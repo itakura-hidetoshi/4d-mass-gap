@@ -1,8 +1,8 @@
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalGaugeTransferSymmetryV5_PZ37ACB
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalGaugeTransferSymmetryV5_PZ37ACC
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalOptimizedMismatchCertificateV5_PZ37ACA
 
 /-!
-# P4-Q2-PZ37ACB — actual gauge-orbit mismatch and all-context obstruction
+# P4-Q2-PZ37ACC — actual gauge-orbit mismatch and all-context obstruction
 
 Use the proved genuine center-gauge transport of the SAME centered
 Gauss-law receiver, and the exact SU(2) identity E(c*g)=2-E(g). Genuine
@@ -36,20 +36,20 @@ local notation "ν" => Measure.prod μ μ
 local notation "E" => specialUnitaryWilsonPlaquetteEnergy 2
 local notation "Cov" => CompactEnergyMismatchMoment.covariance μ
 local notation "Var" => CompactEnergyMismatchMoment.variance μ
-local instance p4Q2PZ37ACB_mismatchGroup : IsTopologicalGroup G :=
+local instance p4Q2PZ37ACC_mismatchGroup : IsTopologicalGroup G :=
   specialUnitaryGroupIsTopologicalGroup 2
-local instance p4Q2PZ37ACB_mismatchCompact : CompactSpace G :=
+local instance p4Q2PZ37ACC_mismatchCompact : CompactSpace G :=
   specialUnitaryGroupCompactSpace 2
-local instance p4Q2PZ37ACB_mismatchCountable : SecondCountableTopology G :=
+local instance p4Q2PZ37ACC_mismatchCountable : SecondCountableTopology G :=
   specialUnitaryGroupSecondCountableTopology 2
-local instance p4Q2PZ37ACB_mismatchMeasurable : MeasurableSpace G :=
+local instance p4Q2PZ37ACC_mismatchMeasurable : MeasurableSpace G :=
   specialUnitaryGroupMeasurableSpace 2
-local instance p4Q2PZ37ACB_mismatchBorel : BorelSpace G :=
+local instance p4Q2PZ37ACC_mismatchBorel : BorelSpace G :=
   specialUnitaryGroupBorelSpace 2
-local instance p4Q2PZ37ACB_mismatchProbability : IsProbabilityMeasure μ :=
+local instance p4Q2PZ37ACC_mismatchProbability : IsProbabilityMeasure μ :=
   normalizedCompactHaar_isProbabilityMeasure G
 
-private theorem p4Q2PZ37ACB_pairHaar_central_integral
+private theorem p4Q2PZ37ACC_pairHaar_central_integral
     (q : G × G → ℝ) (hq : Continuous q) :
     (∫ w : G × G, q (c * w.1, c * w.2) ∂ν) = ∫ w : G × G, q w ∂ν := by
   have hm : MeasurePreserving (fun g : G => c * g) μ μ := by
@@ -63,7 +63,7 @@ private theorem p4Q2PZ37ACB_pairHaar_central_integral
   rw [hp.map_eq] at hi
   exact hi.symm
 
-private theorem p4Q2PZ37ACB_antipodal_moments
+private theorem p4Q2PZ37ACC_antipodal_moments
     (Q R : G → ℝ) (hQ : Continuous Q) (hR : Continuous R)
     (hTrans : ∀ g, R g = Q (c * g)) :
     Cov R E = -Cov Q E ∧ Var R = Var Q := by
@@ -74,7 +74,7 @@ private theorem p4Q2PZ37ACB_antipodal_moments
     calc
       _ = ∫ w : G × G,
           (R (c * w.1) - R (c * w.2)) * (E (c * w.1) - E (c * w.2)) ∂ν :=
-        (p4Q2PZ37ACB_pairHaar_central_integral _
+        (p4Q2PZ37ACC_pairHaar_central_integral _
           (((hR.comp continuous_fst).sub (hR.comp continuous_snd)).mul
             ((hE.comp continuous_fst).sub (hE.comp continuous_snd)))).symm
       _ = ∫ w : G × G, -((Q w.1 - Q w.2) * (E w.1 - E w.2)) ∂ν := by
@@ -89,7 +89,7 @@ private theorem p4Q2PZ37ACB_antipodal_moments
         ∫ w : G × G, (Q w.1 - Q w.2) ^ 2 ∂ν := by
     calc
       _ = ∫ w : G × G, (R (c * w.1) - R (c * w.2)) ^ 2 ∂ν :=
-        (p4Q2PZ37ACB_pairHaar_central_integral _
+        (p4Q2PZ37ACC_pairHaar_central_integral _
           (((hR.comp continuous_fst).sub (hR.comp continuous_snd)).pow 2)).symm
       _ = _ := by
         apply integral_congr_ae
@@ -108,13 +108,13 @@ local notation "Cfg" => PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfigur
 local notation "fH" => p4Q2PZ37ZW_originalCenteredPhysicalDirection H
 local notation "F" => p4Q2PZ37ABZ_originalReceiverSection H
 local notation "U" => p4Q2PZ37ABZ_originalTransferSection H
-local notation "Γ" => p4Q2PZ37ACB_originalCenterGaugePair H
+local notation "Γ" => p4Q2PZ37ACC_originalCenterGaugePair H
 local notation "psi" => p4Q2PZ37ABY_originalCrossPair H
 local notation "mass" => p4Q2PZ37ABY_originalCrossPartMass H
 local notation "budget" => p4Q2PZ37ACA_originalOptimizedMismatchBound H
-local instance p4Q2PZ37ACB_mismatchLinks : Fintype Link := Fintype.ofFinite _
+local instance p4Q2PZ37ACC_mismatchLinks : Fintype Link := Fintype.ofFinite _
 
-private theorem p4Q2PZ37ACB_centeredReceiver_continuous
+private theorem p4Q2PZ37ACC_centeredReceiver_continuous
     (b : ℝ) (hb : 0 ≤ b) (e : Link) (z : Cfg × Cfg) :
     Continuous (F b hb fH e z) :=
   (p4Q2FF_originalWilsonRelativeSignedLinkResponseBCF H 2 (by norm_num) b hb fH e).continuous.comp
@@ -122,74 +122,74 @@ private theorem p4Q2PZ37ACB_centeredReceiver_continuous
 
 /-- The true centered-source receiver covariance reverses under the
 genuine central gauge transformation of the two outer boundaries. -/
-theorem p4Q2PZ37ACB_centeredReceiver_covariance_centerGauge
+theorem p4Q2PZ37ACC_centeredReceiver_covariance_centerGauge
     (b : ℝ) (hb : 0 ≤ b) (e : Link) (z : Cfg × Cfg) :
     Cov (F b hb fH e (Γ e z)) E = -Cov (F b hb fH e z) E := by
-  exact (p4Q2PZ37ACB_antipodal_moments
+  exact (p4Q2PZ37ACC_antipodal_moments
     (F b hb fH e z) (F b hb fH e (Γ e z))
-    (p4Q2PZ37ACB_centeredReceiver_continuous H b hb e z)
-    (p4Q2PZ37ACB_centeredReceiver_continuous H b hb e (Γ e z))
-    (p4Q2PZ37ACB_centeredReceiver_centerGauge H b hb e z)).1
+    (p4Q2PZ37ACC_centeredReceiver_continuous H b hb e z)
+    (p4Q2PZ37ACC_centeredReceiver_continuous H b hb e (Γ e z))
+    (p4Q2PZ37ACC_centeredReceiver_centerGauge H b hb e z)).1
 
 /-- The original centered receiver variance is preserved exactly. -/
-theorem p4Q2PZ37ACB_centeredReceiver_variance_centerGauge
+theorem p4Q2PZ37ACC_centeredReceiver_variance_centerGauge
     (b : ℝ) (hb : 0 ≤ b) (e : Link) (z : Cfg × Cfg) :
     Var (F b hb fH e (Γ e z)) = Var (F b hb fH e z) := by
-  exact (p4Q2PZ37ACB_antipodal_moments
+  exact (p4Q2PZ37ACC_antipodal_moments
     (F b hb fH e z) (F b hb fH e (Γ e z))
-    (p4Q2PZ37ACB_centeredReceiver_continuous H b hb e z)
-    (p4Q2PZ37ACB_centeredReceiver_continuous H b hb e (Γ e z))
-    (p4Q2PZ37ACB_centeredReceiver_centerGauge H b hb e z)).2
+    (p4Q2PZ37ACC_centeredReceiver_continuous H b hb e z)
+    (p4Q2PZ37ACC_centeredReceiver_continuous H b hb e (Γ e z))
+    (p4Q2PZ37ACC_centeredReceiver_centerGauge H b hb e z)).2
 
 /-- The SAME actual Perron transfer-section energy covariance reverses. -/
-theorem p4Q2PZ37ACB_centeredTransfer_covariance_centerGauge
+theorem p4Q2PZ37ACC_centeredTransfer_covariance_centerGauge
     (b : ℝ) (hb : 0 ≤ b) (e : Link) (z : Cfg × Cfg) :
     Cov (U b hb fH e (Γ e z)) E = -Cov (U b hb fH e z) E := by
-  exact (p4Q2PZ37ACB_antipodal_moments
+  exact (p4Q2PZ37ACC_antipodal_moments
     (U b hb fH e z) (U b hb fH e (Γ e z))
     (p4Q2PZ37ABZ_originalTransferSection_continuous H b hb fH e z)
     (p4Q2PZ37ABZ_originalTransferSection_continuous H b hb fH e (Γ e z))
-    (p4Q2PZ37ACB_centeredTransferSection_centerGauge H b hb e z)).1
+    (p4Q2PZ37ACC_centeredTransferSection_centerGauge H b hb e z)).1
 
 /-- The actual transfer-section variance retains all true Perron factors. -/
-theorem p4Q2PZ37ACB_centeredTransfer_variance_centerGauge
+theorem p4Q2PZ37ACC_centeredTransfer_variance_centerGauge
     (b : ℝ) (hb : 0 ≤ b) (e : Link) (z : Cfg × Cfg) :
     Var (U b hb fH e (Γ e z)) = Var (U b hb fH e z) := by
-  exact (p4Q2PZ37ACB_antipodal_moments
+  exact (p4Q2PZ37ACC_antipodal_moments
     (U b hb fH e z) (U b hb fH e (Γ e z))
     (p4Q2PZ37ABZ_originalTransferSection_continuous H b hb fH e z)
     (p4Q2PZ37ABZ_originalTransferSection_continuous H b hb fH e (Γ e z))
-    (p4Q2PZ37ACB_centeredTransferSection_centerGauge H b hb e z)).2
+    (p4Q2PZ37ACC_centeredTransferSection_centerGauge H b hb e z)).2
 
 /-- The actual receiver regression defect is constant on this gauge orbit. -/
-theorem p4Q2PZ37ACB_centeredReceiver_defect_centerGauge
+theorem p4Q2PZ37ACC_centeredReceiver_defect_centerGauge
     (b : ℝ) (hb : 0 ≤ b) (e : Link) (z : Cfg × Cfg) :
     Var (F b hb fH e (Γ e z)) - 4 * (Cov (F b hb fH e (Γ e z)) E) ^ 2 =
       Var (F b hb fH e z) - 4 * (Cov (F b hb fH e z) E) ^ 2 := by
-  rw [p4Q2PZ37ACB_centeredReceiver_variance_centerGauge,
-    p4Q2PZ37ACB_centeredReceiver_covariance_centerGauge, neg_sq]
+  rw [p4Q2PZ37ACC_centeredReceiver_variance_centerGauge,
+    p4Q2PZ37ACC_centeredReceiver_covariance_centerGauge, neg_sq]
 
 /-- The original transfer regression defect obeys the identical invariance. -/
-theorem p4Q2PZ37ACB_centeredTransfer_defect_centerGauge
+theorem p4Q2PZ37ACC_centeredTransfer_defect_centerGauge
     (b : ℝ) (hb : 0 ≤ b) (e : Link) (z : Cfg × Cfg) :
     Var (U b hb fH e (Γ e z)) - 4 * (Cov (U b hb fH e (Γ e z)) E) ^ 2 =
       Var (U b hb fH e z) - 4 * (Cov (U b hb fH e z) E) ^ 2 := by
-  rw [p4Q2PZ37ACB_centeredTransfer_variance_centerGauge,
-    p4Q2PZ37ACB_centeredTransfer_covariance_centerGauge, neg_sq]
+  rw [p4Q2PZ37ACC_centeredTransfer_variance_centerGauge,
+    p4Q2PZ37ACC_centeredTransfer_covariance_centerGauge, neg_sq]
 
 /-- The original ACA optimal budget exchanges orientation on the genuine
 gauge orbit; no correlation sign or tail cap is supplied as a premise. -/
-theorem p4Q2PZ37ACB_centeredOptimizedBudget_centerGauge
+theorem p4Q2PZ37ACC_centeredOptimizedBudget_centerGauge
     (b : ℝ) (hb : 0 ≤ b) (e : Link) (z : Cfg × Cfg) (s : ℝ) :
     budget b hb fH e (Γ e z) s = budget b hb fH e z (-s) := by
   unfold p4Q2PZ37ACA_originalOptimizedMismatchBound CompactEnergyMismatchMoment.optimalBudget
-  rw [p4Q2PZ37ACB_centeredReceiver_variance_centerGauge,
-    p4Q2PZ37ACB_centeredReceiver_covariance_centerGauge]
+  rw [p4Q2PZ37ACC_centeredReceiver_variance_centerGauge,
+    p4Q2PZ37ACC_centeredReceiver_covariance_centerGauge]
   ring
 
 /-- Actual FF receiver/energy crossing under genuine center-gauge transport.
 Only the auxiliary Haar variables are changed on the right-hand side. -/
-theorem p4Q2PZ37ACB_centeredCrossPair_centerGauge
+theorem p4Q2PZ37ACC_centeredCrossPair_centerGauge
     (b : ℝ) (hb : 0 ≤ b) (e : Link) (z : Cfg × Cfg) (s : ℝ) (w : G × G) :
     psi b hb fH e (Γ e z) s w = psi b hb fH e z (-s) (c * w.1, c * w.2) := by
   simp only [p4Q2PZ37ABY_originalCrossPair_eq_energy]
@@ -197,24 +197,24 @@ theorem p4Q2PZ37ACB_centeredCrossPair_centerGauge
       (E w.2 - E w.1)) =
     (2 * b) * ((-s) * (F b hb fH e z (c * w.1) - F b hb fH e z (c * w.2)) *
       (E (c * w.2) - E (c * w.1)))
-  simp only [p4Q2PZ37ACB_centeredReceiver_centerGauge,
+  simp only [p4Q2PZ37ACC_centeredReceiver_centerGauge,
     p4Q2PZ37ABV_central_mul_energy]
   ring
 
 /-- BOTH full original cross-part masses exchange under this real gauge
 orbit. No region of either tail is omitted and no posterior is substituted. -/
-theorem p4Q2PZ37ACB_centeredCrossPartMass_centerGauge
+theorem p4Q2PZ37ACC_centeredCrossPartMass_centerGauge
     (b : ℝ) (hb : 0 ≤ b) (e : Link) (z : Cfg × Cfg) (s : ℝ) :
     mass b hb fH e (Γ e z) s = mass b hb fH e z (-s) := by
   unfold p4Q2PZ37ABY_originalCrossPartMass
-  simp_rw [p4Q2PZ37ACB_centeredCrossPair_centerGauge]
-  exact p4Q2PZ37ACB_pairHaar_central_integral
+  simp_rw [p4Q2PZ37ACC_centeredCrossPair_centerGauge]
+  exact p4Q2PZ37ACC_pairHaar_central_integral
     (fun w : G × G => max (psi b hb fH e z (-s) w) 0)
     ((p4Q2PZ37ABY_originalCrossPair_continuous H b hb fH e z (-s)).max continuous_const)
 
 /-- A genuine ABX-positive link cannot have strict fixed-orientation tail
 dominance at EVERY outer context. The coefficient need only satisfy theta<1. -/
-theorem p4Q2PZ37ACB_centeredRectangle_no_allContext_tailDominance
+theorem p4Q2PZ37ACC_centeredRectangle_no_allContext_tailDominance
     (b : ℝ) (hb : 0 ≤ b) (e : Link)
     (R : p4Q2PZ37ABX_OriginalAlignmentRectangle H b hb fH e)
     (s : ℝ) (hs : s = 1 ∨ s = -1) (theta : ℝ) (htheta : theta < 1) :
@@ -224,7 +224,7 @@ theorem p4Q2PZ37ACB_centeredRectangle_no_allContext_tailDominance
       mass b hb fH e z s = 0 ∧ mass b hb fH e z (-s) = 0 := by
     have hForward := hCap z
     have hReverse := hCap (Γ e z)
-    simp only [p4Q2PZ37ACB_centeredCrossPartMass_centerGauge, neg_neg] at hReverse
+    simp only [p4Q2PZ37ACC_centeredCrossPartMass_centerGauge, neg_neg] at hReverse
     have hPos : 0 ≤ mass b hb fH e z s := integral_nonneg (fun _ => le_max_right _ _)
     have hNeg : 0 ≤ mass b hb fH e z (-s) := integral_nonneg (fun _ => le_max_right _ _)
     have hSum : mass b hb fH e z s + mass b hb fH e z (-s) ≤ 0 := by
@@ -247,22 +247,22 @@ theorem p4Q2PZ37ACB_centeredRectangle_no_allContext_tailDominance
 /-- Unconditionally at every finite H,b>0, SOME actual active link has
 no strict all-context tail-dominance ratio for either fixed orientation.
 This does not quantify over every link and does not rule out selected events. -/
-theorem p4Q2PZ37ACB_exists_activeLink_no_allContext_tailDominance
+theorem p4Q2PZ37ACC_exists_activeLink_no_allContext_tailDominance
     (b : ℝ) (hb : 0 < b) :
     ∃ e : Link, ∀ s : ℝ, (s = 1 ∨ s = -1) → ∀ theta : ℝ, theta < 1 →
       ¬ (∀ z : Cfg × Cfg,
         mass b hb.le fH e z (-s) ≤ theta * mass b hb.le fH e z s) := by
   obtain ⟨e, ⟨R⟩⟩ := p4Q2PZ37ABX_exists_centeredPhysical_alignmentRectangle H b hb
   exact ⟨e, fun s hs theta htheta =>
-    p4Q2PZ37ACB_centeredRectangle_no_allContext_tailDominance H b hb.le e R s hs theta htheta⟩
+    p4Q2PZ37ACC_centeredRectangle_no_allContext_tailDominance H b hb.le e R s hs theta htheta⟩
 
 /-- On an original active link, EACH fixed orientation has a boundary
 context with strictly positive full mismatch for the SAME centered source. -/
-theorem p4Q2PZ37ACB_exists_activeLink_positiveMismatch_eachOrientation
+theorem p4Q2PZ37ACC_exists_activeLink_positiveMismatch_eachOrientation
     (b : ℝ) (hb : 0 < b) :
     ∃ e : Link, ∀ s : ℝ, (s = 1 ∨ s = -1) →
       ∃ z : Cfg × Cfg, 0 < mass b hb.le fH e z (-s) := by
-  obtain ⟨e, he⟩ := p4Q2PZ37ACB_exists_activeLink_no_allContext_tailDominance H b hb
+  obtain ⟨e, he⟩ := p4Q2PZ37ACC_exists_activeLink_no_allContext_tailDominance H b hb
   refine ⟨e, ?_⟩
   intro s hs
   have hn := he s hs 0 (by norm_num)
@@ -277,15 +277,15 @@ end GroundStatePosteriorJoint
 end
 end MGAP4D.MathlibAnalytic
 
-#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACB_centeredReceiver_covariance_centerGauge
-#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACB_centeredReceiver_variance_centerGauge
-#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACB_centeredTransfer_covariance_centerGauge
-#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACB_centeredTransfer_variance_centerGauge
-#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACB_centeredReceiver_defect_centerGauge
-#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACB_centeredTransfer_defect_centerGauge
-#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACB_centeredOptimizedBudget_centerGauge
-#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACB_centeredCrossPair_centerGauge
-#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACB_centeredCrossPartMass_centerGauge
-#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACB_centeredRectangle_no_allContext_tailDominance
-#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACB_exists_activeLink_no_allContext_tailDominance
-#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACB_exists_activeLink_positiveMismatch_eachOrientation
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACC_centeredReceiver_covariance_centerGauge
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACC_centeredReceiver_variance_centerGauge
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACC_centeredTransfer_covariance_centerGauge
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACC_centeredTransfer_variance_centerGauge
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACC_centeredReceiver_defect_centerGauge
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACC_centeredTransfer_defect_centerGauge
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACC_centeredOptimizedBudget_centerGauge
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACC_centeredCrossPair_centerGauge
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACC_centeredCrossPartMass_centerGauge
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACC_centeredRectangle_no_allContext_tailDominance
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACC_exists_activeLink_no_allContext_tailDominance
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACC_exists_activeLink_positiveMismatch_eachOrientation

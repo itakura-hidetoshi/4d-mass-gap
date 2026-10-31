@@ -1,4 +1,4 @@
-# P4-Q2-PZ37ACB Implementation Plan
+# P4-Q2-PZ37ACC Implementation Plan
 
 > **For agentic workers:** Use superpowers:executing-plans with parallel implementation and an independent whole-file mathematical review. All GitHub operations use MCP; git/gh CLI is forbidden.
 
@@ -8,7 +8,7 @@
 
 **Tech Stack:** Lean v4.30.0-rc2; mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6.
 
-**Spec:** User's ABY handoff, verified ABZ/ACA completion and explicit continuation to ACB. Exact sole-authority base f3cb167e576250dd55b630cec1d448cbadf90a6d.
+**Spec:** User's ABY handoff, verified ABZ/ACA completion and explicit continuation to ACB. Original development base f3cb167e576250dd55b630cec1d448cbadf90a6d. Concurrent ACB PR #6046 and docs PR #6048 have since merged. Final integration base is 9dde4d0174f85292f5b17eefcdef8e2cf2502701; preserve both new ACB leaves and all documentation. The present four-leaf development is therefore numbered PZ37ACC. The GI leaf imports the merged ACB transfer-defect certificate.
 
 ## Global Constraints
 
@@ -38,12 +38,16 @@ The user authorized continued formalization and verified merge with minimal proc
 ## Tasks and Interfaces
 
 - [ ] Add CompactEnergyMismatchDefect.lean: exact opposite-budget product, defect rationalization and strict threshold criteria; favorable-covariance sqrt-defect bound; exact budget-ratio iff favorable sign and relative regression defect. Public analytic mismatch bound uses genuine Var(E)=1/4.
-- [ ] Add PhysicalYangMillsWilsonSU2OriginalCovarianceGIBoundsV5_PZ37ACB.lean: original full-GI two-sided covariance envelope, absolute error and absolute-response lower bound, same-Perron expression, strict positivity criterion through actual regression defect, domination of ACA's rectangle lower margin, and original outer pair-Haar second-moment consequence under an explicit event margin.
-- [ ] Add PhysicalYangMillsWilsonSU2OriginalGaugeTransferSymmetryV5_PZ37ACB.lean: original centered source, true Perron/joint density gauge invariance, central gauge map and exact P/U/F transformation.
-- [ ] Add PhysicalYangMillsWilsonSU2OriginalGaugeMismatchObstructionV5_PZ37ACB.lean: actual covariance/variance/defect and full cross-part exchange; actual active-link impossibility of all-context strict one-sided tail dominance.
+- [ ] Add PhysicalYangMillsWilsonSU2OriginalCovarianceGIBoundsV5_PZ37ACC.lean: original full-GI two-sided covariance envelope, absolute error and absolute-response lower bound, same-Perron expression, strict positivity criterion through actual regression defect, domination of ACA's rectangle lower margin, and original outer pair-Haar second-moment consequence under an explicit event margin.
+- [ ] Add PhysicalYangMillsWilsonSU2OriginalGaugeTransferSymmetryV5_PZ37ACC.lean: original centered source, true Perron/joint density gauge invariance, central gauge map and exact P/U/F transformation.
+- [ ] Add PhysicalYangMillsWilsonSU2OriginalGaugeMismatchObstructionV5_PZ37ACC.lean: actual covariance/variance/defect and full cross-part exchange; actual active-link impossibility of all-context strict one-sided tail dominance.
 - [ ] Independently review all new sources/imports/dependent signatures/pinned APIs; run the existing exact-source dependency-aware CI and fix diagnosed structural failures without weakening statements.
 - [ ] After all gates, squash to authority and append README/ROADMAP on authority and main. For documentation-only commits, use GitHub's documented skip-ci message to avoid the observed unconditional legacy main-push builds; preserve any required check gate, and do not change workflows.
 
 ## Validation
 
 Formal theorem statements and all public #print axioms are the meaningful verification surface. No local Lean runtime is available. Use the mandatory exact-source CI, completed full logs, independent receipt, and GitHub MCP tree/ref reobservation. Previous elaboration lessons: typed scalar integrals; explicit quarter-term identity; add_le_add_right fixes the summand on the left in the pinned API, so use explicit add_le_add where ordering matters.
+
+## Concurrent-authority integration
+
+While the initial source was in CI, another ACB theorem PR #6046 merged at 8721fe3bb5dc283ac55f67f27a254db18581973f, followed by docs-only #6048 at 9dde4d0174f85292f5b17eefcdef8e2cf2502701. Source/merge-test tree comparison detected the change. Preserve that entire base, rename only this PR's unmerged physical leaves and identifiers to ACC, and rerun exact-source CI on the combined tree. No merged source is renamed or overwritten. The next stage after this PR is ACD.
