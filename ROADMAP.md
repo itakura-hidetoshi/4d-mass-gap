@@ -1,3 +1,103 @@
+## 検証済み定理 — ACL（2026-10-31 JST）
+
+唯一のLean定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラー。[ACL #6070](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6070) は、元の中心化Gauss-law物理源、真正FF受信器、Perron代表、transfer norm、二つの相互作用Wilson posterior、元の外側pair-Haarを保持する。
+
+### 1. 真正連続SU(2)軌道で共分散ゼロと正分散を両立
+
+同じ受信器について `C(z)=Cov_Haar(F_z,E)`、`V(z)=Var_Haar(F_z)`、`D(z)=V(z)-4*C(z)^2` と書く。H=0を含む全有限H・b>0・全真正リンクeが対象であり、正の共分散配置を新しい仮定にはしない。
+
+ACIの既存定理から `C(z_plus)>0` の実在配置を取り、`4*C(z_plus)^2<=V(z_plus)` により正分散を得る。既存の真正回転族
+`a(t)=[[cos(t),-sin(t)],[sin(t),cos(t)]]` は連続で、`a(0)=1`、`a(pi)=centralMinusOne`。
+ACKの同時source頂点ゲージ作用を両外側境界に施すと、
+
+```text
+h(t) = C(Gamma_(a(t)) z_plus) is continuous,
+h(0) = C(z_plus) > 0, h(pi) = -C(z_plus) < 0,
+V(Gamma_(a(t)) z_plus) = V(z_plus) > 0.
+```
+
+ACCのcenter符号反転と中間値の定理から、実際の `t_* in [0,pi]` と `z_0=Gamma_(a(t_*)) z_plus` を得る：
+
+```text
+C(z_0)=0, V(z_0)>0, D(z_0)=V(z_0)>0.
+```
+
+元の物理源・受信器を代替せず、同じゲージ軌道で共分散だけをゼロにし、元の正分散を保存する。
+
+### 2. 任意の有限共分散二乗capは正質量の開領域で破れる
+
+任意の実数Kに対し、元の外側pair-Haarを `nu_H` として、
+
+```text
+U_K = {z | K*C(z)^2 < D(z)},
+U_K is open, nu_H(U_K)>0,
+not (forall z, D(z)<=K*C(z)^2),
+not (almost every z under nu_H, D(z)<=K*C(z)^2).
+```
+
+がACLの結論となる。Kの符号・大きさに制限はなく、固定したH・b>0・eに対してさえ、そのような有限Kは存在しない。ACKの `K<12` という障害を全有限Kへ拡張する。
+
+正質量はCとVの連続性、上の実在証人、元pair-Haarの非空開集合に対する正値性から導く。`C=0` 集合自体のHaar質量は評価していない。正質量を持つのは厳密違反の開集合であり、非零共分散の配置も含み得る。
+
+### 3. 分散capの鋭い係数は1
+
+元の共分散二乗評価から、全有限H・b>=0・全リンク・全配置で `0<=D(z)<=V(z)`。
+一方、b>0では任意の `theta<1` に対し、
+
+```text
+W_theta = {z | theta*V(z)<D(z)},
+W_theta is open, nu_H(W_theta)>0,
+not (forall z, D(z)<=theta*V(z)),
+not (almost every z under nu_H, D(z)<=theta*V(z)).
+```
+
+従って全配置またはほとんど至る所に共通する分散capの係数1は最良であり、ACKの `theta<3/4` から厳格化される。選んだ配置領域に限定した評価を否定する結論ではない。
+
+### 4. 一つの証人から全Kの違反と正の局所振幅を得る
+
+H・b>0・eを固定すると、Kを選ぶ前に一つの `z_0` を取り、
+
+```text
+C(z_0)=0, V(z_0)>0,
+forall K in R,
+  nu_H({z | V(z_0)/2<V(z) and K*C(z)^2<D(z)})>0.
+```
+
+同じ正の半分散振幅を全Kで保持するが、違反集合はKに依存する。全K共通の正質量、質量の数値的下界、H・b・リンクに一様な正質量や振幅は得ていない。ゼロ共分散点での除算には依存しない。
+
+### 5. 検証記録
+
+| 項目 | 確定値 |
+| --- | --- |
+| 定理PR | [#6070](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6070) — MERGED |
+| 定理squash | `9d8eed5a59c8b9eba5c093cf1d1008619d1701c8` |
+| exact-source HEAD | `c82fd8de685af3fc26c4a13423fbe017aa80eea1` |
+| 実CI checkout | `bf986355ff8a939513e8acdba2e6a42ef22e8bf3` |
+| source・checkout・squash共通Git tree | `9feda32dc1ebe46024171c37b08c325f8f52e0b0` |
+| exact-source CI | [#41206293933](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41206293933) — SUCCESS |
+| 独立source receipt | [#124553198555](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41206293933/job/124553198555) — SUCCESS |
+| マージ後push CI | [#41206896250](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41206896250) — SUCCESS |
+| 独立push receipt | [#124555009386](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41206896250/job/124555009386) — SUCCESS |
+| Lean検証 | source・マージ後とも 11,231 / 11,231 SUCCESS |
+| 新規Lean・公開定理 | 3ファイル、547行追加、削除0、29定理 |
+| 公理依存 | 全29定理とも propext・Classical.choice・Quot.sound のみ。sorryAxなし |
+| 変更Lean warning / error | source・マージ後とも 0 / 0 |
+| Lean / mathlib | v4.30.0-rc2 / `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
+
+workflow・job・実Lean stepのcompleted/success、全29件の公理出力、独立completion receipt、source/checkout/squash tree一致を完了ログで確認した。一般連続関数補題12定理、真正center経路3定理、元物理受信器への適用14定理を含む。新規3ファイルの全文・imports・依存署名・固定mathlib APIを独立レビューし、初回exact-source CIとマージ後CIの両方で検証した。定理PRでは既存8,760個のblobとそのpath/modeを保存し、旧Lean・root・workflow・依存固定は一切変更していない。
+
+### 6. 次段階 ACM（未証明）
+
+真正SU(2)ゲージ軌道の選択領域で、元受信器の共分散振幅と源残差を同時に解析する。ACKの四成分から同じ軌道上の共分散の最大振幅を厳密に表示できるかも検討対象だが、この段階では未証明である。
+
+同じ元配置域で `-C>=c>0`、`D<=d` と正の元pair-Haar質量を揃え、`rho(b)=b^2*(exp(32b)-exp(-32b))^2/4` に対するGI正値の十分条件 `2*b*exp(-32b)*c>sqrt(d*rho(b))` の実成立を調べる。ACLが排除した全配置／a.e.の有限capを次段階の前提にせず、選択領域の評価を元定義から構成する。
+
+固定b>0または `0<b0<=b(H)<=B0` における共分散二乗モーメントS・真正GI二乗モーメントの体積一様正下界、同一配置域の一様質量と振幅、遠方相殺、全物理Hilbert coercivity、共通positive-fine区間、同一endpoint E/F、H1–H4、OS/Wightman再構成、4D連続体Yang–Mills存在・質量ギャップは未解決。ABS・ABM・PZ37ZA・ACC・ACGの既存障害定理とACKの厳密分解を維持する。
+
+以下のACK以前の「最新」「次段階」は歴史スナップショットとして保存する。ACK節の「ACL（未証明）」や全有限Kについての留保は、当時の到達点を記録したものである。この節だけを先頭に追加し、旧本文はバイト単位で保存する。
+
+---
+
 ## 検証済み定理 — ACK（2026-10-31 JST）
 
 唯一のLean定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラー。[ACK #6067](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6067) は、元の中心化Gauss-law物理源、真正FF受信器、Perron代表、transfer norm、二つの相互作用Wilson posteriorと元の外側pair-Haarを保持したまま、SU(2)四成分と残差の厳密な配分を証明した。
