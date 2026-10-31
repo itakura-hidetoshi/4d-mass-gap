@@ -1,3 +1,51 @@
+# MGAP4D main文書ミラー — ABX–ABY（2026-10-31 JST）
+
+この `main` は唯一のLean定理正本 `formal/real-hilbert-uniform-coercive-strong-limit` の**文書ミラーのみ**であり、主張するLean定理をmainに移したものではない。正本docs-only [PR #6038](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6038) のsquash `344e3a857bea068a83e071d787cfcde56a42b9db` に基づく。最新定理bearing squashはABY [PR #6037](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6037) の `e9641c02a2830455ac8fec3ce288561acf589914`。ABX [PR #6036](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6036) も正本へ統合済み。mainの既存本文は以下に完全に保存する。
+
+---
+
+# MGAP4D — 最新検証済み定理 P4-Q2-PZ37ABX–ABY（2026-10-31 JST）
+
+**唯一の定理正本**は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は**文書ミラー**であり定理正本ではない。ABXの定理PR [#6036](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6036) と、最新のABY定理PR [#6037](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6037) はともに **MERGED**。最新のABY定理squash `e9641c02a2830455ac8fec3ce288561acf589914` がマージ直後の正本HEADに完全一致。検証したABYのexact source `6070d795822f9908b359d3e58bca63c43ca3b10a` はsquashとは異なるコミットで、**全tree `49c34e6dbdc33a8b6f00fad606dd0ead73da35d1` が同一**。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` は不変。
+
+**独立検証：** ABX [CI #41162615381](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41162615381) は **11,166/11,166 SUCCESS**、新規10公開定理、標準3公理のみ、`sorryAx`なし、変更warning/error 0/0、独立completion receipt [#124424290535](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41162615381/job/124424290535) SUCCESS。ABY [CI #41165349729](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41165349729) は **11,168/11,168 SUCCESS**、新規16公開定理、標準3公理 `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、変更warning/error 0/0、独立completion receipt [#124432651768](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41165349729/job/124432651768) SUCCESS。
+
+## CLOSED — ABX：真正物理受信器の整合領域を実模型から構成
+
+AAZの既証定理「すべての有限H・b>0で、同一の中心化Gauss-law源の真正GI gapがあるリンクで非零」を、ABTの厳密な符号付き二点表示とFFの**変更していない真正受信器**へ接続。新規の整合仮定なく、ある真正リンク `e`、向き `s∈{1,-1}`、非空**開**の外側真正pair-Haar境界event `A` と、非空**開**の内側補助二コピーSU(2) Haar event `V` を構成し、両方の元のHaar質量が**厳密正**であること、`η,κ>0` があって `∀z∈A, ∀(g,h)∈V, s(F_z(g)-F_z(h))≥η, c_b(g,h)≥κ` を証明した。その結果、`∀z∈A, ∫_V s Φ_z d(μ×μ)≥ηκ exp(-32b)(μ×μ)(V)>0`。向きsは受信器の符号記録であり**物理源の置換ではない**。新規 `V` はABVの固定cap `U` と一致するとは限らず、固定capのHaar下界 `1/64` は移植しない。
+
+[ABX全Lean本文](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/72ea17713148f75bc59be714e0211a8b710e5a6d/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalActualReceiverAlignmentV5_PZ37ABX.lean)。
+
+## CLOSED — ABY：真正密度行列式・全符号付きtailの厳密両側比較
+
+ABUの元の二つの相互作用Wilson posteriorの行列式 `D_b(g,h)` と、元の時間Wilsonエネルギー交差 `c_b(g,h)=2b(E(h)-E(g))` に対し、全点で **`D_b=k_b c_b`** を証明した。`c_b≠0` で `k_b=D_b/c_b`、`c_b=0` では `k_b=1` と定義し、`exp(-32b)≤k_b≤exp(32b)` を全有限H・真正リンク・右背景について証明。零交差でのこの総関数の**連続性は主張しない**。係数は新しいposteriorでも新しい物理測度でもない。
+
+`Φ_z(g,h)=(F_z(g)-F_z(h))D_b(g,h)`、`Ψ_{z,s}(g,h)=s(F_z(g)-F_z(h))c_b(g,h)`、`M_s(z)=∫_{G×G} max(Ψ_{z,s},0)d(μ×μ)` とすると、全域で `sΦ_z=k_b Ψ_{z,s}`、負領域の一致、完全正・負部分の両側評価
+
+`exp(-32b)M_s≤∫max(sΦ_z,0)≤exp(32b)M_s`、
+
+`exp(-32b)M_{-s}≤∫max(-sΦ_z,0)≤exp(32b)M_{-s}`
+
+と、**元のGI gap** の両側下界／上界
+
+`(exp(-32b)M_s-exp(32b)M_{-s})/2 ≤ sΔ_GI(z) ≤ (exp(32b)M_s-exp(-32b)M_{-s})/2`
+
+を新たなtail上界の**仮定なしでLean証明**した。ABXの実整合長方形で `M_s(z)≥ηκ(μ×μ)(V)` を得るため `∀z∈A` で
+
+`sΔ_GI(z) ≥ [exp(-32b)ηκ(μ×μ)(V)-exp(32b)M_{-s}(z)]/2`。
+
+これは**全負寄与の小ささの証明ではない**。実物理受信器に依存する全不整合積分 `M_{-s}` が定量的に露出したことが成果。
+
+[ABY密度係数Lean](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/e9641c02a2830455ac8fec3ce288561acf589914/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalDeterminantSlopeV5_PZ37ABY.lean) ／ [ABY全符号付きtail Lean](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/e9641c02a2830455ac8fec3ce288561acf589914/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFullSignedTailV5_PZ37ABY.lean)。
+
+## OPEN — 次段階P4-Q2-PZ37ABZ（仮称）：実物理不整合・体積一様性
+
+最重要の未解決入力は `M_{-s}` の**真正Wilson物理源からの**小ささと、ABXで構成された `A,V,η,κ` の**Hに依存しない**局所・固定support構成または適切な割合評価である。さらにABW／ABX／ABYの補助 `μ×μ` と元の外側pair-Haar `μ_H` を混同しない。他プラケット・遠方相殺、ABSの粗いHaar中心化絶対誤差obstruction、ABM／PZ37ZA no-goを維持。全物理Hilbert coercivity、共通positive-fine、同一endpoint E/F、任意深さ、H1–H4、OS/Wightmanおよび4D連続体Yang–Mills mass gapは**OPEN**。
+
+**以下のABW以前の節は当時の履歴として無修正で保持する。** この文書同期はdocs-onlyで、Leanを不要に再実行しない。
+
+---
+
 # MGAP4D — main文書ミラー（P4-Q2-PZ37ABW・2026-10-31 JST）
 
 このdefault `main` は **README・ROADMAPのみの文書ミラー**であり、唯一のLean定理正本 `formal/real-hilbert-uniform-coercive-strong-limit` ではない。[正本docs-only #6034](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6034) の統合commit `7c6b3f093fa17939d6a54b8c3827bb4d6a620053` に基づき、定理 #6033 の検証済み成果を文書として反映する。ABW定理squash `f37f4fceb0ee6b74d3d30e63be9cb1006e3c1e4e`、exact-source `405aae45e47501ca868bad5258ead2c0fa7efd7e`、[CI #41159498041](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41159498041) はいずれも別々の証拠であり、mainにLean定理を移すものではない。
