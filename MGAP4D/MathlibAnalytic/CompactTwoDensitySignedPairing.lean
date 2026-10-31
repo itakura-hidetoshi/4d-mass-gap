@@ -60,7 +60,9 @@ theorem integral_twoDensityCrossPair
     _ = (∫ z : X × X, (p z.1 * f z.1) * q z.2 ∂μ.prod μ) -
         (∫ z : X × X, p z.1 * (q z.2 * f z.2) ∂μ.prod μ) := integral_sub hA hB
     _ = _ := by
-      rw [integral_prod_mul, integral_prod_mul, hq1, hp1, mul_one, one_mul]
+      rw [integral_prod_mul (μ := μ) (ν := μ) (fun x : X => p x * f x) q,
+        integral_prod_mul (μ := μ) (ν := μ) p (fun x : X => q x * f x),
+        hq1, hp1, mul_one, one_mul]
 
 /-- Exact antisymmetrization: twice the original signed expectation gap.
 The normalization hypotheses are explicit and no sign hypothesis is added. -/
