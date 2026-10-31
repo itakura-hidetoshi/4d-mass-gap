@@ -148,7 +148,9 @@ theorem p4Q2PZ37ACI_originalAffineResidual_variance_le
   change Var (fun g => contrast b hb B e g +
     (b * (Real.exp (32 * b) + Real.exp (-32 * b))) * E g) ≤
       (b * (Real.exp (32 * b) - Real.exp (-32 * b))) ^ 2 / 4 at h
-  convert h using 1 <;> unfold p4Q2PZ37ACI_originalPosteriorResidualEnvelope <;> ring
+  convert h using 1
+  unfold p4Q2PZ37ACI_originalPosteriorResidualEnvelope
+  ring
 
 /-- A sharper k-dependent bound obtained by completing the actual variance square. -/
 theorem p4Q2PZ37ACI_originalPosteriorResidual_le_energyProduct
