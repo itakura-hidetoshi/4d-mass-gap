@@ -86,7 +86,7 @@ private theorem p4Q2PZ37ACM_synthesisMatrix_mem
     fin_cases i <;> fin_cases j <;>
       apply Complex.ext <;>
       simp [p4Q2PZ37ACM_synthesisMatrix, Matrix.mul_apply,
-        Matrix.conjTranspose_apply, Matrix.one_apply, Fin.sum_univ_two,
+        Matrix.conjTranspose_apply, Fin.sum_univ_two,
         Complex.mul_re, Complex.mul_im] <;>
       nlinarith [hx4]
   · apply Complex.ext <;>
@@ -117,7 +117,7 @@ theorem p4Q2PZ37ACM_exists_fourModeCharacter_coordinates
         p4Q2PZ35A_pauliQ2, p4Q2PZ35A_pauliQ3,
         Matrix.trace_fin_two, Matrix.mul_apply, Fin.sum_univ_two,
         Complex.mul_re, Complex.mul_im] <;>
-      ring
+      ring_nf <;> rfl
   exact_mod_cast hComplex
 
 end
