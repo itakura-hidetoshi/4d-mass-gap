@@ -84,8 +84,9 @@ theorem p4Q2PZ37ABY_originalCrossPair_eq_energy
 theorem p4Q2PZ37ABY_originalCrossPair_continuous
     (b : ℝ) (hb : 0 ≤ b) (f : Phys) (e : Link) (z : Cfg × Cfg) (s : ℝ) :
     Continuous (psi b hb f e z s) := by
-  have hF := (p4Q2PZ37ABX_originalDifference_joint_continuous H b hb f e s).comp
-    (continuous_const.prodMk (continuous_id : Continuous (fun w : G × G => w)))
+  have hF : Continuous (fun w : G × G => s * diff b hb f e z w.1 w.2) :=
+    (p4Q2PZ37ABX_originalDifference_joint_continuous H b hb f e s).comp
+      (continuous_const.prodMk continuous_id)
   exact hF.mul (p4Q2PZ37ABV_temporalCrossLog_continuous b)
 
 /-- Full positive-part crossing moment exists for every actual source. -/

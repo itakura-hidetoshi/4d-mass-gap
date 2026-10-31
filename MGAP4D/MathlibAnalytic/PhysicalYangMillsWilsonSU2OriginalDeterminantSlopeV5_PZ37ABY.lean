@@ -85,8 +85,10 @@ theorem p4Q2PZ37ABY_originalDetSlope_twoSided
     · have hcSwap : 0 < cross b h g := by
         rw [p4Q2PZ37ABU_temporalCrossLog_swap]
         exact neg_pos.mpr hc
-      simpa only [p4Q2PZ37ABU_temporalCrossLog_swap,
-        p4Q2PZ37ABU_originalDet_swap, neg_div_neg_eq] using hRatio h g hcSwap
+      have hs := hRatio h g hcSwap
+      rw [p4Q2PZ37ABU_temporalCrossLog_swap b g h,
+        p4Q2PZ37ABU_originalDet_swap H b hb B e g h] at hs
+      simpa only [neg_div_neg_eq] using hs
     · exact hRatio g h hc
 
 /-- Exact factorization, including the zero-crossing locus. -/
@@ -97,7 +99,8 @@ theorem p4Q2PZ37ABY_originalDet_eq_slope_mul_cross
   · have hd : det b hb B e g h = 0 := by
       rw [p4Q2PZ37ABU_originalDet_eq_crossRatio, hc, Real.exp_zero]
       ring
-    simp only [p4Q2PZ37ABY_originalDetSlope, hc, if_pos rfl, hd, mul_zero]
+    rw [hc, mul_zero]
+    exact hd
   · simp only [p4Q2PZ37ABY_originalDetSlope, if_neg hc]
     exact (div_mul_cancel₀ _ hc).symm
 
