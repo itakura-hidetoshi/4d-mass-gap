@@ -30,6 +30,7 @@ def adjustedMargin (u v : α → ℝ) (epsilon : ℝ) (x : α) : ℝ :=
   ((∫ y : α, v y ∂μ) + epsilon) * u x - (∫ y : α, u y ∂μ) * v x
 
 /-- The margin is continuous in the unchanged compact probability space. -/
+omit [CompactSpace α] [BorelSpace α] [IsProbabilityMeasure μ] in
 theorem adjustedMargin_continuous (u v : α → ℝ)
     (hu : Continuous u) (hv : Continuous v) (epsilon : ℝ) :
     Continuous (adjustedMargin μ u v epsilon) := by
@@ -92,7 +93,7 @@ theorem adjustedMargin_half_mean_tail (u v : α → ℝ)
     (adjustedMargin_continuous μ u v hu hv epsilon)
     (((∫ x : α, v x ∂μ) + epsilon) * R) hUpper hMean
   rw [adjustedMargin_integral μ u v hu hv epsilon] at ht
-  exact ht
+  simpa only [mul_assoc] using ht
 
 end
 
