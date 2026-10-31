@@ -130,7 +130,9 @@ local notation "μ" => normalizedCompactHaar G
 local instance p4Q2PZ37ABS_probability : IsProbabilityMeasure μ :=
   normalizedCompactHaar_isProbabilityMeasure G
 
-variable (p : Plaq)
+-- Explicit dependence on H keeps the section variable in the binder.
+-- A notation-only binder was elaborated with an unresolved implicit H.
+variable (p : PeriodicHypercubicEvenSpatialSlicePlaquette H)
 include p
 local notation "emb" => p4Q2MY_originalPlaquetteFourEdgeEmbedding H p
 local notation "Remote" => {e : Link // e ∉ Set.range emb}
