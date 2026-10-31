@@ -153,8 +153,9 @@ private theorem p4Q2PZ37ACB_gauge_update
       (delta (periodicHypercubicEvenSpatialSliceShift H k.1 k.2))⁻¹ = _
   by_cases hk : k = e
   · subst k
-    simp only [Function.update_same]
+    simp only [Function.update_self]
   · simp only [Function.update_of_ne hk]
+    rfl
 
 /-- Actual right-link replacement commutes with the central gauge action
 with insertion c*g. This is literal Function.update, not relative multiplication. -/
