@@ -1,3 +1,60 @@
+# main文書ミラー更新 — P4-Q2-PZ37ABZ（2026-10-31 JST）
+
+このmainは文書ミラー。唯一の定理正本は [formal/real-hilbert-uniform-coercive-strong-limit](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit)、現在の正本HEADは `15783bdb15a9df34e45dacf2629f9c25bac70ba2`（[README・ROADMAP同期 #6041](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6041) MERGED）。ABZ定理squashは `bf7d9575a7f3f25e041b901e00a72f3034ccd244`。その後の正本変更はREADME・ROADMAPへの追記のみ。以下は正本の検証済みABZ追補の文書ミラーであり、定理の正本をmainへ移していない。
+
+---
+
+# MGAP4D — 定理正本ロードマップ追補（2026-10-31 JST／P4-Q2-PZ37ABZ）
+
+- **唯一の定理正本：** `formal/real-hilbert-uniform-coercive-strong-limit`。default mainは文書ミラー。
+- **最新定理：** [ABZ #6040](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6040) **MERGED**。squash＝マージ直後正本HEAD `bf7d9575a7f3f25e041b901e00a72f3034ccd244`。exact-source `f1499f8d2d20e97e0f5a111e60628d35b6c6b7d5` と同一tree `971fc2f9be67aa8eb9e150d355dceaff037eb29e`。
+- **exact-source検証：** [CI #41168743376](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41168743376) workflow・job・Lean step completed / SUCCESS、Lean **11,171／11,171 SUCCESS**、3新規Lean葉・35公開定理・35公理依存報告が標準3公理以内、sorryAxなし、変更warning/error 0/0。独立completion receipt [#124442869146](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41168743376/job/124442869146) SUCCESS。
+- **固定：** Lean v4.30.0-rc2、mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6。元Wilson模型、Gauss-law源、真Perron、transfer norm、二posterior、公開root不変。
+
+## CLOSED — 全不整合モーメントの実エネルギー残差上界
+
+元の `Ψ_s=2bs(F(g)-F(h))(E(h)-E(g))`、`M_{-s}=∫max(-Ψ_s,0)d(μ×μ)` に対し、`R=F+s*a*E` とすると
+
+`M_{-s} ≤ (b/a) Var_μ(R)`  （b≥0、a>0、sは任意の実数）
+
+を点ごとの平方完成と `∫(R(g)-R(h))²=2Var_μ(R)` から証明。Haar分散が中心化二乗積分と一致すること、可積分性も証明済み。tailや残差が小さいという仮定を使わない。元の真SU(2) Haarで `∫E=1, ∫E²=5/4, VarE=1/4`、従って
+
+`Var(R)=Var(F)+2*s*a*Cov(F,E)+(s*a)²/4`。
+
+## CLOSED — 元FF/GN転送構造と符号付き共分散障害
+
+`F(g)=‖T‖⁻¹I_f(B)-P(z)U_z(g)`、
+`P(z)=‖T‖⁻¹sqrtDensity(z)>0`、
+`U_z(g)=I_f(B[e:=g])/sqrtDensity(z.left,B[e:=g])`。
+
+元右リンク更新と更新後Perron半密度を含むこの真正断面の連続性、二更新差、全M_{-s}の厳密表示をLean証明。MQの局所Riesz商をUの有限supportへ取り違えない。
+
+`M_s-M_{-s}=-4bs Cov(F,E)` と全負部分の絶対変動＋共分散分解も確定。`s Cov(F,E)≥0` ならABYの下界 `[e^{-32b}M_s-e^{32b}M_{-s}]/2≤0`。**実GIの符号へのno-goではなく、この比較式で正値を認証するための共分散方向の障害。**
+
+## CLOSED / CONDITIONAL — 完全負tailから元外側Haar二次モーメントへ
+
+ABYの元posterior全負tailは `e^{32b}(b/a)Var(R)` 以下。ABXの真正長方形で
+
+`sΔ_GI(z)≥[e^{-32b}ηκν(V)-e^{32b}(b/a)Var(R_z)]/2`。
+
+この下界の厳密正値には `(b/a)Var(R_z)<e^{-64b}ηκν(V)` の実模型での検証が必要で、これは未証明。
+
+この右辺がA全体でδ≥0以上という**別の明示条件**が検証されれば、真の外側pair-Haarについて `∫Δ_GI²dμ_H≥μ_H(A)δ²`。残差条件を実模型で充足したとは主張していない。ν=補助SU2二コピーHaar、μ_H=元configuration pair-Haarを保持し、ABV固定capの1/64はABXのVに流用しない。
+
+## OPEN — 次段階P4-Q2-PZ37ACA
+
+1. 真正中心化物理源の更新後Perron転送断面Uを使い、実際の `Var(F)`、`Cov(F,E)`、`Var(F+s*a*E)` を評価する。任意a>0の上界の最適化と、上界が正寄与より小さいことの証明を分ける。
+2. 係数b/aとVarE=1/4のH非依存を、残差・A,V・η,κのH一様性へ取り違えない。固定support cylinder、遠方相殺、共通Haar質量・振幅と真Gram/Rayleigh下界は未確立。
+3. ABSの粗いHaar中心化絶対誤差障害、ABM・PZ37ZA no-goを保持。元源・真Perron・真transfer norm・二interacting posteriorsを変更しない。
+4. 全物理Hilbert coercivity、common fine-positive、同一endpoint E/F、H1–H4、OS/Wightman、4D連続体Yang–Mills mass gapはOPEN。
+
+GitHub MCPで正本HEAD→変更Lean全文・imports・dependent signatures・固定mathlib→exact-source workflow/job/Lean step→公理依存・独立receipt→squash/source treeと正本HEAD一致を確認。docs-onlyではStrict Leanを追加実行しない。
+
+**以下のABY以前の節は当時の履歴として完全に保存する。**
+
+---
+
+
 # MGAP4D mainロードマップ文書ミラー — ABX–ABY（2026-10-31 JST）
 
 **唯一の定理正本：** `formal/real-hilbert-uniform-coercive-strong-limit`。このmain文書追補は正本README・ROADMAP [#6038](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6038) の `344e3a857bea068a83e071d787cfcde56a42b9db` に基づき、ABX #6036およびABY #6037の形式化のscopeとOPENを同期するだけである。元のmain本文・全Lean・Wilson模型・正規化・pinは変更しない。
