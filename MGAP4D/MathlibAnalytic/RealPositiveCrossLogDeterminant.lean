@@ -20,9 +20,9 @@ theorem realPositiveCrossDet_eq_exp_crossLog
       (a * d) / (b * c) := by
     simp only [Real.exp_sub, Real.exp_log ha, Real.exp_log hb,
       Real.exp_log hc, Real.exp_log hd]
-    field_simp [hb.ne', hc.ne', hd.ne'] <;> ring
+    field_simp [hb.ne', hc.ne', hd.ne']
   rw [he]
-  field_simp [hb.ne', hc.ne'] <;> ring
+  field_simp [hb.ne', hc.ne']
 
 end
 end MGAP4D.MathlibAnalytic
