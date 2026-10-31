@@ -60,7 +60,6 @@ theorem energyAlignmentRatio_defect_identity (s v C : ℝ)
       _ = 4 * C ^ 2 := by rw [hs]; ring
   rw [hsq]
   field_simp [hv.ne']
-  ring
 
 /-- Exactly factor the same ACA optimized full-mismatch budget
 through the signed energy correlation. -/
@@ -70,7 +69,6 @@ theorem optimizedTransferBudget_eq_alignment (b P s v C : ℝ) (hv : 0 < v) :
   unfold energyAlignmentRatio
   have hσ : Real.sqrt v ≠ 0 := (Real.sqrt_pos.mpr hv).ne'
   field_simp [hσ]
-  ring
 
 /-- The ACA strict certificate is exactly a normalized alignment
 threshold when coupling, Perron prefactor and variance are positive. -/
@@ -84,10 +82,10 @@ theorem optimizedTransferBudget_lt_iff_alignment (b P s v C T : ℝ)
   constructor
   · intro h
     apply (lt_div_iff₀ hcoef).mpr
-    convert h using 1 <;> ring
+    convert h using 1; ring
   · intro h
     have ht := (lt_div_iff₀ hcoef).mp h
-    convert ht using 1 <;> ring
+    convert ht using 1; ring
 
 /-- With favorable signed covariance, the scaled optimal budget is
 bounded by the true energy regression defect. No smallness hypothesis. -/
@@ -127,7 +125,10 @@ theorem smallDefect_implies_optimizedTransferBudget_lt (b P s v C T : ℝ)
   have hbound := optimizedTransferBudget_mul_stddev_le_defect b P s v C
     hb hP hv hs hC hdir
   have hσ : 0 < Real.sqrt v := Real.sqrt_pos.mpr hv
-  exact (mul_lt_mul_right hσ).mp (hbound.trans_lt hsmall)
+  by_contra hn
+  have hge : T ≤ b * P * (Real.sqrt v - 2 * s * C) := le_of_not_gt hn
+  have hmul := mul_le_mul_of_nonneg_right hge hσ.le
+  exact (not_lt_of_ge hmul) (hbound.trans_lt hsmall)
 
 /-- Wrong global covariance direction keeps the same positive-slope
 budget above the uncorrected standard-deviation scale. -/
@@ -150,6 +151,7 @@ theorem positiveCertificate_forces_favorableOrientation (b P s v C T : ℝ)
   have hge := wrongOrientation_budget_ge_baseline b P s v C hb hP hbad
   exact (not_lt_of_ge (hbase.trans hge)) hcert
 
+end
 end MGAP4D.MathlibAnalytic.CompactEnergyMismatchMoment
 
 #print axioms MGAP4D.MathlibAnalytic.CompactEnergyMismatchMoment.energyAlignmentRatio_bounds
