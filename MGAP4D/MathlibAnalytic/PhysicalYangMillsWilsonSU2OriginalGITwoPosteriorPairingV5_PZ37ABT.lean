@@ -98,14 +98,14 @@ theorem p4Q2PZ37ABT_originalSignedPair_continuous
 /-- Genuine integrability of the two-copy signed kernel, before any estimate. -/
 theorem p4Q2PZ37ABT_originalSignedPair_integrable
     (b : ℝ) (hb : 0 ≤ b) (f : Phys) (e : Link) (z : Cfg × Cfg) :
-    Integrable (pair b hb f e z) (μ.prod μ) :=
+    Integrable (pair b hb f e z) (Measure.prod μ μ) :=
   (p4Q2PZ37ABT_originalSignedPair_continuous H b hb f e z).integrable_of_hasCompactSupport
     (HasCompactSupport.of_compactSpace _)
 
 /-- Exact symmetric two-copy formula for the ORIGINAL two-posterior GI gap. -/
 theorem p4Q2PZ37ABT_originalGI_eq_half_pair_integral
     (b : ℝ) (hb : 0 ≤ b) (f : Phys) (e : Link) (z : Cfg × Cfg) :
-    gap b hb f e z = (1 / 2 : ℝ) * ∫ w : G × G, pair b hb f e z w ∂μ.prod μ := by
+    gap b hb f e z = (1 / 2 : ℝ) * ∫ w : G × G, pair b hb f e z w ∂Measure.prod μ μ := by
   let P0 : G → ℝ := density b hb left0 z.2 e
   let P1 : G → ℝ := density b hb (left1 e) z.2 e
   let F : G → ℝ := fun g => response b hb f e (z, g)
@@ -117,7 +117,7 @@ theorem p4Q2PZ37ABT_originalGI_eq_half_pair_integral
     (h0.mul hF).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   have h1F : Integrable (fun g => P1 g * F g) μ :=
     (h1.mul hF).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
-  have hpair : (∫ w : G × G, pair b hb f e z w ∂μ.prod μ) =
+  have hpair : (∫ w : G × G, pair b hb f e z w ∂Measure.prod μ μ) =
       2 * ((∫ g : G, P0 g * F g ∂μ) - (∫ g : G, P1 g * F g ∂μ)) :=
     integral_twoDensitySignedPair_eq_two_mul_gap μ P0 P1 F h0 h1 hF
       (p4Q2PZ37ABT_originalPosteriorDensity_mass_one H b hb left0 z.2 e)
@@ -139,10 +139,10 @@ theorem p4Q2PZ37ABT_originalGI_eq_half_pair_integral
 theorem p4Q2PZ37ABT_originalGI_eq_signed_pair_parts
     (b : ℝ) (hb : 0 ≤ b) (f : Phys) (e : Link) (z : Cfg × Cfg) :
     gap b hb f e z = (1 / 2 : ℝ) *
-      ((∫ w : G × G, max (pair b hb f e z w) 0 ∂μ.prod μ) -
-        (∫ w : G × G, max (-pair b hb f e z w) 0 ∂μ.prod μ)) := by
+      ((∫ w : G × G, max (pair b hb f e z w) 0 ∂Measure.prod μ μ) -
+        (∫ w : G × G, max (-pair b hb f e z w) 0 ∂Measure.prod μ μ)) := by
   rw [p4Q2PZ37ABT_originalGI_eq_half_pair_integral,
-    integral_compactContinuous_eq_pos_sub_neg (μ.prod μ) _
+    integral_compactContinuous_eq_pos_sub_neg (Measure.prod μ μ) _
       (p4Q2PZ37ABT_originalSignedPair_continuous H b hb f e z)]
 
 /-- The exact strict positivity criterion is a positive-minus-negative margin,
@@ -150,8 +150,8 @@ not positivity of the posterior densities themselves. -/
 theorem p4Q2PZ37ABT_originalGI_pos_iff_signed_pair_margin
     (b : ℝ) (hb : 0 ≤ b) (f : Phys) (e : Link) (z : Cfg × Cfg) :
     0 < gap b hb f e z ↔
-      (∫ w : G × G, max (-pair b hb f e z w) 0 ∂μ.prod μ) <
-        (∫ w : G × G, max (pair b hb f e z w) 0 ∂μ.prod μ) := by
+      (∫ w : G × G, max (-pair b hb f e z w) 0 ∂Measure.prod μ μ) <
+        (∫ w : G × G, max (pair b hb f e z w) 0 ∂Measure.prod μ μ) := by
   rw [p4Q2PZ37ABT_originalGI_eq_signed_pair_parts]
   constructor <;> intro h <;> linarith
 
@@ -160,8 +160,8 @@ and a negative-tail upper estimate must BOTH be supplied. -/
 theorem p4Q2PZ37ABT_originalGI_lower_of_pair_mass_bounds
     (b : ℝ) (hb : 0 ≤ b) (f : Phys) (e : Link) (z : Cfg × Cfg)
     (P N : ℝ)
-    (hP : P ≤ ∫ w : G × G, max (pair b hb f e z w) 0 ∂μ.prod μ)
-    (hN : (∫ w : G × G, max (-pair b hb f e z w) 0 ∂μ.prod μ) ≤ N) :
+    (hP : P ≤ ∫ w : G × G, max (pair b hb f e z w) 0 ∂Measure.prod μ μ)
+    (hN : (∫ w : G × G, max (-pair b hb f e z w) 0 ∂Measure.prod μ μ) ≤ N) :
     (P - N) / 2 ≤ gap b hb f e z := by
   rw [p4Q2PZ37ABT_originalGI_eq_signed_pair_parts]
   linarith
