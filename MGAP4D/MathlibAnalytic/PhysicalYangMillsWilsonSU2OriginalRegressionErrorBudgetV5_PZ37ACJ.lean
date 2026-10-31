@@ -2,6 +2,7 @@ import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalTransferRegressi
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalPosteriorResidualBoundV5_PZ37ACI
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalAbsoluteCrossSmallCouplingObstructionV5_PZ37ABM
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalHaarPosteriorPlaquetteNormalizedFloorV5_PZ37AAI
+import Mathlib.SetTheory.Cardinal.Finite
 
 /-!
 # P4-Q2-PZ37ACJ — numerical original physical source and GI error budgets
@@ -121,7 +122,10 @@ theorem p4Q2PZ37ACJ_originalReceiver_variance_le_numericBudget
       576 * b ^ 2 * Real.exp ((2 * budget + 48) * b) * ‖f‖ ^ 2 := by
   let L : ℝ := ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
     H 2 (by norm_num) b hb.le‖⁻¹
-  have hL : 0 ≤ L := inv_nonneg.mpr (norm_nonneg _)
+  have hL : 0 ≤ L := inv_nonneg.mpr
+    (ContinuousLinearMap.opNorm_nonneg
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+        H 2 (by norm_num) b hb.le))
   have hInv := p4Q2PZ37ABM_originalPhysicalTransferNorm_inv_le_exp_actionBudget H b hb
   change L ≤ Real.exp (b * budget) at hInv
   have hGap : 0 ≤ Real.exp (24 * b) - 1 := by
@@ -158,7 +162,9 @@ theorem p4Q2PZ37ACJ_centeredReceiverDefect_le_numericBudget
     (b : ℝ) (hb : 0 < b) (e : Link) (z : Cfg × Cfg) :
     Var (F b hb.le f0 e z) - 4 * (Cov (F b hb.le f0 e z) E) ^ 2 ≤
       3456 * P * b ^ 2 * Real.exp ((2 * budget + 48) * b) := by
-  have hNorm := p4Q2PZ37AAI_originalCenteredPhysicalNorm_sq_le_six_plaquetteCount H
+  have hNorm : ‖f0‖ ^ 2 ≤ 6 * P := by
+    simpa only [Fintype.card_eq_nat_card] using
+      (p4Q2PZ37AAI_originalCenteredPhysicalNorm_sq_le_six_plaquetteCount H)
   have hScale : 0 ≤ 576 * b ^ 2 * Real.exp ((2 * budget + 48) * b) := by positivity
   calc
     _ ≤ 576 * b ^ 2 * Real.exp ((2 * budget + 48) * b) * ‖f0‖ ^ 2 :=
@@ -193,7 +199,9 @@ theorem p4Q2PZ37ACJ_centeredGI_energyRegression_numeric_sq
     (b : ℝ) (hb : 0 < b) (e : Link) (z : Cfg × Cfg) :
     (gap b hb.le f0 e z + 4 * k b hb.le z.2 e * Cov (F b hb.le f0 e z) E) ^ 2 ≤
       3538944 * P * b ^ 6 * Real.exp ((2 * budget + 112) * b) := by
-  have hNorm := p4Q2PZ37AAI_originalCenteredPhysicalNorm_sq_le_six_plaquetteCount H
+  have hNorm : ‖f0‖ ^ 2 ≤ 6 * P := by
+    simpa only [Fintype.card_eq_nat_card] using
+      (p4Q2PZ37AAI_originalCenteredPhysicalNorm_sq_le_six_plaquetteCount H)
   have hScale : 0 ≤ 589824 * b ^ 6 * Real.exp ((2 * budget + 112) * b) := by positivity
   calc
     _ ≤ 589824 * b ^ 6 * Real.exp ((2 * budget + 112) * b) * ‖f0‖ ^ 2 :=

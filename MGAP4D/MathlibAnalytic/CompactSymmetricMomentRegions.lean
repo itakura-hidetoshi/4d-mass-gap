@@ -29,6 +29,7 @@ def secondMoment (f : α → ℝ) : ℝ := ∫ x, (f x) ^ 2 ∂μ
 private theorem csmr_integrable {f : α → ℝ} (hf : Continuous f) : Integrable f μ :=
   hf.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
 
+omit [CompactSpace α] [IsProbabilityMeasure μ] in
 /-- A genuine measure-preserving sign reversal forces the actual mean to vanish. -/
 theorem mean_eq_zero (f : α → ℝ) (T : α → α) (hf : Continuous f)
     (hT : MeasurePreserving T μ μ) (hFlip : ∀ x, f (T x) = -f x) :
@@ -40,6 +41,7 @@ theorem mean_eq_zero (f : α → ℝ) (T : α → α) (hf : Continuous f)
   rw [integral_neg] at h
   linarith
 
+omit [CompactSpace α] [IsProbabilityMeasure μ] in
 /-- Strict positive and negative tails have equal real mass, at every threshold. -/
 theorem positive_negative_tail_mass_eq
     (f : α → ℝ) (T : α → α) (hf : Continuous f)
@@ -106,17 +108,17 @@ theorem half_moment_tail_bounds
     by_cases hp : x ∈ P
     · have hpx : c < f x := hp
       have hn : x ∉ N := by change ¬f x < -c; linarith
-      rw [Set.indicator_of_mem hp, Set.indicator_of_not_mem hn]
+      rw [Set.indicator_of_mem hp, Set.indicator_of_notMem hn]
       nlinarith [hBound x]
     · by_cases hn : x ∈ N
-      · rw [Set.indicator_of_not_mem hp, Set.indicator_of_mem hn]
+      · rw [Set.indicator_of_notMem hp, Set.indicator_of_mem hn]
         nlinarith [hBound x]
       · have hLower : -c ≤ f x := le_of_not_gt hn
         have hUpper : f x ≤ c := le_of_not_gt hp
         have hAbs : |f x| ≤ c := abs_le.mpr ⟨hLower, hUpper⟩
         have hSq : (f x) ^ 2 ≤ c ^ 2 := by
           simpa only [sq_abs] using pow_le_pow_left₀ (abs_nonneg (f x)) hAbs 2
-        rw [Set.indicator_of_not_mem hp, Set.indicator_of_not_mem hn]
+        rw [Set.indicator_of_notMem hp, Set.indicator_of_notMem hn]
         simpa using hSq
   have hIntegral :
       (∫ x : α, c ^ 2 + (R - c ^ 2) *
