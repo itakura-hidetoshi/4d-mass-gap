@@ -150,7 +150,7 @@ theorem p4Q2PZ37ACD_originalCovarianceRegion_mass_pos
     (b : ℝ) (hb : 0 ≤ b) (f : Phys) (e : Link) (c V : ℝ)
     (z0 : Cfg × Cfg) (hz0 : z0 ∈ A b hb f e c V) :
     0 < Measure.real outer (A b hb f e c V) := by
-  letI : outer.IsOpenPosMeasure := p4Q2PZ37ACD_outerOpenPos H
+  letI : (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H 2).IsOpenPosMeasure := p4Q2PZ37ACD_outerOpenPos H
   exact ENNReal.toReal_pos
     ((p4Q2PZ37ACD_originalCovarianceRegion_isOpen H b hb f e c V).measure_pos
       outer ⟨z0, hz0⟩).ne' (measure_ne_top _ _)
@@ -299,7 +299,7 @@ theorem p4Q2PZ37ACD_exists_positiveHaar_marginRegion_of_point
     (p4Q2PZ37ACD_originalAbsoluteMargin_continuous H b hb f e)
   have hz0 : z0 ∈ S := by change delta < LAbs b hb f e z0; dsimp [delta]; linarith
   have hmass : 0 < Measure.real outer S := by
-    letI : outer.IsOpenPosMeasure := p4Q2PZ37ACD_outerOpenPos H
+    letI : (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H 2).IsOpenPosMeasure := p4Q2PZ37ACD_outerOpenPos H
     exact ENNReal.toReal_pos
       (hopen.measure_pos outer ⟨z0, hz0⟩).ne' (measure_ne_top _ _)
   have hbound : ∀ z ∈ S, delta ≤ LAbs b hb f e z := fun _ hz => hz.le
