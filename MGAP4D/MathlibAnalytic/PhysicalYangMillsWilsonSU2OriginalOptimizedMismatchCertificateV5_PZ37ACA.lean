@@ -119,7 +119,7 @@ theorem p4Q2PZ37ACA_originalMismatch_le_FC_covariance
         2 * s * Cov (F b hb f e z) E) := by
   have hσ := p4Q2PZ37ACA_originalReceiver_stddev_le_FC H b hb f e z
   have hbound := mul_le_mul_of_nonneg_left
-    (add_le_add_right hσ (2 * s * Cov (F b hb f e z) E)) hb
+    (add_le_add hσ (le_refl (2 * s * Cov (F b hb f e z) E))) hb
   exact (p4Q2PZ37ACA_originalMismatch_le_optimized H b hb f e z s hs).trans hbound
 
 /-- The true transfer-section regression defect is nonnegative without
