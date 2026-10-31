@@ -84,10 +84,14 @@ theorem p4Q2PZ37ABY_originalCrossPair_eq_energy
 theorem p4Q2PZ37ABY_originalCrossPair_continuous
     (b : ℝ) (hb : 0 ≤ b) (f : Phys) (e : Link) (z : Cfg × Cfg) (s : ℝ) :
     Continuous (psi b hb f e z s) := by
-  have hF : Continuous (fun w : G × G => s * diff b hb f e z w.1 w.2) :=
-    (p4Q2PZ37ABX_originalDifference_joint_continuous H b hb f e s).comp
+  let F : G → ℝ := fun g =>
+    p4Q2FF_originalWilsonRelativeSignedLinkResponseBCF H 2 (by norm_num) b hb f e (z, g)
+  have hF : Continuous F :=
+    (p4Q2FF_originalWilsonRelativeSignedLinkResponseBCF H 2 (by norm_num) b hb f e).continuous.comp
       (continuous_const.prodMk continuous_id)
-  exact hF.mul (p4Q2PZ37ABV_temporalCrossLog_continuous b)
+  change Continuous (fun w : G × G => s * (F w.1 - F w.2) * cross b w.1 w.2)
+  exact (continuous_const.mul ((hF.comp continuous_fst).sub (hF.comp continuous_snd))).mul
+    (p4Q2PZ37ABV_temporalCrossLog_continuous b)
 
 /-- Full positive-part crossing moment exists for every actual source. -/
 theorem p4Q2PZ37ABY_originalCrossPart_integrable
@@ -211,7 +215,7 @@ theorem p4Q2PZ37ABY_originalGI_signed_twoSided
     (fun w : G × G => s * pair b hb f e z w)
     (continuous_const.mul (p4Q2PZ37ABT_originalSignedPair_continuous H b hb f e z))
   rw [integral_const_mul] at heq
-  simp only [neg_mul] at hn
+  simp only [neg_mul s] at hn
   rw [p4Q2PZ37ABT_originalGI_eq_half_pair_integral]
   constructor <;> linarith [hp.1, hp.2, hn.1, hn.2]
 
