@@ -31,8 +31,11 @@ theorem mean_sub_threshold_le_cap_mul_mass
   have hsum : (∫ x, t + S.indicator (fun _ : X => K) x ∂μ) =
       t + Measure.real μ S * K := by
     rw [integral_add (integrable_const t) hI, integral_indicator_const K hS]
-    simp [smul_eq_mul]
+    simp [S, smul_eq_mul]
   have h := integral_mono hf ((integrable_const t).add hI) hpoint
+  -- Integrable.add uses function addition; normalize to the pointwise lambda
+  -- before rewriting by the integral identity with the explicit event.
+  change (∫ x, f x ∂μ) ≤ ∫ x, t + S.indicator (fun _ : X => K) x ∂μ at h
   rw [hsum] at h
   change (∫ x, f x ∂μ) - t ≤ K * Measure.real μ S
   nlinarith only [h]
