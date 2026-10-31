@@ -29,8 +29,8 @@ variable {α : Type*} [TopologicalSpace α] [MeasurableSpace α]
 def adjustedMargin (u v : α → ℝ) (epsilon : ℝ) (x : α) : ℝ :=
   ((∫ y : α, v y ∂μ) + epsilon) * u x - (∫ y : α, u y ∂μ) * v x
 
-/-- The margin is continuous in the unchanged compact probability space. -/
 omit [CompactSpace α] [BorelSpace α] [IsProbabilityMeasure μ] in
+/-- The margin is continuous in the unchanged compact probability space. -/
 theorem adjustedMargin_continuous (u v : α → ℝ)
     (hu : Continuous u) (hv : Continuous v) (epsilon : ℝ) :
     Continuous (adjustedMargin μ u v epsilon) := by
