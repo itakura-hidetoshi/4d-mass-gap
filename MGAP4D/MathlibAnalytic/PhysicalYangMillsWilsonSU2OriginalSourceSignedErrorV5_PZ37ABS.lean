@@ -264,9 +264,16 @@ theorem p4Q2PZ37ABS_originalKernelSection_signed_error
   calc
     _ = hW b B * |(∫ x : X, K4 b x (fun i => B (emb i)) * S b B x * f x ∂ν) -
         S b B y * (∫ x : X, K4 b x (fun i => B (emb i)) * f x ∂ν)| := by
-      rw [← abs_of_pos hwB, ← abs_mul]
-      congr 1
-      ring
+      -- First factor the scalar and only then take the absolute value.
+      -- Rewriting hW to |hW| before factoring obstructs the ring tactic.
+      calc
+        _ = |hW b B *
+            ((∫ x : X, K4 b x (fun i => B (emb i)) * S b B x * f x ∂ν) -
+              S b B y *
+                (∫ x : X, K4 b x (fun i => B (emb i)) * f x ∂ν))| := by
+          congr 1
+          ring
+        _ = _ := by rw [abs_mul, abs_of_pos hwB]
     _ ≤ hW b B * ((Real.exp (24 * b) - 1) * S b B y *
         (∫ x : X, K4 b x (fun i => B (emb i)) * |f x| ∂ν)) :=
       mul_le_mul_of_nonneg_left h hwB.le
