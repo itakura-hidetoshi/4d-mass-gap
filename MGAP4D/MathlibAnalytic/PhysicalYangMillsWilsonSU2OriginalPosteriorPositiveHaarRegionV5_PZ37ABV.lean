@@ -135,7 +135,7 @@ theorem p4Q2PZ37ABV_originalDet_continuous
 /-- Genuine product-Haar integrability before taking any restricted integral. -/
 theorem p4Q2PZ37ABV_originalDet_integrable
     (b : ℝ) (hb : 0 ≤ b) (B : Cfg) (e : Link) :
-    Integrable (fun w : G × G => det b hb B e w.1 w.2) (μ.prod μ) :=
+    Integrable (fun w : G × G => det b hb B e w.1 w.2) (Measure.prod μ μ) :=
   (p4Q2PZ37ABV_originalDet_continuous H b hb B e).integrable_of_hasCompactSupport
     (HasCompactSupport.of_compactSpace _)
 
@@ -153,9 +153,9 @@ theorem p4Q2PZ37ABV_originalDet_lower_on_pairCap
 theorem p4Q2PZ37ABV_originalDet_pairCap_integral_lower
     (b : ℝ) (hb : 0 ≤ b) (B : Cfg) (e : Link) :
     b * Real.exp (-32 * b) / 32 ≤
-      ∫ w in cap, det b hb B e w.1 w.2 ∂(μ.prod μ) := by
-  have hset : (Real.exp (-32 * b) * (2 * b)) * (μ.prod μ).real cap ≤
-      ∫ w in cap, det b hb B e w.1 w.2 ∂(μ.prod μ) :=
+      ∫ w in cap, det b hb B e w.1 w.2 ∂(Measure.prod μ μ) := by
+  have hset : (Real.exp (-32 * b) * (2 * b)) * Measure.real (Measure.prod μ μ) cap ≤
+      ∫ w in cap, det b hb B e w.1 w.2 ∂(Measure.prod μ μ) :=
     setIntegral_ge_of_const_le_real p4Q2PZ37ABV_pairCap_measurable
       (measure_ne_top _ _)
       (fun w hw => p4Q2PZ37ABV_originalDet_lower_on_pairCap H b hb B e w.1 w.2 hw)
@@ -163,14 +163,14 @@ theorem p4Q2PZ37ABV_originalDet_pairCap_integral_lower
   calc
     b * Real.exp (-32 * b) / 32 =
         (Real.exp (-32 * b) * (2 * b)) * (1 / 64 : ℝ) := by ring
-    _ ≤ (Real.exp (-32 * b) * (2 * b)) * (μ.prod μ).real cap :=
+    _ ≤ (Real.exp (-32 * b) * (2 * b)) * Measure.real (Measure.prod μ μ) cap :=
       mul_le_mul_of_nonneg_left p4Q2PZ37ABV_pairCap_real_mass_lower (by positivity)
     _ ≤ _ := hset
 
 /-- For positive coupling, the unchanged determinant's cap integral is positive. -/
 theorem p4Q2PZ37ABV_originalDet_pairCap_integral_pos
     (b : ℝ) (hb : 0 < b) (B : Cfg) (e : Link) :
-    0 < ∫ w in cap, det b hb.le B e w.1 w.2 ∂(μ.prod μ) :=
+    0 < ∫ w in cap, det b hb.le B e w.1 w.2 ∂(Measure.prod μ μ) :=
   lt_of_lt_of_le (div_pos (mul_pos hb (Real.exp_pos _)) (by norm_num))
     (p4Q2PZ37ABV_originalDet_pairCap_integral_lower H b hb.le B e)
 

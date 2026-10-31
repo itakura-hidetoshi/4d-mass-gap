@@ -176,7 +176,7 @@ private theorem p4Q2PZ37ABV_haar_left_preimage
 
 /-- Explicit low-cap Haar mass from the eight-translate cover of the same Haar. -/
 theorem p4Q2PZ37ABV_lowEnergyCap_real_mass_lower :
-    (1 / 8 : ℝ) ≤ μ.real p4Q2PZ37ABV_lowEnergyCap := by
+    (1 / 8 : ℝ) ≤ Measure.real μ p4Q2PZ37ABV_lowEnergyCap := by
   have hpre (i : Fin 4 × Bool) :
       μ ((fun g : G => p4Q2PZ37ABV_capTranslate i * g) ⁻¹'
         p4Q2PZ37ABV_lowEnergyCap) = μ p4Q2PZ37ABV_lowEnergyCap :=
@@ -211,17 +211,17 @@ theorem p4Q2PZ37ABV_highEnergyCap_mass_eq :
 
 /-- The antipodal high-energy cap has the same explicit original Haar floor. -/
 theorem p4Q2PZ37ABV_highEnergyCap_real_mass_lower :
-    (1 / 8 : ℝ) ≤ μ.real p4Q2PZ37ABV_highEnergyCap := by
+    (1 / 8 : ℝ) ≤ Measure.real μ p4Q2PZ37ABV_highEnergyCap := by
   simpa only [measureReal_def, p4Q2PZ37ABV_highEnergyCap_mass_eq] using
     p4Q2PZ37ABV_lowEnergyCap_real_mass_lower
 
 /-- The actual ordered cap pair has at least 1/64 of original product Haar. -/
 theorem p4Q2PZ37ABV_pairCap_real_mass_lower :
-    (1 / 64 : ℝ) ≤ (μ.prod μ).real p4Q2PZ37ABV_pairCap := by
+    (1 / 64 : ℝ) ≤ Measure.real (Measure.prod μ μ) p4Q2PZ37ABV_pairCap := by
   rw [p4Q2PZ37ABV_pairCap, measureReal_prod_prod]
   calc
     (1 / 64 : ℝ) = (1 / 8 : ℝ) * (1 / 8 : ℝ) := by norm_num
-    _ ≤ μ.real p4Q2PZ37ABV_lowEnergyCap * μ.real p4Q2PZ37ABV_highEnergyCap :=
+    _ ≤ Measure.real μ p4Q2PZ37ABV_lowEnergyCap * Measure.real μ p4Q2PZ37ABV_highEnergyCap :=
       mul_le_mul p4Q2PZ37ABV_lowEnergyCap_real_mass_lower
         p4Q2PZ37ABV_highEnergyCap_real_mass_lower (by norm_num)
         (le_trans (by norm_num) p4Q2PZ37ABV_lowEnergyCap_real_mass_lower)
