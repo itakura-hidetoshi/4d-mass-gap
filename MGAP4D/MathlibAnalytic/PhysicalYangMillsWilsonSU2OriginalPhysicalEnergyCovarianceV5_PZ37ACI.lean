@@ -232,7 +232,7 @@ private theorem p4Q2PZ37ACI_receiverEnergyTest_factorization
     calc
       R u g * χ g = (N * M g * (C u * A g * X u g)) * χ g := by rw [hR]
       _ = (C u / C u₀) * (X u g * ((N * M g * (C u₀ * A g)) * χ g)) := by
-        field_simp [hC₀] <;> ring
+        field_simp [hC₀]
       _ = (C u / C u₀) *
           (X u g * ((R u₀ g * Real.exp ((b / 4) * inner ℝ (Phi u₀) (Phi g))) * χ g)) := by
         rw [hReference]
@@ -311,8 +311,8 @@ theorem p4Q2PZ37ACI_centeredEnergyCovariance_nonzero
 covariance on every chosen link. It does not give a sign law for the GI gap. -/
 theorem p4Q2PZ37ACI_centeredEnergyCovariance_both_signs
     (b : ℝ) (hb : 0 < b) (e : Link) (left₀ : Cfg) :
-    ∃ z₊ z₋ : Cfg × Cfg,
-      0 < Cov (F b hb.le f₀ e z₊) E ∧ Cov (F b hb.le f₀ e z₋) E < 0 := by
+    ∃ zPos zNeg : Cfg × Cfg,
+      0 < Cov (F b hb.le f₀ e zPos) E ∧ Cov (F b hb.le f₀ e zNeg) E < 0 := by
   obtain ⟨z, hz⟩ := p4Q2PZ37ACI_centeredEnergyCovariance_nonzero H b hb e left₀
   have hFlip := p4Q2PZ37ACC_centeredReceiver_covariance_centerGauge H b hb.le e z
   rcases lt_or_gt_of_ne hz with hneg | hpos

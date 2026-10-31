@@ -75,9 +75,11 @@ theorem variance_contrast_add_energy_le
     exact h
   have hraw : (∫ x, P0 x * R x ∂μ) - (∫ x, P1 x * R x ∂μ) =
       covariance μ R d := by
+    have h0RI : Integrable (fun x : α => P0 x * R x) μ := ci μ (h0.mul hR)
+    have h1RI : Integrable (fun x : α => P1 x * R x) μ := ci μ (h1.mul hR)
     unfold covariance
     rw [hdmean, mul_zero, sub_zero]
-    rw [← integral_sub (ci μ (h0.mul hR)) (ci μ (h1.mul hR))]
+    rw [← integral_sub h0RI h1RI]
     apply integral_congr_ae
     filter_upwards with x
     dsimp [d]
@@ -110,8 +112,13 @@ theorem variance_contrast_add_energy_le
         ring
       _ = (∫ w : α × α, A w * T w ∂μ.prod μ) -
           a * ∫ w : α × α, A w * C w ∂μ.prod μ := by
-        rw [integral_sub (ci (μ.prod μ) (hA.mul hT))
-          ((ci (μ.prod μ) (hA.mul hC)).const_mul a), integral_const_mul]
+        have hATI : Integrable (fun w : α × α => A w * T w) (μ.prod μ) :=
+          ci (μ.prod μ) (hA.mul hT)
+        have hACI : Integrable (fun w : α × α => A w * C w) (μ.prod μ) :=
+          ci (μ.prod μ) (hA.mul hC)
+        have haACI : Integrable (fun w : α × α => a * (A w * C w)) (μ.prod μ) :=
+          hACI.const_mul a
+        rw [integral_sub hATI haACI, integral_const_mul]
       _ = _ := by rw [hAT, hAC]; ring
   have hASq : (∫ w : α × α, (A w) ^ 2 ∂μ.prod μ) = 2 * variance μ R :=
     difference_square_integral μ R hR
@@ -149,7 +156,9 @@ theorem variance_contrast_add_energy_le
       ci (μ.prod μ) (hA.pow 2)
     have hAKI : Integrable (fun w : α × α => 2 * (A w * K w)) (μ.prod μ) :=
       (ci (μ.prod μ) (hA.mul hK)).const_mul (2 : ℝ)
-    rw [integral_add (hKI.sub hAKI) hAI, integral_sub hKI hAKI,
+    have hSub : Integrable (fun w : α × α => (K w) ^ 2 - 2 * (A w * K w))
+        (μ.prod μ) := hKI.sub hAKI
+    rw [integral_add hSub hAI, integral_sub hKI hAKI,
       integral_const_mul]
   have hn : 0 ≤ ∫ w : α × α, (K w - A w) ^ 2 ∂μ.prod μ :=
     integral_nonneg (fun _ => sq_nonneg _)
@@ -173,7 +182,7 @@ theorem regressionDefect_add_square_le_of_det_error
     h0 h1 hE h0mass h1mass hEV hc hdet
   have heq := variance_residual_eq_defect_add_square μ 1 a
     (fun x => P0 x - P1 x) E (h0.sub h1) hE hEV
-  simp only [residual, one_mul] at heq
+  simp only [CompactEnergyMismatchMoment.residual, one_mul] at heq
   rw [heq] at h
   exact h
 
