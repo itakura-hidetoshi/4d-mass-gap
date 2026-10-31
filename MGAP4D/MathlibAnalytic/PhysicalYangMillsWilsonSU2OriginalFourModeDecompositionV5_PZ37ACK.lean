@@ -385,8 +385,9 @@ theorem p4Q2PZ37ACK_originalCovarianceSecondMoment_le_numeric
   have hw := p4Q2PZ37ACK_originalFourModeResidualMoment_nonneg H b hb.le e
   rw [p4Q2PZ37ACK_originalVarianceMoment_eq] at hV
   change S b hb.le e ≤ 36 * b ^ 2 * Real.exp ((2 * A + 48) * b) * ‖f₀‖ ^ 2
-  dsimp [U] at hV
-  linarith
+  change 16 * S b hb.le e + W b hb.le e ≤
+    576 * b ^ 2 * Real.exp ((2 * A + 48) * b) * ‖f₀‖ ^ 2 at hV
+  linarith only [hV, hw]
 
 /-- The original plaquette count makes the H dependence explicit. This is
 an upper estimate and supplies no new numerical or uniform positive floor. -/
@@ -398,7 +399,7 @@ theorem p4Q2PZ37ACK_originalCovarianceSecondMoment_le_plaquetteBudget
   let A := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H
   let P : ℝ := Fintype.card (PeriodicHypercubicEvenSpatialSlicePlaquette H)
   have hNorm : ‖f₀‖ ^ 2 ≤ 6 * P := by
-    simpa only [Fintype.card_eq_nat_card] using
+    simpa only [P, Fintype.card_eq_nat_card] using
       (p4Q2PZ37AAI_originalCenteredPhysicalNorm_sq_le_six_plaquetteCount H)
   have hScale : 0 ≤ 36 * b ^ 2 * Real.exp ((2 * A + 48) * b) := by positivity
   calc
