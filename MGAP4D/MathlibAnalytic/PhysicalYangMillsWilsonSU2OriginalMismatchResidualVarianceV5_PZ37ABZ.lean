@@ -76,8 +76,8 @@ theorem p4Q2PZ37ABZ_originalEnergy_Haar_second :
     (continuous_specialUnitaryWilsonPlaquetteEnergy 2).integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
   have hχInt : Integrable (fun g : G => χ g ^ 2) μ :=
-    ((continuous_const.sub (continuous_specialUnitaryWilsonPlaquetteEnergy 2)).pow 2).
-      integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+    ((continuous_const.sub (continuous_specialUnitaryWilsonPlaquetteEnergy 2)).pow 2).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
   have hp (g : G) : E g ^ 2 = χ g ^ 2 + 2 * E g - 1 := by
     unfold p4Q2PZ35C_originalOneLinkCharacter
     ring
@@ -280,8 +280,8 @@ theorem p4Q2PZ37ABZ_rectangle_outerMoment_lower_of_residualMargin
   have hs : R.sign ^ 2 = 1 := by
     rcases R.orientation with hs | hs <;> norm_num [hs]
   have hInt : Integrable (fun z : Cfg × Cfg => (gap b hb f e z) ^ 2) outer :=
-    ((p4Q2HI_originalWilsonTwoPosteriorExpectationGap_continuous H b hb f e).pow 2).
-      integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+    ((p4Q2HI_originalWilsonTwoPosteriorExpectationGap_continuous H b hb f e).pow 2).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
   have hPoint (z : Cfg × Cfg) (hz : z ∈ R.outerEvent) :
       delta ^ 2 ≤ (gap b hb f e z) ^ 2 := by
     have hd := (hMargin z hz).trans
