@@ -1,3 +1,117 @@
+> `main` は文書ミラーです。唯一のLean定理正本は `formal/real-hilbert-uniform-coercive-strong-limit` です。
+
+## 検証済み定理 — ACM（2026-10-31 JST）
+
+唯一のLean定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラー。[ACM #6073](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6073) は、元の相互作用Wilson SU(2)模型、中心化Gauss-law物理源、真正FF受信器、正Perron代表、物理transfer norm、二つの相互作用posterior、元の外側pair-Haarを保持する。
+
+### 1. 四成分から真正SU(2)軌道の最大共分散を厳密に構成
+
+同じ受信器について `C(z)=Cov_Haar(F_z,E)`、`V(z)=Var_Haar(F_z)`、`D(z)=V(z)-4*C(z)^2` と書く。ACKの四成分を `m_j(z)`、実際の四成分残差二乗積分を `W(z)` とし、
+
+```text
+A(z) = sqrt(sum_{j : Fin 4} m_j(z)^2)
+V(z) = 4*A(z)^2 + W(z),    W(z) >= 0
+```
+
+を用いる。全有限H（H=0を含む）・b>=0・全真正リンクe・全元配置zで成立する。一般的な非零共分散や残差小性を新たな物理仮定にはしない。
+
+実際の2×2複素行列から、任意の実単位四成分に対応する元SU(2)元を構成し、ユニタリ性と行列式1を証明した。ACKの四成分 `phi_j` に対して、
+
+```text
+chi(a*g) = sum_j phi_j(a^-1)*phi_j(g)
+C(Gamma_a z) = -sum_j m_j(z)*phi_j(a^-1)
+max_a |C(Gamma_a z)| = A(z)                 (実際に達成)
+```
+
+を得る。零振幅の場合も扱う。抽象的な四成分球面の上限だけでなく、元SU(2)の真正ゲージ変換で達成する。
+
+### 2. 共分散・回帰残差の軌道上の値域全体
+
+ACLの真正連続center pathを最適化元から動かし、中間値の定理で全区間を埋める。
+
+```text
+range_a C(Gamma_a z) = [-A(z), A(z)]
+range_a D(Gamma_a z) = [W(z), V(z)]
+```
+
+同じ真正ゲージ変換 `a*` で `C(Gamma_a* z)=A(z)` と `D(Gamma_a* z)=W(z)` を同時に達成する。したがって、ゲージ軌道内で除去可能なscalar回帰残差と、ACKの四成分を除いても残る実残差Wとを厳密に分離できる。
+
+### 3. 同じ元配置領域で共分散と残差を制御
+
+任意の実c,dで `c<A(z)`、`W(z)<d` ならば、
+
+```text
+{w | c < C(w) and D(w) < d}
+```
+
+は開集合であり、元の外側pair-Haarの正の質量を持つ。共同最適化された元配置 `Gamma_(a*) z` がこの同じ集合に属することから証明する。b>0ではACIから各真正リンクに正振幅配置zの存在を導き、全epsilon>0について `C(w)>A(z)/2` と `D(w)<W(z)+epsilon` を同じ正質量開集合で実現する。
+
+正の質量は厳密不等式で定めた元配置空間の開集合に対するもの。軌道自身や正確な極値のlevel setの測度、epsilon共通の正質量、体積一様な振幅・質量は主張しない。
+
+### 4. 真正GI絶対値の下界評価式の最適値と正値性の必要十分条件
+
+ACIの既存のposterior残差上界
+
+```text
+rho(b) = (b^2/4)*(exp(32*b)-exp(-32*b))^2
+```
+
+を保持し、元のGI絶対値に対して
+
+```text
+L(z) = 2*b*exp(-32*b)*|C(z)| - sqrt(D(z)*rho(b))
+L(z) <= |GI(z)|
+```
+
+を無条件に証明した。元のposterior係数は変換後の同じ第二境界で評価しており、posteriorのanchorを置換しない。
+
+この評価式は真正ゲージ軌道上で
+
+```text
+max_a L(Gamma_a z)
+  = Lstar(z)
+  = 2*b*exp(-32*b)*A(z) - sqrt(W(z)*rho(b))
+```
+
+を実際に達成する。よって、
+
+```text
+(exists a, 0 < L(Gamma_a z))
+  iff W(z)*rho(b) < (2*b*exp(-32*b)*A(z))^2
+```
+
+が成立する。b=0でLstar=0、A=0でLstar<=0も明示した。これは**このGI下界評価式の正値性**の必要十分条件であり、GI自体が非零であることの必要十分条件ではない。実際の物理配置で右辺の厳格不等式が成立することは未証明である。
+
+### 5. exact-source検証と保存
+
+| 項目 | 確定結果 |
+| --- | --- |
+| 定理PR | [#6073](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6073) — MERGED |
+| exact-source HEAD | `29478dcaa5fa632dc4e7d65145a93241e84d42a3` |
+| 実CI checkout | `d4aaeef3b23fd5a73e9427f73eff33ebfab5b448` |
+| 定理squash | `aece46412a07084b28389e862ed1e065a28d7b05` |
+| source／checkout／squash共通tree | `e8c0e9abf94e273f345def4d6520478d504cb039` |
+| exact-source CI | [41210066023](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41210066023) — completed / success |
+| 独立source receipt | [124564080061](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41210066023/job/124564080061) — success |
+| マージ後push CI | [41210529629](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41210529629) — completed / success |
+| 独立push receipt | [124565478045](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41210529629/job/124565478045) — success |
+| Lean検証 | 11235 / 11235 SUCCESS（source／push） |
+| 公開定理／公理出力 | 32 / 32、propext・Classical.choice・Quot.soundのみ |
+| sorryAx／変更Lean warning／error | なし / 0 / 0 |
+| 変更 | 新規Lean4ファイル、778行追加、削除0 |
+| 既存保存 | 8,763個の既存blobをpath・modeを含めすべて保存 |
+| Lean／mathlib | v4.30.0-rc2 / `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
+
+新規全文、imports、dependent signatures、固定mathlib API、実Lean elaboration、公理依存、source identity、completedログを確認。既存Lean、root、workflow、依存固定は変更しない。文書更新ではStrict Leanを再実行しない。
+
+### 6. 次段階 — ACN（未証明）
+
+ACMが与えた**同じ実配置のAとW**について、`W*rho < (2*b*exp(-32*b)*A)^2` を実Wilson模型で成立させる定量評価を研究する。Aの正値性のみからこの厳格不等式へ進むことはできない。
+
+体積一様な元GI二乗モーメント下界、固定support cylinder、遠方相殺、全物理Hilbert coercivity、共通positive-fine区間、同一endpoint E/F、H1–H4、OS/Wightman再構成、4D連続体Yang–Mills存在・質量ギャップは引き続きOPEN。ABS・ABM・PZ37ZA・ACC・ACGのno-go、ACK厳密分解、ACLの全配置／a.e.上界障害を保持する。
+
+_以下のACL以前の「最新」表現は各PR時点の履歴スナップショット。現在の検証済みfrontierは上記ACM。_
+
 > このmainは文書ミラー。唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。以下はACL定理PR #6070の正本検証記録の同期である。
 
 ## 検証済み定理 — ACL（2026-10-31 JST）
