@@ -156,7 +156,7 @@ theorem p4Q2PZ37ABX_alignedPoint_of_nonzeroGI
     nlinarith
   have hPoint : ∃ w : G × G, 0 < s * pair b hb f e z w := by
     by_contra hn
-    push_neg at hn
+    push Not at hn
     have hnonpos : (∫ w : G × G, s * pair b hb f e z w ∂ν) ≤ 0 := integral_nonpos hn
     linarith
   obtain ⟨⟨g, h⟩, hp⟩ := hPoint
@@ -247,11 +247,24 @@ theorem p4Q2PZ37ABX_alignmentRectangle_of_nonzeroGI
   have hSmass : 0 < Measure.real ν S := by
     exact ENNReal.toReal_pos (hSopen.measure_pos ν ⟨(g, h), hwS⟩).ne'
       (measure_ne_top ν S)
-  refine ⟨{ sign := s, orientation := hs, anchor := z0,
-    outerEvent := A, innerEvent := S, eta := eta, kappa := kappa,
-    eta_pos := heta, kappa_pos := hkappa, anchor_mem := hzA,
-    anchor_gap_pos := hsGap, outer_open := hAopen, inner_open := hSopen,
-    outer_mass_pos := hAmass, inner_mass_pos := hSmass, aligned := ?_ }⟩
+  refine ⟨{
+    sign := s
+    orientation := hs
+    anchor := z0
+    outerEvent := A
+    innerEvent := S
+    eta := eta
+    kappa := kappa
+    eta_pos := heta
+    kappa_pos := hkappa
+    anchor_mem := hzA
+    anchor_gap_pos := hsGap
+    outer_open := hAopen
+    inner_open := hSopen
+    outer_mass_pos := hAmass
+    inner_mass_pos := hSmass
+    aligned := ?_
+  }⟩
   intro z hz w hw
   have ht : (z, w) ∈ T := hsub ⟨hAA0 hz, hSS0 hw⟩
   exact ⟨ht.1.le, ht.2.le⟩
