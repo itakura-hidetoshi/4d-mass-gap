@@ -188,7 +188,9 @@ theorem mismatch_le_optimized (b s : ℝ) (hb : 0 ≤ b) (hs : s ^ 2 = 1)
   have h := mismatch_le_residual_variance μ b s a hb ha F E hF hE
   rw [variance_residual μ s a F E hF hE, hEV] at h
   have hsa : (s * a) ^ 2 = a ^ 2 := by rw [mul_pow, hs, one_mul]
-  simpa only [hsa, mul_div_assoc, mul_one, quadraticBudget] using h
+  have hquarter : a ^ 2 * (1 / 4 : ℝ) = a ^ 2 / 4 := by ring
+  rw [hsa, hquarter] at h
+  exact h
 
 /-- The zero-variance endpoint is zero, not an undefined optimized slope. -/
 theorem mismatch_eq_zero_of_variance_zero (b s : ℝ) (hb : 0 ≤ b) (hs : s ^ 2 = 1)
