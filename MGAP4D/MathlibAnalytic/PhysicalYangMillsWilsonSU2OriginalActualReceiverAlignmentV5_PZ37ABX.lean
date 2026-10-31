@@ -49,7 +49,7 @@ local instance p4Q2PZ37ABX_measurable : MeasurableSpace G := specialUnitaryGroup
 local instance p4Q2PZ37ABX_borel : BorelSpace G := specialUnitaryGroupBorelSpace 2
 local instance p4Q2PZ37ABX_probability : IsProbabilityMeasure μ :=
   normalizedCompactHaar_isProbabilityMeasure G
-local instance p4Q2PZ37ABX_haarOpenPos : μ.IsOpenPosMeasure := by
+local instance p4Q2PZ37ABX_haarOpenPos : (normalizedCompactHaar G).IsOpenPosMeasure := by
   unfold normalizedCompactHaar
   infer_instance
 local instance p4Q2PZ37ABX_links (H : ℕ) :
