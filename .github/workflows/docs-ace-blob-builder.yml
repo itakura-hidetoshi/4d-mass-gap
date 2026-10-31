@@ -1,0 +1,146 @@
+name: Prepare ACD ACE documentation blobs
+on:
+  push:
+    branches: [tooling/docs-ace-blob-builder-20261031]
+    paths: [.github/workflows/docs-ace-blob-builder.yml]
+permissions:
+  contents: write
+jobs:
+  prepare:
+    if: github.repository == 'itakura-hidetoshi/4d-mass-gap'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 3
+    steps:
+      - name: Preserve full old documents and create unreferenced Git blobs only
+        env:
+          API_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import base64, hashlib, json, os, pathlib, urllib.request
+          repo = 'itakura-hidetoshi/4d-mass-gap'
+          api = 'https://api.github.com/repos/' + repo
+          refs = {
+              'canonical': '812b0b138649335944843067f6983a3da709fc18',
+              'main': '491cc71d3928e4e736f1ec18e914abb7a10dc883',
+          }
+          def request(path, body=None):
+              data = None if body is None else json.dumps(body).encode('utf-8')
+              req = urllib.request.Request(api + path, data=data, headers={
+                  'Authorization': 'Bearer ' + os.environ['API_TOKEN'],
+                  'Accept': 'application/vnd.github+json',
+                  'X-GitHub-Api-Version': '2022-11-28',
+                  'Content-Type': 'application/json',
+              })
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  return json.load(response)
+          def blob_hash(data):
+              return hashlib.sha1(b'blob ' + str(len(data)).encode() + b'\0' + data).hexdigest()
+          common = '''# MGAP4D — 最新検証済み定理 P4-Q2-PZ37ACE（2026-10-31 JST）
+
+          **唯一の定理正本：** `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーであり定理正本ではない。最新定理 [ACE #6053](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6053) は **MERGED**。定理squashおよびマージ直後に再観測した正本HEADは `812b0b138649335944843067f6983a3da709fc18`。この追補はACD #6052とACE #6053を記録し、以下のACC以前の本文を完全に保持する。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を変更しない。
+
+          ## 検証記録
+
+          ACE exact-sourceは `ba109c602cf36be26c90f16fa09516cd576c03ea`、PR checkoutは `b18d1b6e69f716cbaf626d7e0d08ded2f5b491b4`。source・checkout・squashのGit treeは `5a5966116e58f73c4d64fb6ec5dc17771a270c3b` に一致。[source CI #41180324447](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41180324447) はworkflow・build job・Lean stepが **completed / SUCCESS**、Lean **11,194 / 11,194**。2新規Leanファイル・282追加行・削除0・11公開定理。11件の公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`・追加公理・自己参照公理なし、変更warning/error **0/0**。独立receipt job `124477438087` は同じexact-source SHAで `source_result=success`。
+
+          [ACEマージ後CI #41181059786](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41181059786) も、同じ定理squashについてbuild job `124478370634`・Lean step・独立receipt job `124479238539` が **completed / SUCCESS**。旧依存ファイルの警告が皆無とは主張しない。文書追記だけの変更には不要なLean再実行を要求しない。
+
+          ## CLOSED / CONDITIONAL — ACDの真正共分散領域
+
+          [ACD #6052](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6052) の定理squashは `e5181eff0aebf93f1598888447dc36cc7755ca46`。source CI #41178410965、マージ後CI #41178841752はいずれもSUCCESS。元FF受信器について `C_F(z)=Cov_mu(F_z,E)`、`v_F(z)=Var_mu(F_z)` の連続性を証明し、`A(c,V)={z | c<abs(C_F(z)) and v_F(z)<V}` を元外側配置空間の開集合として構成した。実際の非零共分散証人 `C_F(z0) != 0` が与えられると、`c=abs(C_F(z0))/2`、`V=v_F(z0)+1`、`eta=min(1/2,2*c^2/V)` により正の元pair-Haar質量と `0<eta<1` を得る。
+
+          同じ真正Perron断面の厳密恒等式 `v_F=P^2*v_U`、`D_F=P^2*D_U`、`P>0` から、領域上で `0<=D_U<=(1-eta)*Var_mu(U_z)` を証明した。ここで `D_U=Var_mu(U_z)-4*Cov_mu(U_z,E)^2`。**元の中心化物理源に対する非零共分散証人そのものは未証明**であり、この改善がACCのより強い正値閾値を満たすとも主張しない。
+
+          ## CLOSED — ACEの実GI二乗モーメントと正Haar質量
+
+          元の中心化Gauss-law物理源、二つの相互作用Wilson posterior、真正Perron代表・transfer norm、元外側configuration pair-Haar `lambda_H` を保持する。真正GIの連続性と元配置空間のコンパクト性から `Delta_GI^2` の可積分性を証明し、既証AAZの非a.e.ゼロ性を接続した。従って、**すべての有限Hとb>0について、ある真正リンクeが存在して**
+
+          `M(H,b,e)=integral Delta_GI(z)^2 d(lambda_H)(z)>0`。
+
+          これは正モーメントを追加仮定として置く定理ではない。同じ真正二乗GIの連続写像ノルムから `K(H,b,e)=norm(Delta_GI^2)+1>0` を構成し、実際の開領域
+
+          `A(H,b,e)={z | M(H,b,e)/2 < Delta_GI(z)^2}`
+
+          に対し `lambda_H(A)>=M/(2*K)>0` を証明した。共通の向きは不要。**MとKはH,b,eに依存し、この表示を体積一様な数値下界と取り違えない。非零GIを非零エネルギー共分散とも同一視しない。**
+
+          ## CLOSED / CONDITIONAL — 元の物理Rayleighへの接続
+
+          元受信器の共分散下限c・分散上限Vが可測な元外側領域S上で成立するとき、`delta=b*(exp(32*b)+exp(-32*b))*c-(b/2)*(exp(32*b)-exp(-32*b))*sqrt(V)` とする。`delta>=0` と、同じ真正FX感度の全外側配置上界 `Q(z)<=q`、`q>0` の下で、
+
+          `(lambda_H(S)*delta^2/q)/18 <= R_H(b)`
+
+          を証明した。二乗可積分性は証明済みの性質であり、追加仮定ではない。体積族版では共通の正の領域モーメント下界と共通の真正FX上界を明示的に保持する。この定理は同じ中心化物理源に対するもので、全物理Hilbert空間のcoercivityではない。
+
+          [ACD証明](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/e5181eff0aebf93f1598888447dc36cc7755ca46/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalCovarianceRegionV5_PZ37ACD.lean) ／ [ACEの上側領域測度補題](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/812b0b138649335944843067f6983a3da709fc18/MGAP4D/MathlibAnalytic/CompactProbabilityUpperEvent.lean) ／ [真正GIモーメント・領域質量・Rayleigh](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/812b0b138649335944843067f6983a3da709fc18/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalMomentMassRayleighV5_PZ37ACE.lean)。
+
+          ## OPEN — 次段階 P4-Q2-PZ37ACF
+
+          最優先の実模型課題は、真正中心化物理源のUについて非零エネルギー共分散と十分に小さい相対回帰欠損を解析し、ACCの厳密正値閾値を満たす元Haar領域を構成すること。並行して、ACEの真正FX上界qを実模型から評価し、M・K・領域質量・GI振幅・Perron係数のH,b依存を明らかにする。固定support cylinder、遠方相殺、体積一様な正の二乗GI下界、全物理Hilbert coercivity、common positive-fine、同一endpoint E/F、H1-H4、OS/Wightman再構成、非自明な4D連続体Yang-Mills existence / mass gapはOPEN。
+
+          ABSの粗Haar中心化誤差障害、ABMの小正結合族障害、PZ37ZAの別の補償済み二文脈量のno-go、ACCのあるactive linkにおける全配置・固定向きtail優越障害を保持する。元spatial Haar-L2中心化を固定リンク平均ゼロと混同せず、MQの別Riesz商の局所性を真正Uへ転用しない。
+
+          **以下は当時の履歴として一字も削らず保持する。最新状態は上のACD・ACE追補を優先する。**
+
+          ---
+          '''
+          roadmap = '''# ROADMAP追補 — ACD / ACE検証済み、次はACF（2026-10-31 JST）
+
+          唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。最新定理 [ACE #6053](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6053) はMERGED、定理squash `812b0b138649335944843067f6983a3da709fc18`。mainは文書ミラー。以下の旧ロードマップはそのまま保持し、現在の完了・未完了はこの追補を優先する。
+
+          ## 検証済み
+
+          - ACD #6052: 実受信器の共分散・分散・絶対GI marginの連続性。非零共分散証人を明示した条件付き正Haar共分散領域と相対回帰欠損改善。同じPerron係数Pの厳密P^2恒等式による真正Uへの移送。source / postmerge CI SUCCESS。
+          - ACE #6053: 元二乗GIの可積分性を証明。すべての有限H,b>0である真正リンクの実モーメントM>0を無条件に証明。実上界K=norm(Delta_GI^2)+1と開領域A={M/2<Delta_GI^2}を構成し、元pair-Haar質量lambda_H(A)>=M/(2K)>0を証明。
+          - ACE: ACDの実共分散・分散領域Sとdelta>=0、独立な真正FX上界Q<=q、q>0から、同じ中心化物理源の真正Rayleigh下界(lambda_H(S)*delta^2/q)/18を証明。族版も共通下界と上界の義務を明示する。
+
+          ACE exact-source `ba109c602cf36be26c90f16fa09516cd576c03ea`、checkout `b18d1b6e69f716cbaf626d7e0d08ded2f5b491b4`、squashの共通tree `5a5966116e58f73c4d64fb6ec5dc17771a270c3b`。[CI #41180324447](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41180324447) completed SUCCESS、Lean 11194/11194、11/11標準3公理のみ、sorryAxなし、変更warning/error 0/0、独立receipt #124477438087 exact SHA一致。[正本push CI #41181059786](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41181059786) もbuild・Lean step・独立receipt #124479238539 completed SUCCESS。新規2ファイル282行、既存Leanの変更なし。
+
+          ## ACFの実解析義務
+
+          1. 真正中心化源のUのエネルギー共分散・分散・回帰欠損を実積分から評価する。非零GIから非零共分散への飛躍は禁止する。
+          2. 選択した元外側Haar領域でACCの厳密正値条件を実証し、deltaとPerron係数の正の評価を得る。ACDのeta>0だけではACC閾値は満たさない。
+          3. 真正FX上界qの標準公理のみの実模型評価を検討する。有限体積のコンパクト上界とH一様な上界を区別する。
+          4. ACEのM/(2K)>0を、有用なH,b依存評価・固定support cylinder・遠方相殺へ進める。MとKの表示だけを体積一様性の証明とはしない。
+          5. 元pair-Haar二乗GIから真Gram / Rayleighへ進める際も、単一の中心化源と全物理Hilbert coercivityを区別する。
+
+          ## 引き続きOPEN
+
+          非零共分散証人、十分に小さい実回帰欠損、体積一様なGI二乗モーメント・領域質量・振幅、全物理Hilbert coercivity、common positive-fine、同一endpoint E/F、H1-H4、OS/Wightman再構成、非自明な4D連続体Yang-Mills existence / mass gap。ABS・ABM・PZ37ZAおよびACCの全配置固定向きtail障害を保持する。
+
+          元Wilson模型、Gauss-law源、真正Perron代表、transfer norm、二つのinteracting posterior、外側pair-Haarを変えない。Lean v4.30.0-rc2 / mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6固定。変更Lean全文・imports・依存署名・固定APIを確認し、exact-source CI完了、公理依存、独立receipt、tree一致の後にのみ統合する。docs-onlyで不要なLeanを再実行しない。
+
+          ---
+          '''
+          prefixes = {'README.md': common, 'ROADMAP.md': roadmap}
+          out = []
+          for label, ref in refs.items():
+              for path, prefix in prefixes.items():
+                  obj = request('/contents/' + path + '?ref=' + ref)
+                  assert obj['encoding'] == 'base64'
+                  old = base64.b64decode(obj['content'])
+                  assert len(old) > 100000, 'Unexpected truncated source document'
+                  assert blob_hash(old) == obj['sha'], 'Source blob mismatch'
+                  assert b'P4-Q2-PZ37ACE' not in old[:3000], 'Already synchronized'
+                  mirror = '' if label == 'canonical' else '> **main文書ミラー（ACE同期）**：定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。この更新は文書のみで、定理squash `812b0b138649335944843067f6983a3da709fc18` の検証済み結果を反映する。\n\n'
+                  added = (mirror + prefix).encode('utf-8')
+                  new = added + old
+                  assert new[len(added):] == old
+                  created = request('/git/blobs', {'content': base64.b64encode(new).decode(), 'encoding': 'base64'})
+                  assert created['sha'] == blob_hash(new)
+                  entry = {'target': label, 'base_commit': ref, 'path': path,
+                           'old_blob': obj['sha'], 'new_blob': created['sha'],
+                           'old_bytes': len(old), 'new_bytes': len(new),
+                           'added_lines': added.count(b'\n'), 'deleted_lines': 0,
+                           'old_suffix_preserved': True}
+                  out.append(entry)
+                  print('DOC_BLOB ' + json.dumps(entry, ensure_ascii=False), flush=True)
+          pathlib.Path('docs-ace-manifest.json').write_text(json.dumps(out, ensure_ascii=False, indent=2) + '\n')
+          print('DONE: no branch, tree, commit, PR or canonical workflow was modified by this job.')
+          PY
+      - name: Save byte-preservation manifest
+        uses: actions/upload-artifact@v6
+        with:
+          name: docs-ace-blob-manifest
+          path: docs-ace-manifest.json
+          if-no-files-found: error
