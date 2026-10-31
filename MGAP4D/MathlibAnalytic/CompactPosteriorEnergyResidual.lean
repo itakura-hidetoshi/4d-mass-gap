@@ -182,7 +182,8 @@ theorem regressionDefect_add_square_le_of_det_error
     h0 h1 hE h0mass h1mass hEV hc hdet
   have heq := variance_residual_eq_defect_add_square μ 1 a
     (fun x => P0 x - P1 x) E (h0.sub h1) hE hEV
-  simp only [CompactEnergyMismatchMoment.residual, one_mul] at heq
+  change variance μ (fun x => P0 x - P1 x + (1 : ℝ) * a * E x) = _ at heq
+  simp only [one_mul] at heq
   rw [heq] at h
   exact h
 
