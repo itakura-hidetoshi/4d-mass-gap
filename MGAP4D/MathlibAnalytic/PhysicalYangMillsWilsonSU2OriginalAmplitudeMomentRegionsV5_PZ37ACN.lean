@@ -163,7 +163,7 @@ theorem p4Q2PZ37ACN_exists_highAmplitude
     ∃ z : Pair, 2 * S b hb.le e < (A b hb.le e z) ^ 2 := by
   have hS := p4Q2PZ37ACJ_originalCenteredCovarianceSecondMoment_pos H b hb e
   by_contra hNo
-  push_neg at hNo
+  push Not at hNo
   have hConstI : Integrable (fun _z : Pair => 2 * S b hb.le e) outer :=
     integrable_const _
   have hI : (∫ z : Pair, (A b hb.le e z) ^ 2 ∂outer) ≤
@@ -172,8 +172,9 @@ theorem p4Q2PZ37ACN_exists_highAmplitude
       ((p4Q2PZ37ACN_originalAmplitude_sq_continuous H b hb.le e).integrable_of_hasCompactSupport
         (HasCompactSupport.of_compactSpace _))
       hConstI hNo
-  rw [p4Q2PZ37ACN_originalAmplitude_sq_outerIntegral] at hI
-  simp only [integral_const] at hI
+  have hConst : (∫ _z : Pair, 2 * S b hb.le e ∂outer) = 2 * S b hb.le e := by
+    simp
+  rw [p4Q2PZ37ACN_originalAmplitude_sq_outerIntegral, hConst] at hI
   linarith
 
 /-- Unconditional SAME-context selected region:
