@@ -80,9 +80,12 @@ private theorem p4Q2PZ37ABS_halfWeight_oneLink_le
     calc
       _ ≤ Real.exp (6 * b + -(theta * d)) := Real.exp_le_exp.mpr hlog
       _ = _ := by rw [Real.exp_add]
-  change Real.exp (-(theta * a)) ≤
-    Real.exp (6 * b) * Real.exp (-(theta * d))
-  exact he
+  -- The half-weight is written as exp (-(b / 2) * action), not
+  -- exp (-( (b / 2) * action )). These expressions are propositionally
+  -- equal by neg_mul, but not definitionally equal for `change`.
+  change Real.exp (-theta * a) ≤
+    Real.exp (6 * b) * Real.exp (-theta * d)
+  simpa only [neg_mul] using he
 
 /-! Freeze the spatial half-weight only during the four-link telescope,
 mirroring the already verified ABQ proof. -/
