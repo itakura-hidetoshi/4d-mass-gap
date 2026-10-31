@@ -103,13 +103,16 @@ theorem p4Q2PZ37ACO_originalRelativeMargin_integral
     (fun z : Pair => (A b hb e z) ^ 2) (fun z : Pair => W b hb e z)
     (p4Q2PZ37ACN_originalAmplitude_sq_continuous H b hb e)
     (p4Q2PZ37ACO_residual_continuous H b hb e) epsilon
-  rw [p4Q2PZ37ACN_originalAmplitude_sq_outerIntegral] at ht
-  change (∫ z : Pair,
+  have hStep : (∫ z : Pair,
       (Wbar b hb e + epsilon) * (A b hb e z) ^ 2 -
         (4 * S b hb e) * W b hb e z ∂outer) =
-        epsilon * (4 * S b hb e) at ht
+        epsilon * (4 * S b hb e) := by
+    simpa only [
+      CompactPositiveMeanRelativeResidual.adjustedMargin,
+      p4Q2PZ37ACK_originalFourModeResidualMoment,
+      p4Q2PZ37ACN_originalAmplitude_sq_outerIntegral] using ht
   calc
-    _ = epsilon * (4 * S b hb e) := ht
+    _ = epsilon * (4 * S b hb e) := hStep
     _ = (4 * S b hb e) * epsilon := by ring
 
 /-- An explicit positive original-Haar floor for the high relaxed
@@ -137,17 +140,11 @@ theorem p4Q2PZ37ACO_originalRelativeMargin_tail
     (p4Q2PZ37ACK_originalFourModeResidualEnergy_nonneg H b hb.le e)
     (p4Q2PZ37ACN_originalAmplitude_sq_outerIntegral_pos H b hb e)
     epsilon hepsilon
-  rw [p4Q2PZ37ACN_originalAmplitude_sq_outerIntegral] at ht
-  change 0 < 2 * (Wbar b hb.le e + epsilon) * ((B b hb.le) ^ 2 / 4) -
-        epsilon * (4 * S b hb.le e) ∧
-      (epsilon * (4 * S b hb.le e)) /
-        (2 * (Wbar b hb.le e + epsilon) * ((B b hb.le) ^ 2 / 4) -
-          epsilon * (4 * S b hb.le e)) ≤
-        Measure.real outer {z : Pair |
-          epsilon * (4 * S b hb.le e) / 2 <
-            (Wbar b hb.le e + epsilon) * (A b hb.le e z) ^ 2 -
-              (4 * S b hb.le e) * W b hb.le e z} at ht
-  exact ht
+  simpa only [
+    CompactPositiveMeanRelativeResidual.adjustedMargin,
+    p4Q2PZ37ACK_originalFourModeResidualMoment,
+    p4Q2PZ37ACN_originalAmplitude_sq_outerIntegral,
+    mul_assoc] using ht
 
 /-- The same quantitatively bounded original region has strictly
 positive mass. The optimized orbit is not presumed to have positive mass. -/
