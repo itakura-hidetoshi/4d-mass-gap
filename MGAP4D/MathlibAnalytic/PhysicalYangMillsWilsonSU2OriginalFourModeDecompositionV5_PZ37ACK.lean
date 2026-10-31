@@ -177,8 +177,7 @@ private theorem p4Q2PZ37ACK_decomposition_coefficient_continuous
     Continuous (fun z : Pair => m b hb e z j) := by
   have hc := p4Q2PZ37ACK_decomposition_covariance_continuous H b hb e
   have hg : Continuous (Γ e (q j)) :=
-    (p4Q2PZ37ACK_originalGaugePair_continuous H e).comp
-      (continuous_const.prodMk continuous_id)
+    p4Q2PZ37ACK_originalGaugePair_continuous_z H e (q j)
   have heq : (fun z : Pair => m b hb e z j) =
       (fun z : Pair => -C b hb e (Γ e (q j) z)) := by
     funext z

@@ -132,39 +132,97 @@ private theorem p4Q2PZ37ACK_originalGauge_eval_continuous (e : Link) (v : Vertex
   · simpa only [p4Q2PZ37ACK_originalGauge, Function.update_of_ne hv] using
       (continuous_const : Continuous (fun _a : G => (1 : G)))
 
-private theorem p4Q2PZ37ACK_originalGaugeConfig_continuous (e : Link) :
-    Continuous (fun w : G × Cfg => GA (gamma e w.1) w.2) := by
-  apply continuous_pi
-  intro k
-  change Continuous (fun w : G × Cfg =>
-    gamma e w.1 k.1 * w.2 k *
-      (gamma e w.1 (periodicHypercubicEvenSpatialSliceShift H k.1 k.2))⁻¹)
-  exact (((p4Q2PZ37ACK_originalGauge_eval_continuous H e k.1).comp continuous_fst).mul
-    ((continuous_apply k).comp continuous_snd)).mul
-    (((p4Q2PZ37ACK_originalGauge_eval_continuous H e
-      (periodicHypercubicEvenSpatialSliceShift H k.1 k.2)).comp continuous_fst).inv)
-
 /-- Joint continuity of the genuine SU(2) value and both original contexts. -/
 theorem p4Q2PZ37ACK_originalGaugePair_continuous (e : Link) :
     Continuous (fun w : G × (Cfg × Cfg) => Γ e w.1 w.2) := by
-  have hLeft : Continuous (fun w : G × (Cfg × Cfg) => (w.1, w.2.1)) :=
-    continuous_fst.prodMk (continuous_fst.comp continuous_snd)
-  have hRight : Continuous (fun w : G × (Cfg × Cfg) => (w.1, w.2.2)) :=
-    continuous_fst.prodMk (continuous_snd.comp continuous_snd)
-  exact ((p4Q2PZ37ACK_originalGaugeConfig_continuous H e).comp hLeft).prodMk
-    ((p4Q2PZ37ACK_originalGaugeConfig_continuous H e).comp hRight)
+  -- Expose the pair and each link coordinate before elaborating continuity.
+  -- Keep definitional-equality elaboration at group-valued coordinates rather
+  -- than composing configuration-valued theorems against a hidden pair action.
+  unfold p4Q2PZ37ACK_originalGaugePair
+    periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform
+  apply Continuous.prodMk
+  · apply continuous_pi
+    intro k
+    have hSource : Continuous (fun w : G × (Cfg × Cfg) => gamma e w.1 k.1) :=
+      (p4Q2PZ37ACK_originalGauge_eval_continuous H e k.1).comp
+        (show Continuous (fun w : G × (Cfg × Cfg) => w.1) from continuous_fst)
+    have hLink : Continuous (fun w : G × (Cfg × Cfg) => w.2.1 k) :=
+      (show Continuous (fun B : Cfg => B k) from continuous_apply k).comp
+        (show Continuous (fun w : G × (Cfg × Cfg) => w.2.1) from
+          continuous_fst.comp continuous_snd)
+    have hTarget : Continuous (fun w : G × (Cfg × Cfg) =>
+        (gamma e w.1 (periodicHypercubicEvenSpatialSliceShift H k.1 k.2))⁻¹) :=
+      ((p4Q2PZ37ACK_originalGauge_eval_continuous H e
+        (periodicHypercubicEvenSpatialSliceShift H k.1 k.2)).comp
+          (show Continuous (fun w : G × (Cfg × Cfg) => w.1) from continuous_fst)).inv
+    exact (hSource.mul hLink).mul hTarget
+  · apply continuous_pi
+    intro k
+    have hSource : Continuous (fun w : G × (Cfg × Cfg) => gamma e w.1 k.1) :=
+      (p4Q2PZ37ACK_originalGauge_eval_continuous H e k.1).comp
+        (show Continuous (fun w : G × (Cfg × Cfg) => w.1) from continuous_fst)
+    have hLink : Continuous (fun w : G × (Cfg × Cfg) => w.2.2 k) :=
+      (show Continuous (fun B : Cfg => B k) from continuous_apply k).comp
+        (show Continuous (fun w : G × (Cfg × Cfg) => w.2.2) from
+          continuous_snd.comp continuous_snd)
+    have hTarget : Continuous (fun w : G × (Cfg × Cfg) =>
+        (gamma e w.1 (periodicHypercubicEvenSpatialSliceShift H k.1 k.2))⁻¹) :=
+      ((p4Q2PZ37ACK_originalGauge_eval_continuous H e
+        (periodicHypercubicEvenSpatialSliceShift H k.1 k.2)).comp
+          (show Continuous (fun w : G × (Cfg × Cfg) => w.1) from continuous_fst)).inv
+    exact (hSource.mul hLink).mul hTarget
 
 /-- Continuity along a genuine gauge orbit with the outer context fixed. -/
 theorem p4Q2PZ37ACK_originalGaugePair_continuous_a (e : Link) (z : Cfg × Cfg) :
-    Continuous (fun a : G => Γ e a z) :=
-  (p4Q2PZ37ACK_originalGaugePair_continuous H e).comp
-    (continuous_id.prodMk continuous_const)
+    Continuous (fun a : G => Γ e a z) := by
+  unfold p4Q2PZ37ACK_originalGaugePair
+    periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform
+  apply Continuous.prodMk
+  · apply continuous_pi
+    intro k
+    have hSource : Continuous (fun a : G => gamma e a k.1) :=
+      p4Q2PZ37ACK_originalGauge_eval_continuous H e k.1
+    have hLink : Continuous (fun _a : G => z.1 k) := continuous_const
+    have hTarget : Continuous (fun a : G =>
+        (gamma e a (periodicHypercubicEvenSpatialSliceShift H k.1 k.2))⁻¹) :=
+      (p4Q2PZ37ACK_originalGauge_eval_continuous H e
+        (periodicHypercubicEvenSpatialSliceShift H k.1 k.2)).inv
+    exact (hSource.mul hLink).mul hTarget
+  · apply continuous_pi
+    intro k
+    have hSource : Continuous (fun a : G => gamma e a k.1) :=
+      p4Q2PZ37ACK_originalGauge_eval_continuous H e k.1
+    have hLink : Continuous (fun _a : G => z.2 k) := continuous_const
+    have hTarget : Continuous (fun a : G =>
+        (gamma e a (periodicHypercubicEvenSpatialSliceShift H k.1 k.2))⁻¹) :=
+      (p4Q2PZ37ACK_originalGauge_eval_continuous H e
+        (periodicHypercubicEvenSpatialSliceShift H k.1 k.2)).inv
+    exact (hSource.mul hLink).mul hTarget
 
 /-- Continuity in the original outer context for each fixed gauge value. -/
 theorem p4Q2PZ37ACK_originalGaugePair_continuous_z (e : Link) (a : G) :
-    Continuous (Γ e a) :=
-  (p4Q2PZ37ACK_originalGaugePair_continuous H e).comp
-    (continuous_const.prodMk continuous_id)
+    Continuous (Γ e a) := by
+  unfold p4Q2PZ37ACK_originalGaugePair
+    periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform
+  apply Continuous.prodMk
+  · apply continuous_pi
+    intro k
+    have hSource : Continuous (fun _z : Cfg × Cfg => gamma e a k.1) := continuous_const
+    have hLink : Continuous (fun z : Cfg × Cfg => z.1 k) :=
+      (show Continuous (fun B : Cfg => B k) from continuous_apply k).comp
+        (show Continuous (fun z : Cfg × Cfg => z.1) from continuous_fst)
+    have hTarget : Continuous (fun _z : Cfg × Cfg =>
+        (gamma e a (periodicHypercubicEvenSpatialSliceShift H k.1 k.2))⁻¹) := continuous_const
+    exact (hSource.mul hLink).mul hTarget
+  · apply continuous_pi
+    intro k
+    have hSource : Continuous (fun _z : Cfg × Cfg => gamma e a k.1) := continuous_const
+    have hLink : Continuous (fun z : Cfg × Cfg => z.2 k) :=
+      (show Continuous (fun B : Cfg => B k) from continuous_apply k).comp
+        (show Continuous (fun z : Cfg × Cfg => z.2) from continuous_snd)
+    have hTarget : Continuous (fun _z : Cfg × Cfg =>
+        (gamma e a (periodicHypercubicEvenSpatialSliceShift H k.1 k.2))⁻¹) := continuous_const
+    exact (hSource.mul hLink).mul hTarget
 
 private theorem p4Q2PZ37ACK_gauge_update
     (delta : GT) (B : Cfg) (e : Link) (g : G) :

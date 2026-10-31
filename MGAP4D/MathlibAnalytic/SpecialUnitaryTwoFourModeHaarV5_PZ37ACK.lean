@@ -100,7 +100,7 @@ theorem p4Q2PZ37ACK_quaternion_relativeCharacter (i j : Fin 4) :
         p4Q2PZ35A_pauliQ0, p4Q2PZ35A_pauliQ1,
         p4Q2PZ35A_pauliQ2, p4Q2PZ35A_pauliQ3,
         Matrix.trace_fin_two, Matrix.mul_apply, Fin.sum_univ_two, Complex.I_sq]
-  exact_mod_cast hc
+  exact congrArg Complex.re hc
 
 /-- Exact Gram matrix of the four genuine Haar coordinate tests. -/
 theorem p4Q2PZ37ACK_fourModeCharacter_gram (i j : Fin 4) :

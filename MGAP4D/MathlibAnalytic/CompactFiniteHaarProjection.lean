@@ -74,10 +74,16 @@ theorem remainder_mean_zero (F : α → ℝ) (φ : ι → α → ℝ)
     (hF : Continuous F) (hφ : ∀ i, Continuous (φ i))
     (hmean : ∀ i, (∫ x, φ i x ∂μ) = 0) :
     (∫ x, remainder μ F φ x ∂μ) = 0 := by
+  have hFI : Integrable F μ := ci μ hF
+  have hMean : Integrable (fun _ : α => ∫ y, F y ∂μ) μ :=
+    integrable_const (∫ y, F y ∂μ)
+  have hCentered : Integrable (fun x : α => F x - ∫ y, F y ∂μ) μ :=
+    hFI.sub hMean
+  have hProjection : Integrable (fun x : α => projection μ F φ x) μ :=
+    ci μ (projection_continuous μ F φ hφ)
   unfold remainder
-  rw [integral_sub ((ci μ hF).sub (integrable_const _))
-      (ci μ (projection_continuous μ F φ hφ)),
-    integral_sub (ci μ hF) (integrable_const _),
+  rw [integral_sub hCentered hProjection,
+    integral_sub hFI hMean,
     projection_mean_zero μ F φ hφ hmean]
   simp
 
@@ -85,6 +91,9 @@ private theorem integral_mul_projection (F Q : α → ℝ) (φ : ι → α → �
     (hQ : Continuous Q) (hφ : ∀ i, Continuous (φ i)) :
     (∫ x, Q x * projection μ F φ x ∂μ) =
       4 * ∑ i, coefficient μ F φ i * (∫ x, Q x * φ i x ∂μ) := by
+  have hTerm (i : ι) :
+      Integrable (fun x : α => coefficient μ F φ i * (Q x * φ i x)) μ :=
+    (ci μ (hQ.mul (hφ i))).const_mul (coefficient μ F φ i)
   calc
     _ = ∫ x, 4 * ∑ i, coefficient μ F φ i * (Q x * φ i x) ∂μ := by
       apply integral_congr_ae
@@ -94,18 +103,24 @@ private theorem integral_mul_projection (F Q : α → ℝ) (φ : ι → α → �
       intro i _
       ring
     _ = 4 * ∑ i, coefficient μ F φ i * (∫ x, Q x * φ i x ∂μ) := by
-      rw [integral_const_mul, integral_finset_sum _
-        (fun i _ => (ci μ (hQ.mul (hφ i))).const_mul _)]
+      rw [integral_const_mul (4 : ℝ),
+        integral_finset_sum (μ := μ) (Finset.univ : Finset ι)
+          (f := fun i x => coefficient μ F φ i * (Q x * φ i x))
+          (fun i _ => hTerm i)]
       simp only [integral_const_mul]
 
+omit [Fintype ι] in
 private theorem centered_pairing (F : α → ℝ) (φ : ι → α → ℝ)
     (hF : Continuous F) (hφ : ∀ i, Continuous (φ i))
     (hmean : ∀ i, (∫ x, φ i x ∂μ) = 0) (i : ι) :
     (∫ x, (F x - ∫ y, F y ∂μ) * φ i x ∂μ) = coefficient μ F φ i := by
+  have hProduct : Integrable (fun x : α => F x * φ i x) μ :=
+    ci μ (hF.mul (hφ i))
+  have hMeanProduct : Integrable (fun x : α => (∫ y, F y ∂μ) * φ i x) μ :=
+    (ci μ (hφ i)).const_mul (∫ y, F y ∂μ)
   simp_rw [sub_mul]
-  rw [integral_sub (ci μ (hF.mul (hφ i)))
-      ((ci μ (hφ i)).const_mul _),
-    integral_const_mul, hmean i]
+  rw [integral_sub hProduct hMeanProduct,
+    integral_const_mul (∫ y, F y ∂μ), hmean i]
   simp only [coefficient, mul_zero, sub_zero]
 
 variable [DecidableEq ι]
@@ -184,9 +199,17 @@ theorem pythagoras (F : α → ℝ) (φ : ι → α → ℝ)
   have hCentered : Continuous (fun x => F x - ∫ y, F y ∂μ) :=
     hF.sub continuous_const
   have hP := projection_continuous μ F φ hφ
-  have hSquare := ci μ (hCentered.pow 2)
-  have hCross := (ci μ (hCentered.mul hP)).const_mul (2 : ℝ)
-  have hProjectionSquare := ci μ (hP.pow 2)
+  have hSquare : Integrable (fun x : α => (F x - ∫ y, F y ∂μ) ^ 2) μ :=
+    ci μ (hCentered.pow 2)
+  have hCross : Integrable (fun x : α =>
+      2 * ((F x - ∫ y, F y ∂μ) * projection μ F φ x)) μ :=
+    (ci μ (hCentered.mul hP)).const_mul (2 : ℝ)
+  have hProjectionSquare : Integrable (fun x : α => (projection μ F φ x) ^ 2) μ :=
+    ci μ (hP.pow 2)
+  have hDifference : Integrable (fun x : α =>
+      (F x - ∫ y, F y ∂μ) ^ 2 -
+        2 * ((F x - ∫ y, F y ∂μ) * projection μ F φ x)) μ :=
+    hSquare.sub hCross
   calc
     _ = ∫ x, ((F x - ∫ y, F y ∂μ) ^ 2 -
         2 * ((F x - ∫ y, F y ∂μ) * projection μ F φ x)) +
@@ -198,8 +221,8 @@ theorem pythagoras (F : α → ℝ) (φ : ι → α → ℝ)
     _ = (∫ x, (F x - ∫ y, F y ∂μ) ^ 2 ∂μ) -
         2 * (∫ x, (F x - ∫ y, F y ∂μ) * projection μ F φ x ∂μ) +
         (∫ x, (projection μ F φ x) ^ 2 ∂μ) := by
-      rw [integral_add (hSquare.sub hCross) hProjectionSquare,
-        integral_sub hSquare hCross, integral_const_mul]
+      rw [integral_add hDifference hProjectionSquare,
+        integral_sub hSquare hCross, integral_const_mul (2 : ℝ)]
     _ = variance μ F - 4 * ∑ i, (coefficient μ F φ i) ^ 2 := by
       rw [← variance_eq_centered μ F hF,
         centered_projection μ F φ hF hφ hmean,
