@@ -161,7 +161,9 @@ theorem p4Q2PZ37ACI_originalPosteriorResidual_le_energyProduct
     (b * (Real.exp (32 * b) + Real.exp (-32 * b)))
     (contrast b hb B e) E (p4Q2PZ37ACI_contrast_continuous H b hb B e)
     (continuous_specialUnitaryWilsonPlaquetteEnergy 2)
-  simp only [CompactEnergyMismatchMoment.residual, one_mul] at hv
+  change Var (fun g => contrast b hb B e g +
+    (1 : ℝ) * (b * (Real.exp (32 * b) + Real.exp (-32 * b))) * E g) = _ at hv
+  simp only [one_mul] at hv
   rw [hv, p4Q2PZ37ACI_contrast_variance, p4Q2PZ37ACI_contrast_covariance,
     p4Q2PZ37ABZ_originalEnergy_Haar_variance] at h
   unfold p4Q2PZ37ACI_originalPosteriorResidualEnvelope at h
