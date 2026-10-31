@@ -150,6 +150,7 @@ theorem p4Q2PZ37ACM_originalCovariance_amplitude_attained
   rw [p4Q2PZ37ACM_originalCovariance_gauge_fourMode]
   simp_rw [ha]
   rw [hmx, neg_neg]
+  rfl
 
 /-- Exact pointwise variance allocation, with the actual ACK residual. -/
 theorem p4Q2PZ37ACM_originalVariance_eq_amplitude_residual
@@ -259,7 +260,9 @@ theorem p4Q2PZ37ACM_originalOrbit_defect_range
       · nlinarith [hd.1]
     rw [← p4Q2PZ37ACM_originalOrbit_covariance_range H b hb e z] at hc
     obtain ⟨a, ha⟩ := hc
+    change C b hb e (Γ e a z) = c at ha
     refine ⟨a, ?_⟩
+    change D b hb e (Γ e a z) = d
     rw [p4Q2PZ37ACM_originalDefect_gauge_eq, ha, hcsq]
     ring
 
