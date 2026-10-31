@@ -17,12 +17,13 @@ noncomputable section
 set_option autoImplicit false
 
 variable {α : Type*} [TopologicalSpace α] [MeasurableSpace α]
-  [CompactSpace α] [SecondCountableTopology α] [BorelSpace α]
+  [CompactSpace α] [BorelSpace α]
   (μ : Measure α) [IsProbabilityMeasure μ]
 
 private theorem ci {F : α → ℝ} (hF : Continuous F) : Integrable F μ :=
   hF.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
 
+omit [TopologicalSpace α] [CompactSpace α] [BorelSpace α] [IsProbabilityMeasure μ] in
 /-- Covariance is symmetric without changing the measure. -/
 theorem covariance_swap (F D : α → ℝ) : covariance μ F D = covariance μ D F := by
   unfold covariance
@@ -35,6 +36,9 @@ theorem covariance_sub_mul_left (F E D : α → ℝ) (a : ℝ)
       covariance μ F D - a * covariance μ E D := by
   have hm : (∫ x, F x - a * E x ∂μ) = (∫ x, F x ∂μ) - a * ∫ x, E x ∂μ := by
     rw [integral_sub (ci μ hF) ((ci μ hE).const_mul a), integral_const_mul]
+  have hFD : Integrable (fun x => F x * D x) μ := ci μ (hF.mul hD)
+  have haED : Integrable (fun x => a * (E x * D x)) μ :=
+    (ci μ (hE.mul hD)).const_mul a
   have hp : (∫ x, (F x - a * E x) * D x ∂μ) =
       (∫ x, F x * D x ∂μ) - a * ∫ x, E x * D x ∂μ := by
     calc
@@ -43,8 +47,7 @@ theorem covariance_sub_mul_left (F E D : α → ℝ) (a : ℝ)
         filter_upwards with x
         ring
       _ = _ := by
-        rw [integral_sub (ci μ (hF.mul hD)) ((ci μ (hE.mul hD)).const_mul a),
-          integral_const_mul]
+        rw [integral_sub hFD haED, integral_const_mul]
   unfold covariance
   rw [hm, hp]
   ring
@@ -63,15 +66,18 @@ private theorem centered_product (F D : α → ℝ)
       covariance μ F D := by
   let mF : ℝ := ∫ x, F x ∂μ
   let mD : ℝ := ∫ x, D x ∂μ
-  have hFD := ci μ (hF.mul hD)
-  have hA := (ci μ hD).const_mul mF
-  have hB := (ci μ hF).const_mul mD
+  have hFD : Integrable (fun x => F x * D x) μ := ci μ (hF.mul hD)
+  have hA : Integrable (fun x => mF * D x) μ := (ci μ hD).const_mul mF
+  have hB : Integrable (fun x => mD * F x) μ := (ci μ hF).const_mul mD
+  have hSub : Integrable (fun x => F x * D x - mF * D x) μ := hFD.sub hA
+  have hSub2 : Integrable (fun x => F x * D x - mF * D x - mD * F x) μ :=
+    hSub.sub hB
   have hp (x : α) : (F x - mF) * (D x - mD) =
       (F x * D x - mF * D x) - mD * F x + mF * mD := by ring
   change (∫ x, (F x - mF) * (D x - mD) ∂μ) = covariance μ F D
   simp_rw [hp]
-  rw [integral_add ((hFD.sub hA).sub hB) (integrable_const _),
-    integral_sub (hFD.sub hA) hB, integral_sub hFD hA,
+  rw [integral_add hSub2 (integrable_const _),
+    integral_sub hSub hB, integral_sub hFD hA,
     integral_const_mul, integral_const_mul]
   simp [covariance, mF, mD]
   ring
@@ -98,13 +104,15 @@ theorem covariance_sq_le_variances (F D : α → ℝ)
     ← real_inner_self_eq_norm_sq Dp, hFD, hFF, hDD] at h
   exact h
 
+omit [TopologicalSpace α] [CompactSpace α] [BorelSpace α] [IsProbabilityMeasure μ] in
 /-- Expose only the small scalar residual wrapper, not physical definitions. -/
 theorem regressionResidual_eq_sub (F E : α → ℝ) :
     regressionResidual μ F E = fun x => F x - 4 * covariance μ F E * E x := by
   funext x
-  dsimp [regressionResidual, residual]
+  dsimp [regressionResidual, CompactEnergyMismatchMoment.residual]
   ring
 
+omit [CompactSpace α] [BorelSpace α] [IsProbabilityMeasure μ] in
 private theorem regression_continuous (F E : α → ℝ)
     (hF : Continuous F) (hE : Continuous E) : Continuous (regressionResidual μ F E) := by
   rw [regressionResidual_eq_sub]
@@ -116,16 +124,20 @@ theorem regression_covariance (F D E : α → ℝ)
     (hEV : variance μ E = (1 / 4 : ℝ)) :
     covariance μ (regressionResidual μ F E) (regressionResidual μ D E) =
       covariance μ F D - 4 * covariance μ F E * covariance μ D E := by
+  have hRD : Continuous (fun x => D x - (4 * covariance μ D E) * E x) :=
+    hD.sub (continuous_const.mul hE)
   rw [regressionResidual_eq_sub, regressionResidual_eq_sub]
-  rw [covariance_sub_mul_left μ F E _ _ hF hE
-    (hD.sub (continuous_const.mul hE)),
-    covariance_sub_mul_right μ F D E _ hF hD hE,
-    covariance_sub_mul_right μ E D E _ hE hD hE,
+  rw [covariance_sub_mul_left μ F E
+    (fun x => D x - (4 * covariance μ D E) * E x) (4 * covariance μ F E) hF hE hRD,
+    covariance_sub_mul_right μ F D E (4 * covariance μ D E) hF hD hE,
+    covariance_sub_mul_right μ E D E (4 * covariance μ D E) hE hD hE,
     covariance_swap μ E D]
   change _ - (4 * covariance μ F E) *
     (covariance μ D E - (4 * covariance μ D E) * variance μ E) = _
   rw [hEV]
   ring
+
+variable [SecondCountableTopology α]
 
 /-- Sharp regression Cauchy bound: the error is controlled by both residuals,
 not by the full variance of either original argument. -/
