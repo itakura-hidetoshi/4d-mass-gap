@@ -309,8 +309,14 @@ theorem p4Q2PZ37ACT_originalPointwiseFraction_eq_transfer
     pow_pos (p4Q2PZ37ABZ_originalTransferSectionPrefactor_pos H b hb z) _
   unfold p4Q2PZ37ACS_originalPointwiseFirstFourFraction
     p4Q2PZ37ACT_originalPointwiseTransferFraction
-  rw [p4Q2PZ37ACQ_originalAmplitudeSq_eq_transfer H b hb e z,
-    p4Q2PZ37ACA_originalReceiver_variance_eq_transfer H b hb f₀ e z]
+  rw [p4Q2PZ37ACQ_originalAmplitudeSq_eq_transfer H b hb e z]
+  change
+    4 * ((P b hb z) ^ 2 * tA2 b hb e z) /
+        CompactEnergyMismatchMoment.variance μ
+          (p4Q2PZ37ABZ_originalReceiverSection H b hb f₀ e z) =
+      4 * tA2 b hb e z /
+        CompactEnergyMismatchMoment.variance μ (U b hb f₀ e z)
+  rw [p4Q2PZ37ACA_originalReceiver_variance_eq_transfer H b hb f₀ e z]
   field_simp [ne_of_gt hp, ne_of_gt hV]
   ring
 
