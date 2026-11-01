@@ -1,3 +1,29 @@
+## 検証済み定理 — ADC（2026-11-01 JST）
+
+唯一の定理正本は`formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラー。P4-Q2-PZ37ADC／定理PR #6119はMERGED、定理squash SHAは`99de1c420935a2c48440a94ad0951209fda5033d`。ADBまでの既存形式証明は維持し、元の有限体積interacting Wilson SU(2)、中心化Gauss-law物理源、FF受信器、正Perron ground代表、更新後transfer section、同じ二interacting posterior、真正境界pair-Haar測度は変更なし。
+
+### 真正結合の固定・厳密有理閾値・有限体積のリンク一様定数
+
+- **厳密な正結合**：`b0=log(3/2)/64>0` を定義。`exp(64*b0)=3/2`、既存ACPの真正posterior指数差平方`tau(b0)=(exp(64*b0)-1)²=1/4`をLean4で証明。従ってADBのFC割合判定に現れる`tau/(tau+4)=1/17`が厳密有理定数となります。
+- **元Wilson GI二乗平均証明書の正確な符号**：ADBの真正比率`u(H,b,e)=16S(H,b,e)/B(H,b)²`、`v(H,b,e)=Wbar(H,b,e)/B(H,b)²`を使うと、各有限H・元物理リンクeで`M_GI(H,b0,e)>0` **iff** `v(H,b0,e)<16*u(H,b0,e)`。これは平均二乗証明書の判定であり、signed GI応答そのものの同値ではありません。
+- **数値閾値を伴う条件付き証明**：真正FC残差配分`u+v<=1`から`u(H,b0,e)>1/17`なら`M_GI(H,b0,e)>0`。既存ACOにより元の同じ二つのinteracting posteriorのsigned GI応答が非零となるOPEN・正pair-Haar質量領域が存在します。逆に`M_GI<=0`なら`u<=1/17`。厳密に`1/17`を越えること自体は元模型で未証明。
+- **有限リンク集合から正の定数を得る**：固定有限Hで真正リンク型`Link(H)`が非空なら、全ての元リンクで`u(H,b0,e)>0`であり、型が有限であることから**リンクに依存しない正の実定数**`c_H=min_e u(H,b0,e)>0`が存在することを形式証明。さらに`c_H>1/17`を追加の数値条件として別に課す場合に限り、固定Hの全リンクで上記正値性が従います。正の`c_H`の存在と`c_H>1/17`は区別します。
+- **体積間の権限境界**：一つの実定数`c>1/17`について全ての有限体積`H`と元リンク`e`で`c<=u(H,b0,e)`を別途証明できれば、同じ固定結合で全体積の元GI二乗平均証明書が正となる条件付き定理を形式証明しました。実際の模型にそのような`H,e`一様下界が存在することは**未証明**であり、体積一様coercivityや連続体Yang–Mills質量ギャップは主張しません。
+
+### exact-source CI／公理依存／append-onlyガバナンス
+
+- 定理PR #6119 https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6119 — MERGED。新規Lean1ファイル・1定義・12定理・12`#print axioms`、281行追加・削除0、元物理模型・既存Lean・root・pin・workflowの変更なし。
+- 初回source検証済みHEAD`d1bb7b7d86728fa73815c9aa7a928f11037ad0a4`に続き、ADB文書同期を親コミットとしてfast-forward保持した最終exact-source HEAD`729047939706ebd725b38bed0b9312cd55b46438`で再検証。最終sourceとsquash`99de1c420935a2c48440a94ad0951209fda5033d`のGit treeは`a489fe48e133e23fe015d801cbc0471cfdd4d38d`で完全一致。改変・force-pushなし。
+- 正本baseと完全一致したexact-source CI #41296069589 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41296069589 — Lean11253/11253 SUCCESS、12/12公理依存は`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立completion receipt SUCCESS。
+- マージ後push CI #41296471435 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41296471435 — squash HEAD上のLean step／workflow全体／独立MCP completion receiptすべてSUCCESS。
+- Lean `v4.30.0-rc2`、mathlib`5450b53e5ddc75d46418fabb605edbf36bd0beb6`維持。docs-only Strict Leanは起動しません。
+
+### 次の物理的・形式的課題 — ADE（OPEN）
+
+固定結合の数値閾値を真正共分散モーメントの定量評価に還元する：`u(H,b0,e)>1/17`は正の`B(H,b0)²`のもとで`B(H,b0)²<272*S(H,b0,e)`と同値。まずこの厳密換算をLean4で明示し、その後、元Perron／transfer normを含む`B`と元境界pair-Haar上の`S`の間に、数値272を満たす証明済みの物理評価があるか検討する。固定Hのリンク最小値と全Hに共通する数値下界は分離し、未証明の下界を仮定なしで成立したと主張しない。
+
+---
+
 ## 検証済み定理 — ADB（2026-11-01 JST）
 
 唯一の定理正本：`formal/real-hilbert-uniform-coercive-strong-limit`。default `main` はREADME・ROADMAP文書ミラーのみ。P4-Q2-PZ37ADBの定理PR #6118はMERGED（定理squash SHA `02a8b1ccd55e373d7faeb98bf39d50958f7dc4d0`）。既存ACZ/ADAと真正有限体積Wilson SU(2)模型、中心化Gauss-law物理源、FF受信器、正Perron代表、更新後transfer、元の二つのinteracting posterior・境界pair-Haar測度を変更しません。
