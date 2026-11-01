@@ -350,7 +350,13 @@ theorem p4Q2PZ37ACV_originalGIMeanBudget_pos_iff_densityDominance
   rw [p4Q2PZ37ACU_originalGIMeanBudget_pos_iff_positiveDominates H b hb e,
     p4Q2PZ37ACV_negativeContribution_eq_norm_times_density H b hb.le e,
     p4Q2PZ37ACV_positiveContribution_eq_norm_times_density H b hb.le e]
-  exact mul_lt_mul_left hc
+  constructor
+  · intro h
+    by_contra hnot
+    have hge : Iplus b hb.le e ≤ Iminus b hb.le e := le_of_not_gt hnot
+    exact (not_le_of_gt h) (mul_le_mul_of_nonneg_left hge hc.le)
+  · intro h
+    exact mul_lt_mul_of_pos_left h hc
 
 /-- Equivalent raw true Perron-density comparison of the ACS spectral
 threshold for the actual interacting Wilson SU(2) receiver. -/
