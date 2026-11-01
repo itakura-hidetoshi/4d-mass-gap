@@ -1,3 +1,29 @@
+## 検証済み定理 — ADJ（2026-11-02 JST）
+
+唯一の定理正本は`formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。P4-Q2-PZ37ADJ定理PR #6139はMERGED、定理squash SHA `0517a9bf440ba8fda37db56bb04ff3c657cdd662`。元の有限体積interacting Wilson SU(2)、固定結合`b0=log(3/2)/64>0`、中心化Gauss-law源、元FF受信器、Perron/transfer、元二interacting posteriorと真正境界pair-Haar確率は変更していない。
+
+### 元SU(2)単一リンクOPEN capと真正有限体積境界pair-Haarの定量下界
+
+- **既存の真正ABV数値Haar capをOPEN化**：元Wilsonエネルギー`E(g)=1-Re(tr g)/2`について、既存ABVの真正SU(2) quaternion8平行移動による閉cap`A={g:E(g)<=1/2}`の元normalized compact Haar質量`μ(A)>=1/8`を再利用。厳密なOPEN cap`U={g:E(g)<3/4}`は`A⊆U`を満たすので`μ(U)>=1/8`。補助的な有限群Haarには置換しない。
+- **元境界pair-Haarへの実際の測度保存移送**：元境界`Pair_H=Cfg_H×Cfg_H`、真の`ν_H=(⊗_{e∈Link_H}μ)⊗(⊗_{e∈Link_H}μ)`について、元の第1境界の指定リンク射影`z↦z.left(e)`は`MeasureTheory.measurePreserving_eval`と元productの`measurePreserving_fst`から真正測度保存。従ってすべての有限H・真正リンクeで`V_{H,e}={z:E(z.left(e))<3/4}`はOPEN、かつ`ν_H(V_{H,e})=μ(U)>=1/8>1/17`。これは**単一リンク円筒領域の真のH非依存質量下界**であって、共分散球やphysical coercivityのH一様下界ではない。
+- **八つの実quaternion平行移動で全元境界を被覆**：ABVの8個のSU(2)平行移動から、各`e`に対する8個の真正OPEN円筒領域`V_{H,e,i}={z:E(q_i*z.left(e))<3/4}`を作り、各領域に`ν_H(V_{H,e,i})=μ(U)>=1/8>1/17`を証明。さらに`⋃_i V_{H,e,i}=Pair_H`。元pair-Haarを任意の代替法則へ変更していない。
+- **元の非零物理共分散との交差**：ACIの元中心化Gauss-law物理源の真正`C_e(z0)≠0`から、この非零点が上の大質量OPEN円筒の少なくとも一つに属する。ACDの元Cov連続性と元pair-Haarのopen-positive性で、その内部に**より小さい**OPEN `W_e`、`a_e>0`、`ν_H(W_e)>0`を構成し、全`z∈W_e`で`|C_e(z)|>=a_e`とADEの`a_e²*ν_H(W_e)<=S(H,b0,e)`を形式証明。大きな親円筒の`>=1/8`を小領域の質量として誤って代入しない。
+- **元の二境界座標の実pair-Haar**：同じ元リンクeでの`z↦(z.left(e),z.right(e))`は真正`ν_H`から元の`μ×μ`への測度保存。ABVの真正low/high ordered capの`(μ×μ)(capPair)>=1/64`を、元の物理境界pair上の対応円筒の実質量`>=1/64`として形式証明。これは二posteriorのsigned GI応答下界ではない。
+- **未証明の正確な境界**：`ν_H(V)>=1/8`は成立しても、`ν_H(W_e)>1/17`、共分散の明示振幅`C_e(z0)^2>K_H/68`、真正Wilson共分散の数値Lipschitz係数、物理的に数値校正したSU(2)積距離球の質量、ADI/ADHの厳密`K_H<68*C_e(z0)^2*ν_H(ball)`、全体積一様強制性、連続体4D Yang–Mills質量ギャップは未証明。OPEN円筒と元のADH擬距離球を同一視しない。
+
+### exact-source CI・公理監査・マージ後push CI
+
+- 定理PR #6139 https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6139 — MERGED。新規Leanファイル`MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalBoundaryHaarCylindersV5_PZ37ADJ.lean`のみ、18定理・18件`#print axioms`、追加408行・削除0行。既存Lean、模型、root、workflow、Lean/mathlib pin不変。
+- 最終exact-source HEAD `d572a5a58264aae332e10c78052e50971dae8a1c`、test-merge `96fdbeed8c170317137c595bc69f992d9688cece`、定理squash `0517a9bf440ba8fda37db56bb04ff3c657cdd662`はすべて同一Git tree `7a27ee4d2922e7c9f6c329bb9c7b87c52f85ee96`。
+- exact-source CI #41343426933 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41343426933 — 11259/11259 Lean SUCCESS、18/18公理が`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更warning/error 0/0、独立completion receipt `event=pull_request`・`source_result=success`。
+- マージ後push CI #41343909762 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41343909762 — 定理squash HEADで11259/11259 SUCCESS、18/18標準3公理のみ、`sorryAx`・変更警告・エラーなし、独立completion receipt `event=push`・`source_result=success`。
+- 初回CIのLean局所記法`μ`と名前付き引数、`slice`・`outer`のドット記法、冗長な`dsimp`、最後の`μ.prod`名前解決エラーを、変更ファイル全文・依存定理型・固定mathlib APIを確認して完全修飾で修正。数学的主張・仮定・数値定数の緩和なし。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`固定。docs-onlyではStrict Leanを起動しない。
+
+### 次の研究課題 — ADK（OPEN）
+
+今回の`>=1/8`は元Haarの**単一リンクOPEN円筒**に対する数値下界であり、真正Cov下界が保たれる小領域の数値質量ではない。次は元SU(2)の具体的な行列／四元数座標に沿った数値校正距離、真正有限リンク積上の明示的なmetric ballとその元pair-Haar下界、元FF受信器の真正Lipschitz係数、およびACIの非零Cov振幅をそれぞれ形式化し、**同じ領域**で`ν_H(ball)>1/17`と`|C_e(z)|`を両立できるかを検証する。球半径・共分散振幅・Haar質量の存在と実数値評価、固定HとH一様性、有限体積と連続体を分離する。
+
+---
 ## 検証済み定理 — ADI（2026-11-02 JST）
 
 唯一の定理正本は`formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。P4-Q2-PZ37ADI定理PR #6136はMERGED、定理squash SHAは`b48204a99e89a454aac1bda0fd9d11fd34dfc303`。元の有限体積interacting Wilson SU(2)、固定結合`b0=log(3/2)/64`、中心化Gauss-law源、元FF受信器、Perron/transfer、元の二interacting posterior、元の境界pair-Haar確率とADHの位相適合擬距離は不変更。
