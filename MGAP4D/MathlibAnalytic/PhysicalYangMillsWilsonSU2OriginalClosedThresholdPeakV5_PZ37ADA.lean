@@ -178,7 +178,9 @@ theorem p4Q2PZ37ADA_realGain_at_closedOptimal
   let t := Real.sqrt (c * (c + q) / f)
   have hroot := p4Q2PZ37ADA_realRoot_pos_sq c f q hc hf hq
   have hy : 0 < c + (t - c) := by
-    convert hroot.1 using 1 <;> ring
+    have heq : c + (t - c) = t := by ring
+    rw [heq]
+    exact hroot.1
   have hzero :
       f * (c + (t - c) - t) ^ 2 / (c + (t - c)) = 0 := by
     have hz : c + (t - c) - t = 0 := by ring
@@ -204,15 +206,16 @@ theorem p4Q2PZ37ADA_realClosedOptimal_interior
     (div_pos (mul_pos hc (add_pos hc hq)) hf).le
   have ht2 : t ^ 2 = c * (c + q) / f :=
     Real.sq_sqrt harg
-  have hmulLe : f * c ^ 2 ≤ c ^ 2 :=
-    (mul_le_mul_of_nonneg_right hfOne (sq_nonneg c))
-      |>.trans (by ring)
+  have hmulLe : f * c ^ 2 ≤ c ^ 2 := by
+    simpa only [one_mul] using
+      (mul_le_mul_of_nonneg_right hfOne (sq_nonneg c))
   have hmulPos := mul_pos hc hq
   have hmulLt : f * c ^ 2 < c * (c + q) := by
     nlinarith only [hmulLe, hmulPos]
   have hrootGtSq : c ^ 2 < t ^ 2 := by
     rw [ht2]
-    exact (lt_div_iff₀ hf).mpr hmulLt
+    apply (lt_div_iff₀ hf).mpr
+    nlinarith only [hmulLt]
   have hrootGt : c < t := by
     nlinarith only [hrootGtSq, hc, hroot.1]
   have hsum : 0 < c + q := add_pos hc hq
@@ -426,7 +429,7 @@ theorem p4Q2PZ37ADA_exists_strictReduced_iff_closedPeak
     obtain ⟨hdelta, hinterior⟩ :=
       p4Q2PZ37ADA_originalOptimalThreshold_interior H b hb e hdom
     refine ⟨Opt b hb.le e, hdelta, hinterior, ?_⟩
-    rw [p4Q2PZ37ADA_originalReducedMargin_at_closedOptimal]
+    rw [p4Q2PZ37ADA_originalReducedMargin_at_closedOptimal H b hb e]
     exact hpeak
 
 /-- A viable closed-form optimizer also induces an explicitly positive
