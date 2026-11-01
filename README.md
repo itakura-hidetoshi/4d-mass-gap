@@ -1,3 +1,22 @@
+## 検証済み定理 — ADN（2026-11-02 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAPの文書ミラーのみ。P4-Q2-PZ37ADN定理PR [#6151](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6151) はMERGED（定理squash `0bdcc7da613baa448638605a41b08172e9c0960c`）。元の有限体積interacting Wilson SU(2)、固定結合、中心化Gauss-law物理源、元FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haarと定理rootは不変更。
+
+### 真正SU(2)反対極Haar球と元全リンク球の定量的上界
+
+- **真正中心反対極の弦距離**：ADKの元行列特徴 `J`、真正Wilsonエネルギー `E`、既存のSU(2)中心元 `z=-1` について `d_J(1,g)^2=2E(g)` と `d_J(z,g)^2=2(2-E(g))` をLean4証明。新しい測度模型・任意の正則性仮定は導入しない。
+- **元normalized SU(2) Haarの半径別数値境界**：ADMの真正 `m(r)=μ{g:d_J(1,g)<r}` に対し、`0<r` かつ `r^2≤2` なら反対極OPEN球は互いに素で `m(r)≤1/2`、`0<r` かつ `r^2>2` なら両球はSU(2)を覆い `m(r)≥1/2`。とくに `m(3/2)≥1/2`。ADKの単純な `1/8` cap質量とは異なる半径別校正である。
+- **元全リンク・二境界の球と箱の比較**：ADLの真正 `D_H` 球は同じ半径の真正全リンク箱に含まれる。ADMの厳密Haar積測度から `ν_H(B_{D_H}(a,R))≤m(R)^(2 card(Link_H))` をLean4証明。空間リンク型は実際の零時刻頂点×3空間方向であり、`card(Link_H)≥3` を元幾何から証明した（`Nat.card_prod` によってインスタンスに依らず計数）。
+- **数値的 `1/17` obstruction**：任意の元境界中心a・有限H・`0<R`・`R^2≤2` に対し `ν_H(B_{D_H}(a,R))≤(1/2)^(2 card(Link_H))≤1/64<1/17`。従ってADIの元物理共分散・元FC上界 `K_H` による `68 C_e(a)^2 ν_H(B_{D_H}(a,R))≤K_H` を証明し、ADHの厳密な68十分条件は**この半径領域の同じ元全リンク球では成立しない**。これは十分条件の数値的障害であり、真の物理mass gapの否定ではない。
+- **残る厳密な課題**：任意の小半径における `m(r)` の計算可能な正の数値下界、元物理共分散の計算可能なLipschitz係数、非零振幅の数値下界、より大きい真の安定球での `ν_H>1/17` の成立可否、有限体積一様強制性、連続体4D Yang–Mills mass gap はいずれも未証明。ADMの一様連続性をLipschitz性と混同しない。
+
+### exact-source Lean4検証
+
+- 新規定理14件・`#print axioms` 14件。固定Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。[exact-source CI #41356437448](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41356437448) は **11,263/11,263 SUCCESS**、変更Lean file error/warning 0、全14定理で公理は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし。独立MCP completion receiptもSUCCESS。
+- Source/test-merge/squashのGit treeはすべて `e677d0fd47e4209c4bd63cd6ee05d23cdad90081` で一致。定理正本はPR #6151のsquashであり、default mainには定理Leanをコピーしない。
+
+---
+
 ## 検証済み定理 — ADM（2026-11-02 JST）
 
 唯一の定理正本は`formal/real-hilbert-uniform-coercive-strong-limit`、default `main`はREADME・ROADMAPの文書ミラーのみ。P4-Q2-PZ37ADM定理PR #6148はMERGED、定理squash SHA `454006a79a2332d45bdb3887db1f5be6e1e594d4`。元の有限体積interacting Wilson SU(2)、固定結合`b0=log(3/2)/64>0`、中心化Gauss-law物理源、元FF受信器、Perron/transfer、元二interacting posterior、元boundary pair-Haar確率は一切変更していない。
