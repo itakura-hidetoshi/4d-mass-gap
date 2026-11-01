@@ -1,3 +1,32 @@
+## 検証済み定理 — ADF（2026-11-01 JST）
+
+唯一の定理正本は`formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。P4-Q2-PZ37ADF／定理PR #6127 MERGED、定理squash SHA `104a6d2dde97b6fcbe5d2031942d0bfba4b0cfb4`。ADE以前の証明を保持し、元の有限体積interacting Wilson SU(2)、中心化Gauss-law物理源、FF受信器、正Perron代表、更新後transfer section、元の二interacting posterior、境界pair-Haar、根・workflow・toolchain pinは無変更。
+
+### 真正物理transfer・プラケットに基づく明示的FC上界
+
+- 固定結合は既存ADCの`b0=log(3/2)/64>0`。元の実Wilson一スラブ作用量の上界を`A_H=2*(length(原空間plaquette list)+length(原空間link list))`、実空間プラケット数を`P_H=Fintype.card(原空間plaquette)`とする。
+- **追加仮定なしの真正transfer下界**：既存の原kernel global minorizationと定数物理単位ベクトルから`||T_(H,b0)||>=exp(-b0*A_H)>0`、従って`||T||^(-1)<=exp(b0*A_H)`。別の形式証明から元中心化Gauss-law源`||f0_H||²<=6*P_H`。定量性は有限Hに限定。
+- **ADF新規無条件定理**：元FC上界`B(H,b0)`に対して`B(H,b0)² <= K_H`、`K_H := 6*P_H*exp(2*b0*A_H)*(exp(8*b0)^3-1)^2`。従来の未知の物理transferノルムを、実格子作用量と実プラケット数で明示的に支配する。固定`b0`では`exp(8*b0)^3=exp(24*b0)`。
+- **真正Cov二乗モーメントとの条件付き比較**：各原リンク`e`で`K_H<272*S(H,b0,e)`を別途示せば、既存ADEより真正GI二乗平均証明書`M_GI(H,b0,e)>0`。さらに元の二interacting posteriorの実signed GI応答が非零となるOPEN・正pair-Haar質量集合が存在する。証明書の正値性とsigned応答の符号は同一視しない。
+- **実Cov開領域による十分条件**：OPEN集合`U`で`a>0`かつ`a<=|Cov(z)|`が全`z in U`に成り立ち、`K_H<272*a²*ν_H(U)`が別途成立すれば、同じ真正GI二乗平均証明書とsigned GI非零開領域が得られる。
+- **固定Hの全リンクへ**：既存ADEの正定数`s_H=min_e S(H,b0,e)>0`について`K_H<272*s_H`が別途成立すれば、固定有限Hの全真正リンクで`M_GI>0`。有限H依存定数と全H一様定数は区別する。
+- **非正証明書の障害**：元`M_GI<=0`なら`272*S(H,b0,e)<=B(H,b0)²<=K_H`。十分条件の障害のみを述べ、実signed GI応答の全消失を導かない。
+- **未解決の本質**：真正Wilson模型で`K_H<272*S`または`K_H<272*a²*ν_H(U)`が成立することは未証明。global actionの指数因子は粗い証明経路の体積依存性を露わにするだけで、物理transferの実際の悪化、全H一様性、連続体4D Yang–Mills質量ギャップは示さない。
+
+### exact-source CI・公理監査・マージ後独立検証
+
+- 定理PR #6127 https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6127 — MERGED。新規Leanファイル1件、1定義・8定理・8`#print axioms`、257行追加・削除0行。原模型、既存Lean、pin、root、workflowは不変更。
+- 修正済みexact-source HEAD `6ba61fd075d9e16db47f73869532480ca9fdb1c8`、CI test-merge commit `21028d9b3c9de6ae3aee38308f66e932063fe044`、squash `104a6d2dde97b6fcbe5d2031942d0bfba4b0cfb4` のGit treeはすべて `bb3a6fd435dcb08cdd6314f46816b541ff5da051` で一致。
+- exact-source CI #41301330625 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41301330625 — 11255/11255 Lean SUCCESS、8/8公理依存は`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立completion receipt `source_result=success`。
+- マージ後push CI #41301819870 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41301819870 — 同じsquash HEADで11255/11255 Lean SUCCESS、8/8標準3公理のみ、`sorryAx`なし、変更warning/error 0/0、独立completion receipt `event=push`／`source_result=success`。固定Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`維持。
+- 初回CIの作用素ノルム型推論、同一有限集合の`Fintype`インスタンス相違、`≤`と`<`の推移律誤用を、完全修飾作用素名・固定mathlibの`Fintype.card_eq_nat_card`・`lt_of_le_of_lt`で修正。主張・仮定の緩和なし。README・ROADMAPは正本とmain文書ミラーの同文追記を行い、docs-only Strict Leanは起動しない。
+
+### 次の研究課題 — ADG（OPEN）
+
+元の真正共分散`S(H,b0,e)`および実Cov開領域`a²*ν_H(U)`へ格子・作用・Perron/transfer・Haarの下界を接続し、`K_H<272*S`がいずれかの有限Hで成立するかを実際に評価する。粗いglobal action指数依存を改善できるかも調査するが、正値の存在だけを数値的優越性や体積一様性と誤認しない。
+
+---
+
 ## 検証済み定理 — ADE（2026-11-01 JST）
 
 唯一の定理正本は`formal/real-hilbert-uniform-coercive-strong-limit`。default `main` はREADME・ROADMAP文書ミラーのみ。P4-Q2-PZ37ADE／定理PR #6124 MERGED、定理squash SHA `e21981875aae3c4c172a2e3758767e99d160fdd3`。ADCまでの既存定理を保存し、有限体積の真正interacting Wilson SU(2)、中心化Gauss-law源、元FF受信器、正Perron ground代表、更新後transfer section、元の二interacting posteriorと元境界pair-Haar測度を変更していません。
