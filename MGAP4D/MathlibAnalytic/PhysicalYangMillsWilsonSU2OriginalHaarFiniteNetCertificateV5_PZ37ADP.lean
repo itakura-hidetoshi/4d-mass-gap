@@ -134,7 +134,7 @@ theorem p4Q2PZ37ADP_trueFiniteNet_HaarMass_card_mul_ge_one
     calc
       (1 : ℝ) = Measure.real haar (Set.univ : Set G) := by simp
       _ ≤ Measure.real haar (⋃ a ∈ s, BallJ a r) :=
-        measureReal_mono hCover
+        measureReal_mono hCover (measure_ne_top _ _)
       _ ≤ ∑ a ∈ s, Measure.real haar (BallJ a r) :=
         measureReal_biUnion_finset_le s (fun a : G => BallJ a r)
   simp_rw [p4Q2PZ37ADM_oneLinkChordalBallMass_eq_radial] at hBound
