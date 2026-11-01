@@ -290,7 +290,7 @@ This is a sharp overlap-minus-residual estimate for ANY real r>0:
 No independence or concentration assumption occurs. -/
 theorem p4Q2PZ37ACY_originalIntersection_residualMoment_overlap
     (b : ℝ) (hb : 0 < b) (e : Link)
-    (r : ℝ) (hr : 0 < r) :
+    (r : ℝ) (_hr : 0 < r) :
     r * Measure.real outer (High b hb.le e) ≤
       r * Measure.real outer (Good b hb.le e r) + Wbar b hb.le e := by
   have hHighMeas : MeasurableSet (High b hb.le e) :=
