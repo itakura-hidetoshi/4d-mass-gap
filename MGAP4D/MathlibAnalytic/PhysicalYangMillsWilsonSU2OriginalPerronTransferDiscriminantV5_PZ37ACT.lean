@@ -72,6 +72,8 @@ local notation "P" => p4Q2PZ37ABZ_originalTransferSectionPrefactor H
 local notation "tA2" => p4Q2PZ37ACQ_transferAmplitudeSq H
 local notation "tW" => p4Q2PZ37ACQ_transferResidualEnergy H
 local notation "A" => p4Q2PZ37ACM_originalCovarianceAmplitude H
+local notation "W" => p4Q2PZ37ACK_originalFourModeResidualEnergy H
+local notation "Vbar" => p4Q2PZ37ACK_originalReceiverVarianceMoment H
 local notation "V" => p4Q2PZ37ACL_originalCenteredReceiverVariance H
 local notation "S" => p4Q2PZ37ACJ_originalCenteredCovarianceSecondMoment H
 local notation "Wbar" => p4Q2PZ37ACK_originalFourModeResidualMoment H
@@ -125,6 +127,72 @@ theorem p4Q2PZ37ACT_weightedDiscriminant_eq_originalMoments
   rw [p4Q2PZ37ACQ_weightedTransferAmplitude_integral H b hb e,
     p4Q2PZ37ACQ_weightedTransferResidual_integral H b hb e]
   ring
+
+
+/-- Integral of the ACTUAL local updated-transfer discriminator, weighted
+by the ORIGINAL Perron P_z^2, is exactly the global discriminator.
+The two integrands are integrable by previously proved continuity of the
+unchanged physical receiver's amplitude and higher-mode residual. -/
+theorem p4Q2PZ37ACT_weightedDiscriminant_eq_integralLocal
+    (b : ℝ) (hb : 0 ≤ b) (e : Link) :
+    D b hb e =
+      ∫ z : Pair, (P b hb z) ^ 2 * d b hb e z ∂outer := by
+  have hA : Integrable
+      (fun z : Pair => (P b hb z) ^ 2 * tA2 b hb e z) outer := by
+    have hEq :
+        (fun z : Pair => (P b hb z) ^ 2 * tA2 b hb e z) =
+          (fun z : Pair => (A b hb e z) ^ 2) := by
+      funext z
+      exact (p4Q2PZ37ACQ_originalAmplitudeSq_eq_transfer H b hb e z).symm
+    rw [hEq]
+    exact (p4Q2PZ37ACN_originalAmplitude_sq_continuous H b hb e).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  have hW : Integrable
+      (fun z : Pair => (P b hb z) ^ 2 * tW b hb e z) outer := by
+    have hEq :
+        (fun z : Pair => (P b hb z) ^ 2 * tW b hb e z) =
+          (fun z : Pair => W b hb e z) := by
+      funext z
+      exact (p4Q2PZ37ACQ_originalResidualEnergy_eq_transfer H b hb e z).symm
+    rw [hEq]
+    exact (p4Q2PZ37ACR_originalResidual_continuous H b hb e).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  calc
+    D b hb e =
+        ∫ z : Pair,
+          (16 * ((P b hb z) ^ 2 * tA2 b hb e z) -
+            tau b * ((P b hb z) ^ 2 * tW b hb e z)) ∂outer := by
+      unfold p4Q2PZ37ACT_originalWeightedTransferDiscriminant
+      rw [integral_sub (hA.const_mul _) (hW.const_mul _),
+        integral_const_mul, integral_const_mul]
+    _ = ∫ z : Pair, (P b hb z) ^ 2 * d b hb e z ∂outer := by
+      apply integral_congr_ae
+      filter_upwards with z
+      unfold p4Q2PZ37ACT_originalTransferLocalDiscriminant
+      ring
+
+/-- Direct variance-only global test of the true original updated Perron
+transfer. Evaluation does not require separately expanding its Haar tail;
+the original P_z^2 remains in both outer integrals. -/
+theorem p4Q2PZ37ACT_weightedDiscriminant_eq_transferVariance
+    (b : ℝ) (hb : 0 ≤ b) (e : Link) :
+    D b hb e =
+      4 * (tau b + 4) *
+        (∫ z : Pair, (P b hb z) ^ 2 * tA2 b hb e z ∂outer) -
+      tau b *
+        (∫ z : Pair, (P b hb z) ^ 2 *
+          CompactEnergyMismatchMoment.variance μ (U b hb f₀ e z) ∂outer) := by
+  have hAllocation := p4Q2PZ37ACK_originalVarianceMoment_eq H b hb e
+  calc
+    D b hb e = 64 * S b hb e - tau b * Wbar b hb e :=
+      p4Q2PZ37ACT_weightedDiscriminant_eq_originalMoments H b hb e
+    _ = 4 * (tau b + 4) * (4 * S b hb e) -
+        tau b * Vbar b hb e := by
+      rw [hAllocation]
+      ring
+    _ = _ := by
+      rw [p4Q2PZ37ACQ_weightedTransferAmplitude_integral H b hb e,
+        p4Q2PZ37ACQ_weightedTransferVariance_integral H b hb e]
 
 /-- EXACT global original GI mean squared-certificate, as a signed
 Perron-weighted boundary-data discriminator; no threshold is presumed. -/
@@ -337,6 +405,8 @@ end MGAP4D.MathlibAnalytic
 
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACT_localDiscriminant_eq_transferVariance
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACT_weightedDiscriminant_eq_originalMoments
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACT_weightedDiscriminant_eq_integralLocal
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACT_weightedDiscriminant_eq_transferVariance
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACT_originalGIMeanBudget_eq_weightedDiscriminant
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACT_weightedDiscriminant_pos_iff_fraction
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ACT_weightedDiscriminant_nonpos_iff_obstruction
