@@ -113,7 +113,8 @@ theorem p4Q2PZ37ADB_realHaarFloor_normalize
   -- Cross-multiply the two ORIGINAL nonzero denominators first.
   -- Unlike a calc after field_simp, this leaves a stable polynomial goal.
   apply (div_eq_div_iff (ne_of_gt hden) (ne_of_gt htwo)).mpr
-  field_simp [ne_of_gt hx] <;> ring
+  field_simp [ne_of_gt hx]
+  ring
 
 /-- Scaling by the SAME original positive FC cap cancels precisely
 from the Perron negative-region threshold ratio. -/
