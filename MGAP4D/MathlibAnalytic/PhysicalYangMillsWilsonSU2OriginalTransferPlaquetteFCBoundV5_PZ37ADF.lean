@@ -104,7 +104,10 @@ theorem p4Q2PZ37ADF_originalFCsq_le_transferPlaquetteBound :
   let q : ℝ := Real.exp (8 * b₀) ^ 3 - 1
   have htNonneg : 0 ≤ t := by
     dsimp [t]
-    exact inv_nonneg.mpr (norm_nonneg _)
+    exact inv_nonneg.mpr
+      (norm_nonneg
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+          H 2 (by norm_num) b₀ p4Q2PZ37ADC_fixedCoupling_pos.le))
   have htInvLe : t ≤ v := by
     have ht :=
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferNorm_inv_le_globalMinorizationFloor_inv
@@ -117,8 +120,9 @@ theorem p4Q2PZ37ADF_originalFCsq_le_transferPlaquetteBound :
     simpa only [Real.exp_neg, inv_inv] using ht
   have htSq : t ^ 2 ≤ v ^ 2 :=
     pow_le_pow_left₀ htNonneg htInvLe 2
-  have hfSq : ‖f₀‖ ^ 2 ≤ 6 * P :=
-    p4Q2PZ37AAI_originalCenteredPhysicalNorm_sq_le_six_plaquetteCount H
+  have hfSq : ‖f₀‖ ^ 2 ≤ 6 * P := by
+    simpa only [Fintype.card_eq_nat_card] using
+      (p4Q2PZ37AAI_originalCenteredPhysicalNorm_sq_le_six_plaquetteCount H)
   have hFirst :
       t ^ 2 * q ^ 2 * ‖f₀‖ ^ 2 ≤
         v ^ 2 * q ^ 2 * ‖f₀‖ ^ 2 :=
@@ -162,7 +166,7 @@ theorem p4Q2PZ37ADF_transferPlaquetteBound_lt_moment_gives_positiveBudget
         272 * S b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e) :
     0 < Budget b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e := by
   exact p4Q2PZ37ADE_fixedCovarianceFC_gives_positiveBudget H e
-    ((p4Q2PZ37ADF_originalFCsq_le_transferPlaquetteBound H).trans hNumeric)
+    (lt_of_le_of_lt (p4Q2PZ37ADF_originalFCsq_le_transferPlaquetteBound H) hNumeric)
 
 /-- The same conditional explicit comparison yields a nonzero actual
 SIGNED two-interacting-posterior GI response on an OPEN positive
@@ -177,7 +181,7 @@ theorem p4Q2PZ37ADF_transferPlaquetteBound_lt_moment_gives_openGI
         0 < |p4Q2GI_originalWilsonSignedSourceTwoPosteriorExpectationGap
           H b₀ p4Q2PZ37ADC_fixedCoupling_pos.le f₀ e z| := by
   exact p4Q2PZ37ADE_fixedCovarianceFC_gives_openGI H e
-    ((p4Q2PZ37ADF_originalFCsq_le_transferPlaquetteBound H).trans hNumeric)
+    (lt_of_le_of_lt (p4Q2PZ37ADF_originalFCsq_le_transferPlaquetteBound H) hNumeric)
 
 /-- A quantitative actual covariance OPEN region can be compared
 directly to the explicit transfer/plaquette budget, without an
@@ -193,7 +197,7 @@ theorem p4Q2PZ37ADF_transferPlaquetteBound_lt_region_gives_positiveBudget
     0 < Budget b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e := by
   exact p4Q2PZ37ADE_originalRegionNumeric_gives_positiveBudget
     H e U a hOpen ha hCov
-      ((p4Q2PZ37ADF_originalFCsq_le_transferPlaquetteBound H).trans hNumeric)
+      (lt_of_le_of_lt (p4Q2PZ37ADF_originalFCsq_le_transferPlaquetteBound H) hNumeric)
 
 /-- Conditional positive-mass OPEN signed GI response from a
 genuinely measurable local covariance region and the explicit cap. -/
@@ -211,7 +215,7 @@ theorem p4Q2PZ37ADF_transferPlaquetteBound_lt_region_gives_openGI
           H b₀ p4Q2PZ37ADC_fixedCoupling_pos.le f₀ e z| := by
   exact p4Q2PZ37ADE_originalRegionNumeric_gives_openGI
     H e U a hOpen ha hCov
-      ((p4Q2PZ37ADF_originalFCsq_le_transferPlaquetteBound H).trans hNumeric)
+      (lt_of_le_of_lt (p4Q2PZ37ADF_originalFCsq_le_transferPlaquetteBound H) hNumeric)
 
 /-- At a fixed H, compare one TRUE common covariance-moment lower
 constant to the concrete volume-dependent scalar cap. This does NOT
@@ -224,7 +228,7 @@ theorem p4Q2PZ37ADF_fixedVolumeTransferPlaquetteCap_allLinks
       p4Q2PZ37ADF_originalTransferPlaquetteFCBound H < 272 * s₀) :
     ∀ e : Link, 0 < Budget b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e := by
   exact p4Q2PZ37ADE_fixedVolumeConstant_dominance_allLinks H s₀ hLower
-    ((p4Q2PZ37ADF_originalFCsq_le_transferPlaquetteBound H).trans hNumeric)
+    (lt_of_le_of_lt (p4Q2PZ37ADF_originalFCsq_le_transferPlaquetteBound H) hNumeric)
 
 /-- If the actual original mean GI squared certificate is
 nonpositive, its covariance moment cannot exceed this explicit
