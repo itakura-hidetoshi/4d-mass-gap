@@ -1,3 +1,29 @@
+## 検証済み定理 — ADM（2026-11-02 JST）
+
+唯一の定理正本は`formal/real-hilbert-uniform-coercive-strong-limit`、default `main`はREADME・ROADMAPの文書ミラーのみ。P4-Q2-PZ37ADM定理PR #6148はMERGED、定理squash SHA `454006a79a2332d45bdb3887db1f5be6e1e594d4`。元の有限体積interacting Wilson SU(2)、固定結合`b0=log(3/2)/64>0`、中心化Gauss-law物理源、元FF受信器、Perron/transfer、元二interacting posterior、元boundary pair-Haar確率は一切変更していない。
+
+### 真正SU(2)の任意半径Haar質量と全リンク弦距離での共分散一様連続性
+
+- **真正行列特徴弦距離の左平行移動不変性**：ADKの既存厳密校正式`d_J(a,g)^2=2*E(a^{-1}g)`とノルム非負性から、すべての真正`a,g∈SU(2)`で`d_J(a,g)=d_J(1,a^{-1}g)`をLean4証明。従って真正normalized SU(2) Haarの弦距離OPEN球質量は中心aに依存しない。真正SU(2)球質量関数`m(r)=μ{g:d_J(1,g)<r}`を定義し、**任意のr>0で厳密に`m(r)>0`**を元compact Haarのopen-positive性から証明。代替有限群Haarやposteriorへの置換なし。
+- **元の全リンク・二境界Haar箱の厳密な半径別積測度**：実際の`Link_H`と元`Pair_H=Cfg_H×Cfg_H`において、任意中心aと半径rに対する左右全リンク弦距離箱`Q_H(a,r)`について、元のpair-Haar`ν_H`の厳密等式`ν_H(Q_H(a,r))=m(r)^(2*card(Link_H))`を形式証明。これはADLの粗い`8^(-2card(Link_H))`からの前進であり、rが小さいときも成立する。`m(r)`自体は元の真正Haar測度の値で、**数値評価は未実施**。
+- **任意の正半径での真正全座標距離球の質量下界**：元の全リンク距離`D_H(z,w)=Σ_e[d_J(z.left(e),w.left(e))+d_J(z.right(e),w.right(e))]`について、すべての`R>0`で`Q_H(a,R/(2card(Link_H)+1))⊆B_{D_H}(a,R)`を証明。ゆえに`ν_H(B_{D_H}(a,R)) >= m(R/(2card(Link_H)+1))^(2card(Link_H))>0`が全有限H・全中心a・全R>0で真正pair-Haarについて成立。半径が小さい場合も有効だが、この下界の具体的な実数値はまだ未知。
+- **真正元物理共分散の全配置一様連続性**：元の`Pair_H`は真正SU(2)有限積のコンパクト空間、ADLの`D_H`は点を分離し、今回は`(z,w)↦D_H(z,w)`の**同時連続性**を証明。genericなcompact bad-pair最小距離補題をLean4証明し、ACDの真正元共分散`C_e(z)=Cov_Haar(F_original,e(z),E)`へ適用。全有限H・真正リンクe・全ε>0で**共通のδ>0が存在し**、`D_H(z,w)<δ`なら全元境界対z,wについて`|C_e(z)-C_e(w)|<ε`が成立。これは真のreceiver/transferに由来する一様連続性だが、数値δ・線形Lipschitz係数Lは導いていない。
+- **同じ真正D_H球で非零共分散・Haar質量・二乗momentを接続**：ACIによる同じ中心化Gauss-law物理源の非零真正Cov点`a`を選択し、ε=`|C_e(a)|/2`で上記一様連続性から`R>0`を取得。元の全リンクOPEN球`B_{D_H}(a,R)`全域で`|C_e(z)|>=|C_e(a)|/2`、同じ球の元pair-Haar質量`>=m(R/(2card(Link_H)+1))^(2card(Link_H))>0`、ADEの`(|C_e(a)|/2)^2*ν_H(B_{D_H}(a,R))<=S_e`を形式証明。物理元ソース・受信器・正Perron代表・二posterior・元Haar法則は不変更。
+- **残る厳密な数値障害**：存在する半径Rと一リンク小球質量`m(R/(2card(Link_H)+1))`、真正Cov非零点での振幅、および実線形Lipschitz係数は**数値評価されていない**。一様連続性を一様Lipschitz性と同一視しない。ADIで必要な`ν_H(ball)>1/17`、ADHの厳密`K_H<68*C_e(a)^2*ν_H(ball)`、H一様物理強制性・連続体4D Yang–Mills質量ギャップは引き続きOPEN。
+
+### exact-source CI・公理監査・独立completion receipt
+
+- 定理PR #6148 https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6148 — MERGED。唯一の新規Leanファイル`MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFullChordalCovarianceModulusV5_PZ37ADM.lean`、17定理・17件`#print axioms`、追加488行・削除0行。既存Lean・定理root・モデル・workflow・Lean/mathlib pin不変更。
+- 最終exact-source SHA `bf3e784fd9f852c9db6b4bafefedf59afef7f8be`、PR test-merge `9b4c45a29997eb0960d45577f45d1de161c2fcfa`、定理squash `454006a79a2332d45bdb3887db1f5be6e1e594d4`は**完全一致Git tree**`d75f7637916dab3f51a428dea8c6357cd81abd0b`。
+- source CI #41352932167 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41352932167 — **11262/11262 SUCCESS**。17/17公理が`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更警告・エラー0/0、独立completion receipt SUCCESS。
+- マージ後push CI #41353451974 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41353451974 — 正本squashで**11262/11262 SUCCESS**、17/17標準公理のみ、`sorryAx`・変更警告・エラー0/0、独立completion receipt SUCCESS。
+- 初回CI #41352489549の唯一のelaboration errorは`Finset.univ.card`と`Fintype.card Link`の同値正規化不足で、固定mathlibの`Finset.card_univ`を追加し修正。Leanファイル全文・imports・依存定理型・固定APIを確認。定理主張・仮定・数値定数を弱めず、Lean`v4.30.0-rc2`・mathlib`5450b53e5ddc75d46418fabb605edbf36bd0beb6`固定。docs-onlyのStrict Leanは起動しない。
+
+### 次の研究課題 — ADN（OPEN）
+
+ADMで実際の全リンク距離`D_H`、元pair-Haar全半径質量の厳密関数`m(r)^(2card(Link_H))`、元共分散一様連続性と同球二乗moment下界を確立。次は真正SU(2)の実8次元特徴＝S³上の球から**小半径Haar質量m(r)の計算可能な明示下界**を形式化し、真正Perron/transfer/FF受信器から共分散変動の数値モジュラスまたはLipschitz係数を評価する。元の同じ球についてADIの`1/17`とADHの68条件を独立数値比較する。有限Hの条件付き結果を、全H一様強制性・連続体mass gapと混同しない。
+
+---
 ## 検証済み定理 — ADL（2026-11-02 JST）
 
 唯一の定理正本は`formal/real-hilbert-uniform-coercive-strong-limit`、default `main`はREADME・ROADMAP文書ミラーのみ。P4-Q2-PZ37ADL定理PR #6145はMERGED、定理squash SHA `c74c5aef86f89debdc6e97f1501b44be384e0073`。元の有限体積interacting Wilson SU(2)、固定結合`b0=log(3/2)/64>0`、中心化Gauss-law物理源、元FF受信器、Perron/transfer、元の二interacting posterior・真正境界pair-Haar測度は不変更。
