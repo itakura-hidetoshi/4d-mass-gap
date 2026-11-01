@@ -116,8 +116,11 @@ theorem p4Q2PZ37ACQ_originalReceiver_difference_eq_transfer
     (b : ℝ) (hb : 0 ≤ b) (e : Link) (z : Pair) (g h : G) :
     F b hb f₀ e z g - F b hb f₀ e z h =
       -(P b hb z) * (U b hb f₀ e z g - U b hb f₀ e z h) := by
-  rw [p4Q2PZ37ABZ_originalResponse_eq_transferSection H b hb f₀ e z g,
-    p4Q2PZ37ABZ_originalResponse_eq_transferSection H b hb f₀ e z h]
+  have hd := p4Q2PZ37ABZ_originalDifference_eq_transferSection
+    H b hb f₀ e z g h
+  change F b hb f₀ e z g - F b hb f₀ e z h =
+    P b hb z * (U b hb f₀ e z h - U b hb f₀ e z g) at hd
+  rw [hd]
   ring
 
 /-- Each of the four original receiver coefficients is the corresponding
@@ -325,7 +328,11 @@ theorem p4Q2PZ37ACQ_exists_transfer_relativeResidual
         (P b hb.le z) ^ 2 *
           ((Wbar b hb.le e + epsilon) * tA2 b hb.le e z) := by ring
   rw [hFact, hFact2] at hRatio
-  exact (mul_lt_mul_left hp).mp hRatio
+  by_contra hnot
+  have hge : (Wbar b hb.le e + epsilon) * tA2 b hb.le e z ≤
+      (4 * S b hb.le e) * tW b hb.le e z := le_of_not_gt hnot
+  have hprod := mul_le_mul_of_nonneg_left hge hp.le
+  exact (not_le_of_gt hRatio) hprod
 
 /-- If the true weighted transfer-section test is eventually discharged
 from the original Perron and two-posterior data, the true original GI
