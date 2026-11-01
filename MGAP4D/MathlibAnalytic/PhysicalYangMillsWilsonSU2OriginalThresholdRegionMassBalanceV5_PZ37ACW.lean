@@ -182,7 +182,8 @@ theorem p4Q2PZ37ACW_originalPositiveContribution_regionMass_lower
       simpa only [mul_one] using
         (le_of_lt hzi).trans (le_max_left (w b hb.le e z) 0)
     · rw [Set.indicator_of_notMem hz]
-      simpa using (le_max_right (w b hb.le e z) 0)
+      simp only [mul_zero]
+      exact le_max_right (w b hb.le e z) 0
   have hIntegral := integral_mono hLow hPos hPoint
   change (∫ z : Pair,
     delta * (T b hb.le e delta).indicator (fun _ => (1 : ℝ)) z ∂outer) ≤
@@ -224,7 +225,7 @@ theorem p4Q2PZ37ACW_originalNegativeContribution_complementMass_upper
       have hzi : delta < w b hb.le e z := hz
       have hw : 0 < w b hb.le e z := lt_of_le_of_lt hdelta hzi
       rw [max_eq_right (by linarith : -(w b hb.le e z) ≤ (0 : ℝ))]
-      ring
+      simp
     · rw [Set.indicator_of_notMem hz]
       simpa using p4Q2PZ37ACW_originalNegativePart_le_FC H b hb.le e z
   have hBound := integral_mono hNeg hEnvelope hPoint
