@@ -110,10 +110,10 @@ theorem p4Q2PZ37ADI_originalPointwiseCovariance_fourSq_le_cap
         (continuous_const.prodMk continuous_id)
   have hCov :
       4 * (C b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e z) ^ 2 ≤
-        Var (F b₀ p4Q2PZ37ADC_fixedCoupling_pos.le f₀ e z) E := by
+        Var (F b₀ p4Q2PZ37ADC_fixedCoupling_pos.le f₀ e z) := by
     change 4 * (CompactEnergyMismatchMoment.covariance μ
         (F b₀ p4Q2PZ37ADC_fixedCoupling_pos.le f₀ e z) E) ^ 2 ≤
-      Var (F b₀ p4Q2PZ37ADC_fixedCoupling_pos.le f₀ e z) E
+      Var (F b₀ p4Q2PZ37ADC_fixedCoupling_pos.le f₀ e z)
     exact CompactEnergyMismatchMoment.four_covariance_sq_le_variance μ
       (F b₀ p4Q2PZ37ADC_fixedCoupling_pos.le f₀ e z) E hCont
       (continuous_specialUnitaryWilsonPlaquetteEnergy 2)
@@ -121,7 +121,7 @@ theorem p4Q2PZ37ADI_originalPointwiseCovariance_fourSq_le_cap
   have hVar :=
     p4Q2PZ37ACA_originalReceiver_variance_le_FC
       H b₀ p4Q2PZ37ADC_fixedCoupling_pos.le f₀ e z
-  change Var (F b₀ p4Q2PZ37ADC_fixedCoupling_pos.le f₀ e z) E ≤
+  change Var (F b₀ p4Q2PZ37ADC_fixedCoupling_pos.le f₀ e z) ≤
     (B b₀ p4Q2PZ37ADC_fixedCoupling_pos.le) ^ 2 at hVar
   exact (hCov.trans hVar).trans
     (p4Q2PZ37ADF_originalFCsq_le_transferPlaquetteBound H)
