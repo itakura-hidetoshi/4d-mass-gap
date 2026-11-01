@@ -320,7 +320,6 @@ theorem p4Q2PZ37ACT_originalPointwiseFraction_eq_transfer
   have hP : P b hb z ≠ 0 :=
     (p4Q2PZ37ABZ_originalTransferSectionPrefactor_pos H b hb z).ne'
   field_simp [hP, ne_of_gt hp, ne_of_gt hV]
-  ring
 
 /-- Pointwise direct SU(2) transfer-variance computation of the same sharp
 posterior criterion, with no assumption of a receiver variance floor. -/
