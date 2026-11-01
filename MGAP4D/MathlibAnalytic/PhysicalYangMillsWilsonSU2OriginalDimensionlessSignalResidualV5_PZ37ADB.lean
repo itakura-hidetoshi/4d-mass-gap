@@ -119,7 +119,10 @@ theorem p4Q2PZ37ADB_realHaarFloor_normalize
   field_simp [ne_of_gt hx, ne_of_gt hden, ne_of_gt htwo, hne1, hne2]
   have hcancel : (x - s * 8) * (x - s * 8)⁻¹ = 1 := by
     simpa only [div_eq_mul_inv] using (div_self hne1)
-  nlinarith only [hcancel]
+  calc
+    x * (x - s * 8)⁻¹ * 16 - s * (x - s * 8)⁻¹ * 128 =
+        16 * ((x - s * 8) * (x - s * 8)⁻¹) := by ring
+    _ = 16 := by simp only [hcancel, mul_one]
 
 /-- Scaling by the SAME original positive FC cap cancels precisely
 from the Perron negative-region threshold ratio. -/
