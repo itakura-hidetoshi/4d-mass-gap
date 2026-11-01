@@ -1,3 +1,31 @@
+## 検証済み定理 — ADG（2026-11-01 JST）
+
+唯一の定理正本は`formal/real-hilbert-uniform-coercive-strong-limit`、default `main`は文書ミラーのみ。P4-Q2-PZ37ADG定理PR #6130はMERGED、squash SHAは`41cd7430003e284f3d5ec59b9740bcd68d5de227`。元の有限体積interacting Wilson SU(2)、中心化Gauss-law物理源、FF受信器、正Perron代表、更新後transfer section、元の二interacting posteriorと境界pair-Haarを厳密に保持しています。
+
+### 固定有限体積・全真正リンクに共通する両符号Cov領域
+
+- ADCの真正固定結合`b0=log(3/2)/64>0`、ACJの元境界Cov`C_e(z)`・二乗モーメント`S_e=∫ C_e(z)^2 dν_H(z)>0`、ADFの元transfer・プラケット明示上界`K_H=6*P_H*exp(2*b0*A_H)*(exp(8*b0)^3-1)^2`を同一模型で使用。
+- ADEの有限リンク最小値から`s_H=min_e S_e>0`が存在。ACJの真正正負のOPEN領域`A_e^+={C_e>sqrt(S_e/2)}`、`A_e^-={-C_e>sqrt(S_e/2)}`は各リンクで実pair-Haar質量`ν_H(A_e^±)>=S_e/(B_H²-2*S_e)>0`を持つ。
+- **ADGの新規全リンク共通定量証拠**：`a_H=sqrt(s_H/2)>0`、`m_H=s_H/(K_H-2*s_H)>0`とすると、各有限Hのすべての真正リンク`e`について両領域がOPENで`ν_H(A_e^+)>=m_H`、`ν_H(A_e^-)>=m_H`、領域内でそれぞれ`C_e(z)>a_H`、`-C_e(z)>a_H`が成立。分母の正値はACJの`B_H²-2*S_e>0`、ADEの`s_H<=S_e`、ADFの`B_H²<=K_H`による形式証明。
+- **Sの値を入力しない独立の局所証拠**：ACI・ACD・ADEから各真正リンク`e`で実CovのOPEN集合`U_e`、振幅`a_e>0`、実Haar質量`ν_H(U_e)>0`、全`z∈U_e`で`|C_e(z)|>=a_e`が存在。有限個の真正リンク上でこれらの振幅・質量をそれぞれ最小化して別の`a'_H>0`、`m'_H>0`を構成し、全リンクで`ν_H(U_e)>=m'_H`、`|C_e(z)|>=a'_H`、`S_e>=(a'_H)^2*m'_H`をLean4証明した。選択したOPEN集合はリンクに依存するが、二定数はリンクに依存しない。
+- **数値条件は別問題**：局所証拠について`K_H<272*(a'_H)^2*m'_H`を別途満たせば、固定Hの全真正リンクで元GI二乗平均証明書`M_GI>0`。元の二interacting posteriorの実signed GI応答が非零となるOPEN・正pair-Haar質量集合も各リンクで存在する。これは既存ADE・ADFへの厳密な条件付き接続であり、signed応答の符号を断定しない。
+- **証明と未証明の境界**：両符号OPEN領域の存在、リンク共通の正振幅・正Haar質量下界、および局所領域からの正モーメント下界は無条件で形式化完了。正の共通定数の**数値評価**、`K_H<272*(a'_H)^2*m'_H`、全Hに一様な定数、連続体4D Yang–Mills質量ギャップは未証明。存在の定理を数値優越の証明と混同しない。
+
+### exact-source CI・squash・マージ後push CI
+
+- 定理PR #6130 https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6130 — MERGED。新規Leanファイル`MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalUniformTwoSignCovarianceV5_PZ37ADG.lean` 1件のみ、2定義・9定理・9件`#print axioms`、405行追加・削除0。既存Lean・root・toolchain・workflow・物理模型は不変。
+- 最終exact-source HEAD `432998c404d4d3553e642e95e7914338d38fa6f9`、test-merge commit `5e7f4257c82e1f24cfbcb5f9730b8a29af237418`、定理squash `41cd7430003e284f3d5ec59b9740bcd68d5de227`はすべて同じGit tree `5f4796263704cf58227db3efa017dd83c3a0d266`。単一新規ファイルによるappend-only。
+- exact-source CI #41303675413 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41303675413 — `11256/11256` Lean SUCCESS、9/9公理は`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error `0/0`、独立receipt`event=pull_request`・`source_result=success`。
+- マージ後push CI #41304074956 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41304074956 — squash HEADで`11256/11256` SUCCESS、9/9標準公理のみ、`sorryAx`・変更警告・変更エラーなし、独立receipt`event=push`・`source_result=success`。
+- 初回CI #41303150874のLean局所記法`S`と同名束縛変数の構文衝突を小文字変数に修正。連鎖した定理名解決エラー・未証明依存は全て解消。9定理の主張・仮定を弱めていない。Lean`v4.30.0-rc2`、mathlib`5450b53e5ddc75d46418fabb605edbf36bd0beb6`固定。
+- docs-onlyはREADME・ROADMAPの同文追記のみ。Strict Leanを別途起動しない。
+
+### 次の研究課題 — ADH（OPEN）
+
+実Covを非零にする具体的な元境界配置`z0`における`|C_e(z0)|`の数値的下界、受信器の局所連続性に対する**明示的な近傍半径**、その近傍の真正pair-Haar質量の明示的下界を調べる。これらが分かれば`(a'_H)^2*m'_H`を数値比較へ進められる。固定Hの成立、全リンク共通、全H一様を区別し、未証明の正値・質量ギャップを仮定しない。
+
+---
+
 ## 検証済み定理 — ADF（2026-11-01 JST）
 
 唯一の定理正本は`formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。P4-Q2-PZ37ADF／定理PR #6127 MERGED、定理squash SHA `104a6d2dde97b6fcbe5d2031942d0bfba4b0cfb4`。ADE以前の証明を保持し、元の有限体積interacting Wilson SU(2)、中心化Gauss-law物理源、FF受信器、正Perron代表、更新後transfer section、元の二interacting posterior、境界pair-Haar、根・workflow・toolchain pinは無変更。
