@@ -1,3 +1,28 @@
+## 検証済み定理 — ADI（2026-11-02 JST）
+
+唯一の定理正本は`formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。P4-Q2-PZ37ADI定理PR #6136はMERGED、定理squash SHAは`b48204a99e89a454aac1bda0fd9d11fd34dfc303`。元の有限体積interacting Wilson SU(2)、固定結合`b0=log(3/2)/64`、中心化Gauss-law源、元FF受信器、Perron/transfer、元の二interacting posterior、元の境界pair-Haar確率とADHの位相適合擬距離は不変更。
+
+### 真正Cov上界からのHaar球質量1/17障害
+
+- **元模型の無条件の点評価**：ACJの真正共分散分散上界`4*C_e(z)^2<=B_H^2`とADFの真のtransfer/プラケット上界`B_H^2<=K_H`を、各有限体積H、元の物理リンクe、元の境界対zにそのまま適用して`4*C_e(z)^2<=K_H`をLean4証明。独立した確率分布・抽象Covモデル・仮想距離へすり替えない。
+- **数値的必要条件（単一球の証明書に限る）**：元pair-Haar実質量`ν_H(A)<=1/17`の任意集合Aについて`68*C_e(z0)^2*ν_H(A)<=K_H`。従ってADHのstrict条件`K_H<68*C_e(z0)^2*ν_H(ball)`を満たす元Haar球には必ず`ν_H(ball)>1/17`（約5.882%）が必要。元pair-Haar確率正規化`ν_H(A)<=1`から別途`C_e(z0)^2>K_H/68`も必要。これらはADHの**特定の十分条件**に対する必要条件であり、GI応答そのものの必要条件ではない。
+- **同じ擬距離における真正Lipschitz半径の単調性**：`0<L1<=L2`なら`r(L)=|C_e(z0)|/(2L)`は`r(L1)>=r(L2)`。したがって**同一の元pair-Haar法則**に対して`ν_H(ball(r(L1)))>=ν_H(ball(r(L2)))`であり、68条件の右辺も悪化しない。さらに改善されたL1の真正Cov Lipschitz評価を**別途検証した場合**に限り、L2でのstrict数値条件からADHの元GI二乗平均証明書正値と、元二posteriorのsigned GI応答非零OPEN・正Haar質量領域に条件付き接続。
+- **未証明の境界**：元SU(2)受信器に対する実数値Lipschitz定数、非零Cov点の数値振幅、元Haar球質量の具体値、1/17超過、68閾値の成立、全H一様評価、連続体4D Yang–Mills質量ギャップは未証明。ADHの擬距離は元位相と適合するが、物理的な数値距離として未校正である。
+
+### exact-source CI・公理依存・マージ後push CI
+
+- 定理PR #6136 https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6136 — MERGED。新規Leanファイル`MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalNumericHaarMassObstructionV5_PZ37ADI.lean` 1件のみ、8定理・8件`#print axioms`、追加284行・削除0行。既存Lean・真正模型・root・workflow・pin不変更。
+- 最終exact-source HEAD `635ac1fab2f281c6e062a1aca4ea530ca56e0fdb`、test-merge commit `f9fa80d685e99e7cf9b8e3fdecb9fd536bcebb87`、定理squash `b48204a99e89a454aac1bda0fd9d11fd34dfc303`のGit treeはすべて`8eab57b6412e94d2b087a1bc1cce4b52256584f1`で完全一致。
+- exact-source CI #41329768683 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41329768683 — 11258/11258 Lean SUCCESS、8/8公理は`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立completion receipt `event=pull_request`・`source_result=success`。
+- マージ後push CI #41330387235 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41330387235 — 正本squash HEADで11258/11258 Lean SUCCESS、8/8標準3公理のみ、`sorryAx`・変更警告・変更エラーなし、独立completion receipt `event=push`・`source_result=success`。
+- 初回CI #41329233315では元`CompactEnergyMismatchMoment.variance μ`が一変数関数であるのに対し`Var(F) E`と余分な引数を渡したLean elaboration errorが3箇所あった。依存ACJ定理の完全な引数と既存分散記法を確認し、`Var(F)`へ訂正。定理主張・仮定の緩和なし。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`固定。docs-onlyではStrict Leanを起動しない。
+
+### 次の研究課題 — ADJ（OPEN）
+
+真正SU(2)境界配置の**数値校正された具体的な積距離**と元pair-Haar球質量下界、ACIの真正非零共分散の**数値振幅**、元FF受信器の真正Lipschitz定数をそれぞれ導出する。まずADHの特定十分条件に必要な球質量`>1/17`と点振幅`>sqrt(K_H/68)`の実現可能性を、有限Hの正確な物理量で検証する。存在・条件付き定理を数値的成功と同一視せず、全H一様性や連続体質量ギャップは別ゲートに保持する。
+
+---
+
 ## 検証済み定理 — ADH（2026-11-01 JST）
 
 唯一の定理正本は`formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。P4-Q2-PZ37ADH定理PR #6133はMERGED、定理squash SHA `729b2138ffa234e2c0f57f5e21abc8107fca3be0`。元の有限体積interacting Wilson SU(2)、中心化Gauss-law源、元FF受信器、Perron代表・transfer、元の二interacting posteriorと元境界pair-Haar測度は不変更。
