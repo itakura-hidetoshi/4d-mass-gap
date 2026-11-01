@@ -1,3 +1,28 @@
+## 検証済み定理 — ADK（2026-11-02 JST）
+
+唯一の定理正本は`formal/real-hilbert-uniform-coercive-strong-limit`、default `main`はREADME・ROADMAP文書ミラーのみ。P4-Q2-PZ37ADK定理PR #6142はMERGED、定理squash SHA `de512ca9efd2cfb3477d4e63524f8c3e16406be8`。元の有限体積interacting Wilson SU(2)、固定結合`b0=log(3/2)/64>0`、中心化Gauss-law物理源、元FF受信器、Perron/transfer、元二interacting posterior、元境界pair-Haar確率は不変更。
+
+### 真正行列実8次元特徴からの数値校正弦距離と物理的Haar球
+
+- **既存真正SU(2)特徴の距離校正**：normalized SU(2)実トレース核の既存行列実8次元Hilbert特徴`J(g)=sqrt(1/2)*realify(g)`を使用し、弦距離`d_J(g,h)=||J(g)-J(h)||`を定義。既存の元SU(2)相対トレース核内積と単位特徴ノルムから、元Wilsonエネルギー`E(g)=1-Re(tr(g))/2`に関する**厳密等式**`d_J(g,h)^2=2*E(g^{-1}h)`をLean4証明。`d_J>=0`、`d_J(g,g)=0`、対称性・三角不等式も証明。`J`の連続性から数値弦距離OPEN球は**元のSU(2)位相でOPEN**。`J`の単射性による距離分離性は別途形式化するため、ADK時点では校正済み**擬距離**と呼ぶ。
+- **全中心における具体的半径と真正Haar質量**：ABVの元normalized SU(2) compact Haarに対するquaternion8平行移動による真正Wilson閉cap`{g:E(g)<=1/2}`の数値下界`μ(cap)>=1/8`を再利用。任意の真正中心`a∈SU(2)`、任意の数値半径`r>1`で、元の閉capの`a`による実左平行移動は真の弦距離OPEN球`B_J(a,r)={g:d_J(a,g)<r}`に包含。実Haar左不変性から`μ(B_J(a,r))>=1/8`が成立。特に**明示半径`5/4`**で`μ(B_J(a,5/4))>=1/8>1/17`。
+- **元の有限体積Haar pairへの定量移送**：元境界`Pair_H=Cfg_H×Cfg_H`と真の`ν_H=(⊗_{e∈Link_H}μ)⊗(⊗_{e∈Link_H}μ)`に対し、`z↦z.left(e)`の真正測度保存射影から、一リンク弦距離円筒`V_{H,e,a,r}={z:d_J(a,z.left(e))<r}`はOPENで、`ν_H(V)=μ(B_J(a,r))>=1/8`、任意`H,e,a,r>1`で成立。ACIの真正中心化Gauss-law共分散非零点`z0`を選び、その**真の第1境界リンク値`z0.left(e)`を円筒の中心**にでき、中心点で`C_e(z0)≠0`、円筒Haar質量`>1/17`を同時に証明。ただし円筒全域で共分散が非零または一定振幅を保つとは主張しない。
+- **真正二境界座標での質量**：元の`(z.left(e),z.right(e))`射影は真正pair-Haarから`μ×μ`への測度保存。二つの独立した数値半径`5/4`弦距離球を同時に課す**元物理境界上の二座標円筒**は、実質量が各SU(2)球質量の積に正確に等しく`>=1/64`。これを全リンク制約の球、posterior法則、またはGI受信器の振幅と取り違えない。
+- **引き続きOPENな本質的障害**：全リンクの数値校正積距離での**真正全座標球**のHaar質量、SU(2)特徴単射性の独立Lean証明、元FF受信器の実Lipschitz係数`L_H,e`、非零点共分散の実数値下界、円筒の共分散安定部分の質量`>1/17`、ADHの`K_H<68*C_e(z0)^2*ν_H(ball)`、全H一様強制性および連続体4D Yang–Mills質量ギャップは未証明。`1/8`は一座標円筒、`1/64`は二座標円筒の数値下界に限定。
+
+### exact-source Lean・公理依存・独立completion receipt
+
+- 定理PR #6142 https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6142 — MERGED。新規Leanファイル`MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalCalibratedChordalHaarBallsV5_PZ37ADK.lean`のみ、21定理・21件`#print axioms`、追加430行・削除0行。既存Lean・root・物理模型・workflow・toolchain pin変更なし。
+- source SHA `3d2ce2128538a7c765b7dc61f8e5e1d8d7644fd1`、test-merge SHA `5253f765eaa54f86408ebe69a077026126dfdc88`、定理squash SHA `de512ca9efd2cfb3477d4e63524f8c3e16406be8`はすべて共通Git tree `c4cd8713a6e348184e1e4a8f40d631e2041c9881`。
+- exact-source CI #41347960546 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41347960546 — **11260/11260 Lean SUCCESS**。21/21公理は`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立completion receipt`event=pull_request`・`source_result=success`。
+- マージ後push CI #41348415962 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41348415962 — theorem squash正本HEADで**11260/11260 SUCCESS**、21/21標準公理、`sorryAx`・変更警告・エラー0、独立completion receipt`event=push`・`source_result=success`。
+- 初回source CIから追加修正なし。既存normalized-trace Hilbert特徴、Mathlibのノルム二乗等式・連続性・Haar測度保存射影を直接組み合わせて証明。Lean`v4.30.0-rc2`、mathlib`5450b53e5ddc75d46418fabb605edbf36bd0beb6`維持。docs-onlyではStrict Leanを起動しない。
+
+### 次の研究課題 — ADL（OPEN）
+
+ADKの数値校正されたSU(2)実8次元特徴について**単射性・元位相との同値性を形式化した真正距離**を確立する。その距離を元の有限リンク積・左右二境界の**全座標**に拡張し、真正pair-Haarの全座標球質量を`H`依存の実数値として評価する。単一/二座標円筒下界を全座標球へ無根拠に流用しない。その後、同じ全座標球で元FF受信器の物理共分散振幅・Lipschitz係数を導出し、ADH/ADIの数値`1/17`および68閾値を評価する。全H一様性・連続体mass gapは別ゲートとする。
+
+---
 ## 検証済み定理 — ADJ（2026-11-02 JST）
 
 唯一の定理正本は`formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。P4-Q2-PZ37ADJ定理PR #6139はMERGED、定理squash SHA `0517a9bf440ba8fda37db56bb04ff3c657cdd662`。元の有限体積interacting Wilson SU(2)、固定結合`b0=log(3/2)/64>0`、中心化Gauss-law源、元FF受信器、Perron/transfer、元二interacting posteriorと真正境界pair-Haar確率は変更していない。
