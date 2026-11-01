@@ -102,8 +102,8 @@ local instance p4Q2PZ37ADH_pairPseudoMetric : PseudoMetricSpace Pair :=
   TopologicalSpace.pseudoMetrizableSpacePseudoMetric _
 
 private theorem p4Q2PZ37ADH_originalOuterOpenPos :
-    outer.IsOpenPosMeasure := by
-  letI : μ.IsOpenPosMeasure := by
+    (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H 2).IsOpenPosMeasure := by
+  letI : (normalizedCompactHaar G).IsOpenPosMeasure := by
     unfold normalizedCompactHaar
     infer_instance
   letI : (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2).IsOpenPosMeasure := by
@@ -117,7 +117,7 @@ positive original pair-Haar REAL mass for each positive radius. -/
 theorem p4Q2PZ37ADH_originalBallHaarMass_pos
     (z₀ : Pair) (r : ℝ) (hr : 0 < r) :
     0 < Measure.real outer (Metric.ball z₀ r) := by
-  letI : outer.IsOpenPosMeasure :=
+  letI : (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H 2).IsOpenPosMeasure :=
     p4Q2PZ37ADH_originalOuterOpenPos H
   have hBall : (Metric.ball z₀ r).Nonempty :=
     ⟨z₀, Metric.mem_ball_self hr⟩
@@ -326,7 +326,6 @@ theorem p4Q2PZ37ADH_originalLipschitz_gives_explicitBall
         L * (|C b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e z₀| / (2 * L)) =
           |C b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e z₀| / 2 := by
       field_simp [ne_of_gt hL]
-      ring
     exact lt_of_lt_of_eq h hEq
   have hTriangle :
       |C b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e z₀| ≤
@@ -413,7 +412,7 @@ theorem p4Q2PZ37ADH_originalLipschitzBall_numericGivesGI
       68 * (C b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e z₀) ^ 2 *
         Measure.real outer (Metric.ball z₀
           (|C b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e z₀| / (2 * L))) := by
-    rw [sq_abs]
+    rw [div_pow, sq_abs]
     ring
   have hRegionNumerical : K <
       272 * ((|C b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e z₀| / 2) ^ 2 *
