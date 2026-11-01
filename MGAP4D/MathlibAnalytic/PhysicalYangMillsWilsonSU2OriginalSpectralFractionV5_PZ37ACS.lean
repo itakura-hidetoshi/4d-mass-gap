@@ -285,7 +285,6 @@ theorem p4Q2PZ37ACS_originalGIMeanBudget_normalizedIdentity
       unfold p4Q2PZ37ACS_originalFirstFourEnergyFraction
         p4Q2PZ37ACS_originalPosteriorCriticalEnergyFraction
       field_simp [ne_of_gt hv, ne_of_gt hd]
-      ring
 
 /-- The exact genuine original GI squared orbit margin satisfies a
 pointwise spectral identity. It is a CERTIFICATE, not the GI gap itself. -/
