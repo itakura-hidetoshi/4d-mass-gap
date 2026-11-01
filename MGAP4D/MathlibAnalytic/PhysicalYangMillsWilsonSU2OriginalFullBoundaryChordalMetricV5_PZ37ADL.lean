@@ -234,7 +234,7 @@ theorem p4Q2PZ37ADL_originalFullBoundaryBox_mass_eq
         (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2))
       (p4Q2PZ37ADL_originalSliceFullChordalBox H a.1 r ×ˢ
         p4Q2PZ37ADL_originalSliceFullChordalBox H a.2 r) = _
-  exact measureReal_prod_prod
+  rw [measureReal_prod_prod]
 
 /-- Quantitative genuine original all-link/two-boundary floor.
 There are exactly 2*card(Link H) ORIGINAL SU(2) coordinates, so
