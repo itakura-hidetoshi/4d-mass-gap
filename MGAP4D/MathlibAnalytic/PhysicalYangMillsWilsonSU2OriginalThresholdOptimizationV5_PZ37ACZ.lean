@@ -125,7 +125,7 @@ theorem p4Q2PZ37ACZ_maxResidual_pos_and_saturates
       tau b * p4Q2PZ37ACZ_maxResidualAtThreshold H b hb.le e delta =
         32 * S b hb.le e - delta := by
     unfold p4Q2PZ37ACZ_maxResidualAtThreshold
-    field_simp [ne_of_gt ht] <;> ring
+    field_simp [ne_of_gt ht]
   refine ⟨hr, ?_⟩
   rw [hScale]
   linarith
@@ -173,7 +173,7 @@ theorem p4Q2PZ37ACZ_reducedMargin_pos_gives_positiveBudget
   have ht := p4Q2PZ37ACZ_originalPosteriorGap_pos b hb
   have hScale : tau b * r = 32 * S b hb.le e - delta := by
     dsimp [r, p4Q2PZ37ACZ_maxResidualAtThreshold]
-    field_simp [ne_of_gt ht] <;> ring
+    field_simp [ne_of_gt ht]
   have hProd : 0 < tau b *
       (r * (F b hb.le e - C b hb.le / (C b hb.le + delta)) -
         Wbar b hb.le e) := by
@@ -231,7 +231,7 @@ theorem p4Q2PZ37ACZ_nonpositiveBudget_reducedMargin_obstruction
   have ht := p4Q2PZ37ACZ_originalPosteriorGap_pos b hb
   have hScale : tau b * r = 32 * S b hb.le e - delta := by
     dsimp [r, p4Q2PZ37ACZ_maxResidualAtThreshold]
-    field_simp [ne_of_gt ht] <;> ring
+    field_simp [ne_of_gt ht]
   have hObs :=
     p4Q2PZ37ACY_nonpositiveBudget_forces_intersectionMomentObstruction
       H b hb e hNonpos r delta hr hDelta hLocal
@@ -355,7 +355,7 @@ theorem p4Q2PZ37ACZ_nonpositiveBudget_selectedFC_obstruction
     p4Q2PZ37ACX_nonpositiveBudget_thresholdMass_upper
       H b hb e
       (32 * S b hb.le e - tau b * Rcap b hb.le e) hDelta hNonpos
-  exact hFloor.trans hUpper
+  simpa only [add_comm] using hFloor.trans hUpper
 
 /-- Preserve ACP's EXACT physical obstruction boundary: any positive
 ACZ optimized sufficient condition implies tau*Wbar<64*S; ACZ does
