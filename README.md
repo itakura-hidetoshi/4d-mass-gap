@@ -1,3 +1,22 @@
+## 検証済み定理 — ADP（2026-11-02 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラーのみ。P4-Q2-PZ37ADP定理PR [#6157](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6157) はMERGED、定理squash SHA `472b95ec8070088d66030c7ad067cc731f1f4ce2`。元の有限体積interacting Wilson SU(2)、固定結合、中心化Gauss-law物理源、元FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haar、定理rootは不変更。
+
+### 真正SU(2)弦距離の有限被覆と小球Haar数値証明書
+
+- **任意正半径での真正SU(2)有限net**：ADKの元の正規化行列特徴 `J` が定める `B_J(a,r)={g:d_J(a,g)<r}` は元位相で開き、真正 `SU(2)` はコンパクト。全 `r>0` について有限集合 `s:Finset SU(2)` を元のSU(2)内部から選び、全 `g` がある `a∈s` の球 `B_J(a,r)` に入ることをLean4証明。被覆集合 `s` は非空。
+- **元normalized SU(2) Haarの評価可能な数値下界**：ADMの中心不変な元Haar球質量 `m(r)=μ(B_J(1,r))` に対して、被覆が成立する任意の実際の有限 `s` について `1≤card(s)*m(r)`、従って **`m(r)≥1/card(s)`** をLean4証明。被覆と `card(s)≤N` を具体的に検査できれば **`m(r)≥1/N`**。真のnormalized Haarと測度劣加法性のみを使用し、有限群上の一様分布は使わない。どの真正SU(2)中心でも同じ質量下界が成立。
+- **元の全リンク・二境界D_H球への厳密移送**：元の有限`H`リンク集合`Link_H`と`R>0`について、被覆半径 `r=R/(2*card(Link_H)+1)` の真正net `s` から `ν_H(B_{D_H}(a,R))≥(1/card(s))^(2 card(Link_H))`。さらに`card(s)≤N`なら `ν_H(B_{D_H}(a,R))≥(1/N)^(2 card(Link_H))` を形式証明。元のpair-Haar法則とADMの箱⊆球をそのまま使用し、半径 `R=1/2` の元全リンク球でも存在証明書を構成。
+- **数値化に関する正確な境界**：全`r>0`で有限整数分母が存在することと、その値 `N(r)` を計算したことは異なる。今回の `s` はコンパクト性による存在証明であり、**明示した`r↦N(r)`・`c*r^3`等の半径だけによる数値下界は未証明**。ADI/ADHの厳密68条件、元Perron/FF共分散の定量Lipschitz係数、ACI非零点振幅、H一様強制性・連続体4D Yang–Mills質量ギャップも未解決。
+- **次の橋渡し**：固定mathlib `Mathlib/MeasureTheory/Constructions/HaarToSphere.lean` に球面Haarの `toSphereBallBound` がある。ただし、これを真正SU(2)へ移すには元の四元数・単位3球表示と元normalized Haarの測度保存対応を先にLean4証明する必要がある。現段階でその対応は仮定にも結論にも入れていない。
+
+### exact-source Lean4・公理依存
+
+- 新規12定理と `#print axioms` 12件。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。[exact-source PR CI #41361036521](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41361036521) は **11,265/11,265 SUCCESS**、変更Leanファイルwarning/error 0/0、12件すべて標準3公理 `propext`・`Classical.choice`・`Quot.sound` のみで `sorryAx` なし、独立MCP completion receipt SUCCESS。
+- Source/test-merge/squash Git treeは `d940b7e31c9632dacd73e696576dbd7e89fc9f6e` で一致。定理正本はPR #6157のsquashに保持し、default mainにはLean証明をコピーしない。
+
+---
+
 ## 検証済み定理 — ADO（2026-11-02 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAPの文書ミラーのみ。P4-Q2-PZ37ADO定理PR [#6154](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6154) はMERGED（squash `a1d8563a055198509557072de33666809a2420d6`）。元の有限体積interacting Wilson SU(2)、固定結合、中心化Gauss-law物理源、元FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haarと定理rootは不変更。
