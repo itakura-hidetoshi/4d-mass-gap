@@ -219,6 +219,50 @@ theorem p4Q2PZ37ADC_allFiniteVolumes_of_uniformSignalConstant
   exact p4Q2PZ37ADC_fixedCoupling_signal_gt_seventeenth_budget_pos
     n e (lt_of_lt_of_le hc (hUniform n e))
 
+/-- For any FIXED finite volume with at least one physical link, the
+actual positive Wilson signal fractions have an attained strictly
+positive MINIMUM over all links. This gives one exact H-dependent real
+constant c_H that is independent of e; no unproved numerical estimate
+c_H>1/17 or H-uniform lower bound is inserted. -/
+theorem p4Q2PZ37ADC_fixedVolume_positiveLinkIndependentConstant
+    [Nonempty Link] :
+    ∃ c : ℝ, 0 < c ∧
+      ∀ e : Link,
+        c ≤ u p4Q2PZ37ADC_fixedCoupling
+          p4Q2PZ37ADC_fixedCoupling_pos.le e := by
+  classical
+  obtain ⟨e₀, _, hMin⟩ :=
+    Set.exists_min_image
+      (Set.univ : Set Link)
+      (fun e : Link =>
+        u p4Q2PZ37ADC_fixedCoupling
+          p4Q2PZ37ADC_fixedCoupling_pos.le e)
+      (Set.finite_univ : (Set.univ : Set Link).Finite)
+      (Set.univ_nonempty : (Set.univ : Set Link).Nonempty)
+  refine ⟨u p4Q2PZ37ADC_fixedCoupling
+      p4Q2PZ37ADC_fixedCoupling_pos.le e₀,
+    (p4Q2PZ37ADB_originalSignalFraction_pos_le_one
+      H p4Q2PZ37ADC_fixedCoupling
+        p4Q2PZ37ADC_fixedCoupling_pos e₀).1, ?_⟩
+  intro e
+  exact hMin e (Set.mem_univ e)
+
+/-- The exact finite-H minimum c_H can serve as a common signal
+threshold for ALL physical links only if the ADDITIONAL numerical
+inequality c_H>1/17 is independently established. -/
+theorem p4Q2PZ37ADC_fixedVolume_constantThreshold_for_allLinks
+    [Nonempty Link]
+    (hNumerical : ∃ c : ℝ, (1 / 17 : ℝ) < c ∧
+      ∀ e : Link,
+        c ≤ u p4Q2PZ37ADC_fixedCoupling
+          p4Q2PZ37ADC_fixedCoupling_pos.le e) :
+    ∀ e : Link,
+      0 < Budget p4Q2PZ37ADC_fixedCoupling
+        p4Q2PZ37ADC_fixedCoupling_pos.le e := by
+  obtain ⟨c, hc, hLower⟩ := hNumerical
+  exact p4Q2PZ37ADC_fixedVolume_linkUniformSignal_bound
+    H c hc hLower
+
 end GroundStatePosteriorJoint
 end
 end MGAP4D.MathlibAnalytic
@@ -233,3 +277,5 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ADC_fixedCoupling_nonpositiveBudget_signal_le_seventeenth
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ADC_fixedVolume_linkUniformSignal_bound
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ADC_allFiniteVolumes_of_uniformSignalConstant
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ADC_fixedVolume_positiveLinkIndependentConstant
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ADC_fixedVolume_constantThreshold_for_allLinks
