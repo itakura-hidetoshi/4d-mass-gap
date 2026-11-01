@@ -1,3 +1,23 @@
+## 検証済み定理 — ADO（2026-11-02 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAPの文書ミラーのみ。P4-Q2-PZ37ADO定理PR [#6154](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6154) はMERGED（squash `a1d8563a055198509557072de33666809a2420d6`）。元の有限体積interacting Wilson SU(2)、固定結合、中心化Gauss-law物理源、元FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haarと定理rootは不変更。
+
+### 真正異半径SU(2)反対極Haarと元全リンク球の数値障害拡張
+
+- **真正反対極の2球距離恒等式**：ADK・ADNの元正規化行列8実次元特徴による`d_J`と実際の中心元`z=-I`について、全真正`g∈SU(2)`で`d_J(1,g)^2+d_J(z,g)^2=4`をLean4証明。`r,s>0`かつ`r^2+s^2≤4`なら元の異半径OPEN球は交わらず、同じnormalized SU(2) Haarに対して`m(r)+m(s)≤1`。
+- **真正Haar質量の有理数半径上界**：元ADKの`m(5/4)≥1/8`と新しい2球非交差性から、全`r>0`、`r²≤39/16`で`m(r)≤7/8`を形式証明。とくに`1/2≤m(3/2)≤7/8`。さらに全`0<r<2`について、正Haar質量の反対極球を使い`m(r)<1`を証明。ただし`m(r)`の小半径での明示正下界ではない。
+- **元の零時刻格子に12本以上の物理空間リンク**：側長`2(H+1)≥2`の元の`ZMod`格子について、原点と3つの座標単位頂点が異なることをLean4証明し、3空間方向との積から全有限`H`について`card(Link_H)≥12`を形式証明。元幾何からの結論であり、人工的なリンク数の仮定なし。`Nat.card_prod`でFintypeインスタンスの不一致を回避。
+- **本物の全リンク距離球に対する強い数値obstruction**：元ADM/ADNの真正`D_H`全リンク球のpair-Haar上界を利用し、任意の元中心a・有限H・`0<R`・`R²≤39/16`について`ν_H(B_D(a,R))≤(7/8)^(2 card(Link_H))≤(7/8)^24<1/17`をLean4証明。半径`3/2`を含み、ADNの`R²≤2`から真に拡張された。
+- **元物理源のADI/ADH 68条件に直接接続**：同じ真正`C_e(a)`と`K_H`で`68*C_e(a)^2*ν_H(B_D(a,R))≤K_H`を上記半径範囲に対して形式証明。これはこの球を用いる**ADHの特定の68十分条件が成立しない**ことを意味し、GI非零性・物理質量ギャップそのものの不成立を意味しない。
+- **未証明の本質的障害**：元normalized SU(2) Haarの任意小半径での計算可能な正下界・四元数/単位3球への測度保存対応・元Perron/FF共分散の定量Lipschitz係数・ACI非零点の数値振幅・共分散が安定する大質量球での`ν_H>1/17`・H一様強制性・連続体4D Yang–Mills質量ギャップ。元の一様連続性をLipschitz性と混同しない。
+
+### exact-source Lean4 CI・公理依存
+
+- 新規14定理、`#print axioms`14件。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。 [exact-source PR CI #41358770192](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41358770192) は **11,264/11,264 SUCCESS**、変更Leanファイルwarning/error 0/0、14件全て`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、独立MCP completion receipt SUCCESS。
+- Source/test-merge/squash Git treeは`cd2132bb473d25c7d2ed8b19605d1af478973319`で完全一致。定理PR #6154はMERGED。default mainは文書ミラーであり、Lean定理源は正本branchにだけ保持する。
+
+---
+
 ## 検証済み定理 — ADN（2026-11-02 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAPの文書ミラーのみ。P4-Q2-PZ37ADN定理PR [#6151](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6151) はMERGED（定理squash `0bdcc7da613baa448638605a41b08172e9c0960c`）。元の有限体積interacting Wilson SU(2)、固定結合、中心化Gauss-law物理源、元FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haarと定理rootは不変更。
