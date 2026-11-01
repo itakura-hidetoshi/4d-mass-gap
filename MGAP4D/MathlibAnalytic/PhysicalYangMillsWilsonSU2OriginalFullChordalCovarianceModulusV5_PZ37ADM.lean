@@ -233,7 +233,7 @@ theorem p4Q2PZ37ADM_originalFullBoxHaarMass_exactRadialPower
     p4Q2PZ37ADL_sliceBox_originalHaarMass_eq,
     p4Q2PZ37ADL_sliceBox_originalHaarMass_eq]
   simp_rw [p4Q2PZ37ADM_oneLinkChordalBallMass_eq_radial]
-  simp only [Finset.prod_const]
+  simp only [Finset.prod_const, Finset.card_univ]
   rw [two_mul, pow_add]
 
 /-- Every genuine full coordinate box has positive original pair
