@@ -1,3 +1,32 @@
+## 検証済み定理 — ADA（2026-11-01 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` はREADME・ROADMAP文書ミラーであり定理正本ではありません。P4-Q2-PZ37ADA／定理PR #6115 はMERGED、squash SHAは `d85c361bb368ba97c784a0d0c84087ad0cee22e0`。ACY・ACZ以前の全形式定理・no-goを維持し、append-only／tighten-only／overwrite-forbidden／same-rootを遵守しています。
+
+### 真正有限体積Wilson SU(2)・二閾値の閉形式最適化と障害
+
+元の相互作用Wilson SU(2)、中心化Gauss-law物理源、FF受信器、正Perron ground代表、更新後transfer section `U_z`、同じ二つのinteracting posterior、元の境界pair-Haar測度 `ν_H` と元空間リンク `e` は一切変更なし。各有限体積H・b>0・真正eで、四成分共分散二乗モーメント `S>0`、元FC上界 `B`、高次Haar残差平均 `Wbar>=0`、`tau=(exp(64b)-1)^2>0`、`C=tau*B²`、`F=4S/(B²/2-4S)`、`Q=32S` を使います。
+
+- **無条件の真正物理境界**：ACKの元の `S<=B²/16` とACNの正分母から `0<F<=1`、`0<C`、`0<Q` をLean4で証明。高信号Haar質量を独立確率モデルに置換していません。
+- **全閾値に対する平方完成**：`g(delta)=(Q-delta)*(F-C/(C+delta))`、`t=sqrt(C*(C+Q)/F)`、`delta_star=t-C`。すべての`delta>0`に対して `g(delta_star)-g(delta)=F*(delta-delta_star)^2/(C+delta)>=0` をLean4で証明。最適値は厳密に `g(delta_star)=(sqrt(F*(C+Q))-sqrt(C))²`。微分や数値的近似ではなく正確な代数的証明です。
+- **内点成立と真の必要十分条件**：元物理量の`F>C/(C+Q)`を満たせば `0<delta_star<Q`、ACZの`r_star=(Q-delta_star)/tau>0`、`delta_star+tau*r_star=Q`。さらに `Phi(delta)=g(delta)-tau*Wbar` とすると、`exists delta: 0<delta<Q and Phi(delta)>0` **iff** `F>C/(C+Q)` **and** `(sqrt(F*(C+Q))-sqrt(C))²>tau*Wbar` を元物理量に対して形式証明。
+- **条件付き正値性**：この二つの明示的数値条件が真正Wilsonデータに成立すれば、ACI/ACOの元平均GI**二乗証明書** `M_GI>0`。既存ACOから元の同じ二interacting posteriorの実signed GI応答が非零となるOPEN・正pair-Haar質量領域が帰結します。`M_GI`とsigned GI応答そのものを同一視しません。
+- **障害の完全分離**：`F<=C/(C+Q)`なら全`0<delta<Q`で `Phi(delta)<=0`。他方`M_GI<=0`かつ`F>C/(C+Q)`なら閉形式最適余剰`Phi(delta_star)<=0`。どちらもこの平均証明書に対するACZ閾値法の阻害であり、実signed GI応答の消失を含意しません。正の閉形式余剰なら既存ACPの厳密残差条件`tau*Wbar<64*S`も従います。
+- 元真正Wilson模型について上記二つの厳密数値条件を**無条件に証明したものではありません**。体積Hに一様なcoercivity、OS/Wightman再構成、連続体4D Yang–Mills質量ギャップも依然OPENです。
+
+### exact-source Lean4 CI・独立検証・正本保全
+
+- 定理PR #6115: https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6115 — MERGED。新規Leanファイル1件・2定義・19定理。追加486行・削除0行、既存Lean・物理模型・import root・workflow・pinは変更なし。
+- 最終exact-source HEAD `c7f84d3469c54afbc9219ccca79542a498f53a5b` と定理squash SHA `d85c361bb368ba97c784a0d0c84087ad0cee22e0` のGit treeは `c6602053b4edb6e8b826bade1ebc7497a835e3c7` で完全一致。
+- exact-source CI #41277266869: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41277266869 — workflow／11251/11251 Lean SUCCESS、19/19公理は`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立MCP completion receipt job #124762791493 SUCCESS。
+- マージ後push CI #41277632795: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41277632795 — squash HEAD上の実Lean step／workflow SUCCESS、独立completion receipt job #124763731246 SUCCESS。
+- Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 維持。docs-only Strict Leanは起動しません。
+
+### 次の研究課題 — ADB（OPEN）
+
+ADAで得た閉形式必要十分条件を、真正元Wilson模型のS、FC境界B、高次Haar平均Wbarの間の追加の**証明済み**関係へ還元できるかを検討する。特に`F>C/(C+Q)`の実モデルでの実現可能性、最適閉形式余剰の厳密正値性と必要な物理追加境界、有限H依存性を区別する。勝手な独立Haar模型・Perron一様下界・連続体質量ギャップの主張は導入しません。
+
+---
+
 ## 検証済み定理 — ACZ（2026-11-01 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` はREADME・ROADMAP文書ミラーであり定理正本ではありません。P4-Q2-PZ37ACZ／定理PR #6112 はMERGED、定理squash SHAは `fcc93417cca1e50af56543777bad74b857547b23`。ACY以前の全Lean定理・no-goを保持し、append-only／tighten-only／overwrite-forbidden／same-rootを維持しています。
