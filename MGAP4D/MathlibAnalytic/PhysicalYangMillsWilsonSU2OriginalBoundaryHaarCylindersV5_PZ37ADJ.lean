@@ -166,7 +166,7 @@ private theorem p4Q2PZ37ADJ_leftCoordinate_measurePreserving
     exact MeasureTheory.measurePreserving_fst
   have hEval : MeasurePreserving (fun x : Cfg => x e) slice μ := by
     simpa only [periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure] using
-      (MeasureTheory.measurePreserving_eval (μ := fun _ : Link => μ) e)
+      (MeasureTheory.measurePreserving_eval (fun _ : Link => μ) e)
   simpa only [Function.comp_def] using hEval.comp hLeft
 
 private theorem p4Q2PZ37ADJ_rightCoordinate_measurePreserving
@@ -177,7 +177,7 @@ private theorem p4Q2PZ37ADJ_rightCoordinate_measurePreserving
     exact MeasureTheory.measurePreserving_snd
   have hEval : MeasurePreserving (fun x : Cfg => x e) slice μ := by
     simpa only [periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure] using
-      (MeasureTheory.measurePreserving_eval (μ := fun _ : Link => μ) e)
+      (MeasureTheory.measurePreserving_eval (fun _ : Link => μ) e)
   simpa only [Function.comp_def] using hEval.comp hRight
 
 /-- A REAL one-link cylinder in the ORIGINAL H-dependent boundary pair,
@@ -290,11 +290,11 @@ theorem p4Q2PZ37ADJ_originalEveryLink_nonzeroCovariance_largeCylinder
     p4Q2PZ37ADJ_originalTranslatedFirstCylinder_mass_gt_seventeenth H e i⟩
 
 private theorem p4Q2PZ37ADJ_originalOuterOpenPos :
-    outer.IsOpenPosMeasure := by
+    (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H 2).IsOpenPosMeasure := by
   letI : (normalizedCompactHaar G).IsOpenPosMeasure := by
     unfold normalizedCompactHaar
     infer_instance
-  letI : slice.IsOpenPosMeasure := by
+  letI : (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2).IsOpenPosMeasure := by
     unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
     infer_instance
   unfold periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure
@@ -332,12 +332,13 @@ theorem p4Q2PZ37ADJ_originalLargeCylinder_hasPositiveCovarianceSubregion
   have ha : 0 < a := div_pos (abs_pos.mpr hz₀) (by norm_num)
   have hAtA : z₀ ∈ A := by
     refine ⟨hAt, ?_⟩
+    change a < |C b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e z₀|
     dsimp [a]
     have hPos : 0 < |C b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e z₀| :=
       abs_pos.mpr hz₀
-    dsimp
     linarith
-  letI : outer.IsOpenPosMeasure := p4Q2PZ37ADJ_originalOuterOpenPos H
+  letI : (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H 2).IsOpenPosMeasure :=
+    p4Q2PZ37ADJ_originalOuterOpenPos H
   have hMass : 0 < Measure.real outer A :=
     ENNReal.toReal_pos ((hOpen.measure_pos outer ⟨z₀, hAtA⟩).ne')
       (measure_ne_top _ _)
@@ -366,7 +367,7 @@ theorem p4Q2PZ37ADJ_originalTwoBoundaryCoordinateCap_mass_ge_sixtyFour
       Measure.real outer (p4Q2PZ37ADJ_originalTwoBoundaryCoordinateCap H e) := by
   have hEval : MeasurePreserving (fun x : Cfg => x e) slice μ := by
     simpa only [periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure] using
-      (MeasureTheory.measurePreserving_eval (μ := fun _ : Link => μ) e)
+      (MeasureTheory.measurePreserving_eval (fun _ : Link => μ) e)
   have hPair : MeasurePreserving
       (fun z : Pair => (z.1 e, z.2 e)) outer (μ.prod μ) := by
     have hProd := hEval.prod hEval
