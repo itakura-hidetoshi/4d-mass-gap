@@ -110,7 +110,14 @@ theorem p4Q2PZ37ADB_realHaarFloor_normalize
   have hfrac : 16 * s / x ≤ 1 :=
     (div_le_iff₀ hx).mpr (by simpa using hcap)
   have htwo : 0 < 2 - 16 * s / x := by linarith only [hfrac]
-  field_simp [ne_of_gt hx, ne_of_gt hden, ne_of_gt htwo] <;> ring
+  have hne1 : x - s * 8 ≠ 0 := by
+    have hpos : 0 < x - s * 8 := by linarith only [hden]
+    exact ne_of_gt hpos
+  have hne2 : x * 2 - s * 16 ≠ 0 := by
+    have hpos : 0 < x * 2 - s * 16 := by linarith only [hden]
+    exact ne_of_gt hpos
+  field_simp [ne_of_gt hx, ne_of_gt hden, ne_of_gt htwo, hne1, hne2]
+  ring
 
 /-- Scaling by the SAME original positive FC cap cancels precisely
 from the Perron negative-region threshold ratio. -/
@@ -120,7 +127,7 @@ theorem p4Q2PZ37ADB_realNegativeRatio_normalize
       t / (t + 2 * (16 * s / x)) := by
   have hden : 0 < t * x + 32 * s := by positivity
   have htwo : 0 < t + 2 * (16 * s / x) := by positivity
-  field_simp [ne_of_gt hx, ne_of_gt hden, ne_of_gt htwo] <;> ring
+  field_simp [ne_of_gt hx, ne_of_gt hden, ne_of_gt htwo]; ring
 
 /-- No square roots: the exact ADA interior optimum criterion is just
 a quadratic signal versus posterior-gap inequality on u in (0,1]. -/
