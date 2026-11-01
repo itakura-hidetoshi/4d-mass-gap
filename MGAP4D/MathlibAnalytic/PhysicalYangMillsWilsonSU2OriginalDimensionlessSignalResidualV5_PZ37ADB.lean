@@ -117,7 +117,7 @@ theorem p4Q2PZ37ADB_realHaarFloor_normalize
     have hpos : 0 < x * 2 - s * 16 := by linarith only [hden]
     exact ne_of_gt hpos
   field_simp [ne_of_gt hx, ne_of_gt hden, ne_of_gt htwo, hne1, hne2]
-  ring
+  field_simp [hne1]; ring
 
 /-- Scaling by the SAME original positive FC cap cancels precisely
 from the Perron negative-region threshold ratio. -/
