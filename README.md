@@ -1,3 +1,30 @@
+## 検証済み定理 — ADE（2026-11-01 JST）
+
+唯一の定理正本は`formal/real-hilbert-uniform-coercive-strong-limit`。default `main` はREADME・ROADMAP文書ミラーのみ。P4-Q2-PZ37ADE／定理PR #6124 MERGED、定理squash SHA `e21981875aae3c4c172a2e3758767e99d160fdd3`。ADCまでの既存定理を保存し、有限体積の真正interacting Wilson SU(2)、中心化Gauss-law源、元FF受信器、正Perron ground代表、更新後transfer section、元の二interacting posteriorと元境界pair-Haar測度を変更していません。
+
+### 実共分散モーメントの厳密定量閾値
+
+- ADCで固定済みの真正正結合`b0=log(3/2)/64`、元の共分散二乗モーメント`S(H,b0,e)>0`、元のFC上界`B(H,b0)²>0`、正規化した四成分信号`u(H,b0,e)=16*S/B²`について、`u>1/17` **iff** `B²<272*S`をLean4で証明しました。元GI二乗平均証明書の正値性に対する**条件付き十分条件**です。
+- **実物理量のみによる条件付きGI結論**：`B²<272*S`なら、元の真正GI二乗平均証明書`M_GI>0`。既存ACOより、元の二interacting posteriorのsigned GI応答が非零となるOPEN・正の元pair-Haar質量集合が存在します。二乗平均証明書と実signed GI応答は区別します。
+- **実Cov開領域の普遍的下界**：元outer空間の任意のOPEN集合`A`で`a>0`かつ`a<=|Cov(z)|`（全`z in A`）なら`a²*ν_H(A)<=S`。従って具体的な数値条件`B²<272*a²*ν_H(A)`を独立に示せば、同じ真のGI二乗平均証明書とsigned GI非零開領域が従います。
+- **この実Cov開領域は真正模型で存在**：既存ACIの元リンクにおける非零CovとACDの連続性・元Haar正質量から、各有限H・b0・真正リンクeについて、実際に`a>0`、OPEN`A`、`ν_H(A)>0`、`a<=|Cov|`を満たす証拠が存在し、`0<a²*ν_H(A)<=S`をLean4で構成しました。ただし`272*a²*ν_H(A)>B²`はここからは**導かれません**。
+- **物理的数値障害**：元GI二乗平均証明書が非正なら`272*S<=B²`。さらに任意の上記実Cov開領域`A`と閾値`a`に対し`272*a²*ν_H(A)<=B²`。これは証明書／十分条件の障害であり、signed GI応答の全消失ではありません。
+- **有限体積における定数化**：真正リンク型が非空で固定Hなら、有限個の元Covモーメントに対して`s_H=min_e S(H,b0,e)>0`が存在し、eに依存しない正定数が得られます。さらに`B(H,b0)²<272*s_H`が別途成立すれば固定Hの全リンクで正のGI二乗平均証明書が従う条件付き定理を証明。正の`s_H`の存在だけではこの数値272閾値は保証しません。
+
+### exact-source CI・公理・正本保全
+
+- 定理PR #6124 https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6124 — MERGED。新規Leanファイル1件、1定義・16定理・16`#print axioms`、359行追加・削除0行。既存Lean/model/root/toolchain/workflow/pinは無変更。
+- 完全修正後exact-source HEAD `e28ddd26c57b01efbe6605b8031e540b2097446b` と定理squash `e21981875aae3c4c172a2e3758767e99d160fdd3` のGit treeは `563057298367f49c1b98a685a6d6d5835b171479` で完全一致。Lean4局所表記`hb0.le`の非展開を完全修飾正値定理へ修正、既存定理の仮定緩和なし。
+- exact-source CI #41297952511 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41297952511 — 11254/11254 Lean SUCCESS。16/16公理依存`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立completion receipt SUCCESS。
+- マージ後push CI #41298470345 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41298470345 — squash HEAD上のLeanステップ・workflow・独立completion receiptすべてSUCCESS。
+- Lean`v4.30.0-rc2`、mathlib`5450b53e5ddc75d46418fabb605edbf36bd0beb6`維持。docs-onlyではStrict Leanを起動しません。
+
+### 次の研究課題 — ADF（OPEN）
+
+固定結合`b0`の元Perron/transferノルムを含むFC上界`B(H,b0)²`と、元Cov二乗モーメント`S(H,b0,e)`について、既存の具体的な格子・作用・転送の評価から`B²<272*S`、または実Cov開領域寄与`B²<272*a²*ν_H(A)`をさらに定量化できるかを検討する。とくに体積H依存の`s_H>0`と体積H一様な実数下界を明確に区別し、未証明の係数比較・連続体4D質量ギャップを既成事実としません。
+
+---
+
 ## 検証済み定理 — ADC（2026-11-01 JST）
 
 唯一の定理正本は`formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラー。P4-Q2-PZ37ADC／定理PR #6119はMERGED、定理squash SHAは`99de1c420935a2c48440a94ad0951209fda5033d`。ADBまでの既存形式証明は維持し、元の有限体積interacting Wilson SU(2)、中心化Gauss-law物理源、FF受信器、正Perron ground代表、更新後transfer section、同じ二interacting posterior、真正境界pair-Haar測度は変更なし。
