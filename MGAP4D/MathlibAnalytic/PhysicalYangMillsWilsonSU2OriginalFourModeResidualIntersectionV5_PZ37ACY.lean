@@ -342,6 +342,11 @@ theorem p4Q2PZ37ACY_originalIntersection_residualMoment_overlap
         r * Measure.real outer (Good b hb.le e r) := by
     rw [integral_const_mul, integral_indicator_const (1 : ℝ) hGoodMeas]
     simp
+  change (∫ z : Pair,
+      r * (High b hb.le e).indicator (fun _ : Pair => (1 : ℝ)) z ∂outer) ≤
+    (∫ z : Pair,
+      r * (Good b hb.le e r).indicator (fun _ : Pair => (1 : ℝ)) z +
+        W b hb.le e z ∂outer) at hBound
   rw [hHighIntegral, integral_add (hGI.const_mul r) hWI,
     hGoodIntegral] at hBound
   change r * Measure.real outer (High b hb.le e) ≤
