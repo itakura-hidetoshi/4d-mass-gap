@@ -118,7 +118,9 @@ theorem p4Q2PZ37ADO_twoRadiusHaarMass_sum_le_one
   have hBound :
       Measure.real haar (BallJ (1 : G) r ∪ BallJ z s) ≤ 1 :=
     measureReal_le_one
-  rw [hUnion, p4Q2PZ37ADM_oneLinkChordalBallMass_eq_radial] at hBound
+  rw [hUnion] at hBound
+  change m r + Measure.real haar (BallJ z s) ≤ 1 at hBound
+  rw [p4Q2PZ37ADM_oneLinkChordalBallMass_eq_radial z s] at hBound
   exact hBound
 
 /-- At every ORIGINAL radius 0<r<2, some genuine antipodal ball
@@ -209,7 +211,8 @@ theorem p4Q2PZ37ADO_fourSpatialVertices_injective :
     by_contra hne
     have hl : l ≠ 0 := Ne.symm hne
     have hv := congrArg (fun v : Vertex => v.1 l) h
-    simp [p4Q2PZ37ADO_fourSpatialVertices, hl, hOne] at hv
+    simp [p4Q2PZ37ADO_fourSpatialVertices, hl] at hv
+    exact hOne hv.symm
   · by_contra hne
     have hv := congrArg (fun v : Vertex => v.1 k) h
     simp [p4Q2PZ37ADO_fourSpatialVertices, hk, hne, hOne] at hv
@@ -312,8 +315,9 @@ theorem p4Q2PZ37ADO_originalFullBall_mass_lt_one_below_two
   have hmLe : m R ≤ 1 := hm.le
   have hCard := p4Q2PZ37ADO_originalSpatialLinkCount_ge_twelve H
   have hExponent : 1 ≤ 2 * Fintype.card Link := by omega
-  have hPower : m R ^ (2 * Fintype.card Link) ≤ m R :=
-    (pow_le_pow_of_le_one hmNonneg hmLe hExponent)
+  have hPower : m R ^ (2 * Fintype.card Link) ≤ m R := by
+    simpa only [pow_one] using
+      (pow_le_pow_of_le_one hmNonneg hmLe hExponent)
   exact (p4Q2PZ37ADN_originalFullBall_mass_le_radialPower
     H a R).trans_lt (hPower.trans_lt hm)
 
