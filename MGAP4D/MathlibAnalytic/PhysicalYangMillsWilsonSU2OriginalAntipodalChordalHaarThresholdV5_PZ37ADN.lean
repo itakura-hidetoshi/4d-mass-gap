@@ -270,9 +270,11 @@ theorem p4Q2PZ37ADN_originalSpatialLinkCount_ge_three :
   have hDirection :
       Fintype.card PeriodicHypercubicEvenSpatialDirection = 3 := by
     decide
-  change 3 ≤ Fintype.card (PeriodicHypercubicEvenSpatialSliceVertex H) *
-    Fintype.card PeriodicHypercubicEvenSpatialDirection
-  rw [hDirection]
+  have hCard : Fintype.card Link =
+      Fintype.card (PeriodicHypercubicEvenSpatialSliceVertex H) *
+        Fintype.card PeriodicHypercubicEvenSpatialDirection := by
+    exact Fintype.card_prod _ _
+  rw [hCard, hDirection]
   omega
 
 /-- Every genuine small original full-link D_H ball has pair-Haar
