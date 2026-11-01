@@ -273,9 +273,17 @@ theorem p4Q2PZ37ADN_originalSpatialLinkCount_ge_three :
   have hCard : Fintype.card Link =
       Fintype.card (PeriodicHypercubicEvenSpatialSliceVertex H) *
         Fintype.card PeriodicHypercubicEvenSpatialDirection := by
-    exact Fintype.card_prod
-      (PeriodicHypercubicEvenSpatialSliceVertex H)
-      PeriodicHypercubicEvenSpatialDirection
+    calc
+      Fintype.card Link = Nat.card Link :=
+        (Nat.card_eq_fintype_card).symm
+      _ = Nat.card (PeriodicHypercubicEvenSpatialSliceVertex H) *
+            Nat.card PeriodicHypercubicEvenSpatialDirection :=
+        Nat.card_prod
+          (PeriodicHypercubicEvenSpatialSliceVertex H)
+          PeriodicHypercubicEvenSpatialDirection
+      _ = Fintype.card (PeriodicHypercubicEvenSpatialSliceVertex H) *
+            Fintype.card PeriodicHypercubicEvenSpatialDirection := by
+        simp only [Nat.card_eq_fintype_card]
   rw [hCard, hDirection]
   omega
 
