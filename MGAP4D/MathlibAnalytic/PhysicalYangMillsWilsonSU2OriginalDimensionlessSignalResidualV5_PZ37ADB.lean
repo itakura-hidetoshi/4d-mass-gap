@@ -110,9 +110,7 @@ theorem p4Q2PZ37ADB_realHaarFloor_normalize
   have hfrac : 16 * s / x ≤ 1 :=
     (div_le_iff₀ hx).mpr (by simpa using hcap)
   have htwo : 0 < 2 - 16 * s / x := by linarith only [hfrac]
-  apply (div_eq_iff₀ htwo).mpr
-  field_simp [ne_of_gt hx, ne_of_gt hden]
-  ring
+  field_simp [ne_of_gt hx, ne_of_gt hden, ne_of_gt htwo] <;> ring
 
 /-- Scaling by the SAME original positive FC cap cancels precisely
 from the Perron negative-region threshold ratio. -/
@@ -122,9 +120,7 @@ theorem p4Q2PZ37ADB_realNegativeRatio_normalize
       t / (t + 2 * (16 * s / x)) := by
   have hden : 0 < t * x + 32 * s := by positivity
   have htwo : 0 < t + 2 * (16 * s / x) := by positivity
-  apply (div_eq_iff₀ htwo).mpr
-  field_simp [ne_of_gt hx, ne_of_gt hden]
-  ring
+  field_simp [ne_of_gt hx, ne_of_gt hden, ne_of_gt htwo] <;> ring
 
 /-- No square roots: the exact ADA interior optimum criterion is just
 a quadratic signal versus posterior-gap inequality on u in (0,1]. -/
@@ -150,7 +146,14 @@ theorem p4Q2PZ37ADB_realResidualRatio_iff
   have ha : t * (w / x) = (t * w) / x := by ring
   have hb : 4 * (16 * s / x) = (64 * s) / x := by ring
   rw [ha, hb, div_lt_div_iff₀ hx hx]
-  exact (mul_lt_mul_right hx).symm
+  constructor
+  · intro hh
+    by_contra hn
+    have hrev : 64 * s ≤ t * w := le_of_not_gt hn
+    have hscaled := mul_le_mul_of_nonneg_right hrev hx.le
+    exact (not_le_of_gt hh) hscaled
+  · intro hh
+    exact mul_lt_mul_of_pos_right hh hx
 
 /-- An even simpler single-number threshold for the original Wilson
 mean certificate, not a claim about actual data at arbitrary b,H. -/
