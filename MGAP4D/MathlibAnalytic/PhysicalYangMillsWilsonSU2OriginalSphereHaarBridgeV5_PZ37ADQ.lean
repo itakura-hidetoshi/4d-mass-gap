@@ -75,12 +75,12 @@ theorem p4Q2PZ37ADQ_sphereSurface_totalMass :
 /-- Radius-only, positive fraction of total authentic three-sphere
 surface mass from the FIXED mathlib ball bound. -/
 noncomputable def p4Q2PZ37ADQ_sphereRadiusFraction (r : ℝ) : ℝ :=
-  ((Measure.toSphereBallBound 4 r : ℝ≥0) : ℝ) / 4
+  ((Measure.toSphereBallBound 4 r : NNReal) : ℝ) / 4
 
 theorem p4Q2PZ37ADQ_sphereRadiusFraction_pos (r : ℝ) :
     0 < p4Q2PZ37ADQ_sphereRadiusFraction r := by
   unfold p4Q2PZ37ADQ_sphereRadiusFraction
-  have h : (0 : ℝ≥0) < Measure.toSphereBallBound 4 r :=
+  have h : (0 : NNReal) < Measure.toSphereBallBound 4 r :=
     Measure.toSphereBallBound_pos 4 r
   exact div_pos (by exact_mod_cast h) (by norm_num)
 
@@ -97,7 +97,7 @@ theorem p4Q2PZ37ADQ_trueSphereBall_mass_ge_fraction
   calc
     p4Q2PZ37ADQ_sphereRadiusFraction r *
         Measure.real surf (Set.univ : Set S3) =
-        (((Measure.toSphereBallBound 4 r : ℝ≥0) : ℝ)) *
+        (((Measure.toSphereBallBound 4 r : NNReal) : ℝ)) *
           (volume : Measure E4).real (Metric.ball 0 1) := by
             rw [p4Q2PZ37ADQ_sphereSurface_totalMass]
             unfold p4Q2PZ37ADQ_sphereRadiusFraction
@@ -127,8 +127,10 @@ theorem p4Q2PZ37ADQ_originalRadialMass_ge_fraction_of_bridge
   by_contra hn
   have hlt : m r < p4Q2PZ37ADQ_sphereRadiusFraction r :=
     lt_of_not_ge hn
-  have hMul :=
-    (mul_lt_mul_right hTotal).mpr hlt
+  have hMul :
+      m r * Measure.real surf (Set.univ : Set S3) <
+        p4Q2PZ37ADQ_sphereRadiusFraction r * Measure.real surf (Set.univ : Set S3) :=
+    mul_lt_mul_of_pos_right hlt hTotal
   linarith
 
 /-- A genuine SU(2) ball at ANY original center inherits the same
