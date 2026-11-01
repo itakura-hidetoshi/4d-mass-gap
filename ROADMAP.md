@@ -1,3 +1,21 @@
+## 検証済み定理 — ADQ（2026-11-02 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラーのみ。P4-Q2-PZ37ADQ定理PR [#6160](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6160) はMERGED、定理squash SHA `481ac27155d7137dbf16f8e42e826cb09f966a7e`。元の有限体積interacting Wilson SU(2)、元Gauss-law物理源、元FF受信器、元boundary pair-Haar、固定Lean・mathlib・定理rootは不変更。
+
+### 実4次元単位球面の半径依存Haar評価と真正SU(2)移送の明示的条件
+
+- **固定mathlibの真正S³球面測度**：`E4 = EuclideanSpace ℝ (Fin 4)` は実次元4、`S3 = sphere(0,1)`。元Euclidean `volume` の `Measure.toSphere` をそのまま使用し、球面測度の総質量 `σ(S³)=4*volume(ball(0,1))` をLean4で証明。**`toSphere` を正規化済み確率測度と誤認しない**。
+- **球面の半径のみの陽な下界**：`κ(r)=((Measure.toSphereBallBound 4 r : NNReal):ℝ)/4` を定義し、全 `r` で `κ(r)>0`、全 `r>0` と `x∈S³` で `σ(ball(x,r))≥κ(r)*σ(S³)` をLean4証明。これは球面に関する**無条件**定理で、固定mathlibの `toSphereBallBound_mul_measureReal_unitBall_le_toSphere_ball` と総質量恒等式を使用する。
+- **元SU(2) Haarへの条件付き移送**：元ADKの `BallJ`、ADMの `m(r)=μ_G(BallJ(1,r))`、元normalized SU(2) Haar `μ_G` を保持したまま、写像 `f:G→S³` について (i) 元弦距離球の逆像一致、(ii) `μ_G(f⁻¹s)*σ(S³)=σ(s)`、(iii) `σ(S³)>0` を**明示的前提**として、`m(r)≥κ(r)` と任意中心の同じ下界を形式証明。
+- **未解決obstructionを保全**：このPRでは `SU(2)≃S³` の具体的等長写像、元 `J` 弦距離との一致、正規化Haarの測度保存移送は**まだ証明していない**。したがって元SU(2)上の**無条件**半径下界、`c*r³` の鋭い3次スケーリング、全有限Hに一様な強制性、連続体4D Yang–Mills質量ギャップは主張しない。次の実装は四元数・実4次元球面への写像と元Haarの正当な測度対応の個別証明。
+
+### exact-source Lean4・公理依存
+
+- 新規6定理・`#print axioms`6件、固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。[exact-source CI #41364001721](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41364001721) は **11,266/11,266 SUCCESS**、変更Leanファイルwarning/error 0/0、6件すべて標準3公理 `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし。
+- Source/test-merge/squash Git treeは `8e7c38ee32bc76ceabc54890b6112f026e508b6c` で一致。定理正本HEADは `481ac27155d7137dbf16f8e42e826cb09f966a7e`（文書同期前）。default mainへLean定理ソースはコピーしない。
+
+---
+
 ## 検証済み定理 — ADP（2026-11-02 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラーのみ。P4-Q2-PZ37ADP定理PR [#6157](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6157) はMERGED、定理squash SHA `472b95ec8070088d66030c7ad067cc731f1f4ce2`。元の有限体積interacting Wilson SU(2)、固定結合、中心化Gauss-law物理源、元FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haar、定理rootは不変更。
