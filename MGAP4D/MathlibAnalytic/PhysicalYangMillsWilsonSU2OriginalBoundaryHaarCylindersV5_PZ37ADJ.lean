@@ -369,16 +369,16 @@ theorem p4Q2PZ37ADJ_originalTwoBoundaryCoordinateCap_mass_ge_sixtyFour
     simpa only [periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure] using
       (MeasureTheory.measurePreserving_eval (fun _ : Link => μ) e)
   have hPair : MeasurePreserving
-      (fun z : Pair => (z.1 e, z.2 e)) outer (μ.prod μ) := by
+      (fun z : Pair => (z.1 e, z.2 e)) outer ((normalizedCompactHaar G).prod (normalizedCompactHaar G)) := by
     have hProd := hEval.prod hEval
     simpa [periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure,
       Function.comp_def] using hProd
   have hMass :
       Measure.real outer (p4Q2PZ37ADJ_originalTwoBoundaryCoordinateCap H e) =
-        Measure.real (μ.prod μ) p4Q2PZ37ABV_pairCap := by
+        Measure.real ((normalizedCompactHaar G).prod (normalizedCompactHaar G)) p4Q2PZ37ABV_pairCap := by
     change Measure.real outer
       ((fun z : Pair => (z.1 e, z.2 e)) ⁻¹' p4Q2PZ37ABV_pairCap) =
-      Measure.real (μ.prod μ) p4Q2PZ37ABV_pairCap
+      Measure.real ((normalizedCompactHaar G).prod (normalizedCompactHaar G)) p4Q2PZ37ABV_pairCap
     simp only [measureReal_def]
     rw [hPair.measure_preimage p4Q2PZ37ABV_pairCap_measurable.nullMeasurableSet]
   rw [hMass]
