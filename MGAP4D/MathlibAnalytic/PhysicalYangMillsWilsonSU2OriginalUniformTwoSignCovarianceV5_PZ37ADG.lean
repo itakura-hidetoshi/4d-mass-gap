@@ -89,19 +89,19 @@ local instance p4Q2PZ37ADG_outerProbability : IsProbabilityMeasure outer := by
 combined with a larger actual FC cap, yields a smaller positive
 two-sided covariance tail-mass lower bound. -/
 theorem p4Q2PZ37ADG_realUniformTailMassComparison
-    (s S x k : ℝ)
-    (hs : 0 < s) (hsS : s ≤ S)
-    (hd : 0 < x - 2 * S) (hxk : x ≤ k) :
+    (s t x k : ℝ)
+    (hs : 0 < s) (hsS : s ≤ t)
+    (hd : 0 < x - 2 * t) (hxk : x ≤ k) :
     0 < k - 2 * s ∧
-      s / (k - 2 * s) ≤ S / (x - 2 * S) := by
-  have hD : x - 2 * S ≤ k - 2 * s := by linarith
+      s / (k - 2 * s) ≤ t / (x - 2 * t) := by
+  have hD : x - 2 * t ≤ k - 2 * s := by linarith
   have hK : 0 < k - 2 * s := lt_of_lt_of_le hd hD
-  have hS : 0 ≤ S := (le_of_lt hs).trans hsS
-  have hCross : s * (x - 2 * S) ≤ S * (k - 2 * s) := by
+  have hS : 0 ≤ t := (le_of_lt hs).trans hsS
+  have hCross : s * (x - 2 * t) ≤ t * (k - 2 * s) := by
     calc
-      s * (x - 2 * S) ≤ S * (x - 2 * S) :=
+      s * (x - 2 * t) ≤ t * (x - 2 * t) :=
         mul_le_mul_of_nonneg_right hsS hd.le
-      _ ≤ S * (k - 2 * s) :=
+      _ ≤ t * (k - 2 * s) :=
         mul_le_mul_of_nonneg_left hD hS
   exact ⟨hK, (div_le_div_iff₀ hK hd).2 hCross⟩
 
@@ -304,6 +304,92 @@ theorem p4Q2PZ37ADG_commonTailNumerical_allLinks_openSignedGI
   exact p4Q2PZ37ADF_transferPlaquetteBound_lt_moment_gives_openGI
     H e hNumericMoment
 
+
+/-- The original ACI/ACD genuinely provide an OPEN covariance region
+for each original physical link, with strictly positive amplitude and
+original boundary-pair-Haar mass. FINITENESS of the actual link type
+allows simultaneous minima of the AMPLITUDES and of the HAAR MASSES,
+without first defining or estimating S(H,b0,e). This gives an
+independently region-sourced positive finite-volume certificate. -/
+theorem p4Q2PZ37ADG_originalPhysicalRegion_commonAmplitudeMass_exists
+    [Nonempty Link] :
+    ∃ a m : ℝ, 0 < a ∧ 0 < m ∧
+      ∀ e : Link, ∃ U : Set Pair,
+        IsOpen U ∧ m ≤ Measure.real outer U ∧
+        (∀ z ∈ U,
+          a ≤ |C b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e z|) := by
+  classical
+  have hRegions : ∀ e : Link, ∃ a : ℝ, ∃ U : Set Pair,
+      0 < a ∧ IsOpen U ∧ 0 < Measure.real outer U ∧
+      (∀ z ∈ U,
+        a ≤ |C b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e z|) := by
+    intro e
+    exact p4Q2PZ37ADE_originalPhysicalCovarianceRegion_exists H e
+  choose a U ha hOpen hMass hCov using hRegions
+  obtain ⟨ea, _, hMinA⟩ :=
+    Set.exists_min_image (Set.univ : Set Link)
+      (fun e : Link => a e)
+      (Set.finite_univ : (Set.univ : Set Link).Finite)
+      (Set.univ_nonempty : (Set.univ : Set Link).Nonempty)
+  obtain ⟨em, _, hMinM⟩ :=
+    Set.exists_min_image (Set.univ : Set Link)
+      (fun e : Link => Measure.real outer (U e))
+      (Set.finite_univ : (Set.univ : Set Link).Finite)
+      (Set.univ_nonempty : (Set.univ : Set Link).Nonempty)
+  refine ⟨a ea, Measure.real outer (U em), ha ea, hMass em, ?_⟩
+  intro e
+  refine ⟨U e, hOpen e, hMinM e (Set.mem_univ e), ?_⟩
+  intro z hz
+  exact (hMinA e (Set.mem_univ e)).trans (hCov e z hz)
+
+/-- A genuine OPEN-REGION lower bound for the original covariance
+second moment, uniform in e for every fixed finite H. Unlike the
+tail-mass witness above, its two scalar data are selected directly
+from ACI/ACD covariance regions, before invoking S. -/
+theorem p4Q2PZ37ADG_originalPhysicalRegion_commonMomentLower_exists
+    [Nonempty Link] :
+    ∃ a m : ℝ, 0 < a ∧ 0 < m ∧
+      ∀ e : Link,
+        a ^ 2 * m ≤ S b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e := by
+  obtain ⟨a, m, ha, hm, hRegion⟩ :=
+    p4Q2PZ37ADG_originalPhysicalRegion_commonAmplitudeMass_exists H
+  refine ⟨a, m, ha, hm, ?_⟩
+  intro e
+  obtain ⟨U, hOpen, hMass, hCov⟩ := hRegion e
+  have hLocal :=
+    p4Q2PZ37ADE_originalOpenCovarianceRegion_lowerMoment
+      H e U a hOpen ha hCov
+  exact (mul_le_mul_of_nonneg_left hMass (sq_nonneg a)).trans hLocal
+
+/-- The only remaining extra obligation is a strict comparison of
+the explicit ORIGINAL Wilson action/plaquette cap K_H with the real
+region-sourced product a_H²*m_H. Under it all original links possess
+a positive GI SQUARED mean certificate and a genuinely nonzero SIGNED
+two-interacting-posterior response on some OPEN positive-Haar region.
+The existence of a_H,m_H alone does NOT establish this inequality. -/
+theorem p4Q2PZ37ADG_originalPhysicalRegion_numericGivesAllGI
+    [Nonempty Link]
+    (a m : ℝ)
+    (hFloor : ∀ e : Link,
+      a ^ 2 * m ≤ S b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e)
+    (hNumeric : K < 272 * (a ^ 2 * m)) :
+    ∀ e : Link,
+      0 < Budget b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e ∧
+      ∃ V : Set Pair, IsOpen V ∧ 0 < Measure.real outer V ∧
+        ∀ z ∈ V,
+          0 < |p4Q2GI_originalWilsonSignedSourceTwoPosteriorExpectationGap
+            H b₀ p4Q2PZ37ADC_fixedCoupling_pos.le f₀ e z| := by
+  intro e
+  have hNumericMoment :
+      K < 272 * S b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e :=
+    lt_of_lt_of_le hNumeric
+      (mul_le_mul_of_nonneg_left (hFloor e) (by norm_num))
+  exact ⟨p4Q2PZ37ADF_transferPlaquetteBound_lt_moment_gives_positiveBudget
+      H e hNumericMoment,
+    p4Q2PZ37ADF_transferPlaquetteBound_lt_moment_gives_openGI
+      H e hNumericMoment⟩
+
+
 end GroundStatePosteriorJoint
 end
 end MGAP4D.MathlibAnalytic
@@ -314,3 +400,6 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ADG_commonTailWitness_lowerOriginalMoment
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ADG_commonTailNumerical_allLinks_positiveBudget
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ADG_commonTailNumerical_allLinks_openSignedGI
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ADG_originalPhysicalRegion_commonAmplitudeMass_exists
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ADG_originalPhysicalRegion_commonMomentLower_exists
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ADG_originalPhysicalRegion_numericGivesAllGI
