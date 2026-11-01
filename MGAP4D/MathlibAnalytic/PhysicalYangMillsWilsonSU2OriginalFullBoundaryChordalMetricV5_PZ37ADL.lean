@@ -89,17 +89,17 @@ theorem p4Q2PZ37ADL_complexMatrixRealFeature_injective :
 since sqrt(1/2) is nonzero. -/
 theorem p4Q2PZ37ADL_trueWilsonFeature_injective :
     Function.Injective (fun g : G => J g) := by
-  intro g h h
+  intro g k hEq
   have hScale :
       specialUnitaryTwoNormalizedTraceFeatureScale ≠ 0 := by
     unfold specialUnitaryTwoNormalizedTraceFeatureScale
     positivity
   have hReal :
       specialUnitaryMatrixRealFeature 2 g =
-        specialUnitaryMatrixRealFeature 2 h := by
+        specialUnitaryMatrixRealFeature 2 k := by
     have hCancel := congrArg
       (fun v : SpecialUnitaryMatrixRealFeatureSpace 2 =>
-        specialUnitaryTwoNormalizedTraceFeatureScale⁻¹ • v) h
+        specialUnitaryTwoNormalizedTraceFeatureScale⁻¹ • v) hEq
     simpa [specialUnitaryTwoNormalizedTraceFeatureVector, smul_smul,
       hScale] using hCancel
   apply Subtype.ext
@@ -229,7 +229,9 @@ theorem p4Q2PZ37ADL_originalFullBoundaryBox_mass_eq
     Measure.real outer (p4Q2PZ37ADL_originalFullBoundaryChordalBox H a r) =
       Measure.real slice (p4Q2PZ37ADL_originalSliceFullChordalBox H a.1 r) *
         Measure.real slice (p4Q2PZ37ADL_originalSliceFullChordalBox H a.2 r) := by
-  change Measure.real (slice.prod slice)
+  change Measure.real
+      ((periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2).prod
+        (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2))
       (p4Q2PZ37ADL_originalSliceFullChordalBox H a.1 r ×ˢ
         p4Q2PZ37ADL_originalSliceFullChordalBox H a.2 r) = _
   exact measureReal_prod_prod
@@ -285,8 +287,9 @@ theorem p4Q2PZ37ADL_originalFullDistance_symm (z w : Pair) :
   unfold p4Q2PZ37ADL_originalFullBoundaryChordalDistance
   apply Finset.sum_congr rfl
   intro e _he
-  rw [p4Q2PZ37ADK_trueChordalDistance_symm,
-    p4Q2PZ37ADK_trueChordalDistance_symm]
+  exact congrArg₂ (fun x y : ℝ => x + y)
+    (p4Q2PZ37ADK_trueChordalDistance_symm (z.1 e) (w.1 e))
+    (p4Q2PZ37ADK_trueChordalDistance_symm (z.2 e) (w.2 e))
 
 theorem p4Q2PZ37ADL_originalFullDistance_triangle
     (z w u : Pair) :
