@@ -110,19 +110,10 @@ theorem p4Q2PZ37ADB_realHaarFloor_normalize
   have hfrac : 16 * s / x ≤ 1 :=
     (div_le_iff₀ hx).mpr (by simpa using hcap)
   have htwo : 0 < 2 - 16 * s / x := by linarith only [hfrac]
-  have hne1 : x - s * 8 ≠ 0 := by
-    have hpos : 0 < x - s * 8 := by linarith only [hden]
-    exact ne_of_gt hpos
-  have hne2 : x * 2 - s * 16 ≠ 0 := by
-    have hpos : 0 < x * 2 - s * 16 := by linarith only [hden]
-    exact ne_of_gt hpos
-  field_simp [ne_of_gt hx, ne_of_gt hden, ne_of_gt htwo, hne1, hne2]
-  have hcancel : (x - s * 8) * (x - s * 8)⁻¹ = 1 := by
-    simpa only [div_eq_mul_inv] using (div_self hne1)
-  calc
-    x * (x - s * 8)⁻¹ * 16 - s * (x - s * 8)⁻¹ * 128 =
-        16 * ((x - s * 8) * (x - s * 8)⁻¹) := by ring
-    _ = 16 := by simp only [hcancel, mul_one]
+  -- Cross-multiply the two ORIGINAL nonzero denominators first.
+  -- Unlike a calc after field_simp, this leaves a stable polynomial goal.
+  apply (div_eq_div_iff (ne_of_gt hden) (ne_of_gt htwo)).mpr
+  field_simp [ne_of_gt hx] <;> ring
 
 /-- Scaling by the SAME original positive FC cap cancels precisely
 from the Perron negative-region threshold ratio. -/
