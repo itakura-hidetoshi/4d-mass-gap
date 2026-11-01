@@ -1,3 +1,30 @@
+## 検証済み定理 — ADH（2026-11-01 JST）
+
+唯一の定理正本は`formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。P4-Q2-PZ37ADH定理PR #6133はMERGED、定理squash SHA `729b2138ffa234e2c0f57f5e21abc8107fca3be0`。元の有限体積interacting Wilson SU(2)、中心化Gauss-law源、元FF受信器、Perron代表・transfer、元の二interacting posteriorと元境界pair-Haar測度は不変更。
+
+### 真正Cov非零点を含むOPEN Haar球と有限体積共通の球下界
+
+- 固定結合は既存ADCの`b0=log(3/2)/64>0`。元の実共分散`C_e(z)=Cov_Haar(F_e(z),E)`と真正共分散二乗モーメント`S_e=∫C_e(z)^2 dν_H(z)`、ADFの元transfer/プラケット上界`K_H=6*P_H*exp(2*b0*A_H)*(exp(8*b0)^3-1)^2`を維持。
+- 境界配置の**元の位相に適合する擬距離**によって`Metric.ball`を用いる。これは元のboundary pair-Haar確率法則・物理模型の置換ではなく、擬距離自体の物理的数値スケールを主張しない。
+- **各真正リンクの無条件Haar球構成**：ACIの元共分散非零点`z_e`とACDの実Cov連続性から、各`e`について`r_e>0`が存在し、`z∈ball(z_e,r_e)`なら`|C_e(z)|>=|C_e(z_e)|/2>0`。元pair-Haarのopen-positive性から球は`ν_H(ball(z_e,r_e))>0`。ADEの元積分評価により`(|C_e(z_e)|/2)^2*ν_H(ball(z_e,r_e))<=S_e`をLean4証明。
+- **固定H・全リンクに共通する実Haar球証拠**：真正リンク型が非空で固定有限`H`なら、有限個の半径、非零Cov振幅、正pair-Haar球質量の各最小値を取ることで、一組の`r_H>0`、`a_H>0`、`m_H>0`が存在。全真正リンク`e`について元境界点`z_e`を選べて、`ν_H(ball(z_e,r_H))>=m_H`かつ球上で`|C_e(z)|>=a_H`、従って`S_e>=a_H²*m_H`。`z_e`はリンク依存、三定数は固定H内でリンク非依存。
+- **条件付き明示半径**：もし元の真正Covに`L>0`かつ全境界`z`に対して`|C_e(z)-C_e(z_e)|<=L*dist(z,z_e)`が別途検証されれば、`r_e=|C_e(z_e)|/(2*L)>0`が具体的に使え、同じ元Haar球の正質量とモーメント下界が従う。Lipschitz定数`L`自体がこの元Wilson模型で数値的に得られるとは未証明。
+- **厳密68条件**：`K_H<68*C_e(z_e)^2*ν_H(ball(z_e,|C_e(z_e)|/(2L)))`が別途成立するなら、元GI二乗平均証明書`M_GI>0`、元の二interacting posteriorの実signed GI応答が非零となるOPEN・正pair-Haar質量領域が存在する。`272*(|C_e(z_e)|/2)^2=68*C_e(z_e)^2`は純代数的な等式。GI二乗平均の正値と実signed応答の符号を混同しない。
+- **未証明の境界**：Lipschitz定数の具体値、球半径・元Haar球質量の具体的数値、`K_H<272*a_H²*m_H`および上記68比較、全Hで一様な下界、連続体4D Yang–Mills質量ギャップは未証明。証明済みなのは真正有限体積・各リンクに関する存在と厳密な条件付き数値還元。
+
+### exact-source CI・公理依存・マージ後独立検証
+
+- ADH定理PR #6133 https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6133 — MERGED。新規Leanファイル`MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalCovarianceHaarBallsV5_PZ37ADH.lean`のみ、10定理・10件`#print axioms`、既存ファイル削除0。元模型・root・workflow・Lean/mathlib pin不変更。
+- 最終exact-source HEAD `2c3a2078f736e8557e34a54514942c0081074dd4`、PR test-merge commit `d2059e95733f471751c09d9d3be983a21090641f`、定理squash `729b2138ffa234e2c0f57f5e21abc8107fca3be0` のGit treeはすべて `758fffa12c2b0e7a69830896420423bf6074819c` で完全一致。
+- exact-source CI #41307792780 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41307792780 — 11257/11257 Lean SUCCESS、10/10公理は`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立completion receipt `event=pull_request`・`source_result=success`。
+- マージ後push CI #41308202510 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41308202510 — 定理squash HEADで11257/11257 Lean SUCCESS、10/10標準公理のみ、`sorryAx`・変更warning/errorなし、独立completion receipt `event=push`・`source_result=success`。
+- 初回CIの局所記法`outer`・`μ`と`.IsOpenPosMeasure`の名前解決、`field_simp`後の余分な`ring`、`(|C|/2)^2`の`div_pow`/`sq_abs`正規化を、全ファイル・imports・固定mathlib APIを確認して修正。証明条件緩和なし。Lean`v4.30.0-rc2`、mathlib`5450b53e5ddc75d46418fabb605edbf36bd0beb6`固定。文書のみのStrict Leanは起動しない。
+
+### 次の研究課題 — ADI（OPEN）
+
+同一の真正Wilson受信器について、非零Cov点での数値的下界、元境界配置上の物理的な距離と定量Lipschitz定数`L_H`、元SU(2)・有限リンク積のHaar球質量の明示的下界を別途確立し、`K_H<68*C_e(z_e)^2*ν_H(ball)`の有限体積数値判定へ接続する。半径・Haar測度の存在を数値評価や体積一様性と同一視しない。
+
+---
 ## 検証済み定理 — ADG（2026-11-01 JST）
 
 唯一の定理正本は`formal/real-hilbert-uniform-coercive-strong-limit`、default `main`は文書ミラーのみ。P4-Q2-PZ37ADG定理PR #6130はMERGED、squash SHAは`41cd7430003e284f3d5ec59b9740bcd68d5de227`。元の有限体積interacting Wilson SU(2)、中心化Gauss-law物理源、FF受信器、正Perron代表、更新後transfer section、元の二interacting posteriorと境界pair-Haarを厳密に保持しています。
