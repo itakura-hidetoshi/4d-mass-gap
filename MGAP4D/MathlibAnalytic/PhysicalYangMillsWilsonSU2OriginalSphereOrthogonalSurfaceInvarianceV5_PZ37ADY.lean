@@ -42,7 +42,7 @@ def p4Q2PZ37ADY_radialSector (s : Set S3) : Set E4 :=
   Set.Ioo (0 : ℝ) 1 • ((fun u : S3 => (u : E4)) '' s)
 
 /-- A radial-sector preimage commutes exactly with the ORIGINAL SU(2)
-sphere action. The key input is AXD's ambient orthogonal extension;
+sphere action. The key input is ADX's ambient orthogonal extension;
 no measurable-set assumption or surrogate sphere group is needed. -/
 theorem p4Q2PZ37ADY_radialSector_preimage (g : G) (s : Set S3) :
     (L g) ⁻¹' p4Q2PZ37ADY_radialSector s =
@@ -110,7 +110,8 @@ theorem p4Q2PZ37ADY_originalLeftAction_preservesSurface (g : G) :
     rw [hm.map_eq] at hMap
     exact hMap.symm
   rw [Measure.map_apply ha hs]
-  rw [Measure.toSphere_apply' (ha hs), Measure.toSphere_apply' hs]
+  rw [Measure.toSphere_apply' (volume : Measure E4) (ha hs),
+      Measure.toSphere_apply' (volume : Measure E4) hs]
   change (Module.finrank ℝ E4 : ℕ) *
       (volume : Measure E4)
         (p4Q2PZ37ADY_radialSector ((act g) ⁻¹' s)) =
