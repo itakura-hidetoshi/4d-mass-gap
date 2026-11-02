@@ -107,7 +107,7 @@ theorem p4Q2PZ37ADV_originalLeftAction_dist (g : G) (x y : S3) :
 
 theorem p4Q2PZ37ADV_originalLeftAction_isometry (g : G) :
     Isometry (act g) :=
-  p4Q2PZ37ADV_originalLeftAction_dist g
+  Isometry.of_dist_eq (p4Q2PZ37ADV_originalLeftAction_dist g)
 
 /-- The action of each G-element is a fully bundled genuine S³
 isometry equivalence, with the original inverse g⁻¹. -/
