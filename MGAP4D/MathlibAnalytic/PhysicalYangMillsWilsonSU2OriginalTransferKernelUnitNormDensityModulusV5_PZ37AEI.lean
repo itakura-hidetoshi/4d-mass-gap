@@ -240,6 +240,41 @@ theorem p4Q2PZ37AEI_originalFiniteNet_unitNorm_densityFloor
       (p4Q2PZ37AEI_originalFixedCouplingTransfer_norm_in_pos_unit H).2
   simpa only [one_mul] using hAEH
 
+
+/-- AEF's true original centered Wilson covariance variation with
+both the transfer norm upper bound and the independent q modulus
+premise discharged by the actual Wilson kernel and rho sample table.
+The source-dependent numerator amplitude and oscillation are still
+independent physical/numerical obligations. -/
+theorem p4Q2PZ37AEI_originalFiniteNet_unitNorm_covarianceModulus
+    (e : Link) (s : Finset Pair)
+    (r epsilon m M R Nmax dN : ℝ)
+    (heps : 0 < epsilon) (hm : epsilon < m) (hRle : R ≤ r)
+    (hNet : p4Q2PZ37AEE_isOriginalFullNet H s r)
+    (hRhoMod : ∀ z w : Pair, D z w < r →
+      |rho z - rho w| < epsilon)
+    (hSampleLower : ∀ a ∈ s, m ≤ rho a)
+    (hSampleUpper : ∀ a ∈ s, rho a ≤ M)
+    (hNmax : ∀ z : Pair, |N e z| ≤ Nmax)
+    (hNmod : ∀ z w : Pair, D z w < R →
+      |N e z - N e w| ≤ dN) :
+    ∀ z w : Pair, D z w < R →
+      |C b0 hb0 e z - C b0 hb0 e w| ≤
+        (dN + (Nmax / ((1 : ℝ) / (M + epsilon))) *
+          ((Tnorm⁻¹ / (m - epsilon)) * epsilon / (m - epsilon))) /
+          ((1 : ℝ) / (M + epsilon)) := by
+  have hQmod :=
+    p4Q2PZ37AEI_originalFiniteNet_givesDensityModulus
+      H s r epsilon m R hm hRle hNet hRhoMod hSampleLower
+  have hAEH :=
+    p4Q2PZ37AEH_originalCertifiedNet_givesCovarianceModulus
+      H e s r epsilon M 1 R Nmax dN
+      ((Tnorm⁻¹ / (m - epsilon)) * epsilon / (m - epsilon))
+      heps hNet hRhoMod hSampleUpper
+      (p4Q2PZ37AEI_originalFixedCouplingTransfer_norm_in_pos_unit H).2
+      hNmax hNmod hQmod
+  simpa only [one_mul] using hAEH
+
 end GroundStatePosteriorJoint
 
 end
@@ -255,3 +290,5 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEI_originalFiniteNet_sampleLower_givesGlobalRhoFloor
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEI_originalFiniteNet_givesDensityModulus
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEI_originalFiniteNet_unitNorm_densityFloor
+
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEI_originalFiniteNet_unitNorm_covarianceModulus
