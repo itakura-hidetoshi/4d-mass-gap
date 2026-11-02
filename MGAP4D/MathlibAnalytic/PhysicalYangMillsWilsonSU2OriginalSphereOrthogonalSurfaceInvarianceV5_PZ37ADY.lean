@@ -84,7 +84,13 @@ theorem p4Q2PZ37ADY_radialSector_preimage (g : G) (s : Set S3) :
     calc
       r • (act g u : E4) = r • e (u : E4) := by rw [hAction u]
       _ = e (r • (u : E4)) := (e.map_smul r (u : E4)).symm
-      _ = e x := by rw [hEq]
+      _ = e x := by
+        -- Set.image2 stores the scalar action as a lambda application.
+        -- Rewrite matching need not unfold this eta-expanded presentation.
+        -- Normalize the equation by definitional equality, then map it.
+        have hScaled : r • (u : E4) = x := by
+          exact hEq
+        exact congrArg (fun z : E4 => e z) hScaled
 
 /-- Unnormalized Mathlib S³ surface measure is preserved by each
 ACTUAL original SU(2) left action. This uses the full radial-sector
@@ -135,8 +141,8 @@ theorem p4Q2PZ37ADY_originalLeftAction_preservesNormalizedSurface
     intro h
     have hh : (μ : Measure S3) = 0 :=
       congrArg (fun m : FiniteMeasure S3 => (m : Measure S3)) h
-    exact (Measure.toSphere_ne_zero (volume : Measure E4))
-      (by simpa [μ] using hh)
+    change surf = 0 at hh
+    exact (Measure.toSphere_ne_zero (volume : Measure E4)) hh
   have hRaw : Measure.map (act g) (μ : Measure S3) = (μ : Measure S3) := by
     change Measure.map (act g) surf = surf
     exact p4Q2PZ37ADY_originalLeftAction_preservesSurface g
