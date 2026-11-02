@@ -31,7 +31,7 @@ posteriors, pair Haar, physical configuration, theorem root or pins.
 namespace MGAP4D.MathlibAnalytic
 
 open MeasureTheory
-open scoped Topology Classical InnerProductSpace BigOperators
+open scoped Topology Classical InnerProductSpace BigOperators ComplexConjugate
 
 noncomputable section
 set_option autoImplicit false
@@ -53,15 +53,15 @@ theorem p4Q2PZ37ADR_originalFirstColumn_normSq_one (g : G) :
     Complex.normSq ((g : Mat) 0 0) +
       Complex.normSq ((g : Mat) 1 0) = 1 := by
   have hU : (g : Mat).conjTranspose * (g : Mat) = (1 : Mat) := by
-    simpa only [star_eq_conjTranspose] using g.property.1.1
+    simpa only [Matrix.star_eq_conjTranspose] using g.property.1.1
   have h00 := congrArg (fun A : Mat => A 0 0) hU
   have hC :
-      Complex.conj ((g : Mat) 0 0) * ((g : Mat) 0 0) +
-        Complex.conj ((g : Mat) 1 0) * ((g : Mat) 1 0) = 1 := by
+      conj ((g : Mat) 0 0) * ((g : Mat) 0 0) +
+        conj ((g : Mat) 1 0) * ((g : Mat) 1 0) = 1 := by
     simpa [Matrix.mul_apply, Fin.sum_univ_two, Matrix.conjTranspose_apply] using h00
   have hRe := congrArg Complex.re hC
   simp only [Complex.add_re, Complex.one_re, Complex.mul_re,
-    Complex.conj_re, Complex.conj_im] at hRe
+    conj_re, conj_im] at hRe
   simp only [Complex.normSq_apply]
   nlinarith only [hRe]
 
@@ -100,7 +100,7 @@ the genuine matrix adjugate with its genuine conjugate transpose. -/
 theorem p4Q2PZ37ADR_originalAdjugate_eq_conjTranspose (g : G) :
     (g : Mat).adjugate = (g : Mat).conjTranspose := by
   have hRight : (g : Mat) * (g : Mat).conjTranspose = (1 : Mat) := by
-    simpa only [star_eq_conjTranspose] using g.property.1.2
+    simpa only [Matrix.star_eq_conjTranspose] using g.property.1.2
   have hDet : (g : Mat).det = 1 := g.property.2
   calc
     (g : Mat).adjugate =
@@ -115,25 +115,25 @@ theorem p4Q2PZ37ADR_originalAdjugate_eq_conjTranspose (g : G) :
 /-- The SECOND original complex column is uniquely forced by the
 first column, using true SU(2) determinant one and unitarity. -/
 theorem p4Q2PZ37ADR_originalSecondColumn_formula (g : G) :
-    (g : Mat) 1 1 = Complex.conj ((g : Mat) 0 0) ∧
-      (g : Mat) 0 1 = -Complex.conj ((g : Mat) 1 0) := by
+    (g : Mat) 1 1 = conj ((g : Mat) 0 0) ∧
+      (g : Mat) 0 1 = -conj ((g : Mat) 1 0) := by
   have h := p4Q2PZ37ADR_originalAdjugate_eq_conjTranspose g
   have h00 := congrArg (fun A : Mat => A 0 0) h
   have h10 := congrArg (fun A : Mat => A 1 0) h
   constructor
   · simpa [Matrix.adjugate_fin_two, Matrix.conjTranspose_apply] using h00
   · have hC : -((g : Mat) 1 0) =
-        Complex.conj ((g : Mat) 0 1) := by
+        conj ((g : Mat) 0 1) := by
       simpa [Matrix.adjugate_fin_two, Matrix.conjTranspose_apply] using h10
-    have hc := congrArg Complex.conj hC
+    have hc := congrArg conj hC
     simpa using hc.symm
 
 /-- Fully explicit quaternion-shaped representative of the SAME
 actual SU(2) matrix, with no abstract isomorphism assumptions. -/
 theorem p4Q2PZ37ADR_originalMatrix_fromFirstColumn (g : G) :
     (g : Mat) =
-      !![((g : Mat) 0 0), -Complex.conj ((g : Mat) 1 0);
-         ((g : Mat) 1 0), Complex.conj ((g : Mat) 0 0)] := by
+      !![((g : Mat) 0 0), -conj ((g : Mat) 1 0);
+         ((g : Mat) 1 0), conj ((g : Mat) 0 0)] := by
   obtain ⟨h11, h01⟩ := p4Q2PZ37ADR_originalSecondColumn_formula g
   ext i j
   fin_cases i <;> fin_cases j
@@ -152,11 +152,11 @@ theorem p4Q2PZ37ADR_originalFirstColumn_injective :
   apply Subtype.ext
   calc
     (g : Mat) =
-        !![((g : Mat) 0 0), -Complex.conj ((g : Mat) 1 0);
-           ((g : Mat) 1 0), Complex.conj ((g : Mat) 0 0)] :=
+        !![((g : Mat) 0 0), -conj ((g : Mat) 1 0);
+           ((g : Mat) 1 0), conj ((g : Mat) 0 0)] :=
       p4Q2PZ37ADR_originalMatrix_fromFirstColumn g
-    _ = !![((h : Mat) 0 0), -Complex.conj ((h : Mat) 1 0);
-            ((h : Mat) 1 0), Complex.conj ((h : Mat) 0 0)] := by rw [hA, hB]
+    _ = !![((h : Mat) 0 0), -conj ((h : Mat) 1 0);
+            ((h : Mat) 1 0), conj ((h : Mat) 0 0)] := by rw [hA, hB]
     _ = (h : Mat) :=
       (p4Q2PZ37ADR_originalMatrix_fromFirstColumn h).symm
 
