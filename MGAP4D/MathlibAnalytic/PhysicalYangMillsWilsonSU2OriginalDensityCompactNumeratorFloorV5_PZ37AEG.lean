@@ -124,6 +124,10 @@ theorem p4Q2PZ37AEG_originalJointSqrtDensity_positiveMaximum_exists :
     p4Q2PZ37AEG_originalDensity_continuous H
   have hQne : ∀ z : Pair, q b0 hb0 z ≠ 0 :=
     fun z => (p4Q2PZ37AEF_originalDensity_pos H z).ne'
+  have hT : ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+      H 2 (by norm_num) b0 hb0‖ ≠ 0 :=
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
+      H 2 (by norm_num) b0 hb0).ne'
   have hL : L ≠ 0 := (inv_pos.mpr
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
       H 2 (by norm_num) b0 hb0)).ne'
@@ -133,7 +137,7 @@ theorem p4Q2PZ37AEG_originalJointSqrtDensity_positiveMaximum_exists :
     have hr : rho z ≠ 0 :=
       (continuousJointSqrtDensity_pos H 2 (by norm_num) b0 hb0 z).ne'
     rw [p4Q2PZ37AEG_originalDensity_exactVacuumCancellation H z]
-    field_simp [hL, hr]
+    field_simp [hL, hr, hT]
   have hrho : Continuous (fun z : Pair => rho z) := by
     rw [hRhoEq]
     exact continuous_const.div hQ hQne
