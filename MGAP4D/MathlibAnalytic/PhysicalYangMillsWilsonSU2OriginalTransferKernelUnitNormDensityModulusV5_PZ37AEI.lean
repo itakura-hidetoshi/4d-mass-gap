@@ -115,8 +115,82 @@ theorem p4Q2PZ37AEI_originalPhysicalTransfer_norm_le_one
       p4Q2PZ37AEI_originalWilsonSingleSlabKernelL2_norm_le_one
         H N hN beta hbeta
 
+
+/-- Real reciprocal variation through a true positive density floor,
+with the original transfer inverse magnitude retained explicitly. -/
+theorem p4Q2PZ37AEI_realInverseOverDensity_variation
+    (t a b m delta : ℝ)
+    (ht : 0 < t) (hm : 0 < m)
+    (hma : m ≤ a) (hmb : m ≤ b)
+    (hdelta : |a - b| ≤ delta) :
+    |t⁻¹ / a - t⁻¹ / b| ≤ ((t⁻¹ / m) * delta) / m := by
+  have hb : 0 < b := hm.trans_le hmb
+  have hInv : 0 < t⁻¹ := inv_pos.mpr ht
+  have hAmp : |t⁻¹ / b| ≤ t⁻¹ / m :=
+    p4Q2PZ37AEF_realAbsQuotient_le_of_denFloor
+      (t⁻¹) b m (t⁻¹) hm hmb
+      (by simpa only [abs_of_pos hInv] using (le_refl (t⁻¹)))
+  have hVar :=
+    p4Q2PZ37AEF_realQuotientVariation_le
+      (t⁻¹) (t⁻¹) a b m 0 delta (t⁻¹ / m)
+      hm hma hb (by simp) hdelta hAmp
+  simpa only [zero_add] using hVar
+
+namespace GroundStatePosteriorJoint
+
+variable (H : ℕ)
+local notation "Link" => PeriodicHypercubicEvenSpatialSliceLink H
+local notation "Cfg" =>
+  PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+local notation "Pair" => Cfg × Cfg
+local notation "b0" => p4Q2PZ37ADC_fixedCoupling
+local notation "hb0" => p4Q2PZ37ADC_fixedCoupling_pos.le
+local notation "q" => p4Q2JQ_originalPhysicalGIDensityWeight H
+local notation "rho" => continuousJointSqrtDensity H 2 (by norm_num) b0 hb0
+local notation "N" => p4Q2PZ37AEF_originalCenteredCovarianceNumerator H
+local notation "C" => p4Q2PZ37ACJ_originalCenteredEnergyCovariance H
+local notation "D" => p4Q2PZ37ADL_originalFullBoundaryChordalDistance H
+local notation "Tnorm" =>
+  ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+    H 2 (by norm_num) b0 hb0‖
+
+/-- The true fixed-coupling unnormalized Perron/transfer norm lies
+in the positive unit interval, not merely its normalized version. -/
+theorem p4Q2PZ37AEI_originalFixedCouplingTransfer_norm_in_pos_unit :
+    0 < Tnorm ∧ Tnorm ≤ 1 := by
+  exact ⟨
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
+      H 2 (by norm_num) b0 hb0,
+    p4Q2PZ37AEI_originalPhysicalTransfer_norm_le_one
+      H 2 (by norm_num) b0 hb0⟩
+
+/-- The original physical density's q-modulus follows from rho's
+oscillation and an actual positive rho lower floor. No proxy law. -/
+theorem p4Q2PZ37AEI_originalDensity_variation_fromTrueSqrtDensity
+    (m delta R : ℝ)
+    (hm : 0 < m)
+    (hRhoLower : ∀ z : Pair, m ≤ rho z)
+    (hRhoMod : ∀ z w : Pair, D z w < R →
+      |rho z - rho w| ≤ delta) :
+    ∀ z w : Pair, D z w < R →
+      |q b0 hb0 z - q b0 hb0 w| ≤
+        ((Tnorm⁻¹ / m) * delta) / m := by
+  intro z w hzw
+  rw [p4Q2PZ37AEG_originalDensity_exactVacuumCancellation H z,
+      p4Q2PZ37AEG_originalDensity_exactVacuumCancellation H w]
+  exact p4Q2PZ37AEI_realInverseOverDensity_variation
+    Tnorm (rho z) (rho w) m delta
+    (p4Q2PZ37AEI_originalFixedCouplingTransfer_norm_in_pos_unit H).1
+    hm (hRhoLower z) (hRhoLower w) (hRhoMod z w hzw)
+
+end GroundStatePosteriorJoint
+
 end
 end MGAP4D.MathlibAnalytic
 
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AEI_originalWilsonSingleSlabKernelL2_norm_le_one
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AEI_originalPhysicalTransfer_norm_le_one
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AEI_realInverseOverDensity_variation
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEI_originalFixedCouplingTransfer_norm_in_pos_unit
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEI_originalDensity_variation_fromTrueSqrtDensity
