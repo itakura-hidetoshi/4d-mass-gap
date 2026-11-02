@@ -45,6 +45,21 @@ set_option autoImplicit false
 set_option maxHeartbeats 3900000
 set_option synthInstance.maxHeartbeats 1050000
 
+-- The TRUE original SU(2) compact and Borel structures are explicit.
+-- The pair-space compactness/measurability should not be expected to
+-- synthesize from a local Fintype Link instance alone.
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local instance p4Q2PZ37AED_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37AED_compactG : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37AED_countableG : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37AED_measurableG : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37AED_borelG : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+
 namespace GroundStatePosteriorJoint
 
 variable (H : ℕ)
@@ -91,8 +106,8 @@ theorem p4Q2PZ37AED_originalMaximumAbsoluteCovariance_exists
   obtain ⟨a, _ha, hMax⟩ :=
     (isCompact_univ : IsCompact (Set.univ : Set Pair)).exists_isMaxOn
       ⟨a₀, Set.mem_univ a₀⟩ hC.abs.continuousOn
-  exact ⟨a, (abs_pos.mpr ha₀).trans_le (hMax a₀ (Set.mem_univ a₀)),
-    fun z => hMax z (Set.mem_univ z)⟩
+  exact ⟨a, (abs_pos.mpr ha₀).trans_le (hMax a₀),
+    fun z => hMax z⟩
 
 /-- The genuine original center-gauge action makes a positive covariance
 GLOBAL maximizer available, with a negative partner of EQUAL amplitude. -/
@@ -119,7 +134,7 @@ theorem p4Q2PZ37AED_originalPositiveMaximumCovariance_exists
       linarith
     · intro z
       rw [hFlip]
-      simpa only [abs_neg] using hMax z
+      simpa only [abs_of_neg hn] using hMax z
   · refine ⟨a, hp, ?_⟩
     intro z
     simpa only [abs_of_pos hp] using hMax z
@@ -152,7 +167,7 @@ theorem p4Q2PZ37AED_originalTwoSignBalls_stable
   · intro z hz
     have h := (abs_lt.mp (hMod a z hz)).2
     change v - C b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e z < v / 2 at h
-    dsimp [v]
+    change v / 2 ≤ C b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e z
     linarith
   · intro z hz
     have h := (abs_lt.mp (hMod (Gamma e a) z hz)).1
@@ -212,7 +227,6 @@ theorem p4Q2PZ37AED_originalTwoSignBallUnion_mass_ge_doublePolynomial
 half-amplitude in ABSOLUTE VALUE on the entire disjoint union. -/
 theorem p4Q2PZ37AED_originalTwoSignBallUnion_absFloor
     (e : Link) (a : Pair) (R : ℝ)
-    (ha : 0 < C b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e a)
     (hPos : ∀ z ∈ Ball a R,
       C b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e a / 2 ≤
         C b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e z)
@@ -259,7 +273,7 @@ theorem p4Q2PZ37AED_originalTwoSignBallUnion_secondMoment_doubleFloor
         (p4Q2PZ37ADL_originalFullChordalBall_isOpen H (Gamma e a) R))
       (half_pos ha)
       (p4Q2PZ37AED_originalTwoSignBallUnion_absFloor
-        H e a R ha hPos hNeg)
+        H e a R hPos hNeg)
   exact (mul_le_mul_of_nonneg_left hMass (sq_nonneg _)).trans hMoment
 
 /-- Every actual original spatial link has a positive maximizer and
