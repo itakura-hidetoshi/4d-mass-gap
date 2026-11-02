@@ -57,7 +57,7 @@ jobs:
     # Foundational incidence lemmas invalidate thousands of dependent oleans.
     # Exact-head PZ37O runs exceeded 60 minutes with no Lean errors, so allow
     # a complete dependency-aware check; do not skip imports or lower heartbeats.
-    timeout-minutes: 180
+    timeout-minutes: 360
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
