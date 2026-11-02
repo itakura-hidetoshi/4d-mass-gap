@@ -53,9 +53,9 @@ theorem p4Q2PZ37AEH_realInverseProductFloor
   have hU : 0 < U := ht.trans_le htU
   have hP : 0 < P := hp.trans_le hpP
   have htInv : U⁻¹ ≤ t⁻¹ :=
-    (inv_le_inv₀ ht hU).2 htU
+    (inv_le_inv₀ hU ht).2 htU
   have hpInv : P⁻¹ ≤ p⁻¹ :=
-    (inv_le_inv₀ hp hP).2 hpP
+    (inv_le_inv₀ hP hp).2 hpP
   calc
     (1 : ℝ) / (U * P) = U⁻¹ * P⁻¹ := by
       rw [one_div, mul_inv_rev]
