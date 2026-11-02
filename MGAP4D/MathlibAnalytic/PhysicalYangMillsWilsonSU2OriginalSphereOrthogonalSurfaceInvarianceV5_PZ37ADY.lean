@@ -142,10 +142,9 @@ theorem p4Q2PZ37ADY_originalLeftAction_preservesNormalizedSurface
     exact p4Q2PZ37ADY_originalLeftAction_preservesSurface g
   change Measure.map (act g) (μ.normalize : Measure S3) =
     (μ.normalize : Measure S3)
-  rw [μ.toMeasure_normalize_eq_of_nonzero hμ,
-    Measure.map_smul _
-      (p4Q2PZ37ADU_originalLeftAction_continuous g).measurable.aemeasurable,
-    hRaw]
+  -- Pinned Mathlib's Measure.map_smul accepts (scalar, measure, map),
+  -- not an AEMeasurable proof. The action was already shown measurable above.
+  rw [μ.toMeasure_normalize_eq_of_nonzero hμ, Measure.map_smul, hRaw]
 
 /-- Unconditional identification: ORIGINAL compact SU(2) Haar,
 transported by the ORIGINAL matrix/S³ homeomorphism, is precisely
