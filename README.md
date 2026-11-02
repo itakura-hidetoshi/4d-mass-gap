@@ -1,3 +1,24 @@
+## 検証済み定理 — AEF（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。P4-Q2-PZ37AEF定理PR [#6205](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6205) はMERGED、定理squash SHA `0f0ecf47e0f6c3e2c216595d83e6294583910606`。真正interacting Wilson SU(2)、original centered Gauss-law source、Perron/transfer、FF receiver、二つのinteracting posterior、元boundary pair-Haar、固定pin、公開rootは変更なし。
+
+### 真正Wilson共分散を元のHaar分子・元の正密度分母へ分離
+
+- **物理比率の恒等式**：ACIの完全に元の物理リンクreceiver `J_e(z,g)` と元のSU(2) Wilson character `χ(g)` を用いるHaar分子 `N_e(z)=∫ J_e(z,g) χ(g) dμ_SU(2)(g)` を新しく命名するだけで、`C_e(z)=N_e(z)/q_H(z)` を元の固定結合 `b₀` でLean4形式証明。分母 `q_H(z)` はJQの元の半密度・Perron/transfer逆密度からなる真正の厳密正値な正規化重みであり、代理確率分布ではない。ACI/AEDの非零真正共分散点から、各物理リンクeについて実際の `N_e(z)≠0` の存在もLean4証明。
+- **分子／分母の独立した定量証明書**：任意の真の `λ>0` について `λ≤q_H(z)` と `|N_e(z)|≤Nmax` が個別に検証できれば `|C_e(z)|≤Nmax/λ`。任意の元の二点の真正Haar分子・密度誤差がそれぞれ `dN,dq` 以下なら、元の真正共分散は `|C_e(z)-C_e(w)|≤(dN+(Nmax/λ)·dq)/λ`。さらにこれを元の全リンク弦距離 `D_H` における半径Rの統一モジュラスへ形式化した。数値のλ・Nmax・dN・dqそのものは計算していない。
+
+### 同じ元物理二球・モーメント・条件付きFCへの接続
+
+- **AEFの変動証明書の代入**：`ε=(dN+(Nmax/λ)·dq)/λ` とおき、実際に `R>0`、真正分子・密度のグローバルな境界および `ε<C_e(a)` が確認できた場合、AEEの元の反対符号・互いに素な二球と、AECの元boundary pair-Haar多項式下界から `(C_e(a)-ε)^2·2·(min(R/(2·card(Link_H)+1),2)/4)^(8·card(Link_H))≤S(H,b₀,e)` を証明。半径 `R=1/2` では真の係数 `2·(1/(8·(2·card(Link_H)+1)))^(8·card(Link_H))` となる。全て有限H依存を保持。
+- **元GI検証の厳密な条件境界**：元のFC envelope `B(H,b₀)^2` が `272` 倍の上記の真正二球モーメント下界より厳密に小さいとの**追加数値判定が成立する場合にのみ**元のGI squared mean budgetが正と証明。GI 68/1:17の閾値を無条件で通過したという意味ではない。
+
+### exact-source Lean監査・未解決境界
+
+- 追加は新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalPhysicalNumeratorDenominatorModulusV5_PZ37AEF.lean` 1本。公開Lean4定理11件、`#print axioms`11件。固定Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。exact-source [CI #41537256383](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41537256383) は **11,281/11,281 SUCCESS**、全11定理の公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、新規Lean warning/error 0/0、独立completion receipt成功。source HEAD `8a562e06faf2616cc8ea416867be3e7049c3f1e2`、source/test-merge/squash Git tree `c6cf5fd14f9c57aa43ba9fabb194fccf30cc984c` 完全一致。
+- **未解決の真の物理的obstruction**：元の `q_H` の数値的で一様な正下界、Haar積分分子 `N_e` の数値振幅・変動、真正 `D_H` に対する具体的変動率、実共分散 `C_e(a)` の認証、有限体積一様強制性、物理スペクトルギャップ、連続体4D Yang–Mills質量ギャップは依然として未証明。新規定理は検査可能な条件付き定量ルートであり、数値認証の代わりではない。docs-onlyではStrict Leanを再実行しない。
+
+---
+
 ## 検証済み定理 — AEE（2026-11-03 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。P4-Q2-PZ37AEE定理PR [#6202](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6202) はMERGED、定理squash SHA `a0420dca1ed357378db6f9e233096871ecf1904c`。旧Leanファイル、元のinteracting Wilson SU(2)、centered Gauss-law source、FF receiver、Perron/transfer、二つのinteracting posterior、真正boundary pair-Haar、pin、公開rootに変更はない。
