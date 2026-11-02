@@ -1,3 +1,20 @@
+## 検証済み定理 — ADY（2026-11-02 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラーのみ。P4-Q2-PZ37ADY定理PR [#6184](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6184) はMERGED、定理squash SHA `38acbb00232f42db39790ebba1ad090d272b5c4b`。元のinteracting Wilson SU(2)、Gauss-law源、FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haar、定理rootは不変更。
+
+### 真正SU(2)直交左作用によるMathlib球面測度の無条件不変性
+
+- **放射状sectorの厳密移送**：ADXの真正SU(2)左作用を延長する実4次元線形等長同型 `L_g` と、ADU/ADVの元球面作用 `T_g` に対し、任意の球面集合 `s` で `L_g⁻¹(radialSector(s)) = radialSector(T_g⁻¹(s))` をLean4証明。集合の表示に由来するLean4 `rw` の照合差は、定義上の等式を明示し `congrArg` で運ぶことで解決。
+- **独立Mathlib球面測度の不変性**：固定mathlib `LinearIsometryEquiv.measurePreserving` のLebesgue体積保存、`Measure.toSphere_apply'` の放射状領域公式から、`σ = Measure.toSphere (volume : Measure E4)` に対し `Measure.map (T_g) σ = σ` を証明。
+- **正規化と元Haar一意性**：固定mathlib `Measure.toSphere_ne_zero` による非零性、`FiniteMeasure.normalize`、`Measure.map_smul` で `σ̂` の不変性を証明。ADUで既に証明した真正SU(2)左作用に関するHaar確率一意性に接続し、元の確率Haarの押し出し `Measure.map Φ μ_SU2 = σ̂` を**無条件**にLean4証明。別のSU(2)群・代替Haar・追加測度仮定を導入しない。
+
+### exact-source Lean4・公理依存・次の段階
+
+- 固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。[exact-source CI #41439134813](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41439134813) は **11,274/11,274 SUCCESS**、Leanジョブ・独立completion receiptともSUCCESS。新規4定理すべての `#print axioms` は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error 0/0。
+- 定理PRのsource/test-mergeで差分ファイルなし。source HEAD `11a656c7bd5a041ce3441ef427922c93bd2ed0eb` とsquashの変更対象2ファイル（新規ADY Leanファイル・CI実行時間設定）のGit blob SHAが一致し、親ADX正本に対する変更ファイル集合も一致。
+- **次のADZ課題**：ADTの元弦距離球と真正S³球の逆像一致、ADYの独立正規化球面Haar同一視、ADQの半径下界を接続し、元normalized SU(2) Haarの `m(r) ≥ toSphereBallBound(4,r)/4 > 0` （`r>0`）を無条件化する。全有限体積Hで一様な強制性や連続体4D Yang–Mills質量ギャップは引き続き別の未証明課題。docs-onlyでStrict Leanは再実行しない。
+
+---
 ## 検証済み定理 — ADX（2026-11-02 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラーのみ。P4-Q2-PZ37ADXの定理PR [#6181](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6181) はMERGED、定理squash `376cf3e0f8f75908e81e2e3bb3c4a97b4ae37f29`。元のinteracting Wilson SU(2)、Gauss-law源、FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haar、定理rootは不変更。
