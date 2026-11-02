@@ -1,3 +1,21 @@
+## 検証済み定理 — ADX（2026-11-02 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラーのみ。P4-Q2-PZ37ADXの定理PR [#6181](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6181) はMERGED、定理squash `376cf3e0f8f75908e81e2e3bb3c4a97b4ae37f29`。元のinteracting Wilson SU(2)、Gauss-law源、FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haar、定理rootは不変更。
+
+### 真正SU(2)左作用と実4次元線形直交変換の厳密一致
+
+- **ADW四元数の符号整合**：元SU(2)の第1列4実座標とADW真正四元数の第4成分の符号差を固定mathlibの`LinearIsometryEquiv.piLpCongrRight`による実4次元線形等長反射で補正。真正 `Quaternion.linearIsometryEquivTuple` と合成し、元の4実座標 `V(g)` と正確に一致することをLean4で証明。
+- **無条件の実4次元直交作用**：ADWの元SU(2)四元数左乗法線形等長同型を、固定mathlib `EuclideanSpace ℝ (Fin 4)` の `≃ₗᵢ[ℝ]` へ共役で移送。全元 `g,h∈SU(2)` で `L_g(V(h))=V(gh)`、全球面点 `x∈S³` で `L_g(x)=T_g(x)` をLean4無条件証明。ここで `T_g(x)=Φ(g Ψ(x))` はADV/ADUで確立した**同じ元の物理SU(2)作用**。
+- **真の球面保存**：`L_g` は元の4次元ノルムを保存する線形等長同型なので、元のMathlib単位3球を保ち、元の作用 `T_g` と完全一致する。別の群・物理ゲージ・Haar法則は導入しない。
+- **残存obstructionの限定**：独立の固定mathlib球面測度 `σ=Measure.toSphere(volume)` が上記線形直交変換 `L_g` で保存されることはこのPRでは未証明。従って `ν_G=σ̂` や元Haarの無条件半径依存下界はまだ主張しない。H一様強制性・連続体4D Yang–Mills質量ギャップも別問題。
+
+### exact-source Lean4・公理依存
+
+- 新規5定理と`#print axioms`5件。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。[exact-source CI #41394507779](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41394507779) は **11,273/11,273 SUCCESS**。全5件の公理依存は標準3公理 `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error 0/0、独立completion receipt SUCCESS。
+- Source/test-merge/squash treeは `a697191c476a65576e7d95977879a55f0435f747` で一致。次のADYでは固定mathlib `Measure.toSphere_apply'` と線形等長変換の体積保存から球面測度不変性を形式化する。docs-onlyでStrict Leanを再実行しない。
+
+---
+
 ## 検証済み定理 — ADW（2026-11-02 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラーのみ。P4-Q2-PZ37ADW定理PR [#6178](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6178) はMERGED、定理squash SHA `e2f09f7f33ae0c3a1703ea4de996a57eef33cbea`。元interacting Wilson SU(2)、Gauss-law物理源、FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haar、定理rootは不変更。
