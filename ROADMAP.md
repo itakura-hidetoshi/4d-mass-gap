@@ -1,3 +1,21 @@
+## 検証済み定理 — ADR（2026-11-02 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。P4-Q2-PZ37ADR定理PR [#6163](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6163) はMERGED、定理squash SHA `c43658962ec2c2caeab7cf1f5028668c8e0347c5`。元のinteracting Wilson SU(2)、中心化Gauss-law物理源、元FF受信器、Perron/transfer、二interacting posterior、boundary pair-Haar、定理root、固定toolchainは不変更。default mainは文書ミラーのみ。
+
+### 真正SU(2)行列の4実次元単位球面への単射と四元数形復元
+
+- **本物のSU(2)第1列の単位条件**：任意の元の特殊ユニタリ2×2行列 `g` で `Complex.normSq(g₀₀)+Complex.normSq(g₁₀)=1` を既存のunitary groupのstar積条件からLean4で証明。独立した四元数群の仮定は挿入しない。
+- **4実次元単位球面の実際の点**：行列成分の `(Re(g₀₀),Im(g₀₀),Re(g₁₀),Im(g₁₀))` を `EuclideanSpace ℝ (Fin 4)` に構成し、Euclidean normの2乗=1、norm=1、`S³` への真正写像を形式証明。従来の行列8実次元表現から4実次元表示へ還元。
+- **行列全体を第1列から厳密に復元**：元SU(2)の`det(g)=1`と`gᴴg=ggᴴ=I`を使用し、`adjugate(g)=conjTranspose(g)` と `g₁₁=conj(g₀₀)`、`g₀₁=-conj(g₁₀)` を証明。よって元の行列は `[[a,-conj(b)],[b,conj(a)]]` で完全に表され、第1複素列写像および `SU(2)→S³` 写像が**単射**であることを証明。
+- **未解決obstruction**：今回は`S³→SU(2)`逆写像・全射性・元ADK特徴弦距離との等長性・球面測度のnormalized SU(2) Haarへの移送はまだ証明していない。ADQの半径依存球面測度下界は現時点で元SU(2)上へ無条件移送していない。H一様強制性や連続体Yang–Mills質量ギャップは主張しない。
+
+### exact-source Lean4・公理依存
+
+- 新規8定理・`#print axioms`8件。固定Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。[exact-source CI #41366463730](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41366463730) は **11,267/11,267 SUCCESS**。変更Leanファイルwarning/error 0/0、全8件 `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし。Source/test-merge/squash Git tree `4a60cc5e85fa8281fa90b08409b22a9cce557cfe` 一致。
+- 次の形式化候補：同じ本物のSU(2)行列から具体的な `S³→SU(2)` 逆写像を構成し全射性を証明した後、元弦距離の一致と正規化Haar測度の移送を個別に証明する。docs-onlyではStrict Leanを再実行しない。
+
+---
+
 ## 検証済み定理 — ADQ（2026-11-02 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラーのみ。P4-Q2-PZ37ADQ定理PR [#6160](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6160) はMERGED、定理squash SHA `481ac27155d7137dbf16f8e42e826cb09f966a7e`。元の有限体積interacting Wilson SU(2)、元Gauss-law物理源、元FF受信器、元boundary pair-Haar、固定Lean・mathlib・定理rootは不変更。
