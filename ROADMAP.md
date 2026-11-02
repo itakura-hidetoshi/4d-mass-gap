@@ -1,3 +1,23 @@
+## 検証済み定理 — AED（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。P4-Q2-PZ37AEDの定理PR [#6199](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6199) はMERGED、定理squash SHA `576f89f2476744e862a76ffb0758ebe42569e518`。元のinteracting Wilson SU(2)、centered Gauss-law源、FF receiver、Perron/transfer、二つのinteracting posterior、元boundary pair-Haar、Lean/mathlib pin、theorem rootは変更していない。
+
+### 最大真正共分散と中心ゲージ対称性から得る二球・2倍の物理モーメント下界
+
+- **真正物理共分散の最大振幅**：ACIが各有限体積H・元の空間物理リンクeについて構成した非零共分散点、ACDの元のFF receiver共分散連続性、真正boundary pair空間のコンパクト性を接続。元の `C_e(z)` について `M_(H,e)=max_z |C_e(z)|>0` の実際の達成点をLean4証明。ACCの真正central gauge `Γ_e` で `C_e(Γ_e(a))=-C_e(a)` を使い、`C_e(a)=M_(H,e)>0` とする**正の最大中心**と負の対中心を無条件に構成。これは振幅の数値計算ではない。
+- **元の全リンク距離で共通の安定半径**：ADMがコンパクト性から証明した元のWilson共分散一様連続性により、`R>0` を選んで、真正 `D_H` 球 `Ball(a,R)` 内で `C_e(z)≥M_(H,e)/2`、対中心の `Ball(Γ_e(a),R)` 内で `C_e(z)≤-M_(H,e)/2` を証明。両方の球は実際に互いに素で、共通の真の半径Rを用いる。Rの無条件数値評価は未達成。
+- **2倍の真正boundary pair-Haarと物理二乗モーメント**：AECの初等的な原Haar多項式 `P_H(R)=(min(R/(2·card(Link_H)+1),2)/4)^(8·card(Link_H))` を各球に適用。固定mathlibの `measureReal_union` と真正pair-Haarの加法性で、互いに素な球の和の質量 `ν_H(Ball(a,R)∪Ball(Γ_e(a),R))≥2P_H(R)` を証明。ADEの元Wilson共分散二乗モーメント `S(H,b₀,e)` へ `0<(M_(H,e)/2)^2·2P_H(R)≤S(H,b₀,e)` を、**全元物理空間リンクe** に対し無条件の存在証人付きでLean4証明。従来のAEC単一球下界を係数2で強化した。
+- **検査可能な半径1/2の有理下界**：もし元の真の共分散一様連続性が `D_H(z,w)<1/2 ⇒ |C_e(z)-C_e(w)|<C_e(a)/2` を満たすと確認できるなら、`(C_e(a)/2)^2·2·(1/(8(2·card(Link_H)+1)))^(8·card(Link_H))≤S(H,b₀,e)` が従う。これは**検査可能な条件付き半径1/2証明書**であり、この物理安定半径自体が数値認証されたという主張ではない。
+
+### Lean4検証・修正履歴・未解決境界
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalTwoSignCovarianceDoubleBallV5_PZ37AED.lean` に10公開定理と10 `#print axioms`。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。最終exact-source [CI #41528288716](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41528288716) は **11,279/11,279 SUCCESS**。全10定理の公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。
+- 初回CIでは真正SU(2)の局所コンパクト／Borelインスタンスと、固定mathlib `IsMaxOn` が点を暗黙引数にするシグネチャ等でelaboration失敗。変更Lean全文と依存定理シグネチャ・固定mathlib APIを照合し修正。次回は `IsMaxOn` に集合所属証明だけを渡す形へ修正し、最終CI成功。元の物理モデル・新規定理文・正下界・係数2は弱めず、不要な仮定のみ削除した。
+- Exact-source HEAD `f951407eeac10513dbfdd45fb1379aa0d79b3d2e`、source/test-merge/squash Git treeは `9ba92b8d0db5dfaff0105c53c575984fb47684ca` で完全一致。新規Lean blob `5a145f3e9669b9399822a2a9693d3450b392fd8f`。squash SHA `576f89f2476744e862a76ffb0758ebe42569e518`。マージ後push CIはexact-source CIと分離して確認する。
+- **未解決**：真正物理共分散の最大振幅 `M_(H,e)` と共通安定半径Rの計算可能な数値、H一様な強制性、GI 68/1:17閾値、物理スペクトルギャップ、連続体4D Yang–Mills質量ギャップは未証明。次は実際のWilson共分散の振幅・安定半径を定量評価するための真正物理的解析を別に行う。docs-onlyではStrict Leanを起動しない。
+
+---
+
 ## 検証済み定理 — AEC（2026-11-03 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。P4-Q2-PZ37AEC定理PR [#6196](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6196) はMERGED、定理squash SHA `29d667b08174ab833a0e20c8b503c99121e33410`。元のinteracting Wilson SU(2)、centered Gauss-law源、FF receiver、Perron/transfer、二つのinteracting posterior、元boundary pair-Haar、pin、theorem rootは不変更。
