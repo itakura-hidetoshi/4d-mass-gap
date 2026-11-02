@@ -151,7 +151,7 @@ theorem p4Q2PZ37AEE_certifiedFiniteNet_covarianceApprox
                 (C b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e a)
                 (-(C b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e a -
                     C b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e z)))
-      _ = _ := by simp
+      _ = _ := by simp only [abs_neg]
   linarith only [hTriangle, hOsc]
 
 /-- A verified finite TABLE of physical covariance absolute values,
@@ -172,7 +172,10 @@ theorem p4Q2PZ37AEE_certifiedFiniteTable_globalAmplitudeUpper
   obtain ⟨a, ha, hApprox⟩ :=
     p4Q2PZ37AEE_certifiedFiniteNet_covarianceApprox
       H e s r ε hNet hMod z
-  exact hApprox.trans_le (add_le_add_right (hSamples a ha) ε)
+  have hTable :
+      |C b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e a| + ε ≤ M + ε := by
+    linarith only [hSamples a ha]
+  exact hApprox.trans_le hTable
 
 /-- Every finite H and actual physical link has an arbitrarily
 accurate FINITE sampling interface for the genuine global covariance.
@@ -235,7 +238,9 @@ theorem p4Q2PZ37AEE_certifiedTwoSignError_doubleMomentFloor
         (8 * Fintype.card Link)) ≤
       S b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e := by
   let A : ℝ := C b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e a - ε
-  have hA : 0 < A := sub_pos.mpr hAmp
+  have hA : 0 < A := by
+    dsimp [A]
+    linarith only [hAmp, hε]
   have hFlip :
       C b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e (Gamma e a) =
         -C b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e a :=
