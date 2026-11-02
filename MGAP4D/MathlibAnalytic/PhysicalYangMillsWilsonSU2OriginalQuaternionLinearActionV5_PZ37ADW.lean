@@ -92,11 +92,12 @@ theorem p4Q2PZ37ADW_originalQuaternion_mul (g h : G) :
   have h00 : (((g * h : G) : Mat) 0 0) = a * c - conj b * d := by
     change (((g : Mat) * (h : Mat)) 0 0) = _
     rw [hg, hh]
-    simp [Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+    simp [Matrix.mul_apply, Fin.sum_univ_two]
+    ring
   have h10 : (((g * h : G) : Mat) 1 0) = b * c + conj a * d := by
     change (((g : Mat) * (h : Mat)) 1 0) = _
     rw [hg, hh]
-    simp [Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+    simp [Matrix.mul_apply, Fin.sum_univ_two]
   have hQ :
       p4Q2PZ37ADW_originalQuaternion (g * h) =
         (⟨(a * c - conj b * d).re,
@@ -115,7 +116,7 @@ theorem p4Q2PZ37ADW_originalQuaternion_mul (g h : G) :
       Complex.sub_im, Complex.add_re, Complex.add_im,
       Complex.conj_re, Complex.conj_im,
       a, b, c, d]
-    <;> ring
+    ring
 
 /-- Original true SU(2) group multiplication yields a single
 canonical monoid homomorphism into real quaternions. -/
