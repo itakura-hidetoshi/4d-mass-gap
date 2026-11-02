@@ -1,3 +1,21 @@
+## 検証済み定理 — ADZ（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。P4-Q2-PZ37ADZ定理PR [#6187](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6187) はMERGED、定理squash SHA `381369eb6f91ffb82685b0e5ddf0d600018543d5`。元のinteracting Wilson SU(2)、Gauss-law源、FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haar、定理rootは不変更。
+
+### 真正SU(2) Haarに対する正半径の無条件・全中心下界
+
+- **Haar／球面測度の厳密逆像評価**：ADUの元SU(2)↔S³ homeomorphism `Φ` と固定mathlib `MeasurableEquiv.map_apply` により、任意の球面集合 `s` で `μ_SU2(Φ⁻¹(s))=ν_G(s)` を証明。ADYの真正 `ν_G=σ̂`（独立固定mathlib球面測度の確率正規化）を使用し、可測集合に制限しない測度同一視を保持。
+- **元の表面測度の正規化・正値性**：有限測度 `μ=Measure.toSphere(volume)` に対して、固定mathlib `FiniteMeasure.self_eq_mass_mul_normalize` と実数値測度の変換を使い、全集合 `s` で `σ̂(s)·σ(S³)=σ(s)` を証明。`Measure.toSphere_ne_zero` と `measureReal_univ_pos` から `σ(S³)>0` を証明。非正規化の球面測度を元Haarと誤認しない。
+- **既存ADQ条件の無条件解除**：ADTで証明済みの元弦距離球 `BallJ(1,r)=Φ⁻¹(ball(Φ(1),r))` と、上記の測度輸送・総質量正値性をADQの条件付き定理に代入。全 `r>0` で、元のnormalized compact SU(2) Haarの半径質量 `m(r)` に `m(r)≥κ(r)>0` を**無条件**に証明。ここで `κ(r)=((Measure.toSphereBallBound 4 r : NNReal):ℝ)/4` は固定mathlib由来の陽な半径関数。
+- **全SU(2)中心へ拡張**：元の全 `a∈SU(2)` と `r>0` で `μ_SU2(BallJ(a,r)).toReal≥κ(r)` を証明。元の物理ゲージ・boundary pair-Haar・受信器・事後分布を置き換えない。
+
+### 正本検証・継承事項
+
+- 新規Lean `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalUnconditionalHaarRadiusV5_PZ37ADZ.lean` の7定理・`#print axioms`7件。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。exact-source [PR Lean Fast Check #41441980869](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41441980869) は **11,275/11,275 SUCCESS**。変更Lean warning/error 0/0、公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし。独立completion receipt SUCCESS。
+- 定理source HEAD `203eb5da6954fbff47e918012ad35d4a91719550` のsource/test-mergeに差分ファイルなし。source／squashの新規ADZ LeanファイルGit blob SHAは `cf3f533d30370b5533e98d372a8043f4a9b9b32e` で一致。親ADY正本に対する変更ファイルはADZ Leanファイル1件のみ。
+- **残る問題**：全有限体積Hで一様な強制性・volume-independent物理スペクトルギャップ・連続体4D Yang–Mills質量ギャップは、この球測度下界だけでは証明されない。次は真正boundary pair-Haar積への半径依存下界の定量移送などを別個に検証。docs-onlyではStrict Leanを再実行しない。
+
+---
 ## 検証済み定理 — ADY（2026-11-02 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラーのみ。P4-Q2-PZ37ADY定理PR [#6184](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6184) はMERGED、定理squash SHA `38acbb00232f42db39790ebba1ad090d272b5c4b`。元のinteracting Wilson SU(2)、Gauss-law源、FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haar、定理rootは不変更。
