@@ -1,3 +1,21 @@
+## 検証済み定理 — AEB（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。P4-Q2-PZ37AEB定理PR [#6193](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6193) はMERGED、定理squash SHA `1dd4c2f5fa2b5013dcc84e87960cd15b534eb6ee`。元のinteracting Wilson SU(2)、centered Gauss-law物理源、FF受信器、Perron/transfer、二つのinteracting posterior、元boundary pair-Haar、定理rootと固定pinは変更なし。
+
+### 真正Wilson共分散二乗モーメントへの半径依存・振幅依存の明示的定量接続
+
+- **検査可能な球内振幅証明書**：実物理リンク `e`、元のboundary pair中心 `a`、`R>0`、`A>0` について、真正全リンク球 `Ball_D_H(a,R)` 内の全点で `A≤|C_e(z)|` が検証できれば、元ADEの共分散二乗モーメント評価とAEAの真正pair-Haar下界から、`A² κ(R/(2·card(Link_H)+1))^(2·card(Link_H)) ≤ S(H,b₀,e)` をLean4で証明。ここで `κ(r)=((Measure.toSphereBallBound 4 r : NNReal):ℝ)/4` はADZの固定mathlib由来の明示関数。
+- **任意の非零共分散点から存在証人**：元ADMの真正全リンク距離に関する一様連続性から、`C_e(a)≠0` なら、ある実際の `R>0` で球内振幅 `|C_e(a)|/2` を維持。従って `0 < (|C_e(a)|/2)² κ(R/(2·card(Link_H)+1))^(2·card(Link_H)) ≤ S(H,b₀,e)` を無条件に構成。
+- **全物理リンクの明示的存在証明書**：ACIが元の固定結合・元Gauss-law源・元FF受信器で構成した各空間リンク `e` の非零共分散証人を代入。すべての実リンクに、上記の正の定量証明書 `(a,R)` が存在し、真正の物理共分散二乗モーメント `S(H,b₀,e)>0` をLean4で再証明。有限体積 `H` に依存する半径・振幅は数値未評価。
+
+### Lean4 exact-source検証・継承境界
+
+- 新規Lean `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalCovarianceExplicitMomentFloorV5_PZ37AEB.lean` の6定理・`#print axioms`6件を検証。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。[exact-source CI #41514706212](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41514706212) **11,277/11,277 SUCCESS**、変更Lean warning/error 0/0、公理依存は `propext`・`Classical.choice`・`Quot.sound` のみで `sorryAx` なし。独立completion receipt SUCCESS。
+- 定理source HEAD `9a5875334aeae829be8ff1dd8fab874a0fb503bc`。source/test-merge/squashのGit treeは `b47715de07970fc835f5d9acd7d01b007e64971f` で一致。追加Leanのblob SHAは `60e5483209a151571ceaa48c8ede6e22b6c4d17a`。定理正本のマージ後HEADは `1dd4c2f5fa2b5013dcc84e87960cd15b534eb6ee`。マージ後push CIはexact-source CIと分離して確認する。
+- **残る定量obstruction**：真の `R` と `|C_e(a)|` の計算可能な数値評価、volume-independent物理強制性、68/1:17テスト、実物理スペクトルギャップ、連続体4D Yang–Mills質量ギャップはいずれも本定理の結論ではない。次は物理振幅と安定半径の実数値評価・半径関数の具体化を別々に検証。docs-onlyではStrict Leanを再実行しない。
+
+---
+
 ## 検証済み定理 — AEA（2026-11-03 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。P4-Q2-PZ37AEA定理PR [#6190](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6190) はMERGED、定理squash SHA `e9709855fb25e40273ca17f876123a30268088ca`。元のinteracting Wilson SU(2)、Gauss-law源、FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haar、定理rootおよびpinは不変更。
