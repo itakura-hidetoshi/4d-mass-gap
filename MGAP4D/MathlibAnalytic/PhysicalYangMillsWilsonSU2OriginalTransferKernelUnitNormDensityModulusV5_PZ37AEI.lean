@@ -275,6 +275,47 @@ theorem p4Q2PZ37AEI_originalFiniteNet_unitNorm_covarianceModulus
       hNmax hNmod hQmod
   simpa only [one_mul] using hAEH
 
+
+/-- Same genuine two-sided rho table and the Wilson U=1 theorem feed
+the AEF original gauge-opposite two-ball Haar covariance-moment floor.
+The original nonzero amplitude-vs-error margin remains explicit. -/
+theorem p4Q2PZ37AEI_originalFiniteNet_unitNorm_doubleMomentFloor
+    (e : Link) (a : Pair) (s : Finset Pair)
+    (r epsilon m M R Nmax dN : ℝ)
+    (heps : 0 < epsilon) (hm : epsilon < m)
+    (hR : 0 < R) (hRle : R ≤ r)
+    (hNet : p4Q2PZ37AEE_isOriginalFullNet H s r)
+    (hRhoMod : ∀ z w : Pair, D z w < r →
+      |rho z - rho w| < epsilon)
+    (hSampleLower : ∀ x ∈ s, m ≤ rho x)
+    (hSampleUpper : ∀ x ∈ s, rho x ≤ M)
+    (hNmax : ∀ z : Pair, |N e z| ≤ Nmax)
+    (hNmod : ∀ z w : Pair, D z w < R →
+      |N e z - N e w| ≤ dN)
+    (hAmp :
+      (dN + (Nmax / ((1 : ℝ) / (M + epsilon))) *
+        ((Tnorm⁻¹ / (m - epsilon)) * epsilon / (m - epsilon))) /
+        ((1 : ℝ) / (M + epsilon)) < C b0 hb0 e a) :
+    (C b0 hb0 e a -
+      (dN + (Nmax / ((1 : ℝ) / (M + epsilon))) *
+        ((Tnorm⁻¹ / (m - epsilon)) * epsilon / (m - epsilon))) /
+        ((1 : ℝ) / (M + epsilon))) ^ 2 *
+        (2 * (min (R / (2 * (Fintype.card Link : ℝ) + 1)) 2 / 4) ^
+          (8 * Fintype.card Link)) ≤
+      p4Q2PZ37ACJ_originalCenteredCovarianceSecondMoment H b0 hb0 e := by
+  have hQmod :=
+    p4Q2PZ37AEI_originalFiniteNet_givesDensityModulus
+      H s r epsilon m R hm hRle hNet hRhoMod hSampleLower
+  have hAEH :=
+    p4Q2PZ37AEH_originalCertifiedNet_givesDoubleMomentFloor
+      H e a s r epsilon M 1 R Nmax dN
+      ((Tnorm⁻¹ / (m - epsilon)) * epsilon / (m - epsilon))
+      heps hR hNet hRhoMod hSampleUpper
+      (p4Q2PZ37AEI_originalFixedCouplingTransfer_norm_in_pos_unit H).2
+      hNmax hNmod hQmod
+      (by simpa only [one_mul] using hAmp)
+  simpa only [one_mul] using hAEH
+
 end GroundStatePosteriorJoint
 
 end
@@ -292,3 +333,5 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEI_originalFiniteNet_unitNorm_densityFloor
 
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEI_originalFiniteNet_unitNorm_covarianceModulus
+
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEI_originalFiniteNet_unitNorm_doubleMomentFloor
