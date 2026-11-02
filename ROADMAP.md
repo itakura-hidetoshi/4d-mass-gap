@@ -1,3 +1,28 @@
+## 検証済み定理 — AEE（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。P4-Q2-PZ37AEE定理PR [#6202](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6202) はMERGED、定理squash SHA `a0420dca1ed357378db6f9e233096871ecf1904c`。旧Leanファイル、元のinteracting Wilson SU(2)、centered Gauss-law source、FF receiver、Perron/transfer、二つのinteracting posterior、真正boundary pair-Haar、pin、公開rootに変更はない。
+
+### 真正D_H有限ネットと物理共分散の有限サンプル証明書
+
+- **有限ネットの無条件存在**：ADLの元の全リンク校正弦距離 `D_H` と元のboundary pair空間のコンパクト性から、各有限体積Hと任意の実半径r>0に、全真正境界配置を覆う実際の有限 `D_H`-net `s` が存在することをLean4で証明。netの中心とcardinalityの具体的な数値は未計算。
+- **有限データから大域振幅への厳密評価**：真正net証明 `∀z, ∃a∈s, D_H(a,z)<r` と真の共分散一様変動証明 `D_H(z,w)<r ⇒ |C_e(z)-C_e(w)|<ε` があれば、各zであるサンプルa∈sについて `|C_e(z)|<|C_e(a)|+ε`。特に実サンプルが全て `|C_e(a)|≤M` なら `∀z, |C_e(z)|<M+ε` を証明した。ADMの真正一様連続性とコンパクト性から、各ε>0にこのような有限サンプル証明書が存在することも無条件にLean4証明。
+- **非零有限サンプル**：ACIの各真正リンクeの非零物理共分散証人と有限近似から、十分細かい有限netに非零共分散の実サンプルが存在する。これは**有限サンプルの存在**であって、数値的に算出したサンプルや一様半径の提示ではない。
+
+### 可変誤差の二球Wilsonモーメント下界
+
+- **固定値1/2から可変誤差へ**：真正元の中心aで `R>0`、`0≤ε<C_e(a)`、`D_H(z,w)<R ⇒ |C_e(z)-C_e(w)|≤ε` が確認されたとき、ACCのゲージ符号反転、相反する二つの互いに素な真正 `D_H` 球、AECの真正pair-Haar下界およびADEの二乗積分から、
+  `(C_e(a)-ε)^2 × 2 × (min(R/(2·card(Link_H)+1),2)/4)^(8·card(Link_H)) ≤ S(H,b₀,e)`
+  をLean4で証明。半径1/2では厳密な有理係数 `2×(1/(8(2·card(Link_H)+1)))^(8·card(Link_H))` となる。誤差・半径・振幅は数値認証されていない。
+- **FC/GIとの正確な境界**：元のFC envelope `B(H,b₀)^2` が `272×`上記の真の二球積下界より厳密に小さいと**別途検証できた場合のみ**、ADEの元のGI squared mean budgetの正値性を導く。閾値68/1:17の無条件判定を意味しない。
+
+### exact-source Lean検証・公理監査・未解決課題
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalCovarianceFiniteNetErrorCertificateV5_PZ37AEE.lean` に8公開定理と8 `#print axioms`。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。最終exact-source [CI #41534328138](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41534328138) は **11,280/11,280 SUCCESS**。8定理すべて `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。
+- 初回CIの絶対値差の対称性・固定mathlibの `add_le_add_right` の加法順序とunused hε linter warningを新規Leanファイル全文・ADE/ADM/AEC/AEDシグネチャ照合後に修正。定理型・物理法則・必要な仮定は変更なし。最終source HEAD `aaf6744d9db8444b3d534d35dbd0e69349867cac`。source/test-merge/squash Git treeは `411399842c9452544fb4a0a568aba4f1d0c8b697` で完全一致。squash `a0420dca1ed357378db6f9e233096871ecf1904c`。
+- **未解決**：実際に構成・検証した有限netの具体点と規模、数値的な真正共分散値・変動率・半径、H一様強制性、厳密なGI閾値、物理スペクトルギャップ、連続体4D Yang–Mills質量ギャップは未証明。次の物理研究では元のPerron/FF密度分母と共分散分子に対する計算可能な上界・下界を分離する。docs-onlyではStrict Leanを再起動しない。
+
+---
+
 ## 検証済み定理 — AED（2026-11-03 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。P4-Q2-PZ37AEDの定理PR [#6199](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6199) はMERGED、定理squash SHA `576f89f2476744e862a76ffb0758ebe42569e518`。元のinteracting Wilson SU(2)、centered Gauss-law源、FF receiver、Perron/transfer、二つのinteracting posterior、元boundary pair-Haar、Lean/mathlib pin、theorem rootは変更していない。
