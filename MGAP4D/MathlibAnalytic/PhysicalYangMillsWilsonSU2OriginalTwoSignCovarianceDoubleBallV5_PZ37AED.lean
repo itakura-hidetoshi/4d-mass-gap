@@ -106,8 +106,8 @@ theorem p4Q2PZ37AED_originalMaximumAbsoluteCovariance_exists
   obtain ⟨a, _ha, hMax⟩ :=
     (isCompact_univ : IsCompact (Set.univ : Set Pair)).exists_isMaxOn
       ⟨a₀, Set.mem_univ a₀⟩ hC.abs.continuousOn
-  exact ⟨a, (abs_pos.mpr ha₀).trans_le (hMax a₀),
-    fun z => hMax z⟩
+  exact ⟨a, (abs_pos.mpr ha₀).trans_le (hMax (Set.mem_univ a₀)),
+    fun z => hMax (Set.mem_univ z)⟩
 
 /-- The genuine original center-gauge action makes a positive covariance
 GLOBAL maximizer available, with a negative partner of EQUAL amplitude. -/
