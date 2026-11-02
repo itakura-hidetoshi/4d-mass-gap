@@ -1,3 +1,23 @@
+## 検証済み定理 — AEC（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。P4-Q2-PZ37AEC定理PR [#6196](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6196) はMERGED、定理squash SHA `29d667b08174ab833a0e20c8b503c99121e33410`。元のinteracting Wilson SU(2)、centered Gauss-law源、FF receiver、Perron/transfer、二つのinteracting posterior、元boundary pair-Haar、pin、theorem rootは不変更。
+
+### 固定mathlibに基づく真正Haar下界の初等的な四次・冪式
+
+- **固定mathlibの定義を厳密展開**：pinned `Mathlib/MeasureTheory/Constructions/HaarToSphere.lean` の `Measure.toSphereBallBound` は、`n≠0∧r>0` で `n*((min (Real.toNNReal r) 2)/4)^n`。従ってADQの元の `κ(r)=((toSphereBallBound 4 r : NNReal):ℝ)/4` に対し、全 `r>0` で `κ(r)=(min r 2/4)^4` をLean4で無条件証明。小半径 `0<r≤2` では `κ(r)=(r/4)^4`、`r≥2` では `κ(r)=1/16`（これは元Haarの等号値ではなく下界）。特に元のnormalized SU(2) Haar radial mass は `m(1)≥1/256`。
+- **真正boundary pair-Haarへ移送**：AEAの全有限体積H・全中心a・全 `R>0` の証明から、真正 `ν_H(B_D(a,R))≥(min (R/(2·card(Link_H)+1)) 2/4)^(8·card(Link_H))` を定理化。元の両boundaryの `2·card(Link_H)` 因子と実4次元の四次下界を保持し、指数 `8·card(Link_H)` の正確な掛け算を形式証明。
+- **半径1/2の完全有理下界**：実際の元の full `D_H` 球 `B_D(a,1/2)` の質量は `(1/(8*(2·card(Link_H)+1)))^(8·card(Link_H))` 以上。有限Hのリンク数が定まれば計算できる式であり、有限ネットの未知cardinalityを使わない。
+- **元の物理共分散二乗モーメント**：球内振幅 `A>0` が実際に検証できれば、ADE/AEBの元Wilson二乗モーメント `S(H,b₀,e)` へ `A²*(min(R/(2·card(Link_H)+1),2)/4)^(8·card(Link_H))≤S` を形式証明。全元物理空間リンクeについて、ACIの非零共分散点とADMの真の安定半径から、同じ多項式付き正下界の存在証人を無条件に得る。
+
+### exact-source Lean・修正理由・未解決境界
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalExplicitSpherePolynomialFloorV5_PZ37AEC.lean` の9定理／9 `#print axioms`。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。修正後exact-source [CI #41522554271](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41522554271) は **11,278/11,278 SUCCESS**、全9件の公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。
+- 初回CIでLean `push_cast` により `↑(min a b)` が `min (↑a) (↑b)` に正規化され、元のキャスト形へ `rw` できず失敗。変更Lean全文・import先・固定mathlibの定義と依存シグネチャを確認し、正規化後の `Real.coe_toNNReal` で等式を証明。定理の型や物理仮定は弱めず、linterの不要sequence-focusも修正。
+- 最終source HEAD `6d8e13728eeb1ca0e1fb858a8197ca00c461cd31`、test-merge/squash Git tree `85fd436a3c38650022c6015bbb1e7972c3aa8527` で一致。新規AEC Lean blob `209b5f34137dfae8d1b21a52fd7c67d7c3fec913`。定理squash `29d667b08174ab833a0e20c8b503c99121e33410`。マージ後push CIは独立に記録する。
+- **未解決**：Hに依存しない強制性、実際の物理共分散振幅・安定半径の具体的な数値、68/1:17閾値判定、物理スペクトルギャップおよび連続体4D Yang–Mills質量ギャップは本定理からは導かれない。docs-onlyではStrict Leanを再実行しない。
+
+---
+
 ## 検証済み定理 — AEB（2026-11-03 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。P4-Q2-PZ37AEB定理PR [#6193](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6193) はMERGED、定理squash SHA `1dd4c2f5fa2b5013dcc84e87960cd15b534eb6ee`。元のinteracting Wilson SU(2)、centered Gauss-law物理源、FF受信器、Perron/transfer、二つのinteracting posterior、元boundary pair-Haar、定理rootと固定pinは変更なし。
