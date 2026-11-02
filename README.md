@@ -1,3 +1,25 @@
+## 検証済み定理 — AEG（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。AEG定理PR [#6208](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6208) はMERGED、定理squash SHA `2977080e8b9a65b250ea64ea08182c53ffd00505`。真正interacting Wilson SU(2)、元centered Gauss-law source、Perron/transfer、FF receiver、元二つのinteracting posterior、boundary pair-Haar、固定Lean/mathlib、定理rootは不変更。
+
+### 真正Perron分母の厳密な真空相殺と有限体積正下界
+
+- **真正密度の恒等式**：JQ/FFで定義済みの元の物理密度 `q_H(z)` は、元の半密度 `W_H(z)` と逆真空重み `V_H(z.2)` の積。FFの定義と真正正値定理をLean4で展開し、真空重みの厳密な相殺により `q_H(z)=‖T_H‖⁻¹ / ρ_H(z)` を証明。ここで `T_H` は元Perron/transfer作用素、`ρ_H(z)=continuousJointSqrtDensity_H(z)` は元の真正joint sqrt-density。新しい確率測度・代理分母を導入しない。
+- **固定Hの無条件正下界**：真正boundary pair空間のコンパクト性、元密度の連続性・正値性、上記恒等式から `ρ_H` は厳密に正の有限最大値 `M_H` を持ち、元の全境界配置zに対し `λ_H=‖T_H‖⁻¹/M_H>0`、`λ_H≤q_H(z)` をLean4形式証明。これは**各有限H依存の存在定理**であって、`M_H`、`λ_H` の数値計算や体積一様下界ではない。
+
+### 元Haar分子の連続性・最大値・共通誤差半径
+
+- **同一真正物理分子**：AEFの元のsource-dependent SU(2) Haar積分 `N_e(z)` と同じ物理共分散 `C_e(z)` に対し `N_e(z)=C_e(z)q_H(z)` を証明。ACDで証明済みの元物理共分散連続性と元density連続性を使い、`N_e` の連続性を証明。ACI/AEFの非零物理証人より、全真正物理空間リンクeで `|N_e|` の達成された厳密正値の有限大域最大値が存在する。
+- **AEFの個別条件が同時充足可能**：任意の真正リンクe、各 `δ_N>0`、`δ_q>0` に対して、同じ元の全リンク弦距離 `D_H` 上の共通 `R>0` と、真正密度下界 `λ_H>0`、分子上界 `M_{H,e}>0` が存在し、`D_H(z,w)<R` なら `|N_e(z)-N_e(w)|≤δ_N` と `|q_H(z)-q_H(w)|≤δ_q` が同時に成立することをLean4で証明。独立な一様連続性半径のminを使用し、元のAEF商の誤差評価へ接続できる。半径・振幅・分母上界の具体的数値は未認証。
+
+### Lean4 CI・公理監査・境界
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalDensityCompactNumeratorFloorV5_PZ37AEG.lean` 1本。公開11定理、11件の `#print axioms`。固定Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。最終exact-source [CI #41541628032](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41541628032) は **11,282/11,282 SUCCESS**、全11定理の公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。
+- 初回失敗で局所記法 `W.continuous`・`rho.continuous` のLean識別子解釈を確認し、元FFの連続写像型と、通常関数としての `continuousJointSqrtDensity` を区別。元密度の連続性と真空相殺からsqrt-density連続性を導き、最後にtransferノルム非零証拠を用いて逆数正規化を完了。数式・物理仮定・元ファイルは弱めていない。最終source HEAD `d7208d8a205e31a304f70a5961147d858777c21f`。source/test-merge/squash Git tree `836a858d4a5c2952f138169f26bd81703dc73a7c` は完全一致。
+- **未解決の数値obstruction**：元`ρ_H` の実際の最大数値、元transferノルム、`λ_H`、真正Haar分子の振幅・変動率、元共分散の数値、GI 68/1:17条件、体積一様強制性、物理スペクトルギャップ、連続体4D Yang–Mills質量ギャップは本定理からは数値確定しない。次は元のsqrt-density・Perron/FF量に対する計算可能な上下界を別途調べる。docs-onlyではStrict Leanを再実行しない。
+
+---
+
 ## 検証済み定理 — AEF（2026-11-03 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。P4-Q2-PZ37AEF定理PR [#6205](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6205) はMERGED、定理squash SHA `0f0ecf47e0f6c3e2c216595d83e6294583910606`。真正interacting Wilson SU(2)、original centered Gauss-law source、Perron/transfer、FF receiver、二つのinteracting posterior、元boundary pair-Haar、固定pin、公開rootは変更なし。
