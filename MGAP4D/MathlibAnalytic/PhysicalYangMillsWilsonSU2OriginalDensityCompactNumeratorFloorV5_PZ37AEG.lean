@@ -120,8 +120,23 @@ theorem p4Q2PZ37AEG_originalDensity_continuous :
 maximum over all true original boundary pairs at each fixed H. -/
 theorem p4Q2PZ37AEG_originalJointSqrtDensity_positiveMaximum_exists :
     ∃ M : ℝ, 0 < M ∧ ∀ z : Pair, rho z ≤ M := by
-  have hrho : Continuous (fun z : Pair => rho z) :=
-    (continuousJointSqrtDensity H 2 (by norm_num) b0 hb0).continuous
+  have hQ : Continuous (fun z : Pair => q b0 hb0 z) :=
+    p4Q2PZ37AEG_originalDensity_continuous H
+  have hQne : ∀ z : Pair, q b0 hb0 z ≠ 0 :=
+    fun z => (p4Q2PZ37AEF_originalDensity_pos H z).ne'
+  have hL : L ≠ 0 := (inv_pos.mpr
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
+      H 2 (by norm_num) b0 hb0)).ne'
+  have hRhoEq : (fun z : Pair => rho z) =
+      (fun z : Pair => L / q b0 hb0 z) := by
+    funext z
+    have hr : rho z ≠ 0 :=
+      (continuousJointSqrtDensity_pos H 2 (by norm_num) b0 hb0 z).ne'
+    rw [p4Q2PZ37AEG_originalDensity_exactVacuumCancellation H z]
+    field_simp [hL, hr]
+  have hrho : Continuous (fun z : Pair => rho z) := by
+    rw [hRhoEq]
+    exact continuous_const.div hQ hQne
   let z0 : Pair := (originalWilsonExplicitIdentityBoundary H,
     originalWilsonExplicitIdentityBoundary H)
   obtain ⟨a, _ha, hMax⟩ :=
