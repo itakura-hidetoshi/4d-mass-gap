@@ -61,7 +61,7 @@ theorem p4Q2PZ37ADR_originalFirstColumn_normSq_one (g : G) :
     simpa [Matrix.mul_apply, Fin.sum_univ_two, Matrix.conjTranspose_apply] using h00
   have hRe := congrArg Complex.re hC
   simp only [Complex.add_re, Complex.one_re, Complex.mul_re,
-    conj_re, conj_im] at hRe
+    Complex.conj_re, Complex.conj_im] at hRe
   simp only [Complex.normSq_apply]
   nlinarith only [hRe]
 
