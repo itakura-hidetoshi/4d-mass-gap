@@ -1,3 +1,21 @@
+## 検証済み定理 — ADV（2026-11-02 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラーのみ。P4-Q2-PZ37ADV定理PR [#6175](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6175) はMERGED、定理squash SHA `1855cbbdc96f22bb8e1cf973c1156ecf4bc34dd7`。元interacting Wilson SU(2)、中心化Gauss-law源、FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haar、定理rootは不変更。
+
+### 真正SU(2)のS³左作用の等長性・推移性と全中心Haar球質量
+
+- **元ADKの弦距離の厳密左不変性**：実物理Wilsonエネルギーの `d_J(g,h)^2=2 E(g⁻¹h)` と真正SU(2)群則から、任意`a,g,h`で `d_J(ag,ah)=d_J(g,h)` をLean4無条件証明。別の距離・物理モデルへの置換なし。
+- **球面上の真正SU(2)作用の等長性と推移性**：ADUの `T_g(x)=Φ(g*Ψ(x))` について単位作用・合成作用・`g⁻¹`による左右逆作用、全`x,y`で `dist(T_g x,T_g y)=dist(x,y)` を証明。各`g`の具体的な`S³ ≃ᵢ S³`を構成し、任意の球面`x,y`間には `T_g x=y` を満たす元のSU(2)要素`g`が存在することを形式化。
+- **球集合の移送と元Haar球質量の中心不変性**：全半径`r`で `T_g⁻¹(ball(T_g a,r))=ball(a,r)` を証明。ADUの真正元SU(2) Haar押し出し`ν_G`と左作用による測度保存・推移性から、全球面中心`a`について `ν_G(ball(a,r)).toReal=m(r)` を無条件でLean4証明。ここで`m(r)`はADMの元normalized SU(2) Haar半径質量であり、固定mathlibの別の球面測度ではない。
+- **残存の独立測度obstruction**：固定mathlib `Measure.toSphere(volume)` を確率正規化した`σ̂`が各`T_g`で不変であることは未証明。従ってADUの一意性を使った`ν_G=σ̂`、元SU(2) Haarの無条件半径依存明示下界、全H一様強制性、連続体4D Yang–Mills質量ギャップは未達成。次は各`T_g`を実4次元線形直交変換として延長し、`toSphere`の不変性へ接続する。
+
+### exact-source Lean4・公理依存
+
+- 新規10定理・`#print axioms`10件。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。[exact-source CI #41382808932](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41382808932) は **11,271/11,271 SUCCESS**。変更Lean warning/error 0/0、全10件は標準3公理 `propext`・`Classical.choice`・`Quot.sound` のみで `sorryAx` なし、独立completion receipt SUCCESS。
+- 定理source/test-merge/squash Git treeは `dae10eff95da311a5eb0ec8b8559bd98fc166a11` で一致。docs-onlyではStrict Leanを再実行しない。default mainにはLean定理本体をコピーしない。
+
+---
+
 ## 検証済み定理 — ADU（2026-11-02 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラーのみ。P4-Q2-PZ37ADU定理PR [#6172](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6172) はMERGED、定理squash SHA `7a7b01f8083d884d62c08872cf37329600b6f538`。元のinteracting Wilson SU(2)、centered Gauss-law物理源、FF受信器、Perron/transfer、二interacting posterior、boundary pair-Haar、定理rootは不変更。
