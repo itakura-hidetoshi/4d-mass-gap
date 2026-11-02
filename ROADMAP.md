@@ -1,3 +1,21 @@
+## 検証済み定理 — ADW（2026-11-02 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラーのみ。P4-Q2-PZ37ADW定理PR [#6178](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6178) はMERGED、定理squash SHA `e2f09f7f33ae0c3a1703ea4de996a57eef33cbea`。元interacting Wilson SU(2)、Gauss-law物理源、FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haar、定理rootは不変更。
+
+### 真正SU(2)の単位四元数表示と実4次元線形等長作用
+
+- **真正SU(2)→Mathlib四元数の正確な符号付き対応**：ADRで証明した元の行列`g=[[a,-conj(b)],[b,conj(a)]]`について、固定mathlibの`Quaternion ℝ`へ`q(g)=(Re(a),Im(a),Re(b),-Im(b))`を構成。第四成分の負符号は元SU(2)行列積を保存するために必要。全`g`に対して`Quaternion.normSq(q(g))=1`と`‖q(g)‖=1`をLean4で証明。
+- **真正の乗法整合性**：元の2×2 SU(2)行列積と固定Mathlib四元数の実部・3虚部の積公式を直接計算し、`q(1)=1`、`q(gh)=q(g)q(h)`をLean4無条件証明。元の特殊ユニタリ群から`Quaternion ℝ`へのモノイド準同型を構成。
+- **実4次元の線形等長作用と逆**：元の`g`に対応する左乗法`x↦q(g)x`を`Quaternion ℝ →ₗ[ℝ] Quaternion ℝ`として構成。四元数の乗法的ノルムと`‖q(g)‖=1`により真正の`→ₗᵢ[ℝ]`を証明し、元`g⁻¹`の四元数左乗法を逆とする`≃ₗᵢ[ℝ]`を構成。別の有限群Haarや仮想SU(2)を導入しない。
+- **残る独立の測度obstruction**：今回の四元数上の実線形等長作用が、ADVで証明済みの元`S³`作用`T_g(x)=Φ(g*Ψ(x))`と一致すること、および固定mathlibの`Measure.toSphere(volume)`正規化測度がその実4次元直交作用に不変であることは未証明。したがって`ν_G=σ̂`、元SU(2) Haarの無条件半径依存数値下界、全H一様強制性、連続体4D Yang–Mills質量ギャップは主張しない。
+
+### exact-source Lean4・公理依存
+
+- 新規4定理・`#print axioms`4件。固定Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。[exact-source CI #41385605532](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41385605532) は **11,272/11,272 SUCCESS**、変更Lean warning/error 0/0、4件は標準3公理`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、独立MCP completion receipt SUCCESS。
+- Source/test-merge/squash Git treeは `d2faeedaa725b20119b11b21249cb52ee26b35f5` で一致。次は四元数実4次元等長変換を`EuclideanSpace ℝ (Fin 4)`上で実装し、真の球面作用との一致、標準球面測度の不変性を個別に形式化する。docs-onlyのStrict Lean再実行は不要。
+
+---
+
 ## 検証済み定理 — ADV（2026-11-02 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラーのみ。P4-Q2-PZ37ADV定理PR [#6175](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6175) はMERGED、定理squash SHA `1855cbbdc96f22bb8e1cf973c1156ecf4bc34dd7`。元interacting Wilson SU(2)、中心化Gauss-law源、FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haar、定理rootは不変更。
