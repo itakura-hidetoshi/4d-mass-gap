@@ -64,14 +64,15 @@ theorem p4Q2PZ37ADT_genuineTrace_eq_twiceSphereInner (g h : G) :
     rw [hg, hh]
     simp [Matrix.trace_fin_two, Matrix.mul_apply,
       Fin.sum_univ_two, Matrix.conjTranspose_apply,
-      Complex.add_re, Complex.mul_re, Complex.neg_re,
-      Complex.conj_re, Complex.conj_im] <;> ring
+      Complex.add_re, Complex.mul_re,
+      Complex.conj_re, Complex.conj_im]
+    ring
   have hFour :
       inner ℝ (V g) (V h) =
         a.re * c.re + a.im * c.im + b.re * d.re + b.im * d.im := by
     simp [p4Q2PZ37ADR_originalFourCoordinates,
       PiLp.inner_apply, Fin.sum_univ_four,
-      realScalarInner_eq_mul, a, b, c, d] <;> ring
+      realScalarInner_eq_mul, a, b, c, d]
   rw [hTrace, hFour]
 
 /-- The original normalized SU(2) real-trace RELATIVE kernel is
@@ -134,8 +135,10 @@ theorem p4Q2PZ37ADT_originalBall_eq_sphereBallPreimage
     p4Q2PZ37ADK_trueChordalBall a r =
       Φ ⁻¹' Metric.ball (Φ a) r := by
   ext g
-  change dJ a g < r ↔ dist (Φ a) (Φ g) < r
-  rw [p4Q2PZ37ADT_originalChordal_eq_sphereDist]
+  simp only [p4Q2PZ37ADK_trueChordalBall, Set.mem_setOf_eq,
+    Set.mem_preimage, Metric.mem_ball]
+  rw [p4Q2PZ37ADT_originalChordal_eq_sphereDist a g]
+  simp only [dist_comm]
 
 /-- In particular the EXACT ADQ required original identity ball is the
 inverse image of its genuine unit 3-sphere ball. -/
