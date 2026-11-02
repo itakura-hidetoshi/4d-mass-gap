@@ -1,3 +1,21 @@
+## 検証済み定理 — ADU（2026-11-02 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラーのみ。P4-Q2-PZ37ADU定理PR [#6172](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6172) はMERGED、定理squash SHA `7a7b01f8083d884d62c08872cf37329600b6f538`。元のinteracting Wilson SU(2)、centered Gauss-law物理源、FF受信器、Perron/transfer、二interacting posterior、boundary pair-Haar、定理rootは不変更。
+
+### 真正SU(2) HaarのS³押し出し、左作用不変性、Haar一意性への還元
+
+- **元の位相による真正Homeomorph**：ADSの元SU(2)↔S³双方向写像とADTの元`d_J`-球面Euclidean距離一致を利用し、ADKの元`J`連続性・SU(2)コンパクト性・S³のHausdorff性から `Φ : SU(2) ≃ₜ S³` をLean4証明。正逆写像ともBorel可測。
+- **元Haarを保持した球面確率測度**：元normalized compact Haar `μ_G` の真正押し出し `ν_G = Measure.map Φ μ_G` を定義し、確率測度性、`Φ`による測度保存、`Ψ`による元Haarの厳密復元、元ADMの半径球質量 `m(r) = ν_G(ball(Φ(1),r)).toReal` を無条件でLean4証明。有限群Haar・別の任意分布への置換はない。
+- **真正SU(2)作用と測度不変性**：球面上の作用 `T_g(x)=Φ(g*Ψ(x))` を元の群演算から構成し、各`T_g`の連続性・`MeasurePreserving T_g ν_G ν_G` をLean4証明。さらに、この元SU(2)作用に対して不変な**任意の球面確率測度**は`ν_G`と等しいことを、固定mathlibの確率Haar測度一意性から証明。
+- **別個の標準球面測度と残存obstruction**：固定mathlib `Measure.toSphere (volume : Measure (EuclideanSpace ℝ (Fin 4)))` を独立に確率正規化した`σ̂`を定義。`∀g, Measure.map (T_g) σ̂ = σ̂` という**具体的な作用不変性を前提**とすれば `ν_G=σ̂` が成立する条件付き定理を形式証明。しかしこの作用不変性そのものはADUでは未証明。元SU(2) Haarに対するADQの無条件半径依存数値下界、全H一様強制性、連続体Yang–Mills質量ギャップは未達成。
+
+### exact-source Lean4・公理依存
+
+- 新規14定理・`#print axioms`14件。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。[exact-source CI #41374989708](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41374989708) は **11,270/11,270 SUCCESS**、変更Lean warning/error 0/0、公理依存は14件すべて標準3公理 `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし。[定理マージ後push CI #41375511861](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41375511861) もSUCCESS、独立completion receipt SUCCESS。
+- 定理source/squash Git treeは `7d67e47e31fe5f3cb7ff2fbccff0a40fc3252f5b` で一致。次のADVでは固定球面測度 `σ̂` が真正SU(2)作用に対して不変であることを、実4次元の正規直交作用と固定mathlibの`toSphere`との整合性から証明する。docs-onlyでStrict Leanを実行しない。
+
+---
+
 ## 検証済み定理 — ADT（2026-11-02 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラーのみ。P4-Q2-PZ37ADT定理PR [#6169](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6169) はMERGED、定理squash SHA `1e5ceac8e72c3f0b83e31b35e0c253ef2a0918e8`。元有限体積interacting Wilson SU(2)、元centered Gauss-law源、FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haar、定理rootは不変更。
