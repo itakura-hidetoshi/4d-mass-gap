@@ -1,3 +1,21 @@
+## 検証済み定理 — ADT（2026-11-02 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラーのみ。P4-Q2-PZ37ADT定理PR [#6169](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6169) はMERGED、定理squash SHA `1e5ceac8e72c3f0b83e31b35e0c253ef2a0918e8`。元有限体積interacting Wilson SU(2)、元centered Gauss-law源、FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haar、定理rootは不変更。
+
+### 元SU(2)弦距離とS³ Euclidean距離の真正等長性
+
+- **真正相対トレース内積同定**：ADRで既に証明した元SU(2)の第1列からの厳密な2×2行列復元を使用し、`Re Tr(gᴴh)=2*⟪V(g),V(h)⟫_ℝ` を固定mathlibの元行列積と複素数計算でLean4証明。元のnormalized SU(2)相対トレースkernelが`EuclideanSpace ℝ (Fin 4)`上の実内積に厳密一致する。新規の代替ゲージ・カーネルは導入しない。
+- **元ADKの8実次元Wilson特徴と4実次元球面の厳密距離一致**：ADKの真正 `J` の単位ノルム、ADRの4実次元 `V` の単位ノルム、両者の内積一致から `d_J(g,h)^2=‖V(g)-V(h)‖²`、非負性から**`d_J(g,h)=dist(Φ(g),Φ(h))`** をLean4で無条件証明。ADSで構成済みの真正 `SU(2)≃S³` 全単射が元のWilson特徴弦距離を厳密に保存。
+- **ADQの球集合条件を無条件に解消**：すべての元SU(2)中心`a`、すべての実数半径`r`で `B_J(a,r)=Φ⁻¹(B_{S³}(Φ(a),r))` を形式証明。ADQで明示的だった元の半径球のinverse-image条件はもはや仮定ではない。
+- **未解決の独立obstruction**：元normalized compact SU(2) Haarから正規化S³ `Measure.toSphere` への**測度保存・全質量整合性**は未証明。等長全単射のみから測度移送を自動主張しない。したがってADQの半径だけによる正の下界は元SU(2) Haarへ無条件には移送していない。H一様強制性、共分散数値Lipschitz定数、連続体4D Yang–Mills質量ギャップも未証明。
+
+### exact-source Lean4・公理依存
+
+- 新規7定理・`#print axioms` 7件。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。[exact-source PR CI #41371772326](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41371772326) は **11,269/11,269 SUCCESS**。変更Lean warning/error 0/0、全7件は標準3公理 `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし、独立completion receipt SUCCESS。
+- Source/test-merge/squash Git treeは `0bb7f516836f75615dcacf434bce8ff44cc48f64` で一致。次のADUの主要目標は、ADS/ADTの具体的な等長全単射の連続性および元normalized Haarと球面測度の正規化・測度保存を真正Lean4で確立すること。docs-onlyでStrict Leanは再実行しない。
+
+---
+
 ## 検証済み定理 — ADS（2026-11-02 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラーのみ。P4-Q2-PZ37ADS定理PR [#6166](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6166) はMERGED、定理squash SHA `04ad63891f9b24e7a62c09dfb5ddd0a22115939c`。元の有限体積interacting Wilson SU(2)、固定結合、中心化Gauss-law物理源、元FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haar、定理rootは不変更。
