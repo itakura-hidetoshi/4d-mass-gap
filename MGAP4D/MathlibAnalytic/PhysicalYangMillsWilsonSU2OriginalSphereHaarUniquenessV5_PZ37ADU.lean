@@ -213,7 +213,7 @@ theorem p4Q2PZ37ADU_originalHaar_uniqueness_of_sphereInvariant
     rw [Measure.map_map (measurable_const_mul g)
       p4Q2PZ37ADU_originalSphereToSU2_measurable]
     have hFun :
-        (fun x : S3 => g * Ψ x) =
+        ((fun x : G => g * x) ∘ Ψ) =
           Ψ ∘ p4Q2PZ37ADU_originalLeftActionOnSphere g := by
       funext x
       exact (p4Q2PZ37ADS_originalSU2_roundtrip (g * Ψ x)).symm
