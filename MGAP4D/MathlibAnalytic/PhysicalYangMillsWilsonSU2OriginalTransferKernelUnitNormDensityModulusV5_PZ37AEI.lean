@@ -183,6 +183,63 @@ theorem p4Q2PZ37AEI_originalDensity_variation_fromTrueSqrtDensity
     (p4Q2PZ37AEI_originalFixedCouplingTransfer_norm_in_pos_unit H).1
     hm (hRhoLower z) (hRhoLower w) (hRhoMod z w hzw)
 
+
+/-- A genuine lower sample table and genuine D_H net imply a lower
+rho bound at every original SU(2) boundary pair. -/
+theorem p4Q2PZ37AEI_originalFiniteNet_sampleLower_givesGlobalRhoFloor
+    (s : Finset Pair) (r epsilon m : ℝ)
+    (hNet : p4Q2PZ37AEE_isOriginalFullNet H s r)
+    (hRhoMod : ∀ z w : Pair, D z w < r →
+      |rho z - rho w| < epsilon)
+    (hSampleLower : ∀ a ∈ s, m ≤ rho a) :
+    ∀ z : Pair, m - epsilon < rho z := by
+  intro z
+  obtain ⟨a, ha, haz⟩ := hNet z
+  have hDelta : rho a - rho z < epsilon :=
+    (abs_lt.mp (hRhoMod a z haz)).2
+  linarith only [hDelta, hSampleLower a ha]
+
+/-- A certified true two-sided finite net supplies the physical q
+modulus whenever the observed rho lower margin exceeds the error.
+The original inverse transfer norm remains explicit and unevaluated. -/
+theorem p4Q2PZ37AEI_originalFiniteNet_givesDensityModulus
+    (s : Finset Pair) (r epsilon m R : ℝ)
+    (hm : epsilon < m) (hRle : R ≤ r)
+    (hNet : p4Q2PZ37AEE_isOriginalFullNet H s r)
+    (hRhoMod : ∀ z w : Pair, D z w < r →
+      |rho z - rho w| < epsilon)
+    (hSampleLower : ∀ a ∈ s, m ≤ rho a) :
+    ∀ z w : Pair, D z w < R →
+      |q b0 hb0 z - q b0 hb0 w| ≤
+        ((Tnorm⁻¹ / (m - epsilon)) * epsilon) / (m - epsilon) := by
+  have hPositive : 0 < m - epsilon := sub_pos.mpr hm
+  have hLower : ∀ z : Pair, m - epsilon ≤ rho z := fun z =>
+    (p4Q2PZ37AEI_originalFiniteNet_sampleLower_givesGlobalRhoFloor
+      H s r epsilon m hNet hRhoMod hSampleLower z).le
+  have hOsc : ∀ z w : Pair, D z w < R →
+      |rho z - rho w| ≤ epsilon := by
+    intro z w hzw
+    exact (hRhoMod z w (lt_of_lt_of_le hzw hRle)).le
+  exact p4Q2PZ37AEI_originalDensity_variation_fromTrueSqrtDensity
+    H (m - epsilon) epsilon R hPositive hLower hOsc
+
+/-- AEH's genuine original finite-net lower-density bound, with
+the separate transfer upper-bound premise now discharged: U=1. -/
+theorem p4Q2PZ37AEI_originalFiniteNet_unitNorm_densityFloor
+    (s : Finset Pair) (r epsilon M : ℝ)
+    (heps : 0 < epsilon)
+    (hNet : p4Q2PZ37AEE_isOriginalFullNet H s r)
+    (hRhoMod : ∀ z w : Pair, D z w < r →
+      |rho z - rho w| < epsilon)
+    (hSampleUpper : ∀ a ∈ s, rho a ≤ M) :
+    0 < (1 : ℝ) / (M + epsilon) ∧
+      ∀ z : Pair, (1 : ℝ) / (M + epsilon) ≤ q b0 hb0 z := by
+  have hAEH :=
+    p4Q2PZ37AEH_originalCertifiedNet_transferNorm_densityFloor
+      H s r epsilon M 1 heps hNet hRhoMod hSampleUpper
+      (p4Q2PZ37AEI_originalFixedCouplingTransfer_norm_in_pos_unit H).2
+  simpa only [one_mul] using hAEH
+
 end GroundStatePosteriorJoint
 
 end
@@ -194,3 +251,7 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AEI_realInverseOverDensity_variation
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEI_originalFixedCouplingTransfer_norm_in_pos_unit
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEI_originalDensity_variation_fromTrueSqrtDensity
+
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEI_originalFiniteNet_sampleLower_givesGlobalRhoFloor
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEI_originalFiniteNet_givesDensityModulus
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEI_originalFiniteNet_unitNorm_densityFloor
