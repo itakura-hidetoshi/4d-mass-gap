@@ -1,3 +1,28 @@
+## 検証済み定理 — AEH（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。AEH定理PR [#6211](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6211) はMERGED、定理squash SHA `02e3f35651eb18e10b718060152d6696fe4fbdd3`。元のinteracting Wilson SU(2)、centered Gauss-law物理源、Perron/transfer作用素、FF receiver、二つのinteracting posterior、元boundary pair-Haar、Lean/mathlib pin、定理rootは変更しない。
+
+### 真正有限D_Hネットの観測データによる物理正規化分母の検査可能な下界
+
+- **実際のjoint sqrt-densityを使用**：元の `rho_H(z)=continuousJointSqrtDensity_H(z)` は真正二境界ペア空間上で連続であり、ADMの元全リンク弦距離 `D_H` に関して任意の正誤差に対する一様連続性半径が存在することをLean4で証明。代理densityや異なる距離は導入しない。
+- **真正有限サンプルから大域評価**：AEEで定義済みの実境界配置有限net `s` に対し、`∀z, ∃a∈s, D_H(a,z)<r`、`D_H(z,w)<r ⇒ |rho_H(z)-rho_H(w)|<ε`、`∀a∈s, rho_H(a)≤M` が**実際に検証できれば**、`∀z, rho_H(z)<M+ε` を証明。元のrhoの正値性と真正net非空性からサンプル上界 `M>0` も証明。
+- **元Perron/transferノルムを数値認証へ分離**：真正未正規化物理transfer作用素 `T_H` に独立に `‖T_H‖≤U` が確認できた場合、AEGの元物理分母の厳密恒等式 `q_H(z)=‖T_H‖⁻¹/rho_H(z)` を使い、全元境界配置について
+  `0<λ_cert(H)=1/(U*(M+ε))≤q_H(z)`
+  をLean4形式証明。これは**チェック可能な条件付き有限H数値式**であって、net、変動半径、サンプル数値M、transferノルム上界Uの実値が既に認証されたことは意味しない。
+
+### 元のWilson共分散変動・二球モーメント定理へ移送
+
+- **AEFの厳密な分子／分母証明書へ代入**：元のsource-dependent Haar分子 `N_e(z)` について `|N_e(z)|≤Nmax`、`D_H(z,w)<R ⇒ |N_e(z)-N_e(w)|≤dN`、元分母について `|q_H(z)-q_H(w)|≤dq` を**別途認証**できた場合、真正共分散変動は `|C_e(z)-C_e(w)|≤(dN+(Nmax/λ_cert)*dq)/λ_cert`。元のGauss-law・FF受信器・Perron重みを変えず、実数の補題と真正物理定理で接続する。
+- **真正ゲージ反転二球下界**：同じ真正共分散の正の中心振幅 `C_e(a)` が上記変動誤差 `δ_C` より大きいことが**別途確認できた場合**、AEE/AEFの互いに素な二球から `(C_e(a)-δ_C)^2*2*(min(R/(2*card(Link_H)+1),2)/4)^(8*card(Link_H))≤S(H,b₀,e)` が形式的に成立。物理振幅の数値、FCの68/1:17閾値、体積一様強制性、物理スペクトルギャップ、連続体4D Yang–Mills mass gapは未証明のまま保持する。
+
+### exact-source Lean検証・形式証明境界
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalSampledDensityNormBudgetV5_PZ37AEH.lean` 1本のみ。8公開定理、8件の `#print axioms`。固定Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。最終exact-source [CI #41545186979](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41545186979) は **11,283/11,283 SUCCESS**、8件すべて公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立exact-head completion receipt SUCCESS。
+- 初回CIの固定mathlib `inv_le_inv₀` 引数順エラーは、新規AEHファイル全文とAEG・AEE・AEFの依存シグネチャを再照合し修正。定理文・数値式・元物理モデルを弱めず、最終source HEAD `ba917e8829015758f57b7f77f002c786eca56d77`。source/test-merge/squash Git tree `12ea18c4648f40ff5cd1f62d0927987a792f15cd` 完全一致。
+- **次の定量的obstruction**：本当に検査可能な有限net中心・cardinality、`rho_H` のサンプルと変動半径、元transfer作用素ノルムの具体的上界U、Hに依存する共分散分子の数値、実際の物理二球の安定半径と振幅を独立に評価する必要がある。現時点では条件付き証明書が完成した段階。docs-onlyではStrict Leanを再実行しない。
+
+---
+
 ## 検証済み定理 — AEG（2026-11-03 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。AEG定理PR [#6208](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6208) はMERGED、定理squash SHA `2977080e8b9a65b250ea64ea08182c53ffd00505`。真正interacting Wilson SU(2)、元centered Gauss-law source、Perron/transfer、FF receiver、元二つのinteracting posterior、boundary pair-Haar、固定Lean/mathlib、定理rootは不変更。
