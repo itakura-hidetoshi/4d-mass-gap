@@ -109,14 +109,19 @@ compact two-boundary configuration space: both BCF factors are
 ALREADY actual continuous maps, without inserting a new density. -/
 theorem p4Q2PZ37AEG_originalDensity_continuous :
     Continuous (fun z : Pair => q b0 hb0 z) := by
-  change Continuous (fun z : Pair => W z * V z.2)
-  exact W.continuous.mul (V.continuous.comp continuous_snd)
+  let w := normalizedPhysicalOneSlabJointHalfDensityWeightBCF
+    H 2 (by norm_num) b0 hb0
+  let v := normalizedPhysicalOneSlabContinuousVacuumInverseBCF
+    H 2 (by norm_num) b0 hb0
+  change Continuous (fun z : Pair => w z * v z.2)
+  exact w.continuous.mul (v.continuous.comp continuous_snd)
 
 /-- The genuine joint sqrt-density reaches an actual finite positive
 maximum over all true original boundary pairs at each fixed H. -/
 theorem p4Q2PZ37AEG_originalJointSqrtDensity_positiveMaximum_exists :
     ∃ M : ℝ, 0 < M ∧ ∀ z : Pair, rho z ≤ M := by
-  have hrho : Continuous (fun z : Pair => rho z) := rho.continuous
+  have hrho : Continuous (fun z : Pair => rho z) :=
+    (continuousJointSqrtDensity H 2 (by norm_num) b0 hb0).continuous
   let z0 : Pair := (originalWilsonExplicitIdentityBoundary H,
     originalWilsonExplicitIdentityBoundary H)
   obtain ⟨a, _ha, hMax⟩ :=
