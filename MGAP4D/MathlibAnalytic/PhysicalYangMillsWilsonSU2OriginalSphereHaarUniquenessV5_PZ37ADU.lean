@@ -75,8 +75,8 @@ theorem p4Q2PZ37ADU_originalSU2ToSphere_continuous :
   apply continuous_iff_continuousAt.mpr
   intro a
   apply tendsto_iff_dist_tendsto_zero.mpr
-  have hJ :=
-    p4Q2PZ37ADK_trueFeature_continuous.continuousAt a
+  have hJ : ContinuousAt (fun b : G => J b) a :=
+    p4Q2PZ37ADK_trueFeature_continuous.continuousAt
   have hT := tendsto_iff_dist_tendsto_zero.mp hJ
   have hFun :
       (fun b : G => dist (Φ b) (Φ a)) =
@@ -179,6 +179,9 @@ theorem p4Q2PZ37ADU_originalLeftAction_preservesHaar (g : G) :
     MeasurePreserving (p4Q2PZ37ADU_originalLeftActionOnSphere g)
       p4Q2PZ37ADU_originalHaarOnSphere
       p4Q2PZ37ADU_originalHaarOnSphere := by
+  letI : Measure.IsHaarMeasure haar := by
+    dsimp [normalizedCompactHaar]
+    infer_instance
   have hLeft : MeasurePreserving (fun x : G => g * x) haar haar :=
     measurePreserving_mul_left haar g
   have h := p4Q2PZ37ADU_originalHaarToSphere_measurePreserving.comp
@@ -201,22 +204,23 @@ theorem p4Q2PZ37ADU_originalHaar_uniqueness_of_sphereInvariant
     exact Measure.isProbabilityMeasure_map
       p4Q2PZ37ADU_originalSphereToSU2_measurable.aemeasurable
   letI : IsProbabilityMeasure back := hBackProb
-  letI : Measure.IsMulLeftInvariant back where
-    map_mul_left_eq_self := by
-      intro g
-      change Measure.map (fun x : G => g * x) (Measure.map Ψ ν) =
-        Measure.map Ψ ν
-      rw [Measure.map_map (measurable_const_mul g)
-        p4Q2PZ37ADU_originalSphereToSU2_measurable]
-      have hFun :
-          (fun x : S3 => g * Ψ x) =
-            Ψ ∘ p4Q2PZ37ADU_originalLeftActionOnSphere g := by
-        funext x
-        exact (p4Q2PZ37ADS_originalSU2_roundtrip (g * Ψ x)).symm
-      rw [hFun, ← Measure.map_map
-        p4Q2PZ37ADU_originalSphereToSU2_measurable
-        (p4Q2PZ37ADU_originalLeftAction_continuous g).measurable]
-      rw [hInvariant g]
+  letI : Measure.IsMulLeftInvariant back := by
+    constructor
+    intro g
+    show Measure.map (fun x : G => g * x) back = back
+    change Measure.map (fun x : G => g * x) (Measure.map Ψ ν) =
+      Measure.map Ψ ν
+    rw [Measure.map_map (measurable_const_mul g)
+      p4Q2PZ37ADU_originalSphereToSU2_measurable]
+    have hFun :
+        (fun x : S3 => g * Ψ x) =
+          Ψ ∘ p4Q2PZ37ADU_originalLeftActionOnSphere g := by
+      funext x
+      exact (p4Q2PZ37ADS_originalSU2_roundtrip (g * Ψ x)).symm
+    rw [hFun, ← Measure.map_map
+      p4Q2PZ37ADU_originalSphereToSU2_measurable
+      (p4Q2PZ37ADU_originalLeftAction_continuous g).measurable]
+    rw [hInvariant g]
   have hBackHaar : Measure.IsHaarMeasure back :=
     Measure.isHaarMeasure_of_isCompact_nonempty_interior
       back Set.univ isCompact_univ (by simp) (by simp) (by simp)
@@ -257,7 +261,7 @@ local instance p4Q2PZ37ADU_sphereNonempty : Nonempty S3 :=
 normalized to a genuine probability. This is not DEFINED using
 SU(2) Haar and thus retains the independent comparison challenge. -/
 noncomputable def p4Q2PZ37ADU_normalizedMathlibSphereSurface : ProbabilityMeasure S3 :=
-  (⟨surf, inferInstance⟩ : FiniteMeasure S3).normalize
+  FiniteMeasure.normalize (⟨surf, inferInstance⟩ : FiniteMeasure S3)
 
 /-- An exact normalized surface sphere probability exists independently
 of the original gauge-theoretic Haar law. -/
