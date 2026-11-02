@@ -53,7 +53,9 @@ theorem p4Q2PZ37ADS_sphere_complex_normSq_one (x : S3) :
     Complex.normSq (p4Q2PZ37ADS_sphereA x) +
       Complex.normSq (p4Q2PZ37ADS_sphereB x) = 1 := by
   have hx : ‖(x : E4)‖ = 1 := by
-    simpa only [dist_zero_right] using x.property
+    have hSphere : (x : E4) ∈ Metric.sphere (0 : E4) 1 := x.property
+    change dist (x : E4) (0 : E4) = 1 at hSphere
+    simpa only [dist_zero_right] using hSphere
   have hSq : ‖(x : E4)‖ ^ 2 = 1 := by
     rw [hx]
     norm_num
