@@ -1,3 +1,21 @@
+## 検証済み定理 — ADS（2026-11-02 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラーのみ。P4-Q2-PZ37ADS定理PR [#6166](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6166) はMERGED、定理squash SHA `04ad63891f9b24e7a62c09dfb5ddd0a22115939c`。元の有限体積interacting Wilson SU(2)、固定結合、中心化Gauss-law物理源、元FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haar、定理rootは不変更。
+
+### 真正SU(2)と単位3球の両方向の逆写像・具体的全単射
+
+- **真正S³→SU(2)逆写像の構成**：固定mathlibの `S³=Metric.sphere (0:EuclideanSpace ℝ (Fin 4)) 1` の全点 `x` に対して、実4座標から複素 `a=x₀+i x₁`、`b=x₂+i x₃` を取り、`|a|²+|b|²=1` をLean4で証明。代替の群構造や測度は導入しない。
+- **本物のspecial-unitary行列への所属**：真正行列 `[[a,-conj(b)],[b,conj(a)]]` に対し、固定mathlibの `Matrix.adjugate_fin_two` と `Matrix.mul_adjugate` を用いて、`det=1`、`conjTranspose=adjugate`、`M*star(M)=1` を形式証明。よってまさに元の `Matrix.specialUnitaryGroup (Fin 2) ℂ` に所属する。
+- **双方向の恒等写像と完全な全単射**：ADRの元第1列写像 `Φ:SU(2)→S³` に対し、新しい `Ψ:S³→SU(2)` を定義。全 `x∈S³` で `Φ(Ψ(x))=x`、全 `g∈SU(2)` で `Ψ(Φ(g))=g` をLean4証明。元 `Φ` の全射性・全単射性と、逆写像を備えた真正 `Equiv` を構成。
+- **未解決の本質的橋渡し**：この `Equiv` は**集合としての全単射**であり、元ADK `J` 弦距離とS³弦距離の一致・位相同型・正規化 `SU(2)` Haarと正規化S³球面測度の測度保存性はまだLean4で証明していない。したがってADQの半径依存S³ Haar下界は元SU(2)へ無条件移送しておらず、`c*r³`、H一様強制性、連続体Yang–Mills質量ギャップも主張しない。
+
+### exact-source Lean4・公理依存
+
+- 新規7定理・`#print axioms`7件。固定Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。[exact-source PR CI #41368903703](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41368903703) は **11,268/11,268 SUCCESS**。変更Leanファイルwarning/error 0/0、全7件は標準3公理 `propext`・`Classical.choice`・`Quot.sound` のみで `sorryAx` なし、completion receipt SUCCESS。
+- Source/test-merge/squash Git treeは `9acc6f7e740db0e17bbd9fe8a80219337982d4cd` で一致。今後は同じ `Equiv` の連続性・元弦距離同定・正規化Haar測度保存を独立に形式化し、初めてADQの明示的半径下界を元物理SU(2)へ移送する。docs-onlyでStrict Leanを再実行しない。
+
+---
+
 ## 検証済み定理 — ADR（2026-11-02 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。P4-Q2-PZ37ADR定理PR [#6163](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6163) はMERGED、定理squash SHA `c43658962ec2c2caeab7cf1f5028668c8e0347c5`。元のinteracting Wilson SU(2)、中心化Gauss-law物理源、元FF受信器、Perron/transfer、二interacting posterior、boundary pair-Haar、定理root、固定toolchainは不変更。default mainは文書ミラーのみ。
