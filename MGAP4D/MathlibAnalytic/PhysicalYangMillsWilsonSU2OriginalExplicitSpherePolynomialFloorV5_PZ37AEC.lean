@@ -44,11 +44,10 @@ theorem p4Q2PZ37AEC_originalKappa_eq_minQuartic
   unfold p4Q2PZ37ADQ_sphereRadiusFraction Measure.toSphereBallBound
   have hif : (4 : ℕ) ≠ 0 ∧ 0 < r := ⟨by decide, hr⟩
   rw [if_pos hif]
-  have hmin :
-      ((min (Real.toNNReal r) (2 : NNReal) : NNReal) : ℝ) = min r 2 := by
-    simp [NNReal.coe_min, Real.coe_toNNReal _ hr.le]
+  -- The pinned coercion simplifier pushes the cast THROUGH min.
+  -- Rewrite the resulting Real.toNNReal coercion, not the old outer cast.
   push_cast
-  rw [hmin]
+  rw [Real.coe_toNNReal r hr.le]
   ring
 
 /-- Below the exact unit S³ chordal diameter 2,
@@ -137,8 +136,7 @@ theorem p4Q2PZ37AEC_originalHalfBall_mass_ge_rationalPower
   have hBase :
       ((1 / 2 : ℝ) / (2 * (Fintype.card Link : ℝ) + 1)) / 4 =
         1 / (8 * (2 * (Fintype.card Link : ℝ) + 1)) := by
-    field_simp
-    <;> ring
+    field_simp; ring
   have h := p4Q2PZ37AEC_originalFullBall_mass_ge_minPolynomial
     H a (1 / 2) (by norm_num)
   rw [min_eq_left hSmall, hBase] at h
