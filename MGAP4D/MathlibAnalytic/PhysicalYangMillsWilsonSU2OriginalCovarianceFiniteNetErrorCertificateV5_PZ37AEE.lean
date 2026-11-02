@@ -228,7 +228,7 @@ have the original AEC polynomial Haar mass, and contribute at least
 (C_e(a)-epsilon)^2 each. No numerical modulus is assumed to hold. -/
 theorem p4Q2PZ37AEE_certifiedTwoSignError_doubleMomentFloor
     (e : Link) (a : Pair) (R ε : ℝ)
-    (hR : 0 < R) (hε : 0 ≤ ε)
+    (hR : 0 < R) (_hε : 0 ≤ ε)
     (hAmp : ε < C b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e a)
     (hMod : ∀ z w : Pair, D z w < R →
       |C b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e z -
@@ -238,9 +238,7 @@ theorem p4Q2PZ37AEE_certifiedTwoSignError_doubleMomentFloor
         (8 * Fintype.card Link)) ≤
       S b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e := by
   let A : ℝ := C b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e a - ε
-  have hA : 0 < A := by
-    dsimp [A]
-    linarith only [hAmp, hε]
+  have hA : 0 < A := sub_pos.mpr hAmp
   have hFlip :
       C b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e (Gamma e a) =
         -C b₀ p4Q2PZ37ADC_fixedCoupling_pos.le e a :=
