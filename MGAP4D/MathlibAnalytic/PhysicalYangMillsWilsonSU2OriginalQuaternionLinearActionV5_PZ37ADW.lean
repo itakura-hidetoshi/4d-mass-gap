@@ -71,7 +71,9 @@ theorem p4Q2PZ37ADW_originalQuaternion_norm_one (g : G) :
 theorem p4Q2PZ37ADW_originalQuaternion_one :
     p4Q2PZ37ADW_originalQuaternion (1 : G) = (1 : H4) := by
   apply Quaternion.ext <;>
-    norm_num [p4Q2PZ37ADW_originalQuaternion]
+    norm_num [p4Q2PZ37ADW_originalQuaternion,
+      Quaternion.re_one, Quaternion.imI_one,
+      Quaternion.imJ_one, Quaternion.imK_one]
 
 /-- The original SU(2) matrix multiplication is *exactly*
 quaternion multiplication under the proven sign convention. -/
@@ -90,11 +92,11 @@ theorem p4Q2PZ37ADW_originalQuaternion_mul (g h : G) :
   have h00 : (((g * h : G) : Mat) 0 0) = a * c - conj b * d := by
     change (((g : Mat) * (h : Mat)) 0 0) = _
     rw [hg, hh]
-    simp [Matrix.mul_apply, Fin.sum_univ_two]
+    simp [Matrix.mul_apply, Fin.sum_univ_two] <;> ring
   have h10 : (((g * h : G) : Mat) 1 0) = b * c + conj a * d := by
     change (((g : Mat) * (h : Mat)) 1 0) = _
     rw [hg, hh]
-    simp [Matrix.mul_apply, Fin.sum_univ_two]
+    simp [Matrix.mul_apply, Fin.sum_univ_two] <;> ring
   have hQ :
       p4Q2PZ37ADW_originalQuaternion (g * h) =
         (⟨(a * c - conj b * d).re,
@@ -148,19 +150,21 @@ noncomputable def p4Q2PZ37ADW_originalQuaternionLeftLinearIsometryEquiv
     (p4Q2PZ37ADW_originalQuaternionLeftIsometry g)
     (p4Q2PZ37ADW_originalQuaternionLeftIsometry g⁻¹)
     (by
-      ext x
-      change
-        p4Q2PZ37ADW_originalQuaternion g⁻¹ *
-          (p4Q2PZ37ADW_originalQuaternion g * x) = x
-      rw [← mul_assoc, ← p4Q2PZ37ADW_originalQuaternion_mul,
-        inv_mul_cancel, p4Q2PZ37ADW_originalQuaternion_one, one_mul])
-    (by
-      ext x
+      apply LinearMap.ext
+      intro x
       change
         p4Q2PZ37ADW_originalQuaternion g *
           (p4Q2PZ37ADW_originalQuaternion g⁻¹ * x) = x
       rw [← mul_assoc, ← p4Q2PZ37ADW_originalQuaternion_mul,
         mul_inv_cancel, p4Q2PZ37ADW_originalQuaternion_one, one_mul])
+    (by
+      apply LinearMap.ext
+      intro x
+      change
+        p4Q2PZ37ADW_originalQuaternion g⁻¹ *
+          (p4Q2PZ37ADW_originalQuaternion g * x) = x
+      rw [← mul_assoc, ← p4Q2PZ37ADW_originalQuaternion_mul,
+        inv_mul_cancel, p4Q2PZ37ADW_originalQuaternion_one, one_mul])
 
 end
 end MGAP4D.MathlibAnalytic
