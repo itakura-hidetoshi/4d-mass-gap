@@ -1,3 +1,21 @@
+## 検証済み定理 — AEA（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。P4-Q2-PZ37AEA定理PR [#6190](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6190) はMERGED、定理squash SHA `e9709855fb25e40273ca17f876123a30268088ca`。元のinteracting Wilson SU(2)、Gauss-law源、FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haar、定理rootおよびpinは不変更。
+
+### 真正boundary pair-Haar全リンク球の無条件・半径依存定量下界
+
+- **一リンクから全リンクへの厳密接続**：ADZの元のnormalized SU(2) Haar `m(r)≥κ(r)>0`（`r>0`、`κ(r)=((Measure.toSphereBallBound 4 r : NNReal):ℝ)/4`）と、ADMの元boundary pair-Haar全弦距離球 `ν_H(B_D(a,R))≥m(R/(2·card(Link_H)+1))^(2·card(Link_H))` を、追加の測度輸送条件なしで接続。正の分母とscaled radius、自然数冪の実数単調性をLean4形式証明。
+- **無条件の真正全リンク球評価**：すべての有限体積 `H`、元boundary pair中心 `a`、`R>0` で `ν_H(B_D(a,R))≥κ(R/(2·card(Link_H)+1))^(2·card(Link_H))>0`。指数は左右境界の元の実リンク数 `2·card(Link_H)` で、有限体積依存を明示。半径 `R=1/2` についても同じ下界を形式証明。
+- **真正Wilson共分散への接続**：全実物理空間リンク `e` についてACI/ADMの非零Wilson共分散証人 `a` と正半径 `R` を取り、上記の明示的pair-Haar正下界と既存ADEの真正共分散二乗モーメント評価を同時に形式証明。Gauss-law源・元の2 posterior・FF receiver・pair-Haar分布の置換なし。
+
+### 検証・未解決境界
+
+- 新規Lean `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalPairHaarExplicitFloorV5_PZ37AEA.lean` に7定理・`#print axioms`7件。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。[exact-source CI #41487286710](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41487286710) は **11,276/11,276 SUCCESS**。全7件の公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、変更Lean warning/error 0/0。独立MCP completion receipt SUCCESS。
+- 定理source HEAD `9fceb07db8962406dad9879ab4147cf44db4d2d6`、test-mergeとsquashのGit treeはすべて `c301320d34f945087653498b3101cc6492f86664` で一致。定理正本のマージ後HEADは `e9709855fb25e40273ca17f876123a30268088ca`。マージ後push CIの完了は別途確認対象であり、exact-source CIと混同しない。
+- **未解決**：この`κ`下界はHに依存する。体積一様な強制性、厳密な物理スペクトルギャップ、厳密数値68/1:17判定、連続体4D Yang–Mills質量ギャップはこの段階では証明されていない。次の研究では、この明示的H依存の球測度下界を真の物理的評価へ定量接続し、非零共分散振幅と半径の数値化を独立に扱う。docs-onlyではStrict Leanを再実行しない。
+
+---
+
 ## 検証済み定理 — ADZ（2026-11-03 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。P4-Q2-PZ37ADZ定理PR [#6187](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6187) はMERGED、定理squash SHA `381369eb6f91ffb82685b0e5ddf0d600018543d5`。元のinteracting Wilson SU(2)、Gauss-law源、FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haar、定理rootは不変更。
