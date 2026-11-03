@@ -185,6 +185,7 @@ theorem p4Q2PZ37AEJ_realDoubleDivision_monotone
 namespace GroundStatePosteriorJoint
 
 variable (H : ℕ)
+local notation "Link" => PeriodicHypercubicEvenSpatialSliceLink H
 local notation "Cfg" =>
   PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
 local notation "Pair" => Cfg × Cfg
@@ -201,6 +202,9 @@ local notation "actionBudget" =>
 local notation "k" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor H b0
 local notation "E" => Real.exp (b0 * actionBudget)
+local notation "N" => p4Q2PZ37AEF_originalCenteredCovarianceNumerator H
+local notation "C" => p4Q2PZ37ACJ_originalCenteredEnergyCovariance H
+local notation "S" => p4Q2PZ37ACJ_originalCenteredCovarianceSecondMoment H
 
 /-- Actual SU(2) fixed-coupling Perron/transfer norm: no replacement
 physical Hilbert carrier or non-original normalization is used. -/
@@ -318,6 +322,80 @@ theorem p4Q2PZ37AEJ_originalFiniteNet_explicitTwoSidedDensity
       H s r epsilon m hm hNet hRhoMod hSampleLower
   exact ⟨hPositive, fun z => ⟨hLower z, hUpper z⟩⟩
 
+
+/-- The true physical Wilson numerator/covariance oscillation, now
+with BOTH transfer-norm and q-modulus certificates reduced to literal
+Wilson action and TRUE rho sample bounds. Numerator majorants and
+moduli remain explicit, uncomputed physical verification obligations. -/
+theorem p4Q2PZ37AEJ_originalFiniteNet_explicitCovarianceModulus
+    (e : Link) (s : Finset Pair)
+    (r epsilon m M R Nmax dN : ℝ)
+    (heps : 0 < epsilon) (hm : epsilon < m) (hRle : R ≤ r)
+    (hNet : p4Q2PZ37AEE_isOriginalFullNet H s r)
+    (hRhoMod : ∀ z w : Pair, D z w < r →
+      |rho z - rho w| < epsilon)
+    (hSampleLower : ∀ a ∈ s, m ≤ rho a)
+    (hSampleUpper : ∀ a ∈ s, rho a ≤ M)
+    (hNmax : ∀ z : Pair, |N e z| ≤ Nmax)
+    (hNmod : ∀ z w : Pair, D z w < R →
+      |N e z - N e w| ≤ dN) :
+    ∀ z w : Pair, D z w < R →
+      |C b0 hb0 e z - C b0 hb0 e w| ≤
+        (dN + (Nmax / ((1 : ℝ) / (M + epsilon))) *
+          ((E / (m - epsilon)) * epsilon / (m - epsilon))) /
+          ((1 : ℝ) / (M + epsilon)) := by
+  have hQmod :=
+    p4Q2PZ37AEJ_originalFiniteNet_explicitDensityModulus
+      H s r epsilon m R heps hm hRle hNet hRhoMod hSampleLower
+  have hAEH :=
+    p4Q2PZ37AEH_originalCertifiedNet_givesCovarianceModulus
+      H e s r epsilon M 1 R Nmax dN
+      ((E / (m - epsilon)) * epsilon / (m - epsilon))
+      heps hNet hRhoMod hSampleUpper
+      (p4Q2PZ37AEI_originalFixedCouplingTransfer_norm_in_pos_unit H).2
+      hNmax hNmod hQmod
+  simpa only [one_mul] using hAEH
+
+/-- Exact original SU(2) gauge-opposite two-ball Haar second-moment
+floor using the genuine Wilson action in the density-error budget.
+The positive amplitude-vs-error margin is explicitly required; no
+GI threshold or continuum gap is inferred from the bound. -/
+theorem p4Q2PZ37AEJ_originalFiniteNet_explicitDoubleMomentFloor
+    (e : Link) (a : Pair) (s : Finset Pair)
+    (r epsilon m M R Nmax dN : ℝ)
+    (heps : 0 < epsilon) (hm : epsilon < m)
+    (hR : 0 < R) (hRle : R ≤ r)
+    (hNet : p4Q2PZ37AEE_isOriginalFullNet H s r)
+    (hRhoMod : ∀ z w : Pair, D z w < r →
+      |rho z - rho w| < epsilon)
+    (hSampleLower : ∀ x ∈ s, m ≤ rho x)
+    (hSampleUpper : ∀ x ∈ s, rho x ≤ M)
+    (hNmax : ∀ z : Pair, |N e z| ≤ Nmax)
+    (hNmod : ∀ z w : Pair, D z w < R →
+      |N e z - N e w| ≤ dN)
+    (hAmp :
+      (dN + (Nmax / ((1 : ℝ) / (M + epsilon))) *
+        ((E / (m - epsilon)) * epsilon / (m - epsilon))) /
+        ((1 : ℝ) / (M + epsilon)) < C b0 hb0 e a) :
+    (C b0 hb0 e a -
+      (dN + (Nmax / ((1 : ℝ) / (M + epsilon))) *
+        ((E / (m - epsilon)) * epsilon / (m - epsilon))) /
+        ((1 : ℝ) / (M + epsilon))) ^ 2 *
+        (2 * (min (R / (2 * (Fintype.card Link : ℝ) + 1)) 2 / 4) ^
+          (8 * Fintype.card Link)) ≤ S b0 hb0 e := by
+  have hQmod :=
+    p4Q2PZ37AEJ_originalFiniteNet_explicitDensityModulus
+      H s r epsilon m R heps hm hRle hNet hRhoMod hSampleLower
+  have hAEH :=
+    p4Q2PZ37AEH_originalCertifiedNet_givesDoubleMomentFloor
+      H e a s r epsilon M 1 R Nmax dN
+      ((E / (m - epsilon)) * epsilon / (m - epsilon))
+      heps hR hNet hRhoMod hSampleUpper
+      (p4Q2PZ37AEI_originalFixedCouplingTransfer_norm_in_pos_unit H).2
+      hNmax hNmod hQmod
+      (by simpa only [one_mul] using hAmp)
+  simpa only [one_mul] using hAEH
+
 end GroundStatePosteriorJoint
 
 end
@@ -335,3 +413,6 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEJ_originalFiniteNet_explicitDensityModulus
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEJ_originalFiniteNet_explicitDensityUpper
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEJ_originalFiniteNet_explicitTwoSidedDensity
+
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEJ_originalFiniteNet_explicitCovarianceModulus
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEJ_originalFiniteNet_explicitDoubleMomentFloor
