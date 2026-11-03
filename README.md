@@ -1,3 +1,22 @@
+## 検証済み定理 — AEQ（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AEQ定理PR [#6238](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6238) はMERGED、定理squash SHA `1ea9d87d6973035c6fc197a8a1c2176f4c1b80d4`。AEPまでの真正interacting Wilson SU(2)、中心化Gauss-law物理源、元Perron/transfer、真正joint sqrt-density・JQ密度・境界pair-Haar、固定Lean/mathlibと公開rootは不変更。
+
+### 真正二境界・全リンクD_Hの明示的絶対変動と球内Lipschitz
+
+- **前提を追加しない全リンク変動評価**：AEPの無条件相対Harnack `rho_H(z)≤exp(c*D_H(z,w))*rho_H(w)`、`q_H(z)≤exp(c*D_H(z,w))*q_H(w)`（両者の逆方向も成立）を使用。ここで `c=13*beta0` はH非依存、`D_H` はADLの元の二境界全リンクℓ1弦距離。AEKの真正物理的振幅天井 `M_rho(H)=sqrt((k_H⁻¹)^3)`、`M_q(H)=exp(beta0*B_H)/sqrt(k_H^3)`（`k_H=exp(-beta0*B_H)>0`、`B_H` は元のone-slab Wilson全作用budget）をそのまま使用。
+- **新たにLean4で無条件証明**：すべての実在有限Hの元境界ペア `z,w` に対して **`|rho_H(z)-rho_H(w)|≤(exp(c*D_H(z,w))-1)*M_rho(H)`** および **`|q_H(z)-q_H(w)|≤(exp(c*D_H(z,w))-1)*M_q(H)`**。代理密度、独立性、有限net標本、H一様振幅仮定は導入しない。
+- **半径指定の数値Lipschitz**：実指数の標準接線不等式から `exp(x)-1≤x*exp(x)` を証明。任意の元距離 `D_H(z,w)≤R` について、**`|rho_H(z)-rho_H(w)|≤c*exp(c*R)*M_rho(H)*D_H(z,w)`** および **`|q_H(z)-q_H(w)|≤c*exp(c*R)*M_q(H)*D_H(z,w)`** を形式証明。Rの大きさに応じて係数を明示でき、AEHの定性的な一様連続性だけに依存しない。
+- **authority/obstruction**：AEPの `log rho_H`・`log q_H` のH非依存係数 `c` と区別し、AEQの絶対変動振幅 `M_rho(H),M_q(H)` は有限体積Hに依存すると明示。今回の定理から源依存共分散のD_H安定球、GI 68/1:17閾値、体積一様強制性、物理スペクトルギャップ、連続体Yang--Mills質量ギャップの証明は主張しない。
+
+### exact-source Lean4検証・公理監査
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFullChordalExplicitDensityModulusV5_PZ37AEQ.lean` 1ファイル、6公開定理・6件 `#print axioms`。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。既存Leanファイル、物理模型、workflow、公開rootは不変更。
+- exact-source [CI #41601402216](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41601402216) は **11,297/11,297 SUCCESS**。新規6定理の公理依存は `propext`・`Classical.choice`・`Quot.sound` 以内、`sorryAx`なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。最終source HEAD `095f9bf3f0734f0f30c92c9aa55fe78dc7e70ab7`、squash `1ea9d87d6973035c6fc197a8a1c2176f4c1b80d4` のGit tree `752a6ac497e116ebf16f1f6e070918c3102522a5` は完全一致。
+- **次の段階**：元のsource-dependent共分散 `C_e` の真正D_H球内の定量的安定性を分離して形式化し、明示的なHaar球測度下界と二球モーメントのpositive witnessに接続する。体積一様強制性・連続体4D質量ギャップは引き続き未証明。今回のREADME・ROADMAP同期はdocs-onlyでStrict Leanを再実行しない。
+
+---
+
 ## 検証済み定理 — AEP（2026-11-03 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AEP定理PR [#6235](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6235) はMERGED、squash SHA `a79302bf97a7e3ab5127b46971a01dfddb9d9ee3`。AEOまでの真正interacting Wilson SU(2)、中心化Gauss-law物理源、元Perron/transfer、二interacting posterior、元境界pair-Haar、固定toolchainおよび公開rootを不変更に保つ。
