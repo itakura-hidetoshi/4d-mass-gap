@@ -159,7 +159,9 @@ theorem p4Q2PZ37AEL_originalJointWeight_oneLinkHarnack
       _ ≤ Omega A * (t ^ 2 * (K A Bh * Omega Bh)) :=
         mul_le_mul_of_nonneg_left hFactors hOmega0
       _ = t ^ 2 * (Omega A * K A Bh * Omega Bh) := by ring
-  have hTinv : 0 ≤ Tnorm⁻¹ := inv_nonneg.mpr (norm_nonneg _)
+  have hTinv : 0 ≤ Tnorm⁻¹ := (inv_pos.mpr
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
+      H 2 (by norm_num) b0 hb0)).le
   change Tnorm⁻¹ * (Omega A * K A Bg * Omega Bg) ≤
     t ^ 2 * (Tnorm⁻¹ * (Omega A * K A Bh * Omega Bh))
   calc
@@ -231,8 +233,9 @@ theorem p4Q2PZ37AEL_originalPerronDensity_oneLinkHarnack
       t * q b0 hb0 (A, Replace B e h) := by
   let Bg := Replace B e g
   let Bh := Replace B e h
-  have hTnonneg : 0 ≤ Tnorm⁻¹ :=
-    inv_nonneg.mpr (norm_nonneg _)
+  have hTnonneg : 0 ≤ Tnorm⁻¹ := (inv_pos.mpr
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
+      H 2 (by norm_num) b0 hb0)).le
   have hrhoG : 0 < rho (A, Bg) :=
     continuousJointSqrtDensity_pos H 2 (by norm_num) b0 hb0 (A, Bg)
   have hrhoH : 0 < rho (A, Bh) :=
@@ -272,7 +275,8 @@ theorem p4Q2PZ37AEL_originalSqrtDensity_oneLink_absVariation
   have ht1 : 1 ≤ t := by
     change 1 ≤ Real.exp (8 * b0)
     rw [← Real.exp_zero]
-    exact Real.exp_le_exp.mpr (by positivity)
+    exact Real.exp_le_exp.mpr
+      (mul_nonneg (by norm_num : (0 : ℝ) ≤ 8) hb0)
   have hBounds :=
     (p4Q2PZ37AEK_originalJointSqrtDensity_explicitWilsonBounds H).2
   have hG : rho (A, Replace B e g) ≤ Real.sqrt (k⁻¹ ^ 3) :=
@@ -303,7 +307,8 @@ theorem p4Q2PZ37AEL_originalPerronDensity_oneLink_absVariation
   have ht1 : 1 ≤ t := by
     change 1 ≤ Real.exp (8 * b0)
     rw [← Real.exp_zero]
-    exact Real.exp_le_exp.mpr (by positivity)
+    exact Real.exp_le_exp.mpr
+      (mul_nonneg (by norm_num : (0 : ℝ) ≤ 8) hb0)
   have hBounds :=
     (p4Q2PZ37AEK_originalPhysicalDensity_explicitWilsonBounds H).2
   have hG : q b0 hb0 (A, Replace B e g) ≤ E / Real.sqrt (k ^ 3) :=
