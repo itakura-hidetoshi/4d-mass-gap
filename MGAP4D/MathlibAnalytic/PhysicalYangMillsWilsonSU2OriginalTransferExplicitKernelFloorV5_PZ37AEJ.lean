@@ -169,9 +169,86 @@ theorem p4Q2PZ37AEJ_originalPhysicalTransfer_inverseNorm_le_expAction
       unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor
       rw [Real.exp_neg, inv_inv]
 
+
+/-- Nonnegative density-error budgets are monotone under a larger
+inverse-transfer bound, with the SAME positive rho floor. -/
+theorem p4Q2PZ37AEJ_realDoubleDivision_monotone
+    (a b m delta : ℝ)
+    (hm : 0 < m) (hdelta : 0 ≤ delta) (hab : a ≤ b) :
+    ((a / m) * delta) / m ≤ ((b / m) * delta) / m := by
+  have hDiv : a / m ≤ b / m :=
+    (div_le_div_iff_of_pos_right hm).2 hab
+  have hMul : (a / m) * delta ≤ (b / m) * delta :=
+    mul_le_mul_of_nonneg_right hDiv hdelta
+  exact (div_le_div_iff_of_pos_right hm).2 hMul
+
+namespace GroundStatePosteriorJoint
+
+variable (H : ℕ)
+local notation "Cfg" =>
+  PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+local notation "Pair" => Cfg × Cfg
+local notation "b0" => p4Q2PZ37ADC_fixedCoupling
+local notation "hb0" => p4Q2PZ37ADC_fixedCoupling_pos.le
+local notation "rho" => continuousJointSqrtDensity H 2 (by norm_num) b0 hb0
+local notation "q" => p4Q2JQ_originalPhysicalGIDensityWeight H
+local notation "D" => p4Q2PZ37ADL_originalFullBoundaryChordalDistance H
+local notation "Tnorm" =>
+  ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+    H 2 (by norm_num) b0 hb0‖
+local notation "actionBudget" =>
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H
+local notation "k" =>
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor H b0
+local notation "E" => Real.exp (b0 * actionBudget)
+
+/-- Actual SU(2) fixed-coupling Perron/transfer norm: no replacement
+physical Hilbert carrier or non-original normalization is used. -/
+theorem p4Q2PZ37AEJ_originalFixedCouplingTransfer_explicitTwoSidedNorm :
+    0 < k ∧ k ≤ Tnorm ∧ Tnorm ≤ 1 := by
+  exact p4Q2PZ37AEJ_originalPhysicalTransfer_explicitTwoSidedNorm
+    H 2 (by norm_num) b0 hb0
+
+/-- The true inverse unnormalized SU(2) transfer norm has a completely
+explicit finite-volume budget computed from the literal Wilson action. -/
+theorem p4Q2PZ37AEJ_originalFixedCouplingTransfer_inverseNorm_le_expAction :
+    Tnorm⁻¹ ≤ E := by
+  exact p4Q2PZ37AEJ_originalPhysicalTransfer_inverseNorm_le_expAction
+    H 2 (by norm_num) b0 hb0
+
+/-- The exact original q=‖T‖⁻¹/rho has a finite-volume explicit
+oscillation estimate, assuming only a certified real rho lower floor
+and an actual rho error modulus. The transfer norm is no longer a
+separate numerical input. -/
+theorem p4Q2PZ37AEJ_originalDensity_explicitActionModulus
+    (m delta R : ℝ)
+    (hm : 0 < m) (hdelta : 0 ≤ delta)
+    (hRhoLower : ∀ z : Pair, m ≤ rho z)
+    (hRhoMod : ∀ z w : Pair, D z w < R →
+      |rho z - rho w| ≤ delta) :
+    ∀ z w : Pair, D z w < R →
+      |q b0 hb0 z - q b0 hb0 w| ≤
+        ((E / m) * delta) / m := by
+  have hPrev :=
+    p4Q2PZ37AEI_originalDensity_variation_fromTrueSqrtDensity
+      H m delta R hm hRhoLower hRhoMod
+  have hBound :=
+    p4Q2PZ37AEJ_realDoubleDivision_monotone
+      Tnorm⁻¹ E m delta hm hdelta
+      (p4Q2PZ37AEJ_originalFixedCouplingTransfer_inverseNorm_le_expAction H)
+  intro z w hzw
+  exact (hPrev z w hzw).trans hBound
+
+end GroundStatePosteriorJoint
+
 end
 end MGAP4D.MathlibAnalytic
 
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AEJ_originalPhysicalTransfer_norm_ge_WilsonActionFloor
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AEJ_originalPhysicalTransfer_explicitTwoSidedNorm
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AEJ_originalPhysicalTransfer_inverseNorm_le_expAction
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AEJ_realDoubleDivision_monotone
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEJ_originalFixedCouplingTransfer_explicitTwoSidedNorm
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEJ_originalFixedCouplingTransfer_inverseNorm_le_expAction
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEJ_originalDensity_explicitActionModulus
