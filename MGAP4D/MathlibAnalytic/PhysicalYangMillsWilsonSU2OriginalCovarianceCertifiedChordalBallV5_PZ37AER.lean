@@ -70,7 +70,6 @@ theorem p4Q2PZ37AER_realQuarterBudgets
           (M / lambda) * (lambda ^ 2 * a / (4 * (M + lambda)))) / lambda =
         a / 4 + (M / (M + lambda)) * (a / 4) := by
     field_simp [ne_of_gt hlambda, ne_of_gt hsum]
-    <;> ring
   rw [hEq]
   have hMul : (M / (M + lambda)) * (a / 4) ≤ 1 * (a / 4) :=
     mul_le_mul_of_nonneg_right hfrac (by positivity)
@@ -205,8 +204,11 @@ theorem p4Q2PZ37AER_originalCertifiedNumerator_explicitStableBall
   have hMoment :=
     p4Q2PZ37AEE_certifiedTwoSignError_doubleMomentFloor
       H e a R (amp / 2) hR hHalfPos hHalfLt hCovMod
-  refine ⟨R, rfl, hR, hCovMod, ?_⟩
-  exact hMoment
+  have hHalfIdentity : C b0 hb0 e a - amp / 2 = C b0 hb0 e a / 2 := by
+    dsimp [amp]
+    ring
+  rw [hHalfIdentity] at hMoment
+  exact ⟨R, rfl, hR, hCovMod, hMoment⟩
 
 /-- UNCONDITIONAL fixed-H existence: AED supplies a true positive
 original covariance center, AEG supplies actual lambda, M, and
