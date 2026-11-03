@@ -1,3 +1,29 @@
+## 検証済み定理 — AFB（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAPの文書ミラーのみ。AFB定理PR [#6271](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6271) は **MERGED**、squash SHA `93ce1dec59fc0ccedde96768ea72c61216366895`。前段AFA（#6268）、AEZ、AEXまでの真正Wilson SU(2)、中心化Gauss-law物理源、Perron真空、元の更新transfer、pair-Haar測度、FC envelope、原距離、Lean/mathlib pinは不変更。AEXのAEW保守的二球FC下界のno-goを維持。
+
+### 真正例外集合の有限D_Hネット・Haar質量上界
+
+- **真正残差差分**：元の受信器の真正境界量 `G_θ(z)=W_F(z)−θ*A_F(z)^2` を定義し、AFAの例外集合 `Bad_θ={z|G_θ(z)>0}` と対応させる。元ACRの残差連続性とACNの四成分振幅平方連続性から `G_θ` が真の境界ペア空間上で連続と証明。
+- **有限体積での無条件な局所変動半径とネットの存在**：ADMの真正全境界距離 `D_H` に対するコンパクト一様連続性により、任意の `η>0` で `r>0` が存在し、`D_H(a,z)<r` なら `|G_θ(z)−G_θ(a)|<η`。既存AEEの真正有限 `D_H` ネット存在定理と接続する。半径 `r` の数値値は未計算。
+- **例外候補標本だけの被覆証明**：元の真正境界配置からなる有限ネット `s` に対し、`Flag={a∈s | θ*A_F(a)^2<W_F(a)+η}` と定義。真正変動証明書があれば **`Bad_θ⊆⋃_{a∈Flag}B_{D_H}(a,r)`** をLean4で証明。全境界での残差比一様上界は仮定しない。
+- **真のHaar例外質量の有限和評価**：元の真正pair-Haar確率 `ν_H` に対し、一般の有限被覆と実測度の劣加法性を利用して **`ν_H(Bad_θ)≤Σ_{a∈Flag}ν_H(B_{D_H}(a,r))`** を証明。被覆球の独立性・互いの非交差性・代理Haar分布は一切仮定しない。各球について独立に認証した上界 `cap` があれば、`ν_H(Bad_θ)≤card(Flag)*cap` とする公開定理も構成。
+- **AFA数値条件と真正GI/FCへの接続**：被覆球の有限和が独立に `ε` 以下と認証され、`θ≥0`、`θ*A4_H+B_H²*ε<64*A4_H` なら、元の正の二乗GI平均証明書 `Budget_H>0` と、真正二posterior符号付きGIが非零となる開・正Haar測度領域を得る。さらに別途 `E_H≤σ*A4_H` と `(θ+σ)*A4_H+B_H²*ε<64*A4_H` が証明されれば、元のより強い `B_H²<272*S_H` を得る。
+- **非正証明書の障害を有限和へ移送**：`Budget_H≤0`、`θ≥0` なら、任意の有効な真正有限ネット証明書の例外球質量和は **`((64−θ)*A4_H)/B_H² ≤ Σ_{a∈Flag}ν_H(B_{D_H}(a,r))`** を満たす。これは例外被覆の必要量であって、真正符号付きGI応答の消滅を意味しない。
+
+### exact-source CI・公理監査・Git tree
+
+- 既存Lean・workflow・rootを変更せず、新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalExceptionalHaarFiniteNetCertificateV5_PZ37AFB.lean`（348行）1ファイルのみ追加。公開12定理、12件の `#print axioms`。Lean `v4.30.0-rc2` / mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を維持。
+- 修正版[exact-source CI #41719148881](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41719148881) は **11,309 / 11,309 SUCCESS**。12定理の公理は `propext`、`Classical.choice`、`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error **0/0**、独立MCP completion receipt **SUCCESS**。
+- 初回CI #41717397875の3件のLean elaboration failureは、(1) 集合所属 `hz : z∈{z|...}` が `linarith` の算術仮説へ展開されていないこと、(2) `measureReal_mono` の対象集合の有限測度証拠が自動補完されないこと、(3) ADMの `|G(a)−G(z)|` と目標 `|G(z)−G(a)|` の向きの型不一致。全集約・既存定理・固定mathlibを照合し、`change`、`(measure_lt_top ν _).ne`、`abs_sub_comm` によって修正。仮定・結論を一切弱めていない。
+- 最終exact-source HEAD `166b351f500f8001298866ce857bb79ab61c37fc`、test-merge `58a5d2d4edace0e9a8dea6e08587845fee7f2238`、squash `93ce1dec59fc0ccedde96768ea72c61216366895` のGit treeは `a1edd8d9562ebb9dddafbf0961361cd46a0f67fb` で一致。定理squash後push CIは別途追跡。
+
+### 次の研究境界 — AFC
+
+真正有限ネットと局所変動の**存在**は証明済みだが、`Flag` の具体的な標本数、元の `D_H` 球の真正pair-Haar測度**上界**、非自明な `ε` の小ささ、FC未使用分 `E_H` の数値評価は未証明。有限体積からH一様なコントロール、物理Hamiltonianのスペクトルギャップ、連続体4D Yang--Mills質量ギャップも未証明。AEX二球FC no-goを解除したとの主張ではない。
+
+---
+
 ## 検証済み定理 — AFA（2026-11-04 JST）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFA定理PR [#6268](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6268) はMERGED、squash SHA `0e92ad447852dcdf7505da25c56fa5a9a2dacceb`。AEZまでの元の真正Wilson SU(2)、Gauss-law中心化物理源、Perron真空、元の更新transfer・二posterior、SU(2) Haarと元pair-Haar、FC envelope、原距離、公開root、Lean/mathlib pinは変更しない。AEXのAEW保守的二球下界に関するFC no-goも維持する。
