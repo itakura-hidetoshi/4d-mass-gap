@@ -238,6 +238,51 @@ theorem p4Q2PZ37AEK_originalContinuousVacuum_explicitBounds
   exact p4Q2PZ37AEK_unitLp_globalRatio_givesPointwiseBounds
     μ Omega hMem hUnit k hk hOmegaPos hRatio
 
+
+/-- Real four-factor bound for the ORIGINAL normalized Wilson
+joint density: if k<=lambda<=1, k<=Omega(left/right)<=1/k
+and k<=K<=1, then k^3<=lambda^-1*Omega(left)*K*Omega(right)
+<=k^-3. No independence or probabilistic replacement is used. -/
+theorem p4Q2PZ37AEK_realWilsonJointWeightBounds
+    (k lambda a c b : ℝ)
+    (hk : 0 < k) (hkl : k ≤ lambda) (hl1 : lambda ≤ 1)
+    (ha : k ≤ a ∧ a ≤ k⁻¹)
+    (hc : k ≤ c ∧ c ≤ 1)
+    (hb : k ≤ b ∧ b ≤ k⁻¹) :
+    k ^ 3 ≤ lambda⁻¹ * (a * c * b) ∧
+      lambda⁻¹ * (a * c * b) ≤ (k⁻¹) ^ 3 := by
+  have hlpos : 0 < lambda := hk.trans_le hkl
+  have hinvk : 0 ≤ k⁻¹ := inv_nonneg.mpr hk.le
+  have hinvl : 0 ≤ lambda⁻¹ := inv_nonneg.mpr hlpos.le
+  have ha0 : 0 ≤ a := hk.le.trans ha.1
+  have hb0 : 0 ≤ b := hk.le.trans hb.1
+  have hc0 : 0 ≤ c := hk.le.trans hc.1
+  have hInvLo : (1 : ℝ) ≤ lambda⁻¹ := by
+    have h := (inv_le_inv₀ (by norm_num : (0 : ℝ) < 1) hlpos).2 hl1
+    simpa using h
+  have hInvHi : lambda⁻¹ ≤ k⁻¹ :=
+    (inv_le_inv₀ hk hlpos).2 hkl
+  have hAcLo : k * k ≤ a * c :=
+    mul_le_mul ha.1 hc.1 hk.le ha0
+  have hAcHi : a * c ≤ k⁻¹ * 1 :=
+    mul_le_mul ha.2 hc.2 hc0 hinvk
+  have hAbcLo : (k * k) * k ≤ (a * c) * b :=
+    mul_le_mul hAcLo hb.1 hk.le (mul_nonneg ha0 hc0)
+  have hAbcHi : (a * c) * b ≤ (k⁻¹ * 1) * k⁻¹ :=
+    mul_le_mul hAcHi hb.2 hb0 (mul_nonneg hinvk (by norm_num))
+  constructor
+  · calc
+      k ^ 3 = (1 : ℝ) * ((k * k) * k) := by ring
+      _ ≤ lambda⁻¹ * ((a * c) * b) :=
+        mul_le_mul hInvLo hAbcLo
+          (mul_nonneg (mul_nonneg hk.le hk.le) hk.le) hinvl
+  · calc
+      lambda⁻¹ * (a * c * b) ≤
+          k⁻¹ * ((k⁻¹ * 1) * k⁻¹) :=
+        mul_le_mul hInvHi hAbcHi
+          (mul_nonneg (mul_nonneg ha0 hc0) hb0) hinvk
+      _ = (k⁻¹) ^ 3 := by ring
+
 end
 end MGAP4D.MathlibAnalytic
 
@@ -245,3 +290,5 @@ end MGAP4D.MathlibAnalytic
 
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AEK_unitLp_globalRatio_givesPointwiseBounds
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AEK_originalContinuousVacuum_explicitBounds
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AEK_realWilsonJointWeightBounds
