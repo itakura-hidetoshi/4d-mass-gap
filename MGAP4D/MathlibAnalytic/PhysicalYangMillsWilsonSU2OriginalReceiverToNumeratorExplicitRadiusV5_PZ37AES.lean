@@ -84,6 +84,28 @@ local instance p4Q2PZ37AES_borel : BorelSpace G :=
 local instance p4Q2PZ37AES_probability : IsProbabilityMeasure mu :=
   normalizedCompactHaar_isProbabilityMeasure G
 
+/-- The ORIGINAL Wilson character is a real continuous map on the
+actual compact SU(2), so its genuine supremum norm is finite. -/
+noncomputable def p4Q2PZ37AES_originalWilsonCharacterContinuous : C(G, ℝ) :=
+  ⟨chi, by
+    change Continuous (fun g : G =>
+      (1 : ℝ) - specialUnitaryWilsonPlaquetteEnergy 2 g)
+    exact continuous_const.sub
+      (continuous_specialUnitaryWilsonPlaquetteEnergy 2)⟩
+
+/-- The original Wilson character has an ACTUAL, not hypothetical,
+finite compact SU(2) bound. Its norm is not evaluated numerically. -/
+theorem p4Q2PZ37AES_originalWilsonCharacter_abs_le_compactNorm
+    (g : G) :
+    |chi g| ≤ ‖p4Q2PZ37AES_originalWilsonCharacterContinuous‖ := by
+  have hUp :=
+    ContinuousMap.apply_le_norm p4Q2PZ37AES_originalWilsonCharacterContinuous g
+  have hLow :=
+    ContinuousMap.neg_norm_le_apply p4Q2PZ37AES_originalWilsonCharacterContinuous g
+  change chi g ≤ ‖p4Q2PZ37AES_originalWilsonCharacterContinuous‖ at hUp
+  change -‖p4Q2PZ37AES_originalWilsonCharacterContinuous‖ ≤ chi g at hLow
+  exact abs_le.mpr ⟨hLow, hUp⟩
+
 namespace GroundStatePosteriorJoint
 
 variable (H : ℕ)
@@ -217,6 +239,37 @@ theorem p4Q2PZ37AES_originalReceiverCertified_explicitStableBall
   refine ⟨R, ?_, hRpos, hStable, hMoment⟩
   simpa only [rN, dN, LN] using hRform
 
+/-- Specialize the true receiver-to-numerator radius with the
+genuinely established SU(2) Wilson-character compact norm.
+NO external character-bound hypothesis remains; only the physical
+receiver D_H Lipschitz certificate LF is still conditional. -/
+theorem p4Q2PZ37AES_originalReceiverSlope_explicitRadius_withTrueCharacterNorm
+    (e : Link) (a : Pair) (lambda M LF : ℝ)
+    (ha : 0 < C b0 hb0 e a) (hlambda : 0 < lambda)
+    (hM : 0 ≤ M) (hLF : 0 ≤ LF)
+    (hQFloor : ∀ z : Pair, lambda ≤ q b0 hb0 z)
+    (hNmax : ∀ z : Pair, |N e z| ≤ M)
+    (hReceiver : ∀ z w : Pair, ∀ g : G,
+      |F e z g - F e w g| ≤ LF*D z w) :
+    ∃ R : ℝ,
+      R = min ((lambda*C b0 hb0 e a/4)/
+        (LF*‖p4Q2PZ37AES_originalWilsonCharacterContinuous‖+1))
+        (min 1
+          ((lambda^2*C b0 hb0 e a/(4*(M+lambda)))/(Lq+1))) ∧
+      0 < R ∧
+      (∀ z w : Pair, D z w < R →
+        |C b0 hb0 e z - C b0 hb0 e w| ≤ C b0 hb0 e a / 2) ∧
+      (C b0 hb0 e a / 2)^2 *
+        (2*(min (R/(2*(Fintype.card Link : ℝ)+1)) 2 / 4)^
+          (8*Fintype.card Link)) ≤ S b0 hb0 e := by
+  exact p4Q2PZ37AES_originalReceiverCertified_explicitStableBall
+    H e a lambda M LF
+    ‖p4Q2PZ37AES_originalWilsonCharacterContinuous‖
+    ha hlambda hM hLF (norm_nonneg _)
+    hQFloor hNmax
+    p4Q2PZ37AES_originalWilsonCharacter_abs_le_compactNorm
+    hReceiver
+
 /-- The same legitimate original receiver certificate gives the
 unchanged physical GI positive-mean consequence ONLY under the
 separate original FC numerical dominance test. -/
@@ -253,6 +306,8 @@ end
 end MGAP4D.MathlibAnalytic
 
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AES_realWeightedReceiverOscillation
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AES_originalWilsonCharacter_abs_le_compactNorm
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AES_originalReceiverSlope_givesNumeratorSlope
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AES_originalReceiverCertified_explicitStableBall
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AES_originalReceiverSlope_explicitRadius_withTrueCharacterNorm
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AES_originalReceiverCertified_numericGivesGI
