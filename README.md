@@ -1,3 +1,24 @@
+## 検証済み定理 — AEX（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AEX定理PR [#6259](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6259) はMERGED、squash SHA `5528fce1650e64b954994fa80fa77942a413b07a`。AEW以前の元の真正Wilson SU(2)、Gauss-law中心化物理源、元JQ受信器、Perron/transfer、SU(2) Haar・二境界pair-Haar、原距離、Lean/mathlib pin・公開rootを維持する。
+
+### 重要な新規結果：AEWの保守的二球下界によるFC閾値認証は不可能
+
+- **数値比較のauthority境界**：AEWが導出した正の半径・共分散半振幅安定性・元の共分散二乗モーメント`S_H`に対する二球下界は有効。ただし、二球**下界** `P_H(a,R)=(C_e(a)/2)^2 * 2*(min(R/(2*n_H+1),2)/4)^(8*n_H)` そのものを、元のFC envelope `B_H` に対する `B_H^2 < 272*P_H(a,R)` と比較する経路には構造的なno-goがある。ここで`n_H=card(Link_H)`、実際の物理リンク`e`が存在するため`n_H≥1`。
+- **無条件の真正SU(2)点wise共分散FC bound**：元ACJの同じ共分散`C_e(a)`と同じFC envelope`B_H`について、`CompactEnergyMismatchMoment.four_covariance_sq_le_variance`と元ACAの真正受信器分散FC上界を組み合わせ、**`4*C_e(a)^2 ≤ B_H^2`** を新規公開Lean定理で再構成。ACJ内のprivate helperを不正に参照せず、既存Mathlib・物理機構から証明。
+- **有限リンク球の幾何学的上限**：任意の`R≥0`、`n_H≥1`について **`(min(R/(2*n_H+1),2)/4)^(8*n_H) ≤1/256`**、従って真の二球Haar係数は高々`1/128`。これは小半径・大半径の区別なく成立する上限であり、`R_H`自体の存在・正値を妨げない。
+- **証明書の定量的no-go**：二つを掛け合わせると、真正物理リンク`e`・任意の二境界`a`・任意の`R≥0`について **`272*P_H(a,R) ≤ (17/128)*B_H^2 ≤ B_H^2`**。従って **`¬(B_H^2 < 272*P_H(a,R))`** をLean4で無条件形式化。AEWが与える`a,M,R_H`の有効な正半径証拠と、このno-goが同時に成立することも公開定理として証明。
+- **意味すること・意味しないこと**：AEWの**特定の保守的二球下界**をそのまま使ったGI正値十分条件は到達不能。しかし真正**全二乗モーメント`S_H`** の数値比較 `B_H^2 < 272*S_H`、本来の物理GI、非零共分散、既存の正領域、有限体積強制性そのものの不可能性は主張しない。なぜなら元の`S_H`は二球下界より大きくなり得るためである。元のHamiltonian spectral gap・体積一様強制性・連続体Yang--Mills質量ギャップは未証明。
+
+### exact-source Lean4検証
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalTwoBallFCNumericalObstructionV5_PZ37AEX.lean` だけを追加。公開6定理、6件`#print axioms`。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`固定。既存Leanファイル・元物理模型・測度・距離・workflow・公開root変更なし。
+- 最終 [exact-source CI #41630657809](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41630657809) は **11,305/11,305 SUCCESS**。新規6定理の依存公理は`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error **0/0**、独立MCP completion receipt **SUCCESS**。source HEAD `1a4516813c6a722739ee0b4868bab72afe085a4e`、test-merge `2ce0cd1566f6ac1b4032e8b63c4331d837608953`、squash `5528fce1650e64b954994fa80fa77942a413b07a` のGit tree `227102f4aed0f376e2cd98ce49625157debb6686`が完全一致。
+- **Lean修正履歴**：初回は `rw [←pow_mul,pow_succ]` が目標の外側累乗ではなく内側の`x^8`を書き換え、未解決ゴールが生じた。全文と固定Mathlibの書換え機構・ACJ/ACA依存定義を点検し、外側`pow_mul`と`pow_succ`を明示的な別段等式に分けて修正。仮定も定理文も弱めず最終CIが成功。docs-only更新ではStrict Lean再実行なし。
+- **次の研究 AEY**：元の二球局所質量を超える、真正`S_H`の全体評価、正規化された共分散エネルギー割合・分散／残差構造、FC envelopeとの直接比較を研究。AEWの球下界を改善しただけで閾値を満たせると仮定せず、未解決の数値・体積一様障害を保持する。
+
+---
+
 ## 検証済み定理 — AEW（2026-11-03 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AEW定理PR [#6256](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6256) はMERGED、定理squash SHA `add2cccca4683ab12d8830246a227989f3f9d203`。AEVまでの真正interacting Wilson SU(2)、元の中心化Gauss-law物理源、元JQ物理受信器、Perron/transfer、joint sqrt-density・元JQ密度、元のSU(2) Haarとpair-Haar法則、固定Lean/mathlib、公開rootは不変更。
