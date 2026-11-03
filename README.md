@@ -1,3 +1,33 @@
+## 検証済み定理 — AFE（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFE定理PR [#6280](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6280) は **MERGED**、squash SHA `b7367d835dad2d46ed97320e901bb11c25cafd4a`。AFD（#6277）・AFC（#6274）・AFB（#6271）・AFA（#6268）までの真正Wilson SU(2)、中心化Gauss-law物理源、Perron真空、元の右リンク更新transfer、同一元境界pair-Haar確率 `ν_H`、FC envelope、全リンク距離 `D_H`、Lean/mathlib固定pinおよび公開rootを変更しない。AEXの保守的AEW二球FC証明書no-goを保持する。
+
+### 複数閾値・複数半径の真正Haar例外質量上界
+
+- **元例外集合の閾値反単調性**：元の真正物理受信器の四成分振幅 `A_F(z)` と高次残差 `W_F(z)` で `Bad_θ={z | θ*A_F(z)^2<W_F(z)}` とすると、平方非負性から `θ_i≤θ_target → Bad_(θ_target)⊆Bad_(θ_i)`。これは独立の代理Haar lawや異なる物理量の仮定ではなく、元の同一境界・物理源に関する集合包含である。
+- **真正スケール証拠を保持する依存型**：有限体積 `H` と元の物理リンク `e` について、個々の `θ_i,η_i,r_i,s_i,t_i` と真正 `D_H` ネット、元の差分 `G_θ=W_F−θ*A_F²` の変動証拠、良好中心 `t_i⊆Good(s_i)`、`2r_i` 分離証拠を一つの型として保持。数値だけを入力し、証明書なしに本物のHaar質量の上界とみなす構造ではない。
+- **有限表の最小値**：各スケールのAFD真正二重上界 `Dual_i=min(Σ_{a∈Flag(s_i)}ν_H(B_D(a,r_i)),1−card(t_i)*κ_H(r_i))` に対し、有限表 `scales=[i_1,…,i_N]` から **`MultiBudget_H(scales)=min(1,Dual_(i_1),…,Dual_(i_N))`** を構成。`θ_i≤θ_target` が全ての表要素で認証されるなら **`ν_H(Bad_(θ_target))≤MultiBudget_H(scales)`** をLean4で証明する。空表では元の確率上限1を返す。
+- **表の単調改善と確率範囲**：一般の有限リストfoldl-min帰納定理を追加。表中の任意の証明書 `c` について `MultiBudget_H≤Dual(c)`、さらに常に `MultiBudget_H≤1`、有効な表なら `0≤MultiBudget_H` を証明。表の要素間に同じ閾値・同じ半径・同じ有限ネットを要求せず、重複しても安全である。
+- **各スケールの真正存在証明**：任意の元の物理リンク、任意の `θ`、正のguard margin `η>0` について、AFBのコンパクト一様変動、AEEの真正全境界有限ネット、AFDの有限greedy分離packingを合成し、元の物理量に基づくスケール証拠の存在をLean4で証明。ただし半径・良好packing数・Haar球質量・閾値を数値認証しない。
+
+### 真正GI・FCへの条件付き接続と逆向き障害
+
+- **元の真正GI平均証明書**：`θ_target≥0` かつ各 `θ_i≤θ_target`、別途検査された `θ_target*A4_H+B_H²*MultiBudget_H<64*A4_H` なら、元AFAの二乗GI平均証明書 `Budget_H>0` と真正pair-Haar正測度の開領域で元の符号付き二posterior GI応答が非零であることを導出。数値不等式が無条件に成り立つという宣言ではない。
+- **より強い元のFC判定**：独立に真正FC未使用分 `E_H≤σ*A4_H` と `(θ_target+σ)*A4_H+B_H²*MultiBudget_H<64*A4_H` を認証した場合に限り、元の厳密な `B_H²<272*S_H` を証明。GI平均とFCの異なる証明書を保持する。
+- **非正GI証明書のobstruction**：元の `Budget_H≤0` なら、任意の有効な多尺度表について **`((64−θ_target)*A4_H)/B_H²≤MultiBudget_H`** が必要。これは平均証明書の数値限界であり、実GIの消滅やYang–Mills質量ギャップのno-goではない。
+
+### exact-source CI、公理・Git tree監査
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalMultiscaleHaarCertificateV5_PZ37AFE.lean`（396行）**1ファイルのみ追加**。既存Lean、元のSU(2)・物理模型・測度、公開root、workflow不変更。公開14定理・14件 `#print axioms`。Lean `v4.30.0-rc2` / mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 固定。
+- [exact-source CI #41731762702](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41731762702) **11,312/11,312 SUCCESS**。全14定理の依存公理は `propext`、`Classical.choice`、`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error **0/0**、独立MCP completion receipt **SUCCESS**。初回CIからLean elaboration failureなし。
+- exact-source HEAD `9adc511e832f0617336813ed37f1c33a2b2b6f58`、GitHub test-merge、squash `b7367d835dad2d46ed97320e901bb11c25cafd4a` のGit tree `8f0625bfc7fc8d769519751967a95b30e83d4228` が一致。squash後push CIは別途独立確認する。
+
+### 次の独立課題 — AFF
+
+真正多尺度表は厳密な有限次元証明書だが、表の実際の標本・数値的な十分小ささ、元Wilson/Perron残差の定量勾配・良好packing密度、体積H一様な見積り、真正FC未使用分の具体的な上界は未証明。次は複数閾値の階層的差分集合、有限表による局所領域の切り分け、あるいはHaar測度の重複補正を条件付きの形で形式化し、具体的な計算可能証明書へ近づける。AEXの保守的二球FC no-goを維持し、物理Hamiltonianの必要spectral gapおよび連続体4D Yang–Mills質量ギャップは引き続き未証明。
+
+---
+
 ## 検証済み定理 — AFD（2026-11-04 JST）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFD定理PR [#6277](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6277) は **MERGED**、定理squash SHA `6a67257b9dac6e4417d80cdfa09d5a561077c8bb`。AFC（#6274）、AFB（#6271）、AFA（#6268）までの真正Wilson SU(2)、中心化Gauss-law物理源、Perron真空、元の右リンク更新transfer、元pair-Haar確率 `ν_H`、FC envelope、全リンク弦距離 `D_H`、Lean/mathlib固定pinおよび公開rootを継承し、AEXの保守的二球FC no-goを維持する。
