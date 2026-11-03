@@ -1,0 +1,337 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalSampledDensityNormBudgetV5_PZ37AEH
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferFactorization
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37AEI — original Wilson kernel transfer norm and density variation
+
+The genuine unnormalized physical one-slab transfer norm has a direct
+upper bound from the original Wilson kernel on normalized Haar L2.
+No proxy operator, altered coupling, numerical samples or uniform gap.
+-/
+
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory
+open scoped Topology Classical InnerProductSpace BigOperators
+
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 3900000
+set_option synthInstance.maxHeartbeats 1050000
+
+local instance p4Q2PZ37AEI_group (N : ℕ) :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+local instance p4Q2PZ37AEI_compact (N : ℕ) :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+local instance p4Q2PZ37AEI_countable (N : ℕ) :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+local instance p4Q2PZ37AEI_measurable (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+local instance p4Q2PZ37AEI_borel (N : ℕ) :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+local instance p4Q2PZ37AEI_links (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
+/-- The literal single-slab Wilson kernel on genuine spatial pair-Haar
+has L2 norm at most one at any finite H and nonnegative coupling. -/
+theorem p4Q2PZ37AEI_originalWilsonSingleSlabKernelL2_norm_le_one
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
+    ‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2
+        H N hN beta hbeta‖ ≤ 1 := by
+  let μ := periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N
+  letI : IsProbabilityMeasure μ := by
+    dsimp [μ, periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure,
+      periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure]
+    infer_instance
+  have hOne :
+      MemLp
+        (fun _ :
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+          (1 : ℝ)) 2 μ := memLp_const 1
+  have hKernelAE :
+      (fun p =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2
+          H N hN beta hbeta p) =ᵐ[μ]
+        (fun p =>
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+            H N beta p.1 p.2) := by
+    simpa [μ] using
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2_coeFn
+        H N hN beta hbeta
+  have hle :
+      ∀ᵐ p ∂μ,
+        ‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2
+            H N hN beta hbeta p‖ ≤
+          ‖hOne.toLp (fun _ :
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+              PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+            (1 : ℝ)) p‖ := by
+    filter_upwards [hKernelAE, hOne.coeFn_toLp] with p hp hOnep
+    rw [hp, hOnep]
+    simpa [Real.norm_eq_abs] using
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_abs_le_one
+        H N hN beta hbeta p.1 p.2
+  calc
+    ‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2
+        H N hN beta hbeta‖ ≤
+      ‖hOne.toLp (fun _ :
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+          (1 : ℝ))‖ := Lp.norm_le_norm_of_ae_le hle
+    _ = 1 := by
+      rw [MemLp.toLp_const]
+      have hConst :=
+        Lp.norm_const'
+          (μ := μ) (p := (2 : ENNReal)) (c := (1 : ℝ))
+          (by norm_num) (by norm_num)
+      simpa using hConst
+
+/-- The genuine unnormalized Gauss-law physical one-slab transfer
+operator has norm at most one by its ambient Hilbert-Schmidt bound. -/
+theorem p4Q2PZ37AEI_originalPhysicalTransfer_norm_le_one
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
+    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+        H N hN beta hbeta‖ ≤ 1 := by
+  calc
+    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+        H N hN beta hbeta‖ ≤
+      ‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
+        H N hN beta hbeta‖ :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_le_ambient
+        H N hN beta hbeta
+    _ ≤ ‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2
+        H N hN beta hbeta‖ :=
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_norm_le
+        H N hN beta hbeta
+    _ ≤ 1 :=
+      p4Q2PZ37AEI_originalWilsonSingleSlabKernelL2_norm_le_one
+        H N hN beta hbeta
+
+
+/-- Real reciprocal variation through a true positive density floor,
+with the original transfer inverse magnitude retained explicitly. -/
+theorem p4Q2PZ37AEI_realInverseOverDensity_variation
+    (t a b m delta : ℝ)
+    (ht : 0 < t) (hm : 0 < m)
+    (hma : m ≤ a) (hmb : m ≤ b)
+    (hdelta : |a - b| ≤ delta) :
+    |t⁻¹ / a - t⁻¹ / b| ≤ ((t⁻¹ / m) * delta) / m := by
+  have hb : 0 < b := hm.trans_le hmb
+  have hInv : 0 < t⁻¹ := inv_pos.mpr ht
+  have hAmp : |t⁻¹ / b| ≤ t⁻¹ / m :=
+    p4Q2PZ37AEF_realAbsQuotient_le_of_denFloor
+      (t⁻¹) b m (t⁻¹) hm hmb
+      (by simpa only [abs_of_pos hInv] using (le_refl (t⁻¹)))
+  have hVar :=
+    p4Q2PZ37AEF_realQuotientVariation_le
+      (t⁻¹) (t⁻¹) a b m 0 delta (t⁻¹ / m)
+      hm hma hb (by simp) hdelta hAmp
+  simpa only [zero_add] using hVar
+
+namespace GroundStatePosteriorJoint
+
+variable (H : ℕ)
+local notation "Link" => PeriodicHypercubicEvenSpatialSliceLink H
+local notation "Cfg" =>
+  PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+local notation "Pair" => Cfg × Cfg
+local notation "b0" => p4Q2PZ37ADC_fixedCoupling
+local notation "hb0" => p4Q2PZ37ADC_fixedCoupling_pos.le
+local notation "q" => p4Q2JQ_originalPhysicalGIDensityWeight H
+local notation "rho" => continuousJointSqrtDensity H 2 (by norm_num) b0 hb0
+local notation "N" => p4Q2PZ37AEF_originalCenteredCovarianceNumerator H
+local notation "C" => p4Q2PZ37ACJ_originalCenteredEnergyCovariance H
+local notation "D" => p4Q2PZ37ADL_originalFullBoundaryChordalDistance H
+local notation "Tnorm" =>
+  ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+    H 2 (by norm_num) b0 hb0‖
+
+/-- The true fixed-coupling unnormalized Perron/transfer norm lies
+in the positive unit interval, not merely its normalized version. -/
+theorem p4Q2PZ37AEI_originalFixedCouplingTransfer_norm_in_pos_unit :
+    0 < Tnorm ∧ Tnorm ≤ 1 := by
+  exact ⟨
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
+      H 2 (by norm_num) b0 hb0,
+    p4Q2PZ37AEI_originalPhysicalTransfer_norm_le_one
+      H 2 (by norm_num) b0 hb0⟩
+
+/-- The original physical density's q-modulus follows from rho's
+oscillation and an actual positive rho lower floor. No proxy law. -/
+theorem p4Q2PZ37AEI_originalDensity_variation_fromTrueSqrtDensity
+    (m delta R : ℝ)
+    (hm : 0 < m)
+    (hRhoLower : ∀ z : Pair, m ≤ rho z)
+    (hRhoMod : ∀ z w : Pair, D z w < R →
+      |rho z - rho w| ≤ delta) :
+    ∀ z w : Pair, D z w < R →
+      |q b0 hb0 z - q b0 hb0 w| ≤
+        ((Tnorm⁻¹ / m) * delta) / m := by
+  intro z w hzw
+  rw [p4Q2PZ37AEG_originalDensity_exactVacuumCancellation H z,
+      p4Q2PZ37AEG_originalDensity_exactVacuumCancellation H w]
+  exact p4Q2PZ37AEI_realInverseOverDensity_variation
+    Tnorm (rho z) (rho w) m delta
+    (p4Q2PZ37AEI_originalFixedCouplingTransfer_norm_in_pos_unit H).1
+    hm (hRhoLower z) (hRhoLower w) (hRhoMod z w hzw)
+
+
+/-- A genuine lower sample table and genuine D_H net imply a lower
+rho bound at every original SU(2) boundary pair. -/
+theorem p4Q2PZ37AEI_originalFiniteNet_sampleLower_givesGlobalRhoFloor
+    (s : Finset Pair) (r epsilon m : ℝ)
+    (hNet : p4Q2PZ37AEE_isOriginalFullNet H s r)
+    (hRhoMod : ∀ z w : Pair, D z w < r →
+      |rho z - rho w| < epsilon)
+    (hSampleLower : ∀ a ∈ s, m ≤ rho a) :
+    ∀ z : Pair, m - epsilon < rho z := by
+  intro z
+  obtain ⟨a, ha, haz⟩ := hNet z
+  have hDelta : rho a - rho z < epsilon :=
+    (abs_lt.mp (hRhoMod a z haz)).2
+  linarith only [hDelta, hSampleLower a ha]
+
+/-- A certified true two-sided finite net supplies the physical q
+modulus whenever the observed rho lower margin exceeds the error.
+The original inverse transfer norm remains explicit and unevaluated. -/
+theorem p4Q2PZ37AEI_originalFiniteNet_givesDensityModulus
+    (s : Finset Pair) (r epsilon m R : ℝ)
+    (hm : epsilon < m) (hRle : R ≤ r)
+    (hNet : p4Q2PZ37AEE_isOriginalFullNet H s r)
+    (hRhoMod : ∀ z w : Pair, D z w < r →
+      |rho z - rho w| < epsilon)
+    (hSampleLower : ∀ a ∈ s, m ≤ rho a) :
+    ∀ z w : Pair, D z w < R →
+      |q b0 hb0 z - q b0 hb0 w| ≤
+        ((Tnorm⁻¹ / (m - epsilon)) * epsilon) / (m - epsilon) := by
+  have hPositive : 0 < m - epsilon := sub_pos.mpr hm
+  have hLower : ∀ z : Pair, m - epsilon ≤ rho z := fun z =>
+    (p4Q2PZ37AEI_originalFiniteNet_sampleLower_givesGlobalRhoFloor
+      H s r epsilon m hNet hRhoMod hSampleLower z).le
+  have hOsc : ∀ z w : Pair, D z w < R →
+      |rho z - rho w| ≤ epsilon := by
+    intro z w hzw
+    exact (hRhoMod z w (lt_of_lt_of_le hzw hRle)).le
+  exact p4Q2PZ37AEI_originalDensity_variation_fromTrueSqrtDensity
+    H (m - epsilon) epsilon R hPositive hLower hOsc
+
+/-- AEH's genuine original finite-net lower-density bound, with
+the separate transfer upper-bound premise now discharged: U=1. -/
+theorem p4Q2PZ37AEI_originalFiniteNet_unitNorm_densityFloor
+    (s : Finset Pair) (r epsilon M : ℝ)
+    (heps : 0 < epsilon)
+    (hNet : p4Q2PZ37AEE_isOriginalFullNet H s r)
+    (hRhoMod : ∀ z w : Pair, D z w < r →
+      |rho z - rho w| < epsilon)
+    (hSampleUpper : ∀ a ∈ s, rho a ≤ M) :
+    0 < (1 : ℝ) / (M + epsilon) ∧
+      ∀ z : Pair, (1 : ℝ) / (M + epsilon) ≤ q b0 hb0 z := by
+  have hAEH :=
+    p4Q2PZ37AEH_originalCertifiedNet_transferNorm_densityFloor
+      H s r epsilon M 1 heps hNet hRhoMod hSampleUpper
+      (p4Q2PZ37AEI_originalFixedCouplingTransfer_norm_in_pos_unit H).2
+  simpa only [one_mul] using hAEH
+
+
+/-- AEF's true original centered Wilson covariance variation with
+both the transfer norm upper bound and the independent q modulus
+premise discharged by the actual Wilson kernel and rho sample table.
+The source-dependent numerator amplitude and oscillation are still
+independent physical/numerical obligations. -/
+theorem p4Q2PZ37AEI_originalFiniteNet_unitNorm_covarianceModulus
+    (e : Link) (s : Finset Pair)
+    (r epsilon m M R Nmax dN : ℝ)
+    (heps : 0 < epsilon) (hm : epsilon < m) (hRle : R ≤ r)
+    (hNet : p4Q2PZ37AEE_isOriginalFullNet H s r)
+    (hRhoMod : ∀ z w : Pair, D z w < r →
+      |rho z - rho w| < epsilon)
+    (hSampleLower : ∀ a ∈ s, m ≤ rho a)
+    (hSampleUpper : ∀ a ∈ s, rho a ≤ M)
+    (hNmax : ∀ z : Pair, |N e z| ≤ Nmax)
+    (hNmod : ∀ z w : Pair, D z w < R →
+      |N e z - N e w| ≤ dN) :
+    ∀ z w : Pair, D z w < R →
+      |C b0 hb0 e z - C b0 hb0 e w| ≤
+        (dN + (Nmax / ((1 : ℝ) / (M + epsilon))) *
+          ((Tnorm⁻¹ / (m - epsilon)) * epsilon / (m - epsilon))) /
+          ((1 : ℝ) / (M + epsilon)) := by
+  have hQmod :=
+    p4Q2PZ37AEI_originalFiniteNet_givesDensityModulus
+      H s r epsilon m R hm hRle hNet hRhoMod hSampleLower
+  have hAEH :=
+    p4Q2PZ37AEH_originalCertifiedNet_givesCovarianceModulus
+      H e s r epsilon M 1 R Nmax dN
+      ((Tnorm⁻¹ / (m - epsilon)) * epsilon / (m - epsilon))
+      heps hNet hRhoMod hSampleUpper
+      (p4Q2PZ37AEI_originalFixedCouplingTransfer_norm_in_pos_unit H).2
+      hNmax hNmod hQmod
+  simpa only [one_mul] using hAEH
+
+
+/-- Same genuine two-sided rho table and the Wilson U=1 theorem feed
+the AEF original gauge-opposite two-ball Haar covariance-moment floor.
+The original nonzero amplitude-vs-error margin remains explicit. -/
+theorem p4Q2PZ37AEI_originalFiniteNet_unitNorm_doubleMomentFloor
+    (e : Link) (a : Pair) (s : Finset Pair)
+    (r epsilon m M R Nmax dN : ℝ)
+    (heps : 0 < epsilon) (hm : epsilon < m)
+    (hR : 0 < R) (hRle : R ≤ r)
+    (hNet : p4Q2PZ37AEE_isOriginalFullNet H s r)
+    (hRhoMod : ∀ z w : Pair, D z w < r →
+      |rho z - rho w| < epsilon)
+    (hSampleLower : ∀ x ∈ s, m ≤ rho x)
+    (hSampleUpper : ∀ x ∈ s, rho x ≤ M)
+    (hNmax : ∀ z : Pair, |N e z| ≤ Nmax)
+    (hNmod : ∀ z w : Pair, D z w < R →
+      |N e z - N e w| ≤ dN)
+    (hAmp :
+      (dN + (Nmax / ((1 : ℝ) / (M + epsilon))) *
+        ((Tnorm⁻¹ / (m - epsilon)) * epsilon / (m - epsilon))) /
+        ((1 : ℝ) / (M + epsilon)) < C b0 hb0 e a) :
+    (C b0 hb0 e a -
+      (dN + (Nmax / ((1 : ℝ) / (M + epsilon))) *
+        ((Tnorm⁻¹ / (m - epsilon)) * epsilon / (m - epsilon))) /
+        ((1 : ℝ) / (M + epsilon))) ^ 2 *
+        (2 * (min (R / (2 * (Fintype.card Link : ℝ) + 1)) 2 / 4) ^
+          (8 * Fintype.card Link)) ≤
+      p4Q2PZ37ACJ_originalCenteredCovarianceSecondMoment H b0 hb0 e := by
+  have hQmod :=
+    p4Q2PZ37AEI_originalFiniteNet_givesDensityModulus
+      H s r epsilon m R hm hRle hNet hRhoMod hSampleLower
+  have hAEH :=
+    p4Q2PZ37AEH_originalCertifiedNet_givesDoubleMomentFloor
+      H e a s r epsilon M 1 R Nmax dN
+      ((Tnorm⁻¹ / (m - epsilon)) * epsilon / (m - epsilon))
+      heps hR hNet hRhoMod hSampleUpper
+      (p4Q2PZ37AEI_originalFixedCouplingTransfer_norm_in_pos_unit H).2
+      hNmax hNmod hQmod
+      (by simpa only [one_mul] using hAmp)
+  simpa only [one_mul] using hAEH
+
+end GroundStatePosteriorJoint
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AEI_originalWilsonSingleSlabKernelL2_norm_le_one
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AEI_originalPhysicalTransfer_norm_le_one
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AEI_realInverseOverDensity_variation
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEI_originalFixedCouplingTransfer_norm_in_pos_unit
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEI_originalDensity_variation_fromTrueSqrtDensity
+
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEI_originalFiniteNet_sampleLower_givesGlobalRhoFloor
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEI_originalFiniteNet_givesDensityModulus
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEI_originalFiniteNet_unitNorm_densityFloor
+
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEI_originalFiniteNet_unitNorm_covarianceModulus
+
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEI_originalFiniteNet_unitNorm_doubleMomentFloor
