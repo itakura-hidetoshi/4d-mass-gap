@@ -1,3 +1,24 @@
+## 検証済み定理 — AET（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AET定理PR [#6247](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6247) はMERGED、定理squash SHA `89ae225820b8eb7c37ce4ae0cfb4fb5659600111`。AESまでの真正interacting Wilson SU(2)、中心化Gauss-law物理源、元JQ source-link receiver、元Perron/transfer、真正joint sqrt-density・JQ密度、元SU(2) Haarとpair-Haar、固定Lean/mathlib・公開rootは不変更。
+
+### 真正受信器の正確な右リンク独立性・全リンクLipschitz descent
+
+- **無条件の元物理受信器不変性**：JQの受信器は元の中心化Gauss-law源 `f0` から作られ、`F_e(A,B;g)=normalizedPhysicalOneSlabJointReceiverProductBCF(A,Function.update(B,e,g))` を使う。したがって任意の真正SU(2) `h,g` に対し **`F_e(A,Function.update(B,e,h);g)=F_e(A,B;g)`** をLean4で証明。積分変数`g`で上書きされる前の右境界リンク`B(e)`の値に関する厳密な独立性であり、受信器全体の右境界独立性ではない。
+- **真正SU(2) Haar分子の同一性**：元の分子 `N_e(A,B)=∫_SU2 F_e(A,B;g)*chi(g)dmu(g)` についても **`N_e(A,Function.update(B,e,h))=N_e(A,B)`** を無条件に証明。これは元Haar積分の値を変えないもので、分母`q_H`や商の共分散`C_e=N_e/q_H`が`B(e)`に依存しないとの主張ではない。
+- **符号付き有限座標Lipschitz gluing**：AEPの真正finite-two-boundary exponential Harnack telescopeを`exp(f)`へ適用し、局所的`|f(update_i(g))-f(update_i(h))|≤L*d(g,h)`から、二境界全有限座標について`|f(z)-f(w)|≤L*sum_i(d(z.left_i,w.left_i)+d(z.right_i,w.right_i))`を証明。元の符号付き`f`に非負性を仮定せず、幾何学的`d`の対称性のみ使用。
+- **本物の受信器への適用**：元のADK弦距離`d_J`・ADL全リンク距離`D_H`を保持する。全左リンクと、右側について**観測リンクe以外**の各リンクで同一の局所変動係数`LF≥0`が証明されれば、右eの局所評価は上書き不変性から`0`で自動的に解決し、**`|F_e(z,g)-F_e(w,g)|≤LF*D_H(z,w)`** を導く。AESの証明済み`|chi|≤1`から`|N_e(z)-N_e(w)|≤LF*D_H(z,w)`も導く。
+- **AER・AESの定量的結論を継承**：真正`C_e(a)>0`、既存`lambda>0`・`M≥0`、元密度係数`Lq(H)`と局所受信器係数`LF`の証明書を入力すると、`R=min((lambda*C_e(a)/4)/(LF+1),1,(lambda^2*C_e(a)/(4*(M+lambda)))/(Lq(H)+1))>0`が元の共分散半振幅安定性と真正pair-Haar二球モーメント下界を与える。
+- **authority/obstruction**：右`B(e)`独立性、有限座標の加法的gluing、条件付きAER/AES接続は形式証明済み。ただし**それ以外の元物理受信器の各リンク`d_J`変動係数`LF`はまだ無条件に証明・数値評価されていない**。したがってこの局所証明書を無条件で使えるとは主張しない。有限体積`H`の正半径存在はAERで別途証明済み。GI数値閾値、体積一様強制性、物理spectral gap、連続体Yang--Mills質量ギャップは未証明。
+
+### exact-source Lean4検証・公理監査
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalReceiverLocalToGlobalChordalV5_PZ37AET.lean` のみ、公開7定理と7件`#print axioms`。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`、既存Leanファイル、物理模型、workflow、公開rootは不変更。
+- [exact-source CI #41613092993](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41613092993) **11,300/11,300 SUCCESS**、新規7定理の公理依存は`propext`・`Classical.choice`・`Quot.sound`以内、`sorryAx`なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。最終source HEAD `cc1ff43e62f696eddba29515e69fd37a9efe6d0d`、test-merge `50b1d26ad959089c2b635dae5b7cd82bbcebcac3`、squash `89ae225820b8eb7c37ce4ae0cfb4fb5659600111` のGit tree `7389cf9c2786a7bd3f0ec9bf82fa731ce3af145a` は完全一致。docs-onlyではStrict Lean再実行不要。
+- **次の段階 AEU**：元の中心化Wilson物理源・one-slab kernel・Perron因子の構造から、残る左リンクと右非観測リンクに対する本物の局所受信器変動を定量化する。有限体積ごとの局所係数の構成と体積一様上界を区別する。
+
+---
+
 ## 検証済み定理 — AES（2026-11-03 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AES定理PR [#6244](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6244) はMERGED、定理squash SHA `3d28af0d38e6832597fed74d4050c545ae0d9f97`。AERまでの真正interacting Wilson SU(2)、中心化Gauss-law物理源、JQの真正source-link receiver、元Perron/transfer、二境界joint sqrt-density・JQ密度、元のSU(2) Haarおよびpair-Haar、固定Lean/mathlibと公開rootは不変更。
