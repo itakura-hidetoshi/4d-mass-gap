@@ -120,7 +120,10 @@ theorem p4Q2PZ37AEK_originalContinuousVacuum_globalKernelRatio
       _ = k * (∫ A, V.1 A * K A B ∂μ) := by rw [hPerron B]
       _ ≤ ∫ A, V.1 A * K A C ∂μ := hIntegral
       _ = lambda * Omega C := (hPerron C).symm
-  exact (mul_le_mul_left hlam).mp hScaled
+  change k * Omega B ≤ Omega C
+  by_contra h
+  have hlt : Omega C < k * Omega B := lt_of_not_ge h
+  exact (not_lt_of_ge hScaled) (mul_lt_mul_of_pos_left hlt hlam)
 
 
 /-- A nonnegative probability-Haar L2 vector of norm one and a
@@ -144,24 +147,23 @@ theorem p4Q2PZ37AEK_unitLp_globalRatio_givesPointwiseBounds
     have hNorm :=
       Lp.norm_const' (μ := μ) (p := (2 : ENNReal)) (c := k * f x)
         (by norm_num) (by norm_num)
-    simpa [Real.norm_eq_abs, abs_of_nonneg (mul_nonneg hk.le (hPos x))]
-      using hNorm
+    simpa only [Real.norm_eq_abs, abs_mul, abs_of_nonneg hk.le,
+      abs_of_nonneg (hPos x)] using hNorm
   have hConstHiNorm :
       ‖hConstHi.toLp (fun _ : α => f x / k)‖ = f x / k := by
     rw [MemLp.toLp_const]
     have hNorm :=
       Lp.norm_const' (μ := μ) (p := (2 : ENNReal)) (c := f x / k)
         (by norm_num) (by norm_num)
-    simpa [Real.norm_eq_abs, abs_of_nonneg (div_nonneg (hPos x) hk.le)]
-      using hNorm
+    simpa only [Real.norm_eq_abs, abs_div, abs_of_nonneg (hPos x),
+      abs_of_pos hk] using hNorm
   have hCompareLo :
       ‖hConstLo.toLp (fun _ : α => k * f x)‖ ≤ ‖hf.toLp f‖ := by
     apply Lp.norm_le_norm_of_ae_le
     filter_upwards [hConstLo.coeFn_toLp, hf.coeFn_toLp] with y h1 h2
     rw [h1, h2]
-    simpa [Real.norm_eq_abs,
-      abs_of_nonneg (mul_nonneg hk.le (hPos x)), abs_of_nonneg (hPos y)]
-      using hRatio x y
+    simpa only [Real.norm_eq_abs, abs_mul, abs_of_nonneg hk.le,
+      abs_of_nonneg (hPos x), abs_of_nonneg (hPos y)] using hRatio x y
   have hCompareHi :
       ‖hf.toLp f‖ ≤ ‖hConstHi.toLp (fun _ : α => f x / k)‖ := by
     apply Lp.norm_le_norm_of_ae_le
@@ -169,8 +171,8 @@ theorem p4Q2PZ37AEK_unitLp_globalRatio_givesPointwiseBounds
     rw [h1, h2]
     have hxy : f y ≤ f x / k :=
       (le_div_iff₀ hk).2 (by simpa [mul_comm] using hRatio y x)
-    simpa [Real.norm_eq_abs, abs_of_nonneg (hPos y),
-      abs_of_nonneg (div_nonneg (hPos x) hk.le)] using hxy
+    simpa only [Real.norm_eq_abs, abs_div, abs_of_nonneg (hPos y),
+      abs_of_nonneg (hPos x), abs_of_pos hk] using hxy
   have hkfx : k * f x ≤ 1 := by
     calc
       k * f x = ‖hConstLo.toLp (fun _ : α => k * f x)‖ :=
@@ -261,7 +263,7 @@ theorem p4Q2PZ37AEK_realWilsonJointWeightBounds
     have h := (inv_le_inv₀ (by norm_num : (0 : ℝ) < 1) hlpos).2 hl1
     simpa using h
   have hInvHi : lambda⁻¹ ≤ k⁻¹ :=
-    (inv_le_inv₀ hk hlpos).2 hkl
+    (inv_le_inv₀ hlpos hk).2 hkl
   have hAcLo : k * k ≤ a * c :=
     mul_le_mul ha.1 hc.1 hk.le ha0
   have hAcHi : a * c ≤ k⁻¹ * 1 :=
@@ -374,7 +376,7 @@ theorem p4Q2PZ37AEK_originalPhysicalDensity_explicitWilsonBounds :
       Tnorm 1 (rho z) (Real.sqrt ((k⁻¹) ^ 3))
       hT.1 hT.2 hrho hRhoMax
   have hRhoInv : (rho z)⁻¹ ≤ (Real.sqrt (k ^ 3))⁻¹ :=
-    (inv_le_inv₀ hRhoLow hrho).2 hRhoMin
+    (inv_le_inv₀ hrho hRhoLow).2 hRhoMin
   rw [p4Q2PZ37AEG_originalDensity_exactVacuumCancellation H z]
   constructor
   · simpa only [one_mul] using hLow
