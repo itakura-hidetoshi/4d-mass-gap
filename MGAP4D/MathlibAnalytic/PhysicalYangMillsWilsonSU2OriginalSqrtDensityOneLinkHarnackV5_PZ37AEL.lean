@@ -70,6 +70,29 @@ theorem p4Q2PZ37AEL_real_commonNumeratorDivHarnack
     _ = t * (c / v) := by ring
 
 
+
+/-- A two-sided multiplicative Harnack comparison and a common true
+global majorant provide an absolute one-step oscillation budget. -/
+theorem p4Q2PZ37AEL_real_twoSidedHarnack_absVariation
+    (u v t M : ℝ)
+    (ht : 1 ≤ t) (hu : u ≤ M) (hv : v ≤ M)
+    (huv : u ≤ t * v) (hvu : v ≤ t * u) :
+    |u - v| ≤ (t - 1) * M := by
+  have ht0 : 0 ≤ t - 1 := sub_nonneg.mpr ht
+  have hStep1 : u - v ≤ (t - 1) * v := by
+    linarith only [huv]
+  have hStep2 : v - u ≤ (t - 1) * u := by
+    linarith only [hvu]
+  have hB1 : (t - 1) * v ≤ (t - 1) * M :=
+    mul_le_mul_of_nonneg_left hv ht0
+  have hB2 : (t - 1) * u ≤ (t - 1) * M :=
+    mul_le_mul_of_nonneg_left hu ht0
+  apply abs_le.mpr
+  constructor
+  · linarith only [hStep2, hB2]
+  · linarith only [hStep1, hB1]
+
+
 namespace GroundStatePosteriorJoint
 
 variable (H : ℕ)
@@ -232,6 +255,66 @@ theorem p4Q2PZ37AEL_originalPerronDensity_oneLinkReverse
   exact p4Q2PZ37AEL_originalPerronDensity_oneLinkHarnack H A B e h g
 
 
+
+/-- Unconditional explicit SINGLE-LINK absolute variation of the actual
+joint sqrt-density, using AEK's global upper bound. This bound is
+coarse: it does not shrink with the chordal size of the link change. -/
+theorem p4Q2PZ37AEL_originalSqrtDensity_oneLink_absVariation
+    (A B : Cfg) (e : Link) (g h : G) :
+    |rho (A, Replace B e g) - rho (A, Replace B e h)| ≤
+      (t - 1) *
+        Real.sqrt
+          ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor
+            H b0)⁻¹ ^ 3) := by
+  let k := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor H b0
+  have ht1 : 1 ≤ t := by
+    change 1 ≤ Real.exp (8 * b0)
+    rw [← Real.exp_zero]
+    exact Real.exp_le_exp.mpr (by positivity)
+  have hBounds :=
+    (p4Q2PZ37AEK_originalJointSqrtDensity_explicitWilsonBounds H).2
+  have hG : rho (A, Replace B e g) ≤ Real.sqrt (k⁻¹ ^ 3) :=
+    (hBounds (A, Replace B e g)).2
+  have hH : rho (A, Replace B e h) ≤ Real.sqrt (k⁻¹ ^ 3) :=
+    (hBounds (A, Replace B e h)).2
+  exact p4Q2PZ37AEL_real_twoSidedHarnack_absVariation
+    (rho (A, Replace B e g)) (rho (A, Replace B e h))
+    t (Real.sqrt (k⁻¹ ^ 3)) ht1 hG hH
+    (p4Q2PZ37AEL_originalSqrtDensity_oneLinkHarnack H A B e g h)
+    (p4Q2PZ37AEL_originalSqrtDensity_oneLinkReverse H A B e g h)
+
+/-- Unconditional explicit SINGLE-LINK absolute variation for the
+ORIGINAL JQ Perron density, retaining the genuine physical numerator
+and AEK's original density ceiling. -/
+theorem p4Q2PZ37AEL_originalPerronDensity_oneLink_absVariation
+    (A B : Cfg) (e : Link) (g h : G) :
+    |q b0 hb0 (A, Replace B e g) - q b0 hb0 (A, Replace B e h)| ≤
+      (t - 1) *
+        (Real.exp (b0 *
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H) /
+          Real.sqrt
+            ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor
+              H b0) ^ 3)) := by
+  let k := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor H b0
+  let E := Real.exp (b0 *
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H)
+  have ht1 : 1 ≤ t := by
+    change 1 ≤ Real.exp (8 * b0)
+    rw [← Real.exp_zero]
+    exact Real.exp_le_exp.mpr (by positivity)
+  have hBounds :=
+    (p4Q2PZ37AEK_originalPhysicalDensity_explicitWilsonBounds H).2
+  have hG : q b0 hb0 (A, Replace B e g) ≤ E / Real.sqrt (k ^ 3) :=
+    (hBounds (A, Replace B e g)).2
+  have hH : q b0 hb0 (A, Replace B e h) ≤ E / Real.sqrt (k ^ 3) :=
+    (hBounds (A, Replace B e h)).2
+  exact p4Q2PZ37AEL_real_twoSidedHarnack_absVariation
+    (q b0 hb0 (A, Replace B e g)) (q b0 hb0 (A, Replace B e h))
+    t (E / Real.sqrt (k ^ 3)) ht1 hG hH
+    (p4Q2PZ37AEL_originalPerronDensity_oneLinkHarnack H A B e g h)
+    (p4Q2PZ37AEL_originalPerronDensity_oneLinkReverse H A B e g h)
+
+
 end GroundStatePosteriorJoint
 end
 end MGAP4D.MathlibAnalytic
@@ -248,3 +331,7 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEL_originalSqrtDensity_firstBoundary_oneLinkHarnack
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEL_originalPerronDensity_oneLinkHarnack
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEL_originalPerronDensity_oneLinkReverse
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AEL_real_twoSidedHarnack_absVariation
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEL_originalSqrtDensity_oneLink_absVariation
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEL_originalPerronDensity_oneLink_absVariation
