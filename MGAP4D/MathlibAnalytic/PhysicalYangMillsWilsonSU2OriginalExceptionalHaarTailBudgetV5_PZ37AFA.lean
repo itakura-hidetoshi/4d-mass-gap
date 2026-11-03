@@ -184,7 +184,7 @@ theorem p4Q2PZ37AFA_originalExceptionalBoundary_iff_transfer
       theta * ((P b0 hb0 z)^2 * tA2 b0 hb0 e z) =
         (P b0 hb0 z)^2 * (theta * tA2 b0 hb0 e z) := by ring
   rw [hFactor]
-  exact mul_lt_mul_left hp
+  exact mul_lt_mul_iff_of_pos_left hp
 
 /-- ACTUAL original four-mode variance and higher-character residual:
 global bound uses only the true FC cap and the measurable exceptional
