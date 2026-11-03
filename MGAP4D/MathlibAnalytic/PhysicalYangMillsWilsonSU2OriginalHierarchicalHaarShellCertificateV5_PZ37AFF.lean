@@ -323,7 +323,7 @@ def p4Q2PZ37AFF_originalShellChainFloor
   | .refl _ => 0
   | .step w rest =>
       p4Q2PZ37AFF_originalShellFloor H e w +
-        p4Q2PZ37AFF_originalShellChainFloor H e rest
+        p4Q2PZ37AFF_originalShellChainFloor e rest
 
 /-- The total floor of any finite physical shell chain is nonnegative;
 each genuine nonempty step supplies a strictly positive summand. -/
