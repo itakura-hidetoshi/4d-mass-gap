@@ -1,3 +1,29 @@
+## 検証済み定理 — AFC（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFC定理PR [#6274](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6274) は **MERGED**、squash SHA `15720bb288c8382f5bb7f1afa3f05210ffaa2833`。前段AFB（#6271）・AFA（#6268）・AEZおよびAEXの保守的AEW二球FC証明書no-goを継承する。真正Wilson SU(2)、Gauss-law中心化物理源、Perron真空、元の更新transfer、元の外側pair-Haar、FC envelope、正本root、Lean/mathlib pinは不変。
+
+### 真正良好球のHaar下界から例外集合上界へ
+
+- **真正良好中心の判定**：元物理受信器の四成分 `A_F`、高次Haar残差 `W_F`、真正差分 `G_θ(z)=W_F(z)−θ*A_F(z)^2` を維持。実境界標本 `s` で `Good={a∈s | W_F(a)+η≤θ*A_F(a)^2}` を定義。証明書 `D_H(a,z)<r → |G_θ(z)−G_θ(a)|<η` があれば、`Good` に属する標本中心の真正開球 `B_{D_H}(a,r)` は AFAの元例外集合 `Bad_θ={z|G_θ(z)>0}` と交わらない。
+- **元ADLの三角不等式による厳密な非交差性**：異なる二つの真正良好標本中心に対して `2*r≤D_H(a,b)` が認証されれば、開球 `B_{D_H}(a,r)`、`B_{D_H}(b,r)` は互いに非交差。測度の独立性も幾何の代理量も仮定しない。
+- **真正pair-Haar確率の相補上界**：良好中心を相互に `2r` 以上離した有限集合とし、実測度の有限加法性を使用して、**`ν_H(Bad_θ)≤1−Σ_{a∈Good}ν_H(B_{D_H}(a,r))`** を証明。AFBの「例外候補球の質量を上から足す」経路と相補的な「良好球の質量を下から足す」経路である。
+- **AEAの真正Haar球下界への無条件接続**：全真正境界中心・任意 `r>0` で確定した `κ_H(r)=κ(r/(2*card(Link_H)+1))^(2*card(Link_H))>0`（`κ(x)=toSphereBallBound(4,x)/4`）を適用し、**`ν_H(Bad_θ)≤1−card(Good)*κ_H(r)`** を得る。これは真正SU(2) pair-Haarの有限体積 `H` 依存評価であり、無条件に多数の良好標本が存在すると主張するものではない。
+- **真正GI・FCへの接続**：`θ≥0` と元AFAの数値ゲート `θ*A4_H+B_H²*(1−card(Good)*κ_H(r))<64*A4_H` が別途認証できれば、真正二乗GI平均証明書 `Budget_H>0` および元の符号付き二posterior GI応答が非零となる開・正Haar領域を得る。さらに独立の元FC未使用分 `E_H≤σ*A4_H` と `(θ+σ)*A4_H+B_H²*(1−card(Good)*κ_H(r))<64*A4_H` が必要な場合、より強い真正FC閾値 `B_H²<272*S_H` も導く。
+- **逆向きの実数障害**：`Budget_H≤0` なら、有効な良好packing証明書について **`((64−θ)*A4_H)/B_H²+card(Good)*κ_H(r)≤1`** が必要。真正GIの消滅やYang–Mills質量ギャップの不可能性を意味しない。
+
+### 正式なLean4検証と修正理由
+
+- append-onlyで新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalGoodHaarPackingComplementV5_PZ37AFC.lean`（359行）を追加。既存Lean、物理モデル、Haar law、公開root、CI workflowは変更なし。公開12定理／12件 `#print axioms`。Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を保持。
+- 修正版[exact-source CI #41725365393](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41725365393) は **11,310/11,310 SUCCESS**。全12定理の依存公理は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error **0/0**、独立MCP completion receipt **SUCCESS**。
+- 初回CI #41724465578では、固定mathlibで `PairwiseDisjoint` が `Set` 名前空間にあるのに未修飾で使用したためElaborationが失敗し、後続の有限和・証明式へ型エラーが波及。新規Lean全文・固定mathlibの `measureReal_biUnion_finset`・関連ソースを照合し、2か所を `Set.PairwiseDisjoint` と明示して解決。仮定、定理文、元の測度は弱めず、追加公理はなし。
+- exact-source HEAD `3dc2aae39bac8bc9fcf88c9466ca5047d8a176e0`、test-merge `b6f2d21f19a958b809863f125b30e46cddca3b9d`、squash `15720bb288c8382f5bb7f1afa3f05210ffaa2833` のGit treeは `2fbb9b38e2cf27e832e6c55cf3eb125a90389541` で一致。squash後push CIの独立確認は別途行う。
+
+### 次の独立課題 — AFD
+
+有限体積で証明済みの球Haar下界は `H` 依存で小さくなり得る。良好標本の具体的な認証、互いに離れた良好中心のpacking数、真正 `D_H` 球測度の上界・下界を結ぶ体積一様制御、FC未使用分、連続体へのdescentは引き続き未証明。AFBとAFCの二つの例外質量上界を比較して小さい方を採用する数値証明書、あるいは境界幾何の局所分割による重複補正が次の候補。元AEXの二球FC no-go、4D Yang–Mills質量ギャップ未証明の境界は維持する。
+
+---
+
 ## 検証済み定理 — AFB（2026-11-04 JST）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAPの文書ミラーのみ。AFB定理PR [#6271](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6271) は **MERGED**、squash SHA `93ce1dec59fc0ccedde96768ea72c61216366895`。前段AFA（#6268）、AEZ、AEXまでの真正Wilson SU(2)、中心化Gauss-law物理源、Perron真空、元の更新transfer、pair-Haar測度、FC envelope、原距離、Lean/mathlib pinは不変更。AEXのAEW保守的二球FC下界のno-goを維持。
