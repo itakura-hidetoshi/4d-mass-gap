@@ -103,7 +103,7 @@ theorem p4Q2PZ37AEP_finiteCoordinateHarnack
     intro s
     induction s using Finset.induction_on with
     | empty =>
-        simpa [p4Q2PZ37AEP_finiteBlend_empty] using (le_refl (f a))
+        simp [p4Q2PZ37AEP_finiteBlend_empty]
     | @insert i s hi ih =>
         let u := p4Q2PZ37AEP_finiteBlend a b s
         have hOld : Function.update u i (a i) = u :=
