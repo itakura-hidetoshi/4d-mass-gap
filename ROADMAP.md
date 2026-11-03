@@ -1,3 +1,36 @@
+## 検証済み定理 — AFD（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFD定理PR [#6277](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6277) は **MERGED**、定理squash SHA `6a67257b9dac6e4417d80cdfa09d5a561077c8bb`。AFC（#6274）、AFB（#6271）、AFA（#6268）までの真正Wilson SU(2)、中心化Gauss-law物理源、Perron真空、元の右リンク更新transfer、元pair-Haar確率 `ν_H`、FC envelope、全リンク弦距離 `D_H`、Lean/mathlib固定pinおよび公開rootを継承し、AEXの保守的二球FC no-goを維持する。
+
+### 新規定理：元の有限良好標本から2r分離packingを構成
+
+- **一般の有限選択定理**：対称かつ自己距離0の関数 `d`、有限集合 `s` と正半径 `r` について、有限帰納法により部分集合 `t⊆s` を構成し、異なる `a,b∈t` では `2r≤d(a,b)`、元の全ての `a∈s` はある `b∈t` に対して `d(a,b)<2r` を満たす。外部のpacking存在仮定や数値cardinalityを挿入せず、これをADLの真正物理境界 `D_H` に適用。
+- **元の真正良好標本の抽出**：AFCの `Good(s)={a∈s | W_F(a)+η≤θ*A_F(a)^2}` を元のWilson/transfer振幅・残差で定義し、良好標本 `Good(s)` から上記 `t` を構成。`t⊆Good(s)` の下で `Good(t)=t`、任意の異なる選択良好中心は `2r` 以上離れること、選択した良好中心が元の良好標本全体を `2r` 以内で覆うことを証明。
+
+### AFB・AFCの相補的な真正Haar上界を一本化
+
+- **二重例外質量予算の定義**：AFBの真正例外候補中心 `Flag(s)` と、AFCの選択良好packing `t` を同一の真正元境界標本 `s` 上で保持し、`Dual_H(s,t,θ,η,r)=min(Σ_{a∈Flag(s)}ν_H(B_D(a,r)), 1−card(t)*κ_H(r))` を定義。ここで `κ_H(r)=κ(r/(2*card(Link_H)+1))^(2*card(Link_H))>0` はAEAの本物のSU(2) pair-Haar球下界。
+- **真正例外集合の最小上界**：元の真正全リンク有限 `D_H` ネット `s`、同じ元物理残差差分 `G_θ(z)=W_F(z)−θ*A_F(z)^2` の検証済み変動条件 `D_H(a,z)<r→|G_θ(z)−G_θ(a)|<η`、および上記の選択良好packingの下で **`ν_H(Bad_θ)≤Dual_H(s,t,θ,η,r)`** をLean4で証明。元測度上の同じ例外集合にAFBとAFC双方の上界が成立することから、有限和と補集合予算の最小値が正当化される。元の `ν_H` は変更されず、`0≤Dual_H` も導出。
+- **選択構成を仮定から取り除く**：任意の真正有限ネットと真正変動証明書が与えられれば、分離した良好部分集合 `t` と上記の二重上界を満たす証明書の存在を証明。さらに任意の真正物理リンク・任意の正のguard margin `η>0` に対し、AFBのコンパクト一様変動半径とAEEの有限真正ネット存在を合成し、`r,s,t` の存在を形式化。ただし数値的に有用な `t.card` や小さいdual予算の存在は主張しない。
+
+### 元のGI・FC境界への正確な移送
+
+- **二乗GI平均証明書**：`θ≥0`、真正数値比較 `θ*A4_H+B_H²*Dual_H<64*A4_H` が独立に成立すれば、元AFAの `Budget_H>0` と真正pair-Haar正測度の開領域での非零符号付き二posterior GI応答を導出。真正GI応答の全配置での非消滅を意味しない。
+- **より強い真正FCテスト**：これとは別に実際のFC未使用分 `E_H≤σ*A4_H` と `(θ+σ)*A4_H+B_H²*Dual_H<64*A4_H` を数値認証する場合に限り、元の真正 `B_H²<272*S_H` と対応する開GI領域を証明。AFAのGI平均判定とFC判定を混同しない。
+- **逆向きobstruction**：元の平均GI証明書が非正 `Budget_H≤0` なら、任意の有効な二重予算は **`((64−θ)*A4_H)/B_H²≤Dual_H`** を満たす。これは物理GIの消失や連続体Yang–Millsギャップのno-goではない。AEXのAEW二球保守的下界に限定されたno-goもそのまま維持。
+
+### exact-source Lean4検証・公理監査・Git tree
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalDualHaarGreedyPackingV5_PZ37AFD.lean`（425行）**1ファイルのみ追加**。既存Lean・元の模型・Haar測度・公開root・workflow不変更。公開14定理／14件 `#print axioms`。Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 固定。
+- [exact-source CI #41728015997](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41728015997) **11,311 / 11,311 SUCCESS**。新規14定理の公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error **0/0**、独立MCP completion receipt **SUCCESS**。初回CIからelaboration errorなし。
+- exact-source HEAD `e8435d26e5e32de044c31dcb5a769fd54ad2ceb0`、test-merge、squash `6a67257b9dac6e4417d80cdfa09d5a561077c8bb` のGit treeは `df4ca0634d14bbe23e7b662fa6c409847174b5b5` で一致。定理squash後push CIは別途確認。
+
+### 次の独立課題 — AFE
+
+AFDで二重Haar上界の選択構成と統合が形式化された一方、`θ,η,r`、真正良好標本数、元の `D_H` 球の実数値測度、FC未使用分 `E_H` の強い数値認証、体積 `H` に一様な下界は残る。次は単一 `r` と単一 `θ` に固定する強い条件から、複数半径・複数閾値の適応型認証や、良好領域重複の補正を含む有限表の改良可能性を検討する。物理Hamiltonianのスペクトルギャップと連続体4D Yang–Mills質量ギャップは未証明。
+
+---
+
 ## 検証済み定理 — AFC（2026-11-04 JST）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFC定理PR [#6274](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6274) は **MERGED**、squash SHA `15720bb288c8382f5bb7f1afa3f05210ffaa2833`。前段AFB（#6271）・AFA（#6268）・AEZおよびAEXの保守的AEW二球FC証明書no-goを継承する。真正Wilson SU(2)、Gauss-law中心化物理源、Perron真空、元の更新transfer、元の外側pair-Haar、FC envelope、正本root、Lean/mathlib pinは不変。
