@@ -1,3 +1,23 @@
+## 検証済み定理 — AER（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AER定理PR [#6241](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6241) はMERGED、定理squash SHA `a5eb1ff0fa4bf1c6544df12a6c43271b092353aa`。AEP/AEQまでの真正interacting Wilson SU(2)、中心化Gauss-law物理源、元のFF受信器、Perron/transfer作用素、二境界joint sqrt-density、JQ密度、元のpair-Haar、固定Lean/mathlibおよび公開rootは不変更。
+
+### 元の共分散 C_e=N_e/q_H の半振幅安定球
+
+- **分母の明示的な真正評価**：AEQから、元の全リンク二境界弦距離 `D_H(z,w)≤1` で `|q_H(z)-q_H(w)|≤L_q(H) D_H(z,w)`、`L_q(H)=13*beta0*exp(13*beta0)*M_q(H)`。AEPの対数係数 `13*beta0` はH非依存だが、ここで使う絶対変動係数 `L_q(H)` はH依存。
+- **分子・分母の真正予算**：元の物理リンク `e`、正の共分散中心 `a`、AEGの元密度下界 `lambda>0`、真正Haar分子 `N_e` の有限体積上界 `M≥0`、分子誤差 `lambda*C_e(a)/4` に対する真正 `D_H` 半径 `r_N>0` を使う。`delta_q=lambda^2*C_e(a)/(4*(M+lambda))`、`R=min(r_N,1,delta_q/(L_q(H)+1))>0` を定義。
+- **新たに無条件形式化**：元の `q_H` にAEQ明示的変動を代入し、AEFの真正比率誤差則から、すべての元境界 `z,w` で `D_H(z,w)<R` なら `|C_e(z)-C_e(w)|≤C_e(a)/2`。AEGは真正 `r_N` の存在を、AEDは正の真正 `C_e(a)` の存在を証明済み。したがって任意の固定有限 `H` と真正物理リンク `e` について、この形式の正の半径が無条件に存在する。
+- **元Haar二球モーメントへの接続**：AEEのゲージ反転・両符号球の証明を同じ元の `D_H` と元pair-Haar測度で再利用し、`(C_e(a)/2)^2 * 2 * (min(R/(2*card(Link_H)+1),2)/4)^(8*card(Link_H)) ≤ S(H,beta0,e)` を形式証明。代理測度、独立posterior、物理的源・受信器の交換を行わない。
+- **authority/obstruction**：`r_N`、`lambda`、`M`、`C_e(a)`、`M_q(H)` は存在が証明された真正有限体積量だが、数値評価されていない。`R` はそれらを入力する明示式であり、特定の数値半径や体積一様正下界を算出したものではない。GIのFC数値優越、体積一様強制性、物理スペクトルギャップ、連続体4D Yang--Mills質量ギャップは未証明。
+
+### exact-source Lean4検証・公理監査
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalCovarianceCertifiedChordalBallV5_PZ37AER.lean` のみ、公開5定理と5件の `#print axioms`。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 固定。旧Leanファイル、物理模型、workflow、公開root不変更。
+- [exact-source CI #41605787162](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41605787162) **11,298/11,298 SUCCESS**、公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。最終source HEAD `5ded878cab71a0dea3283a91225d390f05c9ad7e`、test-merge `1f66b1b092e9505079cfc583032ab10164ddd472`、squash `a5eb1ff0fa4bf1c6544df12a6c43271b092353aa` のGit tree `5384861ef3a689c15459ef11ec9f9a63a9dbcdfb` は完全一致。
+- **修正履歴**：初回CIの半振幅 `C_e(a)-C_e(a)/2=C_e(a)/2` はLeanの定義上の一致ではなく実数環の等式なので `ring` で明示証明。既にゴールを閉じる `field_simp` 後の不要な `ring` を除去し、定理の仮定・結論は維持。次段階は真正分子 `N_e` のSU(2)リンク依存の明示的変動定数、有限Hでの数値認証、および物理的FC比較。docs-only同期ではStrict Leanを再実行しない。
+
+---
+
 ## 検証済み定理 — AEQ（2026-11-03 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AEQ定理PR [#6238](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6238) はMERGED、定理squash SHA `1ea9d87d6973035c6fc197a8a1c2176f4c1b80d4`。AEPまでの真正interacting Wilson SU(2)、中心化Gauss-law物理源、元Perron/transfer、真正joint sqrt-density・JQ密度・境界pair-Haar、固定Lean/mathlibと公開rootは不変更。
