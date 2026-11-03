@@ -386,6 +386,42 @@ theorem p4Q2PZ37AEK_originalPhysicalDensity_explicitWilsonBounds :
         mul_le_mul_of_nonneg_left hRhoInv (Real.exp_nonneg _)
       _ = E / Real.sqrt (k ^ 3) := by rw [div_eq_mul_inv]
 
+
+/-- The original physical Perron density inherits an explicit
+Wilson-action amplification bound for ANY certified genuine rho_H
+oscillation, with no density-net or positive-denominator input. -/
+theorem p4Q2PZ37AEK_originalPhysicalDensity_explicitRhoModulus
+    (delta R : ℝ) (hdelta : 0 ≤ delta)
+    (hRhoMod : ∀ z w : Pair,
+      p4Q2PZ37ADL_originalFullBoundaryChordalDistance H z w < R →
+        |rho z - rho w| ≤ delta) :
+    ∀ z w : Pair,
+      p4Q2PZ37ADL_originalFullBoundaryChordalDistance H z w < R →
+      |q b0 hb0 z - q b0 hb0 w| ≤
+        ((E / Real.sqrt (k ^ 3)) * delta) / Real.sqrt (k ^ 3) := by
+  obtain ⟨hLowPos, hRhoAll⟩ :=
+    p4Q2PZ37AEK_originalJointSqrtDensity_explicitWilsonBounds H
+  exact p4Q2PZ37AEJ_originalDensity_explicitActionModulus
+    H (Real.sqrt (k ^ 3)) delta R hLowPos hdelta
+    (fun z => (hRhoAll z).1) hRhoMod
+
+/-- Every prescribed positive original rho_H error has a genuine
+finite-H common original chordal radius, and the resulting q_H
+variation bound has a COMPLETELY explicit denominator and transfer
+factor. The radius is existential, not a certified numerical mesh. -/
+theorem p4Q2PZ37AEK_originalPhysicalDensity_explicitUniformModulus_exists
+    (delta : ℝ) (hdelta : 0 < delta) :
+    ∃ R : ℝ, 0 < R ∧ ∀ z w : Pair,
+      p4Q2PZ37ADL_originalFullBoundaryChordalDistance H z w < R →
+        |q b0 hb0 z - q b0 hb0 w| ≤
+          ((E / Real.sqrt (k ^ 3)) * delta) / Real.sqrt (k ^ 3) := by
+  obtain ⟨R, hR, hRho⟩ :=
+    p4Q2PZ37AEH_originalSqrtDensity_uniformChordalModulus
+      H delta hdelta
+  refine ⟨R, hR, ?_⟩
+  exact p4Q2PZ37AEK_originalPhysicalDensity_explicitRhoModulus
+    H delta R hdelta.le (fun z w hzw => (hRho z w hzw).le)
+
 end GroundStatePosteriorJoint
 
 end
@@ -400,3 +436,6 @@ end MGAP4D.MathlibAnalytic
 
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEK_originalJointSqrtDensity_explicitWilsonBounds
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEK_originalPhysicalDensity_explicitWilsonBounds
+
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEK_originalPhysicalDensity_explicitRhoModulus
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEK_originalPhysicalDensity_explicitUniformModulus_exists
