@@ -234,7 +234,7 @@ theorem p4Q2PZ37AEO_originalSqrtDensity_oneLinkDistance_absVariation
           ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor
             H b0)⁻¹ ^ 3) := by
   let k := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor H b0
-  have ht1 := p4Q2PZ37AEO_originalDistanceHarnackFactor_ge_one H g h
+  have ht1 := p4Q2PZ37AEO_originalDistanceHarnackFactor_ge_one g h
   have hBounds :=
     (p4Q2PZ37AEK_originalJointSqrtDensity_explicitWilsonBounds H).2
   have hG : rho (A, Replace B e g) ≤ Real.sqrt (k⁻¹ ^ 3) :=
@@ -261,7 +261,7 @@ theorem p4Q2PZ37AEO_originalPerronDensity_oneLinkDistance_absVariation
   let k := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor H b0
   let E := Real.exp (b0 *
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H)
-  have ht1 := p4Q2PZ37AEO_originalDistanceHarnackFactor_ge_one H g h
+  have ht1 := p4Q2PZ37AEO_originalDistanceHarnackFactor_ge_one g h
   have hBounds :=
     (p4Q2PZ37AEK_originalPhysicalDensity_explicitWilsonBounds H).2
   have hG : q b0 hb0 (A, Replace B e g) ≤ E / Real.sqrt (k ^ 3) :=
