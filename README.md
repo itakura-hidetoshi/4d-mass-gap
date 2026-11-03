@@ -1,3 +1,25 @@
+## 検証済み定理 — AEU（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AEU定理PR [#6250](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6250) はMERGED、定理squash SHA `7c784c332db9feeb078d24c051b7ddce0f411952`。AETまでの真正interacting Wilson SU(2)、中心化Gauss-law物理源、元JQ受信器、元Perron/transfer、真正joint sqrt-density・JQ密度、元のSU(2) Haarとpair-Haar法則、固定Lean/mathlibおよび公開rootは不変更。
+
+### 真正物理受信器の左境界全リンク変動係数を無条件に導出
+
+- **GNの真正源・密度相殺式**：元の中心化Gauss-law源`f0`と真正SU(2)積分変数`xi`に対し、元JQ受信器は **`F_e(A,B;xi)=||T_H||^(-2)*t_f0(B[e:=xi])/rho_H(A,B[e:=xi])`** と厳密に等しい。`t_f0`は変更されていないone-slab Wilson transfer源積分であり、左境界`A`には依存しない。新しい確率法則・源・受信器の再定義は行わない。
+- **真の受信器の絶対振幅上界**：`O_H=normalizedPhysicalOneSlabJointReceiverProductBCF(H,2,beta0,f0)`は既存の真正有界連続BCF。`M_F(H)=||O_H||≥0`とすると、全ての元`A,B,e,xi`で **`|F_e(A,B;xi)|≤M_F(H)`** をLean4で無条件証明。コンパクト性から数値を創作せず、元BCF自体の実在するnormを使用。
+- **本来の左1リンク距離**：元のADL全リンク二境界弦距離`D_H`は、左リンク`i`のみの二つの置換では厳密に **`D_H((A[i:=g],B),(A[i:=h],B))=d_J(g,h)`**。代理擬距離・外部測度は不要。
+- **本来の左境界・短距離商変動**：AEKの真正Wilson joint sqrt-density下界`lambda_rho(H)=sqrt(k_H^3)>0`、AEQの`D_H≤1`での真正密度係数`L_rho(H)=13*beta0*exp(13*beta0)*sqrt((k_H^(-1))^3)`を使用。同じ右挿入境界を持つ二つの元受信器では転送積分分子が同一なので、分母の商差から`d_J(g,h)≤1`なら **`|F_e(A[i:=g],B;xi)-F_e(A[i:=h],B;xi)|≤(M_F*L_rho/lambda_rho)*d_J(g,h)`** を無条件形式化。
+- **元の左全リンク・全距離の明示的Lipschitz**：`d_J>1`では真のBCF振幅上界から`|F_g-F_h|≤2*M_F≤2*M_F*d_J`。従って任意の元左リンクについて **`L_left(H)=M_F(H)*L_rho(H)/lambda_rho(H)+2*M_F(H)`** が実際に有効な有限体積正則性係数として成立。数値評価済みの`M_F`やH非依存係数を主張するものではない。
+- **AETと接続して右側だけを残す**：観測右リンク`e`の独立性はAETで無条件証明済み。残る右**非観測**リンク`i≠e`の真正局所係数`L_R≥0`だけを証明書として仮定すれば、元の全境界で **`|F_e(z,xi)-F_e(w,xi)|≤(L_left(H)+L_R)*D_H(z,w)`**。これをAESの`|chi|≤1`、AERの真正Haar二球モーメントへ接続可能。右非観測リンクの係数`L_R`の存在・数値評価と体積一様性はAEUでは未証明として明示。
+- **authority/obstruction**：左境界全リンク係数は無条件の定理、右観測リンクの零変動も無条件。右非観測リンクの元のWilson transfer源積分・密度比の局所変動こそが次段階AEVの課題。GI数値FC閾値、体積一様強制性、物理スペクトルギャップ、連続体Yang--Mills質量ギャップは未証明。
+
+### exact-source Lean4検証・公理監査
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalReceiverLeftBoundaryExplicitSlopeV5_PZ37AEU.lean` のみ。公開7定理と7件`#print axioms`。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`固定。既存Leanファイル、物理模型、workflow、公開rootを不変更とする。
+- [exact-source CI #41616736179](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41616736179) は **11,301/11,301 SUCCESS**、新規7定理の公理依存は`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。最終source HEAD `bb13a0979d6c04b0e9aec3f9d17dd389719954c3`、test-merge `ce7ff95c0970b92dcc5f7c82c5d7bf728a13face`、squash `7c784c332db9feeb078d24c051b7ddce0f411952` のGit tree `414fdc0ef7d4d2d27f665f0b7f5ddc5ae9be2baf` は完全一致。
+- **Lean4修正履歴**：新規ファイルの全文とGN・AEK・AEQ・AETの依存定理を照合。局所notationを`dsimp`の書換え定理として渡せない理由を確認し、目標の`change`と正値因子の明示的積へ置換。`abs_sub_le`の3点不等式型を確認して`abs_add_le`へ修正。SU(2)のリンク変数`h`と証明名のshadowingを解消。新たな仮定を導入せず定理文を保持。docs-only同期ではStrict Leanを再実行しない。
+
+---
+
 ## 検証済み定理 — AET（2026-11-03 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AET定理PR [#6247](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6247) はMERGED、定理squash SHA `89ae225820b8eb7c37ce4ae0cfb4fb5659600111`。AESまでの真正interacting Wilson SU(2)、中心化Gauss-law物理源、元JQ source-link receiver、元Perron/transfer、真正joint sqrt-density・JQ密度、元SU(2) Haarとpair-Haar、固定Lean/mathlib・公開rootは不変更。
