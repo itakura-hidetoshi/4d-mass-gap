@@ -239,6 +239,85 @@ theorem p4Q2PZ37AEJ_originalDensity_explicitActionModulus
   intro z w hzw
   exact (hPrev z w hzw).trans hBound
 
+
+/-- A TRUE two-sided sample table on an ORIGINAL SU(2) boundary-pair
+D_H net makes the q modulus numerically explicit in the already
+defined finite-H Wilson action budget, without a transfer norm input. -/
+theorem p4Q2PZ37AEJ_originalFiniteNet_explicitDensityModulus
+    (s : Finset Pair) (r epsilon m R : ℝ)
+    (heps : 0 < epsilon) (hm : epsilon < m) (hRle : R ≤ r)
+    (hNet : p4Q2PZ37AEE_isOriginalFullNet H s r)
+    (hRhoMod : ∀ z w : Pair, D z w < r →
+      |rho z - rho w| < epsilon)
+    (hSampleLower : ∀ a ∈ s, m ≤ rho a) :
+    ∀ z w : Pair, D z w < R →
+      |q b0 hb0 z - q b0 hb0 w| ≤
+        ((E / (m - epsilon)) * epsilon) / (m - epsilon) := by
+  have hPos : 0 < m - epsilon := sub_pos.mpr hm
+  have hRhoFloor : ∀ z : Pair, m - epsilon ≤ rho z := fun z =>
+    (p4Q2PZ37AEI_originalFiniteNet_sampleLower_givesGlobalRhoFloor
+      H s r epsilon m hNet hRhoMod hSampleLower z).le
+  have hOsc : ∀ z w : Pair, D z w < R →
+      |rho z - rho w| ≤ epsilon := by
+    intro z w hzw
+    exact (hRhoMod z w (lt_of_lt_of_le hzw hRle)).le
+  exact p4Q2PZ37AEJ_originalDensity_explicitActionModulus
+    H (m - epsilon) epsilon R hPos heps.le hRhoFloor hOsc
+
+/-- True finite-net lower rho samples also furnish a genuine upper
+bound on the SAME original JQ Perron density, using the explicit
+Wilson-action inverse transfer budget. -/
+theorem p4Q2PZ37AEJ_originalFiniteNet_explicitDensityUpper
+    (s : Finset Pair) (r epsilon m : ℝ)
+    (hm : epsilon < m)
+    (hNet : p4Q2PZ37AEE_isOriginalFullNet H s r)
+    (hRhoMod : ∀ z w : Pair, D z w < r →
+      |rho z - rho w| < epsilon)
+    (hSampleLower : ∀ a ∈ s, m ≤ rho a) :
+    ∀ z : Pair, q b0 hb0 z ≤ E / (m - epsilon) := by
+  have hPos : 0 < m - epsilon := sub_pos.mpr hm
+  have hRhoFloor : ∀ z : Pair, m - epsilon ≤ rho z := fun z =>
+    (p4Q2PZ37AEI_originalFiniteNet_sampleLower_givesGlobalRhoFloor
+      H s r epsilon m hNet hRhoMod hSampleLower z).le
+  have hInvT : Tnorm⁻¹ ≤ E :=
+    p4Q2PZ37AEJ_originalFixedCouplingTransfer_inverseNorm_le_expAction H
+  intro z
+  rw [p4Q2PZ37AEG_originalDensity_exactVacuumCancellation H z]
+  have hRho : 0 < rho z :=
+    continuousJointSqrtDensity_pos H 2 (by norm_num) b0 hb0 z
+  have hRhoInv : (rho z)⁻¹ ≤ (m - epsilon)⁻¹ :=
+    (inv_le_inv₀ hPos hRho).2 (hRhoFloor z)
+  calc
+    Tnorm⁻¹ / rho z = Tnorm⁻¹ * (rho z)⁻¹ := by rw [div_eq_mul_inv]
+    _ ≤ E * (rho z)⁻¹ :=
+      mul_le_mul_of_nonneg_right hInvT (inv_nonneg.mpr hRho.le)
+    _ ≤ E * (m - epsilon)⁻¹ :=
+      mul_le_mul_of_nonneg_left hRhoInv (Real.exp_nonneg _)
+    _ = E / (m - epsilon) := by rw [div_eq_mul_inv]
+
+/-- Conditional TRUE joint rho upper/lower samples give a two-sided
+global Perron density interval. The transfer-norm bounds themselves
+are unconditional finite-volume Wilson physics. -/
+theorem p4Q2PZ37AEJ_originalFiniteNet_explicitTwoSidedDensity
+    (s : Finset Pair) (r epsilon m M : ℝ)
+    (heps : 0 < epsilon) (hm : epsilon < m)
+    (hNet : p4Q2PZ37AEE_isOriginalFullNet H s r)
+    (hRhoMod : ∀ z w : Pair, D z w < r →
+      |rho z - rho w| < epsilon)
+    (hSampleLower : ∀ a ∈ s, m ≤ rho a)
+    (hSampleUpper : ∀ a ∈ s, rho a ≤ M) :
+    0 < (1 : ℝ) / (M + epsilon) ∧
+      ∀ z : Pair,
+        (1 : ℝ) / (M + epsilon) ≤ q b0 hb0 z ∧
+        q b0 hb0 z ≤ E / (m - epsilon) := by
+  obtain ⟨hPositive, hLower⟩ :=
+    p4Q2PZ37AEI_originalFiniteNet_unitNorm_densityFloor
+      H s r epsilon M heps hNet hRhoMod hSampleUpper
+  have hUpper :=
+    p4Q2PZ37AEJ_originalFiniteNet_explicitDensityUpper
+      H s r epsilon m hm hNet hRhoMod hSampleLower
+  exact ⟨hPositive, fun z => ⟨hLower z, hUpper z⟩⟩
+
 end GroundStatePosteriorJoint
 
 end
@@ -252,3 +331,7 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEJ_originalFixedCouplingTransfer_explicitTwoSidedNorm
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEJ_originalFixedCouplingTransfer_inverseNorm_le_expAction
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEJ_originalDensity_explicitActionModulus
+
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEJ_originalFiniteNet_explicitDensityModulus
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEJ_originalFiniteNet_explicitDensityUpper
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEJ_originalFiniteNet_explicitTwoSidedDensity
