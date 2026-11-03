@@ -56,7 +56,7 @@ envelope multiply, without assuming the receiver has fixed sign. -/
 theorem p4Q2PZ37AES_realWeightedReceiverOscillation
     (u v t L K d : ℝ)
     (hU : |u-v| ≤ L*d) (hT : |t| ≤ K)
-    (hLD : 0 ≤ L*d) (hK : 0 ≤ K) :
+    (hLD : 0 ≤ L*d) (_hK : 0 ≤ K) :
     |u*t-v*t| ≤ (L*K)*d := by
   have hProd : |u*t-v*t| = |u-v| * |t| := by
     have hFactor : u*t-v*t = (u-v)*t := by ring
