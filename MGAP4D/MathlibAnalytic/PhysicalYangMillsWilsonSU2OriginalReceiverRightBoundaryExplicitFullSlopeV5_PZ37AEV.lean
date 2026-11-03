@@ -109,7 +109,7 @@ theorem p4Q2PZ37AEV_distinctRightUpdates_commute
     simp [hie]
   · by_cases hje : j = e
     · subst j
-      simp [hie, Ne.symm hie]
+      simp [Ne.symm hie]
     · simp [Function.update, hji, hje]
 
 /-- The authentic source transfer normalization is nonnegative
