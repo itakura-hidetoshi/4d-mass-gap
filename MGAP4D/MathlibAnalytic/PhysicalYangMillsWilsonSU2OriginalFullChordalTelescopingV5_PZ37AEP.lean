@@ -51,7 +51,7 @@ theorem p4Q2PZ37AEP_finiteBlend_empty
   simp [p4Q2PZ37AEP_finiteBlend]
 
 theorem p4Q2PZ37AEP_finiteBlend_univ
-    {ι G : Type*} [DecidableEq ι]
+    {ι G : Type*} [Fintype ι] [DecidableEq ι]
     (a b : ι → G) :
     p4Q2PZ37AEP_finiteBlend a b Finset.univ = b := by
   classical
