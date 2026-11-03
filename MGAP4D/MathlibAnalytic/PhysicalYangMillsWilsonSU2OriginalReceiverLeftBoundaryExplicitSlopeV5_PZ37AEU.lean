@@ -201,15 +201,17 @@ theorem p4Q2PZ37AEU_originalLeftOneLink_unconditionalSlope
     |F e (Function.update A i g,B) xi -
        F e (Function.update A i h,B) xi| ≤ Lleft*dJ g h := by
   have hMF : 0 ≤ MF := norm_nonneg _
-  have hLrho : 0 ≤ Lrho := by
-    dsimp only [Lrho]
-    positivity
+  have hLrho : 0 ≤ Lrho :=
+    mul_nonneg
+      (mul_nonneg (mul_nonneg (by norm_num : (0 : ℝ) ≤ 13) hb0)
+        (Real.exp_nonneg _))
+      (Real.sqrt_nonneg _)
   have hlambda : 0 < lambdaRho :=
     (p4Q2PZ37AEK_originalJointSqrtDensity_explicitWilsonBounds H).1
   have hBase : 0 ≤ MF*Lrho/lambdaRho :=
     div_nonneg (mul_nonneg hMF hLrho) hlambda.le
   have hCoeff : MF*Lrho/lambdaRho ≤ Lleft := by
-    dsimp only [Lleft]
+    change MF*Lrho/lambdaRho ≤ MF*Lrho/lambdaRho + 2*MF
     linarith only [hMF]
   have hDist : 0 ≤ dJ g h :=
     p4Q2PZ37ADK_trueChordalDistance_nonneg g h
@@ -231,15 +233,19 @@ theorem p4Q2PZ37AEU_originalLeftOneLink_unconditionalSlope
          F e (Function.update A i h,B) xi| ≤ 2*MF := by
       calc
         _ ≤ |F e (Function.update A i g,B) xi| +
-          |F e (Function.update A i h,B) xi| := abs_sub_le _ _
+          |F e (Function.update A i h,B) xi| := by
+            simpa only [sub_eq_add_neg, abs_neg] using
+              (abs_add_le
+                (F e (Function.update A i g,B) xi)
+                (-(F e (Function.update A i h,B) xi)))
         _ ≤ MF+MF := add_le_add hFg hFh
         _ = 2*MF := by ring
     have hScale : 2*MF ≤ (2*MF)*dJ g h := by
       simpa only [mul_one] using
         (mul_le_mul_of_nonneg_left hLarge
-          (by positivity : 0 ≤ 2*MF))
+          (mul_nonneg (by norm_num) hMF))
     have hCoeff2 : 2*MF ≤ Lleft := by
-      dsimp only [Lleft]
+      change 2*MF ≤ MF*Lrho/lambdaRho + 2*MF
       linarith only [hBase]
     calc
       |F e (Function.update A i g,B) xi -
@@ -261,19 +267,23 @@ theorem p4Q2PZ37AEU_originalRightOnly_givesFullReceiverSlope
       |F e z xi-F e w xi| ≤ (Lleft+LR)*D z w := by
   have hL : 0 ≤ Lleft := by
     have hMF : 0 ≤ MF := norm_nonneg _
-    have hLrho : 0 ≤ Lrho := by dsimp only [Lrho]; positivity
+    have hLrho : 0 ≤ Lrho :=
+      mul_nonneg
+        (mul_nonneg (mul_nonneg (by norm_num : (0 : ℝ) ≤ 13) hb0)
+          (Real.exp_nonneg _))
+        (Real.sqrt_nonneg _)
     have hlam :=
       (p4Q2PZ37AEK_originalJointSqrtDensity_explicitWilsonBounds H).1
-    dsimp only [Lleft]
+    change 0 ≤ MF*Lrho/lambdaRho + 2*MF
     exact add_nonneg
       (div_nonneg (mul_nonneg hMF hLrho) hlam.le)
       (mul_nonneg (by norm_num) hMF)
   apply p4Q2PZ37AET_originalOneLinkReceiver_givesFullSlope
     H e (Lleft+LR) (add_nonneg hL hLR)
   · intro A B i g h xi
-    have h := p4Q2PZ37AEU_originalLeftOneLink_unconditionalSlope
+    have hLeftBound := p4Q2PZ37AEU_originalLeftOneLink_unconditionalSlope
       H e i A B g h xi
-    exact h.trans (mul_le_mul_of_nonneg_right
+    exact hLeftBound.trans (mul_le_mul_of_nonneg_right
       (le_add_of_nonneg_right hLR)
       (p4Q2PZ37ADK_trueChordalDistance_nonneg g h))
   · intro A B i hie g h xi
