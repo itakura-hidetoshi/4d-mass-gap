@@ -43,7 +43,10 @@ theorem p4Q2PZ37AEV_real_signedWeightedIntegral_absVariation
       |f x * u x - f x * v x| ≤ C * |f x| := by
     have hEq : f x * u x - f x * v x = f x * (u x - v x) := by ring
     rw [hEq, abs_mul]
-    exact mul_le_mul_of_nonneg_left (huv x) (abs_nonneg _)
+    calc
+      |f x| * |u x - v x| ≤ |f x| * C :=
+        mul_le_mul_of_nonneg_left (huv x) (abs_nonneg _)
+      _ = C * |f x| := by ring
   have hI1 :
       (∫ x, f x * u x ∂μ) ≤
         (∫ x, f x * v x ∂μ) + C * (∫ x, |f x| ∂μ) := by
