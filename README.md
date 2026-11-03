@@ -1,3 +1,28 @@
+## 検証済み定理 — AEZ（2026-11-03 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。新規AEZ定理PR [#6265](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6265) はMERGED、定理squash SHA `a1a0a149d5a89c420dce6570654bd913fd5b86a4`。AEYまでの元の真正Wilson SU(2)、中心化Gauss-law源、Perron真空、真正更新transfer section、二posterior、Haar・pair-Haar測度、距離、root、Lean/mathlib pinおよびAEXの二球no-goを一切変更しない。
+
+### 真正transferのPerron重み付きHaar全モーメントとFC残差を分離
+
+- **真正transfer全積分の定義と同定**：固定正結合 `b0=log(3/2)/64` で、元ABZ・ACQの更新transfer section `U_z`、元のPerron prefactor `P_z>0`、4つの真正SU(2) character係数 `m_{U,z,j}`、その直交残差二乗 `tW_z` を用い、`A4_H(e)=∫_outer P_z² Σ_j m_{U,z,j}² dν_H(z)=4*S_H(e)>0`、`R4_H(e)=∫_outer P_z²*tW_z dν_H(z)=W_H(e)≥0` をLean4で再同定。元の更新密度・Perron重み・Gauss-law物理源を落としていない。
+- **FC envelopeの真正transfer表示**：AEYで定義した未使用FC分 `E_H=B_H²−Vbar_H≥0` は、`E_H=B_H²−∫_outer P_z² Var_Haar(U_z)dν_H(z)` と一致。これは元のsource-transfer構造に由来する式であり、新しい独立Haar lawや外部非負仮定ではない。
+- **無次元の厳密閾値**：`r_H=R4_H/A4_H≥0`、`s_H=E_H/A4_H≥0` と定義すると、**`Budget_H>0 ↔ r_H<64`**、**`B_H²<272*S_H ↔ r_H+s_H<64`** を形式化。前者は**元ACOの二乗GI平均証明書**の正値判定であり、真正の符号付きGIの必要十分条件ではない。後者は元FC envelopeを用いた**より強い数値十分条件**。いずれも無条件の厳密閾値到達を主張しない。
+- **全境界のtransfer上界から真正Haar積分へ**：元境界ペアの**全て**の `z` で `tW_z≤θ Σ_j m_{U,z,j}²` が成り立つという**明示的な条件**から、元のpair-Haar上で積分単調性・実物理受信器の連続性を使って `R4_H≤θ*A4_H` をLean4で証明。特に `θ<64` が別途証明できれば `Budget_H>0`、さらに元の二posteriorの符号付きGI応答が非零となる開かつpair-Haar正測度の領域が実際に存在する。
+- **FCの独立slack境界**：上記の全境界transfer条件に加え、真正FC未使用分を `E_H≤σ*A4_H` と**独立に認証**し `θ+σ<64` を満たすなら、**`B_H²<272*S_H`** を得て元の符号付き二posterior GI正領域まで伝播する。`θ`、`σ` は未証明の自由な上界を物理的事実として挿入したものではなく、条件付き定理の明記された入力である。
+- **真正境界のobstruction witness**：元GI平均証明書 `Budget_H≤0` が成立するなら、任意の候補 `θ<64` に対して**真正境界 `z` が存在し** `θ Σ_jm_{U,z,j}² < tW_z`。同様にFC判定が不成立で、別途 `E_H≤σ*A4_H`、`θ+σ<64` の条件を課す場合にも同じ真正boundary violationが存在。GI平均証明書の非正値から実際の符号付きGI応答消滅は推論していない。
+
+### exact-source Lean4検証と構造的エラー監査
+
+- 既存ファイルを変更せず、新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalWeightedTransferResidualFCGateV5_PZ37AEZ.lean`（365行）だけを追加。**公開14定理**、14件の `#print axioms`。Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 固定、定理root・CI workflow不変更。
+- 最終 [exact-source CI #41641344378](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41641344378) は **11,307/11,307 SUCCESS**。新規14定理すべての公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ。 `sorryAx` なし、変更Lean warning/error **0/0**、独立MCP completion receipt **SUCCESS**。初回Leanでエラーなし。
+- exact source HEAD `a1c4b8c1f1d840e645b9eebec4454e2b1765ce13`、GitHub test-merge `32f450da2bddbc5bdcdd9dbe4a7ce6a0a120cda8`、squash `a1a0a149d5a89c420dce6570654bd913fd5b86a4` のGit treeは **`de13683d4d6c3586b0bba5c291e125bcf68c56e9` で完全一致**。マージ後push CIは別途独立検査。
+
+### 残る真の物理的課題
+
+AEXの保守的二球幾何下界 `P_H(a,R)` はFC閾値を超えないというno-goを維持。一方、AEZの全モーメント `S_H` と真正transfer残差 `tW_z` は異なる実物理量であり、`Budget_H>0` も `B_H²<272*S_H` も本定理で無条件達成していない。次段階は、全境界を仮定した強いpointwise上界から離れ、元Wilson核とPerron重みを保つ**分割領域ごとの残差・振幅の積分比較**、有限格子からH一様な数値制御へのcompatibilityを研究する。物理Hamiltonianの必要スペクトルギャップと連続体4D Yang--Mills質量ギャップは未証明。
+
+---
+
 ## 検証済み定理 — AEY（2026-11-03 JST）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AEY定理PR [#6262](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6262) はMERGED、squash SHA `753e32f213470ccd4df7355339efa2069569482b`。前段AEXのAEW保守的二球下界に対するFC no-goを弱めず、既存の真正Wilson SU(2)、中心化Gauss-law物理源、元の物理受信器、Perron真空・transfer、元SU(2) Haarと真正pair-Haar測度、距離、定理root、Lean/mathlib pinを保持する。
