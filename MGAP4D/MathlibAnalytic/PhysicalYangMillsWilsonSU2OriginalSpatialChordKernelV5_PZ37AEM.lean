@@ -173,9 +173,7 @@ theorem p4Q2PZ37AEM_originalReplaceLink_coordinate_chordLe
   classical
   by_cases heq : j = target
   · subst j
-    simpa [Replace,
-      periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink] using
-      (le_refl (dJ g h))
+    simp [periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink]
   · rw [periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_of_ne
           H 2 B target j g heq,
         periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_of_ne
@@ -301,7 +299,7 @@ theorem p4Q2PZ37AEM_originalOneSlabKernel_unconditionalChordLipschitz
   have hKernel :=
     p4Q2PZ37AEM_originalOneSlabKernel_chordLipschitz_of_spatial
       H A B target g h 24 (by norm_num) hSpatial
-  convert hKernel using 1 <;> ring
+  convert hKernel using 1; ring
 
 end GroundStatePosteriorJoint
 end
