@@ -42,6 +42,22 @@ def p4Q2PZ37AEP_finiteBlend
     (a b : ι → G) (s : Finset ι) : ι → G :=
   fun j => if j ∈ s then b j else a j
 
+theorem p4Q2PZ37AEP_finiteBlend_empty
+    {ι G : Type*} [DecidableEq ι]
+    (a b : ι → G) :
+    p4Q2PZ37AEP_finiteBlend a b (∅ : Finset ι) = a := by
+  classical
+  funext i
+  simp [p4Q2PZ37AEP_finiteBlend]
+
+theorem p4Q2PZ37AEP_finiteBlend_univ
+    {ι G : Type*} [DecidableEq ι]
+    (a b : ι → G) :
+    p4Q2PZ37AEP_finiteBlend a b Finset.univ = b := by
+  classical
+  funext i
+  simp [p4Q2PZ37AEP_finiteBlend]
+
 theorem p4Q2PZ37AEP_finiteBlend_updateOld
     {ι G : Type*} [DecidableEq ι]
     (a b : ι → G) (s : Finset ι) (i : ι)
@@ -57,8 +73,7 @@ theorem p4Q2PZ37AEP_finiteBlend_updateOld
 
 theorem p4Q2PZ37AEP_finiteBlend_insert
     {ι G : Type*} [DecidableEq ι]
-    (a b : ι → G) (s : Finset ι) (i : ι)
-    (hi : i ∉ s) :
+    (a b : ι → G) (s : Finset ι) (i : ι) :
     Function.update (p4Q2PZ37AEP_finiteBlend a b s) i (b i) =
       p4Q2PZ37AEP_finiteBlend a b (insert i s) := by
   classical
@@ -66,7 +81,7 @@ theorem p4Q2PZ37AEP_finiteBlend_insert
   by_cases hj : j = i
   · subst j
     simp [p4Q2PZ37AEP_finiteBlend]
-  · simp [p4Q2PZ37AEP_finiteBlend, Finset.mem_insert, hj, Ne.symm hj]
+  · simp [p4Q2PZ37AEP_finiteBlend, Finset.mem_insert, hj]
 
 /-- The one-link exponential Harnack inequality descends along
 EVERY finite chain of genuine coordinate updates.
@@ -88,14 +103,14 @@ theorem p4Q2PZ37AEP_finiteCoordinateHarnack
     intro s
     induction s using Finset.induction_on with
     | empty =>
-        simpa [p4Q2PZ37AEP_finiteBlend] using (le_refl (f a))
+        simpa [p4Q2PZ37AEP_finiteBlend_empty] using (le_refl (f a))
     | @insert i s hi ih =>
         let u := p4Q2PZ37AEP_finiteBlend a b s
         have hOld : Function.update u i (a i) = u :=
           p4Q2PZ37AEP_finiteBlend_updateOld a b s i hi
         have hNew : Function.update u i (b i) =
             p4Q2PZ37AEP_finiteBlend a b (insert i s) :=
-          p4Q2PZ37AEP_finiteBlend_insert a b s i hi
+          p4Q2PZ37AEP_finiteBlend_insert a b s i
         have hStep :
             f u ≤ Real.exp (c * d (a i) (b i)) *
                 f (p4Q2PZ37AEP_finiteBlend a b (insert i s)) := by
@@ -127,7 +142,9 @@ theorem p4Q2PZ37AEP_finiteCoordinateHarnack
                       f (p4Q2PZ37AEP_finiteBlend a b (insert i s)) := by
                         congr 1
                         ring
-  simpa [p4Q2PZ37AEP_finiteBlend] using (hPath Finset.univ)
+  have h := hPath Finset.univ
+  rw [p4Q2PZ37AEP_finiteBlend_univ] at h
+  simpa only [] using h
 
 /-- Two genuine boundary configurations: telescope first the second
 slice, then the first slice, with NO independence assumption. -/
@@ -188,6 +205,8 @@ theorem p4Q2PZ37AEP_finiteTwoBoundaryHarnack
 end
 end MGAP4D.MathlibAnalytic
 
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AEP_finiteBlend_empty
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AEP_finiteBlend_univ
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AEP_finiteBlend_updateOld
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AEP_finiteBlend_insert
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AEP_finiteCoordinateHarnack
