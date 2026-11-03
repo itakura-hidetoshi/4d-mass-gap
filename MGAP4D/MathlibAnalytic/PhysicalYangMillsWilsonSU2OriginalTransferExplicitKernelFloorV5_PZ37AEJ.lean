@@ -163,7 +163,7 @@ theorem p4Q2PZ37AEJ_originalPhysicalTransfer_inverseNorm_le_expAction
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
         H N hN beta hbeta‖⁻¹ ≤
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor
-        H beta)⁻¹ := (inv_le_inv₀ hk ht).2 hLower
+        H beta)⁻¹ := (inv_le_inv₀ ht hk).2 hLower
     _ = Real.exp (beta *
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H) := by
       unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor
@@ -290,7 +290,7 @@ theorem p4Q2PZ37AEJ_originalFiniteNet_explicitDensityUpper
   have hRho : 0 < rho z :=
     continuousJointSqrtDensity_pos H 2 (by norm_num) b0 hb0 z
   have hRhoInv : (rho z)⁻¹ ≤ (m - epsilon)⁻¹ :=
-    (inv_le_inv₀ hPos hRho).2 (hRhoFloor z)
+    (inv_le_inv₀ hRho hPos).2 (hRhoFloor z)
   calc
     Tnorm⁻¹ / rho z = Tnorm⁻¹ * (rho z)⁻¹ := by rw [div_eq_mul_inv]
     _ ≤ E * (rho z)⁻¹ :=
