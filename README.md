@@ -1,3 +1,30 @@
+## 検証済み定理 — AFF（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFE（定理PR #6280、文書 #6281/#6282）を継承し、AFF定理PR [#6283](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6283) は **MERGED**。定理squash SHAは `e1b82397187a259892f9b7e09d8a2b70bc3bf9f5`。真正Wilson SU(2)、中心化Gauss-law物理源、Perron真空、元の右リンク更新transfer、同一境界pair-Haar測度 `ν_H`、FC envelope、真正全リンク距離 `D_H`、固定Lean/mathlibと公開rootを変更しない。AEXの保守的二球FC no-goも保持する。
+
+### 真正Haar閾値殻の厳密分割
+
+- 真正残差ギャップ `G_θ(z)=W_F(z)−θ A_F(z)^2` を使い、`Bad_θ={z | G_θ(z)>0}` と証明。任意の `θ_lo≤θ_hi` に対して `Shell(lo,hi)=Bad_(θ_lo)\\Bad_(θ_hi)` は真正pair-Haar可測で、**`ν_H(Bad_(θ_hi))+ν_H(Shell(lo,hi))=ν_H(Bad_(θ_lo))`**。隣接閾値殻は互いに交わらない。
+- **真正殻内球証明書**：同一の元境界配置 `a` と異なる正の許容誤差 `η_lo,η_hi` により `G_lo(a)>η_lo>0`、`G_hi(a)<−η_hi<0`、および元の `D_H` による双方の振動評価を型付きで保持する。元の `D_H` 球 `B_D(a,r)` が殻に包含され、AEAから **`ν_H(Shell(lo,hi))≥κ_H(r)>0`** を証明。ここで `κ_H(r)=κ(r/(2|Link_H|+1))^(2|Link_H|)` はSU(2)元Haar確率の真の、体積依存する球下界。
+- もし実際の中心 `a` に `G_lo(a)>0>G_hi(a)` があるなら、AFBのコンパクト一様連続性により真正殻内球証明書の存在を構成する。しかし **そのような中心の無条件存在、数値的に大きな球、体積一様な下界は宣言しない**。AFEの上界同士の引き算から下界を捏造しない。
+
+### 有限階層の非重複証明書と既存GI・FCへの接続
+
+- 元の隣接閾値を型が固定する有限 `ShellChain` を構成し、殻ごとの真正Haar球下界を重複なく合計する。`L_chain=Σ_i κ_H(r_i)` と、AFEの独立した低閾値・高閾値の表上界を `U_lo,U_hi` とすると、元の同一Haar確率で **`ν_H(Bad_(θ_hi))≤min(U_hi,U_lo−L_chain)`** をLean4で証明。有効な表なら右辺は `[0,1]` に入り、既存AFE上界より悪化しない。
+- `θ_hi≥0` および別途検査した `θ_hi*A4_H+B_H²*U_AFF<64*A4_H` の下で、元の平均二乗GI証明書が正、かつ元の符号付き二posterior GI応答が非零となる開いた正Haar測度領域が存在する。より強い元FC判定には独立の真の未使用分 `Eunused_H≤σ*A4_H` と `(θ_hi+σ)*A4_H+B_H²*U_AFF<64*A4_H` が必要。平均GI非正なら、AFAの逆向き例外質量下界が `U_AFF` へ引き継がれる。
+
+### exact-source CIと変更境界
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalHierarchicalHaarShellCertificateV5_PZ37AFF.lean` **1ファイル・564行のみ追加**、新規公開21定理と21件 `#print axioms`。既存Leanファイル・測度・模型・workflow・公開rootは変更なし。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。
+- 初回の依存型再帰の固定引数の誤渡しを修正し、最終exact-source HEAD `f0e57b26d6a37242138b94caf20cced09147fd65` に対する [CI #41738490132](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41738490132) が **11,313/11,313 SUCCESS**。21定理すべての公理依存は `propext`、`Classical.choice`、`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error **0/0**。
+- source・test-merge `adc5e982fcad8ba18a5ba7c01104e7b69600790a`・squash `e1b82397187a259892f9b7e09d8a2b70bc3bf9f5` のGit treeはすべて `4fba3de386360f7807aad887456fc2cc30fb24f8` で一致。これは厳密な元モデルの有限体積・条件付き証明書であり、数値十分性、体積一様coercivity、物理Hamiltonianのspectral gap、連続体4D Yang–Mills質量ギャップの証明ではない。
+
+### 次の独立課題 — AFG
+
+真正殻の厳密な二符号中心を元のWilson/Perron残差ギャップから有限の認証可能な条件として得ること、半径・閾値の最適化と正下界の数値検証が次の焦点である。無条件の中心存在を暗黙に仮定せず、AEXのFC no-goと既存の権威境界を維持する。
+
+---
+
 ## 検証済み定理 — AFE（2026-11-04 JST）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFE定理PR [#6280](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6280) は **MERGED**、squash SHA `b7367d835dad2d46ed97320e901bb11c25cafd4a`。AFD（#6277）・AFC（#6274）・AFB（#6271）・AFA（#6268）までの真正Wilson SU(2)、中心化Gauss-law物理源、Perron真空、元の右リンク更新transfer、同一元境界pair-Haar確率 `ν_H`、FC envelope、全リンク距離 `D_H`、Lean/mathlib固定pinおよび公開rootを変更しない。AEXの保守的AEW二球FC証明書no-goを保持する。
