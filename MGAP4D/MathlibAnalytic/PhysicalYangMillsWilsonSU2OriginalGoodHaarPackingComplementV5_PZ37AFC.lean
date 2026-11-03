@@ -55,7 +55,7 @@ theorem p4Q2PZ37AFC_probabilityDisjointGoodCells_tailUpper
     (hAvoid : bad ⊆ (⋃ a ∈ s, cells a)ᶜ)
     (hUnionMeas : MeasurableSet (⋃ a ∈ s, cells a))
     (hCellsMeas : ∀ a ∈ s, MeasurableSet (cells a))
-    (hDisjoint : PairwiseDisjoint (↑s) cells) :
+    (hDisjoint : Set.PairwiseDisjoint (↑s) cells) :
     Measure.real ν bad ≤
       1 - ∑ a ∈ s, Measure.real ν (cells a) := by
   have hMono : Measure.real ν bad ≤
@@ -171,7 +171,7 @@ theorem p4Q2PZ37AFC_originalGoodBalls_pairwiseDisjoint
     (e : Link) (theta eta r : ℝ) (s : Finset Pair)
     (hSep : ∀ a ∈ Good e s theta eta,
       ∀ b ∈ Good e s theta eta, a ≠ b → 2 * r ≤ D a b) :
-    PairwiseDisjoint (↑(Good e s theta eta))
+    Set.PairwiseDisjoint (↑(Good e s theta eta))
       (fun a : Pair => Ball a r) := by
   intro a ha b hb hab
   exact p4Q2PZ37AFC_originalSeparatedBalls_disjoint
