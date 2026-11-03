@@ -53,6 +53,23 @@ theorem p4Q2PZ37AEL_real_twoFactorHarnack
       mul_le_mul_of_nonneg_left hv (mul_nonneg ht hu)
     _ = t ^ 2 * (u * v) := by ring
 
+
+/-- Exact reciprocal inequality for a common nonnegative numerator.
+It is applied to the TRUE inverse transfer norm, not a proxy weight. -/
+theorem p4Q2PZ37AEL_real_commonNumeratorDivHarnack
+    (c u v t : ℝ)
+    (hc : 0 ≤ c) (hu : 0 < u) (hv : 0 < v)
+    (hvu : v ≤ t * u) :
+    c / u ≤ t * (c / v) := by
+  have hCross : c * v ≤ (t * c) * u := by
+    calc
+      c * v ≤ c * (t * u) := mul_le_mul_of_nonneg_left hvu hc
+      _ = (t * c) * u := by ring
+  calc
+    c / u ≤ (t * c) / v := (div_le_div_iff₀ hu hv).2 hCross
+    _ = t * (c / v) := by ring
+
+
 namespace GroundStatePosteriorJoint
 
 variable (H : ℕ)
@@ -157,3 +174,5 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEL_originalJointWeight_oneLinkHarnack
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEL_originalSqrtDensity_oneLinkHarnack
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEL_originalSqrtDensity_oneLinkReverse
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AEL_real_commonNumeratorDivHarnack
