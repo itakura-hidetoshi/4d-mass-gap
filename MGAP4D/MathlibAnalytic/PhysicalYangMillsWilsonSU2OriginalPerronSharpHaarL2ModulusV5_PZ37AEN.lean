@@ -142,7 +142,7 @@ theorem p4Q2PZ37AEN_originalContinuousVacuum_oneLinkSharpLipschitz
         H 2 (by norm_num) b0 hb0)
   have hInt (D : Cfg) :
       Integrable (fun A : Cfg => V.1 A * K A D) μ := by
-    simpa only [V, μ, K] using
+    simpa only [V, μ] using
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_mul_integrable
         H 2 (by norm_num) b0 hb0
         ((V : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2) :
@@ -193,8 +193,11 @@ theorem p4Q2PZ37AEN_originalContinuousVacuum_oneLinkSharpLipschitz
         mul_le_mul_of_nonneg_right hLge (abs_nonneg _)
       _ ≤ ((13 * b0) * dJ g h) := hScaled
   have hDiv :
-      |Omega Bg - Omega Bh| ≤ (((13 * b0) * dJ g h) / k) :=
-    (le_div_iff₀ hk).2 hFloor
+      |Omega Bg - Omega Bh| ≤ (((13 * b0) * dJ g h) / k) := by
+    apply (le_div_iff₀ hk).2
+    calc
+      |Omega Bg - Omega Bh| * k = k * |Omega Bg - Omega Bh| := by ring
+      _ ≤ ((13 * b0) * dJ g h) := hFloor
   calc
     |Omega Bg - Omega Bh| ≤ (((13 * b0) * dJ g h) / k) := hDiv
     _ = (13 * b0 * k⁻¹) * dJ g h := by
