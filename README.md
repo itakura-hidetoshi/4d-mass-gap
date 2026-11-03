@@ -1,3 +1,28 @@
+## 検証済み定理 — AEY（2026-11-03 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AEY定理PR [#6262](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6262) はMERGED、squash SHA `753e32f213470ccd4df7355339efa2069569482b`。前段AEXのAEW保守的二球下界に対するFC no-goを弱めず、既存の真正Wilson SU(2)、中心化Gauss-law物理源、元の物理受信器、Perron真空・transfer、元SU(2) Haarと真正pair-Haar測度、距離、定理root、Lean/mathlib pinを保持する。
+
+### 真正全HaarモーメントとFC envelope未使用分の厳密分解
+
+- **真正の分散恒等式**：ACJ・ACK・ADBの元の共分散二乗モーメント `S_H(e)=∫C_e(z)^2 dν_H(z)`、4成分後の真正高次Haar残差 `W_H(e)≥0`、元受信器分散平均 `Vbar_H=16*S_H+W_H`、元FC envelope `B_H^2≥Vbar_H` を同一の物理モデル上で使用する。新たな外部仮定ではなく、**`E_H(e):=B_H^2−Vbar_H≥0`** を定義した。従って **`B_H^2=16*S_H+W_H+E_H`** が無条件に成立する。
+- **真正FC閾値の必要十分条件**：正の固定結合 `b0=log(3/2)/64` において、**`272*S_H−B_H^2=256*S_H−(W_H+E_H)`**。ゆえに **`B_H^2<272*S_H ↔ W_H+E_H<256*S_H`**。これは元の全モーメントに関する**同値**であり、厳密な数値不等式の成立を証明したものではない。
+- **無次元分解**：`u_H=16*S_H/B_H^2`、`ell_H=(W_H+E_H)/B_H^2` とすると、既存の真正 `B_H^2>0` より **`u_H+ell_H=1`**, **`0≤ell_H<1`**, **`B_H^2<272*S_H ↔ ell_H<16/17`**。この `u_H` は元のFC envelopeで割った割合であり、全分散で割る別の分率と混同しない。
+- **本来のGI平均証明書との重要な区別**：ACPの真正高次Haar残差条件とADCの厳密な `(exp(64*b0)−1)^2=1/4` により、**`Budget_H>0 ↔ W_H<256*S_H`**、**`Budget_H≤0 ↔ 256*S_H≤W_H`** を追加形式化。つまり `W_H+E_H<256*S_H` はFC envelopeを通じた**より強い十分条件**であり、FC証明書の不成立からGI平均証明書の不成立は推論できない。GI平均証明書の非正値を実際の符号付き物理GIの消滅と同一視しない。
+- **条件付きの実GI伝播**：真正数値条件 `W_H+E_H≤θ*S_H` と `θ<256` が別途検証されれば、元のFC厳密閾値、正の平均二乗GI証明書、さらに真正pair-Haar正測度の開集合上で元の符号付き二posterior GI応答が非零であることが既存ADE・ACOから従う。非正の平均証明書から `256*S_H≤W_H+E_H` が必要であることも証明。ただし、この相対残差・slack条件を無条件に得たわけではない。
+
+### exact-source CIと公理依存の監査
+
+- 新規ファイル `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFullMomentFCVarianceSlackV5_PZ37AEY.lean`（267行）だけを追加、公開13定理・13件の `#print axioms` を検証。既存Leanファイル、元の物理モデル、測度、距離、公開root、workflowは不変更。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を維持。
+- 最終 [exact-source CI #41634463383](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41634463383) は **11,306/11,306 SUCCESS**。公開13定理の公理依存は **`propext`・`Classical.choice`・`Quot.sound`のみ**、`sorryAx`なし、変更Lean warning/error **0/0**、独立MCP completion receipt **SUCCESS**。
+- 修正版source HEAD `191af9c5f6b51aa7b03f1b0e5d2216bed2d5ffb5`、GitHub test-merge `8e7a9f66ddac567719d0c6ef13781033c4242f04`、squash `753e32f213470ccd4df7355339efa2069569482b` のGit treeは **`c6758b211efa3b083efa3109791668bda4a097e3` で完全一致**。
+- **Lean4修正理由**：初回CI #41633581758で `rw [add_div]` が等式の左辺にある内側の加法分数を先に書き換えて未解決ゴールを残した。変更Lean全文・依存元・elaboration goalを確認し、両辺を一括正規化する `simp only [add_div]` に変更。数学的な仮定・結論は弱めていない。docs-onlyのStrict Lean再実行は不要。
+
+### AEX no-goの保持と未解決の数値境界
+
+AEXが示した無条件の `¬(B_H^2<272*P_H(a,R))` は元のAEW保守的二球モーメント下界 `P_H` に限定され、AEYでもそのまま成立する。一方 `P_H≤S_H` により、真の全モーメントの `B_H^2<272*S_H` は未決着。今後は同じ元Wilson kernel・中心化source・transferに由来する **`W_H/S_H` と `E_H/S_H` の真正定量制御**が課題。各有限体積の無条件恒等式・正値はH一様の数値評価、物理Hamiltonianの必要スペクトルギャップ、連続体4D Yang–Mills質量ギャップを証明しない。
+
+---
+
 ## 検証済み定理 — AEX（2026-11-03 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AEX定理PR [#6259](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6259) はMERGED、squash SHA `5528fce1650e64b954994fa80fa77942a413b07a`。AEW以前の元の真正Wilson SU(2)、Gauss-law中心化物理源、元JQ受信器、Perron/transfer、SU(2) Haar・二境界pair-Haar、原距離、Lean/mathlib pin・公開rootを維持する。
