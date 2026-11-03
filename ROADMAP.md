@@ -1,3 +1,25 @@
+## 検証済み定理 — AEL（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。AEL定理PR [#6223](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6223) はMERGED、定理squash SHA `be751761848391bad1edc32a9007ada456b1beb2`。AEKまでの真正interacting Wilson SU(2)、centered Gauss-law物理源、元Perron/transfer、二interacting posterior、boundary pair-Haar、固定Lean/mathlibおよび公開rootを保持する。
+
+### 元の二境界joint sqrt-density・Perron密度の1リンクHarnack評価
+
+- **真正Wilson核と連続Perron真空を同じモデルで比較**：元の固定結合 `beta0`、元の1リンク置換 `B_g=B[e↦g]`、`B_h=B[e↦h]`、`t=exp(8*beta0)` を使用。既存の元Wilson核の `K_H(A,B_g)≤t*K_H(A,B_h)` と元連続真空の `Omega_H(B_g)≤t*Omega_H(B_h)` を掛け合わせ、実際の元joint weight `W_H(A,B_g)≤t²*W_H(A,B_h)` をLean4で証明。
+- **真正joint sqrt-densityとJQ分母**：`rho_H=sqrt(W_H)` から `rho_H(A,B_g)≤t*rho_H(A,B_h)` と逆方向を証明。元の厳密相殺恒等式 `q_H(z)=‖T_H‖⁻¹/rho_H(z)` から同じ係数 `t` の真正Perron密度 `q_H` 比較を証明。元Wilson核の交換対称性からjoint weight・rhoの二境界入替対称性、および第一境界の1リンク比較も証明。代理密度、積独立、別作用素は導入しない。
+- **明示的な絶対変動評価**：AEKの大域上下界と組み合わせ、`k_H=exp[-2*beta0*(P_H+L_H)]>0` に対して、同じ1リンク変更で `|rho_H(A,B_g)-rho_H(A,B_h)|≤(t-1)*sqrt((k_H⁻¹)^3)`、`|q_H(A,B_g)-q_H(A,B_h)|≤(t-1)*exp(beta0*2*(P_H+L_H))/sqrt(k_H^3)` を形式証明。どちらも固定Hで数値式が明示されるが体積一様評価ではない。
+
+### 真正全リンク弦距離 D_H への厳密な境界と残るobstruction
+
+- **元D_Hへの正確な校正**：元のSU(2) normalized trace feature弦距離 `d_J` と全二境界・全リンク `l1` 和 `D_H` を用い、`D_H((A,B_g),(A,B_h))=d_J(g,h)` をLean4で証明。距離の取り替えや一般化された合成幾何は使わない。
+- **限界を明示**：今回の `exp(8*beta0)-1` 上界は `d_J(g,h)→0` で消えないため、真正 `D_H` におけるLipschitz／数値的epsilon-delta変動率を証明したとは主張しない。次は元Wilsonエネルギーと連続真空の差分を `d_J` に比例させる鋭い評価を構成し、`rho_H`・`q_H` の小距離変動率からAEFの真正共分散および二球Haarモーメントへ接続する。GI 68/1:17、H一様強制性、物理スペクトルギャップおよび連続体Yang–Mills質量ギャップは未証明。
+
+### exact-source Lean4・公理監査
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalSqrtDensityOneLinkHarnackV5_PZ37AEL.lean` のみ、14公開定理・14件 `#print axioms`。固定Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。最終exact-source [CI #41563025656](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41563025656) は **11,287/11,287 SUCCESS**、14件全て `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。
+- 最初のCIで見つかった真正transferノルムの型付き正値証拠および `exp(8*beta0)≥1` の固定結合正値証明を修正。数式・元の物理仮定は弱めていない。最終source HEAD `6284076e0510bec4ab74536ef8c16694d4c6c8f8`、test-merge `0406d357eaf6b46ab8d4d68cbab74a0d50480de4`、squash `be751761848391bad1edc32a9007ada456b1beb2` のGit tree `0cac5cf5f27364cf1bf8bf916dd9aa1b17c01648` は完全一致。従来のLeanファイルと公開rootに変更なし。README/ROADMAPはappend-only同期し、docs-onlyではStrict Leanを再実行しない。
+
+---
+
 ## 検証済み定理 — AEK（2026-11-03 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。AEK定理PR [#6220](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6220) はMERGED、定理squash SHA `5972a2fc20deafd5ec72ba5e6e0383a1bb98c711`。AEJまでの真正interacting Wilson SU(2)・centered Gauss-law源・Perron/transfer・二interacting posterior・元のboundary pair-Haar・固定toolchain・公開rootを保持。
