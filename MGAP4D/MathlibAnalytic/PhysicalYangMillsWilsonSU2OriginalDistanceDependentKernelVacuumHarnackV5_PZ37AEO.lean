@@ -177,12 +177,17 @@ theorem p4Q2PZ37AEO_originalWilsonKernel_oneLinkDistanceReverse
       R g h * K A (Replace B e g) := by
   have hs := p4Q2PZ37AEO_originalWilsonKernel_oneLinkDistanceHarnack
     H A B e h g
-  simpa only [R, p4Q2PZ37ADK_trueChordalDistance_symm] using hs
+  change K A (Replace B e h) ≤
+    Real.exp (b0 * (13 * dJ h g)) * K A (Replace B e g) at hs
+  rw [p4Q2PZ37ADK_trueChordalDistance_symm h g] at hs
+  exact hs
 
 /-- The comparison factor equals one when there is no link displacement. -/
 theorem p4Q2PZ37AEO_originalDistanceHarnackFactor_self (g : G) :
     R g g = 1 := by
-  simp [p4Q2PZ37ADK_trueChordalDistance_self]
+  change Real.exp (b0 * (13 * dJ g g)) = 1
+  rw [p4Q2PZ37ADK_trueChordalDistance_self]
+  simp
 
 /-- The EXACT physical continuous Perron vacuum inherits the
 distance-dependent Harnack factor through the original nonnegative
@@ -248,7 +253,10 @@ theorem p4Q2PZ37AEO_originalContinuousVacuum_oneLinkDistanceReverse
       R g h * Omega (Replace B e g) := by
   have hs := p4Q2PZ37AEO_originalContinuousVacuum_oneLinkDistanceHarnack
     H B e h g
-  simpa only [R, p4Q2PZ37ADK_trueChordalDistance_symm] using hs
+  change Omega (Replace B e h) ≤
+    Real.exp (b0 * (13 * dJ h g)) * Omega (Replace B e g) at hs
+  rw [p4Q2PZ37ADK_trueChordalDistance_symm h g] at hs
+  exact hs
 
 end GroundStatePosteriorJoint
 end
