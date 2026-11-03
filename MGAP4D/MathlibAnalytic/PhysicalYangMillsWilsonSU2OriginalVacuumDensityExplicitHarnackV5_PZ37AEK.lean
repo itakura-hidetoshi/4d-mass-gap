@@ -283,6 +283,111 @@ theorem p4Q2PZ37AEK_realWilsonJointWeightBounds
           (mul_nonneg (mul_nonneg ha0 hc0) hb0) hinvk
       _ = (k⁻¹) ^ 3 := by ring
 
+
+namespace GroundStatePosteriorJoint
+
+variable (H : ℕ)
+local notation "Cfg" =>
+  PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+local notation "Pair" => Cfg × Cfg
+local notation "b0" => p4Q2PZ37ADC_fixedCoupling
+local notation "hb0" => p4Q2PZ37ADC_fixedCoupling_pos.le
+local notation "Omega" =>
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+    H 2 (by norm_num) b0 hb0
+local notation "K" =>
+  periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 b0
+local notation "k" =>
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor H b0
+local notation "rho" => continuousJointSqrtDensity H 2 (by norm_num) b0 hb0
+local notation "q" => p4Q2JQ_originalPhysicalGIDensityWeight H
+local notation "Tnorm" =>
+  ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+    H 2 (by norm_num) b0 hb0‖
+local notation "E" =>
+  Real.exp (b0 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H)
+
+/-- True SU(2) interacting joint sqrt-density has explicit pointwise
+Wilson action bounds at EVERY finite H. This uses the ORIGINAL Perron
+vacuum, ORIGINAL joint weight and ORIGINAL boundary pair-Haar. No
+numerical net, proxy density or unproved normalization assumption. -/
+theorem p4Q2PZ37AEK_originalJointSqrtDensity_explicitWilsonBounds :
+    0 < Real.sqrt (k ^ 3) ∧
+      ∀ z : Pair,
+        Real.sqrt (k ^ 3) ≤ rho z ∧
+        rho z ≤ Real.sqrt ((k⁻¹) ^ 3) := by
+  have hT :
+      0 < k ∧ k ≤ Tnorm ∧ Tnorm ≤ 1 :=
+    p4Q2PZ37AEJ_originalFixedCouplingTransfer_explicitTwoSidedNorm H
+  have hPos : 0 < Real.sqrt (k ^ 3) :=
+    Real.sqrt_pos.mpr (pow_pos hT.1 3)
+  refine ⟨hPos, ?_⟩
+  intro z
+  have hOmega (A : Cfg) : k ≤ Omega A ∧ Omega A ≤ k⁻¹ :=
+    p4Q2PZ37AEK_originalContinuousVacuum_explicitBounds
+      H 2 (by norm_num) b0 hb0 A
+  have hK : k ≤ K z.1 z.2 ∧ K z.1 z.2 ≤ 1 := ⟨
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor_le_kernel
+      H 2 (by norm_num) b0 hb0 z.1 z.2,
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_le_one
+      H 2 (by norm_num) b0 hb0 z.1 z.2⟩
+  have hW :
+      k ^ 3 ≤ continuousJointWeight H 2 (by norm_num) b0 hb0 z ∧
+        continuousJointWeight H 2 (by norm_num) b0 hb0 z ≤ (k⁻¹) ^ 3 := by
+    change k ^ 3 ≤ Tnorm⁻¹ * (Omega z.1 * K z.1 z.2 * Omega z.2) ∧
+      Tnorm⁻¹ * (Omega z.1 * K z.1 z.2 * Omega z.2) ≤ (k⁻¹) ^ 3
+    exact p4Q2PZ37AEK_realWilsonJointWeightBounds
+      k Tnorm (Omega z.1) (K z.1 z.2) (Omega z.2)
+      hT.1 hT.2.1 hT.2.2 (hOmega z.1) hK (hOmega z.2)
+  change Real.sqrt (k ^ 3) ≤
+      Real.sqrt (continuousJointWeight H 2 (by norm_num) b0 hb0 z) ∧
+    Real.sqrt (continuousJointWeight H 2 (by norm_num) b0 hb0 z) ≤
+      Real.sqrt ((k⁻¹) ^ 3)
+  exact ⟨Real.sqrt_le_sqrt hW.1, Real.sqrt_le_sqrt hW.2⟩
+
+/-- Original Perron density q_H=‖T_H‖⁻¹/rho_H has a completely
+explicit finite-volume positive interval from the literal Wilson
+action. This removes AEI/AEJ's numerical finite-net density floor
+for fixed H; it does NOT give a volume-uniform coercivity constant. -/
+theorem p4Q2PZ37AEK_originalPhysicalDensity_explicitWilsonBounds :
+    0 < (1 : ℝ) / Real.sqrt ((k⁻¹) ^ 3) ∧
+      ∀ z : Pair,
+        (1 : ℝ) / Real.sqrt ((k⁻¹) ^ 3) ≤ q b0 hb0 z ∧
+        q b0 hb0 z ≤ E / Real.sqrt (k ^ 3) := by
+  obtain ⟨hRhoLow, hRhoAll⟩ :=
+    p4Q2PZ37AEK_originalJointSqrtDensity_explicitWilsonBounds H
+  have hk : 0 < k :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor_pos H b0
+  have hRhoHigh : 0 < Real.sqrt ((k⁻¹) ^ 3) :=
+    Real.sqrt_pos.mpr (pow_pos (inv_pos.mpr hk) 3)
+  have hT : 0 < Tnorm ∧ Tnorm ≤ 1 :=
+    p4Q2PZ37AEI_originalFixedCouplingTransfer_norm_in_pos_unit H
+  have hTInv : Tnorm⁻¹ ≤ E :=
+    p4Q2PZ37AEJ_originalFixedCouplingTransfer_inverseNorm_le_expAction H
+  refine ⟨div_pos (by norm_num) hRhoHigh, ?_⟩
+  intro z
+  obtain ⟨hRhoMin, hRhoMax⟩ := hRhoAll z
+  have hrho : 0 < rho z :=
+    continuousJointSqrtDensity_pos H 2 (by norm_num) b0 hb0 z
+  have hLow :=
+    p4Q2PZ37AEH_realInverseProductFloor
+      Tnorm 1 (rho z) (Real.sqrt ((k⁻¹) ^ 3))
+      hT.1 hT.2 hrho hRhoMax
+  have hRhoInv : (rho z)⁻¹ ≤ (Real.sqrt (k ^ 3))⁻¹ :=
+    (inv_le_inv₀ hRhoLow hrho).2 hRhoMin
+  rw [p4Q2PZ37AEG_originalDensity_exactVacuumCancellation H z]
+  constructor
+  · simpa only [one_mul] using hLow
+  · calc
+      Tnorm⁻¹ / rho z = Tnorm⁻¹ * (rho z)⁻¹ := by rw [div_eq_mul_inv]
+      _ ≤ E * (rho z)⁻¹ :=
+        mul_le_mul_of_nonneg_right hTInv (inv_nonneg.mpr hrho.le)
+      _ ≤ E * (Real.sqrt (k ^ 3))⁻¹ :=
+        mul_le_mul_of_nonneg_left hRhoInv (Real.exp_nonneg _)
+      _ = E / Real.sqrt (k ^ 3) := by rw [div_eq_mul_inv]
+
+end GroundStatePosteriorJoint
+
 end
 end MGAP4D.MathlibAnalytic
 
@@ -292,3 +397,6 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AEK_originalContinuousVacuum_explicitBounds
 
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AEK_realWilsonJointWeightBounds
+
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEK_originalJointSqrtDensity_explicitWilsonBounds
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEK_originalPhysicalDensity_explicitWilsonBounds
