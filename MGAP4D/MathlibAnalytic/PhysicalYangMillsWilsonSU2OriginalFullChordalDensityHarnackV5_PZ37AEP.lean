@@ -158,6 +158,7 @@ theorem p4Q2PZ37AEP_originalSqrtDensity_fullDistanceReverse
     (z w : Pair) :
     rho w ≤ Rfull z w * rho z := by
   have hx := p4Q2PZ37AEP_originalSqrtDensity_fullDistanceHarnack H w z
+  change _ ≤ Real.exp ((13 * b0) * D w z) * _ at hx
   rw [p4Q2PZ37ADL_originalFullDistance_symm H w z] at hx
   exact hx
 
@@ -201,6 +202,7 @@ theorem p4Q2PZ37AEP_originalJQDensity_fullDistanceReverse
     (z w : Pair) :
     q b0 hb0 w ≤ Rfull z w * q b0 hb0 z := by
   have hx := p4Q2PZ37AEP_originalJQDensity_fullDistanceHarnack H w z
+  change _ ≤ Real.exp ((13 * b0) * D w z) * _ at hx
   rw [p4Q2PZ37ADL_originalFullDistance_symm H w z] at hx
   exact hx
 
