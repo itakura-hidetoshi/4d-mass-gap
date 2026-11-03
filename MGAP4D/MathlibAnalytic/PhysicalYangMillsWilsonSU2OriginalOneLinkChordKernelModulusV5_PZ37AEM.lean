@@ -110,7 +110,7 @@ theorem p4Q2PZ37AEM_real_exp_nonpos_absLipschitz
       Real.exp_le_exp.mpr hxy
     rw [abs_of_nonpos (sub_nonpos.mpr hmono),
       abs_of_nonpos (sub_nonpos.mpr hxy)]
-    exact p4Q2PZ37AEM_real_exp_nonpos_orderedDifference x y hxy hy
+    linarith only [p4Q2PZ37AEM_real_exp_nonpos_orderedDifference x y hxy hy]
   · have hmono : Real.exp y ≤ Real.exp x :=
       Real.exp_le_exp.mpr hyx
     rw [abs_of_nonneg (sub_nonneg.mpr hmono),
@@ -176,7 +176,7 @@ theorem p4Q2PZ37AEM_originalTemporalCrossing_oneLinkChordLipschitz
   have hsum : (∑ j : Link, (Fg j - Fh j)) =
       E ((A e)⁻¹ * g) - E ((A e)⁻¹ * h) := by
     rw [Finset.sum_eq_single e]
-    · simp [Fg, Fh, Bg, Bh, Replace,
+    · simp [Fg, Fh, Bg, Bh,
         periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink]
     · intro j _hj hne
       have hBg :
@@ -234,6 +234,7 @@ theorem p4Q2PZ37AEM_originalOneSlabKernel_chordLipschitz_of_spatial
       b0 * (1 + c / 2) * dJ g h := by
   let Bg := Replace B e g
   let Bh := Replace B e h
+  have hCoeff : 0 ≤ 1 + c / 2 := by linarith only [hc]
   have hCross :
       |Cross A Bg - Cross A Bh| ≤ dJ g h :=
     p4Q2PZ37AEM_originalTemporalCrossing_oneLinkChordLipschitz H A B e g h
