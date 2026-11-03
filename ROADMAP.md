@@ -17,7 +17,7 @@
 
 - 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalHierarchicalHaarShellCertificateV5_PZ37AFF.lean` **1ファイル・564行のみ追加**、新規公開21定理と21件 `#print axioms`。既存Leanファイル・測度・模型・workflow・公開rootは変更なし。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。
 - 初回の依存型再帰の固定引数の誤渡しを修正し、最終exact-source HEAD `f0e57b26d6a37242138b94caf20cced09147fd65` に対する [CI #41738490132](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41738490132) が **11,313/11,313 SUCCESS**。21定理すべての公理依存は `propext`、`Classical.choice`、`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error **0/0**。
-- source・test-merge `adc5e982fcad8ba18a5ba7c01104e7b69600790a`・squash `e1b82397187a259892f9b7e09d8a2b70bc3bf9f5` のGit treeはすべて `4fba3de386360f7807aad887456fc2cc30fb24f8` で一致。これは厳密な元モデルの有限体積・条件付き証明書であり、数値十分性、体積一様coercivity、物理Hamiltonianのspectral gap、連続体4D Yang–Mills質量ギャップの証明ではない。
+- source・test-merge `adc5e982fcad8ba18a5ba7c01104e7b69600790a`・squash `e1b82397187a259892f9b7e09d8a2b70bc3bf9f5` のGit treeはすべて `4fba3de386360f7807aad887456fc2cc30fb24f8` で一致。マージ後push CI [#41739389697](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41739389697) も **11,313/11,313 SUCCESS**、21件の公理依存は標準3公理のみ、`sorryAx` なし、変更Lean warning/error **0/0** とGitHub MCPで独立再確認した。これは厳密な元モデルの有限体積・条件付き証明書であり、数値十分性、体積一様coercivity、物理Hamiltonianのspectral gap、連続体4D Yang–Mills質量ギャップの証明ではない。
 
 ### 次の独立課題 — AFG
 
