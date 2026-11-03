@@ -118,6 +118,8 @@ local notation "Replace" =>
   periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
     H 2
 
+local instance p4Q2PZ37AEL_links : Fintype Link := Fintype.ofFinite _
+
 /-- For ONE actual Wilson SU(2) second-boundary link replacement, the
 true, unchanged normalized joint weight has an exp(16*beta) comparison.
 Both factors are genuine: original continuous vacuum and original kernel. -/
@@ -315,6 +317,35 @@ theorem p4Q2PZ37AEL_originalPerronDensity_oneLink_absVariation
     (p4Q2PZ37AEL_originalPerronDensity_oneLinkReverse H A B e g h)
 
 
+
+/-- EXACT compatibility with the ORIGINAL two-boundary all-link
+chordal distance D_H: changing just one second-boundary link
+has D_H distance equal to that single genuine SU(2) feature chord.
+This identifies the sharp geometric obstruction in the coarse
+one-link Harnack bound: exp(8 beta)-1 does not scale with this chord. -/
+theorem p4Q2PZ37AEL_originalFullDistance_secondBoundary_oneLink
+    (A B : Cfg) (e : Link) (g h : G) :
+    p4Q2PZ37ADL_originalFullBoundaryChordalDistance H
+        (A, Replace B e g) (A, Replace B e h) =
+      p4Q2PZ37ADK_trueChordalDistance g h := by
+  classical
+  change (∑ j : Link,
+    (p4Q2PZ37ADK_trueChordalDistance (A j) (A j) +
+      p4Q2PZ37ADK_trueChordalDistance
+        ((Replace B e g) j) ((Replace B e h) j))) =
+    p4Q2PZ37ADK_trueChordalDistance g h
+  simp only [p4Q2PZ37ADK_trueChordalDistance_self, zero_add]
+  rw [Finset.sum_eq_single e]
+  · simp
+  · intro j _hj hje
+    rw [periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_of_ne
+          H 2 B e j g hje,
+        periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_of_ne
+          H 2 B e j h hje,
+        p4Q2PZ37ADK_trueChordalDistance_self]
+  · simp
+
+
 end GroundStatePosteriorJoint
 end
 end MGAP4D.MathlibAnalytic
@@ -335,3 +366,5 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AEL_real_twoSidedHarnack_absVariation
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEL_originalSqrtDensity_oneLink_absVariation
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEL_originalPerronDensity_oneLink_absVariation
+
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEL_originalFullDistance_secondBoundary_oneLink
