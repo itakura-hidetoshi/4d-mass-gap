@@ -1,3 +1,27 @@
+## 検証済み定理 — AEN（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main`はREADME・ROADMAP文書ミラーのみ。AEN定理PR [#6229](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6229)はMERGED、squash SHA `42e07b20ef8c39e9e031a709c1f520490fa75100`。AEMまでの真正interacting Wilson SU(2)、中心化Gauss-law物理源、元Perron/transfer、二interacting posterior、境界pair-Haar、固定toolchainおよび公開rootを変更しない。
+
+### 真正Wilson核から元の連続Perron真空への小距離変動移送
+
+- **元の固有方程式をそのまま使用**：実際の物理transferノルム `lambda_H=‖T_H‖`、真正非負規格化Haar `L²` 固有ベクトル `V_H`、元のspatial-slice Haar確率 `mu_H` と真正Wilson核 `K_H` に対し、既存の点ごと恒等式 `lambda_H*Omega_H(B)=∫V_H(A)*K_H(A,B)dmu_H(A)` を使用。AEMの定理 `|K_H(A,B_g)-K_H(A,B_h)|≤13*beta0*d_J(g,h)` は全ての元のAと任意の1リンク置換について無条件。
+- **重み付き積分の一般補題**：元の非負 `V_H` と真の二核切片の可積分性から、積分の差分が `(13*beta0*d_J(g,h))*∫V_H dmu_H` 以下となることをLean4証明。AEKの `Omega_H≤k_H⁻¹` と元の連続真空のa.e.一致を使う粗い上界 `∫V_H≤k_H⁻¹` から、`|Omega_H(B_g)-Omega_H(B_h)|≤13*beta0*k_H⁻²*d_J(g,h)` を独立証明。
+- **真正Haar L²規格化による改善**：Haar確率測度の定数1ベクトルの `L²` ノルムが1、元の規格化されたPerron固有ベクトルのノルムも1であることから、実Hilbert Cauchy–Schwarzにより **`∫V_H dmu_H≤1`** をLean4証明。AEJの真正 `lambda_H≥k_H>0` と組み合わせ、**`|Omega_H(B_g)-Omega_H(B_h)|≤13*beta0*k_H⁻¹*d_J(g,h)`** へ係数を改善。新規正則性・独立性・代理真空は仮定しない。
+- **元の全二境界弦距離への校正**：AEL/ADLで証明済みの1リンク恒等式 `D_H((A,B_g),(A,B_h))=d_J(g,h)` を用いて両版の真正 `D_H` 一座標変動評価を形式証明。任意の二境界配置間を結ぶ全リンクtelescopingについては今後の拡張対象。
+
+### 未証明境界と次の研究
+
+- 係数 `13*beta0/k_H` は各有限Hで明示的であるが、`k_H` は元の全Wilson作用budgetに依存するので**体積一様Lipschitz係数とは断言しない**。次は元の `Omega_H` の変動を真正joint sqrt-density `rho_H` と厳密JQ `q_H` に移送する。さらにAEMの作用差分から小距離指数Harnack `exp(13*beta0*d_J)` を構成し、体積一様な相対比較を検討する。
+- 元の源依存共分散のD_H安定球、GI 68/1:17、H一様強制性、物理スペクトルギャップと連続体4D Yang–Mills質量ギャップは未認証・未証明のまま維持する。
+
+### exact-source Lean4検証と定理正本
+
+- 新規Lean `PhysicalYangMillsWilsonSU2OriginalPerronOneLinkChordModulusV5_PZ37AEN.lean` および `PhysicalYangMillsWilsonSU2OriginalPerronSharpHaarL2ModulusV5_PZ37AEN.lean` の2ファイル、7公開定理・7件の `#print axioms`。固定Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。
+- 最終exact-source [CI #41588933158](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41588933158) は **11,291/11,291 SUCCESS**。7/7件の公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。source/test-mergeファイル差分なし、最終source HEAD `dd64a4fbc6e223f2a2bc4d5f1ff069e351a25914` とsquashの新規2 Lean blobは完全一致。
+- 初回CIのLean4関数加算の点ごと展開、局所notationをsimpへ与えた型エラー、`le_div_iff₀` の乗法順序を修正し、物理モデルや定理文の仮定は弱めていない。既存Lean・公開root・workflow・toolchain pinは不変更。README／ROADMAPは両ブランチ計4文書で同一の追記を保持し、docs-onlyでStrict Leanは再実行しない。
+
+---
+
 ## 検証済み定理 — AEM（2026-11-03 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラーのみ。AEM定理PR [#6226](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6226) はMERGED、定理squash SHA `23ac7379b8f076c844c8f77245cc4849cc2610d4`。AELまでの元interacting Wilson SU(2)、centered Gauss-law物理源、元Perron/transfer、二interacting posterior、元boundary pair-Haar、固定toolchainおよび公開rootを不変更とする。
