@@ -65,8 +65,9 @@ theorem p4Q2PZ37AEX_realTwoBallPolynomial_le_oneOver256
         simpa only [one_pow] using h
       change x ^ (8 * (m + 1)) ≤ (1 / 256 : ℝ)
       calc
-        x ^ (8 * (m + 1)) = (x ^ 8) ^ m * x ^ 8 := by
-          rw [← pow_mul, pow_succ]
+        x ^ (8 * (m + 1)) = (x ^ 8) ^ (m + 1) := by
+          rw [pow_mul]
+        _ = (x ^ 8) ^ m * x ^ 8 := pow_succ (x ^ 8) m
         _ ≤ 1 * x ^ 8 := mul_le_mul_of_nonneg_right hpowm hx8nonneg
         _ = x ^ 8 := by ring
         _ ≤ 1 / 256 := hx8
