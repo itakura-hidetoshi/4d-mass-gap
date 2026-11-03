@@ -79,6 +79,7 @@ theorem p4Q2PZ37AEN_real_weightedIntegral_absVariation
         filter_upwards [hf0] with x hx
         have habs := (abs_le.mp (huv x)).2
         have hmul := mul_le_mul_of_nonneg_left habs hx
+        change f x * u x ≤ f x * v x + C * f x
         nlinarith only [hmul]
       _ = (∫ x, f x * v x ∂μ) + C * (∫ x, f x ∂μ) := by
         rw [integral_add hv (hf.const_mul C), integral_const_mul]
@@ -91,7 +92,9 @@ theorem p4Q2PZ37AEN_real_weightedIntegral_absVariation
         apply integral_mono_ae hv (hu.add (hf.const_mul C))
         filter_upwards [hf0] with x hx
         have habs := (abs_le.mp (huv x)).1
-        have hmul := mul_le_mul_of_nonneg_left (by linarith only [habs]) hx
+        have hOpp : v x - u x ≤ C := by linarith only [habs]
+        have hmul := mul_le_mul_of_nonneg_left hOpp hx
+        change f x * v x ≤ f x * u x + C * f x
         nlinarith only [hmul]
       _ = (∫ x, f x * u x ∂μ) + C * (∫ x, f x ∂μ) := by
         rw [integral_add hu (hf.const_mul C), integral_const_mul]
@@ -188,7 +191,7 @@ theorem p4Q2PZ37AEN_originalContinuousVacuum_oneLinkChordLipschitz
         H 2 (by norm_num) b0 hb0)
   have hInt (D : Cfg) :
       Integrable (fun A : Cfg => V.1 A * K A D) μ := by
-    simpa only [V, μ, K] using
+    simpa only [V, μ] using
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_mul_integrable
         H 2 (by norm_num) b0 hb0
         ((V : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2) :
@@ -241,8 +244,11 @@ theorem p4Q2PZ37AEN_originalContinuousVacuum_oneLinkChordLipschitz
       _ ≤ ((13 * b0) * dJ g h) * k⁻¹ := hScaled
   have hDiv :
       |Omega Bg - Omega Bh| ≤
-        (((13 * b0) * dJ g h) * k⁻¹) / k :=
-      (le_div_iff₀ hk).2 hFloor
+        (((13 * b0) * dJ g h) * k⁻¹) / k := by
+    apply (le_div_iff₀ hk).2
+    calc
+      |Omega Bg - Omega Bh| * k = k * |Omega Bg - Omega Bh| := by ring
+      _ ≤ ((13 * b0) * dJ g h) * k⁻¹ := hFloor
   calc
     |Omega Bg - Omega Bh| ≤
         (((13 * b0) * dJ g h) * k⁻¹) / k := hDiv
