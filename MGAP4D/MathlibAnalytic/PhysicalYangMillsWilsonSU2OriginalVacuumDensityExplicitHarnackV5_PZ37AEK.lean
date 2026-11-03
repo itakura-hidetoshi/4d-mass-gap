@@ -149,8 +149,7 @@ theorem p4Q2PZ37AEK_unitLp_globalRatio_givesPointwiseBounds
     have hNorm :=
       Lp.norm_const' (μ := μ) (p := (2 : ENNReal)) (c := k * f x)
         (by norm_num) (by norm_num)
-    rw [hMass, one_pow, mul_one] at hNorm
-    simpa only [Real.norm_eq_abs, abs_mul, abs_of_nonneg hk.le,
+    simpa [hMass, Real.norm_eq_abs, abs_mul, abs_of_nonneg hk.le,
       abs_of_nonneg (hPos x)] using hNorm
   have hConstHiNorm :
       ‖hConstHi.toLp (fun _ : α => f x / k)‖ = f x / k := by
@@ -158,8 +157,7 @@ theorem p4Q2PZ37AEK_unitLp_globalRatio_givesPointwiseBounds
     have hNorm :=
       Lp.norm_const' (μ := μ) (p := (2 : ENNReal)) (c := f x / k)
         (by norm_num) (by norm_num)
-    rw [hMass, one_pow, mul_one] at hNorm
-    simpa only [Real.norm_eq_abs, abs_div, abs_of_nonneg (hPos x),
+    simpa [hMass, Real.norm_eq_abs, abs_div, abs_of_nonneg (hPos x),
       abs_of_pos hk] using hNorm
   have hCompareLo :
       ‖hConstLo.toLp (fun _ : α => k * f x)‖ ≤ ‖hf.toLp f‖ := by
