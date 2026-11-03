@@ -1,3 +1,27 @@
+## 検証済み定理 — AEJ（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。AEJ定理PR [#6217](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6217) はMERGED、定理squash SHA `861d21996c82e5d5cbdf617afc310191fef211d5`。AEIまでの真正SU(2) Wilson・Gauss-law・Perron/transfer・二interacting posterior・元boundary pair-Haar・固定toolchain・公開rootを保持する。
+
+### 元Wilson作用の明示的下界から真の未正規化物理transferノルムを二側評価
+
+- **実際のWilson作用budget**：元モデルの空間プラケットリスト長 `P_H` と空間リンクリスト長 `L_H` によって、元のone-slab Wilson作用は `A_H(A,B)≤B_H=2*(P_H+L_H)`。既存の真正SU(N) Wilson核下界 `k_H(beta)=exp(-beta*B_H)≤K_H(A,B)≤1` を使用し、代理transferや新しい確率核を作らない。
+- **真正Gauss-law物理ノルム下界**：元のHaar `L²` 上のGauss-law不変な定数単位ベクトルを使い、元ambient Wilson kernelの真の行列要素 `<T_H 1,1>=∫K_H d(Haar×Haar)≥k_H` を得る。内積のCauchy–Schwarzと物理Hilbert上の作用素ノルムから、任意の有限H、正ランクN、非負結合betaについて `0<k_H(beta)≤‖T_phys(H,N,beta)‖≤1` をLean4で証明。右側はAEIの真正未正規化作用素定理。
+- **元物理transfer逆ノルムの数式化**：正ノルムの逆数単調性から `‖T_phys‖⁻¹≤exp(beta*B_H)`。元の固定結合SU(2)もこの不等式を満たす。体積に依存して指数増大する粗い上界であり、H一様なギャップは意味しない。
+
+### 元のPerron密度・有限ネット・共分散・二球Haarへ伝播
+
+- 元の厳密恒等式 `q_H(z)=‖T_H‖⁻¹/rho_H(z)` をそのまま使用。真正全リンク弦距離 `D_H` の有限ネットで、実際のrho上下標本 `m≤rho_H(a)≤M`、真正変動誤差 `epsilon`、`0<epsilon<m` が認証されれば、`1/(M+epsilon)≤q_H(z)≤exp(beta*B_H)/(m-epsilon)`。
+- `D_H(z,w)<R≤r` なら `|q_H(z)-q_H(w)|≤exp(beta*B_H)*epsilon/(m-epsilon)^2`。AEFの実source-dependent Wilson Haar分子の上界・変動率とこのq変動を組み合わせ、元共分散の変動および元のゲージ反転二球Haarモーメント下界に接続。正の中心振幅対変動誤差マージンは別途必要。
+- **証明済みと未認証を区別**：真のtransfer逆ノルム上界は無条件で具体的有限体積式になった。一方、実D_H-net、rho上下標本数値、rhoの具体的変動半径、真正Wilson Haar分子の振幅・変動率、GI 68/1:17はまだ数値認証していない。H一様強制性・物理スペクトルギャップ・連続体4D Yang–Mills mass gapを主張しない。
+
+### exact-source Lean監査と継承境界
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalTransferExplicitKernelFloorV5_PZ37AEJ.lean` 1本、12公開定理と12 `#print axioms`。固定Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。最終exact-source [CI #41553827962](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41553827962) は **11,285/11,285 SUCCESS**、12/12標準公理 `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。
+- 初回CIの `inv_le_inv₀` 正値証拠2か所の引数順を、変更ファイル全文とAEI・元Wilson kernel・Gauss-law・固定mathlib署名の照合に基づき修正。数式・定理文・元物理モデルの弱化なし。最終exact-source HEAD `b8613f06df78ab1fe313632cdfa0576711a43362`、test-merge `e64adf3ca9a3505f946ef48004def91c9fa85da3`、squash `861d21996c82e5d5cbdf617afc310191fef211d5` のGit tree `ce2ce3c357a4b9d90d56b58b9b82fd260582a9e4` は完全一致。
+- **次の障害**：真正 `rho_H` の具体的な上下界および変動率を、連続真空 `Omega_H`・真のWilson核・Perron固有方程式から量的に取り出す。数値を仮定して終わらせず、有限H依存の数学的上界と実行可能なinterval証明書を区別する。docs-only PRではStrict Leanを再実行しない。
+
+---
+
 ## 検証済み定理 — AEI（2026-11-03 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。AEI定理PR [#6214](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6214) はMERGED、定理squash SHA `2a9a09ace31ff90bee6a431b095e5d850c730765`。AEHまでの真正SU(2) Wilson・Gauss-law・Perron/transfer・二interacting posterior・元boundary pair-Haar・固定toolchain・公開rootを保持。
