@@ -1,3 +1,26 @@
+## 検証済み定理 — AEP（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AEP定理PR [#6235](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6235) はMERGED、squash SHA `a79302bf97a7e3ab5127b46971a01dfddb9d9ee3`。AEOまでの真正interacting Wilson SU(2)、中心化Gauss-law物理源、元Perron/transfer、二interacting posterior、元境界pair-Haar、固定toolchainおよび公開rootを不変更に保つ。
+
+### 全リンク有限telescopingと元の二境界弦距離D_H
+
+- **有限座標の型付き経路**：原始的な有限リンク集合を `Finset` で走査し、`Function.update` による選択リンクの置換を累積する真正 `finiteBlend` を定義。空集合では元配置、全体集合では目標配置になることを関数外延性により証明。局所 `f(update(u,i,g))≤exp(c*d(g,h))*f(update(u,i,h))` から全有限座標の `f(a)≤exp(c*∑d(a_i,b_i))*f(b)` を帰納証明し、さらに二境界へ合成。新しい確率測度や密度の独立性は仮定しない。
+- **真正二境界D_H**：ADLで確定した元の全リンク距離 `D_H(z,w)=∑_{e∈Link_H}(d_J(z.1_e,w.1_e)+d_J(z.2_e,w.2_e))` をそのまま使用。AEOの第二境界・第一境界の相対係数 `exp(13*beta0*d_J)` を順次合成し、元の `rho_H` と真正JQ `q_H` について、任意の元境界ペア `z,w` に対し **`rho_H(z)≤exp(13*beta0*D_H(z,w))*rho_H(w)`、`q_H(z)≤exp(13*beta0*D_H(z,w))*q_H(w)`** を無条件に形式証明。両式の逆方向も成立。
+- **対数密度の数値Lipschitz係数**：元 `rho_H>0` は真正joint sqrt-density正値から、`q_H>0` はAEKの元Wilson密度下界から証明。全リンク両側指数比較の対数を取り、**`|log rho_H(z)-log rho_H(w)|≤13*beta0*D_H(z,w)`** および **`|log q_H(z)-log q_H(w)|≤13*beta0*D_H(z,w)`** を形式証明。係数 `13*beta0` は有限体積Hおよびリンク総数に依存せず、真正D_Hは全元リンクの距離を合算する。
+- **同一性と境界**：元のJQ相殺式 `q_H(z)=‖T_H‖⁻¹/rho_H(z)` による二境界対称性もLean4で形式証明。元の物理真空・Wilson核・二interacting posterior・Haar法則を置換せず、全リンクLipschitzからH一様強制性・スペクトルギャップ・連続体Yang--Mills質量ギャップを導いたとは主張しない。
+
+### Lean4 exact-source証明と記録監査
+
+- 追加した真正Leanモジュールは `PhysicalYangMillsWilsonSU2OriginalFullChordalTelescopingV5_PZ37AEP.lean`、`PhysicalYangMillsWilsonSU2OriginalFullChordalDensityHarnackV5_PZ37AEP.lean`、`PhysicalYangMillsWilsonSU2OriginalFullChordalLogDensityLipschitzV5_PZ37AEP.lean` の3件、17公開定理・17件の `#print axioms`。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。
+- 最終exact-source [CI #41595248815](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41595248815) は **11,296/11,296 SUCCESS**、17定理の公理依存は `propext`・`Classical.choice`・`Quot.sound` 以内、`sorryAx` なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。最終source HEAD `a797421515a9b793dc8a028645a8468e7cdfa32a` とsquash `a79302bf97a7e3ab5127b46971a01dfddb9d9ee3` のGit tree `9483d8719e6b70b88fc0ab8687245ff4e8469756` は完全一致。マージ後push CI [#41596154568](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41596154568) もSUCCESS。
+- 初期CIで発見した `Finset` の空集合・全体集合の関数外延性証明、局所証明の型合わせ・linter問題を、全ファイルと既存の定理型を照合して修正。既存Lean、物理模型、公開root、workflow、toolchain pinは変更しない。README・ROADMAPの両ブランチ計4文書に同一の追記を行い、docs-onlyではStrict Leanを再実行しない。
+
+### 次段階のobstruction
+
+- 数値的に明示された全リンク対数Lipschitz係数から、真正 `rho_H`・`q_H` の有限Hの絶対変動上界、共分散 `C_e` の同じD_H球における安定性、元のHaar球質量とGI 68/1:17必要条件を結ぶ定量評価へ進む。有限体積の密度振幅の上界がH依存であること、および体積一様強制性・物理スペクトルギャップ・連続体4D質量ギャップが未証明であることを明記する。
+
+---
+
 ## 検証済み定理 — AEO（2026-11-03 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AEO定理PR [#6232](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6232) はMERGED、定理squash SHA `001cf697e13714e4bf194061312b35c7df63d61e`。AENまでの真正interacting Wilson SU(2)、中心化Gauss-law物理源、元Perron/transfer、二interacting posterior、元境界pair-Haar、固定toolchainと公開rootを不変更とする。
