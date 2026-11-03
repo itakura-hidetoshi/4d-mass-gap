@@ -131,7 +131,7 @@ theorem p4Q2PZ37AEY_originalFCFraction_partition (e : Link) :
     (Wbar b0 hb0 e + Eunused e) / (B b0 hb0) ^ 2 = 1
   calc
     _ = (16 * S b0 hb0 e + (Wbar b0 hb0 e + Eunused e)) /
-          (B b0 hb0) ^ 2 := by rw [add_div]
+          (B b0 hb0) ^ 2 := by simp only [add_div]
     _ = (B b0 hb0) ^ 2 / (B b0 hb0) ^ 2 := by rw [hn]
     _ = 1 := div_self (ne_of_gt hB)
 
@@ -209,6 +209,33 @@ theorem p4Q2PZ37AEY_originalRelativeResidualSlack_gives_openGI
   exact p4Q2PZ37ADE_fixedCovarianceFC_gives_openGI H e
     (p4Q2PZ37AEY_originalRelativeResidualSlack_suffices H e theta hControl hTheta)
 
+/-- Distinguish AEY's conservative original-FC numerical test from the
+SHARP positive-mean sufficient GI certificate. At b0, the latter is
+equivalent to Wbar < 256*S, with NO unused-FC slack term.
+Thus FC dominance is sufficient, but it has NOT been proved necessary
+for positive GI budget or the actual signed GI gap. -/
+theorem p4Q2PZ37AEY_originalBudget_pos_iff_trueHigherHaar (e : Link) :
+    0 < Budget b0 hb0 e ↔ Wbar b0 hb0 e < 256 * S b0 hb0 e := by
+  have h :=
+    p4Q2PZ37ACP_originalGIMeanBudget_pos_iff_exponential_residual
+      H b0 p4Q2PZ37ADC_fixedCoupling_pos e
+  rw [p4Q2PZ37ADC_fixedCoupling_gap_eq_quarter] at h
+  constructor
+  · intro hb
+    have hw := h.mp hb
+    nlinarith only [hw]
+  · intro hw
+    apply h.mpr
+    nlinarith only [hw]
+
+/-- The exact higher-Haar residual obstruction for nonpositive mean
+certificate, distinct from AEX's conservative two-ball obstruction. -/
+theorem p4Q2PZ37AEY_nonpositiveBudget_iff_higherHaarObstruction
+    (e : Link) :
+    Budget b0 hb0 e ≤ 0 ↔ 256 * S b0 hb0 e ≤ Wbar b0 hb0 e := by
+  simpa only [not_lt] using
+    not_congr (p4Q2PZ37AEY_originalBudget_pos_iff_trueHigherHaar H e)
+
 /-- Failure of the ORIGINAL positive GI mean sufficient certificate
 forces the exact complementary lower residual/slack inequality.
 It does NOT imply that the signed physical GI gap vanishes. -/
@@ -234,4 +261,6 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEY_originalRelativeResidualSlack_suffices
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEY_originalRelativeResidualSlack_gives_positiveBudget
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEY_originalRelativeResidualSlack_gives_openGI
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEY_originalBudget_pos_iff_trueHigherHaar
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEY_nonpositiveBudget_iff_higherHaarObstruction
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEY_nonpositiveBudget_forces_fullResidualSlack
