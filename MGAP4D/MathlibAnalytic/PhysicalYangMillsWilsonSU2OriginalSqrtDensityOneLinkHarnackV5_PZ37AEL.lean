@@ -166,6 +166,72 @@ theorem p4Q2PZ37AEL_originalSqrtDensity_oneLinkReverse
     rho (A, Replace B e h) ≤ t * rho (A, Replace B e g) := by
   exact p4Q2PZ37AEL_originalSqrtDensity_oneLinkHarnack H A B e h g
 
+
+/-- The original symmetric Wilson one-slab kernel makes the ORIGINAL
+continuous normalized joint density symmetric in the two boundaries. -/
+theorem p4Q2PZ37AEL_originalJointWeight_symm (A B : Cfg) :
+    W (A, B) = W (B, A) := by
+  change Tnorm⁻¹ * (Omega A * K A B * Omega B) =
+    Tnorm⁻¹ * (Omega B * K B A * Omega A)
+  rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_symmetric
+    H 2 (by norm_num) b0 hb0 A B]
+  ring
+
+/-- Genuine original joint square-root density also has exact
+two-boundary symmetry (not posterior independence). -/
+theorem p4Q2PZ37AEL_originalSqrtDensity_symm (A B : Cfg) :
+    rho (A, B) = rho (B, A) := by
+  change Real.sqrt (W (A, B)) = Real.sqrt (W (B, A))
+  rw [p4Q2PZ37AEL_originalJointWeight_symm H A B]
+
+/-- First-boundary one-link Harnack, obtained by actual Wilson-kernel
+symmetry, retaining the ORIGINAL pair-Haar density. -/
+theorem p4Q2PZ37AEL_originalSqrtDensity_firstBoundary_oneLinkHarnack
+    (A B : Cfg) (e : Link) (g h : G) :
+    rho (Replace A e g, B) ≤ t * rho (Replace A e h, B) := by
+  calc
+    rho (Replace A e g, B) = rho (B, Replace A e g) :=
+      p4Q2PZ37AEL_originalSqrtDensity_symm H _ _
+    _ ≤ t * rho (B, Replace A e h) :=
+      p4Q2PZ37AEL_originalSqrtDensity_oneLinkHarnack H B A e g h
+    _ = t * rho (Replace A e h, B) := by
+      rw [p4Q2PZ37AEL_originalSqrtDensity_symm H B (Replace A e h)]
+
+/-- The actual original JQ Perron density has the SAME one-link
+multiplicative bound, via the exact inverse transfer/rho identity.
+No upper bound on the physical transfer is substituted here. -/
+theorem p4Q2PZ37AEL_originalPerronDensity_oneLinkHarnack
+    (A B : Cfg) (e : Link) (g h : G) :
+    q b0 hb0 (A, Replace B e g) ≤
+      t * q b0 hb0 (A, Replace B e h) := by
+  let Bg := Replace B e g
+  let Bh := Replace B e h
+  have hTnonneg : 0 ≤ Tnorm⁻¹ :=
+    inv_nonneg.mpr (norm_nonneg _)
+  have hrhoG : 0 < rho (A, Bg) :=
+    continuousJointSqrtDensity_pos H 2 (by norm_num) b0 hb0 (A, Bg)
+  have hrhoH : 0 < rho (A, Bh) :=
+    continuousJointSqrtDensity_pos H 2 (by norm_num) b0 hb0 (A, Bh)
+  have hOpp : rho (A, Bh) ≤ t * rho (A, Bg) :=
+    p4Q2PZ37AEL_originalSqrtDensity_oneLinkReverse H A B e g h
+  calc
+    q b0 hb0 (A, Bg) = Tnorm⁻¹ / rho (A, Bg) :=
+      p4Q2PZ37AEG_originalDensity_exactVacuumCancellation H (A, Bg)
+    _ ≤ t * (Tnorm⁻¹ / rho (A, Bh)) :=
+      p4Q2PZ37AEL_real_commonNumeratorDivHarnack
+        Tnorm⁻¹ (rho (A, Bg)) (rho (A, Bh)) t
+        hTnonneg hrhoG hrhoH hOpp
+    _ = t * q b0 hb0 (A, Bh) := by
+      rw [p4Q2PZ37AEG_originalDensity_exactVacuumCancellation H (A, Bh)]
+
+/-- Reverse orientation of the original Perron density comparison. -/
+theorem p4Q2PZ37AEL_originalPerronDensity_oneLinkReverse
+    (A B : Cfg) (e : Link) (g h : G) :
+    q b0 hb0 (A, Replace B e h) ≤
+      t * q b0 hb0 (A, Replace B e g) := by
+  exact p4Q2PZ37AEL_originalPerronDensity_oneLinkHarnack H A B e h g
+
+
 end GroundStatePosteriorJoint
 end
 end MGAP4D.MathlibAnalytic
@@ -176,3 +242,9 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEL_originalSqrtDensity_oneLinkReverse
 
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AEL_real_commonNumeratorDivHarnack
+
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEL_originalJointWeight_symm
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEL_originalSqrtDensity_symm
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEL_originalSqrtDensity_firstBoundary_oneLinkHarnack
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEL_originalPerronDensity_oneLinkHarnack
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AEL_originalPerronDensity_oneLinkReverse
