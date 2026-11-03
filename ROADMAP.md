@@ -1,3 +1,28 @@
+## 検証済み定理 — AFA（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFA定理PR [#6268](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6268) はMERGED、squash SHA `0e92ad447852dcdf7505da25c56fa5a9a2dacceb`。AEZまでの元の真正Wilson SU(2)、Gauss-law中心化物理源、Perron真空、元の更新transfer・二posterior、SU(2) Haarと元pair-Haar、FC envelope、原距離、公開root、Lean/mathlib pinは変更しない。AEXのAEW保守的二球下界に関するFC no-goも維持する。
+
+### 真正例外Haar集合による高次transfer残差の全積分制御
+
+- **元の境界空間における正確な例外集合**：任意の`θ≥0`について、元物理受信器の四成分振幅平方`A_F(z)^2`と真正高次残差`W_F(z)`から `Bad_θ(H,e)={z | θ*A_F(z)^2 < W_F(z)}` を定義。元の更新transfer`U_z`とPerron係数`P_z>0`により`A_F(z)^2=P_z²*A_U(z)^2`、`W_F(z)=P_z²*W_U(z)`なので、**`z∈Bad_θ ↔ θ*A_U(z)^2<W_U(z)`** をLean4で厳密に証明。集合は元のpair-Haar位相で開・可測であり、独立Haar分布や代理受信器への置換ではない。
+- **新しい無条件の全積分上界**：元FC envelopeの真正点別上界`W_F(z)≤B_H²`と、非例外側の`W_F(z)≤θ*A_F(z)^2`を組み合わせ、真のpair-Haar確率`ν_H`について **`R4_H(e)≤θ*A4_H(e)+B_H²*ν_H(Bad_θ)`** を証明。ここで`A4_H=4*S_H(e)>0`、`R4_H=W_H(e)`はAEZの実際のPerron重み付きtransferモーメント。一般のコンパクト確率空間における連続関数のindicator分割積分補題も公開証明。AEW二球下界の小さな体積因子は使用しない。
+- **条件付きの真正GI数値判定**：元Haar例外質量`ν_H(Bad_θ)≤ε`が独立に評価され、**`θ*A4_H+B_H²*ε<64*A4_H`** なら、元の二乗GI平均証明書`Budget_H>0`を導き、既存の定理から真正二posterior符号付きGI応答が非零となる開・正Haar測度領域を得る。例外質量`ε`の十分に小さい値が無条件に得られたという主張ではない。
+- **FC envelope経由のより強い判定**：別途AEYの真正FC未使用分`E_H≤σ*A4_H`を検証し、**`(θ+σ)*A4_H+B_H²*ε<64*A4_H`** を満たすなら、元の厳密な`B_H²<272*S_H(e)`に到達する。これはGI平均証明書の条件より強い、独立の数値条件。
+- **非正証明書が要求する真正Haar質量**：`Budget_H≤0`なら任意の`θ≥0`で **`(64−θ)*A4_H/B_H²≤ν_H(Bad_θ)`**。特に`θ<64`なら元例外集合は正測度である。真のFCテスト不成立`272*S_H≤B_H²`と、別途`E_H≤σ*A4_H`の下では、**`(64−θ−σ)*A4_H/B_H²≤ν_H(Bad_θ)`**。 `θ+σ<64`なら例外集合の正測度を証明。このobstructionは**証明書の数値境界**であって真正符号付きGI応答の消滅証明でもYang–Mills質量ギャップのno-goでもない。
+
+### exact-source Lean4検証、公理・source Git tree監査
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalExceptionalHaarTailBudgetV5_PZ37AFA.lean`（403行）だけを追加、**公開13定理／13件`#print axioms`**。既存Lean・定理root・物理モデル・workflow変更なし。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。
+- 最終[exact-source CI #41700621006](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41700621006) は **11,308/11,308 SUCCESS**、新規13定理は`propext`・`Classical.choice`・`Quot.sound`の標準3公理のみ、`sorryAx`なし、変更Lean warning/error **0/0**、独立MCP completion receipt **SUCCESS**。
+- 初回CI #41699423749の唯一のelaboration failureは、正のPerron因子による厳密不等式の左右同値で`mul_lt_mul_left hp`に誤った型クラス`MulRightStrictMono ℝ`の合成要求が生じたこと。変更Lean全文と既存APIを検査し、固定mathlibで型が正確に適合する`mul_lt_mul_iff_of_pos_left hp`へ差替え。仮定・定理文・物理模型は弱めていない。
+- exact-source HEAD `5950a117781df7bae0144c3b0d7d192f349bad2b`、test-merge `04b3d7e10314cacb550a112bc8d5810d9e964e39`、squash `0e92ad447852dcdf7505da25c56fa5a9a2dacceb` のGit treeはすべて `42188f05178f102d69196c9bd0dc430481b2fca1` で一致。定理squash後push CIを別途確認する。
+
+### 次の独立数値課題
+
+AFAでは、真正残差の全境界一様上界を仮定せず、例外境界集合の量的測度だけを用いる条件付き経路を証明。今後は元のWilson kernel・Perron密度・Haar幾何に由来する`ν_H(Bad_θ)`の具体的な上界、FC未使用分`E_H`の量的制御、有限Hから体積一様なcompatibilityへ移る際の障害を分けて研究する。例外質量が必要閾値を無条件に満たすこと、物理Hamiltonianの必要スペクトルギャップ、連続体4D Yang--Mills質量ギャップはいずれも未証明。
+
+---
+
 ## 検証済み定理 — AEZ（2026-11-03 JST）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。新規AEZ定理PR [#6265](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6265) はMERGED、定理squash SHA `a1a0a149d5a89c420dce6570654bd913fd5b86a4`。AEYまでの元の真正Wilson SU(2)、中心化Gauss-law源、Perron真空、真正更新transfer section、二posterior、Haar・pair-Haar測度、距離、root、Lean/mathlib pinおよびAEXの二球no-goを一切変更しない。
