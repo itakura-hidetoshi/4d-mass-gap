@@ -1,3 +1,23 @@
+## 検証済み定理 — AES（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AES定理PR [#6244](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6244) はMERGED、定理squash SHA `3d28af0d38e6832597fed74d4050c545ae0d9f97`。AERまでの真正interacting Wilson SU(2)、中心化Gauss-law物理源、JQの真正source-link receiver、元Perron/transfer、二境界joint sqrt-density・JQ密度、元のSU(2) Haarおよびpair-Haar、固定Lean/mathlibと公開rootは不変更。
+
+### 真正物理受信器から元Haar分子・共分散安定半径への明示的接続
+
+- **元Wilson characterの無条件数値上界**：元の実SU(2) character `chi(g)=1-specialUnitaryWilsonPlaquetteEnergy(2,g)`。既存のWilsonエネルギー `0≤E(g)≤2` から **`|chi(g)|≤1`** を新たにLean4形式証明。補助的に真のコンパクトSU(2)上の連続character norm `||chi||_sup<∞` もLeanで証明済み。代理character・代理群は使わない。
+- **Haar分子の真の物理的同一性**：元の中心化Gauss-law Hilbert源 `f0` のJQ受信器 `F_e(z,g)=p4Q2JQ_originalPhysicalSourceLinkReceiver(H,beta0,f0,e,z,g)` と元のSU(2) normalized Haar `mu` に対し、元AEFの**真正分子**を `N_e(z)=∫ F_e(z,g)*chi(g) dmu(g)` のまま使用。点ごとの受信器変動 `|F_e(z,g)-F_e(w,g)|≤LF*D_H(z,w)` が認証されれば、`|chi|≤1` と元Haar確率性から **`|N_e(z)-N_e(w)|≤LF*D_H(z,w)`** を形式証明。符号・独立性の仮定は不要。
+- **AERのrNの定量的明示式**：真正共分散正中心 `C_e(a)>0`、AEGの元密度下界 `lambda>0`、元分子上界 `M≥0`、AEQの明示的元密度係数 `Lq(H)=13*beta0*exp(13*beta0)*Mq(H)`、元受信器変動の認証係数 `LF≥0` を使用。`rN=(lambda*C_e(a)/4)/(LF+1)`、`deltaq=lambda^2*C_e(a)/(4*(M+lambda))`、`R=min(rN,1,deltaq/(Lq(H)+1))>0` と定義し、全ての元境界ペア `D_H(z,w)<R` に対し **`|C_e(z)-C_e(w)|≤C_e(a)/2`** を証明。
+- **真正pair-Haar二球モーメント**：同じ元の `D_H` と元pair-Haar法則・元ゲージ符号反転を保持し、`(C_e(a)/2)^2 * 2 * (min(R/(2*card(Link_H)+1),2)/4)^(8*card(Link_H)) ≤ S(H,beta0,e)` を形式証明。元FC envelopeによるGI mean positivityは別途数値優越条件を明示した**条件付き**結論。
+- **authority/obstruction**：`|chi|≤1` は無条件証明。一方 **真正JQ物理受信器のD_H-Lipschitz係数LFの実在・数値値はAESでは未証明**。従って、ここで与えた`R`は受信器認証に依存する明示式であって、数値的に確定した半径ではない。AERの定性的な正半径存在定理とは区別する。`lambda`、`M`、`C_e(a)`、`Lq(H)` の数値評価、GI数値閾値、体積一様強制性、物理スペクトルギャップ、連続体4D Yang--Mills質量ギャップは引き続き未証明。
+
+### exact-source Lean4・公理監査
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalReceiverToNumeratorExplicitRadiusV5_PZ37AES.lean` 1ファイル、9公開定理・9件の`#print axioms`。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`、旧Lean全ファイル・物理模型・workflow・公開rootは不変更。
+- [exact-source CI #41610291228](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41610291228) は**11,299/11,299 SUCCESS**。新規9定理の公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。最終source HEAD `754d55794f463efd377a1ebf3656132e64fbca32`、test-merge `61f4a7e4b95f3632c593566034bd92596e823a7b`、squash `3d28af0d38e6832597fed74d4050c545ae0d9f97` のGit tree `564b4133acc978813d58afb3aa616dcedb76e4e6` は完全一致。
+- **Lean4修正履歴**：絶対値・乗算間の字句解析（`|x| * |y|`）、局所notation`mu`の`.real`非展開に対する明示的`(normalizedCompactHaar G).real`、半径等式を前提に書き戻す`rw`、未使用証明引数の命名を修正。数学的仮定と結論は維持。次は元JQ受信器`F_e`の`LF`を真正Wilson核・連続Perron・中心化物理源から構成することが中心課題。docs-onlyではStrict Lean再実行不要。
+
+---
+
 ## 検証済み定理 — AER（2026-11-03 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AER定理PR [#6241](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6241) はMERGED、定理squash SHA `a5eb1ff0fa4bf1c6544df12a6c43271b092353aa`。AEP/AEQまでの真正interacting Wilson SU(2)、中心化Gauss-law物理源、元のFF受信器、Perron/transfer作用素、二境界joint sqrt-density、JQ密度、元のpair-Haar、固定Lean/mathlibおよび公開rootは不変更。
