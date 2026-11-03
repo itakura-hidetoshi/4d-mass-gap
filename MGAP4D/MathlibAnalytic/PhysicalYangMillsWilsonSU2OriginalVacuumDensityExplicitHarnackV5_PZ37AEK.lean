@@ -122,7 +122,126 @@ theorem p4Q2PZ37AEK_originalContinuousVacuum_globalKernelRatio
       _ = lambda * Omega C := (hPerron C).symm
   exact (mul_le_mul_left hlam).mp hScaled
 
+
+/-- A nonnegative probability-Haar L2 vector of norm one and a
+global multiplicative Harnack comparison has explicit pointwise bounds.
+This is a genuine L2 statement, not an arbitrary choice of representatives. -/
+theorem p4Q2PZ37AEK_unitLp_globalRatio_givesPointwiseBounds
+    {α : Type*} [MeasurableSpace α]
+    (μ : Measure α) [IsProbabilityMeasure μ]
+    (f : α → ℝ) (hf : MemLp f 2 μ)
+    (hUnit : ‖hf.toLp f‖ = 1)
+    (k : ℝ) (hk : 0 < k)
+    (hPos : ∀ x, 0 ≤ f x)
+    (hRatio : ∀ x y, k * f x ≤ f y) :
+    ∀ x, k ≤ f x ∧ f x ≤ k⁻¹ := by
+  intro x
+  have hConstLo : MemLp (fun _ : α => k * f x) 2 μ := memLp_const _
+  have hConstHi : MemLp (fun _ : α => f x / k) 2 μ := memLp_const _
+  have hConstLoNorm :
+      ‖hConstLo.toLp (fun _ : α => k * f x)‖ = k * f x := by
+    rw [MemLp.toLp_const]
+    have hNorm :=
+      Lp.norm_const' (μ := μ) (p := (2 : ENNReal)) (c := k * f x)
+        (by norm_num) (by norm_num)
+    simpa [Real.norm_eq_abs, abs_of_nonneg (mul_nonneg hk.le (hPos x))]
+      using hNorm
+  have hConstHiNorm :
+      ‖hConstHi.toLp (fun _ : α => f x / k)‖ = f x / k := by
+    rw [MemLp.toLp_const]
+    have hNorm :=
+      Lp.norm_const' (μ := μ) (p := (2 : ENNReal)) (c := f x / k)
+        (by norm_num) (by norm_num)
+    simpa [Real.norm_eq_abs, abs_of_nonneg (div_nonneg (hPos x) hk.le)]
+      using hNorm
+  have hCompareLo :
+      ‖hConstLo.toLp (fun _ : α => k * f x)‖ ≤ ‖hf.toLp f‖ := by
+    apply Lp.norm_le_norm_of_ae_le
+    filter_upwards [hConstLo.coeFn_toLp, hf.coeFn_toLp] with y h1 h2
+    rw [h1, h2]
+    simpa [Real.norm_eq_abs,
+      abs_of_nonneg (mul_nonneg hk.le (hPos x)), abs_of_nonneg (hPos y)]
+      using hRatio x y
+  have hCompareHi :
+      ‖hf.toLp f‖ ≤ ‖hConstHi.toLp (fun _ : α => f x / k)‖ := by
+    apply Lp.norm_le_norm_of_ae_le
+    filter_upwards [hf.coeFn_toLp, hConstHi.coeFn_toLp] with y h1 h2
+    rw [h1, h2]
+    have hxy : f y ≤ f x / k :=
+      (le_div_iff₀ hk).2 (by simpa [mul_comm] using hRatio y x)
+    simpa [Real.norm_eq_abs, abs_of_nonneg (hPos y),
+      abs_of_nonneg (div_nonneg (hPos x) hk.le)] using hxy
+  have hkfx : k * f x ≤ 1 := by
+    calc
+      k * f x = ‖hConstLo.toLp (fun _ : α => k * f x)‖ :=
+        hConstLoNorm.symm
+      _ ≤ ‖hf.toLp f‖ := hCompareLo
+      _ = 1 := hUnit
+  have hfx : 1 ≤ f x / k := by
+    calc
+      (1 : ℝ) = ‖hf.toLp f‖ := hUnit.symm
+      _ ≤ ‖hConstHi.toLp (fun _ : α => f x / k)‖ := hCompareHi
+      _ = f x / k := hConstHiNorm
+  constructor
+  · have h := (le_div_iff₀ hk).1 hfx
+    simpa using h
+  · have h : f x ≤ (1 : ℝ) / k :=
+      (le_div_iff₀ hk).2 (by simpa [mul_comm] using hkfx)
+    simpa only [one_div] using h
+
+/-- The ORIGINAL continuous physical Perron vacuum, normalized to
+the existing canonical Haar L2 top eigenvector of norm one, has the
+pointwise interval k ≤ Omega(A) ≤ k⁻¹. This holds at every finite H
+and positive rank, with the literal Wilson global action budget. -/
+theorem p4Q2PZ37AEK_originalContinuousVacuum_explicitBounds
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
+    ∀ A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor H beta ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+          H N hN beta hbeta A ∧
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+          H N hN beta hbeta A ≤
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor H beta)⁻¹ := by
+  let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
+  let Omega := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+    H N hN beta hbeta
+  let V := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+    H N hN beta hbeta
+  let k := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor H beta
+  letI : IsProbabilityMeasure μ := by
+    dsimp [μ, periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure]
+    infer_instance
+  have hk : 0 < k :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor_pos H beta
+  have hOmegaPos : ∀ A, 0 ≤ Omega A := fun A =>
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_pos
+      H N hN beta hbeta A).le
+  have hMem : MemLp Omega 2 μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_memLp_two
+      H N hN beta hbeta
+  have hEq : hMem.toLp Omega =
+      ((V : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
+        Lp ℝ 2 μ) := by
+    apply Lp.ext
+    exact hMem.coeFn_toLp.trans
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_ae_eq_existing
+        H N hN beta hbeta)
+  have hUnit : ‖hMem.toLp Omega‖ = 1 := by
+    rw [hEq]
+    change ‖V‖ = 1
+    exact periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_norm
+      H N hN beta hbeta
+  have hRatio (A B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
+      k * Omega A ≤ Omega B :=
+    p4Q2PZ37AEK_originalContinuousVacuum_globalKernelRatio
+      H N hN beta hbeta A B
+  exact p4Q2PZ37AEK_unitLp_globalRatio_givesPointwiseBounds
+    μ Omega hMem hUnit k hk hOmegaPos hRatio
+
 end
 end MGAP4D.MathlibAnalytic
 
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AEK_originalContinuousVacuum_globalKernelRatio
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AEK_unitLp_globalRatio_givesPointwiseBounds
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AEK_originalContinuousVacuum_explicitBounds
