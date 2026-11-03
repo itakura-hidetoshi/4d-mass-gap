@@ -139,6 +139,8 @@ theorem p4Q2PZ37AEK_unitLp_globalRatio_givesPointwiseBounds
     (hRatio : ∀ x y, k * f x ≤ f y) :
     ∀ x, k ≤ f x ∧ f x ≤ k⁻¹ := by
   intro x
+  have hMass : μ.real Set.univ = 1 := by
+    simp [measureReal_def]
   have hConstLo : MemLp (fun _ : α => k * f x) 2 μ := memLp_const _
   have hConstHi : MemLp (fun _ : α => f x / k) 2 μ := memLp_const _
   have hConstLoNorm :
@@ -147,6 +149,7 @@ theorem p4Q2PZ37AEK_unitLp_globalRatio_givesPointwiseBounds
     have hNorm :=
       Lp.norm_const' (μ := μ) (p := (2 : ENNReal)) (c := k * f x)
         (by norm_num) (by norm_num)
+    rw [hMass, one_pow, mul_one] at hNorm
     simpa only [Real.norm_eq_abs, abs_mul, abs_of_nonneg hk.le,
       abs_of_nonneg (hPos x)] using hNorm
   have hConstHiNorm :
@@ -155,6 +158,7 @@ theorem p4Q2PZ37AEK_unitLp_globalRatio_givesPointwiseBounds
     have hNorm :=
       Lp.norm_const' (μ := μ) (p := (2 : ENNReal)) (c := f x / k)
         (by norm_num) (by norm_num)
+    rw [hMass, one_pow, mul_one] at hNorm
     simpa only [Real.norm_eq_abs, abs_div, abs_of_nonneg (hPos x),
       abs_of_pos hk] using hNorm
   have hCompareLo :
