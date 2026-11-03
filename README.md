@@ -1,3 +1,25 @@
+## 検証済み定理 — AEW（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AEW定理PR [#6256](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6256) はMERGED、定理squash SHA `add2cccca4683ab12d8830246a227989f3f9d203`。AEVまでの真正interacting Wilson SU(2)、元の中心化Gauss-law物理源、元JQ物理受信器、Perron/transfer、joint sqrt-density・元JQ密度、元のSU(2) Haarとpair-Haar法則、固定Lean/mathlib、公開rootは不変更。
+
+### 元の真正受信器から共分散安定半径・Haar二球モーメントへの無条件接続
+
+- **AEVの真正全境界Lipschitz係数を統合**：`O_H` を元の有界連続受信器、`M_F(H)=||O_H||`、`M_src(H)=∫|f0|dμ_H`、`a_H=||T_H||^(-2)`、`lambda_rho(H)=sqrt(k_H^3)`、`L_rho(H)=13*beta0*exp(13*beta0)*sqrt((k_H^(-1))^3)` とする。実際に証明済みの `L_left=M_F*L_rho/lambda_rho+2*M_F`、`L_right=(a_H*13*beta0*M_src+M_F*L_rho)/lambda_rho+2*M_F` から、明示的な本来の`L_F(H)=L_left+L_right≥0` を定義。元受信器と真正SU(2) Haar共分散分子に対して **`|F_e(z,xi)-F_e(w,xi)|≤L_F(H)*D_H(z,w)`**、**`|N_e(z)-N_e(w)|≤L_F(H)*D_H(z,w)`** を外部受信器正則性仮定なしで形式化。
+- **AEKの真正密度下界を使用**：元のWilson kernel global floor `k_H>0` に対して **`lambda_q(H)=1/sqrt((k_H^(-1))^3)>0`** が全ての元二境界配置 `z` について `lambda_q(H)≤q_H(z)` であることを形式化。以前の密度net・自由な正数証明書を追加しない。
+- **明示的な真正安定半径**：元の正共分散中心 `a`（`C_e(a)>0`）と本物のHaar分子絶対値上界 `M≥0`（`|N_e(z)|≤M`）に対し、`L_q(H)=13*beta0*exp(13*beta0)*exp(beta0*ActionBudget(H))/sqrt(k_H^3)` とすると **`R_H=min((lambda_q*C_e(a)/4)/(L_F+1), 1, (lambda_q^2*C_e(a)/(4*(M+lambda_q)))/(L_q+1))>0`** を新規定理で得る。数学的対象は既存AER/AESの元の共分散で、異なるsource・law・metricではない。
+- **共分散半振幅安定性と真正pair-Haar二球下界**：任意の本来の二境界配置 `z,w` に対し `D_H(z,w)<R_H` なら **`|C_e(z)-C_e(w)|≤C_e(a)/2`**。さらに **`(C_e(a)/2)^2 * [2*(min(R_H/(2*card(Link_H)+1),2)/4)^(8*card(Link_H))] ≤ S(H,beta0,e)`** を無条件接続。ここで `S` は元の中心化共分散二乗モーメント。元のpair-HaarとSU(2) character `|chi|≤1` のみ使用。
+- **各物理リンクでの存在を無条件化**：AEDの `p4Q2PZ37AED_originalPositiveMaximumCovariance_exists` とAEGの `p4Q2PZ37AEG_originalNumerator_positiveMaxAbs_exists` を合成し、全ての真正リンク`e`で正中心`a`、真の分子上界`M>0`、表示公式を満たす`R_H>0` と真正二球モーメント下界の存在を新しいLean4定理にした。`M` と`a`の数値認証を済ませたとの主張ではない。
+- **真のGI/FC数値条件を分離**：既存の物理FC-envelope `B_H` に対し `B_H^2 <272 * [明示的二球下界]` が独立に確認できれば、元のGI平均予算`Budget(H,beta0,e)>0`を導く定理も追加。**この数値不等式の成立自体は未証明**であり、H一様強制性、物理Hamiltonian spectral gap、無限体積・連続体Yang--Mills質量ギャップは未証明のまま保持。
+
+### exact-source Lean4検証・公理監査
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalReceiverExplicitCovarianceBallV5_PZ37AEW.lean` のみ。明示係数定義1件、公開7定理と7件`#print axioms`。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を維持。既存Leanファイル、物理模型、CI/workflow、公開rootを不変更とする。
+- [exact-source CI #41627473372](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41627473372) は **11,304/11,304 SUCCESS**。新規7定理の公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、変更Lean warning/error **0/0**、独立MCP completion receipt **SUCCESS**。source HEAD `38789b124394edf74d7139db99ce89a449462afe`、test-merge `eeb79df229e21cd469819279c1adb697fb0e8245`、squash `add2cccca4683ab12d8830246a227989f3f9d203` のGit tree `5d16ffd52bab86b190e5f6b4211640f007af0d60` が完全一致。
+- **Lean4検証理由**：AEU・AEVで導出済みの完全左・右境界係数を原定義のまま再利用し、AEKの真正q下界、AES/AERの半振幅半径定理、AEDの正共分散anchor、AEGの真のHaar numerator boundと接続。新規外部正則性仮定や数値GI仮定の無条件化を行わず、型付きsourceと既存証明のauthority境界を維持。docs-onlyではStrict Leanを再実行しない。
+- **次の研究 AEX**：AEWで確立した半径と下界を、真正FC envelopeとの数値優越比較、およびH依存係数の非一様性の定量評価へ進める。両者を混同せず、H一様強制性・連続体質量ギャップへの飛躍は行わない。
+
+---
+
 ## 検証済み定理 — AEV（2026-11-03 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AEV定理PR [#6253](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6253) はMERGED、定理squash SHA `565a88c536b35063e62eb452b1d06b382b43e667`。AEUまでの真正interacting Wilson SU(2)、中心化Gauss-law物理源、元JQ受信器、元Perron/transfer、真正joint sqrt-density・JQ密度、元のSU(2) Haarとpair-Haar、固定Lean/mathlib・公開rootは不変更。
