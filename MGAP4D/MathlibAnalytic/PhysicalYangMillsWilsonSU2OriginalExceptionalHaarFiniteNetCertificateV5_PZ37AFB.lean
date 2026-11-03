@@ -54,6 +54,7 @@ theorem p4Q2PZ37AFB_finiteNetExceptionalCover
   classical
   intro z hz
   obtain ⟨a, ha, haz⟩ := hNet z
+  change theta * g z < f z at hz
   have hDelta := (abs_lt.mp (hOsc a z haz)).2
   have hFlag : theta * g a < f a + eta := by
     linarith only [hz, hDelta]
@@ -82,6 +83,7 @@ theorem p4Q2PZ37AFB_finiteNetExceptionalMass
       measureReal_mono
         (p4Q2PZ37AFB_finiteNetExceptionalCover
           s d r theta eta f g hNet hOsc)
+        (measure_lt_top ν _).ne
     _ ≤ _ := measureReal_biUnion_finset_le _ _
 
 local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
@@ -153,13 +155,17 @@ theorem p4Q2PZ37AFB_originalResidualGap_uniformChordalModulus
     (e : Link) (theta eta : ℝ) (hEta : 0 < eta) :
     ∃ r : ℝ, 0 < r ∧ ∀ a z : Pair,
       D a z < r → |Gap e theta z - Gap e theta a| < eta := by
-  exact p4Q2PZ37ADM_compactContinuous_uniformDistanceModulus
-    D (p4Q2PZ37ADM_originalFullDistance_jointContinuous H)
-    (fun z w => p4Q2PZ37ADL_originalFullDistance_eq_zero_iff H z w)
-    (fun z w => p4Q2PZ37ADL_originalFullDistance_nonneg H z w)
-    (Gap e theta)
-    (p4Q2PZ37AFB_originalResidualGap_continuous H e theta)
-    eta hEta
+  obtain ⟨r, hr, hMod⟩ :=
+    p4Q2PZ37ADM_compactContinuous_uniformDistanceModulus
+      D (p4Q2PZ37ADM_originalFullDistance_jointContinuous H)
+      (fun z w => p4Q2PZ37ADL_originalFullDistance_eq_zero_iff H z w)
+      (fun z w => p4Q2PZ37ADL_originalFullDistance_nonneg H z w)
+      (Gap e theta)
+      (p4Q2PZ37AFB_originalResidualGap_continuous H e theta)
+      eta hEta
+  refine ⟨r, hr, ?_⟩
+  intro a z haz
+  simpa only [abs_sub_comm] using hMod a z haz
 
 /-- The finite table of actual, guard-failing original boundary centers. -/
 def p4Q2PZ37AFB_originalFlaggedNetCenters
