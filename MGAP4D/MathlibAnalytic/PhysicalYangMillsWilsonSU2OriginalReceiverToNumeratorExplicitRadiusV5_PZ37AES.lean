@@ -58,12 +58,12 @@ theorem p4Q2PZ37AES_realWeightedReceiverOscillation
     (hU : |u-v| ≤ L*d) (hT : |t| ≤ K)
     (hLD : 0 ≤ L*d) (hK : 0 ≤ K) :
     |u*t-v*t| ≤ (L*K)*d := by
-  have hProd : |u*t-v*t| = |u-v|*|t| := by
+  have hProd : |u*t-v*t| = |u-v| * |t| := by
     have hFactor : u*t-v*t = (u-v)*t := by ring
     rw [hFactor, abs_mul]
   rw [hProd]
   calc
-    |u-v|*|t| ≤ (L*d)*K :=
+    |u-v| * |t| ≤ (L*d)*K :=
       mul_le_mul hU hT (abs_nonneg _) hLD
     _ = (L*K)*d := by ring
 
@@ -83,6 +83,19 @@ local instance p4Q2PZ37AES_borel : BorelSpace G :=
   specialUnitaryGroupBorelSpace 2
 local instance p4Q2PZ37AES_probability : IsProbabilityMeasure mu :=
   normalizedCompactHaar_isProbabilityMeasure G
+
+/-- ORIGINAL SU(2) Wilson-character numerical bound. The original
+Wilson one-link energy is in [0,2], hence chi=1-E is in [-1,1].
+No character norm assumption remains in the physical numerator route. -/
+theorem p4Q2PZ37AES_originalWilsonCharacter_abs_le_one
+    (g : G) : |chi g| ≤ (1 : ℝ) := by
+  have h0 := specialUnitaryWilsonPlaquetteEnergy_nonneg
+    (by norm_num : 0 < 2) g
+  have h2 := specialUnitaryWilsonPlaquetteEnergy_le_two
+    (by norm_num : 0 < 2) g
+  change |(1 : ℝ) - specialUnitaryWilsonPlaquetteEnergy 2 g| ≤ 1
+  apply abs_le.mpr
+  constructor <;> linarith only [h0, h2]
 
 /-- The ORIGINAL Wilson character is a real continuous map on the
 actual compact SU(2), so its genuine supremum norm is finite. -/
@@ -175,12 +188,12 @@ theorem p4Q2PZ37AES_originalReceiverSlope_givesNumeratorSlope
       (hReceiver z w g) (hCharacter g) (mul_nonneg hLF hD) hK
   have hIntegral :
       ‖∫ g : G, (F e z g*chi g-F e w g*chi g) ∂mu‖ ≤
-        ((LF*K)*D z w) * mu.real Set.univ := by
+        ((LF*K)*D z w) * (normalizedCompactHaar G).real Set.univ := by
     apply norm_integral_le_of_norm_le_const
     filter_upwards with g
     rw [Real.norm_eq_abs]
     exact hPt g
-  have hUniv : mu.real Set.univ = 1 := by simp [measureReal_def]
+  have hUniv : (normalizedCompactHaar G).real Set.univ = 1 := by simp
   calc
     |N e z-N e w| =
         ‖∫ g : G, (F e z g*chi g-F e w g*chi g) ∂mu‖ := by
@@ -188,6 +201,19 @@ theorem p4Q2PZ37AES_originalReceiverSlope_givesNumeratorSlope
           exact (Real.norm_eq_abs _).symm
     _ ≤ (LF*K)*D z w := by
       simpa only [hUniv, mul_one] using hIntegral
+
+/-- With the *proved* exact Wilson-character numerical bound 1,
+only the genuine physical receiver slope LF is an outstanding premise.
+The physical Haar numerator has the SAME full D_H slope LF. -/
+theorem p4Q2PZ37AES_originalReceiverSlope_givesNumeratorUnitSlope
+    (e : Link) (LF : ℝ) (hLF : 0 ≤ LF)
+    (hReceiver : ∀ z w : Pair, ∀ g : G,
+      |F e z g - F e w g| ≤ LF * D z w) :
+    ∀ z w : Pair, |N e z-N e w| ≤ LF*D z w := by
+  have h := p4Q2PZ37AES_originalReceiverSlope_givesNumeratorSlope
+    H e LF 1 hLF (by norm_num)
+    p4Q2PZ37AES_originalWilsonCharacter_abs_le_one hReceiver
+  simpa only [mul_one] using h
 
 /-- A measurable/pointwise genuine Wilson receiver oscillation certificate
 replaces AER's abstract r_N by an exact radius formula. In particular
@@ -270,6 +296,33 @@ theorem p4Q2PZ37AES_originalReceiverSlope_explicitRadius_withTrueCharacterNorm
     p4Q2PZ37AES_originalWilsonCharacter_abs_le_compactNorm
     hReceiver
 
+/-- Use the verified ORIGINAL |chi|<=1 inequality to simplify
+the AER physical covariance half-amplitude radius to a single true
+source-receiver D_H slope LF, with no external character assumption. -/
+theorem p4Q2PZ37AES_originalReceiverSlope_explicitRadius_unitCharacter
+    (e : Link) (a : Pair) (lambda M LF : ℝ)
+    (ha : 0 < C b0 hb0 e a) (hlambda : 0 < lambda)
+    (hM : 0 ≤ M) (hLF : 0 ≤ LF)
+    (hQFloor : ∀ z : Pair, lambda ≤ q b0 hb0 z)
+    (hNmax : ∀ z : Pair, |N e z| ≤ M)
+    (hReceiver : ∀ z w : Pair, ∀ g : G,
+      |F e z g - F e w g| ≤ LF*D z w) :
+    ∃ R : ℝ,
+      R = min ((lambda*C b0 hb0 e a/4)/(LF+1))
+        (min 1
+          ((lambda^2*C b0 hb0 e a/(4*(M+lambda)))/(Lq+1))) ∧
+      0 < R ∧
+      (∀ z w : Pair, D z w < R →
+        |C b0 hb0 e z - C b0 hb0 e w| ≤ C b0 hb0 e a / 2) ∧
+      (C b0 hb0 e a / 2)^2 *
+        (2*(min (R/(2*(Fintype.card Link : ℝ)+1)) 2 / 4)^
+          (8*Fintype.card Link)) ≤ S b0 hb0 e := by
+  have h := p4Q2PZ37AES_originalReceiverCertified_explicitStableBall
+    H e a lambda M LF 1 ha hlambda hM hLF (by norm_num)
+    hQFloor hNmax p4Q2PZ37AES_originalWilsonCharacter_abs_le_one
+    hReceiver
+  simpa only [mul_one] using h
+
 /-- The same legitimate original receiver certificate gives the
 unchanged physical GI positive-mean consequence ONLY under the
 separate original FC numerical dominance test. -/
@@ -294,7 +347,7 @@ theorem p4Q2PZ37AES_originalReceiverCertified_numericGivesGI
       H e a lambda M LF K ha hlambda hM hLF hK
       hQFloor hNmax hCharacter hReceiver
   have heq : R = R0 := hReq.trans hR0.symm
-  subst R
+  rw [heq] at hNumeric
   have hScale :=
     mul_le_mul_of_nonneg_left hMoment
       (show (0 : ℝ) ≤ 272 by norm_num)
@@ -306,8 +359,11 @@ end
 end MGAP4D.MathlibAnalytic
 
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AES_realWeightedReceiverOscillation
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AES_originalWilsonCharacter_abs_le_one
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AES_originalWilsonCharacter_abs_le_compactNorm
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AES_originalReceiverSlope_givesNumeratorSlope
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AES_originalReceiverSlope_givesNumeratorUnitSlope
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AES_originalReceiverCertified_explicitStableBall
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AES_originalReceiverSlope_explicitRadius_withTrueCharacterNorm
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AES_originalReceiverSlope_explicitRadius_unitCharacter
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AES_originalReceiverCertified_numericGivesGI
