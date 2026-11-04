@@ -128,7 +128,7 @@ theorem p4Q2PZ37AFU_centeredHaarWeightError_zeroShift
       GroundStatePosteriorJoint.p4Q2PZ37AFJ_HaarWeightError partitionAFT q := by
   simp [p4Q2PZ37AFU_centeredHaarWeightError,
     GroundStatePosteriorJoint.p4Q2PZ37AFJ_HaarWeightError,
-    p4Q2PZ37AFT_originalOptimalHaarCells]
+    p4Q2PZ37AFT_originalOptimalHaarCells] <;> rfl
 
 theorem p4Q2PZ37AFU_centeredHaarWeightError_constant_zero (s : ℚ) :
     p4Q2PZ37AFU_centeredHaarWeightError (fun _ => s) s = 0 := by
