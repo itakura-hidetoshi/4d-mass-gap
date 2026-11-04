@@ -31,7 +31,7 @@ The same amplitude error is used in both W and A: it is NOT assumed
 independent of the original physical residual. Exact sign budgets
 for thresholds theta then take the form
 
-  vHat - (4+theta)*aHat +/- (deltaV+(4+theta)*dA).
+  vHat - (4+theta)*aHat, with signed error radius (deltaV+(4+theta)*dA).
 
 The certified finite rational data thus yield an actual AFH original
 interval witness, authentic strict shell centers, original Haar ball
