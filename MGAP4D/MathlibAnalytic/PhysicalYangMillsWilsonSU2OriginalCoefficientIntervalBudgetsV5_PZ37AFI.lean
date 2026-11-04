@@ -175,7 +175,7 @@ private theorem p4Q2PZ37AFI_squareError
     |x^2 - y^2| ≤ delta * (2 * |y| + delta) := by
   have hPlus : |x + y| ≤ 2 * |y| + delta := by
     calc
-      |x + y| = |(x - y) + (y + y)| := by congr 1 <;> ring
+      |x + y| = |(x - y) + (y + y)| := by congr 1; ring
       _ ≤ |x - y| + |y + y| := abs_add_le _ _
       _ ≤ delta + (|y| + |y|) :=
         add_le_add hApprox (abs_add_le _ _)
@@ -244,16 +244,16 @@ theorem p4Q2PZ37AFI_originalAmplitudeSquare_bounds
     have h := (abs_le.mp (hTerm j)).2
     linarith only [h]
   have hSumLo : (∑ j : Fin 4,
-      (d.coefficientCenter a j : ℝ)^2 -
+      ((d.coefficientCenter a j : ℝ)^2 -
         d.coefficientError a j *
-          (2 * |(d.coefficientCenter a j : ℝ)| + d.coefficientError a j)) ≤
+          (2 * |(d.coefficientCenter a j : ℝ)| + d.coefficientError a j))) ≤
           ∑ j : Fin 4, (m b0 hb0 e a j)^2 :=
     Finset.sum_le_sum (fun j _ => hLo j)
   have hSumHi : (∑ j : Fin 4, (m b0 hb0 e a j)^2) ≤
       ∑ j : Fin 4,
-        (d.coefficientCenter a j : ℝ)^2 +
+        ((d.coefficientCenter a j : ℝ)^2 +
           d.coefficientError a j *
-            (2 * |(d.coefficientCenter a j : ℝ)| + d.coefficientError a j) :=
+            (2 * |(d.coefficientCenter a j : ℝ)| + d.coefficientError a j)) :=
     Finset.sum_le_sum (fun j _ => hHi j)
   constructor
   · rw [p4Q2PZ37ACM_originalCovarianceAmplitude_sq H b0 hb0 e a]
