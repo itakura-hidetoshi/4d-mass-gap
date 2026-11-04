@@ -100,8 +100,7 @@ theorem p4Q2PZ37AFX_originalFourMode_firstColumn
     simp [p4Q2PZ35A_pauliQ0, p4Q2PZ35A_pauliQ1,
       p4Q2PZ35A_pauliQ2, p4Q2PZ35A_pauliQ3,
       Matrix.trace_fin_two, Complex.mul_re, Complex.add_re, Complex.neg_re,
-      Complex.conj_re, Complex.conj_im, Complex.I_re, Complex.I_im] <;>
-    ring
+      Complex.conj_re, Complex.conj_im, Complex.I_re, Complex.I_im]
 
 /-- Actual four characters are signed/permuted ADR real first-column
 coordinates, not a proxy S³ test function. -/
@@ -166,10 +165,10 @@ theorem p4Q2PZ37AFX_gridCoordinate_exact
       by_cases h : signs idx = true
       · simp [p4Q2PZ37AFQ_sphereGridCenter,
           p4Q2PZ37AFQ_diagSphere, p4Q2PZ37AFQ_diagVector,
-          p4Q2PZ37AFX_gridCoordinate, h] <;> norm_num
+          p4Q2PZ37AFX_gridCoordinate, h] ; norm_num
       · simp [p4Q2PZ37AFQ_sphereGridCenter,
           p4Q2PZ37AFQ_diagSphere, p4Q2PZ37AFQ_diagVector,
-          p4Q2PZ37AFX_gridCoordinate, h] <;> norm_num
+          p4Q2PZ37AFX_gridCoordinate, h]
 
 /-- Explicit fixed rational sample table for all four characters at all
 24 original SU(2) centers; no floating-point or unknown Haar moments. -/
