@@ -86,15 +86,18 @@ def p4Q2PZ37AFW_originalCharacterVerifiedInterval
     p4Q2PZ37AFV_verifiedInterval (phi j g) where
   lower := -1
   upper := 1
-  hLower := (p4Q2PZ37AFW_originalCharacter_unitBounds j g).1
-  hUpper := (p4Q2PZ37AFW_originalCharacter_unitBounds j g).2
+  hLower := by
+    simpa using (p4Q2PZ37AFW_originalCharacter_unitBounds j g).1
+  hUpper := by
+    simpa using (p4Q2PZ37AFW_originalCharacter_unitBounds j g).2
 
 /-- The resulting character sample is literally zero and its
 proven error is one; it is conservative, not a true character evaluation. -/
 theorem p4Q2PZ37AFW_characterBall_center_zero (j : Fin 4) (g : G) :
     (p4Q2PZ37AFV_intervalToBall
       (p4Q2PZ37AFW_originalCharacterVerifiedInterval j g)).sample = 0 := by
-  rfl
+  norm_num [p4Q2PZ37AFV_intervalToBall,
+    p4Q2PZ37AFW_originalCharacterVerifiedInterval]
 
 theorem p4Q2PZ37AFW_characterBall_error_one (j : Fin 4) (g : G) :
     (p4Q2PZ37AFV_intervalToBall
