@@ -154,7 +154,7 @@ theorem p4Q2PZ37AFJ_HaarStep_eq_onCell
       by_cases hj : j = i
       · subst j
         simp [Set.indicator_of_mem hi]
-      · simp [hj, Set.indicator_of_not_mem (hNot j hj)]
+      · simp [Set.indicator, hj, hNot j hj]
     _ = (q i : ℝ) := by simp
 
 /-- Cellwise physical integrand bounds imply a bound everywhere
@@ -249,12 +249,13 @@ theorem p4Q2PZ37AFJ_integral_error_of_cells
   have hStep := p4Q2PZ37AFJ_HaarStep_integrable p q
   have hPoint : |(∫ g : G, f g ∂mu) -
       (∫ g : G, p4Q2PZ37AFJ_HaarStep p q g ∂mu)| ≤ eps := by
-    have hNorm := norm_integral_le_of_norm_le_const (μ := mu)
+    have hNorm := norm_integral_le_of_norm_le_const
+      (μ := mu) (f := fun g : G => f g - p4Q2PZ37AFJ_HaarStep p q g)
       (C := eps) (Filter.Eventually.of_forall (fun g : G => by
         simpa only [Real.norm_eq_abs] using
           p4Q2PZ37AFJ_HaarStep_pointwise_bound p q f eps hLocal g))
     rw [← integral_sub hF hStep]
-    simpa only [Real.norm_eq_abs] using hNorm
+    simpa [Real.norm_eq_abs] using hNorm
   have hWeight := p4Q2PZ37AFJ_HaarStep_weightError p q
   calc
     |(∫ g : G, f g ∂mu) -
@@ -300,7 +301,7 @@ private theorem p4Q2PZ37AFJ_square_error
         add_le_add h (abs_add_le _ _)
       _ = 2 * |y| + delta := by ring
   calc
-    |x^2 - y^2| = |x-y|*|x+y| := by
+    |x^2 - y^2| = |x-y| * |x+y| := by
       rw [show x^2-y^2=(x-y)*(x+y) by ring, abs_mul]
     _ ≤ delta * |x+y| := mul_le_mul_of_nonneg_right h (abs_nonneg _)
     _ ≤ delta * (2*|y|+delta) :=
@@ -543,7 +544,22 @@ theorem p4Q2PZ37AFJ_originalVariance_accuracy
         ((∫ g : G, F b0 hb0 f0 e a g ∂mu)^2 -
           (uHat e c d a : ℝ)^2) := by ring
   rw [hRearrange]
-  exact (abs_sub_le _ _).trans (add_le_add hSecond hSquare)
+  have hTriangle :
+      |((∫ g : G, (F b0 hb0 f0 e a g)^2 ∂mu) -
+            (sHat e c d a : ℝ)) -
+        ((∫ g : G, F b0 hb0 f0 e a g ∂mu)^2 -
+          (uHat e c d a : ℝ)^2)| ≤
+        |(∫ g : G, (F b0 hb0 f0 e a g)^2 ∂mu) -
+          (sHat e c d a : ℝ)| +
+        |(∫ g : G, F b0 hb0 f0 e a g ∂mu)^2 -
+          (uHat e c d a : ℝ)^2| := by
+    simpa only [abs_neg, sub_eq_add_neg] using
+      abs_add_le
+        ((∫ g : G, (F b0 hb0 f0 e a g)^2 ∂mu) -
+          (sHat e c d a : ℝ))
+        (-((∫ g : G, F b0 hb0 f0 e a g ∂mu)^2 -
+          (uHat e c d a : ℝ)^2))
+  exact hTriangle.trans (add_le_add hSecond hSquare)
 
 /-- FINITE rational Haar quadrature induces the actual AFI
 coefficient-and-variance certificate, with all error evidence proved. -/
