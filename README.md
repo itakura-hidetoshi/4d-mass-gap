@@ -1,3 +1,26 @@
+## 検証済み定理 — AFX（2026-11-05 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` はREADME・ROADMAP文書ミラー。AFW定理 #6334、正本文書 #6335、mainミラー #6336までの全件MERGEDを継承し、[AFX定理PR #6337](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6337) は **MERGED**。定理squash SHAは`a0f626cd2e5e4a0ac46f9b33de185df28419b3e5`。真正SU(2) Wilson・元の正規化compact Haar／境界pair-Haar・Perron/transfer・符号付きFF受信器・AFQ真正24先着中心Borelセル・AFT固定有理重みを保持し、代理群・代理測度・追加の物理仮定を導入しない。
+
+### 真正24中心の四成分Wilson文字に対する厳密有理値
+
+- **元の実4座標との直接対応**：PZ35Bの真正SU(2)Quaternion元とPZ35D2の真正複素行列trace・ADRの元2×2行列再構成を使い、元ACKの四成分Wilson文字 `φ_j(g)` は、元の実4座標 `(x₀,x₁,x₂,x₃)` に対し**`(φ₀,φ₁,φ₂,φ₃)=(x₀,-x₂,-x₁,-x₃)`**とLean4で証明。符号とindexの対応を元のPauli行列の定義から直接導出し、任意の抽象同型や未証明の座標選択に依存しない。
+- **真正24中心の固定有理テーブル**：AFQの元24中心は、ADSで構成した元のSU(2)への真正逆写像を使った座標軸8点＋半対角16点である。各中心の各文字は、軸では `-1,0,1`、半対角では `-1/2,1/2` の固定有理値となる。具体的な `Fin 4×Fin 24→ℚ` テーブル `p4Q2PZ37AFX_exactRationalCharacter` と全indexでの真正値との等式をLean4で形式証明した。数値積分、元Haar質量計算、FF受信器測定に置き換えたものではない。
+- **文字区間の誤差ゼロ**：元AFVの型付き `verifiedInterval` で上下端点を同一の真の有理文字値に置き、`intervalToBall` の文字誤差が**厳密0**となることを証明した。AFWの全球的で保守的な `[-1,1]` 区間の幅1から、元24中心に限った有理singletonへ真正の意味で厳密化した。
+- **物理証明書への型付き接続**：外部入力は依然として、AFG境界サンプルの各点と真正SU(2)24中心における元FF/Perron/transfer受信器の有理区間包含証明だけ。文字側の入力をAFX固定表から作り、元のAFV `originalFiniteIntervalInput` に接続し、AFT受信器積分証明書・AFI係数／分散証明書へ移送。AFUのHaar質量保存・中心化誤差評価も既存の型付き経路のまま使用できる。FF受信器の具体的有理数値自体を認証したとの主張ではない。
+
+### exact-source Lean4 CI・公理監査・Git tree
+
+- 新規Leanは `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalExact24CenterFourModeV5_PZ37AFX.lean` のみ（281行、11件の `#print axioms`）。既存Lean・公開root・CI workflows・元物理測度・pinは変更なし。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を保持。
+- 初回[CI #41922258657](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41922258657)は失敗。その後の修正で[CI #41923287180](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41923287180)がSUCCESSとなり、さらに未実行戦術の削除後に最終exact-source HEAD `1fbd329a8aeca4daf1bfbf922d6fa60c484630f7` で[CI #41924187506](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41924187506)が **11,331/11,331 SUCCESS**。公理依存11件はすべて標準 `propext`・`Classical.choice`・`Quot.sound` のみ、`sorry`・`admit`・追加`axiom`・`constant` 0、変更Lean warning/error **0/0**、独立MCP completion receipt **SUCCESS**。
+- 最終source HEAD、test-merge `5453fa897fd6d11d850d37def919be0a78ea185e`、squash `a0f626cd2e5e4a0ac46f9b33de185df28419b3e5` のGit treeは `e312a4cfb168859127fcbb2c4938d5561c13eb14` で完全一致。
+
+### 残存obstruction・次段AFY
+
+真の24中心でのQuaternion四文字は有理値として厳密確定したが、元FF受信器の具体的な有理区間包含、独立したPerron/transfer数値認証、真正二閾値の非空符号殻は未確定。次段AFYでは、真正物理FF受信器の数値区間認証を検査可能な有限入力に落とし、中心での実際の数値評価と局所振動誤差の接続を進める。体積一様coercivity、物理Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは引き続き**未証明**。
+
+---
+
 ## 検証済み定理 — AFW（2026-11-05 JST）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラー。AFVの定理PR #6331、正本文書 #6332、mainミラー #6333 は全件MERGED。[AFW定理PR #6334](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6334) も **MERGED**。定理squash SHA `1922810011e6940a52bd6566da4b0bbbce90da4b`。真正SU(2) Wilson/Haar・元のAFQ 24先着中心Borelセル・AFT固定有理重み・Perron/transfer/符号付きFF受信器・AFM→AFJ→AFI型付き接続を不変更で継承する。
