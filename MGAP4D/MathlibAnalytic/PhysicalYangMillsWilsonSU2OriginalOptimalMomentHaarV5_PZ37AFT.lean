@@ -173,7 +173,7 @@ theorem p4Q2PZ37AFT_everyCell_originalHaar_le
       p4Q2PZ37AFQ_cells i ⊆ BallJ (gridCenter i) (4 / 5) := by
     intro g hg
     exact (p4Q2PZ37AFN_originalFirstCenterCell_mem_iff
-      (Fintype.card Grid) center (4 / 5) i g).1 hg |>.1
+      (Fintype.card Grid) gridCenter (4 / 5) i g).1 hg |>.1
   calc
     Measure.real mu (p4Q2PZ37AFQ_cells i) ≤
         Measure.real mu (BallJ (gridCenter i) (4 / 5)) :=
