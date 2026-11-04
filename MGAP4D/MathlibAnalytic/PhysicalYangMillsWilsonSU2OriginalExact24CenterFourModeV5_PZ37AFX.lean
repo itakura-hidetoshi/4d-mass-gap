@@ -27,7 +27,7 @@ samples, two-sign shell existence, coercivity or any 4D mass gap.
 namespace MGAP4D.MathlibAnalytic
 
 open MeasureTheory
-open scoped Topology Classical BigOperators InnerProductSpace
+open scoped Topology Classical BigOperators InnerProductSpace ComplexConjugate
 
 noncomputable section
 set_option autoImplicit false
@@ -85,15 +85,21 @@ theorem p4Q2PZ37AFX_originalFourMode_firstColumn
          p4Q2PZ35A_pauliQ2, p4Q2PZ35A_pauliQ3] : Fin 4 → Mat) j *
         !![((g : Mat) 0 0), -conj ((g : Mat) 1 0);
            ((g : Mat) 1 0), conj ((g : Mat) 0 0)] := by
-    change (((q j : G) : Mat) * (g : Mat)) = _
-    rw [p4Q2PZ35B_quaternionFamily_coe,
-      p4Q2PZ37ADR_originalMatrix_fromFirstColumn]
+    calc
+      (((q j * g : G) : Mat)) = (((q j : G) : Mat) * (g : Mat)) := rfl
+      _ = (![p4Q2PZ35A_pauliQ0, p4Q2PZ35A_pauliQ1,
+             p4Q2PZ35A_pauliQ2, p4Q2PZ35A_pauliQ3] : Fin 4 → Mat) j *
+            (g : Mat) := by rw [p4Q2PZ35B_quaternionFamily_coe]
+      _ = _ := congrArg
+        (fun M : Mat =>
+          (![p4Q2PZ35A_pauliQ0, p4Q2PZ35A_pauliQ1,
+             p4Q2PZ35A_pauliQ2, p4Q2PZ35A_pauliQ3] : Fin 4 → Mat) j * M)
+        (p4Q2PZ37ADR_originalMatrix_fromFirstColumn g)
   rw [hMat]
   fin_cases j <;>
     simp [p4Q2PZ35A_pauliQ0, p4Q2PZ35A_pauliQ1,
       p4Q2PZ35A_pauliQ2, p4Q2PZ35A_pauliQ3,
-      Matrix.trace_fin_two, Matrix.mul_apply, Fin.sum_univ_two,
-      Complex.mul_re, Complex.add_re, Complex.neg_re,
+      Matrix.trace_fin_two, Complex.mul_re, Complex.add_re, Complex.neg_re,
       Complex.conj_re, Complex.conj_im, Complex.I_re, Complex.I_im] <;>
     ring
 
@@ -160,10 +166,10 @@ theorem p4Q2PZ37AFX_gridCoordinate_exact
       by_cases h : signs idx = true
       · simp [p4Q2PZ37AFQ_sphereGridCenter,
           p4Q2PZ37AFQ_diagSphere, p4Q2PZ37AFQ_diagVector,
-          p4Q2PZ37AFX_gridCoordinate, h]
+          p4Q2PZ37AFX_gridCoordinate, h] <;> norm_num
       · simp [p4Q2PZ37AFQ_sphereGridCenter,
           p4Q2PZ37AFQ_diagSphere, p4Q2PZ37AFQ_diagVector,
-          p4Q2PZ37AFX_gridCoordinate, h]
+          p4Q2PZ37AFX_gridCoordinate, h] <;> norm_num
 
 /-- Explicit fixed rational sample table for all four characters at all
 24 original SU(2) centers; no floating-point or unknown Haar moments. -/
