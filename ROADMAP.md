@@ -1,3 +1,27 @@
+## 検証済み定理 — AFN（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFM定理PR #6304・正本文書PR #6305・main文書ミラーPR #6306の全件MERGEDを継承し、AFN定理PR [#6307](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6307) は **MERGED**。定理squash SHA `0d1c0cf21d7ce0205c2b20f211f58ea48b3bfc7c`。既存の真正SU(2) Wilson相互作用、中心化Gauss-law物理源、Perron/transfer、元FF符号付き受信器、正規化SU(2) Haar、元境界pair-Haar `ν_H`、`d_J`・`D_H`、FC obstruction、公開root、固定Lean/mathlibは変更しない。
+
+### 元SU(2)有限Borelセルの存在と真正Haar・FF有理誤差証明書
+
+- **ADPの真正SU(2)有限ネットから厳密セルを構成**：任意の正半径 `r>0` でADPの真正SU(2)有限弦距離ネット `g_i` を使い、各 `g∈SU(2)` を、`d_J(g_i,g)<r` を満たす最初のインデックス `i` に割り当てる。`C_i=B_J(g_i,r) ∖ ⋃_{j<i}B_J(g_j,r)` と定義し、`C_i` のBorel可測性、一意所属、全体被覆、真正弦距離半径 `d_J(g,g_i)≤r` をLean4で証明。セルが空でないことや正質量を全セルで主張するものではない。
+- **元の正規化Haar質量に任意精度の有理包囲が存在**：各真のセル質量 `μ_Haar(C_i)` について、任意の `ε_w>0` で `q_i∈ℚ` が存在し、`|Measure.real μ_Haar(C_i)−q_i|≤ε_w`。AFJの真正`originalHaarCells`構造に、重複のない実セル・可測性・真のHaar質量誤差証明を供給する。重みの選択は`Classical.choose`に依存し、実際の有理値・有理区間計算を実行したわけではない。
+- **同じ真正FF受信器の中心有理近似を型付き証明**：任意の `ε_s>0` と有限中心について、元の `p4Q2PZ37ABZ_originalReceiverSection` による `F_z(g_i)`、`F_z(g_i)^2`、四つの真正Quaternion文字を掛けた `F_z(g_i) φ_j(g_i)` に、それぞれ絶対誤差 `≤ε_s` の有理近似が存在することを実数中の有理数稠密性から証明。中間ABZ transfer quotient `U` をFF受信器に置換せず、元の物理量と測度を保存する。
+- **AFM→AFL→AFK→AFJ→AFI→AFHの元の型付き連鎖へ接続**：有限ネットから `originalNumericOnlyCellSamples` が存在し、そのセル半径が指定された真正 `r` に厳密一致することを示す。任意の既存AFG shell sample table `c` と `0≤θ_lo` を与えれば、元の係数・分散有理区間証明書が`Nonempty`となることを導く。ここで**AFG入力 `c` 自体の構成、二閾値で通過する中心の存在、真の殻正質量は証明していない**。
+- **非計算的existenceと実効的numeric certificationの境界**：ADPの有限ネット存在と、`exists_rat_btwn`・`Classical.choose`による有理近似存在はLeanカーネルで検証した。しかし明示座標の有限ネット、セル質量の実数計算、具体的有理標本、セル数上界、非空二符号殻、有用な誤差余裕は未認証。これらを実測済みデータや実行可能アルゴリズムと誤認しない。
+
+### exact-source CI・公理監査・Git tree
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFiniteBorelHaarCellExistenceV5_PZ37AFN.lean` **1ファイル・307追加行、公開7定理・7件の `#print axioms`**。既存Leanファイル、元物理模型・Haar測度、workflow、公開rootは変更なし。Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 固定。
+- 正しい数学的型で初回からexact-source Lean成功。最終source HEAD `7b4f45cc50b0bc61b20c022f95c6f79cb2fb4dd1` の [CI #41801635520](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41801635520) は **11,321/11,321 SUCCESS**。新規7定理の公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ。`sorryAx`なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。
+- source `7b4f45cc50b0bc61b20c022f95c6f79cb2fb4dd1`、test-merge `b0f7fb8b5a6107c410e171bb83fd1571b33beadc`、squash `0d1c0cf21d7ce0205c2b20f211f58ea48b3bfc7c` のGit treeは **`ca4eeb78d61736bd86b92f2a80b9bad084013735`** で完全一致。
+
+### 未解決obstructionと次段AFO
+
+AFNは正半径に対する真正有限Borelセル・真正Haar質量有理包囲・真正FF中心有理近似の**非計算的存在**を形式証明した。一方、計算可能な元SU(2)格子とセル質量の明示誤差評価、具体的な有理FF標本の検算、AFG物理標本表の構成、strict二閾値符号交差、体積一様coercivity、物理Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは**未証明**。AFOでは真正SU(2)↔S³座標と有理区間演算による**実効的な小セル構成・質量/標本認証**へ進める。
+
+---
+
 ## 検証済み定理 — AFM（2026-11-04 JST）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFL定理PR #6301・文書 #6302/#6303まで全件MERGEDの正本を継承し、AFM定理PR [#6304](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6304) は **MERGED**。定理squash SHA `9b1b19e45b3770bc464ffbeb1f650cd9b2105158`。既存の元SU(2)相互作用Wilson作用、中心化Gauss-law物理源、真正Perron真空・transfer、正規化SU(2) Haarと境界pair-Haar `ν_H`、真正弦距離 `d_J` と全リンク `D_H`、FC envelope、AEX二球障害、公開root、固定Lean/mathlibは変更しない。
