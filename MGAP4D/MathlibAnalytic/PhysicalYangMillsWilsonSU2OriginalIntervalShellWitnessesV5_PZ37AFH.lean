@@ -315,13 +315,17 @@ theorem p4Q2PZ37AFH_intervalCenters_empty_of_barrier
       q.residualLower a - lo * q.amplitudeUpper a ≤ c.etaLo ∨
       -c.etaHi ≤ q.residualUpper a - hi * q.amplitudeLower a) :
     Interval e c q = ∅ := by
-  apply Finset.eq_empty_iff_forall_not_mem.mpr
-  intro a ha
-  have haS := (Finset.mem_filter.mp ha).1
-  obtain ⟨hLo, hHi⟩ := (Finset.mem_filter.mp ha).2
-  rcases hBarrier a haS with h | h
-  · exact (not_lt_of_ge h) hLo
-  · exact (not_lt_of_ge h) hHi
+  apply Finset.ext
+  intro a
+  constructor
+  · intro ha
+    have haS := (Finset.mem_filter.mp ha).1
+    obtain ⟨hLo, hHi⟩ := (Finset.mem_filter.mp ha).2
+    rcases hBarrier a haS with h | h
+    · exact False.elim ((not_lt_of_ge h) hLo)
+    · exact False.elim ((not_lt_of_ge h) hHi)
+  · intro ha
+    simp at ha
 
 /-- The genuine finite greedy algorithm extracts a disjoint packing
 from INTERVAL-certified centers, not from uncertified gap estimates. -/
