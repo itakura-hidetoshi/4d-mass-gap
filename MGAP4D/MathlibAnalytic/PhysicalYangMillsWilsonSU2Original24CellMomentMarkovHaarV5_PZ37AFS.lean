@@ -126,10 +126,21 @@ theorem p4Q2PZ37AFS_shiftedSquare_integral_half :
     (∫ g : G, p4Q2PZ37AFS_shiftedSquare g ∂mu) =
         (∫ g : G, (chi g) ^ 2 ∂mu) +
           (∫ g : G, chi g ∂mu) + 1 / 4 := by
-            simp only [p4Q2PZ37AFS_shiftedSquare]
-            rw [integral_add (hIntSq.add hInt) (integrable_const _),
-              integral_add hIntSq hInt]
-            simp
+      have hSplit1 :
+          (∫ g : G, ((chi g) ^ 2 + chi g) + (1 / 4 : ℝ) ∂mu) =
+            (∫ g : G, (chi g) ^ 2 + chi g ∂mu) +
+              (∫ _g : G, (1 / 4 : ℝ) ∂mu) :=
+        integral_add (hIntSq.add hInt) (integrable_const _)
+      have hSplit2 :
+          (∫ g : G, (chi g) ^ 2 + chi g ∂mu) =
+            (∫ g : G, (chi g) ^ 2 ∂mu) +
+              (∫ g : G, chi g ∂mu) :=
+        integral_add hIntSq hInt
+      change (∫ g : G, ((chi g) ^ 2 + chi g) + (1 / 4 : ℝ) ∂mu) =
+        (∫ g : G, (chi g) ^ 2 ∂mu) +
+          (∫ g : G, chi g ∂mu) + 1 / 4
+      rw [hSplit1, hSplit2]
+      simp
     _ = 1 / 2 := by
       rw [p4Q2PZ37AFS_originalCharacter_square_integral,
         p4Q2PZ37AFS_originalCharacter_mean_zero]
