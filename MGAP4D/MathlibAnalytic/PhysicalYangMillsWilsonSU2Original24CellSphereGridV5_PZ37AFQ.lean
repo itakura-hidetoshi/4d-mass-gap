@@ -129,7 +129,7 @@ theorem p4Q2PZ37AFQ_inner_axis
       x j * (if s then (-1 : ℝ) else 1) := by
   fin_cases j <;> cases s <;>
     simp [p4Q2PZ37AFQ_axisVector, PiLp.inner_apply,
-      Fin.sum_univ_four, realScalarInner_eq_mul]
+      realScalarInner_eq_mul]
 
 theorem p4Q2PZ37AFQ_inner_diag
     (x : E4) (s : Fin 4 → Bool) :
