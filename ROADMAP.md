@@ -1,3 +1,27 @@
+## 検証済み定理 — AFL（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFK定理PR #6298・文書 #6299/#6300の全件MERGEDを継承し、AFL定理PR [#6301](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6301) も **MERGED**。定理squash SHA `a23be3f0ce64a6d6a0b0287f0cd4d3ecc322139e`。元の相互作用Wilson SU(2)、中心化Gauss-law物理源、真正Perron真空、元右リンク更新transfer、正規化SU(2) Haar・境界pair-Haar測度 `ν_H`、元全リンク距離 `D_H`、FC envelope、AEX保守的二球FC obstruction、公開root・固定Lean/mathlibを変更しない。
+
+### 真正SU(2)四成分文字の明示係数1弦距離評価
+
+- **実8成分特徴と元文字の厳密同一性**：元のSU(2)正規化実8成分特徴 `J(g)` と元Wilson一リンク文字 `χ(g)=1−E(g)` について、元の相対トレースkernelの真正Hilbert内積から `χ(g)=⟪J(1),J(g)⟫_ℝ` を証明。ADKの `‖J(g)‖²=1` により `‖J(1)‖=1`。Cauchy–Schwarzで **`|χ(g)−χ(h)|≤d_J(g,h)`** を導出。独立の代理文字・新規測度・任意のLipschitz仮定は導入しない。
+- **元SU(2)左平行移動は真正等長**：ADKで検証済みの `d_J(g,h)²=2E(g⁻¹h)` を使用し、任意の真正 `a,g,h∈SU(2)` で **`d_J(ag,ah)=d_J(g,h)`** を証明。これは群作用の元行列・元Wilsonエネルギーだけを使う。
+- **四つの真正Haar文字に外部上界不要**：ACKの元Quaternion要素 `q_j` による `φ_j(g)=χ(q_jg)` に左等長性を適用し、全 `j∈Fin 4,g,h∈SU(2)` で **`|φ_j(g)−φ_j(h)|≤d_J(g,h)`**。別のACK真正恒等式 `Σ_j φ_j(g)²=1` と二乗非負性から **`|φ_j(g)|≤1`** も証明。ここで「係数1」は明示上界であり、最適定数の下限・必要性を別途証明したという意味ではない。
+- **AFKの文字側仮定を型から除去**：真正受信器 `F_z` のenvelope `M_F(z)` と弦距離斜率 `L_F(z)`、元SU(2)有限Haarセル・中心・半径・質量の証明、中心有理サンプル誤差のみを要求する新しい`originalReceiverOnlyCellSamples`を定義。文字側 `M_φ=L_φ=1` は外部入力でなく上記Lean定理から構成し、AFK完全証明書へ型付き移送する。四係数セル誤差は **`Δ_coeff,j=(L_F+M_F)r+ε_coeff,j`** と簡約。
+- **真正Haar・物理ギャップへの条件付き連鎖**：新型からAFK→AFJの真正セル積分→AFIの元係数・分散有理区間→AFHの真の二閾値殻へ接続。検査が通った実中心では元Wilson/Perron残差ギャップの厳密二符号、同一真正境界pair-Haar殻の正質量、AFD真正 `2r` 分離packing `|t|κ_H(r)≤ν_H(Shell)`、非零振幅・閾値分離障害を引き継ぐ。物理的な中心が無条件に存在するとは主張しない。
+
+### exact-source CI・公理監査・Git tree
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFourModeSharpChordalLipschitzV5_PZ37AFL.lean` **1ファイル・377追加行、公開11定理・11件の `#print axioms`**。既存Lean、元物理模型、Haar則、workflow、公開rootは変更なし。Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 固定。
+- 初回CI #41792435952で `Finset.single_le_sum` の被加算関数型推論不足と、独立受信器証拠構造で体積 `H` の重複束縛による依存型不一致を検出。全Leanソース・ACK/ADK・AFK/AFJ・固定mathlibシグネチャを照合し修正。最終exact-source HEAD `823b75ac8e8fecb2d8c9db795eb985a20f92498b` に対する [CI #41793129863](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41793129863) は **11,319/11,319 SUCCESS**。11定理の公理依存は `propext`、`Classical.choice`、`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error **0/0**、独立MCP completion receiptもSUCCESS。
+- source HEAD・test-merge `b32d68219e0f3de69c389a8c5fda6d349054d22e`・squash `a23be3f0ce64a6d6a0b0287f0cd4d3ecc322139e` のGit treeはすべて `e1699fd75182a3871b68d86500ee28b3cd519b99` で一致。
+
+### 未解決obstructionと次のAFM
+
+AFLで文字側のenvelope・弦距離係数は無条件に証明した。一方、**元Wilson/Perron物理受信器 `F_z` のLipschitz係数とenvelope、真正SU(2)有限セル分割とHaarセル質量の有理区間、中心値サンプル、実際の厳密殻交差、H一様coercivity**は依然未証明。物理Hamiltonian spectral gapと連続体4D Yang–Mills質量ギャップも未証明。次段AFMでは受信器の真の右リンク更新transfer・Perron因子・中心化Gauss-law物理源を分解し、実8成分弦距離による数値検証可能な真の受信器変動係数を検討する。
+
+---
+
 ## 検証済み定理 — AFK（2026-11-04 JST）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAPの文書ミラーのみ。AFJ定理PR #6295と文書PR #6296/#6297をMERGEDとして継承し、AFK定理PR [#6298](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6298) も **MERGED**。定理squash SHA `2c644f98e5769b98472ff04b89f37fb92d7d4ecb`。元の相互作用Wilson SU(2)、中心化Gauss-law物理源、真正Perron真空、元の右リンク更新transfer、正規化SU(2) Haar・境界pair-Haar測度 `ν_H`、真正全リンク距離 `D_H`、FC envelope、AEX保守的二球FC obstruction、公開root・Lean/mathlib固定pinを変更しない。
