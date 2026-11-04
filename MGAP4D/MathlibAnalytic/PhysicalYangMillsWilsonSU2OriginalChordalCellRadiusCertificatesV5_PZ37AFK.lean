@@ -101,8 +101,8 @@ private theorem p4Q2PZ37AFK_centerError_to_cell
   calc
     |x - q| ≤ |x - y| + |y - q| := abs_sub_le x y q
     _ ≤ L * d + eps := add_le_add hSlope hSample
-    _ ≤ L * r + eps := add_le_add_right
-      (mul_le_mul_of_nonneg_left hRadius hL) eps
+    _ ≤ L * r + eps :=
+      add_le_add (mul_le_mul_of_nonneg_left hRadius hL) (le_refl eps)
 
 /-- The squared genuine receiver oscillates at most twice the
 receiver envelope times the original receiver Lipschitz slope. -/
@@ -118,9 +118,9 @@ private theorem p4Q2PZ37AFK_square_chordal_modulus
       _ ≤ M+M := add_le_add hx hy
       _ = 2*M := by ring
   calc
-    |x^2-y^2| = |x-y|*|x+y| := by
+    |x^2-y^2| = |x-y| * |x+y| := by
       rw [show x^2-y^2=(x-y)*(x+y) by ring, abs_mul]
-    _ ≤ (L*d)*|x+y| :=
+    _ ≤ (L*d)* |x+y| :=
       mul_le_mul_of_nonneg_right hSlope (abs_nonneg _)
     _ ≤ (L*d)*(2*M) :=
       mul_le_mul_of_nonneg_left hSum (mul_nonneg hL hd)
@@ -136,23 +136,23 @@ private theorem p4Q2PZ37AFK_product_chordal_modulus
     (hYBound : |y| ≤ Mx) (hUBound : |u| ≤ Mu) :
     |x*u-y*v| ≤ (Lx*Mu+Mx*Lu)*d := by
   have hTermX :
-      |x-y|*|u| ≤ (Lx*d)*Mu := by
+      |x-y| * |u| ≤ (Lx*d)*Mu := by
     calc
-      |x-y|*|u| ≤ (Lx*d)*|u| :=
+      |x-y| * |u| ≤ (Lx*d)* |u| :=
         mul_le_mul_of_nonneg_right hX (abs_nonneg _)
       _ ≤ (Lx*d)*Mu :=
         mul_le_mul_of_nonneg_left hUBound (mul_nonneg hLx hd)
   have hTermU :
-      |y|*|u-v| ≤ Mx*(Lu*d) := by
+      |y| * |u-v| ≤ Mx*(Lu*d) := by
     calc
-      |y|*|u-v| ≤ |y|*(Lu*d) :=
+      |y| * |u-v| ≤ |y| * (Lu*d) :=
         mul_le_mul_of_nonneg_left hU (abs_nonneg _)
       _ ≤ Mx*(Lu*d) :=
         mul_le_mul_of_nonneg_right hYBound (mul_nonneg hLu hd)
   calc
     |x*u-y*v| = |(x-y)*u+y*(u-v)| := by congr 1; ring
     _ ≤ |(x-y)*u| + |y*(u-v)| := abs_add_le _ _
-    _ = |x-y|*|u|+|y|*|u-v| := by rw [abs_mul, abs_mul]
+    _ = |x-y| * |u|+|y| * |u-v| := by rw [abs_mul, abs_mul]
     _ ≤ (Lx*d)*Mu + Mx*(Lu*d) := add_le_add hTermX hTermU
     _ = (Lx*Mu+Mx*Lu)*d := by ring
 
