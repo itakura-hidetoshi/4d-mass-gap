@@ -1,3 +1,27 @@
+## 検証済み定理 — AFO（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFN定理PR #6307・正本文書 #6308・mainミラー #6309 の全件MERGEDを継承し、AFO定理PR [#6310](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6310) は **MERGED**。定理squash SHA `69694abf4a1bfdef85588f1a20b95f783ac59753`。既存の真正SU(2)相互作用Wilson、中心化Gauss-law物理源、Perron真空・transfer、真正符号付きFF受信器、元正規化Haarと境界pair-Haar `ν_H`、`d_J`・`D_H`、FC obstruction、公開root・固定Lean/mathlibを変更しない。
+
+### 真正SU(2) Haarの明示2セル・真正FF有理ゼロ標本証明書
+
+- **非計算的な有限ネット選択を不要にした2セル**：元SU(2)の単位元 `1` と既存の真正中心反対元 `z=-1` を中心とする、半径 `3/2` の真正ADK弦距離球を用いる。ADNの既証明 `B_J(1,3/2) ∪ B_J(z,3/2)=SU(2)` から、`C₀=B_J(1,3/2)` と `C₁=SU(2)∖C₀` はBorel可測な重複のない完全分割であり、`C_i⊆B_J(g_i,3/2)` をLean4で証明。中心は元のSU(2)行列であり、代理群・有限置換Haarではない。
+- **具体的有理Haar重みを厳密に認証**：ADOの真正元Haar半径評価 `1/2 ≤ μ(C₀) ≤ 7/8` と確定的な補集合恒等式 `μ(C₀)+μ(C₁)=1` を使用し、**`|μ(C₀)-11/16|≤3/16`、`|μ(C₁)-5/16|≤3/16`** を証明。重み `(11/16,5/16)` は固定された文字通りの有理数で、両方厳密に正、和が厳密に1。セル質量誤差も `3/16` に固定。AFNの`Classical.choose`による任意実数の有理近似ではなく、真正Haar幾何から具体的な区間認証済み数値を導く。
+- **真正符号付きFF受信器の明示有理ゼロ標本**：`F_z(g)`、`F_z(g)^2`、`F_z(g)φ_j(g)` の2中心における有理候補をすべて `0` に固定。元FF有界連続関数の真のノルム `M_{FF}(H,e)` とAFLの真正四文字上界 `|φ_j|≤1` により、各中心の真の誤差を順に `M_{FF}(H,e)`、`M_{FF}(H,e)^2`、`M_{FF}(H,e)` で無条件に証明する。誤差係数は具体的数値に評価されておらず、真正物理受信器の体積依存ノルムのまま。
+- **元AFM→AFL→AFK→AFJ→AFI証明書へ接続**：独立に与えられたAFG真正元境界標本表 `c` と `0≤θ_lo` の下で、半径 `3/2`、中心2個、有理Haar重み・誤差、元FF・FF²・FFφ_j有理ゼロ標本と真の物理誤差を備える `originalNumericOnlyCellSamples` を直接構成。さらに元の係数・分散有理区間証明書へ型付きに変換する。`c`やstrict二閾値の通過中心を構成したものではない。
+- **精度の限界を明示**：これは**具体的有理データをもつ粗い認証済み2セル基準例**である。半径3/2、質量誤差3/16、ノルム大のゼロ標本誤差は、狭い厳密殻交差の成立や数値的な優位性を保証しない。半径を任意に縮小する実効的SU(2)≃S³格子、精密なHaar質量有理区間、受信器中心値の狭い数値区間、体積一様coercivity・物理Hamiltonian gap・連続体4D Yang–Mills質量ギャップは未証明。
+
+### Lean4形式検証・公理監査・exact-source Git tree
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalAntipodalTwoCellEffectiveHaarV5_PZ37AFO.lean` **1ファイル・349追加行、公開12定理・12件の `#print axioms`**。既存Lean、物理模型、測度・workflow、公開rootは不変。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を固定。
+- 初回CI [#41803889688](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41803889688) で`Set.mem_union.mp`の補題名誤り、`Fin 2`正規化と`change`の定義同一性不一致、二乗絶対値の簡約証拠の指定を検出。全文とADN・ADO・AFM・固定mathlibの型を照合し修正。最終source HEAD `bf3b955f7d79c1ff8369144a3c5f76b912f98993` の [exact-source CI #41804745964](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41804745964) は **11,322/11,322 SUCCESS**。12定理の公理依存は `propext`、`Classical.choice`、`Quot.sound` のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。
+- source `bf3b955f7d79c1ff8369144a3c5f76b912f98993`、test-merge `ba1dd8330de53984d142b676585fb2618a452de8`、squash `69694abf4a1bfdef85588f1a20b95f783ac59753` のGit treeは **`04287c1a375688df47fa10d01c9ad988a5ad3b7a`** で一致。
+
+### 未解決obstruction・次段AFP
+
+AFOで固定半径3/2の明示的な真正2セル・有理質量重み・真正FF有理ゼロ標本の型付き証明書は完成。次段AFPは、SU(2)≃S³上の**実効的なより細かい有限格子**、小半径Haarセルの具体的上下界、FF物理標本の狭い有理区間によって誤差予算を改善する。体積一様coercivity・物理Hamiltonian spectral gap・連続体4D Yang–Mills質量ギャップは未証明である。
+
+---
+
 ## 検証済み定理 — AFN（2026-11-04 JST）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFM定理PR #6304・正本文書PR #6305・main文書ミラーPR #6306の全件MERGEDを継承し、AFN定理PR [#6307](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6307) は **MERGED**。定理squash SHA `0d1c0cf21d7ce0205c2b20f211f58ea48b3bfc7c`。既存の真正SU(2) Wilson相互作用、中心化Gauss-law物理源、Perron/transfer、元FF符号付き受信器、正規化SU(2) Haar、元境界pair-Haar `ν_H`、`d_J`・`D_H`、FC obstruction、公開root、固定Lean/mathlibは変更しない。
