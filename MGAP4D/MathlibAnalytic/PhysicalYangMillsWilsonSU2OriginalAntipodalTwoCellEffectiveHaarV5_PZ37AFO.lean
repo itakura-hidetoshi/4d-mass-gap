@@ -136,7 +136,7 @@ theorem p4Q2PZ37AFO_twoCells_chordalRadius
       rw [p4Q2PZ37AFO_twoAntipodalBalls_cover]
       trivial
     have hgz : g ∈ BallJ z (3 / 2) :=
-      (Set.mem_union.mp hUnion).resolve_left hg0
+      hUnion.resolve_left hg0
     have hd : dJ z g ≤ (3 / 2 : ℝ) := le_of_lt hgz
     calc
       dJ g (p4Q2PZ37AFO_twoCenters i) = dJ z g := by
@@ -182,12 +182,25 @@ theorem p4Q2PZ37AFO_twoCellHaarRational_accuracy
       (p4Q2PZ37AFO_twoHaarRationalWeight i : ℝ)| ≤ (3 / 16 : ℝ) := by
   have hFirst := p4Q2PZ37AFO_firstCell_originalHaar_interval
   have hSum := p4Q2PZ37AFO_twoCellHaarMass_sum_one
-  fin_cases i
-  · change |Measure.real mu (p4Q2PZ37AFO_twoCells 0) -
-        (11 / 16 : ℝ)| ≤ (3 / 16 : ℝ)
-    exact abs_le.mpr ⟨by linarith [hFirst.1], by linarith [hFirst.2]⟩
-  · change |Measure.real mu (p4Q2PZ37AFO_twoCells 1) -
-        (5 / 16 : ℝ)| ≤ (3 / 16 : ℝ)
+  by_cases hi : i = 0
+  · subst i
+    have hw :
+        (p4Q2PZ37AFO_twoHaarRationalWeight (0 : Fin 2) : ℝ) =
+          (11 / 16 : ℝ) := by
+      norm_num [p4Q2PZ37AFO_twoHaarRationalWeight]
+    rw [hw]
+    exact abs_le.mpr
+      ⟨by linarith [hFirst.1], by linarith [hFirst.2]⟩
+  · have hiOne : i = (1 : Fin 2) := by
+      fin_cases i
+      · exact False.elim (hi rfl)
+      · rfl
+    subst i
+    have hw :
+        (p4Q2PZ37AFO_twoHaarRationalWeight (1 : Fin 2) : ℝ) =
+          (5 / 16 : ℝ) := by
+      norm_num [p4Q2PZ37AFO_twoHaarRationalWeight]
+    rw [hw]
     exact abs_le.mpr
       ⟨by linarith [hFirst.2, hSum], by linarith [hFirst.1, hSum]⟩
 
@@ -280,7 +293,11 @@ def p4Q2PZ37AFO_explicitPhysicalTwoCellSamples
     intro a ha i
     have hBound := p4Q2PZ37AFO_originalFF_square_le_normSquare
       H e a (p4Q2PZ37AFO_twoCenters i)
-    simpa only [Rat.cast_zero, sub_zero, abs_of_nonneg (sq_nonneg _)] using hBound
+    have hAbs :
+        |(F e a (p4Q2PZ37AFO_twoCenters i)) ^ 2| =
+          (F e a (p4Q2PZ37AFO_twoCenters i)) ^ 2 :=
+      abs_of_nonneg (sq_nonneg _)
+    simpa only [Rat.cast_zero, sub_zero, hAbs] using hBound
   coefficientSample := fun _ _ _ => 0
   coefficientSampleError := fun _ _ => MFF e
   hCoefficientSampleError_nonneg := by
