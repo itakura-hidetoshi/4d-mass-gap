@@ -1,3 +1,26 @@
+## 検証済み定理 — AFI（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFHの真正Wilson/Perron区間殻定理（#6289、文書 #6290/#6291、MERGED）を継承し、AFI定理PR [#6292](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6292) を **MERGED** として正式記録する。定理squash SHAは `3c5ee371e9a63a149cea3b705432b3f06a8f440e`。元の相互作用Wilson SU(2)、中心化Gauss-law物理源、Perron真空、右リンク更新transfer、真正境界pair-Haar測度 `ν_H`、元の全リンク距離 `D_H`、FC envelope、AEX保守的FC no-go、公開rootと固定Lean/mathlibを変更しない。
+
+### 真正四成分係数・分散からの計算可能形の区間証明書
+
+- **元物理量への証拠付き入力**：真正ACKのHaar四係数 `m_j(a)` と真正ACLのreceiver分散 `V(a)` について、AFGの同じ有限全境界ネット `s` 上の有理数候補 `q_j(a), v̂(a)` と、`|m_j(a)-q_j(a)|≤δ_j(a)`、`|V(a)-v̂(a)|≤δ_V(a)`、`δ_j,δ_V≥0` の厳密証明を依存型構造に保持。候補数値を認証なしに元Wilson/Perron物理値として扱わない。
+- **真正ACM恒等式から誤差伝播**：`A(a)^2=Σ_{j:Fin 4}m_j(a)^2`、`V(a)=4A(a)^2+W(a)` をそのまま使用。有理係数の二乗和 `â=Σ_j q_j²`、`Δ_A=Σ_j δ_j(2|q_j|+δ_j)`、`ŵ=v̂−4â`、`Δ_W=δ_V+4Δ_A` を構成し、真正元物理量について `â−Δ_A≤A²≤â+Δ_A` および `ŵ−Δ_W≤W≤ŵ+Δ_W` を証明。**Wの誤差を独立の仮想受信器に置換しない**。
+- **区間幅と閾値別の頑健性**：振幅平方の区間幅は `2Δ_A`、高次残差の区間幅は `2Δ_W`。真正ギャップ `G_θ=W−θA²` に必要な誤差予算は `Δ_G(θ)=δ_V+(4+θ)Δ_A`（`θ≥0`）。両閾値 `0≤θ_lo≤θ_hi` に対し、`η_lo<v̂−(4+θ_lo)â−Δ_G(θ_lo)` かつ `v̂−(4+θ_hi)â+Δ_G(θ_hi)<−η_hi` を満たす有限標本は、AFHの真正区間証明書の認証済み殻内中心となる。
+- **真正Haar殻への型付き接続**：厳密符号が成立した中心の元 `D_H` 球は同一真正殻 `Bad_(θ_lo)∖Bad_(θ_hi)` に包含され、AEAの `κ_H(r)>0` により正の元pair-Haar測度が従う。AFH/AFGの元greedy `2r` 分離packingへ接続して `|t|κ_H(r)≤ν_H(Shell)` を継承し、既存のAFE/AFA GI・FC条件を変更しない。
+
+### Lean4検証・公理依存・Git tree
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalCoefficientIntervalBudgetsV5_PZ37AFI.lean` **1ファイル483追加行・公開11定理と11件 `#print axioms`**。既存Leanファイルは変更なし。Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 固定。
+- 初回は説明文中の `+/-` がLeanコメント開始記号として解釈されたソース監査エラー、次に `∑ j` の被加算項を括弧で囲まなかった束縛範囲のelaborationエラーを全文と依存定義から修正。最終exact-source HEAD `6439c7202cdf4275e163f049dd2dde22593b8be2` に対する [CI #41776343744](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41776343744) は **11,316/11,316 SUCCESS**。11件の公理依存は `propext`、`Classical.choice`、`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error **0/0**。独立MCP completion receiptもSUCCESS。
+- source HEAD・test-merge `d09f3a863aeab6bcd35952f51bd9249caaf8ab57`・squash `3c5ee371e9a63a149cea3b705432b3f06a8f440e` のGit treeはすべて `bc26bd9e3feb8154ba58c4ec7fb68646e0509db0` で一致。
+
+### 証明の境界と次のAFJ
+
+AFIは**値と誤差の証拠が供給された場合の区間導出・真正殻判定**を完成したもの。真正Wilson–Perron係数や分散の具体的な数値積分・有理上下界、非空の厳密符号交差、有益なpacking数、体積 `H` 一様coercivity、物理Hamiltonian spectral gapまたは連続体4D Yang–Mills質量ギャップを主張しない。次段AFJでは同一元物理受信器の係数積分・分散について、証明付き有理近似、有限標本誤差、独立に追試可能な数値certificateの構成を検討する。
+
+---
+
 ## 検証済み定理 — AFH（2026-11-04 JST）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFG（定理PR #6286、文書 #6287/#6288、マージ後CI #41747718991 SUCCESS）を継承し、AFH定理PR [#6289](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6289) は **MERGED**。定理squash SHA `5299db6ecc751766cb1c51188b5505807f70d83c`。元のWilson SU(2)、中心化Gauss-law物理源、Perron真空、元の右リンク更新transfer、同一真正境界pair-Haar測度 `ν_H`、元の全リンク距離 `D_H`、FC envelope、固定Lean/mathlib、公開rootおよびAEXの保守的二球FC no-goを変更しない。
