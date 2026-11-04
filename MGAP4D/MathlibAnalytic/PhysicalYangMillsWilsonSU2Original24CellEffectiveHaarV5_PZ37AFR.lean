@@ -119,17 +119,19 @@ theorem p4Q2PZ37AFR_vertexZ_inner_le_two :
           rcases q with ⟨b,sb⟩
           fin_cases a <;> fin_cases b <;>
             cases sa <;> cases sb <;>
-            norm_num [p4Q2PZ37AFR_vertexZ, Fin.sum_univ_four] at hij ⊢
+            first
+            | exact False.elim (by simpa using hij)
+            | norm_num [p4Q2PZ37AFR_vertexZ, Fin.sum_univ_four]
       | inr t =>
           fin_cases a <;> cases sa <;>
-            simp [p4Q2PZ37AFR_vertexZ, Fin.sum_univ_four] <;>
+            simp [p4Q2PZ37AFR_vertexZ] <;>
             split_ifs <;> omega
   | inr s =>
       cases j with
       | inl q =>
           rcases q with ⟨b,sb⟩
           fin_cases b <;> cases sb <;>
-            simp [p4Q2PZ37AFR_vertexZ, Fin.sum_univ_four] <;>
+            simp [p4Q2PZ37AFR_vertexZ] <;>
             split_ifs <;> omega
       | inr t =>
           have hst : s ≠ t := by
@@ -158,7 +160,27 @@ theorem p4Q2PZ37AFR_vertexZ_inner_le_two :
           have h3 := hTerm 3
           have hh := hOpp k hk
           simp only [Fin.sum_univ_four]
-          fin_cases k <;> omega
+          fin_cases k
+          · have heq :
+                p4Q2PZ37AFR_vertexZ (Sum.inr s) 0 *
+                  p4Q2PZ37AFR_vertexZ (Sum.inr t) 0 = (-1 : ℤ) := by
+              simpa using hh
+            omega
+          · have heq :
+                p4Q2PZ37AFR_vertexZ (Sum.inr s) 1 *
+                  p4Q2PZ37AFR_vertexZ (Sum.inr t) 1 = (-1 : ℤ) := by
+              simpa using hh
+            omega
+          · have heq :
+                p4Q2PZ37AFR_vertexZ (Sum.inr s) 2 *
+                  p4Q2PZ37AFR_vertexZ (Sum.inr t) 2 = (-1 : ℤ) := by
+              simpa using hh
+            omega
+          · have heq :
+                p4Q2PZ37AFR_vertexZ (Sum.inr s) 3 *
+                  p4Q2PZ37AFR_vertexZ (Sum.inr t) 3 = (-1 : ℤ) := by
+              simpa using hh
+            omega
 
 /-- Original S³ inner products inherit the kernel-checked
 finite integer certificate (dot<=2 corresponds to dot<=1/2). -/
@@ -292,7 +314,7 @@ theorem p4Q2PZ37AFR_originalFiniteCenterSet_card_le_24 :
         (Finset.univ : Finset (Fin (Fintype.card Grid))).card :=
       Finset.card_image_le
     _ = 24 := by
-      simp [p4Q2PZ37AFQ_gridIndex_card]
+      simp
 
 theorem p4Q2PZ37AFR_originalFiniteCenterSet_isNet :
     p4Q2PZ37ADP_isTrueChordalNet
