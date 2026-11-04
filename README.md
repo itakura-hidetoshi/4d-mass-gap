@@ -1,3 +1,33 @@
+## 検証済み定理 — AFH（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFG（定理PR #6286、文書 #6287/#6288、マージ後CI #41747718991 SUCCESS）を継承し、AFH定理PR [#6289](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6289) は **MERGED**。定理squash SHA `5299db6ecc751766cb1c51188b5505807f70d83c`。元のWilson SU(2)、中心化Gauss-law物理源、Perron真空、元の右リンク更新transfer、同一真正境界pair-Haar測度 `ν_H`、元の全リンク距離 `D_H`、FC envelope、固定Lean/mathlib、公開rootおよびAEXの保守的二球FC no-goを変更しない。
+
+### 真正Wilson/Perron残差の区間上下界証明書
+
+- **真正元物理量を保持**：有限ネット上の元振幅平方 `A_F(a)^2` と元高次残差 `W_F(a)` に対し、各中心で `ampLower(a)≤A_F(a)^2≤ampUpper(a)`、`residualLower(a)≤W_F(a)≤residualUpper(a)` を元物理量との型付き証明として保存。区間数字だけで真正上界と見なすことも、transfer・Perron重み・Haar測度を代理模型へ交換することもしない。
+- **非負閾値での厳密符号検査**：`0≤θ_lo≤θ_hi` のもと、`η_lo<residualLower(a)−θ_lo*ampUpper(a)` かつ `residualUpper(a)−θ_hi*ampLower(a)<−η_hi` を有限集合で検査すると、元の真正残差ギャップ `G_θ=W_F−θ*A_F²` に対して `G_(θ_lo)(a)>η_lo>0`、`G_(θ_hi)(a)<−η_hi<0` が従う。**区間認証済み中心はAFGの真正Robust中心集合の部分集合**であり、偽陽性を生じない。
+- **物理比・厳密閾値障害**：認証中心では `A_F(a)^2>0` と `θ_lo<θ_hi` が必要で、真正物理比 `θ_lo<W_F(a)/A_F(a)^2<θ_hi` が成立する。この比は元のWilson/Perron receiverの同一配置上で定義され、ゼロ振幅の点を隠れた仮定として除外しない。
+- **区間を狭めると認証が維持**：`residualLower` の引上げ、`residualUpper` の引下げ、`ampLower` の引上げ、`ampUpper` の引下げが真正上下界として保持されるなら、認証済み中心集合は単調に拡大する。各標本が少なくとも一方の厳密marginを満たせない場合は当該有限区間表の認証候補が空となるが、**真の殻の空性や、より精密な区間表での不可能性は主張しない**。
+- **exact-value embeddingと条件付き完全性の境界**：元の真正物理量を上下界の両方に採る形式的なexact intervalはAFGの元Robustフィルタと厳密に一致する。これは型付き構造の整合性を示すが、元の真の振幅・残差を数値評価したことではない。
+
+### 区間認証から真正Haar・GI・FCへ
+
+- AFDの有限greedy分離packingを**区間認証済み中心のみ**に適用し、元の全リンク距離 `D_H(a,b)≥2r` のもとで同一の真正Haar殻 `Shell(θ_lo,θ_hi)=Bad_(θ_lo)\\Bad_(θ_hi)` にある球の重複を排除。AEAの元SU(2)球下界 `κ_H(r)>0` から `|t|κ_H(r)≤ν_H(Shell(θ_lo,θ_hi))` を証明。
+- これをAFGの元上界 `U_AFG=min(U_hi,U_lo−|t|κ_H(r))` に移送し、追加の真正Haar測度仮定なしで `ν_H(Bad_(θ_hi))≤U_AFG` を導出。AFHの数値認証と、AFEの独立低・高閾値表の認証はそれぞれ必要。
+- 独立の真正数値条件 `θ_hi*A4_H+B_H²*U_AFG<64*A4_H` なら平均二乗GI証明書 `Budget_H>0` と元の符号付き二posterior応答が非零となる真正正Haar測度の開領域を導出。より強い真のFC条件には独立の未使用分 `Eunused_H≤σ*A4_H` と `(θ_hi+σ)*A4_H+B_H²*U_AFG<64*A4_H` が必要。元GI平均非正にはAFAの必要質量下界を保持する。
+
+### exact-source CI・正式定理記録
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalIntervalShellWitnessesV5_PZ37AFH.lean` **1ファイル560行・19公開定理と19件 `#print axioms`**。既存Lean、元物理模型、Haar測度、workflow、公開rootは一切変更しない。Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を固定。
+- 初回CI #41768798053で固定mathlibに存在しないFinset空集合補題名を検出。全文・依存定義を照合して `Finset.ext` による直接証明に修正。修正後のexact-source HEAD `11494dd6427302aabb4924bbf223b025f8836357` に対する [CI #41769376813](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41769376813) は **11,315/11,315 SUCCESS**。19定理の依存公理は `propext`、`Classical.choice`、`Quot.sound` のみで、`sorryAx` なし、変更Lean warning/error **0/0**。
+- source HEAD、test-merge `87d33105c4acdc401c47d38b534cbdeea86030f9`、squash `5299db6ecc751766cb1c51188b5505807f70d83c` のGit treeが **`0eeec801e920c0b6c5433afe6896c1a2a9759967` で一致**。これは有限体積での真正物理量の区間条件付き形式証明書であり、具体的な数値区間・H一様coercivity・物理Hamiltonian spectral gap・連続体4D Yang–Mills質量ギャップの実証ではない。
+
+### 次の独立課題 — AFI
+
+真正Wilson/Perron振幅・高次残差の有限標本で、元の連続性・上下界から検証可能な誤差予算の構成を検討し、数値的に認証可能な殻内候補と空表障害を分離する。真正SU(2)・Perron・物理Gauss-law sourceとAEXのno-goは維持する。
+
+---
+
 ## 検証済み定理 — AFG（2026-11-04 JST）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` はREADME・ROADMAPの文書ミラーのみ。AFF（定理PR [#6283](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6283)、文書 #6284/#6285、マージ後CI #41739389697 SUCCESS）を継承したAFG定理PR [#6286](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6286) は **MERGED**。定理squash SHA `8b3bcb6746e1eea0222621e91578c12ef9d1b927`。元の相互作用するWilson SU(2)、中心化Gauss-law物理源、Perron真空、右リンク更新transfer、同一元境界pair-Haar測度 `ν_H`、元全リンク距離 `D_H`、FC envelope、公開rootとLean/mathlib固定pinを変更せず、AEXの保守的二球FC no-goも維持する。
