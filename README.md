@@ -1,3 +1,27 @@
+## 検証済み定理 — AFS（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main`はREADME・ROADMAPの文書ミラー。AFR定理 #6319、正本文書 #6320、main文書 #6321 の全件MERGEDを継承し、[AFS定理PR #6322](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6322) を**MERGED**。定理squash SHAは`ae6a40d78bfdc10d4207aa33c967a916e208563f`。真正SU(2) Wilson相互作用、ZW中心化Gauss-law源、Perron/transfer、符号付きFF受信器、正規化compact Haar、境界pair-Haar、元距離`d_J,D_H`、公開root、固定Lean/mathlibは変更していない。
+
+### 元Wilson Haar二次モーメントとMarkovによる24セル質量区間の厳密改善
+
+- **物理量・測度を置換しないモーメント証明**：既存ACKの真正Quaternion四文字Gramから、元の`χ(g)=1−E(g)`について、元の正規化SU(2) Haar上で`∫χ dμ=0`と`∫χ² dμ=1/4`を継承する。固定多項式`P(g)=(χ(g)+1/2)²≥0`は連続・可積分で、`∫P dμ=1/2`。仮定・代理Haar・新規元群なし。
+- **元半径4/5球での真正不等式**：ADKのWilson校正`d_J(1,g)²=2E(g)`から`g∈B_J(1,4/5) ⇒ χ(g)>17/25`。したがって`P(g)>(59/50)²=3481/2500`。固定mathlibの`mul_meas_ge_le_integral_of_nonneg`（実数版Markov）から**`m(4/5)≤1250/3481<1/2`**をLean4で無条件に証明。
+- **真正24 Borelセルへの移送**：AFQの先着中心セルは元の`B_J(c_i,4/5)`内。ADMの真正Haar球中心不変性とAFRの各セル内部`B_J(c_i,1/5)`の正のHaar下界から、**全24セルについて`1/160000≤Measure.real μ(C_i)≤1250/3481`**を形式証明。実際のセル質量の数値積分値を求めたものではない。
+- **固定有理重みを保った誤差縮小**：AFRの実効的な`w_i=1/24∈ℚ`（全て正、合計1）を変更せず、実際のセルとの誤差上界を**`|μ(C_i)−1/24|≤26519/83544`**と認証。AFRの`11/24`に比べて厳しく、AFQの非計算的`1/64`の小さい形式的近似誤差とは区別する。元のAFJ `originalHaarCells`に改善済みの型付き証明書を格納。実際のFFサンプル値・非空二符号閾値・新しい物理解は主張しない。
+
+### exact-source Lean4 CI・公理監査・Git tree一致
+
+- 新規`MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2Original24CellMomentMarkovHaarV5_PZ37AFS.lean`1ファイルのみ（新規13件`#print axioms`）。既存Leanや元物理模型・workflows・公開rootを変更せず、Lean`v4.30.0-rc2`／mathlib`5450b53e5ddc75d46418fabb605edbf36bd0beb6`固定。
+- 初回[CI #41835136403](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41835136403)は積分の加法性`integral_add`を点ごとの多項式に対して直接`rw`した際、Lean elaboratorの関数和と被積分関数の式の一致に失敗した。変更Lean全文とACK/PZ35Cの元Haar二次モーメント、ADK/AFRの依存型、固定mathlib Bochner積分・Markov補題を再照合し、中間積分加法等式を型付きで明示する形に修正。定理・仮定の弱化なし。
+- 最終exact-source HEAD`25ece6e4494b0a48ff5ae919f78e141350b5c9e6`の[CI #41836184579](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41836184579)は**11,326/11,326 SUCCESS**、13件の公理依存は標準`propext`、`Classical.choice`、`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error **0/0**、独立MCP completion receipt **SUCCESS**。
+- source HEAD`25ece6e4494b0a48ff5ae919f78e141350b5c9e6`、test-merge`9fa606be0d1cbbcb6e6ad7fdd0290387054f3679`、定理squash`ae6a40d78bfdc10d4207aa33c967a916e208563f`のGit treeは**`9d609048dfd57b3485b1ef5713652616052bfd67`**で完全一致。
+
+### 残存obstruction・次段AFT
+
+AFSで真のHaar上の二次モーメントから上界が約0.359へ改善したが、実際の24セル質量の狭い有理区間計算、重み`1/24`に対する精度`1/64`程度の実効的認証、元FF受信器中心値の評価、真正二閾値符号交差、体積一様coercivity、物理Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは**未証明**。次段AFTは同じHaar二次モーメントの最適有理シフトと、元のAFM物理受信器証明書への改善区間移送を検討する。
+
+---
+
 ## 検証済み定理 — AFR（2026-11-04 JST）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main`は文書ミラー。AFQ定理 #6316 と文書 #6317/#6318 の全件MERGEDを継承し、[AFR定理PR #6319](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6319) を **MERGED**。定理squash SHA `94f3ce7d6583a89a96a2ea358081f1f9733f5d03`。元Wilson SU(2)、中心化Gauss-law物理源、Perron/transfer、符号付きFF受信器、真正正規化SU(2) Haarとboundary pair-Haar、弦距離`d_J`、公開root・Lean/mathlib pinsを変更しない。
