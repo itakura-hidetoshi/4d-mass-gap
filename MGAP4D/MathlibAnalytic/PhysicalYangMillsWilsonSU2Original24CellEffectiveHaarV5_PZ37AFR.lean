@@ -73,66 +73,66 @@ local instance p4Q2PZ37AFR_borel : BorelSpace G :=
 local instance p4Q2PZ37AFR_probability : IsProbabilityMeasure mu :=
   normalizedCompactHaar_isProbabilityMeasure G
 
-/-- Decidable, literal rational coordinates for EACH of the 24
-existing AFQ sphere vertices. No floating-point approximation. -/
-def p4Q2PZ37AFR_vertexQ (i : Grid) (k : Fin 4) : ℚ :=
+/-- Twice the original vertex coordinates, now all INTEGERS.
+The exact finite arithmetic proof uses no rational gcd reduction. -/
+def p4Q2PZ37AFR_vertexZ (i : Grid) (k : Fin 4) : ℤ :=
   match i with
   | Sum.inl (j,s) =>
-      if k = j then (if s then -1 else 1) else 0
+      if k = j then (if s then -2 else 2) else 0
   | Sum.inr s =>
-      if s k then -1/2 else 1/2
+      if s k then -1 else 1
 
-/-- Each ORIGINAL AFQ real vertex component is exactly the
-coercion of this decidable rational coordinate. -/
-theorem p4Q2PZ37AFR_vertexQ_eq_real
+/-- Recover original SU(2) sphere coordinates exactly from
+the finite integer representation by division by two. -/
+theorem p4Q2PZ37AFR_vertexZ_eq_real
     (i : Grid) (k : Fin 4) :
-    ((sphereCenter i : S3) : E4) k = (p4Q2PZ37AFR_vertexQ i k : ℝ) := by
+    ((sphereCenter i : S3) : E4) k = (p4Q2PZ37AFR_vertexZ i k : ℝ) / 2 := by
   cases i with
   | inl p =>
       rcases p with ⟨j,s⟩
       by_cases h : k = j
       · subst k
         cases s <;>
-          simp [p4Q2PZ37AFR_vertexQ, p4Q2PZ37AFQ_sphereGridCenter,
+          norm_num [p4Q2PZ37AFR_vertexZ, p4Q2PZ37AFQ_sphereGridCenter,
             p4Q2PZ37AFQ_axisSphere, p4Q2PZ37AFQ_axisVector]
       · cases s <;>
-          simp [p4Q2PZ37AFR_vertexQ, p4Q2PZ37AFQ_sphereGridCenter,
+          simp [p4Q2PZ37AFR_vertexZ, p4Q2PZ37AFQ_sphereGridCenter,
             p4Q2PZ37AFQ_axisSphere, p4Q2PZ37AFQ_axisVector, h]
   | inr s =>
       cases h : s k <;>
-        simp [p4Q2PZ37AFR_vertexQ, p4Q2PZ37AFQ_sphereGridCenter,
+        norm_num [p4Q2PZ37AFR_vertexZ, p4Q2PZ37AFQ_sphereGridCenter,
           p4Q2PZ37AFQ_diagSphere, p4Q2PZ37AFQ_diagVector, h]
 
-/-- Finite arithmetic enumeration of the exact 24-cell rational
-D4-root inner products. All DISTINCT vertices have dot <= 1/2.
-The decision procedure expands only rational finite data. -/
-theorem p4Q2PZ37AFR_vertexQ_inner_le_half :
+/-- Finite integer certificate: for 24 different vertices the
+dot product of TWICE their coordinates is at most 2. -/
+theorem p4Q2PZ37AFR_vertexZ_inner_le_two :
     ∀ i j : Grid, i ≠ j →
       (∑ k : Fin 4,
-        p4Q2PZ37AFR_vertexQ i k *
-          p4Q2PZ37AFR_vertexQ j k) ≤ (1/2 : ℚ) := by
+        p4Q2PZ37AFR_vertexZ i k *
+          p4Q2PZ37AFR_vertexZ j k) ≤ (2 : ℤ) := by
   decide
 
 /-- Original S³ inner products inherit the kernel-checked
-finite rational inequality, without a new metric assumption. -/
+finite integer certificate (dot<=2 corresponds to dot<=1/2). -/
 theorem p4Q2PZ37AFR_sphereGrid_inner_le_half
     (i j : Grid) (hij : i ≠ j) :
     inner ℝ (sphereCenter i : E4) (sphereCenter j : E4) ≤ (1/2 : ℝ) := by
-  have hq := p4Q2PZ37AFR_vertexQ_inner_le_half i j hij
+  have hz := p4Q2PZ37AFR_vertexZ_inner_le_two i j hij
   have hr :
       (∑ k : Fin 4,
-        (p4Q2PZ37AFR_vertexQ i k : ℝ) *
-          (p4Q2PZ37AFR_vertexQ j k : ℝ)) ≤ (1/2 : ℝ) := by
-    exact_mod_cast hq
+        (p4Q2PZ37AFR_vertexZ i k : ℝ) *
+          (p4Q2PZ37AFR_vertexZ j k : ℝ)) ≤ (2 : ℝ) := by
+    exact_mod_cast hz
   have hEq :
-      inner ℝ (sphereCenter i : E4) (sphereCenter j : E4) =
+      4 * inner ℝ (sphereCenter i : E4) (sphereCenter j : E4) =
         ∑ k : Fin 4,
-          (p4Q2PZ37AFR_vertexQ i k : ℝ) *
-            (p4Q2PZ37AFR_vertexQ j k : ℝ) := by
+          (p4Q2PZ37AFR_vertexZ i k : ℝ) *
+            (p4Q2PZ37AFR_vertexZ j k : ℝ) := by
     rw [PiLp.inner_apply]
-    simp_rw [realScalarInner_eq_mul, p4Q2PZ37AFR_vertexQ_eq_real]
-  rw [hEq]
-  exact hr
+    simp_rw [realScalarInner_eq_mul, p4Q2PZ37AFR_vertexZ_eq_real]
+    simp only [Fin.sum_univ_four]
+    ring
+  linarith only [hr, hEq]
 
 /-- Distinct rational grid vertices are at Euclidean chord distance
 AT LEAST 1, matching the existing original true J-chord metric. -/
@@ -311,8 +311,8 @@ def p4Q2PZ37AFR_originalEffectiveHaarCells :
 end
 end MGAP4D.MathlibAnalytic
 
-#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AFR_vertexQ_eq_real
-#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AFR_vertexQ_inner_le_half
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AFR_vertexZ_eq_real
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AFR_vertexZ_inner_le_two
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AFR_sphereGrid_inner_le_half
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AFR_originalGrid_separated
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AFR_originalCenters_separated
