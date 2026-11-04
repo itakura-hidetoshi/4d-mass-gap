@@ -1,3 +1,26 @@
+## 検証済み定理 — AFP（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFOの定理PR #6310・正本文書 #6311・main文書 #6312 の全件MERGEDを継承し、AFP新規定理PR [#6313](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6313) は **MERGED**。定理squash SHA `8f5860a0cfbffd0236e646467a514673cac4f2e5`。元の真正SU(2) Wilson模型、ZW中心化Gauss-law物理源、Perron/transfer、元符号付きFF受信器、正規化compact Haarとboundary pair-Haar、元弦距離`d_J`・全リンク距離`D_H`、FC obstruction・公開root・Lean/mathlib pinを変更しない。
+
+### 元SU(2) Quaternion 8中心の半径1被覆・実際の8セルHaar証明書
+
+- **既存ABVの真正cap被覆とADKの真正Wilson弦距離の合成**：ABVで公理追加なしに証明された、真正Quaternion4元と中心符号2元による**8通りの真正SU(2)左平行移動**の低エネルギーcap被覆を利用。各元`g∈SU(2)`に、`E(a_i g)≤1/2`の元Quaternion変換`a_i`がある。ADKの元物理Wilson校正`d_J(a_i^{-1},g)^2=2E(a_i g)`と距離非負から、厳密に **`∀g, ∃i∈Fin 8, d_J(c_i,g)≤1`** をLean4で証明。中心`c_i=a_i^{-1}`は新規代理群ではなく元のSU(2)行列であり、コンパクト性による未指定ネット選択は不要。8個はインデックス付き中心で、全ての相異性を別個に宣言していない。
+- **任意半径`r>1`で元の8中心開球被覆**：上の定量半径1を使い`∀r>1,∀g,∃i∈Fin 8, g∈B_J(c_i,r)`。AFNの既存「最初の該当中心」ルールから実際の8個のBorelセル`C_i(r)`を構成し、一意所属、全群被覆、`C_i(r)⊆B_J(c_i,r)`を証明。AFOの2中心半径`3/2`から幾何半径を明示的に縮小できる。
+- **真正Haarの保守的・具体的有理重み**：`1<r`かつ`r²≤2`では、各真正セルは元のADN半径`r`のHaar球に含まれ、`0≤μ(C_i(r))≤1/2`を証明。具体的に全8セルの有理重みを`w_i=1/8`、有理重み総和を厳密に1とし、**`|μ(C_i(r))-1/8|≤3/8`** をLean4で証明。セルの質量が実際に互いに等しいという未証明の対称性仮定は一切導入しない。質量誤差`3/8`はAFOの`3/16`より広く、改善は中心を指定した被覆半径の縮小である。
+- **真正元FF受信器の8セル型付き有限有理証明書**：実際の有理半径`r=9/8`で上記8セル・全重み`1/8`をAFJの元HaarCellsへ接続。AFMで同定した真正符号付きWilson/Perron `F_z(g)`、`F_z(g)^2`、四つの真のQuaternion文字による`F_z(g)φ_j(g)`の中心有理標本を`0∈ℚ`に固定し、誤差を元FF BCFの真のノルム`M_{FF}(H,e)`、`M_{FF}(H,e)^2`、`M_{FF}(H,e)`で保証。独立の元AFG境界標本表`c`と`0≤θ_lo`が与えられる場合にのみ、AFM→AFL→AFK→AFJ→AFIの既存係数/分散証明書へ型付き移送する。実際の二閾値符号交差中心は証明していない。
+
+### exact-source CI・公理監査・Git tree一致
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalEightQuaternionChordalCellV5_PZ37AFP.lean` **1ファイル・344追加行、公開11定理・11件の`#print axioms`**。既存Lean・元物理模型・Haar則・workflows・公開rootは不変。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` に固定。
+- 初回exact-source [CI #41808197221](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41808197221)では、真正Haarセルの有理重み `1/8 : ℚ` と実数の等式をLeanが`change`で自動正規化できないエラー1件を検出。ソース全文とABV/ADK/AFN/ADN/AFOの型を確認し、`(p4Q2PZ37AFP_eightRationalWeight i : ℝ)=(1/8 : ℝ)`を明示証明して修正。最終exact-source HEAD `b1f593172faed92d09d61305573048d5be1a5bb0` の [CI #41809074860](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41809074860) は **11,323/11,323 SUCCESS**。11定理公理依存は`propext`、`Classical.choice`、`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。
+- source HEAD `b1f593172faed92d09d61305573048d5be1a5bb0`、test-merge `7e3e6038bb4b1a562c3d67af3e3e8956f6a8f249`、定理squash `8f5860a0cfbffd0236e646467a514673cac4f2e5` のGit treeは **`cd3518cf41b8fdc2688461bb19d55fdd11490181`** で完全一致。
+
+### 未解決obstruction・次段AFQ
+
+AFPは指定された真正Quaternion8中心で半径1被覆を無条件に証明し、実際の有理半径9/8で元Haar・元FFの有限8セル証明書を具体化した。一方、真正セルHaar質量の均等性・精密有理区間、より高密度な真正S³格子による半径`<1`の実効的被覆、元FF中心値の狭い有理評価、具体的二閾値非空符号殻、体積一様coercivity、物理Hamiltonianのspectral gap、連続体4D Yang–Mills質量ギャップは未証明。次段AFQでは、原SU(2)≃S³の実4座標を用いた細分格子と狭い真正Haarセル質量区間を重点的に形式化する。
+
+---
+
 ## 検証済み定理 — AFO（2026-11-04 JST）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFN定理PR #6307・正本文書 #6308・mainミラー #6309 の全件MERGEDを継承し、AFO定理PR [#6310](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6310) は **MERGED**。定理squash SHA `69694abf4a1bfdef85588f1a20b95f783ac59753`。既存の真正SU(2)相互作用Wilson、中心化Gauss-law物理源、Perron真空・transfer、真正符号付きFF受信器、元正規化Haarと境界pair-Haar `ν_H`、`d_J`・`D_H`、FC obstruction、公開root・固定Lean/mathlibを変更しない。
