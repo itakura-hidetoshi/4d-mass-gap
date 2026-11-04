@@ -1,3 +1,28 @@
+## 検証済み定理 — AFR（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main`は文書ミラー。AFQ定理 #6316 と文書 #6317/#6318 の全件MERGEDを継承し、[AFR定理PR #6319](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6319) を **MERGED**。定理squash SHA `94f3ce7d6583a89a96a2ea358081f1f9733f5d03`。元Wilson SU(2)、中心化Gauss-law物理源、Perron/transfer、符号付きFF受信器、真正正規化SU(2) Haarとboundary pair-Haar、弦距離`d_J`、公開root・Lean/mathlib pinsを変更しない。
+
+### 真正24頂点の整数距離証明・全セルHaar質量の実効的有理上下界
+
+- **座標軸8点＋符号付き半対角16点を整数に正規化**：AFQの真のSU(2)↔S³等距離による24個の元行列中心を使用。4座標を2倍した`ℤ`ベクトル`vertexZ`で、全相異なる頂点の整数内積`Σ vertexZ_i(k)·vertexZ_j(k)≤2`を有限場合分けで形式証明し、元弦距離で`1≤d_J(c_i,c_j)`を導出。代理群・新Haar分布なし。
+- **各セルの真正内部球**：AFNの先着中心24個のBorelセル`C_i`は、その中心の`B_J(c_i,1/5)`を含み、半径`4/5`の元のAFQ球に含まれる。この内包は`1/5+4/5=1`と厳密な開球不等式、元ADK三角不等式、上述の1-分離から証明。各セルが空でなく正のHaar質量を持つことも従う。
+- **真のHaar質量へのリテラル有理区間**：既存ADZ/AECの真正半径`1/5`球質量下界`(1/20)^4=1/160000`、ADNの半径`4/5`球上界`1/2`から全24セルについて **`1/160000≤Measure.real μ(C_i)≤1/2`** を形式証明。セル積分の浮動小数点計算や一様セル質量の仮定ではない。
+- **元Haar球と固定重み**：実際の24中心が元の半径`4/5`有限ネットであることからADPの有限net質量定理により`m(4/5)≥1/24`。固定有理重み`w_i=1/24`は全て正で、和は厳密に1。真の24セルへの誤差`|μ(C_i)−1/24|≤11/24`をLean4で証明し、AFJの元の真正HaarCellsへ格納する。誤差11/24は**AFQの非計算的1/64より数値的に粗い**が、固定され独立に検査可能な有理数である。
+- **元物理のauthority境界**：AFRは既存AFQのAFM→AFI真正FF受信器証明書を改変せず、新たな原物理受信器標本の数値測定や閾値交差を導入しない。セル質量の区間証明は、元物理Hamiltonianのspectral gapや体積一様coercivityを直接証明するものではない。
+
+### CI検証・Lean4記法修正・公理監査
+
+- 新規`MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2Original24CellEffectiveHaarV5_PZ37AFR.lean`1ファイルのみ。既存Lean、project root、workflow、測度、pin不変。Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`固定。
+- 初期CIでは有限Bool/Fin場合分けの重い一括`decide`、`simp`後の不要`split_ifs`、数値仮定の未具体化、`No goals to be solved`、最後に`hij : True ⊢ False`へ無効な矛盾証明を使う問題を発見。**新規Lean全文、import、AFQ/AFN/ADT/ADK/ADP/ADZ/AEC/ADNの依存シグネチャと固定mathlibの`fin_cases`・`norm_num`記法を再確認**し、座標軸同士の整数比較は`norm_num [...] at *`で仮定と目標を同時に正規化。原定理の仮定は弱めていない。
+- 最終exact-source HEAD `b3e98c04bc85b10e61c0a13e268c73d4ca2751a1` の [CI #41831372711](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41831372711) は**11,325/11,325 SUCCESS**、新規14件`#print axioms`監査は標準`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error **0/0**、独立MCP completion receipt **SUCCESS**。
+- source HEAD `b3e98c04bc85b10e61c0a13e268c73d4ca2751a1`、test-merge `a585c36690193c9264c88ab6c318b283f29fc8ee`、squash `94f3ce7d6583a89a96a2ea358081f1f9733f5d03` のGit treeは**`959802c17bc86b044582eeb9011ed61c37b42c10`**で完全一致。
+
+### 残存obstruction・次段AFS
+
+セル毎の実効的な正の有理質量区間と、有限24中心の一様球mass floorは確定した。一方、狭いセル質量の計算可能な区間（例えば1/64精度）、実際の元FF中心値の狭い有理包囲、真正二閾値の非空符号殻、体積一様coercivity、物理Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは**未証明**。次段AFSは、原Haar・球面の対称性を証明済み等長変換に限定して使い、各セルの質量区間の実効的精度向上に進む。
+
+---
+
 ## 検証済み定理 — AFQ（2026-11-04 JST）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。AFPまでの全PR #6313–#6315 をMERGEDとして継承し、[AFQ定理PR #6316](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6316) も **MERGED**。定理squash SHA `2915464ade5ab17e44a927d5ac6edd2fc2e7d351`。元の真正SU(2)相互作用Wilson、中心化Gauss-law物理源、真正Perron真空・transfer、符号付きFF受信器、正規化compact Haar・元境界pair-Haar、元弦距離 `d_J` と全リンク距離 `D_H`、公開root・固定Lean/mathlib pinは変更しない。
