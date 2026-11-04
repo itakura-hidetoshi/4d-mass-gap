@@ -1,3 +1,25 @@
+## 検証済み定理 — AFY（2026-11-05 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` はREADME・ROADMAP文書ミラー。AFX定理 #6337、正本文書 #6338、mainミラー #6339 の全件MERGEDを継承し、[AFY定理PR #6340](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6340) を **MERGED**。最終exact-source HEAD `8f9c9451e560ccca72d174ce77ca56fc75a07201`、定理squash SHA `0851bb926b0a8b138ba6df4d780a0766866b5607`。真正SU(2) Wilson/正規化Haar・AFQ24先着中心Borelセル・AFT固定有理重み・元のPerron/transfer/FF物理受信器を不変とし、代理量や新しい物理仮定は導入しない。
+
+### 真正24中心の文字誤差ゼロ・元の物理受信器積評価
+
+- **実際の中心積の鋭い有理証明書**：AFXが元Wilson四文字に対して証明した真の有理値 `qφ(j,i)=φ_j(g_i)` を使い、元FF受信器 `F_e(a,g_i)` のAFV認証有理中点 `qF(a,i)` と認証半幅 `εF(a,i)` から、各元境界サンプル `a∈c.s`、四モードj、真正SU(2)24中心iに対して `|F_e(a,g_i) φ_j(g_i) − qF(a,i) qφ(j,i)| ≤ |qφ(j,i)| εF(a,i)` をLean4で形式証明した。文字側の誤差は厳密0であり、元の受信器区間包含のみが外部証明書入力となる。
+- **既存AFV乗算との型付き厳密一致**：元の `AFV_ballMul` が作る積の有理sampleは `qF*qφ`、errorは **厳密に** `|qφ| εF` に等しいことを定理化。AFVの一般誤差項から未検証のcharacter誤差を単に捨てたのではなく、AFX singletonによるzero errorを用いて具体的に評価した。
+- **元AFT 24中心係数誤差への直接接続**：元AFT証明書の `coefficientSample` と `coefficientSampleError` に対する等式 `E_{a,j}=∑_{i=0}^{23}|qφ(j,i)|εF(a,i)≤∑_{i=0}^{23}εF(a,i)` をLean4で証明。後半の不等式は元ACK四文字の無条件 `|φ_j(g)|≤1` に由来する。元AFUの中心化Haar誤差評価・AFJ係数・AFI係数分散証明書への既存経路を保持した。
+
+### exact-source Lean4 CI・公理監査・source対応
+
+- AFY新規Leanファイル `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalExact24CenterProductErrorV5_PZ37AFY.lean` のみ（326行・14件の `#print axioms`）。既存Leanやworkflow、root、物理測度を変更しない。固定Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を維持。
+- [最新exact-source CI #41928091102](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41928091102) は **11,332 / 11,332 SUCCESS**。Lean診断アーティファクトを独立取得し、新規AFY14宣言すべての公理依存が標準 `propext`・`Classical.choice`・`Quot.sound` のみであること、`sorry`・`admit`・追加`axiom`・`constant` 0、変更AFY warning/error 0/0を確認。独立MCP completion receiptは `chatgpt-ci-receipt/PR Lean Fast Check` = SUCCESS。旧Leanファイルに存在する既存警告は新規AFYのものではない。
+- PR source HEAD・GitHub test-merge `75a00168b21d8348c70a4e436325f0d0dc16cdec`・squash SHAで新規AFYファイルのGit blob SHA `ad49cbe6c929e7efd95e6c78607bc25083de836b` は完全一致。source→test-mergeはファイル差分なし。正本のAFX基点からの追加差分は新規AFY Leanファイル1件のみ。
+
+### 残存obstruction・次段AFZ
+
+AFYは真正24中心での文字側の有限誤差を完全に除去したが、元Perron/transfer/FF受信器の**具体的な数値的有理区間包含証明**は依然未取得。AFG真正二閾値の非空符号殻も未証明。次段AFZでは、真正受信器について有限有理区間の検査可能な生成・包含条件、局所振動幅とAFU中心化Haar誤差への接続を研究する。体積一様coercivity、物理Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは引き続き**未証明**。
+
+---
+
 ## 検証済み定理 — AFX（2026-11-05 JST）
 
 唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` はREADME・ROADMAP文書ミラー。AFW定理 #6334、正本文書 #6335、mainミラー #6336までの全件MERGEDを継承し、[AFX定理PR #6337](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6337) は **MERGED**。定理squash SHAは`a0f626cd2e5e4a0ac46f9b33de185df28419b3e5`。真正SU(2) Wilson・元の正規化compact Haar／境界pair-Haar・Perron/transfer・符号付きFF受信器・AFQ真正24先着中心Borelセル・AFT固定有理重みを保持し、代理群・代理測度・追加の物理仮定を導入しない。
