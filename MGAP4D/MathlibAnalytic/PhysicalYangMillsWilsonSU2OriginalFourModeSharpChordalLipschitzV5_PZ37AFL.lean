@@ -132,8 +132,10 @@ theorem p4Q2PZ37AFL_originalFourMode_chordal_oneLipschitz
 envelope ONE, by the exact original sum-of-four-squares identity. -/
 theorem p4Q2PZ37AFL_originalFourMode_abs_le_one
     (j : Fin 4) (g : G) : |phi j g| ≤ 1 := by
-  have hTerm : (phi j g) ^ 2 ≤ ∑ k : Fin 4, (phi k g) ^ 2 :=
-    Finset.single_le_sum (fun k _ => sq_nonneg _) (Finset.mem_univ j)
+  have hTerm : (phi j g) ^ 2 ≤ ∑ k : Fin 4, (phi k g) ^ 2 := by
+    exact Finset.single_le_sum
+      (s := Finset.univ) (f := fun k : Fin 4 => (phi k g) ^ 2)
+      (fun k _ => sq_nonneg (phi k g)) (Finset.mem_univ j)
   rw [p4Q2PZ37ACK_fourModeCharacter_sum_sq] at hTerm
   have hAbsSq : (|phi j g|) ^ 2 ≤ (1 : ℝ) := by
     simpa only [sq_abs] using hTerm
@@ -166,7 +168,7 @@ local instance p4Q2PZ37AFL_outerProbability : IsProbabilityMeasure outer := by
 bounds, real SU(2) cells/masses and rational numerical point errors.
 The character constants are proved above and are NOT user inputs. -/
 structure p4Q2PZ37AFL_originalReceiverOnlyCellSamples
-    (H : ℕ) (e : PeriodicHypercubicEvenSpatialSliceLink H)
+    (e : PeriodicHypercubicEvenSpatialSliceLink H)
     (lo hi : ℝ)
     (c : p4Q2PZ37AFG_originalShellSampleTable H e lo hi) where
   partition : p4Q2PZ37AFJ_originalHaarCells
