@@ -1,3 +1,27 @@
+## 検証済み定理 — AFV（2026-11-05 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` はREADME・ROADMAP文書ミラー。AFU定理 #6328・正本文書 #6329・main文書 #6330 の全件MERGEDを継承し、[AFV定理PR #6331](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6331) は **MERGED**。定理squash SHA `e62fc7cc6a451cc84d4f4a82e8678c6a64036c2b`。元の真正SU(2) Wilson/Haar・24個の先着中心Borelセル・固定重み1/24・Perron/transfer/FF受信器・元AFM→AFJ→AFI型付き接続は不変更。
+
+### 原FF受信器の証明付き有理区間演算
+
+- **真正値の有理区間入力**：実数 `x` と有理端点 `l,u∈ℚ` に対し、実際の包含証明 `(l:ℝ)≤x≤(u:ℝ)` を要求する構造を導入。証明を伴う場合だけ、具体的有理中心 `q=(l+u)/2` と実誤差 `ε=(u−l)/2≥0` を作り、`|x−q|≤ε` をLean4で証明。端点の順序も包含証明から導く。上下端点は有理計算できるが、真正元FF数値に対する包含証明を自動生成したという意味ではない。
+- **元物理量の二乗・積を区間演算で保証**：`|x−q_x|≤ε_x` なら `|x²−q_x²|≤ε_x(2|q_x|+ε_x)`。また `|y−q_y|≤ε_y` なら `|xy−q_xq_y|≤ε_x(|q_y|+ε_y)+|q_x|ε_y` をLean4で証明。数値解析上の単純な未検証浮動小数点操作ではなく、実数の不等式として確定。
+- **有限・真正24中心への型付き適用**：元のAFG有限境界サンプル集合 `c.s` の各点 `a` と元のAFQ真正24中心 `c_i` で、実際の元FF受信器 `F_e(a,c_i)` の包含を要求。Wilson四成分文字 `φ_j(c_i)` は境界に依存しない別の区間証明書として一度だけ要求する。平方標本 `F²` と四成分積 `Fφ_j` は上の区間代数から構成し、独立の平方値・積値の数値観測を新たに仮定しない。
+- **AFT/AFUへの接続**：実際の区間データから `p4Q2PZ37AFT_original24CellVerifiedSamples` を作り、元の `p4Q2PZ37AFT_toOriginalReceiverQuadrature`・`toOriginalCoefficientVarianceCertificate` に接続。したがって既証明AFUのHaar質量保存・任意定数モード中心化誤差評価にも型付きで利用可能。元の物理受信器が定めた実数値・元Haar・物理閾値条件を置換しない。
+- **真正符号の条件付き判定**：端点の有理不等式 `0<l` または `u<0` と真正値包含が証明されれば、元のSU(2)中心における物理FF受信器値がそれぞれ厳密正または負であることをLean4で証明。具体的な二符号点の存在・元殻の非空性は主張しない。
+
+### exact-source Lean4 CI・公理監査・Git tree
+
+- 新規Leanのみ：`MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalVerifiedRationalIntervalReceiverV5_PZ37AFV.lean`（388行）。既存Lean・root・CI workflows・元物理測度は変更なし。固定Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 不変。
+- exact-source HEAD `c804f53d97c503d3b26ad961bba7231dd32175c7` の[CI #41906037567](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41906037567) は **Lean 11,329/11,329 SUCCESS**。新規11件 `#print axioms` は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorry`・`admit`・追加`axiom`・`constant` 0、変更Lean warning/error **0/0**、独立MCP completion receipt **SUCCESS**。
+- source HEAD、test-merge `31d3c02986e10d48f474049f9c2f8d21e6c26332`、定理squash `e62fc7cc6a451cc84d4f4a82e8678c6a64036c2b` のGit treeは `4544ff0338e9bdb55c558d95b0ec3cf038eeacf4` で完全一致。
+
+### 残存obstruction・次段AFW
+
+AFVは**与えられた真正区間包含証明を検査して伝播する**定理であり、元FF受信器の具体的有理上下限の区間演算器を実行・認証したという主張ではない。次段AFWでは真正24中心の四文字の実効的な有理値検証、元Perron/transfer/FF受信器の実際の数値区間包囲、独立の有限証明書入力の充足を優先する。二閾値非空殻、体積一様coercivity、物理Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは引き続き未証明。
+
+---
+
 ## 検証済み定理 — AFU（2026-11-05 JST）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` はREADME・ROADMAPの文書ミラー。AFTまでの真正SU(2) Wilson・Perron/transfer・符号付きFF受信器・元の24個の先着中心Borelセル・正規化compact Haar・固定重み `1/24` を保持し、[AFU定理PR #6328](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6328) を **MERGED**。定理squash SHAは `d141c233c8aa969c95f5a4d97d5fd07db2374a8b`。既存Leanソース・外部仮定・Haar測度・toolchain pinsは不変更。
