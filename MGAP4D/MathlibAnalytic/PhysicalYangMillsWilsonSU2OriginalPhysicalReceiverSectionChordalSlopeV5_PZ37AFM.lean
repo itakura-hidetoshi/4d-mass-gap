@@ -6,9 +6,10 @@ import Mathlib.Tactic
 # P4-Q2-PZ37AFM — genuine centered Wilson/Perron transfer-section chordal slope
 
 AFL eliminated the external SU(2) character envelope and character slope.
-Its remaining receiver is the ACTUAL ABZ source transfer section
+The remaining AFL receiver is the ACTUAL signed FF response
+  F_z(g) = Tnorm^-1 * T_f(B) - P_z * U_z(g),  P_z > 0,
   U_z(g) = T_f(B[e := g]) / rho(A, B[e := g]).
-This is NOT the signed difference response and not an independent proxy.
+The intermediate U is NOT itself AFL's original FF response.
 
 This module derives a finite-H envelope and unconditional chordal slope
 for U itself. The numerator uses the proven AEV original signed-source
@@ -17,9 +18,10 @@ boundary Perron half-density variation and AEK positive Wilson floor.
 The true JQ bounded continuous physical receiver supplies a uniform
 numerator/denominator QUOTIENT envelope through its exact GN/AEU identity.
 
-It then removes ALL external receiver envelope and slope fields from
-AFL's typed original Haar-cell certificate. Only genuine SU(2) cell
-geometry and independently justified rational quadrature samples remain.
+ABZ's exact affine identity and unchanged true FF BCF norm then remove
+ALL external FF receiver envelope/slope fields from AFL's typed original
+Haar-cell certificate. Rational samples stay on F (not U); original SU(2)
+cell geometry and verified quadrature data remain unchanged.
 
 No physical sample, Haar cell mass, sign crossing, volume-uniform
 coercivity, spectral gap, or continuum Yang--Mills gap is asserted.
@@ -64,6 +66,10 @@ local notation "rho" =>
 local notation "t" => decomposableOneSliceTransferIntegral H 2 b0 f0
 local notation "U" =>
   p4Q2PZ37ABZ_originalTransferSection H b0 hb0 f0
+local notation "F" =>
+  p4Q2PZ37ABZ_originalReceiverSection H b0 hb0 f0
+local notation "P" =>
+  p4Q2PZ37ABZ_originalTransferSectionPrefactor H b0 hb0
 local notation "FJQ" =>
   p4Q2JQ_originalPhysicalSourceLinkReceiver H b0 hb0 f0
 local notation "O" =>
@@ -236,6 +242,67 @@ theorem p4Q2PZ37AFM_originalTransferSectionSlope_nonneg :
     (mul_nonneg (by norm_num)
       (p4Q2PZ37AFM_originalTransferSectionEnvelope_nonneg H))
 
+
+/-- The original receiver in AFL is the actual signed FF
+response, an affine transform of the transfer-section quotient. -/
+theorem p4Q2PZ37AFM_originalFF_eq_affineTransferSection
+    (e : Link) (z : Pair) (g : G) :
+    F e z g = Tnorm⁻¹*t z.2-P z*U e z g := by
+  exact p4Q2PZ37ABZ_originalResponse_eq_transferSection H b0 hb0 f0 e z g
+
+/-- Use the norm of the SAME bounded continuous FF response,
+not the JQ receiver and not an externally chosen envelope. -/
+noncomputable def p4Q2PZ37AFM_originalFFEnvelope (e : Link) : ℝ :=
+  ‖p4Q2FF_originalWilsonRelativeSignedLinkResponseBCF
+    H 2 (by norm_num) b0 hb0 f0 e‖
+local notation "MFF" => p4Q2PZ37AFM_originalFFEnvelope H
+
+theorem p4Q2PZ37AFM_originalFFEnvelope_nonneg (e : Link) :
+    0 ≤ MFF e := by
+  exact norm_nonneg _
+
+theorem p4Q2PZ37AFM_originalFF_abs_le_trueBCFNorm
+    (e : Link) (z : Pair) (g : G) :
+    |F e z g| ≤ MFF e := by
+  change
+    |(p4Q2FF_originalWilsonRelativeSignedLinkResponseBCF
+      H 2 (by norm_num) b0 hb0 f0 e) (z,g)| ≤
+      ‖p4Q2FF_originalWilsonRelativeSignedLinkResponseBCF
+        H 2 (by norm_num) b0 hb0 f0 e‖
+  simpa only [Real.norm_eq_abs] using
+    (BoundedContinuousFunction.norm_coe_le_norm
+      (p4Q2FF_originalWilsonRelativeSignedLinkResponseBCF
+        H 2 (by norm_num) b0 hb0 f0 e) (z,g))
+
+/-- Difference of actual FF responses is P_z times the variation
+of U, with the original unupdated source term cancelling. -/
+theorem p4Q2PZ37AFM_originalFF_unconditionalChordSlope
+    (e : Link) (z : Pair) (g h : G) :
+    |F e z g-F e z h| ≤ (P z*LU)*dJ g h := by
+  have hp : 0 < P z :=
+    p4Q2PZ37ABZ_originalTransferSectionPrefactor_pos H b0 hb0 z
+  have hDiff :
+      F e z g-F e z h = P z*(U e z h-U e z g) := by
+    rw [p4Q2PZ37AFM_originalFF_eq_affineTransferSection H e z g,
+      p4Q2PZ37AFM_originalFF_eq_affineTransferSection H e z h]
+    ring
+  calc
+    |F e z g-F e z h| = P z*|U e z h-U e z g| := by
+      rw [hDiff, abs_mul, abs_of_pos hp]
+    _ = P z*|U e z g-U e z h| := by
+      rw [abs_sub_comm]
+    _ ≤ P z*(LU*dJ g h) :=
+      mul_le_mul_of_nonneg_left
+        (p4Q2PZ37AFM_originalTransferSection_unconditionalChordSlope
+          H e z g h) hp.le
+    _ = (P z*LU)*dJ g h := by ring
+
+theorem p4Q2PZ37AFM_originalFFSlope_nonneg
+    (z : Pair) : 0 ≤ P z*LU := by
+  exact mul_nonneg
+    (p4Q2PZ37ABZ_originalTransferSectionPrefactor_pos H b0 hb0 z).le
+    (p4Q2PZ37AFM_originalTransferSectionSlope_nonneg H)
+
 /-- Final numerical-only certificate: there are NO physical receiver
 bound/slope parameters, NO arbitrary character constants, and NO
 replacement for true Haar cells or actual rational samples. -/
@@ -253,19 +320,19 @@ structure p4Q2PZ37AFM_originalNumericOnlyCellSamples
   meanSampleError : Pair → ℝ
   hMeanSampleError_nonneg : ∀ a ∈ c.s, 0 ≤ meanSampleError a
   hMeanSample : ∀ a ∈ c.s, ∀ i,
-    |U e a (center i) - (meanSample a i : ℝ)| ≤ meanSampleError a
+    |F e a (center i) - (meanSample a i : ℝ)| ≤ meanSampleError a
   secondSample : Pair → Fin partition.n → ℚ
   secondSampleError : Pair → ℝ
   hSecondSampleError_nonneg : ∀ a ∈ c.s, 0 ≤ secondSampleError a
   hSecondSample : ∀ a ∈ c.s, ∀ i,
-    |(U e a (center i))^2 - (secondSample a i : ℝ)| ≤
+    |(F e a (center i))^2 - (secondSample a i : ℝ)| ≤
       secondSampleError a
   coefficientSample : Pair → Fin 4 → Fin partition.n → ℚ
   coefficientSampleError : Pair → Fin 4 → ℝ
   hCoefficientSampleError_nonneg : ∀ a ∈ c.s, ∀ j,
     0 ≤ coefficientSampleError a j
   hCoefficientSample : ∀ a ∈ c.s, ∀ j i,
-    |U e a (center i) * p4Q2PZ37ACK_fourModeCharacter j (center i) -
+    |F e a (center i) * p4Q2PZ37ACK_fourModeCharacter j (center i) -
       (coefficientSample a j i : ℝ)| ≤ coefficientSampleError a j
 
 /-- Discharge every original physical receiver obligation of AFL
@@ -281,20 +348,20 @@ def p4Q2PZ37AFM_toOriginalReceiverOnlyCellSamples
   hRadius := d.hRadius
   hCellRadius := d.hCellRadius
   hThetaLo := d.hThetaLo
-  receiverEnvelope := fun _ => MU
+  receiverEnvelope := fun _ => MFF e
   hReceiverEnvelope_nonneg := by
     intro a ha
-    exact p4Q2PZ37AFM_originalTransferSectionEnvelope_nonneg H
+    exact p4Q2PZ37AFM_originalFFEnvelope_nonneg H e
   hReceiverBound := by
     intro a ha g
-    exact p4Q2PZ37AFM_originalTransferSection_abs_le_trueEnvelope H e a g
-  receiverSlope := fun _ => LU
+    exact p4Q2PZ37AFM_originalFF_abs_le_trueBCFNorm H e a g
+  receiverSlope := fun a => P a*LU
   hReceiverSlope_nonneg := by
     intro a ha
-    exact p4Q2PZ37AFM_originalTransferSectionSlope_nonneg H
+    exact p4Q2PZ37AFM_originalFFSlope_nonneg H a
   hReceiverSlope := by
     intro a ha g h
-    exact p4Q2PZ37AFM_originalTransferSection_unconditionalChordSlope H e a g h
+    exact p4Q2PZ37AFM_originalFF_unconditionalChordSlope H e a g h
   meanSample := d.meanSample
   meanSampleError := d.meanSampleError
   hMeanSampleError_nonneg := d.hMeanSampleError_nonneg
@@ -318,8 +385,8 @@ def p4Q2PZ37AFM_toOriginalChordalCellSamples
   p4Q2PZ37AFL_toOriginalChordalCellSamples H e c
     (p4Q2PZ37AFM_toOriginalReceiverOnlyCellSamples H e c d)
 
-/-- The original four-mode coefficient-cell uncertainty is now
-completely explicit in actual finite-H receiver constants. -/
+/-- Original four-mode cell uncertainty with the true original FF
+receiver envelope and the z-dependent Perron prefactor P_z. -/
 theorem p4Q2PZ37AFM_coefficientOscillation_eq_physicalConstants
     (e : Link) {lo hi : ℝ}
     (c : p4Q2PZ37AFG_originalShellSampleTable H e lo hi)
@@ -327,7 +394,7 @@ theorem p4Q2PZ37AFM_coefficientOscillation_eq_physicalConstants
     (a : Pair) (j : Fin 4) :
     p4Q2PZ37AFK_coefficientOscillation H e c
       (p4Q2PZ37AFM_toOriginalChordalCellSamples H e c d) a j =
-      (LU+MU)*d.radius+d.coefficientSampleError a j := by
+      (P a*LU+MFF e)*d.radius+d.coefficientSampleError a j := by
   simpa [p4Q2PZ37AFM_toOriginalChordalCellSamples,
     p4Q2PZ37AFM_toOriginalReceiverOnlyCellSamples] using
     (p4Q2PZ37AFL_canonicalCoefficientOscillation_eq H e c
@@ -384,5 +451,10 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AFM_originalTransferSection_unitChordSlope
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AFM_originalTransferSection_unconditionalChordSlope
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AFM_originalTransferSectionSlope_nonneg
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AFM_originalFF_eq_affineTransferSection
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AFM_originalFFEnvelope_nonneg
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AFM_originalFF_abs_le_trueBCFNorm
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AFM_originalFF_unconditionalChordSlope
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AFM_originalFFSlope_nonneg
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AFM_coefficientOscillation_eq_physicalConstants
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AFM_originalNumericOnlyCenter_trueSigns
