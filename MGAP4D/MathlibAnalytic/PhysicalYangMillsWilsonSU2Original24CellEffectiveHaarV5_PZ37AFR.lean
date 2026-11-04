@@ -110,7 +110,55 @@ theorem p4Q2PZ37AFR_vertexZ_inner_le_two :
       (∑ k : Fin 4,
         p4Q2PZ37AFR_vertexZ i k *
           p4Q2PZ37AFR_vertexZ j k) ≤ (2 : ℤ) := by
-  decide
+  intro i j hij
+  cases i with
+  | inl p =>
+      rcases p with ⟨a,sa⟩
+      cases j with
+      | inl q =>
+          rcases q with ⟨b,sb⟩
+          fin_cases a <;> fin_cases b <;>
+            cases sa <;> cases sb <;>
+            norm_num [p4Q2PZ37AFR_vertexZ, Fin.sum_univ_four] at hij ⊢
+      | inr t =>
+          fin_cases a <;> cases sa <;>
+            simp [p4Q2PZ37AFR_vertexZ, Fin.sum_univ_four] <;>
+            split_ifs <;> omega
+  | inr s =>
+      cases j with
+      | inl q =>
+          rcases q with ⟨b,sb⟩
+          fin_cases b <;> cases sb <;>
+            simp [p4Q2PZ37AFR_vertexZ, Fin.sum_univ_four] <;>
+            split_ifs <;> omega
+      | inr t =>
+          have hst : s ≠ t := by
+            intro he
+            exact hij (congrArg Sum.inr he)
+          have hSome : ∃ k : Fin 4, s k ≠ t k := by
+            by_contra hh
+            apply hst
+            funext k
+            by_contra hk
+            exact hh ⟨k, hk⟩
+          have hTerm (k : Fin 4) :
+              p4Q2PZ37AFR_vertexZ (Sum.inr s) k *
+                p4Q2PZ37AFR_vertexZ (Sum.inr t) k ≤ (1 : ℤ) := by
+            cases hs : s k <;> cases ht : t k <;>
+              norm_num [p4Q2PZ37AFR_vertexZ, hs, ht]
+          have hOpp (k : Fin 4) (hk : s k ≠ t k) :
+              p4Q2PZ37AFR_vertexZ (Sum.inr s) k *
+                p4Q2PZ37AFR_vertexZ (Sum.inr t) k = (-1 : ℤ) := by
+            cases hs : s k <;> cases ht : t k <;>
+              simp_all [p4Q2PZ37AFR_vertexZ]
+          obtain ⟨k, hk⟩ := hSome
+          have h0 := hTerm 0
+          have h1 := hTerm 1
+          have h2 := hTerm 2
+          have h3 := hTerm 3
+          have hh := hOpp k hk
+          simp only [Fin.sum_univ_four]
+          fin_cases k <;> omega
 
 /-- Original S³ inner products inherit the kernel-checked
 finite integer certificate (dot<=2 corresponds to dot<=1/2). -/
