@@ -218,8 +218,10 @@ theorem p4Q2PZ37AFP_eightHaarRational_accuracy
     measureReal_nonneg
   have h1 :=
     p4Q2PZ37AFP_eightCells_trueHaar_mass_le_half r hr hrSq i
-  change |Measure.real mu (p4Q2PZ37AFP_eightCells r i) -
-    (1 / 8 : ℝ)| ≤ (3 / 8 : ℝ)
+  have hw :
+      (p4Q2PZ37AFP_eightRationalWeight i : ℝ) = (1 / 8 : ℝ) := by
+    norm_num [p4Q2PZ37AFP_eightRationalWeight]
+  rw [hw]
   exact abs_le.mpr ⟨by linarith, by linarith⟩
 
 /-- ORIGINAL AFJ normalized Haar structure with eight concrete
