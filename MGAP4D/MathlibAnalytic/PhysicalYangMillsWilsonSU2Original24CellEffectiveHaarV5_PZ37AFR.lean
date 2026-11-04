@@ -119,9 +119,7 @@ theorem p4Q2PZ37AFR_vertexZ_inner_le_two :
           rcases q with ⟨b,sb⟩
           fin_cases a <;> fin_cases b <;>
             cases sa <;> cases sb <;>
-            first
-            | exact False.elim (by simp at hij)
-            | norm_num [p4Q2PZ37AFR_vertexZ, Fin.sum_univ_four]
+            norm_num [p4Q2PZ37AFR_vertexZ, Fin.sum_univ_four] at *
       | inr t =>
           fin_cases a <;> cases sa <;>
             simp only [Fin.sum_univ_four] <;>
