@@ -373,7 +373,7 @@ noncomputable def p4Q2PZ37AFU_original24CenterPrecisionSamples
 physical AFM→AFJ receiver, with the improved AFT fixed weights. -/
 noncomputable def p4Q2PZ37AFU_originalPrecisionReceiverQuadrature
     (e : Link) {lo hi : ℝ}
-    (c : p4Q2PZ37AFG_originalShellSampleTable H e lo hi c)
+    (c : p4Q2PZ37AFG_originalShellSampleTable H e lo hi)
     (hlo : 0 ≤ lo)
     (eps : ℝ) (heps : 0 < eps) :
     p4Q2PZ37AFJ_originalReceiverQuadrature H e lo hi c :=
@@ -384,7 +384,7 @@ noncomputable def p4Q2PZ37AFU_originalPrecisionReceiverQuadrature
 the certified partitions remain the fixed effective 24 Haar cells. -/
 noncomputable def p4Q2PZ37AFU_originalPrecisionCoefficientVariance
     (e : Link) {lo hi : ℝ}
-    (c : p4Q2PZ37AFG_originalShellSampleTable H e lo hi c)
+    (c : p4Q2PZ37AFG_originalShellSampleTable H e lo hi)
     (hlo : 0 ≤ lo)
     (eps : ℝ) (heps : 0 < eps) :
     p4Q2PZ37AFI_originalCoefficientVarianceCertificate H e lo hi c :=
@@ -395,7 +395,7 @@ noncomputable def p4Q2PZ37AFU_originalPrecisionCoefficientVariance
 mass error; no external physical Lipschitz/character norm hypothesis. -/
 theorem p4Q2PZ37AFU_originalCoefficient_centeredAccuracy
     (e : Link) {lo hi : ℝ}
-    (c : p4Q2PZ37AFG_originalShellSampleTable H e lo hi c)
+    (c : p4Q2PZ37AFG_originalShellSampleTable H e lo hi)
     (hlo : 0 ≤ lo)
     (d : p4Q2PZ37AFT_original24CellVerifiedSamples H e lo hi c)
     (a : Pair) (ha : a ∈ c.s) (j : Fin 4) (s : ℚ) :
@@ -427,7 +427,7 @@ theorem p4Q2PZ37AFU_originalCoefficient_centeredAccuracy
 receiver Haar mean. -/
 theorem p4Q2PZ37AFU_originalMean_centeredAccuracy
     (e : Link) {lo hi : ℝ}
-    (c : p4Q2PZ37AFG_originalShellSampleTable H e lo hi c)
+    (c : p4Q2PZ37AFG_originalShellSampleTable H e lo hi)
     (hlo : 0 ≤ lo)
     (d : p4Q2PZ37AFT_original24CellVerifiedSamples H e lo hi c)
     (a : Pair) (ha : a ∈ c.s) (s : ℚ) :
@@ -454,7 +454,7 @@ theorem p4Q2PZ37AFU_originalMean_centeredAccuracy
 the original receiver variance, without changing physical sources. -/
 theorem p4Q2PZ37AFU_originalSecond_centeredAccuracy
     (e : Link) {lo hi : ℝ}
-    (c : p4Q2PZ37AFG_originalShellSampleTable H e lo hi c)
+    (c : p4Q2PZ37AFG_originalShellSampleTable H e lo hi)
     (hlo : 0 ≤ lo)
     (d : p4Q2PZ37AFT_original24CellVerifiedSamples H e lo hi c)
     (a : Pair) (ha : a ∈ c.s) (s : ℚ) :
