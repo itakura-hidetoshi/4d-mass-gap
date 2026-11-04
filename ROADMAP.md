@@ -1,3 +1,31 @@
+## 検証済み定理 — AFG（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` はREADME・ROADMAPの文書ミラーのみ。AFF（定理PR [#6283](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6283)、文書 #6284/#6285、マージ後CI #41739389697 SUCCESS）を継承したAFG定理PR [#6286](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6286) は **MERGED**。定理squash SHA `8b3bcb6746e1eea0222621e91578c12ef9d1b927`。元の相互作用するWilson SU(2)、中心化Gauss-law物理源、Perron真空、右リンク更新transfer、同一元境界pair-Haar測度 `ν_H`、元全リンク距離 `D_H`、FC envelope、公開rootとLean/mathlib固定pinを変更せず、AEXの保守的二球FC no-goも維持する。
+
+### 真正有限ネット・頑健な殻中心の形式証明
+
+- **真正独立誤差つき有限ネット**：閾値 `θ_lo≤θ_hi`、二つの正の振動許容値 `η_lo,η_hi`、半径 `r>0`、実際の境界pair有限ネット `s` とその `D_H` 被覆証拠、および元の残差ギャップ `G_θ(z)=W_F(z)−θ A_F(z)^2` の両閾値での一様変動証拠を依存型 `originalShellSampleTable` に保持。AFB一様連続性とAEE有限被覆から、任意の正許容値について真正表の存在を証明する。
+- **真正物理値の有限フィルタ**：`Robust(s)={a∈s | η_lo<G_(θ_lo)(a) ∧ G_(θ_hi)(a)<−η_hi}` を定義。各頑健中心 `a` について元の全リンク球 `B_D(a,r)` が真正差分殻 `Bad_(θ_lo)\\Bad_(θ_hi)` に含まれ、AEAの正Haar球下界がそのまま適用される。
+- **分離packing・重複の排除**：AFDの有限greedy構成により `t⊆Robust(s)` を抽出し、異なる中心間の距離 `D_H(a,b)≥2r` を証明。ADLの元の三角不等式により各球の非重複性を得て、**`|t| κ_H(r)≤ν_H(Bad_(θ_lo)\\Bad_(θ_hi))`** をLean4で証明。ここで `κ_H(r)=κ(r/(2|Link_H|+1))^(2|Link_H|)>0` はAEAの真正SU(2)ペアHaar球下界であり、体積 `H` には依存する。
+- **中心検出の条件付き完全性**：元の境界配置 `z` に厳密な二符号 `G_(θ_lo)(z)>0>G_(θ_hi)(z)` が存在すれば、正の振動余裕を選んだ真正有限ネットで頑健中心を検出でき、`|t|κ_H(r)>0` を伴う真正殻質量下界証明書が存在する。一方、そのような元物理点の**無条件存在を証明したのではない**。具体的標本値・有限比較の数値認証や体積一様下界は別課題。
+
+### AFEとの統合・真正GI/FCへの条件付き移送
+
+- 独立に認証したAFEの低・高閾値の有限表上界 `U_lo,U_hi` と、同一真正殻で認証した分離packing `t` から **`ν_H(Bad_(θ_hi))≤U_AFG=min(U_hi,U_lo−|t|κ_H(r))`** を証明。これは二つのHaar上界の引き算から下界を捏造する操作ではない。証明書が有効なら `0≤U_AFG≤1`、かつ両AFE表より悪化しない。
+- **元の平均二乗GI証明書**：`θ_hi≥0` と別途数値認証された `θ_hi*A4_H+B_H²*U_AFG<64*A4_H` の下で、元の `Budget_H>0` と元の符号付き二posterior GI応答が非零となる真正正Haar開領域を導出。**より強い元FC判定** には独立の真の未使用分 `Eunused_H≤σ*A4_H` と `(θ_hi+σ)*A4_H+B_H²*U_AFG<64*A4_H` が必要。元GI平均証明書の非正性にはAFAの必要質量下界を移送する。
+
+### 正本検証・依存公理・未解決境界
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFiniteShellNetPackingV5_PZ37AFG.lean` **1ファイル579行、18公開定理・18公理監査**。既存Leanファイル・workflow・物理模型・Haar測度・公開rootは不変更。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 固定。
+- [exact-source CI #41746954218](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41746954218) は **11,314/11,314 SUCCESS**。18定理の公理依存は `propext`、`Classical.choice`、`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error **0/0**。source HEAD `f10d7905bb93b061c32a485b0bbe0ecda41e8354`、GitHub test-merge `6ab4343eacd257fac962f6ff08f3a8cc4ab73f93`、squash `8b3bcb6746e1eea0222621e91578c12ef9d1b927` のGit tree `6ac57abc8e89915d402d6e08da9bd3875dbf594e` が完全一致。
+- これは**元モデルの有限体積・条件付き真正Haar証明書**であり、元の具体的gap標本の数値下界、`H` 一様coercivity、物理Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップの証明ではない。AEXの保守的FC二球no-goを保持する。
+
+### 次の独立課題 — AFH
+
+真正有限ネットの厳密符号検出を、元Wilson/Perronの振幅・残差の区間誤差証明書、閾値間の符号交差・空表障害、半径とpackingの検査可能な定量条件へ進める。必要な数値誤差や物理的符号交差を仮定なしに捏造しない。
+
+---
+
 ## 検証済み定理 — AFF（2026-11-04 JST）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFE（定理PR #6280、文書 #6281/#6282）を継承し、AFF定理PR [#6283](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6283) は **MERGED**。定理squash SHAは `e1b82397187a259892f9b7e09d8a2b70bc3bf9f5`。真正Wilson SU(2)、中心化Gauss-law物理源、Perron真空、元の右リンク更新transfer、同一境界pair-Haar測度 `ν_H`、FC envelope、真正全リンク距離 `D_H`、固定Lean/mathlibと公開rootを変更しない。AEXの保守的二球FC no-goも保持する。
