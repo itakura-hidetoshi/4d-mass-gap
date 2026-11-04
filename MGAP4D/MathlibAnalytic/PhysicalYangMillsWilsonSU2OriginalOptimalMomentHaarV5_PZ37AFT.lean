@@ -41,7 +41,7 @@ local notation "chi" => p4Q2PZ35C_originalOneLinkCharacter
 local notation "BallJ" => p4Q2PZ37ADK_trueChordalBall
 local notation "m" => p4Q2PZ37ADM_trueOneLinkChordalHaarRadialMass
 local notation "Grid" => p4Q2PZ37AFQ_GridIndex
-local notation "center" => p4Q2PZ37AFQ_originalCenters
+local notation "gridCenter" => p4Q2PZ37AFQ_originalCenters
 
 local instance p4Q2PZ37AFT_topological : IsTopologicalGroup G :=
   specialUnitaryGroupIsTopologicalGroup 2
@@ -116,7 +116,7 @@ theorem p4Q2PZ37AFT_optimalMarkovSquare_integral :
           1224 * (∫ g : G, chi g ∂mu) - 531 := by
       rw [integral_sub hIntL (integrable_const _)]
       rw [integral_sub (hIntA.const_mul _) (hIntChi.const_mul _)]
-      simp
+      simp [integral_const_mul]
     _ = 1781 := by
       rw [p4Q2PZ37AFS_shiftedSquare_integral_half,
         p4Q2PZ37AFS_originalCharacter_mean_zero]
@@ -170,13 +170,13 @@ theorem p4Q2PZ37AFT_everyCell_originalHaar_le
     (i : Fin (Fintype.card Grid)) :
     Measure.real mu (p4Q2PZ37AFQ_cells i) ≤ (625 / 1781 : ℝ) := by
   have hSub :
-      p4Q2PZ37AFQ_cells i ⊆ BallJ (center i) (4 / 5) := by
+      p4Q2PZ37AFQ_cells i ⊆ BallJ (gridCenter i) (4 / 5) := by
     intro g hg
     exact (p4Q2PZ37AFN_originalFirstCenterCell_mem_iff
       (Fintype.card Grid) center (4 / 5) i g).1 hg |>.1
   calc
     Measure.real mu (p4Q2PZ37AFQ_cells i) ≤
-        Measure.real mu (BallJ (center i) (4 / 5)) :=
+        Measure.real mu (BallJ (gridCenter i) (4 / 5)) :=
       measureReal_mono hSub (measure_ne_top _ _)
     _ = m (4 / 5) :=
       p4Q2PZ37ADM_oneLinkChordalBallMass_eq_radial _ _
@@ -260,19 +260,19 @@ structure p4Q2PZ37AFT_original24CellVerifiedSamples
   meanSampleError : Pair → ℝ
   hMeanSampleError_nonneg : ∀ a ∈ c.s, 0 ≤ meanSampleError a
   hMeanSample : ∀ a ∈ c.s, ∀ i,
-    |F e a (center i) - (meanSample a i : ℝ)| ≤ meanSampleError a
+    |F e a (gridCenter i) - (meanSample a i : ℝ)| ≤ meanSampleError a
   secondSample : Pair → Fin (Fintype.card Grid) → ℚ
   secondSampleError : Pair → ℝ
   hSecondSampleError_nonneg : ∀ a ∈ c.s, 0 ≤ secondSampleError a
   hSecondSample : ∀ a ∈ c.s, ∀ i,
-    |(F e a (center i)) ^ 2 - (secondSample a i : ℝ)| ≤
+    |(F e a (gridCenter i)) ^ 2 - (secondSample a i : ℝ)| ≤
       secondSampleError a
   coefficientSample : Pair → Fin 4 → Fin (Fintype.card Grid) → ℚ
   coefficientSampleError : Pair → Fin 4 → ℝ
   hCoefficientSampleError_nonneg : ∀ a ∈ c.s, ∀ j,
     0 ≤ coefficientSampleError a j
   hCoefficientSample : ∀ a ∈ c.s, ∀ j i,
-    |F e a (center i) * p4Q2PZ37ACK_fourModeCharacter j (center i) -
+    |F e a (gridCenter i) * p4Q2PZ37ACK_fourModeCharacter j (gridCenter i) -
       (coefficientSample a j i : ℝ)| ≤ coefficientSampleError a j
 
 /-- No assumptions about cell geometry or physical Lipschitz constants:
