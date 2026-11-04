@@ -108,7 +108,7 @@ private theorem p4Q2PZ37AFK_centerError_to_cell
 receiver envelope times the original receiver Lipschitz slope. -/
 private theorem p4Q2PZ37AFK_square_chordal_modulus
     (x y L M d : ℝ)
-    (hM : 0 ≤ M) (hL : 0 ≤ L) (hd : 0 ≤ d)
+    (hL : 0 ≤ L) (hd : 0 ≤ d)
     (hx : |x| ≤ M) (hy : |y| ≤ M)
     (hSlope : |x-y| ≤ L*d) :
     |x^2-y^2| ≤ (2*M*L)*d := by
@@ -131,7 +131,7 @@ the mixed oscillation needs both envelopes and both slopes. -/
 private theorem p4Q2PZ37AFK_product_chordal_modulus
     (x y u v Lx Lu Mx Mu d : ℝ)
     (hLx : 0 ≤ Lx) (hLu : 0 ≤ Lu)
-    (hMx : 0 ≤ Mx) (hMu : 0 ≤ Mu) (hd : 0 ≤ d)
+    (hd : 0 ≤ d)
     (hX : |x-y| ≤ Lx*d) (hU : |u-v| ≤ Lu*d)
     (hYBound : |y| ≤ Mx) (hUBound : |u| ≤ Mu) :
     |x*u-y*v| ≤ (Lx*Mu+Mx*Lu)*d := by
@@ -351,7 +351,7 @@ theorem p4Q2PZ37AFK_secondLocal_from_chordal
   · exact p4Q2PZ37AFK_square_chordal_modulus
       (F b0 hb0 f0 e a g) (F b0 hb0 f0 e a (d.center i))
       (d.receiverSlope a) (d.receiverEnvelope a) (dJ g (d.center i))
-      (d.hReceiverEnvelope_nonneg a ha) (d.hReceiverSlope_nonneg a ha)
+      (d.hReceiverSlope_nonneg a ha)
       (p4Q2PZ37ADK_trueChordalDistance_nonneg g (d.center i))
       (d.hReceiverBound a ha g) (d.hReceiverBound a ha (d.center i))
       (d.hReceiverSlope a ha g (d.center i))
@@ -386,7 +386,6 @@ theorem p4Q2PZ37AFK_coefficientLocal_from_chordal
       (d.receiverEnvelope a) (d.characterEnvelope j)
       (dJ g (d.center i))
       (d.hReceiverSlope_nonneg a ha) (d.hCharacterSlope_nonneg j)
-      (d.hReceiverEnvelope_nonneg a ha) (d.hCharacterEnvelope_nonneg j)
       (p4Q2PZ37ADK_trueChordalDistance_nonneg g (d.center i))
       (d.hReceiverSlope a ha g (d.center i))
       (d.hCharacterSlope j g (d.center i))
