@@ -61,7 +61,9 @@ def p4Q2PZ37AGA_fromVerifiedInterval {x : ℝ}
     have h := (p4Q2PZ37AFV_intervalToBall v).hContains
     change |x - ((((v.lower + v.upper) / 2 : ℚ) : ℝ))| ≤
       (((v.upper - v.lower : ℚ) : ℝ) / 2) at h
-    convert h using 1 <;> push_cast <;> ring
+    convert h using 1
+    push_cast
+    ring
 
 /-- Forget the rational-error refinement to the pre-existing AFV ball. -/
 def p4Q2PZ37AGA_toAFVBall {x : ℝ}
@@ -88,7 +90,9 @@ def p4Q2PZ37AGA_rationalBall_sub {x y : ℝ}
             congr 1
             ring
       _ ≤ |x - (bx.sample : ℝ)| + |y - (byy.sample : ℝ)| :=
-        abs_sub_le _ _
+        by
+          simpa only [sub_zero, zero_sub, abs_neg] using
+            (abs_sub_le (x - (bx.sample : ℝ)) 0 (y - (byy.sample : ℝ)))
       _ ≤ (bx.radius : ℝ) + (byy.radius : ℝ) :=
         add_le_add bx.hContains byy.hContains
       _ = (((bx.radius + byy.radius : ℚ) : ℝ)) := by push_cast; ring
@@ -114,7 +118,9 @@ def p4Q2PZ37AGA_rationalBall_mul {x y : ℝ}
     change |x * y - (((bx.sample * byy.sample : ℚ) : ℝ))| ≤
       (bx.radius : ℝ) * (|(byy.sample : ℝ)| + (byy.radius : ℝ)) +
       |(bx.sample : ℝ)| * (byy.radius : ℝ) at h
-    convert h using 1 <;> push_cast <;> ring
+    convert h using 1
+    push_cast
+    ring
 
 /-- Turn any rational ball into a typed AFV rational interval. -/
 def p4Q2PZ37AGA_toVerifiedInterval {x : ℝ}
@@ -318,9 +324,10 @@ def p4Q2PZ37AGA_automaticInverseNormInterval :
   lower := 0
   upper := p4Q2PZ37AFZ_rationalInverseNorm H
   hLower := by
-    exact (inv_pos.mpr
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
-        H 2 (by norm_num) b0 hb0)).le
+    simpa only [Rat.cast_zero] using
+      (inv_pos.mpr
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
+          H 2 (by norm_num) b0 hb0)).le
   hUpper := p4Q2PZ37AFZ_originalInverseNorm_le_rational H
 
 /-- Unconditional AFZ density-ratio bounds for every real SU(2) link. -/
@@ -330,8 +337,12 @@ def p4Q2PZ37AGA_automaticDensityRatioInterval
       (rho z / rho (z.1, Function.update z.2 e g)) where
   lower := 0
   upper := 3 / 2
-  hLower := (p4Q2PZ37AFZ_originalDensityRatio_bounds H e z g).1
-  hUpper := (p4Q2PZ37AFZ_originalDensityRatio_bounds H e z g).2
+  hLower := by
+    simpa only [Rat.cast_zero] using
+      (p4Q2PZ37AFZ_originalDensityRatio_bounds H e z g).1
+  hUpper := by
+    simpa only [Rat.cast_div, Rat.cast_ofNat] using
+      (p4Q2PZ37AFZ_originalDensityRatio_bounds H e z g).2
 
 /-- The only REMAINING independently verified finite inputs are the
 signed ORIGINAL one-slab transfer integrals at the actual boundary
