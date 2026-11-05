@@ -146,6 +146,8 @@ theorem p4Q2PZ37AGH_productCell_distance
     (index : Link → Fin n) (A : Cfg)
     (hA : A ∈ p4Q2PZ37AGH_productCell H n centers r index) :
     Dsp A (fun e => centers (index e)) ≤ (Fintype.card Link : ℝ) * r := by
+  change A ∈ Set.univ.pi (fun e : Link =>
+    p4Q2PZ37AFN_originalFirstCenterCell n centers r (index e)) at hA
   unfold p4Q2PZ37AGG_originalSpatialChordalDistance
   calc
     (∑ e : Link, dJ (A e) (centers (index e))) ≤ ∑ _e : Link, r := by
