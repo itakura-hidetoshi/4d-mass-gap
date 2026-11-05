@@ -177,19 +177,22 @@ namespace GroundStatePosteriorJoint
 theorem p4Q2PZ37AGJ_fixedCoupling_bounds :
     (1 / 160 : ℝ) < p4Q2PZ37ADC_fixedCoupling ∧
       p4Q2PZ37ADC_fixedCoupling < (13 / 2048 : ℝ) := by
-  have hL := p4Q2PZ37AGJ_smallExpInterval (2 / 5) 5 (by norm_num) (by norm_num)
-  have hU := p4Q2PZ37AGJ_smallExpInterval (13 / 32) 5 (by norm_num) (by norm_num)
+  let hL := p4Q2PZ37AGJ_smallExpInterval (2 / 5) 5 (by norm_num) (by norm_num)
+  let hU := p4Q2PZ37AGJ_smallExpInterval (13 / 32) 5 (by norm_num) (by norm_num)
   have hExpL : Real.exp (2 / 5 : ℝ) < 3 / 2 := by
     calc
       Real.exp (2 / 5 : ℝ) ≤
         ((p4Q2PZ37AGJ_taylorSum (2 / 5) 5 + p4Q2PZ37AGJ_taylorError (2 / 5) 5 : ℚ) : ℝ) := by
           simpa [hL, p4Q2PZ37AGJ_smallExpInterval] using hL.hUpper
-      _ < 3 / 2 := by exact_mod_cast p4Q2PZ37AGJ_couplingArithmetic_checked.1
+      _ < 3 / 2 := by
+        have h := (Rat.cast_lt (K := ℝ)).2 p4Q2PZ37AGJ_couplingArithmetic_checked.1
+        simpa only [Rat.cast_div, Rat.cast_ofNat] using h
   have hExpU : (3 / 2 : ℝ) < Real.exp (13 / 32 : ℝ) := by
     calc
       (3 / 2 : ℝ) <
         ((p4Q2PZ37AGJ_taylorSum (13 / 32) 5 - p4Q2PZ37AGJ_taylorError (13 / 32) 5 : ℚ) : ℝ) := by
-          exact_mod_cast p4Q2PZ37AGJ_couplingArithmetic_checked.2
+          have h := (Rat.cast_lt (K := ℝ)).2 p4Q2PZ37AGJ_couplingArithmetic_checked.2
+          simpa only [Rat.cast_div, Rat.cast_ofNat] using h
       _ ≤ Real.exp (13 / 32 : ℝ) := by
         simpa [hU, p4Q2PZ37AGJ_smallExpInterval] using hU.hLower
   have hLo : (2 / 5 : ℝ) < 64 * p4Q2PZ37ADC_fixedCoupling := by
@@ -206,8 +209,12 @@ def p4Q2PZ37AGJ_fixedCouplingInterval :
     p4Q2PZ37AFV_verifiedInterval p4Q2PZ37ADC_fixedCoupling where
   lower := 1 / 160
   upper := 13 / 2048
-  hLower := by exact_mod_cast p4Q2PZ37AGJ_fixedCoupling_bounds.1.le
-  hUpper := by exact_mod_cast p4Q2PZ37AGJ_fixedCoupling_bounds.2.le
+  hLower := by
+    simpa only [Rat.cast_div, Rat.cast_one, Rat.cast_ofNat] using
+      p4Q2PZ37AGJ_fixedCoupling_bounds.1.le
+  hUpper := by
+    simpa only [Rat.cast_div, Rat.cast_ofNat] using
+      p4Q2PZ37AGJ_fixedCoupling_bounds.2.le
 
 variable (H : ℕ)
 local notation "Cfg" => PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
