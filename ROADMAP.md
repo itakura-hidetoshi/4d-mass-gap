@@ -1,3 +1,27 @@
+## 検証済み定理 — AGG（2026-11-05 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` はREADME・ROADMAPの文書ミラー。AGF定理 #6361・正本文書 #6362・mainミラー #6363 のすべてのMERGEDを継承し、[AGG定理PR #6364](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6364) は **MERGED**。検証済みexact-source HEAD `5e87f9091f9b2bfbdfb9b3ae83d520ac0ffd1946`、AGG定理squash SHA `e987e7cd3481d14e30a74357a7bccccf3497721a`。真正SU(2) Wilson作用・正規化空間Haar・ZW中心化Gauss-law source・元one-slab Perron/transfer/FF、Lean/mathlib pins、公開rootは一切変更しない。
+
+### 真正空間リンク弦距離による無条件Wilson振動係数
+
+- **元の物理幾何に対する有限座標telescoping**：ADKの真正SU(2)弦距離 `d_J` と元空間リンクの有限集合に対し `D_sp,H(A,C)=Σ_e d_J(A_e,C_e)` を定義。AEMで無条件証明済みの空間Wilson作用1リンク斜率24とAEP/AETの有限座標Lipschitz移送から、元AFZの真正連続中心化source `f_c(A)=½(W_c(A)−m_H)` について **`|f_c(A)−f_c(C)|≤12 D_sp,H(A,C)`** をLean4証明。元のHaar平均は差分で厳密に消去し、任意のL²代表元との不正な点wise同一視をしない。
+- **真正one-slab核の第一境界変動を証明**：AEMの右側1リンク核係数 `13β₀` と既証明の元対称Wilson核 `K_H(A,B)=K_H(B,A)` を合わせ、全空間リンクへのtelescopingで **`|K_H(A,B)−K_H(C,B)|≤13β₀ D_sp,H(A,C)`** を証明。代理核・独立Haar・新しい正則性仮定は導入しない。
+- **真のAGE連続被積分関数の積差分評価**：AGBの真正核中点半径 `(1−k_H)/2`、AGFの`|f_c|≤p_H`、上記の真正source/核差分を積の差の恒等式で接続して、**`|g_B(A)−g_B(C)|≤L_H D_sp,H(A,C)`** を無条件形式証明。係数は **`L_H=6(1−k_H)+13β₀p_H≥0`**。ここで`g_B(A)=f_c(A)(K_H(A,B)−(1+k_H)/2)` は元AGEの真正連続代表元そのもの。各有限Hで成立するが`p_H`・`k_H`を含むため体積一様係数とは主張しない。
+- **真正24中心Haar積セルを直接評価**：AGE・AGDの実際のAFQ指定中心 `a_i` と真正空間積セルの既証明半径`d_J(A_e,a_{i,e})≤4/5` から、**`D_sp,H(A,a_i)≤(4/5)|Link_H|`** を証明。これによりAGEの外部仮定不要な幾何学的`originalSpatialOscillation`を`ε_geom=L_H(4/5)|Link_H|`で構成。
+- **tighten-only hybrid証明書を構成**：AGFの元全球上界`ε_global=(1−k_H)p_H`と新幾何上界から **`ε_H=min{ε_global,ε_geom}`** を真正AGE積セルに対して無条件に導出。元AGEの真正signed transfer有理求積に直結し、**`|t_H(B)−Σ_i q_iw_i|≤ε_H+1/64+Σ_i|q_i|δ_i`** を保持する。AGDの固定24中心セルでは`ε_geom`が`ε_global`より小さいとは限らないため、「数値誤差が厳密に減少した」とは主張しない。`q_i`はAGEの非計算的な有理稠密選択で、具体的な評価済み有理表ではない。
+
+### exact-source Lean4・公理監査・source/test-merge一致
+
+- AGGで追加したのは新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalSpatialChordalCellOscillationV5_PZ37AGG.lean` **1ファイル・382追加行**のみ。既存Lean、元物理量、workflow、公開root、Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` は不変更。
+- 初回sourceの絶対値積差の証明で`abs_mul`と三角不等式の順序を確認し、証明本体を明示的`calc`に修正した。元の定理文・既存物理的仮定は変更なし。修正後の最終[exact-source CI #42025445563](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42025445563)は **11,340 / 11,340 SUCCESS**。`#print axioms`新規13件すべて`propext`・`Classical.choice`・`Quot.sound`のみで`sorryAx`なし、変更AGG warning/error **0/0**、独立MCP completion receipt **SUCCESS**。
+- CI検証済みsource `5e87f9091f9b2bfbdfb9b3ae83d520ac0ffd1946` とGitHub test-merge `c9f00398fc0511a9ce1ccd1c7f4ac2503cb39fce` はGit tree `8194ed45d609844a52963e76766a173994e5d698` で完全一致。検証済みHEAD指定で定理をsquashマージした。
+
+### 未解決obstructionと次の研究
+
+幾何学的なゼロ距離連続性と真正積セルの証明書は得られたが、固定24中心の粗いセル半径と高次元のAGD Haar質量区間は保守的。非計算的有理`q_i`の実効的な区間評価、真正transferの非零符号分離、二閾値殻非空、体積一様coercivity、Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは引き続き**未証明**。次段はより小さな真正AFQ/ADPネットセルと、具体的なHaar質量およびWilson被積分関数の区間演算による誤差縮小・符号判定証明書を検討する。
+
+---
+
 ## 検証済み定理 — AGF（2026-11-05 JST）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` はREADME・ROADMAP文書ミラー。AGE定理PR #6358、正本文書 #6359、main文書ミラー #6360 のMERGEDを継承し、[AGF定理PR #6361](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6361) も **MERGED**。検証済みexact-source HEAD `933d72ac12cfa5f8182067f22689c078d2cfa1a0`、AGF定理squash SHA `d78801d20f0c38466176c8442d0ea434cf50d1e1`。元の真正SU(2) Wilson/Haar、ZW Gauss-law中心化物理source、元のone-slab Perron/transfer/FF、AFQ指定24中心とAGD積セル、固定Lean/mathlibを変更しない。
