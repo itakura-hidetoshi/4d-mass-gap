@@ -1,3 +1,26 @@
+## 検証済み定理 — AFZ（2026-11-05 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` はREADME・ROADMAPの文書ミラー。AFY定理 #6340、正本文書 #6341、mainミラー #6342 のMERGEDを継承し、[AFZ定理PR #6343](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6343) は **MERGED**。最終exact-source HEAD `17703818947cfee5f7d0cb5bf1e227fba3d561c6`、定理squash SHA `92e590996451eef2e7850372ddb3bca3d3be2eb4`。真正SU(2) Wilson作用・元の正規化Haar／境界pair-Haar・Gauss-law中心化物理source・Perron/transfer/符号付きFF受信器・AFQ真正24中心・AFT有理重みは不変更。
+
+### 元の真正物理受信器に対する外部区間入力なしの有理包囲
+
+- **明示的有限体積有理数**：元の空間plaquette列の長さを `p_H`、元のone-slab組合せ体積（plaquette列長＋link列長）を `v_H` とし、`n_H=(v_H+31)/32`（自然数除算）、`Q_H=(3/2)^n_H∈ℚ`、`R_H=(5/2)p_H Q_H∈ℚ` を定義。固定結合 `β₀=log(3/2)/64` の既証明恒等式 `exp(64β₀)=3/2` と元物理transferノルム下界より `‖T_H‖⁻¹≤Q_H` をLean4で導出した。
+- **本物の中心化Gauss-law sourceからの評価**：元のWilson空間作用の `0≤W_H≤2p_H` と真のHaar平均の同範囲包含を使い、元ZW中心化sourceの真のHaar-L²代表元が `|(f_H:A↦ℝ)|≤p_H` をHaar-a.e.で満たすことを証明。元の符号付きsourceに対するHaar-L¹量 `M_src,H≤p_H`、真正Wilson核 `0<K_H≤1` から、元のsigned transfer積分 `|t_H(B)|≤p_H` を導出。仮想source・正値sourceへの置換はない。
+- **Perron比と真正FFの有理区間**：既証明AELの元joint sqrt-densityの1リンクHarnackと `exp(8β₀)≤3/2` から、元右境界を1リンク更新した密度比 `0≤ρ_H(z)/ρ_H(z_g)≤3/2` を証明。元ABZ/AFMの真正FF恒等式 `F_e(z,g)=‖T_H‖⁻¹[t_H(B)−ρ_H(z)t_H(B[e:=g])/ρ_H(z_g)]` を用い、**全ての有限H・元境界z・真のSU(2) gに対して `|F_e(z,g)|≤R_H`** と形式証明。`[-R_H,R_H]` は元AFVの `verifiedInterval` の証明付き真正包囲となり、AFWの受信器区間の外部入力をこの保守的包囲で満たせる。
+- **元物理証明書への直結と限界**：元 `F_e(z,z.2(e))=0` の厳密恒等式、上記区間の有理中点 `0` と誤差 `R_H` をLean4で証明。元AFX→AFV→AFT→AFI係数・分散証明書へ型付き接続。さらに、この選択による真正24中心AFTの係数sampleは **厳密0** と証明した。これは非零係数・正負符号・真正非空二閾値殻の数値認証ではなく、精密なsigned receiver intervalの課題は残る。既存のより鋭い条件付き区間証明書は保持する。
+
+### exact-source Lean4 CI・公理監査・Git tree
+
+- 新規Leanは `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalRationalReceiverEnvelopeV5_PZ37AFZ.lean` のみ（416行、19件 `#print axioms`）。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`、既存Lean・物理モデル・公開root・workflowsは変更なし。
+- 初回CI #41932350756はnotation projectionのquotation失敗とL²内積のelaboration失敗から不成功。Lean4の記法・real inner product・作用素ノルム型・不等式向き・定義展開を修正。最終[exact-source CI #41957129057](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41957129057)は **11,333/11,333 SUCCESS**。AFZ19宣言の公理依存は全て標準 `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし、変更AFZ warning/error 0/0。独立MCP completion receipt `chatgpt-ci-receipt/PR Lean Fast Check` はSUCCESS。
+- 最終source HEADとsquash SHAのGit treeは `a28fd9dc5d5361ea09e3daff6419d9801d149c5f` で一致。従来のAFY以前のソース、形式証明記録は保持。
+
+### 未解決obstruction・次段AGA（仮称）
+
+AFZは本来のFF受信器について保守的な有理包含を無条件に構成したが、区間中心は0で非零符号を判別できない。次は真正Perron/transfer/FFの有理値を中心に持つ**非自明かつ証明付きの区間認証**と、局所変動誤差・二閾値殻条件の接続が必要。体積一様coercivity、物理Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは引き続き**未証明**。
+
+---
+
 ## 検証済み定理 — AFY（2026-11-05 JST）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` はREADME・ROADMAP文書ミラー。AFX定理 #6337、正本文書 #6338、mainミラー #6339 の全件MERGEDを継承し、[AFY定理PR #6340](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6340) を **MERGED**。最終exact-source HEAD `8f9c9451e560ccca72d174ce77ca56fc75a07201`、定理squash SHA `0851bb926b0a8b138ba6df4d780a0766866b5607`。真正SU(2) Wilson/正規化Haar・AFQ24先着中心Borelセル・AFT固定有理重み・元のPerron/transfer/FF物理受信器を不変とし、代理量や新しい物理仮定は導入しない。
