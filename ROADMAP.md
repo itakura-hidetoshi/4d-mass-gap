@@ -1,3 +1,26 @@
+## 検証済み定理 — AGC（2026-11-05 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` はREADME・ROADMAP文書ミラー。AGB定理 #6349、正本文書 #6350、main文書ミラー #6351 のMERGEDを継承し、[AGC定理PR #6352](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6352) も **MERGED**。検証済みexact-source HEAD `f240839db18c28006e95c7a2d0ee59dc9d78fd0e`、AGC定理squash SHA `e974870773c167993e2f5ceaaea0d9357e2ec56c`。真正SU(2) Wilson・元ZW中心化Gauss-law source・Perron/transfer/FF・元空間Haar・AFQ 24中心・固定Lean/mathlib pinは不変。
+
+### 元の全空間Haar積分に対する符号付き有理中心・包含誤差
+
+- **元のtransferを直接使用**：AGBの真正Haar平均ゼロと核の定数相殺を継承。`k_H` を元Wilson one-slab核の大域下界とすると、任意の元境界 `B` で `t_H(B)=∫f_H(A)(K_H(A,B)−(1+k_H)/2)dμ_H(A)`。新しい核・代理source・別の確率測度への置換はない。
+- **真正空間Haar有限分割の型付き証明書**：元全空間配置 `Cfg_H` の有限可測分割 `C_i` に対し、厳密な被覆・重複なしの証明、真正正規化空間Haar質量 `μ_H(C_i)` の有理近似 `w_i∈ℚ` と検証誤差 `δ_i≥0`、元の符号付き中心化核積分関数のセル上の有理標本 `q_i∈ℚ` と誤差 `ε≥0` を要求する。この入力は**証明を伴う条件付き証明書**であり、具体的な有限数値表を実測・認証したものではない。
+- **Lean4形式証明された真正signed transfer包含**：有限セル積分計算を元Haar上でそのまま行い、`q=∑_i q_i w_i∈ℚ`、`E=ε+∑_i|q_i|δ_i` に対し `|t_H(B)−q|≤E` を証明。検証済み有理半径 `r∈ℚ_{≥0}` が `E≤r` を満たす場合、`|t_H(B)−q|≤r` のAGA `rationalBall` およびAFV `verifiedInterval` を自動構成。AGBのゼロ中心包囲と異なり、入力表に応じて中心 `q` は**非零でもよい**。
+- **符号条件を曖昧にしない**：証明済みの有理不等式 `r<q` なら元真正transfer `t_H(B)>0`、`q<−r` なら `t_H(B)<0`。実際にその条件を通過する具体的有理表、元FF受信器の二符号点、真正二閾値殻を得たとの主張ではない。既存AGA→AFV区間接口は維持する。
+
+### Lean4 exact-source CI・公理依存・source/tree対応
+
+- AGC追加ファイルは `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalSpatialHaarSignedQuadratureV5_PZ37AGC.lean` のみ（404行・`#print axioms` 14件）。既存Lean・元Wilson/Haar/Perron物理量・CI workflow・公開root・Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` は変更なし。
+- 初回CI #41995905081はLean4構造体の `H` パラメータの二重捕捉、局所核下界記法 `k` と証明中変数の衝突、無名sectionの未閉鎖で不成功。**変更AGC Lean全文とAFJ・AGB・AGAの依存定義を確認し、元定理文を弱めず修正**した。
+- 修正後の[exact-source CI #41996756761](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41996756761) は **11,336/11,336 SUCCESS**。14件の公理監査は全て標準 `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし、変更Leanエラー0、completion receipt SUCCESS。source/test-merge Git tree は `8aa6c88c8a0541cc244ebee403b946e07737b69e` で一致。
+
+### 未解決obstruction・次段AGD（研究候補）
+
+AGCは真正空間Haarに対する**条件付き有限有理積分証明書の一般定理**であり、元空間配置の具体的セル分割の構築、真のHaar質量の精密な有理評価、元L² source代表元の局所包囲、区間半径の実効的縮小と非零符号点の認証はまだ必要。次段ではAFQ真正SU(2) 24中心セルの有限リンク積分割と、元核・中心化sourceに対する局所誤差の結合を研究する。真正二閾値殻の非空、体積一様coercivity、Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは**未証明**。
+
+---
+
 ## 検証済み定理 — AGB（2026-11-05 JST）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` はREADME・ROADMAPの文書ミラー。AGA定理 #6346、正本文書 #6347、mainミラー #6348 のMERGEDを継承し、[AGB定理PR #6349](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6349) も **MERGED**。検証済みexact-source HEAD `76dc9fc62f38659f69d6b5bb6bb1260b8bb7a538`、定理squash SHA `526dc6016dcb5fcc25ca8fb0d8b2f504f3c19807`。真正SU(2) Wilson作用・正規化Haar・ZW中心化Gauss-law物理source・Perron/transfer/FF受信器・AFQ真正24中心・AFT固定有理重みは不変更。
