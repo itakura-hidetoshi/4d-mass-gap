@@ -1,3 +1,27 @@
+## 検証済み定理 — AGI（2026-11-06 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。[AGI定理PR #6370](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6370) はMERGED。squash `0601f8fd80737c6ad4e66e28bd8b1bf9be15e099`、exact-source `16e34e7f25d12bd234d8b71b69f452b565eb895d`。真正Wilson/Haar/Perron/transfer/FF・元中心化source・公開root・Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` は不変更。
+
+### CLOSED — 符号を保持する有限有理区間評価
+
+計算可能な `rationalTable` と、元の中心値・真正Haar質量・元AGG変動係数との整合を要求する `certifiedTable : Prop` を分離した。中心区間[a_i,b_i]、真正質量区間[m_i,M_i]、有理幾何誤差gammaについて、l_i=a_i-gamma、u_i=b_i+gamma とし、`L=sum_i min(l_i*m_i,l_i*M_i)`、`U=sum_i max(u_i*m_i,u_i*M_i)` を正確な有理数演算で計算する。真正下側・上側Haar階段関数を元測度で積分し、AGEの同一性を使って **`L<=t_H(B)<=U`** をLean4証明した。負のセル係数では反対側の質量端点を使うため、符号を失わない。
+
+元量との整合証拠がある表に限り、Boolean有理判定 `0<L` から真正 `0<t_H(B)`、`U<0` から真正 `t_H(B)<0` を導く。同一H・同一Bの異なる分割の証明済み区間を[max L,min U]で交差でき、正しい二証明書が相反する符号を認証しないことも証明した。AFV `verifiedInterval`・AGA `rationalBall` への接続を保持する。
+
+### 検証・修正理由
+
+新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalSignedSpatialIntervalCertificateV5_PZ37AGI.lean` 1ファイル384行、既存Lean変更なし。[exact-source CI #42063129806](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42063129806) はworkflow・Lean job `127369907250`・Lean step・独立receipt `127373820378` がcompleted/SUCCESS。artifact `13433910241` の診断で **11,342 jobs成功**、13公理依存出力は標準公理のみ、sorryAxなし、変更AGI warning/error 0/0。artifact SHA-256 `5272b4267d34dba8ec5851b51e3266e548b0b3922fae0c47e4c6e2a3a7ad72d2` も一致した。
+
+source・test-merge `3b2c63dc00156449ca17fb268444ed68c0a6ae94`・squashの共通Git treeは `1331e3d69c448a4a957a20a859c1c2ad91ccd36e`。初回CIでは有理演算のdecide簡約と共有境界変数の解決が失敗したため、同じ命題をnorm_numで証明し各定義に `{boundary : Cfg}` を明示した。仮定・結論を弱めていない。正・負・幾何誤差による判定不能の3回帰例は合成算術テストであり、実際のWilson/Haarデータとは主張しない。
+
+### OPEN — 元作用からの区間生成
+
+AGIは与えられた証拠付き区間表の健全性であり、実際の非零transfer符号を認証した結果ではない。次段AGJでは固定結合と元Wilson指数核の有理包囲を、有限Taylor演算と剰余評価から構成する。元作用・Haar質量・中心化平均の入力評価を混同しない。二閾値殻非空、体積一様coercivity、Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは未証明。
+
+以下のAGH以前の本文は全バイトを保存した履歴であり、旧「最新・次段階」よりこの追補を優先する。
+
+---
+
 ## 検証済み定理 — AGH（2026-11-06 JST記録）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。[AGH定理PR #6367](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6367) は2026-11-05 JSTに **MERGED**。定理squash `71627744b2e7a57b2ff93e60f2fe16ae9e55bea4`、最終exact-source `31ca7e9947a27e50fc2b1656e68218810325ed15`。AGGまでの真正Wilson/Haar/Perron/transfer/FF、元Gauss-law中心化source、公開root、Lean `v4.30.0-rc2` とmathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` は不変更。
