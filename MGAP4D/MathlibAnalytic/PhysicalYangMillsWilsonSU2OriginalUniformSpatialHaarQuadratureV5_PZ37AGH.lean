@@ -153,7 +153,9 @@ theorem p4Q2PZ37AGH_productCell_distance
     (∑ e : Link, dJ (A e) (centers (index e))) ≤ ∑ _e : Link, r := by
       apply Finset.sum_le_sum
       intro e _he
-      have hCell := (Set.mem_univ_pi.mp hA) e
+      have hCell :
+          A e ∈ p4Q2PZ37AFN_originalFirstCenterCell n centers r (index e) :=
+        hA e (Set.mem_univ e)
       have hBall :=
         ((p4Q2PZ37AFN_originalFirstCenterCell_mem_iff
           n centers r (index e) (A e)).mp hCell).1
