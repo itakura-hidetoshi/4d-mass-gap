@@ -1,3 +1,30 @@
+## 検証済み定理 — AGB（2026-11-05 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` はREADME・ROADMAPの文書ミラー。AGA定理 #6346、正本文書 #6347、mainミラー #6348 のMERGEDを継承し、[AGB定理PR #6349](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6349) も **MERGED**。検証済みexact-source HEAD `76dc9fc62f38659f69d6b5bb6bb1260b8bb7a538`、定理squash SHA `526dc6016dcb5fcc25ca8fb0d8b2f504f3c19807`。真正SU(2) Wilson作用・正規化Haar・ZW中心化Gauss-law物理source・Perron/transfer/FF受信器・AFQ真正24中心・AFT固定有理重みは不変更。
+
+### 真正ZW中心化sourceのHaar平均ゼロと元Wilson核の定数相殺
+
+- **真の中心化sourceの期待値は厳密0**：元の空間Wilson連続代表元 `W_c(A)`、真のHaar平均 `m_H=∫W_c dμ_H`、既存ZW Gauss-law中心化sourceのHaar-L²代表元 `f_H(A)=½(W_c(A)−m_H)`（Haar-a.e.）を直接使用し、`∫f_H(A)dμ_H(A)=0` をLean4で証明。代理source・再定義測度や平均ゼロの追加公理は導入しない。
+- **元のsigned transferの厳密な恒等式**：真正one-slab Wilson核 `K_H(A,B)` と元のtransfer `t_H(B)=∫f_H(A)K_H(A,B)dμ_H(A)` について、任意の実定数 `c` に対し `t_H(B)=∫f_H(A)(K_H(A,B)−c)dμ_H(A)` を証明。定数核成分の消去は真のHaar平均ゼロに由来し、物理transfer作用素は変更しない。
+- **真正核の中点で半幅を改善**：既証明の元Wilson核の大域範囲 `k_H≤K_H(A,B)≤1`（`k_H=exp(−β₀·originalOneSlabActionBudget(H))>0`）に対し `c=(1+k_H)/2` を用い、`|K_H(A,B)−c|≤(1−k_H)/2`。AEVの元signed variationと元sourceのHaar-L¹質量 `M_src,H` より `|t_H(B)|≤(1−k_H)M_src,H/2≤p_H/2` を導出。ここで `p_H` は実際の空間plaquette列長。AFZの `|t_H(B)|≤p_H` を無条件に半減する。より鋭い `(1−k_H)M_src,H/2` の実数評価も保持。
+
+### 有理区間証明書と既存の真正物理降下
+
+- **具体的な有理半径**：`q_H=(periodicHypercubicEvenSpatialSlicePlaquetteList H).length/2∈ℚ` と `(q_H:ℝ)=p_H/2` をLeanで証明。元の符号付きtransferについて、全境界 `B` で真の包含 `−q_H≤t_H(B)≤q_H` を満たすAFV `verifiedInterval` を外部数値入力なしで構成。
+- **実際の24中心更新先へ一貫して適用**：元AFG境界サンプルで未更新 `B` と真正AFQ SU(2)中心 `g_i` による更新境界 `B[e:=g_i]` の両方に、同じ証明付き包含を自動供給。AGA transfer-only、AFX厳密四文字、AFV→AFT→AFIの真正係数／分散証明書へ型付き接続。`toOriginalCoefficientVariance` は既存シェル標本 `c` と `0≤lo` を保持する。
+- **符号認証との境界**：改善区間の中心は依然として厳密0で、非零transfer符号やFF受信器の正負を証明したわけではない。AGAの有理符号分離条件が満たされたとの主張はしない。既存の条件付き鋭い証明書を弱化しない。
+
+### exact-source Lean4 CI・公理監査・Git tree
+
+- AGBの追加は `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalCenteredTransferKernelCancellationV5_PZ37AGB.lean` 1ファイル（292行、`#print axioms` 10件）のみ。既存Lean・workflow・公開root・固定Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` は変更なし。
+- [exact-source CI #41991998412](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41991998412) は **11,335/11,335 SUCCESS**。新規10件の公理監査は標準 `propext`・`Classical.choice`・`Quot.sound` のみで `sorryAx` なし。変更AGB warning/error 0/0、独立MCP completion receipt SUCCESS。source／GitHub test-merge Git tree は `6f20b247fcc2faec4a747a1cfc00a1e9e72c7050` で一致。マージ後の定理正本HEADは `526dc6016dcb5fcc25ca8fb0d8b2f504f3c19807`。
+
+### 未解決obstruction・次段AGC（研究候補）
+
+非零中心を持つ、**元の真正signed transfer積分の検証付き有理包含**は未取得。次段AGCでは元のWilson作用とHaar平均の相関から具体的なsigned transfer標本の有理中心 `q≠0` と厳密包含誤差 `ε` を構成し、AGAの `q>ε` または `q<−ε` を通す条件を研究する。証明されない数値サンプルを非零と仮定しない。真正二閾値符号殻の非空証明、体積一様coercivity、Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは引き続き**未証明**。
+
+---
+
 ## 検証済み定理 — AGA（2026-11-05 JST）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` はREADME・ROADMAP文書ミラー。AFZ定理 #6343、正本文書 #6344、main文書ミラー #6345 の全件MERGEDを継承し、[AGA定理PR #6346](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6346) も **MERGED**。最終exact-source HEAD `88fa8310169d44e21288bb73da223cb73bb1d2c8`、定理squash SHA `9e2dc0526493d0fcc96784ceb590254969ebfc16`。真正Wilson SU(2)・正規化Haar／境界pair-Haar・元Gauss-law中心化物理source・Perron/transfer/符号付きFF受信器・AFQ真正24中心・AFT固定有理重みは変更していない。
