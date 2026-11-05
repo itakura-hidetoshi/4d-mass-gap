@@ -66,7 +66,12 @@ local notation "W" => p4Q2JU_originalSpatialWilsonPhysicalSource H
 local notation "Wc" => p4Q2JI_actualSpatialWilsonContinuous H
 local notation "U" => periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2
 local notation "L" => ContinuousMap.toLp 2 muH ℝ
-local notation "pH" => ((periodicHypercubicEvenSpatialSlicePlaquetteList H).length : ℝ)
+/-- Actual finite-volume spatial Wilson plaquette count as a real number.
+Use a named definition: the pinned Lean syntax quotation precheck does not
+support dot projection inside a local-notation expansion. -/
+def p4Q2PZ37AFZ_plaquetteCount (H : ℕ) : ℝ :=
+  ((periodicHypercubicEvenSpatialSlicePlaquetteList H).length : ℝ)
+local notation "pH" => p4Q2PZ37AFZ_plaquetteCount H
 local notation "vH" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabCombinatorialVolume H
 local notation "rho" => continuousJointSqrtDensity H 2 (by norm_num) b0 hb0
 local notation "K" => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 b0
@@ -115,7 +120,17 @@ theorem p4Q2PZ37AFZ_originalWilsonMean_eq_integral :
   rw [L2.inner_def]
   apply integral_congr_ae
   filter_upwards [p4Q2JU_originalSpatialWilsonPhysicalSource_ae H, hU] with A hW hOne
-  simp [hW, hOne]
+  -- In pinned mathlib the scalar real inner product is defined via RCLike.re;
+  -- rewrite it BEFORE simplifying the coercions of the physical Lp unit.
+  change inner ℝ ((W : Lp ℝ 2 muH) A) ((U : Lp ℝ 2 muH) A) = Wc A
+  calc
+    inner ℝ ((W : Lp ℝ 2 muH) A) ((U : Lp ℝ 2 muH) A) =
+        ((U : Lp ℝ 2 muH) A) * ((W : Lp ℝ 2 muH) A) := by
+          simp only [real_inner_eq_re_inner (𝕜 := ℝ),
+            RCLike.inner_apply, RCLike.re_to_real, conj_trivial]
+    _ = Wc A := by
+      rw [hOne, hW]
+      ring
 
 /-- The original action and its actual mean are in the same finite range. -/
 theorem p4Q2PZ37AFZ_originalWilsonMean_bounds :
