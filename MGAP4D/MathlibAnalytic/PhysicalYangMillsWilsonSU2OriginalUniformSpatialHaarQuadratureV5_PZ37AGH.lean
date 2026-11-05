@@ -321,9 +321,8 @@ theorem p4Q2PZ37AGH_originalTransfer_threeErrorBound
     (gCont B) (p4Q2PZ37AGH_originalSample H grid B tau htau)
     (slope * grid.radius + tau) hInt hLocal
   rw [p4Q2PZ37AGE_originalContinuousIntegral_eq_transfer H B] at h
-  exact h.trans (add_le_add_left
-    (p4Q2PZ37AGH_summedMassError_le H grid B tau delta htau hdelta)
-    (slope * grid.radius + tau))
+  exact h.trans (add_le_add (le_refl (slope * grid.radius + tau))
+    (p4Q2PZ37AGH_summedMassError_le H grid B tau delta htau hdelta))
 
 /-- A single B-independent spatial geometry and mass precision whose
 certified true error budget is strictly below the requested tolerance. -/
@@ -373,7 +372,7 @@ theorem p4Q2PZ37AGH_exists_uniformQuadrature
   change slope * grid.radius + tau + b * delta < eps
   calc
     slope * grid.radius + tau + b * delta ≤ tau + tau + tau :=
-      add_le_add (add_le_add_right hGeometry tau) hMass
+      add_le_add (add_le_add hGeometry (le_refl tau)) hMass
     _ < eps := by dsimp [tau]; linarith only [heps]
 
 /-- EVERY original right boundary is certified by the SAME chosen
