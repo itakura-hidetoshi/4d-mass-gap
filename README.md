@@ -1,3 +1,26 @@
+## 検証済み定理 — AGD（2026-11-05 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` はREADME・ROADMAPの文書ミラー。AGC定理 #6352、正本文書 #6353、main文書ミラー #6354 のMERGEDを継承。[AGD定理PR #6355](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6355) は **MERGED**。最終検証済みexact-source HEAD `9f64b710f5be2b8194e06505f927fd9a52d3ca7a`、定理squash SHA `a2f7e77f5c956cfdbde3b812daa671db625d5b92`。元のSU(2) Wilson・正規化Haar・ZW Gauss-law中心化source・Perron/transfer/FF・AFQ真正24中心・AFT有理質量境界を変更しない。
+
+### 真正SU(2) 24セルの全空間リンク積とHaar積公式
+
+- **元の空間配置そのものの有限分割**：AFQ真正24中心の最初の中心Borelセル `C_i` は、単一リンクSU(2)上で可測かつ一意分割。元の有限空間リンク型 `Link_H` に対し、積セルindex `j:Link_H→Fin 24` と `C_j={A:Cfg_H | ∀e, A_e∈C_{j(e)}}` を構成。すべての元の空間配置 `A` がただ一つの積セルへ属することと、各積セルが元Haar積σ代数で可測であることをLean4で証明。リンク数を `L_H=Fintype.card Link_H` とすると、indexは24進の有限リンク配列である。
+- **真正空間Haar質量の厳密積**：元の定義 `μ_H=Measure.pi(e↦normalizedCompactHaar(SU(2)))` を直接使用し、`μ_H(C_j)=∏_{e:Link_H} μ_{SU(2)}(C_{j(e)})` を形式証明。実数値 `Measure.real` に移した積公式も証明。代理離散測度や独立性の未証明追加仮定は導入しない。
+- **無条件の有理有限体積質量区間**：既証明AFTの各真正一リンク質量 `1/160000 ≤ μ(C_i) ≤ 625/1781` から、`α_H=(1/160000)^{L_H}∈ℚ`、`β_H=(625/1781)^{L_H}∈ℚ` を定義し、全積セルについて `α_H ≤ Measure.real μ_H(C_j) ≤ β_H` と `α_H≤β_H` をLean4で証明。リンク数0を含む有限Hの形式的境界も保持する。
+- **AGCへ厳密に接続**：真正積セルを `Fintype.equivFin` で有限Fin-indexへ変換。固定有理重み `w_j=(α_H+β_H)/2`、明示的質量半幅 `δ_j=(β_H−α_H)/2≥0` とし、`|Measure.real μ_H(C_j)−w_j|≤δ_j` を証明した `p4Q2PZ37AGC_originalHaarCells H` を外部質量入力なしで構成。未検証の数値質量や新しい測度を持ち込まず、既存AGCの条件付きsigned transfer求積へ降下する。
+
+### Exact-source Lean4検証と構造的修正履歴
+
+- 新規Leanのみ：`MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalSpatial24CellHaarProductV5_PZ37AGD.lean`（245行、`#print axioms` 7件）。既存Lean・公開root・物理定義・workflows・Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` は不変。
+- 初回CI #41998809889 の5件は、Set.piのmembership展開、`Set.mem_univ_pi` の引数、Rat実数cast/冪正規化が原因。修正後CI #41999606512 の残る1件は `(625/1781)^L = 625^L/1781^L` に関する`div_pow`正規化。変更Lean全文・imports・AFQ/AFT/AGC依存型を照合し、仮定や結論の弱化なく解消。
+- 最終[exact-source CI #42000355155](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42000355155) は **11,337/11,337 SUCCESS**。新規7件の`#print axioms` はすべて標準 `propext`・`Classical.choice`・`Quot.sound` のみで `sorryAx` なし。変更AGD warning/error **0/0**、独立MCP completion receipt **SUCCESS**。source／GitHub test-merge Git treeは `b297ccb73fdd1456d8e7c6335249d77d79192cae` で一致。
+
+### 未解決の物理的障害・次段AGE（研究候補）
+
+AGDは真正空間Haar積セルの完全な有限分割と明示的な**質量区間証明書**を構成したが、元のsigned centered Wilson/transfer被積分関数のセルごとの有理標本・局所包含誤差は未取得。AGCの非零有理中心を具体的に認証するには、真正連続Wilson代表元と元L²中心化sourceのa.e.対応、積セルの半径評価、核の変動率、有限個の実際の被積分関数の厳密有理値区間を接続する必要がある。固定質量区間は高次元で保守的であり、非零符号・真正二閾値殻非空・体積一様coercivity・Hamiltonian spectral gap・連続体4D Yang–Mills質量ギャップは**未証明**。
+
+---
+
 ## 検証済み定理 — AGC（2026-11-05 JST）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` はREADME・ROADMAP文書ミラー。AGB定理 #6349、正本文書 #6350、main文書ミラー #6351 のMERGEDを継承し、[AGC定理PR #6352](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6352) も **MERGED**。検証済みexact-source HEAD `f240839db18c28006e95c7a2d0ee59dc9d78fd0e`、AGC定理squash SHA `e974870773c167993e2f5ceaaea0d9357e2ec56c`。真正SU(2) Wilson・元ZW中心化Gauss-law source・Perron/transfer/FF・元空間Haar・AFQ 24中心・固定Lean/mathlib pinは不変。
