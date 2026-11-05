@@ -1,3 +1,33 @@
+> main文書ミラー：定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。Leanファイルは移送しない。
+
+## 検証済み定理 — AGH（2026-11-06 JST記録）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。[AGH定理PR #6367](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6367) は2026-11-05 JSTに **MERGED**。定理squash `71627744b2e7a57b2ff93e60f2fe16ae9e55bea4`、最終exact-source `31ca7e9947a27e50fc2b1656e68218810325ed15`。AGGまでの真正Wilson/Haar/Perron/transfer/FF、元Gauss-law中心化source、公開root、Lean `v4.30.0-rc2` とmathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` は不変更。
+
+### CLOSED — 全右境界に共通の任意精度・真正空間Haar求積
+
+各固定有限体積Hと任意epsilon>0について、元空間配置の真正Borel有限分割・真正中心・有理Haar重みを一度選べば、すべての元右境界Bで `|t_H(B)-sum_i q_i(B) w_i|<epsilon` となる証明書の存在をLean4で証明した。分割・中心・重みはBに依存せず、中心値の有理標本だけがBに依存する。AGCの真正積分評価とAGEのHaar-a.e.等価性から、元のsigned transferそのものへ接続している。
+
+AGGの元空間弦距離斜率 `L_H=6(1-k_H)+13 beta0 p_H`、AGFの真正被積分関数上界 `M_H=(1-k_H)p_H/2`、元リンク数ell_Hを使用する。`tau=epsilon/4`、`r=tau/(L_H ell_H+1)` を選び、ADPの真正SU(2)有限ネットからAFNのfirst-center Borelセルと元リンク積を構成。積距離半径は正しく `ell_H r` であり、次元因子を省略しない。
+
+**セル数が確定してから質量精度を選ぶ。** 実際の積セル数Nを得た後に `delta=tau/(N(M_H+tau)+1)` と定める。すべてのBで `|q_i(B)|<=M_H+tau` なので、幾何誤差 `L_H ell_H r`、中心値有理近似誤差tau、Haar質量誤差の総和 `sum_i |q_i(B)| delta` を各tau以下に抑え、総誤差 `<=3epsilon/4<epsilon` を証明した。細分化だけで質量誤差総和が縮むという推論は使わない。分母の+1は零リンク・零振幅を含む退化場合も扱う。
+
+`p4Q2PZ37AGH_exists_uniformQuadrature`、`p4Q2PZ37AGH_uniformQuadrature_accuracy` と任意の正の有理半径への `p4Q2PZ37AGH_originalTransferRationalBall` を追加。「全右境界Bで共通」は固定Hの一様性であり、Hについての一様性ではない。
+
+### exact-source検証と記録訂正
+
+新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalUniformSpatialHaarQuadratureV5_PZ37AGH.lean` 1ファイル・423追加行、既存Lean変更なし。[最終CI #42033094163](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42033094163) はworkflow・Changed Lean job・Lean step・独立completion receiptがcompleted/SUCCESS。診断artifact `13416763826` の `lean-fast.log` を再検査し、**11,341/11,341 SUCCESS**、新規16宣言は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、変更AGH warning/error **0/0** を確認。
+
+source、test-merge `21ff2dbf30ac7a24b7618bb052a4be755b7459bc`、定理squashの正しい共通Git treeは **`c7cc67bf68af2c64ff60ef7f92fc9920ecb250ce`**。前PRコメントの `dbcb336f...` は転記誤りで、Git-commit APIの三者再取得により訂正した。独立completion receiptの正しいjob IDは `127267191687`。訂正はPRにも追記し、元記録は削除していない。証明修正は積セル所属のリンク型の明示と、加法不等式の両項を `add_le_add`・`le_refl` で対応させたもの。定理文・物理的仮定の弱化なし。
+
+### OPEN — 数値表の評価とAGIへの接続
+
+有限ネット・有理包囲は依然として古典的な非計算的選択を用いる。今回確定したのは任意精度の求積証明書の存在であり、具体的な中心値・Haar質量の有理数表を算出したという意味ではない。次段AGIでは、供給された有理区間と元の真正量との整合証拠を入力とし、有限の区間演算から元transferの上下界・符号へ接続する形式化を進める。実際の正負分離、二閾値殻非空、体積一様coercivity、Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは未証明。
+
+以下のAGG以前の本文は全バイトを保存した履歴。旧「最新・次段階・OPEN」よりこの追補を優先する。
+
+---
+
 ## 検証済み定理 — AGG（2026-11-05 JST）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` はREADME・ROADMAPの文書ミラー。AGF定理 #6361・正本文書 #6362・mainミラー #6363 のすべてのMERGEDを継承し、[AGG定理PR #6364](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6364) は **MERGED**。検証済みexact-source HEAD `5e87f9091f9b2bfbdfb9b3ae83d520ac0ffd1946`、AGG定理squash SHA `e987e7cd3481d14e30a74357a7bccccf3497721a`。真正SU(2) Wilson作用・正規化空間Haar・ZW中心化Gauss-law source・元one-slab Perron/transfer/FF、Lean/mathlib pins、公開rootは一切変更しない。
