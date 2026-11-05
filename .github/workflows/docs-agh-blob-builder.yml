@@ -1,0 +1,106 @@
+name: Prepare verified AGH documentation blobs
+on:
+  push:
+    branches: [tooling/docs-ace-blob-builder-20261031]
+    paths: [.github/workflows/docs-agh-blob-builder.yml]
+permissions:
+  contents: write
+jobs:
+  prepare:
+    if: github.repository == 'itakura-hidetoshi/4d-mass-gap'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 4
+    steps:
+      - name: Verify theorem and register four byte-preserving documentation blobs
+        env:
+          API_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import base64, hashlib, json, os, pathlib, urllib.request
+          api = 'https://api.github.com/repos/itakura-hidetoshi/4d-mass-gap'
+          refs = {'canonical': '71627744b2e7a57b2ff93e60f2fe16ae9e55bea4', 'main': '3bb068f4fa2eefac153da2dddf7220395fe1526e'}
+          expected = {
+              ('canonical', 'README.md'): '74d998797bc3893e2daf9cd64d66e4e45069e7eb',
+              ('canonical', 'ROADMAP.md'): 'fd591626faacfaf3a25bbb1a4394e84fbd9ed1cb',
+              ('main', 'README.md'): '36af2c436b307b43942932f58a8f3342cb8efc27',
+              ('main', 'ROADMAP.md'): '708a40677428187a55cfef80d6b96c444847021c',
+          }
+          def request(path, body=None):
+              if body is not None:
+                  assert path == '/git/blobs', 'Only unreferenced blob registration is permitted'
+              req = urllib.request.Request(api + path, data=None if body is None else json.dumps(body).encode(), headers={
+                  'Authorization': 'Bearer ' + os.environ['API_TOKEN'],
+                  'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', 'Content-Type': 'application/json'})
+              with urllib.request.urlopen(req, timeout=30) as r:
+                  return json.load(r)
+          def sha(data):
+              return hashlib.sha1(b'blob ' + str(len(data)).encode() + b'\0' + data).hexdigest()
+          run = request('/actions/runs/42033094163')
+          assert run['head_sha'] == '31ca7e9947a27e50fc2b1656e68218810325ed15'
+          assert run['status'] == 'completed' and run['conclusion'] == 'success'
+          jobs = request('/actions/runs/42033094163/jobs')['jobs']
+          assert any(j['name'] == 'Changed Lean fast check' and j['status'] == 'completed' and j['conclusion'] == 'success' for j in jobs)
+          assert any(j['name'] == 'Publish MCP CI completion receipt' and j['status'] == 'completed' and j['conclusion'] == 'success' for j in jobs)
+          pr = request('/pulls/6367')
+          assert pr['merged'] and pr['merge_commit_sha'] == refs['canonical']
+          for commit in ('31ca7e9947a27e50fc2b1656e68218810325ed15', '21ff2dbf30ac7a24b7618bb052a4be755b7459bc', refs['canonical']):
+              assert request('/git/commits/' + commit)['tree']['sha'] == 'dbcb336fe17790af5826d5a565fe3ea4b7af36a9'
+          common = '''## 検証済み定理 — AGH（2026-11-06 JST記録）
+
+          唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。[AGH定理PR #6367](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6367) は2026-11-05 JSTに **MERGED**。定理squash `71627744b2e7a57b2ff93e60f2fe16ae9e55bea4`、最終exact-source `31ca7e9947a27e50fc2b1656e68218810325ed15`。AGGまでの真正Wilson/Haar/Perron/transfer/FF、元Gauss-law中心化source、公開root、Lean `v4.30.0-rc2` とmathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` は不変更。
+
+          ### CLOSED — 全右境界に共通の任意精度・真正空間Haar求積
+
+          各固定有限体積Hと任意epsilon>0について、元空間配置の真正Borel有限分割・真正中心・有理Haar重みを一度選べば、すべての元右境界Bで `|t_H(B)-sum_i q_i(B) w_i|<epsilon` となる証明書の存在をLean4で証明した。分割・中心・重みはBに依存せず、中心値の有理標本だけがBに依存する。AGCの真正積分評価とAGEのHaar-a.e.等価性から、元のsigned transferそのものへ接続している。
+
+          AGGの元空間弦距離斜率 `L_H=6(1-k_H)+13 beta0 p_H`、AGFの真正被積分関数上界 `M_H=(1-k_H)p_H/2`、元リンク数ell_Hを使用する。`tau=epsilon/4`、`r=tau/(L_H ell_H+1)` を選び、ADPの真正SU(2)有限ネットからAFNのfirst-center Borelセルとその元リンク積を構成。積距離半径は正しく `ell_H r` であり、次元因子を省略しない。
+
+          **セル数が確定してから質量精度を選ぶ。** 実際の積セル数Nを得た後に `delta=tau/(N(M_H+tau)+1)` と定める。すべてのBで `|q_i(B)|<=M_H+tau` なので、幾何誤差 `L_H ell_H r`、中心値有理近似誤差tau、Haar質量誤差の総和 `sum_i |q_i(B)| delta` を各tau以下に抑え、総誤差 `<=3epsilon/4<epsilon` を証明した。細分化だけで質量誤差総和が縮むという誤った推論は使わない。分母の+1は零リンク・零振幅を含む退化場合も扱う。
+
+          `p4Q2PZ37AGH_exists_uniformQuadrature`、`p4Q2PZ37AGH_uniformQuadrature_accuracy` と、任意の正の有理半径への `p4Q2PZ37AGH_originalTransferRationalBall` を追加した。「全右境界Bで共通」は固定Hにおける一様性であり、Hについての一様性ではない。
+
+          ### exact-source検証とLean4修正理由
+
+          新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalUniformSpatialHaarQuadratureV5_PZ37AGH.lean` 1ファイル・423追加行、既存Lean変更なし。[最終CI #42033094163](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42033094163) はworkflow・Changed Lean job・Lean step・独立completion receiptがcompleted/SUCCESS。診断artifact `13416763826` の `lean-fast.log` を検査し、**11,341/11,341 SUCCESS**、新規16宣言の公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、変更AGH warning/error **0/0** を確認した。
+
+          source、test-merge `21ff2dbf30ac7a24b7618bb052a4be755b7459bc`、定理squashは共通Git tree `dbcb336fe17790af5826d5a565fe3ea4b7af36a9`。証明修正では積セル所属を明示的なリンクごとの型として取り出し、加法不等式の両項を `add_le_add` と `le_refl` で対応させた。定理文・物理的仮定の弱化なし。旧import側linter警告と変更ファイルのエラーは区別する。
+
+          ### OPEN — 数値表の評価とAGIへの接続
+
+          有限ネット・有理包囲は依然として古典的な非計算的選択を用いる。今回確定したのは任意精度の求積証明書の存在であり、具体的な中心値・Haar質量の有理数表を算出したという意味ではない。次段AGIでは、供給された有理区間と元の真正量との整合証拠を入力とし、有限の区間演算から元transferの上下界・符号へ接続する形式化を進める。実際の正負分離、二閾値殻非空、体積一様coercivity、Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは未証明。
+
+          以下のAGG以前の本文は全バイトを保存した履歴。旧「最新・次段階・OPEN」よりこの追補を優先する。
+
+          ---
+
+          '''
+          out = []
+          for label, ref in refs.items():
+              for path in ('README.md', 'ROADMAP.md'):
+                  obj = request('/contents/' + path + '?ref=' + ref)
+                  assert obj['encoding'] == 'base64'
+                  old = base64.b64decode(obj['content'])
+                  assert sha(old) == obj['sha'] == expected[(label, path)]
+                  assert len(old) > 500000
+                  heading = '' if path == 'README.md' else '# ROADMAP追補 — AGH検証済み・AGI区間証明書へ\n\n'
+                  mirror = '' if label == 'canonical' else '> main文書ミラー：定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。Leanファイルは移送しない。\n\n'
+                  prefix = (heading + mirror + common).encode('utf-8')
+                  new = prefix + old
+                  assert new[len(prefix):] == old
+                  created = request('/git/blobs', {'content': base64.b64encode(new).decode(), 'encoding': 'base64'})
+                  assert created['sha'] == sha(new)
+                  registered = request('/git/blobs/' + created['sha'])
+                  assert registered['encoding'] == 'base64' and base64.b64decode(registered['content']) == new
+                  entry = {'target': label, 'base_commit': ref, 'path': path, 'old_blob': sha(old), 'new_blob': created['sha'], 'old_bytes': len(old), 'new_bytes': len(new), 'added_lines': prefix.count(b'\n'), 'deleted_lines': 0, 'old_suffix_preserved': True, 'registration_readback_verified': True}
+                  out.append(entry)
+                  print('DOC_BLOB ' + json.dumps(entry, ensure_ascii=False), flush=True)
+          pathlib.Path('docs-agh-manifest.json').write_text(json.dumps(out, ensure_ascii=False, indent=2) + '\n')
+          print('DONE: only four unreferenced blobs registered; no tree, commit, branch or PR modified by this job.')
+          PY
+      - name: Save preservation manifest
+        uses: actions/upload-artifact@v6
+        with:
+          name: docs-agh-blob-manifest
+          path: docs-agh-manifest.json
+          if-no-files-found: error
