@@ -262,8 +262,14 @@ theorem p4Q2PZ37AGG_originalContinuousIntegrand_allLinkChordalSlope
           ring
     _ ≤ |fCont A - fCont C| * |K A B - (1 + kFloor) / 2| +
         |fCont C| * |K A B - K C B| := by
-          rw [abs_mul, abs_mul]
-          exact abs_add_le _ _
+          calc
+            |(fCont A - fCont C) * (K A B - (1 + kFloor) / 2) +
+                fCont C * (K A B - K C B)| ≤
+              |(fCont A - fCont C) * (K A B - (1 + kFloor) / 2)| +
+                |fCont C * (K A B - K C B)| := abs_add_le _ _
+            _ = |fCont A - fCont C| * |K A B - (1 + kFloor) / 2| +
+                |fCont C| * |K A B - K C B| := by
+                  rw [abs_mul, abs_mul]
     _ ≤ (12 * D) * r + pH * ((13 * b0) * D) := by
           exact add_le_add
             (mul_le_mul hSrc hMid (abs_nonneg _) h0)
