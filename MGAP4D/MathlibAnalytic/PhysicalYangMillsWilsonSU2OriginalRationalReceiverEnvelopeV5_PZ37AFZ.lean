@@ -308,7 +308,7 @@ theorem p4Q2PZ37AFZ_originalFF_abs_le_rational
           (p4Q2PZ37AFZ_originalTransfer_abs_le_plaquetteCount H
             (Function.update z.2 e g)) hr0)
       _ ≤ pH + (3 / 2 : ℝ) * pH :=
-        add_le_add_left (mul_le_mul_of_nonneg_right hr1 hP) pH
+        add_le_add_right (mul_le_mul_of_nonneg_right hr1 hP) pH
       _ = (5 / 2 : ℝ) * pH := by ring
   rw [p4Q2PZ37AFZ_originalFF_eq_densityRatioTransfer, abs_mul, abs_of_nonneg ht0]
   calc
@@ -319,6 +319,7 @@ theorem p4Q2PZ37AFZ_originalFF_abs_le_rational
         (mul_nonneg (by norm_num) hP)
     _ = (RH : ℝ) := by
       unfold p4Q2PZ37AFZ_rationalReceiverBound
+        p4Q2PZ37AFZ_plaquetteCount
       push_cast
       ring
 
