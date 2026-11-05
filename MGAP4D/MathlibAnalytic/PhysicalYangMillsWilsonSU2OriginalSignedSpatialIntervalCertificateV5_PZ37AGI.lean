@@ -87,7 +87,8 @@ def negativeTest : p4Q2PZ37AGI_rationalTable 1 where
 theorem negativeTest_checked :
     negativeTest.lower = -1 ∧ negativeTest.upper = -(1 / 4) ∧
       negativeTest.acceptsNegative = true ∧ negativeTest.acceptsPositive = false := by
-  decide
+  norm_num [negativeTest, lower, upper, cellLower, cellUpper,
+    acceptsNegative, acceptsPositive]
 
 /-- Synthetic positive arithmetic test, not a true transfer sample. -/
 def positiveTest : p4Q2PZ37AGI_rationalTable 1 where
@@ -100,7 +101,8 @@ def positiveTest : p4Q2PZ37AGI_rationalTable 1 where
 theorem positiveTest_checked :
     positiveTest.lower = 1 / 4 ∧ positiveTest.upper = 1 ∧
       positiveTest.acceptsPositive = true ∧ positiveTest.acceptsNegative = false := by
-  decide
+  norm_num [positiveTest, lower, upper, cellLower, cellUpper,
+    acceptsNegative, acceptsPositive]
 
 /-- Geometry can destroy a nominal center sign; the checker must abstain. -/
 def uncertainTest : p4Q2PZ37AGI_rationalTable 1 where
@@ -113,7 +115,8 @@ def uncertainTest : p4Q2PZ37AGI_rationalTable 1 where
 theorem uncertainTest_checked :
     uncertainTest.lower = -(3 / 4) ∧ uncertainTest.upper = 3 / 2 ∧
       uncertainTest.acceptsPositive = false ∧ uncertainTest.acceptsNegative = false := by
-  decide
+  norm_num [uncertainTest, lower, upper, cellLower, cellUpper,
+    acceptsNegative, acceptsPositive]
 
 end p4Q2PZ37AGI_rationalTable
 
@@ -181,14 +184,15 @@ local instance p4Q2PZ37AGI_probability : IsProbabilityMeasure muH := by
 data. No truth claim about a table follows merely by running its checker. -/
 structure p4Q2PZ37AGI_certifiedTable
     (H : ℕ)
-    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2)
+    (boundary : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2)
     (grid : p4Q2PZ37AGH_originalSpatialGrid H)
     (data : p4Q2PZ37AGI_rationalTable grid.n) : Prop where
   hGeometry : p4Q2PZ37AGG_originalSpatialSlope H * grid.radius ≤ (data.geometry : ℝ)
   hCenterLower : ∀ i, (data.sampleLower i : ℝ) ≤
-    p4Q2PZ37AGE_originalContinuousIntegrand H B (grid.center i)
+    p4Q2PZ37AGE_originalContinuousIntegrand H boundary (grid.center i)
   hCenterUpper : ∀ i,
-    p4Q2PZ37AGE_originalContinuousIntegrand H B (grid.center i) ≤ (data.sampleUpper i : ℝ)
+    p4Q2PZ37AGE_originalContinuousIntegrand H boundary (grid.center i) ≤
+      (data.sampleUpper i : ℝ)
   hMassLower : ∀ i, (data.massLower i : ℝ) ≤
     Measure.real (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2)
       (grid.cell i)
@@ -198,12 +202,13 @@ structure p4Q2PZ37AGI_certifiedTable
 
 namespace p4Q2PZ37AGI_certifiedTable
 
-variable {B : Cfg} {grid : p4Q2PZ37AGH_originalSpatialGrid H}
+variable {grid : p4Q2PZ37AGH_originalSpatialGrid H}
   {data : p4Q2PZ37AGI_rationalTable grid.n}
 
 /-- Reuse the exact AGC Haar-step calculus. Midpoint weights and errors
 are only an adapter; the signed proof integrates the TRUE cell masses. -/
-def toHaarCells (c : p4Q2PZ37AGI_certifiedTable H B grid data) :
+def toHaarCells {boundary : Cfg}
+    (c : p4Q2PZ37AGI_certifiedTable H boundary grid data) :
     p4Q2PZ37AGC_originalHaarCells H where
   n := grid.n
   cell := grid.cell
@@ -223,12 +228,15 @@ def toHaarCells (c : p4Q2PZ37AGI_certifiedTable H B grid data) :
 
 /-- AGG promotes true CENTER intervals to true CELL intervals without
 evaluating an arbitrary Haar-L2 representative at a chosen point. -/
-theorem cell_bounds (c : p4Q2PZ37AGI_certifiedTable H B grid data)
+theorem cell_bounds {boundary : Cfg}
+    (c : p4Q2PZ37AGI_certifiedTable H boundary grid data)
     (i : Fin grid.n) (A : Cfg) (hA : A ∈ grid.cell i) :
-    (data.cellLower i : ℝ) ≤ gCont B A ∧ gCont B A ≤ (data.cellUpper i : ℝ) := by
-  have hOsc : |gCont B A - gCont B (grid.center i)| ≤ (data.geometry : ℝ) :=
+    (data.cellLower i : ℝ) ≤ gCont boundary A ∧
+      gCont boundary A ≤ (data.cellUpper i : ℝ) := by
+  have hOsc : |gCont boundary A - gCont boundary (grid.center i)| ≤
+      (data.geometry : ℝ) :=
     ((p4Q2PZ37AGG_originalContinuousIntegrand_allLinkChordalSlope
-      H B A (grid.center i)).trans
+      H boundary A (grid.center i)).trans
       (mul_le_mul_of_nonneg_left (grid.hRadius i A hA)
         (p4Q2PZ37AGG_originalSpatialSlope_nonneg H))).trans c.hGeometry
   obtain ⟨hlo, hhi⟩ := abs_le.mp hOsc
@@ -244,20 +252,21 @@ theorem cell_bounds (c : p4Q2PZ37AGI_certifiedTable H B grid data)
 
 /-- Soundness of the finite signed rational evaluator for the UNCHANGED
 original signed transfer. All integration is against original spatial Haar. -/
-theorem transfer_bounds (c : p4Q2PZ37AGI_certifiedTable H B grid data) :
-    (data.lower : ℝ) ≤ t B ∧ t B ≤ (data.upper : ℝ) := by
+theorem transfer_bounds {boundary : Cfg}
+    (c : p4Q2PZ37AGI_certifiedTable H boundary grid data) :
+    (data.lower : ℝ) ≤ t boundary ∧ t boundary ≤ (data.upper : ℝ) := by
   let p := c.toHaarCells
-  have hf : Integrable (gCont B) muH :=
-    (p4Q2PZ37AGC_originalCenteredKernelIntegrand_integrable B).congr
-      (p4Q2PZ37AGE_originalIntegrand_ae_eq_continuous H B)
+  have hf : Integrable (gCont boundary) muH :=
+    (p4Q2PZ37AGC_originalCenteredKernelIntegrand_integrable boundary).congr
+      (p4Q2PZ37AGE_originalIntegrand_ae_eq_continuous H boundary)
   have hLoPoint : ∀ A : Cfg,
-      p4Q2PZ37AGC_HaarStep p data.cellLower A ≤ gCont B A := by
+      p4Q2PZ37AGC_HaarStep p data.cellLower A ≤ gCont boundary A := by
     intro A
     obtain ⟨i, hi, _⟩ := grid.hPartition A
     rw [p4Q2PZ37AGC_HaarStep_eq_onCell p data.cellLower i A hi]
     exact (c.cell_bounds i A hi).1
   have hHiPoint : ∀ A : Cfg,
-      gCont B A ≤ p4Q2PZ37AGC_HaarStep p data.cellUpper A := by
+      gCont boundary A ≤ p4Q2PZ37AGC_HaarStep p data.cellUpper A := by
     intro A
     obtain ⟨i, hi, _⟩ := grid.hPartition A
     rw [p4Q2PZ37AGC_HaarStep_eq_onCell p data.cellUpper i A hi]
@@ -267,9 +276,9 @@ theorem transfer_bounds (c : p4Q2PZ37AGI_certifiedTable H B grid data) :
   have hHiInt := integral_mono hf
     (p4Q2PZ37AGC_HaarStep_integrable p data.cellUpper) hHiPoint
   rw [p4Q2PZ37AGC_HaarStep_integral p data.cellLower,
-    p4Q2PZ37AGE_originalContinuousIntegral_eq_transfer H B] at hLoInt
+    p4Q2PZ37AGE_originalContinuousIntegral_eq_transfer H boundary] at hLoInt
   rw [p4Q2PZ37AGC_HaarStep_integral p data.cellUpper,
-    p4Q2PZ37AGE_originalContinuousIntegral_eq_transfer H B] at hHiInt
+    p4Q2PZ37AGE_originalContinuousIntegral_eq_transfer H boundary] at hHiInt
   have hCastLo : (data.lower : ℝ) = ∑ i : Fin grid.n,
       min ((data.cellLower i : ℝ) * (data.massLower i : ℝ))
         ((data.cellLower i : ℝ) * (data.massUpper i : ℝ)) := by
@@ -297,40 +306,44 @@ theorem transfer_bounds (c : p4Q2PZ37AGI_certifiedTable H B grid data) :
   exact ⟨hLoSum.trans hLoInt, hHiInt.trans hHiSum⟩
 
 /-- Existing AFV semantics, with literal computed rational endpoints. -/
-def toVerifiedInterval (c : p4Q2PZ37AGI_certifiedTable H B grid data) :
-    p4Q2PZ37AFV_verifiedInterval (t B) where
+def toVerifiedInterval {boundary : Cfg}
+    (c : p4Q2PZ37AGI_certifiedTable H boundary grid data) :
+    p4Q2PZ37AFV_verifiedInterval (t boundary) where
   lower := data.lower
   upper := data.upper
   hLower := c.transfer_bounds.1
   hUpper := c.transfer_bounds.2
 
 /-- Existing AGA factor interfaces receive the SAME original transfer. -/
-def toRationalBall (c : p4Q2PZ37AGI_certifiedTable H B grid data) :
-    p4Q2PZ37AGA_rationalBall (t B) :=
+def toRationalBall {boundary : Cfg}
+    (c : p4Q2PZ37AGI_certifiedTable H boundary grid data) :
+    p4Q2PZ37AGA_rationalBall (t boundary) :=
   p4Q2PZ37AGA_fromVerifiedInterval c.toVerifiedInterval
 
 /-- A purely rational positive check becomes physical only with c. -/
-theorem positive_of_accepts (c : p4Q2PZ37AGI_certifiedTable H B grid data)
-    (h : data.acceptsPositive = true) : 0 < t B := by
+theorem positive_of_accepts {boundary : Cfg}
+    (c : p4Q2PZ37AGI_certifiedTable H boundary grid data)
+    (h : data.acceptsPositive = true) : 0 < t boundary := by
   have hq : 0 < data.lower := of_decide_eq_true h
   have hr : (0 : ℝ) < (data.lower : ℝ) := by exact_mod_cast hq
   exact hr.trans_le c.transfer_bounds.1
 
 /-- Corresponding negative check; no sign is invented by approximation. -/
-theorem negative_of_accepts (c : p4Q2PZ37AGI_certifiedTable H B grid data)
-    (h : data.acceptsNegative = true) : t B < 0 := by
+theorem negative_of_accepts {boundary : Cfg}
+    (c : p4Q2PZ37AGI_certifiedTable H boundary grid data)
+    (h : data.acceptsNegative = true) : t boundary < 0 := by
   have hq : data.upper < 0 := of_decide_eq_true h
   have hr : (data.upper : ℝ) < 0 := by exact_mod_cast hq
   exact c.transfer_bounds.2.trans_lt hr
 
 /-- Independently supplied grids can be combined by intersection because
 both certificates retain the SAME original H, B, source and Haar law. -/
-def intersectInterval
+def intersectInterval {boundary : Cfg}
     {grid₂ : p4Q2PZ37AGH_originalSpatialGrid H}
     {data₂ : p4Q2PZ37AGI_rationalTable grid₂.n}
-    (c₁ : p4Q2PZ37AGI_certifiedTable H B grid data)
-    (c₂ : p4Q2PZ37AGI_certifiedTable H B grid₂ data₂) :
-    p4Q2PZ37AFV_verifiedInterval (t B) where
+    (c₁ : p4Q2PZ37AGI_certifiedTable H boundary grid data)
+    (c₂ : p4Q2PZ37AGI_certifiedTable H boundary grid₂ data₂) :
+    p4Q2PZ37AFV_verifiedInterval (t boundary) where
   lower := max data.lower data₂.lower
   upper := min data.upper data₂.upper
   hLower := by
@@ -341,11 +354,11 @@ def intersectInterval
     simpa using h
 
 /-- Correct tables on different grids cannot certify contradictory signs. -/
-theorem no_opposite_certified_signs
+theorem no_opposite_certified_signs {boundary : Cfg}
     {grid₂ : p4Q2PZ37AGH_originalSpatialGrid H}
     {data₂ : p4Q2PZ37AGI_rationalTable grid₂.n}
-    (c₁ : p4Q2PZ37AGI_certifiedTable H B grid data)
-    (c₂ : p4Q2PZ37AGI_certifiedTable H B grid₂ data₂)
+    (c₁ : p4Q2PZ37AGI_certifiedTable H boundary grid data)
+    (c₂ : p4Q2PZ37AGI_certifiedTable H boundary grid₂ data₂)
     (hp : data.acceptsPositive = true) (hn : data₂.acceptsNegative = true) : False := by
   have hpos := c₁.positive_of_accepts hp
   have hneg := c₂.negative_of_accepts hn
