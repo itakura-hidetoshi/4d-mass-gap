@@ -68,7 +68,6 @@ local notation "K" =>
   periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 b0
 local notation "t" =>
   decomposableOneSliceTransferIntegral H 2 b0 f0
-local notation "cells" => p4Q2PZ37AGD_toAGCOriginalHaarCells H
 local notation "CellIndex" =>
   Fin (Fintype.card (p4Q2PZ37AGD_spatialGridIndex H))
 
@@ -93,10 +92,17 @@ theorem p4Q2PZ37AGE_originalContinuousIntegrand_continuous
       Continuous (fun A : Cfg =>
         (p4Q2PZ37AFZ_originalCenteredContinuous H) A) :=
     (p4Q2PZ37AFZ_originalCenteredContinuous H).continuous
-  have hKernel : Continuous (fun A : Cfg => K A B) :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H 2 b0).comp (continuous_id.prodMk continuous_const)
-  unfold p4Q2PZ37AGE_originalContinuousIntegrand
+  have hPair : Continuous (fun A : Cfg => (A, B)) :=
+    continuous_id.prodMk continuous_const
+  have hKernelPair :
+      Continuous (fun p : Cfg × Cfg => K p.1 p.2) :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+      H 2 b0
+  have hKernel : Continuous (fun A : Cfg => K A B) := by
+    simpa only [Function.comp_def] using hKernelPair.comp hPair
+  change Continuous (fun A : Cfg =>
+    (p4Q2PZ37AFZ_originalCenteredContinuous H) A *
+      (K A B - (1 + kFloor) / 2))
   exact hSource.mul (hKernel.sub continuous_const)
 
 /-- Do NOT conflate a Haar-L2 representative with its continuous version:
@@ -138,12 +144,14 @@ def p4Q2PZ37AGE_spatialProductCenter
 AFQ 4/5 chordal radius of its designated center on each link. -/
 theorem p4Q2PZ37AGE_cell_perLink_chordalRadius
     (i : CellIndex) (A : Cfg)
-    (hA : A ∈ cells.cell i) (e : Link) :
+    (hA : A ∈ (p4Q2PZ37AGD_toAGCOriginalHaarCells H).cell i) (e : Link) :
     p4Q2PZ37ADK_trueChordalDistance (A e)
       (p4Q2PZ37AGE_spatialProductCenter H i e) ≤ (4 / 5 : ℝ) := by
+  have hSpatial : A ∈ p4Q2PZ37AGD_spatialCell H
+      (p4Q2PZ37AGD_indexFromFin H i) := hA
   have he : A e ∈
       p4Q2PZ37AFQ_cells (p4Q2PZ37AGD_indexFromFin H i e) := by
-    exact (Set.mem_univ_pi.mp hA) e
+    exact (Set.mem_univ_pi.mp hSpatial) e
   exact p4Q2PZ37AFQ_cells_chordalRadius
     (p4Q2PZ37AGD_indexFromFin H i e) (A e) he
 
@@ -187,7 +195,7 @@ pointwise equality assumption on arbitrary L2 representatives. -/
 theorem p4Q2PZ37AGE_originalCellwiseSample_accuracy
     (B : Cfg)
     (cert : p4Q2PZ37AGE_originalSpatialOscillation H B)
-    (i : CellIndex) (A : Cfg) (hA : A ∈ cells.cell i) :
+    (i : CellIndex) (A : Cfg) (hA : A ∈ (p4Q2PZ37AGD_toAGCOriginalHaarCells H).cell i) :
     |p4Q2PZ37AGE_originalContinuousIntegrand H B A -
       (p4Q2PZ37AGE_originalSpatialSample H B i : ℝ)| ≤
       cert.epsilon + (1 / 64 : ℝ) := by
@@ -218,23 +226,23 @@ AGD grid-center sum with the proved spatial Haar cell mass errors. -/
 theorem p4Q2PZ37AGE_originalSignedTransfer_accuracy
     (B : Cfg)
     (cert : p4Q2PZ37AGE_originalSpatialOscillation H B) :
-    |t B - (p4Q2PZ37AGC_HaarCenter cells
+    |t B - (p4Q2PZ37AGC_HaarCenter (p4Q2PZ37AGD_toAGCOriginalHaarCells H)
       (p4Q2PZ37AGE_originalSpatialSample H B) : ℝ)| ≤
-      p4Q2PZ37AGC_HaarTotalError cells
+      p4Q2PZ37AGC_HaarTotalError (p4Q2PZ37AGD_toAGCOriginalHaarCells H)
         (p4Q2PZ37AGE_originalSpatialSample H B)
         (cert.epsilon + (1 / 64 : ℝ)) := by
   have hInt :
       Integrable (p4Q2PZ37AGE_originalContinuousIntegrand H B) muH :=
     (p4Q2PZ37AGC_originalCenteredKernelIntegrand_integrable B).congr
       (p4Q2PZ37AGE_originalIntegrand_ae_eq_continuous H B)
-  have hLoc : ∀ i : Fin cells.n, ∀ A : Cfg,
-      A ∈ cells.cell i →
+  have hLoc : ∀ i : Fin (p4Q2PZ37AGD_toAGCOriginalHaarCells H).n, ∀ A : Cfg,
+      A ∈ (p4Q2PZ37AGD_toAGCOriginalHaarCells H).cell i →
       |p4Q2PZ37AGE_originalContinuousIntegrand H B A -
         (p4Q2PZ37AGE_originalSpatialSample H B i : ℝ)| ≤
           cert.epsilon + (1 / 64 : ℝ) := by
     intro i A hA
     exact p4Q2PZ37AGE_originalCellwiseSample_accuracy H B cert i A hA
-  have h := p4Q2PZ37AGC_integral_error_of_cells cells
+  have h := p4Q2PZ37AGC_integral_error_of_cells (p4Q2PZ37AGD_toAGCOriginalHaarCells H)
       (p4Q2PZ37AGE_originalContinuousIntegrand H B)
       (p4Q2PZ37AGE_originalSpatialSample H B)
       (cert.epsilon + (1 / 64 : ℝ)) hInt hLoc
@@ -247,11 +255,11 @@ def p4Q2PZ37AGE_originalSignedTransferBall
     (B : Cfg)
     (cert : p4Q2PZ37AGE_originalSpatialOscillation H B)
     (radius : ℚ) (hRadius0 : 0 ≤ radius)
-    (hRadius : p4Q2PZ37AGC_HaarTotalError cells
+    (hRadius : p4Q2PZ37AGC_HaarTotalError (p4Q2PZ37AGD_toAGCOriginalHaarCells H)
       (p4Q2PZ37AGE_originalSpatialSample H B)
       (cert.epsilon + (1 / 64 : ℝ)) ≤ (radius : ℝ)) :
     p4Q2PZ37AGA_rationalBall (t B) where
-  sample := p4Q2PZ37AGC_HaarCenter cells
+  sample := p4Q2PZ37AGC_HaarCenter (p4Q2PZ37AGD_toAGCOriginalHaarCells H)
     (p4Q2PZ37AGE_originalSpatialSample H B)
   radius := radius
   radius_nonneg := hRadius0
@@ -263,11 +271,11 @@ theorem p4Q2PZ37AGE_originalSignedTransfer_positive
     (B : Cfg)
     (cert : p4Q2PZ37AGE_originalSpatialOscillation H B)
     (radius : ℚ) (hRadius0 : 0 ≤ radius)
-    (hRadius : p4Q2PZ37AGC_HaarTotalError cells
+    (hRadius : p4Q2PZ37AGC_HaarTotalError (p4Q2PZ37AGD_toAGCOriginalHaarCells H)
       (p4Q2PZ37AGE_originalSpatialSample H B)
       (cert.epsilon + (1 / 64 : ℝ)) ≤ (radius : ℝ))
     (hPos : radius <
-      p4Q2PZ37AGC_HaarCenter cells
+      p4Q2PZ37AGC_HaarCenter (p4Q2PZ37AGD_toAGCOriginalHaarCells H)
         (p4Q2PZ37AGE_originalSpatialSample H B)) :
     0 < t B :=
   p4Q2PZ37AGA_rationalBall_positive
@@ -279,10 +287,10 @@ theorem p4Q2PZ37AGE_originalSignedTransfer_negative
     (B : Cfg)
     (cert : p4Q2PZ37AGE_originalSpatialOscillation H B)
     (radius : ℚ) (hRadius0 : 0 ≤ radius)
-    (hRadius : p4Q2PZ37AGC_HaarTotalError cells
+    (hRadius : p4Q2PZ37AGC_HaarTotalError (p4Q2PZ37AGD_toAGCOriginalHaarCells H)
       (p4Q2PZ37AGE_originalSpatialSample H B)
       (cert.epsilon + (1 / 64 : ℝ)) ≤ (radius : ℝ))
-    (hNeg : p4Q2PZ37AGC_HaarCenter cells
+    (hNeg : p4Q2PZ37AGC_HaarCenter (p4Q2PZ37AGD_toAGCOriginalHaarCells H)
       (p4Q2PZ37AGE_originalSpatialSample H B) < -radius) :
     t B < 0 :=
   p4Q2PZ37AGA_rationalBall_negative
