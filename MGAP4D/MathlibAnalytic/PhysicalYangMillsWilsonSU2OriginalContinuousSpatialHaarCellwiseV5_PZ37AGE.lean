@@ -19,7 +19,7 @@ oscillation budget epsilon over the TRUE original spatial product cells:
   |t_H(B) - sum_i q_i*w_i|
     <= epsilon + 1/64 + sum_i |q_i| delta_i.
 
-AGD supplies the true spatial-Haar mass enclosure w_i +/- delta_i.
+AGD supplies the true spatial-Haar mass enclosure w_i with error delta_i.
 The only remaining local physical input is the original continuous
 integrand oscillation; this module does NOT assert that arbitrary L2
 representatives agree pointwise, or that oscillation budgets have been
