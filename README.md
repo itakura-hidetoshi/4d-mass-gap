@@ -1,3 +1,31 @@
+## 検証済み定理 — AGE（2026-11-05 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` はREADME・ROADMAPの文書ミラー。AGD定理 #6355、正本文書 #6356、main文書ミラー #6357 のMERGEDを継承し、[AGE定理PR #6358](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6358) も **MERGED**。検証済みexact-source HEAD `384f0238b3a65e7889902717bec9d3be765ec65e`、AGE定理squash SHA `690670e85cae2ee27d2fb1d79e5e39ca1aebfb0b`。真正SU(2) Wilson作用・正規化Haar／全空間積Haar・元ZW Gauss-law中心化L² source・元one-slab transfer・Perron/FF・AFQ真正24中心は変更していない。
+
+### L²代表元から真正連続Wilson被積分関数への厳密な接続
+
+- **元の物理量だけを使用**：AFZの真正連続Wilson中心化source `f_c(A)=½(W_c(A)−m_H)` と、AGBの元の真正one-slab Wilson核 `K_H(A,B)` および実際の下界 `k_H` を組み、`g_B(A)=f_c(A)(K_H(A,B)−(1+k_H)/2)` を構成。元Wilson作用・核から `g_B` の連続性を証明し、元AGCのL²代表元を評価する被積分関数と **Haar-a.e.で一致すること**を証明。L²同値類の値があらゆる点で連続代表元と一致するとは仮定していない。
+- **真正transfer積分の同一性**：AFZのL²等式、`ContinuousMap.coeFn_toLp`、AGCの真正中心化核積分恒等式を接続し、`∫g_B(A)dμ_H(A)=t_H(B)` を形式証明。新規の代理source・代理Haar確率や置換transfer作用素は導入しない。
+
+### 真正AGD積セル上の有理中心と条件付き局所誤差
+
+- **真正24中心の有限リンク積**：AGDの各元空間リンク上の真正AFQ指定中心を並べた有限配置 `a_i` を構成。各AGD積セル内のすべての元空間配置 `A` について、各リンクの真正Wilson弦距離 `d_J(A_e,(a_i)_e)≤4/5` を証明。最初の中心によるBorelセルでは、指定中心自体がそのセルに属するとは仮定しない。
+- **実際の中心値の有理包囲**：`g_B(a_i)` をAFNの有理数稠密性から非計算的に選択した `q_i∈ℚ` で `|g_B(a_i)−q_i|≤1/64` と形式証明。これは真正物理値を数学的に包囲する*存在証明付きの選択*であり、測定・数値積分で得た計算済みの具体的な有理値表ではない。
+- **未解決のセル内振動を独立の証明入力として保持**：全AGDセル上の真正連続物理関数 `g_B` に対して、`|g_B(A)−g_B(a_i)|≤ε` を証明した入力 `epsilon≥0` がある場合に限り、セル内包含 `|g_B(A)−q_i|≤ε+1/64` を証明。これとAGDの真正空間Haar質量 `w_i,δ_i` を使い、**`|t_H(B)−∑_i q_iw_i|≤ε+1/64+∑_i|q_i|δ_i`** をLean4で形式証明する。
+- **既存AGA有理区間・厳密符号判定へ移送**：右辺を包含する証明付き有理半径 `r≥0` があれば元真正signed transferの `rationalBall` を生成。厳密な `r<∑q_iw_i` なら `t_H(B)>0`、`∑q_iw_i<−r` なら `t_H(B)<0`。実際に符号分離する非零中心・誤差半径を認証したとの主張ではない。AGCのL²代表元に対して不正なpointwise一致を要求するのではなく、同じ真の積分値を連続代表元で証明する独立経路とした。
+
+### Exact-source Lean4 CI・公理監査・Git tree
+
+- 追加Leanは `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalContinuousSpatialHaarCellwiseV5_PZ37AGE.lean` のみ（313行、`#print axioms` 10件）。既存Lean・物理量・workflows・公開root・Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` は不変。
+- 初回CI #42003757426は説明コメント中の `+/-` をLeanブロックコメント開始と解釈した字句監査エラーで不成功。次CI #42003973562では連続核の合成型判定タイムアウトと局所`cells.cell`記法の識別子解決エラーが生じた。Lean全文・imports・AFZ/AGB/AGC/AGDの定義とpinned mathlib APIを確認し、型付き連続写像合成と明示的セル参照へ修正。定理文・仮定は弱化していない。
+- 最終[exact-source CI #42005520130](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42005520130) は **11,338/11,338 SUCCESS**。10件の公理依存は標準 `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし、変更AGE warning/error **0/0**、独立completion receipt **SUCCESS**。source/test-merge Git tree は `11b71794d1507a447a7378990f093ab49cff0280` で一致。
+
+### 未解決obstruction・次段AGF（研究候補）
+
+AGEは元の真正transfer積分に対する**連続代表元の型付き有理求積経路**を検証したが、元の連続Wilson被積分関数の具体的なセル内振動幅 `ε`、厳密な実効的有理評価表、数値的に正負を分離する半径は未認証。次段AGFでは真正Wilson空間作用・one-slab核のリンク変動係数とAFQ指定中心の4/5弦距離を組み、セル内振動の上界を新しい物理仮定なしに導出することが課題。真正二閾値符号殻の非空、体積一様coercivity、Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは引き続き**未証明**。
+
+---
+
 ## 検証済み定理 — AGD（2026-11-05 JST）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` はREADME・ROADMAPの文書ミラー。AGC定理 #6352、正本文書 #6353、main文書ミラー #6354 のMERGEDを継承。[AGD定理PR #6355](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6355) は **MERGED**。最終検証済みexact-source HEAD `9f64b710f5be2b8194e06505f927fd9a52d3ca7a`、定理squash SHA `a2f7e77f5c956cfdbde3b812daa671db625d5b92`。元のSU(2) Wilson・正規化Haar・ZW Gauss-law中心化source・Perron/transfer/FF・AFQ真正24中心・AFT有理質量境界を変更しない。
