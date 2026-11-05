@@ -128,7 +128,9 @@ theorem p4Q2PZ37AGF_originalContinuousIntegrand_globalOscillation
   have hC := p4Q2PZ37AGF_originalContinuousIntegrand_abs_le_floor H B C
   calc
     |gCont B A - gCont B C| ≤
-      |gCont B A| + |gCont B C| := abs_sub_le _ _
+      |gCont B A| + |gCont B C| := by
+        simpa only [sub_zero, zero_sub, abs_neg] using
+          (abs_sub_le (gCont B A) (0 : ℝ) (gCont B C))
     _ ≤ ((1 - kFloor) / 2) * pH +
       ((1 - kFloor) / 2) * pH := add_le_add hA hC
     _ = pH * (1 - kFloor) := by ring
