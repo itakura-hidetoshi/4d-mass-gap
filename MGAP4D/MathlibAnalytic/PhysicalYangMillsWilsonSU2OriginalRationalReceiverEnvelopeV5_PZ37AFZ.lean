@@ -290,7 +290,10 @@ theorem p4Q2PZ37AFZ_originalFF_abs_le_rational
   let r := rho z / rho (z.1, Function.update z.2 e g)
   obtain ⟨hr0, hr1⟩ := p4Q2PZ37AFZ_originalDensityRatio_bounds H e z g
   have hP : 0 ≤ pH := Nat.cast_nonneg _
-  have ht0 : 0 ≤ Tnorm⁻¹ := inv_nonneg.mpr (norm_nonneg _)
+  have ht0 : 0 ≤ Tnorm⁻¹ :=
+    (inv_pos.mpr
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
+        H 2 (by norm_num) b0 hb0)).le
   have hTerm : |t z.2 - r * t (Function.update z.2 e g)| ≤ (5 / 2 : ℝ) * pH := by
     calc
       |t z.2 - r * t (Function.update z.2 e g)| ≤
