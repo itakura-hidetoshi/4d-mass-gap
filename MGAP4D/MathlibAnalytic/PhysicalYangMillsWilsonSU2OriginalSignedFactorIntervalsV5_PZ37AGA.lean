@@ -370,6 +370,62 @@ noncomputable def p4Q2PZ37AGA_transferOnly_toOriginalCoefficientVariance
   p4Q2PZ37AGA_toOriginalCoefficientVariance H e c hlo
     (p4Q2PZ37AGA_transferOnly_toFactorIntervals H e c d)
 
+
+/-- The original physical inverse transfer norm is STRICTLY positive.
+For sign detection it is enough to certify the signed transfer-density
+difference; no artificial high-accuracy inverse norm sample is needed. -/
+def p4Q2PZ37AGA_transferOnly_originalBracketBall
+    (e : Link) {lo hi : ℝ}
+    (c : p4Q2PZ37AFG_originalShellSampleTable H e lo hi)
+    (d : p4Q2PZ37AGA_originalTransferOnlyIntervals H e lo hi c)
+    (z : Pair) (hz : z ∈ c.s) (i : Fin (Fintype.card Grid)) :
+    p4Q2PZ37AGA_rationalBall
+      (t z.2 -
+        (rho z / rho (z.1, Function.update z.2 e (gridCenter i))) *
+          t (Function.update z.2 e (gridCenter i))) :=
+  p4Q2PZ37AGA_rationalBall_sub
+    (p4Q2PZ37AGA_fromVerifiedInterval (d.unupdatedTransfer z hz))
+    (p4Q2PZ37AGA_rationalBall_mul
+      (p4Q2PZ37AGA_fromVerifiedInterval
+        (p4Q2PZ37AGA_automaticDensityRatioInterval H e z (gridCenter i)))
+      (p4Q2PZ37AGA_fromVerifiedInterval (d.updatedTransfer z hz i)))
+
+/-- Sign certificate using ONLY genuine signed transfer-integral intervals,
+AFZ's exact Perron ratio bound, and strict positivity of the physical
+transfer norm. Its interval is not degraded by a zero-lower-bound
+approximation of the inverse transfer norm. -/
+theorem p4Q2PZ37AGA_transferOnly_originalCenter_signPos
+    (e : Link) {lo hi : ℝ}
+    (c : p4Q2PZ37AFG_originalShellSampleTable H e lo hi)
+    (d : p4Q2PZ37AGA_originalTransferOnlyIntervals H e lo hi c)
+    (z : Pair) (hz : z ∈ c.s) (i : Fin (Fintype.card Grid))
+    (h : (p4Q2PZ37AGA_transferOnly_originalBracketBall H e c d z hz i).radius <
+      (p4Q2PZ37AGA_transferOnly_originalBracketBall H e c d z hz i).sample) :
+    0 < F e z (gridCenter i) := by
+  rw [p4Q2PZ37AFZ_originalFF_eq_densityRatioTransfer]
+  exact mul_pos
+    (inv_pos.mpr
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
+        H 2 (by norm_num) b0 hb0))
+    (p4Q2PZ37AGA_rationalBall_positive
+      (p4Q2PZ37AGA_transferOnly_originalBracketBall H e c d z hz i) h)
+
+theorem p4Q2PZ37AGA_transferOnly_originalCenter_signNeg
+    (e : Link) {lo hi : ℝ}
+    (c : p4Q2PZ37AFG_originalShellSampleTable H e lo hi)
+    (d : p4Q2PZ37AGA_originalTransferOnlyIntervals H e lo hi c)
+    (z : Pair) (hz : z ∈ c.s) (i : Fin (Fintype.card Grid))
+    (h : (p4Q2PZ37AGA_transferOnly_originalBracketBall H e c d z hz i).sample <
+      -(p4Q2PZ37AGA_transferOnly_originalBracketBall H e c d z hz i).radius) :
+    F e z (gridCenter i) < 0 := by
+  rw [p4Q2PZ37AFZ_originalFF_eq_densityRatioTransfer]
+  exact mul_neg_of_pos_of_neg
+    (inv_pos.mpr
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
+        H 2 (by norm_num) b0 hb0))
+    (p4Q2PZ37AGA_rationalBall_negative
+      (p4Q2PZ37AGA_transferOnly_originalBracketBall H e c d z hz i) h)
+
 end GroundStatePosteriorJoint
 end
 end MGAP4D.MathlibAnalytic
@@ -392,3 +448,6 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AGA_automaticDensityRatioInterval
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AGA_transferOnly_toFactorIntervals
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AGA_transferOnly_toOriginalCoefficientVariance
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AGA_transferOnly_originalBracketBall
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AGA_transferOnly_originalCenter_signPos
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AGA_transferOnly_originalCenter_signNeg
