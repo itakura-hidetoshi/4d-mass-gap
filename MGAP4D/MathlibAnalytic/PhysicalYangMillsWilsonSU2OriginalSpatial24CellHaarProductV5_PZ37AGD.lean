@@ -108,12 +108,12 @@ theorem p4Q2PZ37AGD_spatialCells_partition (A : Cfg) :
   have hmem (e : Link) : A e ∈ p4Q2PZ37AFQ_cells (index e) :=
     (Classical.choose_spec (p4Q2PZ37AFQ_cells_partition (A e))).1
   refine ⟨index, ?_, ?_⟩
-  · change ∀ e : Link, A e ∈ p4Q2PZ37AFQ_cells (index e)
-    exact hmem
+  · unfold p4Q2PZ37AGD_spatialCell
+    exact Set.mem_univ_pi.mpr hmem
   · intro next hnext
     funext e
     have he : A e ∈ p4Q2PZ37AFQ_cells (next e) := by
-      exact (Set.mem_univ_pi.mp hnext) e (Set.mem_univ e)
+      exact (Set.mem_univ_pi.mp hnext) e
     exact (Classical.choose_spec
       (p4Q2PZ37AFQ_cells_partition (A e))).2 (next e) he
 
@@ -158,29 +158,33 @@ theorem p4Q2PZ37AGD_spatialCell_HaarMass_interval
         ((p4Q2PZ37AGD_rationalUpper H : ℚ) : ℝ) := by
   rw [p4Q2PZ37AGD_spatialCell_HaarMass_real H index]
   constructor
-  · change ((1 / 160000 : ℚ) ^ Fintype.card Link : ℝ) ≤
-      ∏ e : Link, Measure.real (normalizedCompactHaar G)
-        (p4Q2PZ37AFQ_cells (index e))
-    push_cast
-    rw [← Finset.prod_const]
-    exact Finset.prod_le_prod (by intro e he; norm_num)
-      (by intro e he; exact (p4Q2PZ37AFT_everyCell_originalHaar_interval (index e)).1)
-  · change (∏ e : Link, Measure.real (normalizedCompactHaar G)
-        (p4Q2PZ37AFQ_cells (index e))) ≤
-      ((625 / 1781 : ℚ) ^ Fintype.card Link : ℝ)
-    push_cast
-    rw [← Finset.prod_const]
-    exact Finset.prod_le_prod
-      (by intro e he; exact measureReal_nonneg)
-      (by intro e he; exact (p4Q2PZ37AFT_everyCell_originalHaar_interval (index e)).2)
+  · calc
+      ((p4Q2PZ37AGD_rationalLower H : ℚ) : ℝ) =
+          ∏ _e : Link, (1 / 160000 : ℝ) := by
+            simp [p4Q2PZ37AGD_rationalLower, Finset.prod_const]
+      _ ≤ ∏ e : Link, Measure.real (normalizedCompactHaar G)
+          (p4Q2PZ37AFQ_cells (index e)) :=
+        Finset.prod_le_prod
+          (by intro e he; norm_num)
+          (by intro e he
+              exact (p4Q2PZ37AFT_everyCell_originalHaar_interval (index e)).1)
+  · calc
+      (∏ e : Link, Measure.real (normalizedCompactHaar G)
+          (p4Q2PZ37AFQ_cells (index e))) ≤
+          ∏ _e : Link, (625 / 1781 : ℝ) :=
+        Finset.prod_le_prod
+          (by intro e he; exact measureReal_nonneg)
+          (by intro e he
+              exact (p4Q2PZ37AFT_everyCell_originalHaar_interval (index e)).2)
+      _ = ((p4Q2PZ37AGD_rationalUpper H : ℚ) : ℝ) := by
+        simp [p4Q2PZ37AGD_rationalUpper, Finset.prod_const]
 
 /-- The rational endpoints are ordered, also in the zero-link case. -/
 theorem p4Q2PZ37AGD_rationalLower_le_upper :
     p4Q2PZ37AGD_rationalLower H ≤
       p4Q2PZ37AGD_rationalUpper H := by
   unfold p4Q2PZ37AGD_rationalLower p4Q2PZ37AGD_rationalUpper
-  gcongr
-  norm_num
+  gcongr <;> norm_num
 
 /-- Use the exact finite equivalence rather than pretending the spatial
 index is a single SU(2) link; the index has 24^L elements. -/
