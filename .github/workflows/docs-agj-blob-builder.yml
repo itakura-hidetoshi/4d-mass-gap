@@ -1,0 +1,86 @@
+name: Prepare verified AGJ documentation blobs
+on:
+  push:
+    branches: [tooling/docs-ace-blob-builder-20261031]
+    paths: [.github/workflows/docs-agj-blob-builder.yml]
+permissions:
+  contents: write
+jobs:
+  prepare:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 4
+    steps:
+      - name: Verify theorem and register unreferenced byte-preserving document blobs
+        env:
+          API_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import base64, hashlib, json, os, pathlib, urllib.request
+          api='https://api.github.com/repos/itakura-hidetoshi/4d-mass-gap'
+          refs={'canonical':'f24be7665c82a40051873c7fcc3df65c1fc27b06','main':'797395d7328c9213c0ae1f546564c405786501b3'}
+          expected={('canonical','README.md'):'17bdf5d9e1ce79a9954c6f2a7435f635d58551ec',('canonical','ROADMAP.md'):'be9385d93adb5cfa0a1413336b0c115ee9abbda0',('main','README.md'):'bed042b2589839101edfcafd58670ad220f5aa0c',('main','ROADMAP.md'):'7b01227428077871dd03afe2b3b2641837a7e23e'}
+          def request(path,body=None):
+              assert body is None or path=='/git/blobs'
+              req=urllib.request.Request(api+path,data=None if body is None else json.dumps(body).encode(),headers={'Authorization':'Bearer '+os.environ['API_TOKEN'],'Accept':'application/vnd.github+json','Content-Type':'application/json'})
+              with urllib.request.urlopen(req,timeout=30) as r: return json.load(r)
+          def sha(x): return hashlib.sha1(b'blob '+str(len(x)).encode()+b'\0'+x).hexdigest()
+          run=request('/actions/runs/42106035057')
+          assert run['head_sha']=='726c93be12e6f3eeb6cb4ae7b80a3b39330eb83d' and run['status']=='completed' and run['conclusion']=='success'
+          jobs=request('/actions/runs/42106035057/jobs')['jobs']
+          for name in ('Changed Lean fast check','Publish MCP CI completion receipt'):
+              assert any(j['name']==name and j['status']=='completed' and j['conclusion']=='success' for j in jobs)
+          for commit in ('726c93be12e6f3eeb6cb4ae7b80a3b39330eb83d','2aa1e0528d7e33e5d3d9bdce56ea1827c7d549c0',refs['canonical']):
+              assert request('/git/commits/'+commit)['tree']['sha']=='bfdad9a8531b2520962de5e03fd39254b00c5ab5'
+          pr=request('/pulls/6372')
+          assert pr['merged'] and pr['merge_commit_sha']==refs['canonical']
+          common='''## 検証済み定理 — AGJ（2026-11-06 JST）
+
+          唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。[AGJ定理PR #6372](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6372) はMERGED。定理squash `f24be7665c82a40051873c7fcc3df65c1fc27b06`、検証済みsource `726c93be12e6f3eeb6cb4ae7b80a3b39330eb83d`。元Wilson作用・核・固定結合・中心化source・真正Haar/Perron/transfer/FF・公開root・Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` は不変更。
+
+          ### CLOSED — 元Wilson指数核の有限有理Taylor包囲
+
+          `P_n(q)=sum_{j<n} q^j/j!`、`R_n(q)=|q|^n(n+1)/(n!*n)` を計算可能な有理式として実装。`|q|<=1`、`n>0` で固定mathlibの `Real.exp_bound` から `|exp(q)-P_n(q)|<=R_n(q)` を証明した。正整数kによる `exp(q/k)^k=exp(q)` で指数の大きさを処理し、下端 `max(0,P_n-R_n)` を非負にしてから累乗する。負の下端を偶数乗して誤った正下界を作らない。
+
+          元の実数xが有理区間[lo,hi]に入り、`|lo/k|<=1`、`|hi/k|<=1` が成り立てば、計算可能な `expLower(lo,k,n)` と `expUpper(hi,k,n)` で実際のexp(x)を包囲するAFV証明付き区間を構成した。未知の指数値に対する区間oracleや非計算的な有理選択は必要としない。
+
+          ### CLOSED — 元固定結合の無条件有理包囲と真正核への接続
+
+          五項Taylorの正確な有理計算により `exp(2/5)<3/2<exp(13/32)` を証明。既証明の元結合恒等式 `exp(64 beta0)=3/2` と単調性から **`1/160<beta0<13/2048`** を無条件に導いた。beta0自体は元の `log(3/2)/64` のままであり、小数値を物理的仮定として代入していない。
+
+          非負の元one-slab作用 `S_H(A,B)` に対する証拠付き区間[s_lower,s_upper]から、`-beta0*S_H(A,B)` の区間 `[-(13/2048)*s_upper,-(1/160)*s_lower]` を構成し、元Boltzmann恒等式で **真正 `K_H(A,B)=exp(-beta0*S_H(A,B))` の有理区間・AGA有理球**を得る。作用0なら核1、作用64なら核2/3の校正定理は、それぞれ元作用の等式を明示的入力とする。作用64の具体的配置の存在を主張していない。
+
+          ### exact-source検証とLean4修正
+
+          新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalKernelTaylorIntervalV5_PZ37AGJ.lean` 1ファイル279行。既存Lean変更なし。[最終CI #42106035057](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42106035057) はworkflow・Changed Lean job `127520984143`・Lean step・独立receipt `127523984881` がcompleted/SUCCESS。artifact `13452332224` を取得・実検査し、**11,343 jobs成功**、14宣言の公理依存は標準公理のみ、sorryAxなし、変更AGJ warning/error 0/0。SHA-256 `e265fd9a6a4545f0aa9ec95a0081cf7379a42c78375678ebab81bdb23f642273` も一致。
+
+          source・test-merge `2aa1e0528d7e33e5d3d9bdce56ea1827c7d549c0`・squashは共通tree `bfdad9a8531b2520962de5e03fd39254b00c5ab5`。初回CI #42104807540 は固定結合証明の区間構造体をhaveで束縛したため展開できず、有理数から実数へのcastも不一致となった。構造体をletで保持し、Rat.cast_ltと明示的cast簡約へ修正。定理文・仮定は不変更。結合の有理不等式・負端点clip・零指数の3回帰例も最終ビルドで検証した。
+
+          ### OPEN — 具体的原作用・質量・中心化平均
+
+          固定結合区間には正の幅があるため、Taylor次数を上げるだけで全核区間の幅がゼロに収束するとは結論しない。元作用の具体的区間、真正Haarセル質量、中心化平均は別途評価が必要。次段は真正中心配置の元Wilson作用を成分別に有理評価し、AGJの核区間とAGIの証明書へ接続する。実際の非零signed transfer符号、二閾値殻非空、体積一様coercivity、Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは未証明。
+
+          以下のAGI以前の本文は全バイト保存した履歴であり、旧「最新・次段階」よりこの追補を優先する。
+
+          ---
+
+          '''
+          prefix=common.encode('utf-8'); out=[]
+          for label,ref in refs.items():
+              for path in ('README.md','ROADMAP.md'):
+                  obj=request('/contents/'+path+'?ref='+ref)
+                  assert obj['encoding']=='base64'
+                  old=base64.b64decode(obj['content']); assert sha(old)==obj['sha']==expected[(label,path)]
+                  new=prefix+old; assert new[len(prefix):]==old
+                  b=request('/git/blobs',{'content':base64.b64encode(new).decode(),'encoding':'base64'})
+                  assert b['sha']==sha(new)
+                  assert base64.b64decode(request('/git/blobs/'+b['sha'])['content'])==new
+                  row={'target':label,'base_commit':ref,'path':path,'old_blob':sha(old),'new_blob':b['sha'],'added_lines':prefix.count(b'\n'),'deleted_lines':0,'old_suffix_preserved':True,'readback_verified':True}
+                  out.append(row); print('DOC_BLOB '+json.dumps(row),flush=True)
+          pathlib.Path('docs-agj-manifest.json').write_text(json.dumps(out,indent=2)+'\n')
+          PY
+      - uses: actions/upload-artifact@v6
+        with:
+          name: docs-agj-blob-manifest
+          path: docs-agj-manifest.json
+          if-no-files-found: error
