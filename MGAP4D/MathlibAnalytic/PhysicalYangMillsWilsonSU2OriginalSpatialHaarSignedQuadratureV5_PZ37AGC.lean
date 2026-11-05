@@ -61,7 +61,7 @@ local notation "muH" =>
 local notation "b0" => p4Q2PZ37ADC_fixedCoupling
 local notation "hb0" => p4Q2PZ37ADC_fixedCoupling_pos.le
 local notation "f0" => p4Q2PZ37ZW_originalCenteredPhysicalDirection H
-local notation "k" =>
+local notation "kFloor" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor H b0
 local notation "K" =>
   periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 b0
@@ -77,15 +77,18 @@ local instance p4Q2PZ37AGC_probability : IsProbabilityMeasure muH := by
 configuration and its ORIGINAL product Haar probability. -/
 structure p4Q2PZ37AGC_originalHaarCells (H : ℕ) where
   n : ℕ
-  cell : Fin n → Set Cfg
+  cell : Fin n → Set
+    (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2)
   hMeas : ∀ i, MeasurableSet (cell i)
-  hPartition : ∀ g : Cfg, ∃ i : Fin n,
-    g ∈ cell i ∧ ∀ j : Fin n, g ∈ cell j → j = i
+  hPartition :
+    ∀ g : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
+      ∃ i : Fin n, g ∈ cell i ∧ ∀ j : Fin n, g ∈ cell j → j = i
   weight : Fin n → ℚ
   weightError : Fin n → ℝ
   hWeightError_nonneg : ∀ i, 0 ≤ weightError i
   hWeightAccuracy : ∀ i,
-    |Measure.real muH (cell i) - (weight i : ℝ)| ≤ weightError i
+    |Measure.real (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2)
+      (cell i) - (weight i : ℝ)| ≤ weightError i
 
 /-- A truly finite simple function, integrated against original Haar. -/
 def p4Q2PZ37AGC_HaarStep
@@ -271,7 +274,7 @@ theorem p4Q2PZ37AGC_HaarTotalError_nonneg
 /-- Genuine centered-kernel integrand; no source or Wilson kernel change. -/
 def p4Q2PZ37AGC_originalCenteredKernelIntegrand
     (B A : Cfg) : ℝ :=
-  (f0 : Lp ℝ 2 muH) A * (K A B - (1 + k) / 2)
+  (f0 : Lp ℝ 2 muH) A * (K A B - (1 + kFloor) / 2)
 
 /-- The true centered-kernel integrand is integrable because the original
 signed transfer integrand and the centered source are integrable. -/
@@ -284,13 +287,13 @@ theorem p4Q2PZ37AGC_originalCenteredKernelIntegrand_integrable
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_mul_integrable
       H 2 (by norm_num) b0 hb0 (f0 : Lp ℝ 2 muH) B
   have hv : Integrable
-      (fun A : Cfg => (f0 : Lp ℝ 2 muH) A * ((1 + k) / 2)) muH :=
-    hf.mul_const ((1 + k) / 2)
+      (fun A : Cfg => (f0 : Lp ℝ 2 muH) A * ((1 + kFloor) / 2)) muH :=
+    hf.mul_const ((1 + kFloor) / 2)
   have hEq :
-      (fun A : Cfg => (f0 : Lp ℝ 2 muH) A * (K A B - (1 + k) / 2)) =
+      (fun A : Cfg => (f0 : Lp ℝ 2 muH) A * (K A B - (1 + kFloor) / 2)) =
       (fun A : Cfg =>
         (f0 : Lp ℝ 2 muH) A * K A B -
-        (f0 : Lp ℝ 2 muH) A * ((1 + k) / 2)) := by
+        (f0 : Lp ℝ 2 muH) A * ((1 + kFloor) / 2)) := by
     funext A
     ring
   unfold p4Q2PZ37AGC_originalCenteredKernelIntegrand
@@ -304,8 +307,8 @@ theorem p4Q2PZ37AGC_originalCenteredKernelIntegrand_integral
     (∫ A : Cfg, p4Q2PZ37AGC_originalCenteredKernelIntegrand B A ∂muH) =
       t B := by
   change (∫ A : Cfg, (f0 : Lp ℝ 2 muH) A *
-    (K A B - (1 + k) / 2) ∂muH) = t B
-  exact (p4Q2PZ37AGB_originalTransfer_eq_kernelCenteredIntegral H B ((1 + k) / 2)).symm
+    (K A B - (1 + kFloor) / 2) ∂muH) = t B
+  exact (p4Q2PZ37AGB_originalTransfer_eq_kernelCenteredIntegral H B ((1 + kFloor) / 2)).symm
 
 /-- Concrete rational spatial-Haar quadrature table with exact
 cellwise *physical* integrand bounds and certified original Haar masses.
@@ -381,6 +384,7 @@ theorem p4Q2PZ37AGC_originalSignedTransfer_negative
 
 end GroundStatePosteriorJoint
 
+end
 end MGAP4D.MathlibAnalytic
 
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AGC_HaarStep_eq_onCell
