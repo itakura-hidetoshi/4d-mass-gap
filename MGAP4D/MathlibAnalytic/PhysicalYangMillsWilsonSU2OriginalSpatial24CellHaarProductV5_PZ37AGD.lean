@@ -177,7 +177,7 @@ theorem p4Q2PZ37AGD_spatialCell_HaarMass_interval
           (by intro e he
               exact (p4Q2PZ37AFT_everyCell_originalHaar_interval (index e)).2)
       _ = ((p4Q2PZ37AGD_rationalUpper H : ℚ) : ℝ) := by
-        simp [p4Q2PZ37AGD_rationalUpper, Finset.prod_const]
+        simp [p4Q2PZ37AGD_rationalUpper, Finset.prod_const, div_pow]
 
 /-- The rational endpoints are ordered, also in the zero-link case. -/
 theorem p4Q2PZ37AGD_rationalLower_le_upper :
