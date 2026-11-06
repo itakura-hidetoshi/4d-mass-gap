@@ -56,7 +56,8 @@ theorem p4Q2PZ37AGK_tail_identity (n : ℕ) :
     ((1 / 5 : ℚ) ^ (2 * n + 1) / (1 - (1 / 5 : ℚ) ^ 2)) / 32 =
       p4Q2PZ37AGK_tail n := by
   simp only [pow_add, pow_mul, pow_one]
-  norm_num [p4Q2PZ37AGK_tail] <;> ring
+  norm_num [p4Q2PZ37AGK_tail]
+  ring
 
 theorem p4Q2PZ37AGK_tail_nonneg (n : ℕ) : 0 ≤ p4Q2PZ37AGK_tail n := by
   unfold p4Q2PZ37AGK_tail
@@ -116,7 +117,10 @@ theorem p4Q2PZ37AGK_originalCoupling_rawBounds (n : ℕ) :
     simp [p4Q2PZ37AGK_rawLower]
   have hTail : ((1 / 5 : ℝ) ^ (2 * n + 1) / (1 - (1 / 5 : ℝ) ^ 2)) / 32 =
       (p4Q2PZ37AGK_tail n : ℝ) := by
-    exact_mod_cast p4Q2PZ37AGK_tail_identity n
+    -- Transport the entire equality first; then normalize its casts.
+    have h := congrArg (fun q : ℚ => (q : ℝ)) (p4Q2PZ37AGK_tail_identity n)
+    simpa only [Rat.cast_div, Rat.cast_pow, Rat.cast_sub, Rat.cast_one,
+      Rat.cast_ofNat] using h
   constructor
   · rw [hCast]
     linarith only [hL]
@@ -167,10 +171,15 @@ any remaining action-interval or Taylor truncation width. -/
 theorem p4Q2PZ37AGK_originalCoupling_width_tendsto_zero :
     Tendsto (fun n : ℕ => ((p4Q2PZ37AGK_upper n -
       p4Q2PZ37AGK_lower n : ℚ) : ℝ)) atTop (𝓝 0) := by
-  apply squeeze_zero
-    (fun n => by exact_mod_cast (p4Q2PZ37AGK_originalCoupling_width n).1)
-    (fun n => by exact_mod_cast (p4Q2PZ37AGK_originalCoupling_width n).2)
-  exact p4Q2PZ37AGK_tail_tendsto_zero
+  -- Type both real functions before applying the squeeze theorem.
+  have hNonneg (n : ℕ) :
+      (0 : ℝ) ≤ ((p4Q2PZ37AGK_upper n - p4Q2PZ37AGK_lower n : ℚ) : ℝ) :=
+    (Rat.cast_nonneg (K := ℝ)).2 (p4Q2PZ37AGK_originalCoupling_width n).1
+  have hBound (n : ℕ) :
+      ((p4Q2PZ37AGK_upper n - p4Q2PZ37AGK_lower n : ℚ) : ℝ) ≤
+        (p4Q2PZ37AGK_tail n : ℝ) :=
+    (Rat.cast_le (K := ℝ)).2 (p4Q2PZ37AGK_originalCoupling_width n).2
+  exact squeeze_zero hNonneg hBound p4Q2PZ37AGK_tail_tendsto_zero
 
 /-- Every positive requested real precision is met at a finite order. -/
 theorem p4Q2PZ37AGK_exists_originalCoupling_precision
