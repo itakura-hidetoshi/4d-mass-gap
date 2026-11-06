@@ -1,3 +1,15 @@
+## AGR（2026-11-06）— 真正有理ステレオ中心と細分gridの条件付きdescent
+
+[定理PR #6393](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6393) MERGED、[CI #42190751075](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42190751075) **11,353/11,353 SUCCESS**。新規7宣言は標準公理のみ、sorryAxなし、changed warning/error 0/0、source/test-merge/squash Git tree同一。
+
+**CLOSED**：有理3変数の逆ステレオ投影による真正`S³`・元SU(2)中心の厳密構成とAGL有理座標証明、元Wilson作用幅0包囲。真正元SU(2)の有限被覆証拠を入力すると、AGH全リンク格子→AGQの真Haar総質量幅`≤eps`→AGPの元signed-transfer区間を既存のまま連結するLean4定理を構成した。
+
+**NEXT/OPEN**：単一ステレオチャートの除外極を別扱いし、`Rat.denseRange_cast`＋有限Pi稠密性＋連続逆投影＋ADS/ADT等距離の正確な形式化から**任意点・任意半径の有理近似**を証明。次にSU(2)コンパクト性から有限有理被覆を抽出し`hCover`前提を解消する。数値的な具体Haarセル質量表、非零signed transfer符号、H一様coercivity、Hamiltonian gap、連続体質量ギャップは独立の未解決条件。
+
+唯一の定理正本 `formal/real-hilbert-uniform-coercive-strong-limit`。mainは文書ミラー。Lean/mathlib pin、既存定義・root・workflow変更なし。正式記録 `docs/proofs/P4-Q2-PZ37AGR_verified_20261106.md`。AGQ以前の内容を全バイト保持。
+
+---
+
 ## AGQ（2026-11-06）— 真正Haarセルの総質量誤差幅
 
 [定理PR #6390](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6390) MERGED、[CI #42178646756](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42178646756)：11,352/11,352 SUCCESS、9宣言は標準公理のみ、sorryAxなし、warning/error 0/0、独立receipt SUCCESS、Git tree一致。
