@@ -137,8 +137,12 @@ theorem p4Q2PZ37AGV_rationalTable_width_le
     p (M : ℝ) (A : ℝ) (eps : ℝ)
     (by exact_mod_cast hM)
     hMassLo hMassHi hMassNonneg hMassTotal
-    (by intro i; constructor <;> exact_mod_cast (ha i).1)
-    (by intro i; constructor <;> exact_mod_cast (hb i).1)
+    (by intro i; constructor
+      · exact_mod_cast (ha i).1
+      · exact_mod_cast (ha i).2)
+    (by intro i; constructor
+      · exact_mod_cast (hb i).1
+      · exact_mod_cast (hb i).2)
     (by intro i; exact_mod_cast hCellWidths i)
     (by exact_mod_cast hMassWidths)
   have hCast : ((d.upper - d.lower : ℚ) : ℝ) =
