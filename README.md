@@ -1,3 +1,13 @@
+## 検証済み定理 — AGV／元signed-transfer真正Haar幅の定量評価（2026-11-07 JST）
+
+[AGV定理PR #6403](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6403) **MERGED**。真の元Haarセル質量 p_i≥0・総和1と、元AGI/AGPの符号付きmin/max、AGUの同じ選択真正格子の radius≤R と総有理Haar質量幅≤eps から、**各元AGN中心値区間幅≤eta** の明示的条件のもと、`width(I_H)≤eta+2L_H(m)R+2M_H(m,n)eps` をLean4形式証明。ここで L_H(m)=6+13*AGK_upper(m)*(AGN_countRational H/2)、M_H(m,n)=AGN_transferRadius H m n。Haar有理質量下限を非負と仮定せず、上下端点の総和を確率1に置き換えない。元のsigned transferとtighten-only交差を保持する。
+
+[CI #42271966524](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42271966524)：**11,357/11,357 SUCCESS**、新規10宣言は標準3公理のみ、sorryAxなし、変更Lean warning/error0/0、workflow/job/Lean step/独立receipt completed/SUCCESS、source/test-merge/squash Git tree一致 `379ec0b8adc160388cbeabe234aad9ffe4c60474`。新規Lean450行、削除0。Lean v4.30.0-rc2／mathlib pin、既存の元物理量、workflow、公開root不変更。
+
+**NEXT/OPEN:** 中心値幅etaの任意精度保証は依然未証明。AGKの固定結合幅収束からAGM・AGNの指数Taylor／kernel／floorを結合して検討する。具体的大体積数値表、真正非零transfer符号、二閾値殻、H一様coercivity、Hamiltonian gap、連続体4D mass gapは引き続きOPEN。唯一のLean定理正本は formal/real-hilbert-uniform-coercive-strong-limit、mainは文書ミラー。[AGV正式証明記録](docs/proofs/P4-Q2-PZ37AGV_verified_20261107.md)。以下の履歴全文を保持。
+
+---
+
 ## 検証済み定理 — AGU／選択された真正格子への要求精度保存（2026-11-06 JST）
 
 [定理PR #6400](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6400) MERGED。AGTの正しい格子存在定理とAGQの真のHaar質量予算を使い、**選択した同じデータに対する要求半径R・質量総幅epsの保証**を追加した。
