@@ -1,3 +1,13 @@
+## 検証済み定理 — AHA／元kernel・floorの指数Taylor出力幅をAGK幾何誤差と階乗誤差へ降下（2026-11-07 JST）
+
+[AHA定理PR #6418](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6418) **MERGED**。元AGJの真正Taylor残差について `E_n=(n+1)/(n!*n)`・`|q|≤1` の有理上界を証明。元Wilson作用の指数引数が非正であることから `x≤y≤0 ⇒ exp(y)-exp(x)≤y-x` をLean4で導き、AGJの `max 0` clipと整数乗を保持して、元AGK結合誤差 `t_m=(5/768)*(1/25)^m`・元AGM自動scale `k`・実際のTaylor下端 `b` を用いた**指数出力幅** `DeltaExp≤(b+S*t_m/k+4*E_n)^k-b^k` を形式証明した。元AGMの真正kernel幅、元AGNの真正global floor幅、同じAGU真正Borel格子の中心最大値にこの有理上界を適用して、`width(I_H)≤(p_H/2)*(Bmax+Bfloor/2)+2L_H(m)R+2M_H(m,n)eps` を証明。元Haar・source・kernel・floor・signed transfer・tighten-only交差・root/pinsを変更していない。
+
+[Exact-source CI #42310738307](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42310738307)：**11,362/11,362 SUCCESS**、新規12宣言の公理依存は標準 `propext`・`Classical.choice`・`Quot.sound` のみ、sorryAxなし、変更Lean warning/error0/0、workflow/job/Lean step/独立completion receipt completed/SUCCESS。source/test-merge/squash Git tree一致 `61663613839f72b5251105bdbf6355e82544ca91`。新規Lean1件・既存Lean改変なし。別workflowのStrict Lean／Governance実行は主張しない。
+
+**NEXT/OPEN — AHB:** AHAの指数出力幅は有限有理式で評価済みだが、`B(S,m,n)` の任意精度収束、元kernel/floor幅の全中心一様収束、非零signed transfer、H一様coercivity、Hamiltonian gap、連続体mass gapは未証明。作用量上界、scale上界、Taylor階乗tailの収束を結合する。[AHA正式証明記録](docs/proofs/P4-Q2-PZ37AHA_verified_20261107.md)。唯一の定理正本 `formal/real-hilbert-uniform-coercive-strong-limit`、mainは文書ミラー。以下のAGZ以前の履歴全文保持。
+
+---
+
 ## 検証済み定理 — AGZ／元AGK/AGJ有理Taylor幅を真正kernel・floor誤差へ接続（2026-11-07 JST）
 
 [AGZ定理PR #6415](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6415) **MERGED**。元AGL one-slab作用と元AGN global floor組合作用をそのまま使い、真正固定結合AGKの有理端点差から指数入力幅 `0≤qHi-qLo≤S*(5/768)*(1/25)^m` をLean4で形式証明。元AGM clipped kernel区間幅と元AGN floor区間幅が各raw AGK/AGJ指数Taylor認証区間幅以下となること、同じAGU真正grid上のkernel raw最大値から `width(I_H)≤(p_H/2)*(DeltaK_rawTaylorMax+DeltaF_rawTaylor/2)+2L_H(m)R+2M_H(m,n)eps` を証明。元source・Haar・kernel・floor・signed transfer・tighten-only交差は全て維持。有限有理数幅チェックの条件付き定理も追加。
