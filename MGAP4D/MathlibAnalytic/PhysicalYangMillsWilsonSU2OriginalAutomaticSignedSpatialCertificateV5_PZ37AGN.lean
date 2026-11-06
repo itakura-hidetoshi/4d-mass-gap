@@ -128,16 +128,16 @@ def p4Q2PZ37AGN_originalFloorRawInterval (m n : ℕ) (hn : 0 < n) :
 
 /-- Intersect with the proved range of the same genuine floor. -/
 def p4Q2PZ37AGN_originalFloorInterval (m n : ℕ) (hn : 0 < n) :
-    p4Q2PZ37AFV_verifiedInterval kFloor :=
-  p4Q2PZ37AGN_intersectInterval
-    (p4Q2PZ37AGN_originalFloorRawInterval H m n hn)
-    { lower := 0, upper := 1
-      hLower := by simpa using
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor_pos
-          H b0).le
-      hUpper := by simpa using
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor_le_one
-          H b0 p4Q2PZ37ADC_fixedCoupling_pos.le }
+    p4Q2PZ37AFV_verifiedInterval kFloor := by
+  refine p4Q2PZ37AGN_intersectInterval
+    (p4Q2PZ37AGN_originalFloorRawInterval H m n hn) ?_
+  refine ⟨0, 1, ?_, ?_⟩
+  · simpa using
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor_pos
+        H b0).le
+  · simpa using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor_le_one
+        H b0 p4Q2PZ37ADC_fixedCoupling_pos.le
 
 /-- The original centered integrand uses the exact source and genuine
 floor midpoint; the sign of the rational source chooses the endpoints. -/
@@ -165,8 +165,7 @@ def p4Q2PZ37AGN_originalIntegrandInterval
     rw [p4Q2PZ37AGN_centeredSourceRational_exact H A a]
   have h := p4Q2PZ37AGI_signedMul_bounds (s : ℝ)
     (K A B - (1 + kFloor) / 2) (lo : ℝ) (hi : ℝ) hlo hhi
-  refine { lower := min (s * lo) (s * hi), upper := max (s * lo) (s * hi),
-    hLower := ?_, hUpper := ?_ }
+  refine ⟨min (s * lo) (s * hi), max (s * lo) (s * hi), ?_, ?_⟩
   · rw [hs]
     simpa [mul_comm] using h.1
   · rw [hs]
