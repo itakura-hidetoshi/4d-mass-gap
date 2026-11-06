@@ -1,3 +1,19 @@
+## AGS・AGT（2026-11-06 JST）— 有理稠密性・有限被覆・真正空間格子と次の精度保持
+
+**CLOSED:** [AGS #6396](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6396)・[AGT #6397](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6397) MERGED。AGRで外部入力だった真正有理中心の有限被覆は、実チャート逆写像、有理Pi稠密性、対蹠チャート、元SU(2)等距離、コンパクト性から任意正半径について存在証明された。AGTの `exists_fineOriginalRationalSpatialGrid` は任意の正の有理Rに対し、全元リンクの有理座標証拠と `grid.radius≤R` を持つ真正AGH Borel格子を存在量化する。
+
+**型の境界:** AGQの格子後置質量予算はセル数Nを保持して総幅 `≤eps` を証明する。一方、AGTの後段存在定理は `Nonempty (AGP_gridData H)` にR・epsの制約を残しておらず、そこから選択したデータには指定予算の射影定理がない。元signed-transferの `verifiedInterval` 包含保証は有効だが、選択データが指定R・epsを満たす、または最終区間幅がR・epsとともに消えるとは主張しない。
+
+**NEXT — AGU:** 同じ元AGPデータを保持する `precisionGridData H R eps` のような添字付きTypeに、格子半径 `≤R`、各セル認証半径、真のHaar質量区間総幅 `≤eps` の証拠を格納する。AGTの正しい格子存在定理からこの強いTypeの存在を証明し、そのTypeで選択する。元の有理座標・Borelセル・真の測度・signed-transferとの関係を保持したまま、選択後も要求予算を射影できるようにする。既存AGTは変更しない。
+
+**VERIFIED:** AGS [CI #42196369171](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42196369171) は11,354/11,354・新規10宣言、AGT [CI #42208149754](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42208149754) は11,355/11,355・新規5宣言。両者ともworkflow・Changed Lean job・Lean step・receipt completed/SUCCESS、標準公理のみ、sorryAxなし、変更Lean warning/error 0/0、source/test-merge/squash Git tree一致。別workflowのStrict LeanやGovernanceの結果には読み替えない。
+
+**OPEN:** 最終signed区間幅の収束評価、具体的な大体積数値表、元transfer非零符号、二閾値殻、H一様coercivity、Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップ。固定24中心のAGO障害はその手法の定理として保持され、新たな細分可能性と混同しない。
+
+唯一の定理正本 `formal/real-hilbert-uniform-coercive-strong-limit`、mainは文書ミラー。Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`、元物理定義・root・workflow不変更。[AGS正式記録](docs/proofs/P4-Q2-PZ37AGS_verified_20261106.md) · [AGT正式記録](docs/proofs/P4-Q2-PZ37AGT_verified_20261106.md)。AGR以前の全文を保持する。
+
+---
+
 ## AGR（2026-11-06）— 真正有理ステレオ中心と細分gridの条件付きdescent
 
 [定理PR #6393](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6393) MERGED、[CI #42190751075](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42190751075) **11,353/11,353 SUCCESS**。新規7宣言は標準公理のみ、sorryAxなし、changed warning/error 0/0、source/test-merge/squash Git tree同一。
