@@ -161,6 +161,218 @@ theorem p4Q2PZ37AGV_rationalTable_width_le
     exact hReal
   exact_mod_cast hResult
 
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local instance p4Q2PZ37AGV_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37AGV_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37AGV_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37AGV_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37AGV_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+
+namespace GroundStatePosteriorJoint
+
+variable (H : ℕ)
+local notation "Link" => PeriodicHypercubicEvenSpatialSliceLink H
+local notation "Cfg" =>
+  PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+local notation "muH" =>
+  periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
+local notation "gCont" => p4Q2PZ37AGE_originalContinuousIntegrand H
+
+local instance p4Q2PZ37AGV_links : Fintype Link := Fintype.ofFinite _
+local instance p4Q2PZ37AGV_probability : IsProbabilityMeasure muH := by
+  dsimp [periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure]
+  infer_instance
+
+/-- Actual original source/kernel geometry has a single certified
+rational slope cap, independent of cell and right boundary. -/
+def p4Q2PZ37AGV_uniformSlope (m : ℕ) : ℚ :=
+  6 + 13 * p4Q2PZ37AGK_upper m * (p4Q2PZ37AGN_countRational H / 2)
+
+theorem p4Q2PZ37AGV_uniformSlope_nonneg (m : ℕ) :
+    0 ≤ p4Q2PZ37AGV_uniformSlope H m := by
+  have hbReal : (0 : ℝ) ≤ (p4Q2PZ37AGK_upper m : ℝ) :=
+    p4Q2PZ37ADC_fixedCoupling_pos.le.trans
+      (p4Q2PZ37AGK_originalCoupling_bounds m).2
+  have hb : (0 : ℚ) ≤ p4Q2PZ37AGK_upper m := by
+    exact_mod_cast hbReal
+  have hc : (0 : ℚ) ≤ p4Q2PZ37AGN_countRational H := by
+    unfold p4Q2PZ37AGN_countRational
+    positivity
+  have hdiv : 0 ≤ p4Q2PZ37AGN_countRational H / (2 : ℚ) :=
+    div_nonneg hc (by norm_num)
+  unfold p4Q2PZ37AGV_uniformSlope
+  exact add_nonneg (by norm_num)
+    (mul_nonneg (mul_nonneg (by norm_num) hb) hdiv)
+
+/-- The real global integrand envelope implies the rational AGN
+transfer radius is nonnegative. This uses the existing ORIGINAL
+pointwise inequality rather than introducing a new bound. -/
+theorem p4Q2PZ37AGV_transferRadius_nonneg
+    (m n : ℕ) (hn : 0 < n) :
+    0 ≤ p4Q2PZ37AGN_transferRadius H m n hn := by
+  let C : Cfg := fun _ => 1
+  have habs :=
+    p4Q2PZ37AGO_originalIntegrand_abs_le_radius H C C m n hn
+  have hreal : (0 : ℝ) ≤
+      (p4Q2PZ37AGN_transferRadius H m n hn : ℝ) :=
+    (abs_nonneg (gCont C C)).trans habs
+  exact_mod_cast hreal
+
+/-- The actual selected AGU data has the requested uniform cell
+geometry budget, and each source-adapted AGP cell oscillation budget
+is bounded by the same original rational slope cap times R. -/
+theorem p4Q2PZ37AGV_cellBudget_le
+    {R eps : ℚ} (d : p4Q2PZ37AGU_precisionGridData H R eps)
+    (hR : 0 ≤ R) (m n : ℕ) (hn : 0 < n)
+    (i : Fin d.data.grid.n) :
+    p4Q2PZ37AGP_cellBudget H d.data m n hn i ≤
+      p4Q2PZ37AGV_uniformSlope H m * R := by
+  unfold p4Q2PZ37AGP_cellBudget
+  rw [d.hCellRadius i]
+  exact mul_le_mul_of_nonneg_right
+    (p4Q2PZ37AGP_rationalCenterSlope_le_uniform
+      H (d.data.grid.center i) (d.data.centerCoordinates i) m n hn) hR
+
+/-- The clipped original cell bounds stay within the genuine global
+envelope even though its rational mass lower endpoint may be negative.
+An external bound eta is needed only for the center interval widths. -/
+theorem p4Q2PZ37AGV_cellEndpoints_and_width
+    {R eps : ℚ} (d : p4Q2PZ37AGU_precisionGridData H R eps)
+    (hR : 0 ≤ R)
+    (B : Cfg) (b : ∀ e : Link, p4Q2PZ37AGL_rationalCoordinates (B e))
+    (m n : ℕ) (hn : 0 < n) (eta : ℚ)
+    (hCenterWidth : ∀ i : Fin d.data.grid.n,
+      (p4Q2PZ37AGN_originalIntegrandInterval H (d.data.grid.center i) B
+        (d.data.centerCoordinates i) b m n hn).upper -
+      (p4Q2PZ37AGN_originalIntegrandInterval H (d.data.grid.center i) B
+        (d.data.centerCoordinates i) b m n hn).lower ≤ eta)
+    (i : Fin d.data.grid.n) :
+    let M := p4Q2PZ37AGN_transferRadius H m n hn
+    let L := p4Q2PZ37AGV_uniformSlope H m
+    let lo := p4Q2PZ37AGP_cellLower H d.data B b m n hn i
+    let hi := p4Q2PZ37AGP_cellUpper H d.data B b m n hn i
+    (-M ≤ lo ∧ lo ≤ M) ∧
+      (-M ≤ hi ∧ hi ≤ M) ∧
+      hi - lo ≤ eta + 2 * L * R := by
+  let M := p4Q2PZ37AGN_transferRadius H m n hn
+  let L := p4Q2PZ37AGV_uniformSlope H m
+  let c := p4Q2PZ37AGN_originalIntegrandInterval H
+    (d.data.grid.center i) B (d.data.centerCoordinates i) b m n hn
+  let budget := p4Q2PZ37AGP_cellBudget H d.data m n hn i
+  let lo := p4Q2PZ37AGP_cellLower H d.data B b m n hn i
+  let hi := p4Q2PZ37AGP_cellUpper H d.data B b m n hn i
+  have hM : 0 ≤ M := p4Q2PZ37AGV_transferRadius_nonneg H m n hn
+  have hBudget : 0 ≤ budget :=
+    p4Q2PZ37AGP_cellBudget_nonneg H d.data m n hn i
+  have hPoint := abs_le.mp
+    (p4Q2PZ37AGO_originalIntegrand_abs_le_radius H B (d.data.grid.center i) m n hn)
+  have hLowM : c.lower ≤ M := by
+    have h : (c.lower : ℝ) ≤ (M : ℝ) := c.hLower.trans hPoint.2
+    exact_mod_cast h
+  have hHighM : -M ≤ c.upper := by
+    have h : (-(M : ℝ)) ≤ (c.upper : ℝ) := hPoint.1.trans c.hUpper
+    exact_mod_cast h
+  have hLower1 : -M ≤ lo := by
+    change -M ≤ max (-M) (c.lower - budget)
+    exact le_max_left _ _
+  have hLower2 : lo ≤ M := by
+    change max (-M) (c.lower - budget) ≤ M
+    apply max_le
+    · linarith only [hM]
+    · linarith only [hLowM, hBudget]
+  have hUpper1 : -M ≤ hi := by
+    change -M ≤ min M (c.upper + budget)
+    apply le_min
+    · linarith only [hM]
+    · linarith only [hHighM, hBudget]
+  have hUpper2 : hi ≤ M := by
+    change min M (c.upper + budget) ≤ M
+    exact min_le_left _ _
+  have hLowClip : c.lower - budget ≤ lo := by
+    change c.lower - budget ≤ max (-M) (c.lower - budget)
+    exact le_max_right _ _
+  have hHighClip : hi ≤ c.upper + budget := by
+    change min M (c.upper + budget) ≤ c.upper + budget
+    exact min_le_right _ _
+  have hCenter : c.upper - c.lower ≤ eta := hCenterWidth i
+  have hLocal := p4Q2PZ37AGV_cellBudget_le H d hR m n hn i
+  have hWidth : hi - lo ≤ eta + 2 * L * R := by
+    linarith only [hLowClip, hHighClip, hCenter, hLocal]
+  exact ⟨⟨hLower1, hLower2⟩, ⟨hUpper1, hUpper2⟩, hWidth⟩
+
+/-- The ORIGINAL signed-transfer AGP evaluator has a quantitative width
+bound from the SAME precision-indexed genuine spatial grid, original
+product Haar masses and rational center values. The only remaining
+hypothesis is a certified center-value interval width eta. -/
+theorem p4Q2PZ37AGV_originalRawTransferWidth_le
+    {R eps : ℚ} (d : p4Q2PZ37AGU_precisionGridData H R eps)
+    (hR : 0 ≤ R)
+    (B : Cfg) (b : ∀ e : Link, p4Q2PZ37AGL_rationalCoordinates (B e))
+    (m n : ℕ) (hn : 0 < n) (eta : ℚ) (heta : 0 ≤ eta)
+    (hCenterWidth : ∀ i : Fin d.data.grid.n,
+      (p4Q2PZ37AGN_originalIntegrandInterval H (d.data.grid.center i) B
+        (d.data.centerCoordinates i) b m n hn).upper -
+      (p4Q2PZ37AGN_originalIntegrandInterval H (d.data.grid.center i) B
+        (d.data.centerCoordinates i) b m n hn).lower ≤ eta) :
+    (p4Q2PZ37AGP_originalRawInterval H d.data B b m n hn).upper -
+      (p4Q2PZ37AGP_originalRawInterval H d.data B b m n hn).lower ≤
+      eta + 2 * p4Q2PZ37AGV_uniformSlope H m * R +
+        2 * p4Q2PZ37AGN_transferRadius H m n hn * eps := by
+  let tbl := p4Q2PZ37AGP_originalTable H d.data B b m n hn
+  let M := p4Q2PZ37AGN_transferRadius H m n hn
+  let L := p4Q2PZ37AGV_uniformSlope H m
+  have hM : 0 ≤ M := p4Q2PZ37AGV_transferRadius_nonneg H m n hn
+  have hL : 0 ≤ L := p4Q2PZ37AGV_uniformSlope_nonneg H m
+  have hA : 0 ≤ eta + 2 * L * R := by
+    have hp : 0 ≤ 2 * L * R :=
+      mul_nonneg (mul_nonneg (by norm_num) hL) hR
+    exact add_nonneg heta hp
+  have hEval : tbl.upper - tbl.lower ≤
+      (eta + 2 * L * R) + 2 * M * eps := by
+    apply p4Q2PZ37AGV_rationalTable_width_le tbl
+      (fun i => Measure.real muH (d.data.grid.cell i))
+      M (eta + 2 * L * R) eps hM
+    · intro i
+      change (d.data.masses.lower i : ℝ) ≤ Measure.real muH (d.data.grid.cell i)
+      exact d.data.masses.hLower i
+    · intro i
+      change Measure.real muH (d.data.grid.cell i) ≤ (d.data.masses.upper i : ℝ)
+      exact d.data.masses.hUpper i
+    · intro i
+      exact Measure.real_nonneg
+    · exact d.data.masses.total_mass
+    · intro i
+      have h := (p4Q2PZ37AGV_cellEndpoints_and_width H d hR
+        B b m n hn eta hCenterWidth i).1
+      simpa [tbl, p4Q2PZ37AGP_originalTable,
+        p4Q2PZ37AGN_massIntervals.toTable,
+        p4Q2PZ37AGI_rationalTable.cellLower] using h
+    · intro i
+      have h := (p4Q2PZ37AGV_cellEndpoints_and_width H d hR
+        B b m n hn eta hCenterWidth i).2.1
+      simpa [tbl, p4Q2PZ37AGP_originalTable,
+        p4Q2PZ37AGN_massIntervals.toTable,
+        p4Q2PZ37AGI_rationalTable.cellUpper] using h
+    · intro i
+      have h := (p4Q2PZ37AGV_cellEndpoints_and_width H d hR
+        B b m n hn eta hCenterWidth i).2.2
+      simpa [tbl, p4Q2PZ37AGP_originalTable,
+        p4Q2PZ37AGN_massIntervals.toTable,
+        p4Q2PZ37AGI_rationalTable.cellUpper,
+        p4Q2PZ37AGI_rationalTable.cellLower] using h
+    · simpa [tbl, p4Q2PZ37AGP_originalTable,
+        p4Q2PZ37AGN_massIntervals.toTable] using d.hTotalMassWidth
+  simpa [tbl, p4Q2PZ37AGP_originalRawInterval,
+    add_assoc] using hEval
+
+end GroundStatePosteriorJoint
+
 end
 end MGAP4D.MathlibAnalytic
 
@@ -168,3 +380,9 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AGV_realFiniteWidth_le
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AGV_rationalWidth_sum
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AGV_rationalTable_width_le
+
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AGV_uniformSlope_nonneg
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AGV_transferRadius_nonneg
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AGV_cellBudget_le
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AGV_cellEndpoints_and_width
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AGV_originalRawTransferWidth_le
