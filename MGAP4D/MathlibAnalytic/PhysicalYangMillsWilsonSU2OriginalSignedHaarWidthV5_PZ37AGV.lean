@@ -345,7 +345,7 @@ theorem p4Q2PZ37AGV_originalRawTransferWidth_le
       change Measure.real muH (d.data.grid.cell i) ≤ (d.data.masses.upper i : ℝ)
       exact d.data.masses.hUpper i
     · intro i
-      exact Measure.real_nonneg
+      exact measureReal_nonneg
     · exact d.data.masses.total_mass
     · intro i
       have h := (p4Q2PZ37AGV_cellEndpoints_and_width H d hR
@@ -371,6 +371,48 @@ theorem p4Q2PZ37AGV_originalRawTransferWidth_le
   simpa [tbl, p4Q2PZ37AGP_originalRawInterval,
     add_assoc] using hEval
 
+
+/-- The actual AGU selected transfer interval is the AGP raw interval
+intersected with the previous original global enclosure. Intersecting
+cannot widen the raw signed interval. The SAME selected AGU grid carries
+R and eps through to this final statement. -/
+theorem p4Q2PZ37AGV_fineTransferWidth_le
+    (R eps : ℚ) (hR : 0 < R) (heps : 0 < eps)
+    (B : Cfg) (b : ∀ e : Link, p4Q2PZ37AGL_rationalCoordinates (B e))
+    (m n : ℕ) (hn : 0 < n) (eta : ℚ) (heta : 0 ≤ eta)
+    (hCenterWidth :
+      ∀ i : Fin (p4Q2PZ37AGU_fineOriginalGridData H R eps hR heps).data.grid.n,
+        (p4Q2PZ37AGN_originalIntegrandInterval H
+          ((p4Q2PZ37AGU_fineOriginalGridData H R eps hR heps).data.grid.center i)
+          B ((p4Q2PZ37AGU_fineOriginalGridData H R eps hR heps).data.centerCoordinates i)
+          b m n hn).upper -
+        (p4Q2PZ37AGN_originalIntegrandInterval H
+          ((p4Q2PZ37AGU_fineOriginalGridData H R eps hR heps).data.grid.center i)
+          B ((p4Q2PZ37AGU_fineOriginalGridData H R eps hR heps).data.centerCoordinates i)
+          b m n hn).lower ≤ eta) :
+    (p4Q2PZ37AGU_fineOriginalTransferInterval H R eps hR heps B b m n hn).upper -
+      (p4Q2PZ37AGU_fineOriginalTransferInterval H R eps hR heps B b m n hn).lower ≤
+        eta + 2 * p4Q2PZ37AGV_uniformSlope H m * R +
+          2 * p4Q2PZ37AGN_transferRadius H m n hn * eps := by
+  let d := p4Q2PZ37AGU_fineOriginalGridData H R eps hR heps
+  let raw := p4Q2PZ37AGP_originalRawInterval H d.data B b m n hn
+  let final := p4Q2PZ37AGU_fineOriginalTransferInterval H R eps hR heps B b m n hn
+  have hRaw := p4Q2PZ37AGV_originalRawTransferWidth_le
+    H d hR.le B b m n hn eta heta hCenterWidth
+  have hLo : raw.lower ≤ final.lower := by
+    change raw.lower ≤
+      max raw.lower (p4Q2PZ37AGN_originalTransferGlobalInterval H B m n hn).lower
+    exact le_max_left _ _
+  have hHi : final.upper ≤ raw.upper := by
+    change min raw.upper
+      (p4Q2PZ37AGN_originalTransferGlobalInterval H B m n hn).upper ≤ raw.upper
+    exact min_le_left _ _
+  calc
+    final.upper - final.lower ≤ raw.upper - raw.lower := by
+      linarith only [hLo, hHi]
+    _ ≤ eta + 2 * p4Q2PZ37AGV_uniformSlope H m * R +
+        2 * p4Q2PZ37AGN_transferRadius H m n hn * eps := hRaw
+
 end GroundStatePosteriorJoint
 
 end
@@ -386,3 +428,5 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AGV_cellBudget_le
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AGV_cellEndpoints_and_width
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AGV_originalRawTransferWidth_le
+
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AGV_fineTransferWidth_le
