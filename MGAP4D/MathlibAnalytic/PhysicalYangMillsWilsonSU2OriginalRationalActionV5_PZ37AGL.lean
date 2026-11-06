@@ -51,14 +51,17 @@ theorem p4Q2PZ37AGL_orientation_checked :
       ![0,0,0,-1] ∧
     p4Q2PZ37AGL_coordinateMul (![0,0,1,0] : Fin 4 → ℚ) ![0,1,0,0] =
       ![0,0,0,1] := by
+  -- The pinned numeral-index lemmas for 2 and 3 are not simp attributes.
   constructor <;> funext i <;> fin_cases i <;>
-    norm_num [p4Q2PZ37AGL_coordinateMul]
+    norm_num [p4Q2PZ37AGL_coordinateMul, Matrix.cons_val_two, Matrix.cons_val_three]
 
 theorem p4Q2PZ37AGL_inverse_checked :
     p4Q2PZ37AGL_coordinateMul (![0,1,0,0] : Fin 4 → ℚ)
       (p4Q2PZ37AGL_coordinateInv ![0,1,0,0]) = ![1,0,0,0] := by
   funext i
-  fin_cases i <;> norm_num [p4Q2PZ37AGL_coordinateMul, p4Q2PZ37AGL_coordinateInv]
+  fin_cases i <;>
+    norm_num [p4Q2PZ37AGL_coordinateMul, p4Q2PZ37AGL_coordinateInv,
+      Matrix.cons_val_two, Matrix.cons_val_three]
 
 noncomputable section
 open scoped Topology Classical InnerProductSpace ENNReal
@@ -101,7 +104,7 @@ theorem p4Q2PZ37AGL_originalEnergy_coordinate (g : G) :
     simpa using congrArg (fun M : Mat => M 1 1)
       (p4Q2PZ37ADR_originalMatrix_fromFirstColumn g)
   change 1 - (Matrix.trace (g : Mat)).re / (2 : ℝ) = 1 - V g 0
-  simp [Matrix.trace_fin_two, h11, p4Q2PZ37ADR_originalFourCoordinates] <;> ring
+  simp [Matrix.trace_fin_two, h11, p4Q2PZ37ADR_originalFourCoordinates]
 
 /-- Rational data with pointwise evidence for one actual original group element. -/
 structure p4Q2PZ37AGL_rationalCoordinates (g : G) where
@@ -154,8 +157,8 @@ theorem p4Q2PZ37AGL_finiteSum_exact {ι : Type*}
     (xs.map f).sum = ((xs.map q).sum : ℚ) := by
   induction xs with
   | nil => simp
-  | cons x xs ih => simpa only [List.map_cons, List.sum_cons, Rat.cast_add, h x] using
-      congrArg (fun z : ℝ => (q x : ℝ) + z) ih
+  | cons x xs ih =>
+      simp only [List.map_cons, List.sum_cons, Rat.cast_add, h x, ih]
 
 namespace GroundStatePosteriorJoint
 
