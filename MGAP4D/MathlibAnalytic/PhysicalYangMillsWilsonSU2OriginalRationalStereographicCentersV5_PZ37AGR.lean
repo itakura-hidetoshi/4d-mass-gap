@@ -69,7 +69,10 @@ def p4Q2PZ37AGR_rationalSphere (t : Fin 3 → ℚ) : S3 := by
   have hsq : ‖v‖ ^ 2 = 1 := by
     rw [EuclideanSpace.real_norm_sq_eq]
     have h := p4Q2PZ37AGR_rationalSphereCoordinates_sq_sum t
-    exact_mod_cast h
+    have hReal : (∑ j : Fin 4,
+        (p4Q2PZ37AGR_rationalSphereCoordinates t j : ℝ)^2) = 1 := by
+      exact_mod_cast h
+    simpa [v] using hReal
   have hnorm : ‖v‖ = 1 := by
     nlinarith only [hsq, norm_nonneg v]
   exact ⟨v, by change dist v (0 : E4) = 1
