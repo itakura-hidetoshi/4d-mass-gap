@@ -209,7 +209,11 @@ theorem p4Q2PZ37AGS_rationalSphere_approaches_offPole (x : S3)
       (p4Q2PZ37AGS_realStereographicVector (fun j : Fin 3 => (t j : ℝ))) < r := by
     change p4Q2PZ37AGS_realStereographicVector
       (fun j : Fin 3 => (t j : ℝ)) ∈ Metric.ball (x : E4) r at ht
-    exact Metric.mem_ball.mp ht
+    have hReverse : dist
+        (p4Q2PZ37AGS_realStereographicVector (fun j : Fin 3 => (t j : ℝ)))
+        (x : E4) < r := Metric.mem_ball.mp ht
+    rw [dist_comm] at hReverse
+    exact hReverse
   rw [p4Q2PZ37AGS_rationalVector_exact] at hDist
   exact hDist
 
