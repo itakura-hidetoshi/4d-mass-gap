@@ -212,6 +212,124 @@ theorem p4Q2PZ37AGS_rationalSphere_approaches_offPole (x : S3)
   exact hDist
 
 
+
+/-- An exact antipodal map of the EXISTING unit S³, with no replacement
+space or measure. It supplies the second rational stereographic chart. -/
+def p4Q2PZ37AGS_antipode (x : S3) : S3 :=
+  ⟨-(x : E4), by
+    change dist (-(x : E4)) (0 : E4) = 1
+    have h := x.property
+    change dist (x : E4) (0 : E4) = 1 at h
+    simpa only [dist_zero_right, norm_neg] using h⟩
+
+theorem p4Q2PZ37AGS_antipode_apply (x : S3) (j : Fin 4) :
+    (p4Q2PZ37AGS_antipode x : E4) j = - (x : E4) j := by
+  simp [p4Q2PZ37AGS_antipode]
+
+theorem p4Q2PZ37AGS_antipode_involutive (x : S3) :
+    p4Q2PZ37AGS_antipode (p4Q2PZ37AGS_antipode x) = x := by
+  apply Subtype.ext
+  change -(-(x : E4)) = (x : E4)
+  simp
+
+theorem p4Q2PZ37AGS_antipode_dist (x y : S3) :
+    dist (p4Q2PZ37AGS_antipode x) (p4Q2PZ37AGS_antipode y) =
+      dist x y := by
+  change dist (-(x : E4)) (-(y : E4)) = dist (x : E4) (y : E4)
+  exact dist_neg_neg _ _
+
+/-- The two antipodal real sphere charts both have actual
+rational-coordinate centers in the original SU(2). -/
+def p4Q2PZ37AGS_signedRationalSphere (b : Bool) (t : Fin 3 → ℚ) : S3 :=
+  if b then p4Q2PZ37AGS_antipode (p4Q2PZ37AGR_rationalSphere t)
+    else p4Q2PZ37AGR_rationalSphere t
+
+def p4Q2PZ37AGS_originalSignedCenter (b : Bool) (t : Fin 3 → ℚ) :
+    Matrix.specialUnitaryGroup (Fin 2) ℂ :=
+  p4Q2PZ37ADS_originalSphereToSU2 (p4Q2PZ37AGS_signedRationalSphere b t)
+
+/-- The two rational charts have complementary excluded poles, so every
+genuine S³ point is arbitrarily near a rational point of at least one. -/
+theorem p4Q2PZ37AGS_signedRationalSphere_approaches
+    (x : S3) (r : ℝ) (hr : 0 < r) :
+    ∃ b : Bool, ∃ t : Fin 3 → ℚ,
+      dist x (p4Q2PZ37AGS_signedRationalSphere b t) < r := by
+  by_cases hp : (x : E4) 0 = -1
+  · have hAway : (p4Q2PZ37AGS_antipode x : E4) 0 ≠ -1 := by
+      rw [p4Q2PZ37AGS_antipode_apply, hp]
+      norm_num
+    obtain ⟨t, ht⟩ :=
+      p4Q2PZ37AGS_rationalSphere_approaches_offPole
+        (p4Q2PZ37AGS_antipode x) hAway r hr
+    refine ⟨true, t, ?_⟩
+    change dist x (p4Q2PZ37AGS_antipode (p4Q2PZ37AGR_rationalSphere t)) < r
+    have heq : dist x (p4Q2PZ37AGS_antipode
+        (p4Q2PZ37AGR_rationalSphere t)) =
+        dist (p4Q2PZ37AGS_antipode x) (p4Q2PZ37AGR_rationalSphere t) := by
+      calc
+        dist x (p4Q2PZ37AGS_antipode (p4Q2PZ37AGR_rationalSphere t)) =
+          dist (p4Q2PZ37AGS_antipode (p4Q2PZ37AGS_antipode x))
+            (p4Q2PZ37AGS_antipode (p4Q2PZ37AGR_rationalSphere t)) := by
+              rw [p4Q2PZ37AGS_antipode_involutive]
+        _ = dist (p4Q2PZ37AGS_antipode x)
+            (p4Q2PZ37AGR_rationalSphere t) :=
+          p4Q2PZ37AGS_antipode_dist _ _
+    exact heq.trans_lt ht
+  · obtain ⟨t, ht⟩ := p4Q2PZ37AGS_rationalSphere_approaches_offPole x hp r hr
+    exact ⟨false, t, ht⟩
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "BallJ" => p4Q2PZ37ADK_trueChordalBall
+
+local instance p4Q2PZ37AGS_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37AGS_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+
+/-- No external net premise: two genuine rational stereographic charts,
+genuine ADR/ADS S³ equivalence, ADT true chordal isometry and compactness
+give an ACTUAL FINITE rational-coordinate SU(2) cover at every radius. -/
+theorem p4Q2PZ37AGS_exists_originalFiniteRationalCover
+    (r : ℝ) (hr : 0 < r) :
+    ∃ n : ℕ, ∃ parameters : Fin n → Bool × (Fin 3 → ℚ),
+      ∀ g : G, ∃ i : Fin n,
+        g ∈ BallJ
+          (p4Q2PZ37AGS_originalSignedCenter
+            (parameters i).1 (parameters i).2) r := by
+  classical
+  let F : Bool × (Fin 3 → ℚ) → G :=
+    fun p => p4Q2PZ37AGS_originalSignedCenter p.1 p.2
+  have hOpen (p : Bool × (Fin 3 → ℚ)) :
+      IsOpen (BallJ (F p) r) :=
+    p4Q2PZ37ADK_trueChordalBall_isOpen _ _
+  have hCover : (Set.univ : Set G) ⊆ ⋃ p : Bool × (Fin 3 → ℚ),
+      BallJ (F p) r := by
+    intro g _hg
+    obtain ⟨b, t, ht⟩ :=
+      p4Q2PZ37AGS_signedRationalSphere_approaches
+        (p4Q2PZ37ADR_originalSU2ToSphere g) r hr
+    have hg : g ∈ BallJ (F (b, t)) r := by
+      change p4Q2PZ37ADK_trueChordalDistance
+        (p4Q2PZ37AGS_originalSignedCenter b t) g < r
+      rw [p4Q2PZ37ADT_originalChordal_eq_sphereDist,
+        p4Q2PZ37ADS_sphere_roundtrip, dist_comm]
+      exact ht
+    exact Set.mem_iUnion.mpr ⟨(b, t), hg⟩
+  obtain ⟨s, hs⟩ :=
+    (isCompact_univ : IsCompact (Set.univ : Set G)).elim_finite_subcover
+      (fun p : Bool × (Fin 3 → ℚ) => BallJ (F p) r) hOpen hCover
+  let n : ℕ := s.card
+  let parameters : Fin n → Bool × (Fin 3 → ℚ) :=
+    fun i => ((Finset.equivFin s).symm i).1
+  refine ⟨n, parameters, ?_⟩
+  intro g
+  have hg := hs (Set.mem_univ g)
+  obtain ⟨p, hp⟩ := Set.mem_iUnion.mp hg
+  obtain ⟨hps, hpg⟩ := Set.mem_iUnion.mp hp
+  refine ⟨Finset.equivFin s ⟨p, hps⟩, ?_⟩
+  simpa [parameters, F, n] using hpg
+
+
 end
 end MGAP4D.MathlibAnalytic
 
@@ -222,3 +340,8 @@ end MGAP4D.MathlibAnalytic
 
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AGS_rationalParameters_dense
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AGS_rationalSphere_approaches_offPole
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AGS_antipode_involutive
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AGS_antipode_dist
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AGS_signedRationalSphere_approaches
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AGS_exists_originalFiniteRationalCover
