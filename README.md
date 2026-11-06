@@ -1,3 +1,28 @@
+## 検証済み定理 — AGS・AGT／真正SU(2)の任意精度有理被覆と空間格子（2026-11-06 JST）
+
+唯一のLean定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。mainは文書ミラー。[AGS #6396](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6396)・[AGT #6397](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6397) はMERGED。AGRの正式記録と両ブランチ文書は既に#6394・#6395で同期済みであり、本追補はその後の進展を記録する。
+
+**CLOSED — 外部有限被覆仮定の除去。** 元の単位3球面の実ステレオ逆写像の連続性・極以外の全射性、有理3変数の稠密性、対蹠写像、元SU(2)との等距離対応、コンパクト性から、任意の実半径 `r>0` に対する真正SU(2)の有限有理中心被覆を構成した。AGTはこれを全真正空間リンクへ直積し、任意H・正の有理Rについて、元AGH Borel格子と全リンクのAGL有理座標証拠を保ち、`grid.radius ≤ R` となる格子の存在を形式証明した。元リンク数Lに対して一リンク半径を `R/(L+1)` と選び、積距離の次元因子Lを保持する。
+
+**証明済みの接続と型の境界。** AGQは選択済みの真正格子について、セル数Nの決定後に `delta=eps/(2*(N+1))` を選び、真のproduct-Haar質量を含む有理区間の総幅 `≤eps` を保証する。AGTはこの構成をAGPへ接続し、有理座標を持つ元右境界Bと `n>0` に対する元signed-transferの証明済み区間を返す。ただしAGTの後段 `exists_fineOriginalGridData` の結論は予算を添字に持たない `Nonempty (AGP_gridData H)` であり、それを `Classical.choice` した `fineOriginalGridData` には、指定R・epsへの適合を取り出す定理がまだない。最初の格子存在定理と区間の包含保証は成立しているが、**選ばれた後段データの要求予算保存をAGTの結論として扱わない**。次段AGUでは半径・各セル半径・質量総幅を保持する添字付きTypeを追加する。
+
+| 検証 | AGS | AGT |
+| --- | --- | --- |
+| exact-source CI | [#42196369171](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42196369171) | [#42208149754](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42208149754) |
+| Changed Lean依存閉包 | 11,354/11,354 SUCCESS | 11,355/11,355 SUCCESS |
+| 新規公理出力 | 10宣言・標準3公理のみ | 5宣言・標準3公理のみ |
+| sorryAx／変更Lean warning・error | なし／0・0 | なし／0・0 |
+| workflow・Lean job/step・receipt | completed/SUCCESS | completed/SUCCESS |
+| source/test-merge/squash Git tree | 三者一致 | 三者一致 |
+
+AGTのBool分岐は各分岐の `simp` で正規化し、Type値の有理座標証拠は `Nonempty` で命題中に保持した。AGTのPR一覧は積み上げ由来のAGS・AGT二件だが、AGS統合後の正本への追加はAGT新規139行のみ。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`、元物理定義・公開root・workflowは不変更。
+
+**OPEN**：後段の選択データにおける要求予算の型付き保存、最終signed区間幅の任意精度評価、具体的大体積Haar質量表の計算、元transferの実際の非零符号、二閾値殻、H一様coercivity、Hamiltonian gap、連続体Yang–Mills質量ギャップ。有限被覆・質量包囲は古典的存在構成であり、数値表の実行ではない。
+
+[AGS正式証明記録](docs/proofs/P4-Q2-PZ37AGS_verified_20261106.md) · [AGT正式証明記録](docs/proofs/P4-Q2-PZ37AGT_verified_20261106.md)。以下のAGR以前の全文を保持し、過去の「未証明・次段階」の更新には本追補を優先する。
+
+---
+
 ## 検証済み定理 — AGR／真正SU(2)有理ステレオ中心と条件付き細分Haar証明書（2026-11-06 JST）
 
 [定理PR #6393](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6393) MERGED、[exact-source CI #42190751075](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42190751075) **11,353/11,353 SUCCESS**。新規7宣言は標準公理のみ、sorryAxなし、変更Lean warning/error 0/0、source/test-merge/squash Git tree一致。canonical定理squash `59994f8cf41f3eddf572be118abb53e710185c13`。
