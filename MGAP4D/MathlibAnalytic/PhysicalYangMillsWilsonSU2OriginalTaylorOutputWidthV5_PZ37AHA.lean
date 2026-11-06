@@ -204,13 +204,22 @@ theorem p4Q2PZ37AHA_scaledExpGap_le_budget
     simpa only [u, v, b, c, d] using
       p4Q2PZ37AHA_scaledTaylorBaseGap_le
         lo hi k n hk hn hlohi hhi hloSmall hhiSmall
-  have hNonneg : 0 ≤ b := le_max_left _ _
   have hBd : c ≤ b + d := by linarith only [hGap]
   have hCNonneg : 0 ≤ c := le_max_left _ _
   have hPow : c ^ k ≤ (b + d) ^ k :=
     pow_le_pow_left₀ hCNonneg hBd k
-  change c ^ k - b ^ k ≤ (b + d) ^ k - b ^ k
-  linarith only [hPow]
+  have hEndpoint :
+      p4Q2PZ37AGJ_expUpper hi k n - p4Q2PZ37AGJ_expLower lo k n =
+        c ^ k - b ^ k := rfl
+  have hBudgetEq : (b + d) ^ k - b ^ k =
+      p4Q2PZ37AHA_scaledOutputBudget lo hi k n := by
+    dsimp [p4Q2PZ37AHA_scaledOutputBudget, b, d, u, v]
+    ring
+  calc
+    p4Q2PZ37AGJ_expUpper hi k n - p4Q2PZ37AGJ_expLower lo k n =
+        c ^ k - b ^ k := hEndpoint
+    _ ≤ (b + d) ^ k - b ^ k := sub_le_sub_right hPow _
+    _ = p4Q2PZ37AHA_scaledOutputBudget lo hi k n := hBudgetEq
 
 /-- Pull both actual AGJ errors under the same factorial majorant and
 the same AGK geometric coupling-rate certificate. This is a genuine
@@ -224,6 +233,21 @@ def p4Q2PZ37AHA_couplingTaylorBudget (action : ℚ) (m n : ℕ) : ℚ :=
     (p4Q2PZ37AGJ_taylorSum u n - p4Q2PZ37AGJ_taylorError u n)
   (b + action * p4Q2PZ37AGK_tail m / (k : ℚ) +
     4 * p4Q2PZ37AHA_factorialEnvelope n) ^ k - b ^ k
+
+/-- A dependent-value transport of a verified physical real interval
+never changes its rational lower/upper data. The transported proof fields
+retain their original containment evidence. -/
+@[simp] theorem p4Q2PZ37AHA_verifiedInterval_cast_lower
+    {x y : ℝ} (h : x = y) (iv : p4Q2PZ37AFV_verifiedInterval x) :
+    (cast (congrArg p4Q2PZ37AFV_verifiedInterval h) iv).lower = iv.lower := by
+  cases h
+  rfl
+
+@[simp] theorem p4Q2PZ37AHA_verifiedInterval_cast_upper
+    {x y : ℝ} (h : x = y) (iv : p4Q2PZ37AFV_verifiedInterval x) :
+    (cast (congrArg p4Q2PZ37AFV_verifiedInterval h) iv).upper = iv.upper := by
+  cases h
+  rfl
 
 namespace GroundStatePosteriorJoint
 
@@ -327,7 +351,9 @@ theorem p4Q2PZ37AHA_originalKernelTaylorGap_le_budget
   let k := p4Q2PZ37AGM_autoScale lo hi
   have ha := p4Q2PZ37AGM_originalActionRational_nonneg H A B a b
   have h := p4Q2PZ37AHA_originalExponentGap_le_couplingTaylor action ha m n hn
-  simpa [p4Q2PZ37AGZ_originalKernelTaylorGap,
+  simpa [p4Q2PZ37AHA_verifiedInterval_cast_lower,
+    p4Q2PZ37AHA_verifiedInterval_cast_upper,
+p4Q2PZ37AGZ_originalKernelTaylorGap,
     p4Q2PZ37AGM_originalRationalKernelInterval,
     p4Q2PZ37AGK_originalRefinedKernelInterval,
     p4Q2PZ37AGJ_boltzmannInterval,
@@ -348,12 +374,12 @@ theorem p4Q2PZ37AHA_originalFloorTaylorGap_le_budget
   let k := p4Q2PZ37AGM_autoScale lo hi
   have ha := p4Q2PZ37AGZ_originalFloorAction_nonneg H
   have h := p4Q2PZ37AHA_originalExponentGap_le_couplingTaylor action ha m n hn
-  simpa [p4Q2PZ37AGZ_originalKernelTaylorGap,
-    p4Q2PZ37AGM_originalRationalKernelInterval,
-    p4Q2PZ37AGK_originalRefinedKernelInterval,
+  simpa [p4Q2PZ37AGZ_originalFloorTaylorGap,
+    p4Q2PZ37AGN_originalFloorRawInterval,
     p4Q2PZ37AGJ_boltzmannInterval,
     p4Q2PZ37AGJ_scaledExpInterval,
-    p4Q2PZ37AGL_originalSlabActionSingleton,
+    p4Q2PZ37AGN_actionBudgetInterval,
+    p4Q2PZ37AGZ_originalFloorAction,
     p4Q2PZ37AGZ_exponentLower, p4Q2PZ37AGZ_exponentUpper] using h
 
 /-- Finite genuine spatial AGU center maximum of the new computed
