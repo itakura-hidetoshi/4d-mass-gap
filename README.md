@@ -1,3 +1,45 @@
+## 検証済み定理 — AGN／元Wilson Haar平均の厳密計算とsigned transfer自動証明書（2026-11-06 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。[AGN定理PR #6381](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6381) はMERGED。AGN定理squashは `c648bd88566d1e5bf06324ada997ab37918cb12c`。 元SU(2)・Wilson作用・核・固定結合・source・Haar/Perron/transfer/FF・Lean公開集約root・Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を維持。
+
+### CLOSED — 中心化で差し引く元Wilson作用の平均を厳密化
+
+元の空間plaquetteの4本のリンクが全H（H=0を含む）で異なることを証明し、元product Haarの4リンク制限、既証明cyclic Haar word、元Wilsonエネルギーの共役不変性から各plaquetteの平均を1と導いた。積分の線形性で **`m_H=integral W_H dmu_H=p_H`** が成立する。p_Hは元plaquette listの長さである。異なるplaquette間の独立性を仮定していない。元中心化源 `f_c=(W_H-p_H)/2` の平均は0であり、その連続代表の点wise上界をp_Hから **p_H/2** へ改善した。
+
+AGLの厳密有理作用値から、任意の元有理座標配置で中心化源の幅0の有理区間を構成。未知の中心化定数の近似入力を除いた。
+
+### CLOSED — 真正Haar質量・元指数核からAGI全証明欄を構成
+
+既存AFQ/AGDの24中心product cellsを、実際の中心と半径 `(4/5)*L` を持つAGH格子に接続。真正Haar質量の区間 `[(1/160000)^L,(625/1781)^L]`、真正質量総和1、符号付きセル積分の一般包含を構成した。独立した元Wilson平均の有限区間も保持する。
+
+AGK・AGJ・AGMから元global floorの自動有理区間を構成。厳密な元中心化源、AGMの核区間、floor midpoint、元AGG幾何誤差、真正質量端点を接続して、任意の元有理座標境界のAGI signed tableを証明した。特に真正24中心境界では、追加の数値入力は結合次数m、Taylor次数n、n>0のみ。
+
+厳密平均と元kernel midpoint boundにより **`|t_H(B)| <= p_H*(1-ell)/4 <= p_H/4`** を証明した。ellは元floorの認証有理下端である。従来のp_H/2を少なくとも半分に改善し、AGI有限和の区間と交差して同じ元transferの情報を保持する。
+
+### exact-source検証
+
+[CI #42164476429](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42164476429) はworkflow・Lean job `127717599152`・Lean step17・独立receipt `127719202262` がすべてcompleted / SUCCESS。**11,349 jobs・43宣言（14+12+17）・標準公理のみ・sorryAxなし・変更warning/error 0/0**。新規Lean3ファイル・1,013行追加のみ。
+
+検証済みsource `7ab237c1bfb08c85d6ff9031b208b575b23b30b5`、実checkout test-merge `5f902a43cb2e046d3164779fe87fc2c8b51f1bbd`、定理squash `c648bd88566d1e5bf06324ada997ab37918cb12c` のGit treeはすべて `c6d6dc1d045edb21a42a52a0b8682836dfb6176e`。
+
+[AGN正式記録](docs/proofs/P4-Q2-PZ37AGN_verified_20261106.md) · [厳密平均](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/c648bd88566d1e5bf06324ada997ab37918cb12c/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalExactWilsonHaarMeanV5_PZ37AGN.lean) · [真正質量・平均包囲](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/c648bd88566d1e5bf06324ada997ab37918cb12c/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalHaarMeanEnclosureV5_PZ37AGN.lean) · [自動signed証明書](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/c648bd88566d1e5bf06324ada997ab37918cb12c/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalAutomaticSignedSpatialCertificateV5_PZ37AGN.lean)
+
+### AGK・AGL・AGMの記録追補
+
+[AGK #6376](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6376)・[AGL #6377](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6377)・[AGM #6380](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6380) はMERGED。元結合の任意精度包囲、元行列規約に従う厳密有理作用、整数尺度自動選択を経て、真正24中心核の有理区間を構成した。AGM [CI #42158675778](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42158675778) は11,346 jobs・9宣言・標準公理のみ・sorryAxなし・変更warning/error 0/0・receipt SUCCESS。source/test-merge/squashは共通tree `ff9b5391d4bea5ae8e3b0e38942823ba939fcc1e`。
+
+[AGK・AGL正式記録](docs/proofs/P4-Q2-PZ37AGK-AGL_verified_20261106.md) · [AGM正式記録](docs/proofs/P4-Q2-PZ37AGM_verified_20261106.md)
+
+### OPEN — 実際の符号分離と幾何・質量誤差の精密化
+
+元の有限列挙は非計算的定義を含み、24^L個の大体積数値表を実行した段階ではない。固定24中心の半径4/5と保守的な真正質量区間は粗く、m,nの増大だけで幾何・質量誤差が消えるとは結論しない。定義と不等式の数式確認では、現行の幾何予算は対称大域半径の2倍以上であり、raw signed intervalが大域区間全体を含むため、現在の最終交差は大域区間と同じになる（この精度評価は独立の新規Lean宣言としては数えていない）。次は厳密平均を利用した幾何誤差の改善、元Haar質量の精密化または積分の構造的簡約、具体的境界での認証区間の0からの分離である。
+
+実際の非零signed transfer符号、二閾値殻非空、体積一様coercivity、Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは未証明。
+
+以下の既存本文は全て保存した履歴であり、旧「最新・次段階」よりこの追補を優先する。
+
+---
+
 ## 検証済み定理 — AGJ（2026-11-06 JST）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。[AGJ定理PR #6372](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6372) はMERGED。定理squash `f24be7665c82a40051873c7fcc3df65c1fc27b06`、検証済みsource `726c93be12e6f3eeb6cb4ae7b80a3b39330eb83d`。元Wilson作用・核・固定結合・中心化source・真正Haar/Perron/transfer/FF・公開root・Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` は不変更。
