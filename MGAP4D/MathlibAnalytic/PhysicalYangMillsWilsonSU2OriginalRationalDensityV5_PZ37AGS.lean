@@ -48,7 +48,7 @@ theorem p4Q2PZ37AGS_rationalVector_exact (t : Fin 3 → ℚ) :
   funext j
   fin_cases j <;>
     simp [p4Q2PZ37AGS_realSphereCoordinates,
-      p4Q2PZ37AGR_rationalSphereCoordinates] <;> push_cast <;> ring
+      p4Q2PZ37AGR_rationalSphereCoordinates]
 
 /-- The real stereographic family is continuous in all three parameters.
 Its denominator is strictly positive, independently of the chart point. -/
@@ -196,7 +196,7 @@ theorem p4Q2PZ37AGS_rationalSphere_approaches_offPole (x : S3)
   let U : Set (Fin 3 → ℝ) :=
     p4Q2PZ37AGS_realStereographicVector ⁻¹' Metric.ball (x : E4) r
   have hOpen : IsOpen U :=
-    isOpen_ball.preimage p4Q2PZ37AGS_realStereographicVector_continuous
+    Metric.isOpen_ball.preimage p4Q2PZ37AGS_realStereographicVector_continuous
   have hNonempty : U.Nonempty := by
     refine ⟨u, ?_⟩
     change p4Q2PZ37AGS_realStereographicVector u ∈ Metric.ball (x : E4) r
@@ -207,6 +207,8 @@ theorem p4Q2PZ37AGS_rationalSphere_approaches_offPole (x : S3)
   refine ⟨t, ?_⟩
   have hDist : dist (x : E4)
       (p4Q2PZ37AGS_realStereographicVector (fun j : Fin 3 => (t j : ℝ))) < r := by
+    change p4Q2PZ37AGS_realStereographicVector
+      (fun j : Fin 3 => (t j : ℝ)) ∈ Metric.ball (x : E4) r at ht
     exact Metric.mem_ball.mp ht
   rw [p4Q2PZ37AGS_rationalVector_exact] at hDist
   exact hDist
@@ -310,7 +312,8 @@ theorem p4Q2PZ37AGS_exists_originalFiniteRationalCover
         (p4Q2PZ37ADR_originalSU2ToSphere g) r hr
     have hg : g ∈ BallJ (F (b, t)) r := by
       change p4Q2PZ37ADK_trueChordalDistance
-        (p4Q2PZ37AGS_originalSignedCenter b t) g < r
+        (p4Q2PZ37ADS_originalSphereToSU2
+          (p4Q2PZ37AGS_signedRationalSphere b t)) g < r
       rw [p4Q2PZ37ADT_originalChordal_eq_sphereDist,
         p4Q2PZ37ADS_sphere_roundtrip, dist_comm]
       exact ht
