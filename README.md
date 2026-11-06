@@ -1,3 +1,13 @@
+## 検証済み定理 — AGR／真正SU(2)有理ステレオ中心と条件付き細分Haar証明書（2026-11-06 JST）
+
+[定理PR #6393](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6393) MERGED、[exact-source CI #42190751075](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42190751075) **11,353/11,353 SUCCESS**。新規7宣言は標準公理のみ、sorryAxなし、変更Lean warning/error 0/0、source/test-merge/squash Git tree一致。canonical定理squash `59994f8cf41f3eddf572be118abb53e710185c13`。
+
+**CLOSED**：任意の有理3変数から `((1-s)/(1+s),2a/(1+s),2b/(1+s),2c/(1+s))`（`s=a²+b²+c²`）を元の単位3球面に正確に構成し、既証明ADS逆写像で元の真正SU(2)行列へ移送。AGLの4座標有理証明と元Wilson作用の厳密有理値を得た。さらに**有限真正被覆の証明が入力された場合に限り**、元AGH Borel格子・AGQ真のHaarセル質量の任意総幅予算・AGP元signed-transferのtighten-only区間を構成した。元物理量は不変更。
+
+**OPEN**：有理ステレオ中心の元SU(2)全域稠密性と任意精度有限被覆の無条件形式証明（現モジュールの`hCover`は仮定）、具体的大体積質量表・非零signed transfer符号・二閾値殻・H一様coercivity・Hamiltonian gap・連続体質量ギャップ。Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`、元SU(2)・Haar・source・kernel・公開root・workflow維持。[正式証明記録](docs/proofs/P4-Q2-PZ37AGR_verified_20261106.md)。AGQ以前の本文を全バイト保持する。
+
+---
+
 ## 検証済み定理 — AGQ／真のHaar質量の有限格子後置精度予算（2026-11-06 JST）
 
 唯一のLean正本は `formal/real-hilbert-uniform-coercive-strong-limit`。[AGQ定理PR #6390](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6390) MERGED。元のBorel格子Nセルの真のproduct-Haar実質量に対し、正の有理総幅epsを指定し、各セルの有理包囲半幅を `delta=eps/(2*(N+1))` とセル数が決まってから選ぶ。質量端点 `[q_i-delta,q_i+delta]` は元の真の質量を含み、区間幅総和 `N*eps/(N+1)<=eps` を形式証明。AGPの元有理中心・セル半径の証拠を使えば、外部Haar質量区間の入力なしで、元signed transferのverifiedIntervalと以前の区間とのtighten-only交差へ接続できる。
