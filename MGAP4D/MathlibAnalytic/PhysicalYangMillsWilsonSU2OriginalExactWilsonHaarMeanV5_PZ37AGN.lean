@@ -167,8 +167,12 @@ theorem p4Q2PZ37AGN_originalPlaquetteEnergy_integrable (p : Plq) :
   -- lattice topology during elaboration of four nested coordinate maps.
   have hMP := p4Q2PZ37AGN_originalPlaquetteCyclic_measurePreserving H p
   have hCyclic : Integrable (fun A : Cfg => specialUnitaryWilsonPlaquetteEnergy 2
-      (p4Q2PZ37AGN_originalPlaquetteCyclicHolonomy H p A)) muH :=
-    MeasurePreserving.integrable_comp_of_integrable hMP hOne
+      (p4Q2PZ37AGN_originalPlaquetteCyclicHolonomy H p A)) muH := by
+    simpa only [Function.comp_def] using
+      (MeasurePreserving.integrable_comp_of_integrable
+        (μ := muH) (ν := mu)
+        (f := p4Q2PZ37AGN_originalPlaquetteCyclicHolonomy H p)
+        (g := specialUnitaryWilsonPlaquetteEnergy 2) hMP hOne)
   apply hCyclic.congr
   exact Filter.Eventually.of_forall
     (fun A => (p4Q2PZ37AGN_originalPlaquette_energy_eq_cyclic H p A).symm)
