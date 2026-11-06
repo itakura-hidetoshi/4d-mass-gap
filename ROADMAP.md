@@ -1,3 +1,13 @@
+## AGQ（2026-11-06）— 真正Haarセルの総質量誤差幅
+
+[定理PR #6390](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6390) MERGED、[CI #42178646756](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42178646756)：11,352/11,352 SUCCESS、9宣言は標準公理のみ、sorryAxなし、warning/error 0/0、独立receipt SUCCESS、Git tree一致。
+
+**CLOSED**：任意の元AGH真正Borel格子Nセルと正の有理許容epsについて、真のセルHaar質量を含む有理区間の総幅 `<=eps` をLeanで構成。精度選択は格子生成後の `eps/[2(N+1)]`。中心有理座標と半径の証拠がある格子なら、質量intervalを新規oracleなしでAGPの元signed-transferへ接続。
+
+**OPEN**：有理SU(2)細分中心の密度・被覆の形式化、非計算的選択の計算実装、具体的符号認証。既存Wilson・Haar・transfer・root・Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 不変更。正式記録 `docs/proofs/P4-Q2-PZ37AGQ_verified_20261106.md`。mainは文書ミラー。旧本文保持。
+
+---
+
 ## AGP（2026-11-06）— セル別真正Haar評価と次段AGQ
 
 **MERGED:** [定理PR #6387](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6387)。exact-source CI #42175738816：11,351/11,351 SUCCESS、17標準公理監査・sorryAxなし、変更Lean warning/error 0/0、独立receipt SUCCESS、source/test-merge/squash Git tree一致。
