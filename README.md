@@ -1,3 +1,13 @@
+## 検証済み定理 — AHB／固定有限体積における真正kernel・floor幅の全中心一様任意精度（2026-11-07 JST）
+
+[AHB定理PR #6421](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6421) **MERGED**。AGJ元Taylor階乗残差に `E_n=(n+1)/(n!*n)≤2/n` をLean4形式証明し、元AGK幾何尾 `t_m=(5/768)*(1/25)^m` と一緒に任意精度へ選択可能とした。元one-slab Wilson作用の既証明上界 `0≤S_H(A,B)≤V_H` と元AGN floor組合せ作用の厳密値を再利用し、全中心共通の元AGMスケール上界 `k≤K_H=ceil(V_H)+1` と真正AGJ clipped下端 `0≤b≤1` を証明。固定mathlib `abs_pow_sub_pow_le` により `B(S,m,n)≤K_H*2^K_H*(V_H*t_m+4*E_n)`（括弧内≤1）を構成し、**固定Hの全真正AGU格子・元有理右境界に対して共通m,n** を選んで `DeltaKmax<eta, DeltaF<eta` をLean4で証明した。元kernel・floor・Haar・source・signed min/max・既存root/pin不変更。H一様収束や非零transferの主張ではない。
+
+[Exact-source CI #42313988679](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42313988679)：**11,363/11,363 SUCCESS**、新規14宣言の公理依存は標準 `propext`・`Classical.choice`・`Quot.sound` のみ、sorryAxなし、変更Lean warning/error0/0、workflow/job/Lean step/独立completion receipt completed/SUCCESS。source/test-merge/squash Git tree一致 `89d9e7c8dd21726a7c44d1dd0e30bcfd4b2d1d71`。新規Lean1件502行・削除0、旧物理定義・根・Lean/mathlib pin・workflow変更なし。文書専用Strict Leanは実行しない。
+
+**NEXT/OPEN — AHC:** AGYの元signed-transfer誤差に対して `R, eps` の幾何・Haar予算も一括選択し、固定Hにおける元signed-transfer区間幅の任意精度保証を検討する。真正transferの非零符号、two-threshold shell、H一様coercivity、Hamiltonian gap、連続体mass gapと大体積数値表はOPEN。唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。[AHB正式証明記録](docs/proofs/P4-Q2-PZ37AHB_verified_20261107.md)。以下のAHA以前の本文は全文保持。
+
+---
+
 ## 検証済み定理 — AHA／元kernel・floorの指数Taylor出力幅をAGK幾何誤差と階乗誤差へ降下（2026-11-07 JST）
 
 [AHA定理PR #6418](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6418) **MERGED**。元AGJの真正Taylor残差について `E_n=(n+1)/(n!*n)`・`|q|≤1` の有理上界を証明。元Wilson作用の指数引数が非正であることから `x≤y≤0 ⇒ exp(y)-exp(x)≤y-x` をLean4で導き、AGJの `max 0` clipと整数乗を保持して、元AGK結合誤差 `t_m=(5/768)*(1/25)^m`・元AGM自動scale `k`・実際のTaylor下端 `b` を用いた**指数出力幅** `DeltaExp≤(b+S*t_m/k+4*E_n)^k-b^k` を形式証明した。元AGMの真正kernel幅、元AGNの真正global floor幅、同じAGU真正Borel格子の中心最大値にこの有理上界を適用して、`width(I_H)≤(p_H/2)*(Bmax+Bfloor/2)+2L_H(m)R+2M_H(m,n)eps` を証明。元Haar・source・kernel・floor・signed transfer・tighten-only交差・root/pinsを変更していない。
