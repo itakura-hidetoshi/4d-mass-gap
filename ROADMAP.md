@@ -1,3 +1,15 @@
+## AHA（2026-11-07 JST）— AGK結合・AGJ階乗剰余の真正指数出力幅上界
+
+**CLOSED:** [AHA定理PR #6418](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6418) MERGED。元AGJ `TaylorError(q,n)≤E_n=(n+1)/(n!*n)`（`n>0, |q|≤1`）、元非負Wilson作用からの非正指数の1-Lipschitz、ゼロclip付きTaylor底と整数乗の幅をLean4で証明。AGK `t_m=(5/768)*(1/25)^m`、AGMの実際のautoScale `k`、真正Taylor下端 `b` を用い `AGJ_expUpper-AGJ_expLower ≤ (b+S*t_m/k+4E_n)^k-b^k=:B(S,m,n)` とした。元AGM真正kernel・AGN global floorのraw幅≤`B` を証明し、AGU同じ真正格子の全中心最大 `Bmax` とAGZ signed-transfer評価から `width(I_H)≤(p_H/2)*(Bmax+Bfloor/2)+2L_H(m)R+2M_H(m,n)eps` を形式化。元source・Haar・kernel・floor・transfer・root/pins不変更。
+
+**VERIFIED:** [Exact-source CI #42310738307](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42310738307)、**11,362/11,362 SUCCESS**、新規12定理は標準3公理のみ、sorryAxなし、変更Lean warning/error0/0、workflow/job/Lean step/独立receipt completed/SUCCESS、source/test-merge/squash共通Git tree `61663613839f72b5251105bdbf6355e82544ca91`。新規Lean1件・削除0、既存の物理モデル・root・pins・workflow不変更。
+
+**NEXT — AHB:** `t_m→0` に加え、階乗tail `E_n→0`、実際の元作用量 `S` の上界、AGM自動scale `k` の一様上界、`b≤1` をLean4で結合して、固定Hにおける真正出力幅の任意精度制御へ進む。AHA自体は `B(S,m,n)→0`・kernel/floor一様精度を証明しない。真の非零transfer符号、two-threshold shell、H一様coercivity、Hamiltonian gap、連続体gap、大体積Haar表はOPEN。
+
+[正式証明記録](docs/proofs/P4-Q2-PZ37AHA_verified_20261107.md)。唯一のLean正本 `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。以下AGZ以前の履歴全文保持。
+
+---
+
 ## AGZ（2026-11-07 JST）— 元AGK結合・AGJ指数Taylor幅の真正kernel/floorへの降下
 
 **CLOSED:** [定理PR #6415](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6415) MERGED。元AGL真正有理作用・元AGN global floor combinatorial actionについて、AGK固定結合区間から指数入力幅 `0≤qHi-qLo=S*(betaUpper-betaLower)≤S*(5/768)*(1/25)^m` を証明。元AGM真正kernel [0,1] clip／元AGN floor [0,1] clipにより各実幅≤AGK/AGJ raw Taylor有理幅、同一AGU格子の有限最大値についても同様。元signed transfer幅 `width(I_H)≤(p_H/2)*(DeltaK_rawTaylorMax+DeltaF_rawTaylor/2)+2L_H(m)R+2M_H(m,n)eps` を証明。etaK,etaF の有限有理チェック証明を受け取る条件付き最終上界も形式化。物理model・source・Haar・signed min/maxを一切変更しない。
