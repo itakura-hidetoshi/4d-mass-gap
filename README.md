@@ -1,3 +1,13 @@
+## 検証済み定理 — AGX／元中心幅の真正有限最大値で外部eta仮定を除去（2026-11-07 JST）
+
+[AGX定理PR #6409](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6409) **MERGED**。AGUで選択した**同じ真正Borel格子**は、その元SU(2)全空間partition証拠から添字集合が非空。AGWの元AGN各中心値幅 `width_i=|s_H(C_i)|*(kernelWidth_i+floorWidth/2)` の**有限最大値**を `etaMax_H,d,B,m,n` として定義し、すべての中心値区間がそれ以下、`etaMax≥0` をLean4で形式証明。任意H・正有理R,eps・有理座標元右境界B・n>0に対し、**外部eta証明入力を使わず** `width(I_H)≤etaMax+2L_H(m)R+2M_H(m,n)eps` を元AGVの真正signed-transfer評価から導いた。有限セル数に比例する余分な誤差係数を導入していない。
+
+[exact-source CI #42297186825](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42297186825)：**11,359/11,359 SUCCESS**、新規6宣言は標準3公理のみ、sorryAxなし、変更Lean warning/error0/0、workflow/job/step/独立receipt completed/SUCCESS、source/test-merge/squash Git tree一致 `635250d72a630d93fd18537f4f12e5fe0d3b8b35`。新規Lean146行・削除0、既存physics・root・pin・workflowは不変更。
+
+**NEXT/OPEN:** `etaMax` は実際の元中心値に依存する有限有理式だが、古典選択格子の数値表を計算したわけではなく、**その値の任意精度収束はまだ未証明**。AGJ/AGK/AGM/AGNの元kernel・floor幅の一様誤差を追う。非零transfer符号、二閾値殻、H一様coercivity、Hamiltonian gap、連続体mass gapは引き続きOPEN。正本 `formal/real-hilbert-uniform-coercive-strong-limit`、mainは文書ミラー。[AGX正式証明記録](docs/proofs/P4-Q2-PZ37AGX_verified_20261107.md)。以下のAGW以前の履歴は全文保持。
+
+---
+
 ## 検証済み定理 — AGW／元AGN中心値区間幅の厳密な分解（2026-11-07 JST）
 
 [定理PR #6406](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6406) **MERGED**。元AGN中心値区間を変更せず、真正center source有理値s、元AGMのclipped kernel区間[klo,khi]、元AGN floor区間[flo,fhi]について、**`centerWidth=|s|*((khi-klo)+(fhi-flo)/2)`** をLean4で証明した。sの符号を保持するmin/max代数を含む。元中心値区間幅の非負性も確認。AGVに残っている全中心幅≤etaという条件の内容を、同じ物理kernelとfloorの幅へ正確に分解した成果。
