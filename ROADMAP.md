@@ -1,3 +1,17 @@
+## AGU（2026-11-06 JST）— 要求精度を保持した元Haar格子とsigned-transfer接続
+
+**CLOSED:** [定理PR #6400](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6400) MERGED。旧AGTの裸の `Nonempty (AGP_gridData H)` に由来する予算非依存性を形式証明し、元AGPデータと半径・セル認証半径・真のHaar質量総幅を持つ添字付きTypeを追加した。任意正有理R,epsで存在し、そのTypeから選んだ実データに `grid.radius≤R`、`cellCertificateRadius_i=R`、`Σ(upper_i-lower_i)≤eps` が成立する。
+
+**同じ元データへの接続:** AGUのtransfer区間は上記の選択データを元AGP評価器へそのまま渡す。既存区間・元大域区間との交差のtighten-only性を証明。明示的構成子は供給格子とAGQ質量オブジェクトを厳密保存するが、古典選択したpackageがその構成履歴そのものを返すとは主張しない。
+
+**VERIFIED:** [CI #42210989555](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42210989555)、11356/11356 SUCCESS、14宣言は標準公理のみ、sorryAxなし、変更warning/error0/0、workflow・Lean job/step・receipt completed/SUCCESS、source/test-merge/squash Git tree一致。新規1ファイル225追加行、既存Lean・物理定義・root・pin・workflow不変更。
+
+**NEXT/OPEN:** 同じ選択格子について、セル幾何変動、中心の有理核区間幅、有限セル数を含めた質量誤差を統合する最終signed区間幅評価を進める。最終幅の任意精度化には各項の制御が必要であり、R・epsの存在だけから結論しない。具体的大体積計算、非零transfer符号、二閾値殻、H一様coercivity、Hamiltonian gap、連続体4D質量ギャップは未証明。
+
+[正式証明記録](docs/proofs/P4-Q2-PZ37AGU_verified_20261106.md)。唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。mainは文書ミラー。以下の履歴を全て保持し、AGS・AGT追補で次段としていた「要求精度の型付き保存」は今回完了した。
+
+---
+
 ## AGS・AGT（2026-11-06 JST）— 有理稠密性・有限被覆・真正空間格子と次の精度保持
 
 **CLOSED:** [AGS #6396](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6396)・[AGT #6397](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6397) MERGED。AGRで外部入力だった真正有理中心の有限被覆は、実チャート逆写像、有理Pi稠密性、対蹠チャート、元SU(2)等距離、コンパクト性から任意正半径について存在証明された。AGTの `exists_fineOriginalRationalSpatialGrid` は任意の正の有理Rに対し、全元リンクの有理座標証拠と `grid.radius≤R` を持つ真正AGH Borel格子を存在量化する。
