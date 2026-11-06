@@ -385,7 +385,7 @@ theorem p4Q2PZ37AHB_exists_jointPrecision
   have hMul := mul_lt_mul_of_pos_left hm hCp
   have hEq : (C + 1) * em = eps / 2 := by
     dsimp [em]
-    field_simp <;> ring
+    field_simp
   have hFirst : C * p4Q2PZ37AGK_tail m < eps / 2 :=
     hCmp.trans_lt (hMul.trans_eq hEq)
   have hSecond : 4 * p4Q2PZ37AHA_factorialEnvelope n < eps / 2 := by
