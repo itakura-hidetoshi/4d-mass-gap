@@ -295,8 +295,8 @@ theorem p4Q2PZ37AGO_originalSpatial_linkCount_eq_plaquetteCount :
   have hList :
       (periodicHypercubicEvenSpatialSlicePlaquetteList H).length =
         Nat.card (PeriodicHypercubicEvenSpatialSlicePlaquette H) := by
-    simp [periodicHypercubicEvenSpatialSlicePlaquetteList,
-      Fintype.card_eq_nat_card]
+    simp only [periodicHypercubicEvenSpatialSlicePlaquetteList,
+      Finset.length_toList, Finset.card_univ, Fintype.card_eq_nat_card]
   have hLink :
       Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) =
         Nat.card (PeriodicHypercubicEvenSpatialSliceLink H) :=
