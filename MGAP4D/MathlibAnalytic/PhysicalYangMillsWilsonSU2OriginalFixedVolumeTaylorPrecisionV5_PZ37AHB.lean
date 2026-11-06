@@ -443,23 +443,24 @@ theorem p4Q2PZ37AHB_exists_uniformOriginalOutputPrecision
 
 /-- All ORIGINAL kernel/floor physical Taylor gaps, on the same AGU
 grid as AGY, admit arbitrary precision for each FIXED finite H.
-No quantum spectral positivity or uniformity across H is inferred. -/
+The orders m,n do not depend on the right boundary or chosen AGU grid. -/
 theorem p4Q2PZ37AHB_exists_originalKernelFloor_precision
     (H : ℕ) (eta : ℚ) (heta : 0 < eta) :
-    ∃ m n : ℕ, 0 < n ∧
+    ∃ m n : ℕ, ∃ hn : 0 < n,
       ∀ {R eps : ℚ} (d : p4Q2PZ37AGU_precisionGridData H R eps)
         (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2)
         (b : ∀ e : PeriodicHypercubicEvenSpatialSliceLink H,
           p4Q2PZ37AGL_rationalCoordinates (B e)),
-        p4Q2PZ37AGY_originalKernelMax H d B b m n (by assumption) < eta ∧
-        p4Q2PZ37AGY_originalFloorWidth H m n (by assumption) < eta := by
+        p4Q2PZ37AGY_originalKernelMax H d B b m n hn < eta ∧
+        p4Q2PZ37AGY_originalFloorWidth H m n hn < eta := by
   let C := p4Q2PZ37AGZ_originalFloorAction H
   have hC := p4Q2PZ37AGZ_originalFloorAction_nonneg H
+  have hHalf : (0 : ℚ) < eta / 2 := by linarith only [heta]
   obtain ⟨m, n, hn, hUniform⟩ :=
-    p4Q2PZ37AHB_exists_uniformOriginalOutputPrecision C eta hC heta
+    p4Q2PZ37AHB_exists_uniformOriginalOutputPrecision C (eta / 2) hC hHalf
   refine ⟨m, n, hn, ?_⟩
   intro R eps d B b
-  have hKernelBound : p4Q2PZ37AHA_originalKernelBudgetMax H d B b m n ≤ eta := by
+  have hKernelBound : p4Q2PZ37AHA_originalKernelBudgetMax H d B b m n ≤ eta / 2 := by
     unfold p4Q2PZ37AHA_originalKernelBudgetMax
     apply Finset.sup'_le
     intro i _hi
@@ -468,18 +469,15 @@ theorem p4Q2PZ37AHB_exists_originalKernelFloor_precision
     have hUpper := p4Q2PZ37AHB_originalAction_le_globalBudget H
       (d.data.grid.center i) B (d.data.centerCoordinates i) b
     exact (hUniform _ hNonneg hUpper).le
-  have hKernel := (p4Q2PZ37AGY_originalKernelMax_le_components H d B b m n hn)
   have hKT := p4Q2PZ37AGZ_originalKernelMax_le_TaylorMax H d B b m n hn
   have hKB := p4Q2PZ37AHA_originalKernelTaylorMax_le_budgetMax H d B b m n hn
   have hF := (p4Q2PZ37AGZ_originalFloorWidth_le_TaylorGap H m n hn).trans
     (p4Q2PZ37AHA_originalFloorTaylorGap_le_budget H m n hn)
-  have hFloor : p4Q2PZ37AHA_couplingTaylorBudget C m n < eta :=
+  have hFloor : p4Q2PZ37AHA_couplingTaylorBudget C m n < eta / 2 :=
     hUniform C hC le_rfl
-  exact ⟨(hKT.trans (hKB.trans hKernelBound)).trans_lt (by
-    -- A strict target is available; the preceding sup is at most eta,
-    -- so refine the common order choice to eta/2 when using this theorem.
-    exact lt_add_of_pos_right _ heta),
-    hF.trans_lt hFloor⟩
+  have hHalfEta : eta / 2 < eta := by linarith only [heta]
+  exact ⟨(hKT.trans (hKB.trans hKernelBound)).trans_lt hHalfEta,
+    (hF.trans_lt hFloor).trans hHalfEta⟩
 
 end GroundStatePosteriorJoint
 end
