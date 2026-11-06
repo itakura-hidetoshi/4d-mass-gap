@@ -101,7 +101,8 @@ theorem p4Q2PZ37AGV_realFiniteWidth_le
       ring
     _ ≤ A + 2 * M * eps := by
       have h2 : 0 ≤ 2 * M := mul_nonneg (by norm_num) hM
-      exact add_le_add_left (mul_le_mul_of_nonneg_left hMassWidths h2) A
+      have hm := mul_le_mul_of_nonneg_left hMassWidths h2
+      linarith only [hm]
 
 /-- The literal rational table has width equal to the sum of its
 signed per-cell max-minus-min contributions. -/
@@ -131,18 +132,25 @@ theorem p4Q2PZ37AGV_rationalTable_width_le
     (hMassWidths :
       (∑ i : Fin N, (d.massUpper i - d.massLower i)) ≤ eps) :
     d.upper - d.lower ≤ A + 2 * M * eps := by
+  have hAReal : ∀ i : Fin N, -(M : ℝ) ≤ (d.cellLower i : ℝ) ∧
+      (d.cellLower i : ℝ) ≤ (M : ℝ) := by
+    intro i
+    constructor
+    · exact_mod_cast (ha i).1
+    · exact_mod_cast (ha i).2
+  have hBReal : ∀ i : Fin N, -(M : ℝ) ≤ (d.cellUpper i : ℝ) ∧
+      (d.cellUpper i : ℝ) ≤ (M : ℝ) := by
+    intro i
+    constructor
+    · exact_mod_cast (hb i).1
+    · exact_mod_cast (hb i).2
   have hReal := p4Q2PZ37AGV_realFiniteWidth_le
     (fun i => (d.cellLower i : ℝ)) (fun i => (d.cellUpper i : ℝ))
     (fun i => (d.massLower i : ℝ)) (fun i => (d.massUpper i : ℝ))
     p (M : ℝ) (A : ℝ) (eps : ℝ)
     (by exact_mod_cast hM)
     hMassLo hMassHi hMassNonneg hMassTotal
-    (by intro i; constructor
-      · exact_mod_cast (ha i).1
-      · exact_mod_cast (ha i).2)
-    (by intro i; constructor
-      · exact_mod_cast (hb i).1
-      · exact_mod_cast (hb i).2)
+    hAReal hBReal
     (by intro i; exact_mod_cast hCellWidths i)
     (by exact_mod_cast hMassWidths)
   have hCast : ((d.upper - d.lower : ℚ) : ℝ) =
