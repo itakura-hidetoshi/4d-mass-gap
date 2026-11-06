@@ -1,3 +1,15 @@
+## AGZ（2026-11-07 JST）— 元AGK結合・AGJ指数Taylor幅の真正kernel/floorへの降下
+
+**CLOSED:** [定理PR #6415](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6415) MERGED。元AGL真正有理作用・元AGN global floor combinatorial actionについて、AGK固定結合区間から指数入力幅 `0≤qHi-qLo=S*(betaUpper-betaLower)≤S*(5/768)*(1/25)^m` を証明。元AGM真正kernel [0,1] clip／元AGN floor [0,1] clipにより各実幅≤AGK/AGJ raw Taylor有理幅、同一AGU格子の有限最大値についても同様。元signed transfer幅 `width(I_H)≤(p_H/2)*(DeltaK_rawTaylorMax+DeltaF_rawTaylor/2)+2L_H(m)R+2M_H(m,n)eps` を証明。etaK,etaF の有限有理チェック証明を受け取る条件付き最終上界も形式化。物理model・source・Haar・signed min/maxを一切変更しない。
+
+**VERIFIED:** [Exact-source CI #42304072471](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42304072471)、**11,361/11,361 SUCCESS**、新規11宣言は標準3公理のみ、sorryAxなし、変更warning/error0/0、workflow/job/Lean step/独立receipt completed/SUCCESS。source/test-merge/squash Git tree一致 `a8a5c7c2c75e1bd147840ab2ec2e3f31e4ee5df8`。新規Lean1件304行・削除0、root・pin・workflow不変更。
+
+**NEXT — AHA:** AGJ出力Taylor区間幅の定量・一様収束を実際の自動scaleに対して証明し、既証明AGK入力幅収束と統合する。現在は `DeltaK_rawTaylorMax→0`・`DeltaF_rawTaylor→0` 未証明。元transfer非零符号、two-threshold shell、H一様coercivity、Hamiltonian gap、連続体gap、大体積数値Haar表もOPEN。
+
+[正式証明記録](docs/proofs/P4-Q2-PZ37AGZ_verified_20261107.md)。唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。以下のAGY以前の履歴全文保持。
+
+---
+
 ## AGY（2026-11-07 JST）— 元center幅を真正kernel最大幅とglobal floor幅へ分解
 
 **CLOSED:** [定理PR #6412](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6412) MERGED。元AGUと同じBorel格子の真正AGM clipped Wilson kernel幅の有限最大 `DeltaKmax`、元AGN global floor幅 `DeltaF` を定義。元AGN中心化sourceの厳密有理値に `|s_H(C)|≤p_H/2` を適用し、AGXの `etaMax≤(p_H/2)*(DeltaKmax+DeltaF/2)`、更に元AGU最終signed-transfer区間の `width(I_H)≤(p_H/2)*(DeltaKmax+DeltaF/2)+2L_H(m)R+2M_H(m,n)eps` を証明。物理model・Haar・signed min/maxを不変更。
