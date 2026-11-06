@@ -1,3 +1,15 @@
+## AGX（2026-11-07 JST）— 真正有限中心幅最大値による外部eta条件の解消
+
+**CLOSED:** [定理PR #6409](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6409) MERGED。元AGUの空でない真正Borel partitionから `Finset.sup'` による実中心幅の有限最大値 `etaMax` を構成。元AGN各中心幅≤etaMaxとetaMax≥0を証明し、元AGVのsigned min/max／Haar質量／AGP評価／tighten-only交差に**外部eta仮定なし**で接続した：`width(I_H)≤etaMax+2L_H(m)R+2M_H(m,n)eps`。同じ選択格子と右境界・source・kernel・floorを保持。
+
+**VERIFIED:** [exact-source CI #42297186825](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42297186825)、11,359/11,359 SUCCESS、新規6宣言は標準3公理のみ、sorryAxなし、変更warning/error0/0、workflow/job/Lean step/receipt completed/SUCCESS、source/test-merge/squash Git tree一致。新規Lean146追加行・削除0。
+
+**NEXT — AGY:** AGWの厳密因子分解を使い、全中心で元kernel幅と元floor幅の有限最大上界を構築し、さらにAGK結合精度・AGJ Taylor誤差と接続する。古典選択格子の具体的数値表、etaMax→0、実signed-transfer非零符号、二閾値殻、H一様coercivity、Hamiltonian gap、連続体gapはOPEN。
+
+[正式証明記録](docs/proofs/P4-Q2-PZ37AGX_verified_20261107.md)。正本 `formal/real-hilbert-uniform-coercive-strong-limit`、main文書ミラー、既存本文全文保持。
+
+---
+
 ## AGW（2026-11-07 JST）— 元中心値区間のkernel／floor幅への厳密分解
 
 **CLOSED:** [PR #6406](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6406) MERGED。真正AGNの元source有理値sと元AGM clipped kernel[klo,khi]・元AGN floor[flo,fhi]から、`centerWidth=|s|*((khi-klo)+(fhi-flo)/2)` をmin/max符号処理付きでLean4形式証明。元center intervalの非負幅も証明。物理式・Haar法則・元kernel等を変更しない。
