@@ -1,3 +1,13 @@
+## AGP（2026-11-06）— セル別真正Haar評価と次段AGQ
+
+**MERGED:** [定理PR #6387](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6387)。exact-source CI #42175738816：11,351/11,351 SUCCESS、17標準公理監査・sorryAxなし、変更Lean warning/error 0/0、独立receipt SUCCESS、source/test-merge/squash Git tree一致。
+
+**CLOSED:** 元連続signed integrandの中心依存係数 `6(1-k_H)+13 beta0 |f_H(C)|`、AGNによる源振幅 `p_H/2` の一様包囲、セル別真正有理半径・中心値・真のHaar質量を使うAGI min/max積分評価、元transferの既存区間とのtighten-only交差。旧AGI/AGOの定理を変更していない。
+
+**OPEN:** AGQでは、細かい有理SU(2)中心を持つ真正Borel有限被覆、セル別半径、有理質量包囲をAGPへ接続する。非計算的有限ネットの存在と機械的に実行済みの大体積表は区別する。物理的符号・二閾値殻・H一様coercivity・Hamiltonian gap・連続体質量ギャップは未証明。唯一のLean正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を維持する。
+
+---
+
 ## P4-Q2-PZ37AGO（2026-11-06 JST）— 真正24中心signed-transfer証明書の飽和障害
 
 [定理PR #6384](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6384) MERGED。唯一のLean正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。

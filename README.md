@@ -1,3 +1,23 @@
+## 検証済み定理 — AGP／元の中心依存・セル別signed Haar証明書（2026-11-06 JST）
+
+唯一のLean 4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。[AGP定理PR #6387](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6387) はMERGED。検証済みsource `fc93e5ca42aeef85dce18ed192032c682d2fb235`、定理squash `57be141cd5d21158b5981469bb8f09b073f3ea8f`。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。
+
+### CLOSED — 中心依存の元integrand変動係数とセル別の真正積分
+
+元の連続代表 `g_B(A)=f_H(A)(K_H(A,B)-(1+k_H)/2)` に対し、中心C依存の変動係数 `6(1-k_H)+13 beta0 |f_H(C)|` によって `|g_B(A)-g_B(C)| <= coefficient(C)*D_H(A,C)` をLean 4証明。AGNの厳密中心化から `|f_H(C)|<=p_H/2` となり、旧AGGの一様源振幅項 `13 beta0 p_H` を `13 beta0 p_H/2` に改善する。係数全体が半減するとの主張ではない。
+
+真正AGH格子にセルごとの認証有理半径 `r_i`、元有理座標中心、真正Haar質量区間を保持し、`eps_i = c_i r_i` と実中心値のAGM/AGN有理区間からセル全体の端点 `max(-R_H,a_i-eps_i)`、`min(R_H,b_i+eps_i)` を構成。元のAGI signed min/max評価器を幾何パラメータ0で再利用し、同じ元transferの真正Haar積分を包囲した。旧AGIの証拠構造は変更せず、既存証明済み区間との交差はtighten-onlyである。
+
+### exact-source CI とOPEN境界
+
+新規Lean葉1ファイル、394行追加・既存行削除0、17公理監査。[CI #42175738816](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42175738816) はworkflow、Lean job・step、独立completion receiptすべてcompleted/SUCCESS、11,351/11,351 jobs成功、17宣言は標準公理のみ、sorryAxなし、変更Lean warning/error 0/0。source/test-merge/squash共通Git tree `2324f41dd6fd7b9c0579cac6967caccc278a3350`。
+
+本段は有理座標中心・各セルの真正Haar質量・認証半径を与えた際の健全な評価であり、任意精度の**具体的な計算可能細分格子と質量数表**を完成させたわけではない。元transferの実際の非零符号、二閾値殻、H一様coercivity、物理Hamiltonian gap、連続体4D Yang–Mills質量ギャップはOPEN。次は真のSU(2)細分格子とHaar質量の具体化、または元Haarモーメントの直接評価。正式記録：`docs/proofs/P4-Q2-PZ37AGP_verified_20261106.md`。
+
+以下のAGO以前の本文は全バイト保持する履歴とし、旧「次段階」より本追補を優先する。
+
+---
+
 ## 検証済み定理 — AGO／固定24中心signed-transfer幾何障害（2026-11-06 JST）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。[AGO定理PR #6384](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6384) はMERGED。定理squash `c6f0b5b3ed640774f5539813f33c75259224f6ca`、検証済みsource `82dc6a7bae92b40fbff48f23ddc778fb1f552e5d`。元SU(2)・Wilson作用・固定結合・Haar/Perron・中心化source・transfer・公開root・Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` は不変更。
