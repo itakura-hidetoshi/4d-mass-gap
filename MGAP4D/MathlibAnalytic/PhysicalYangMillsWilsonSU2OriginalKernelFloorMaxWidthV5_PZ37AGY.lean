@@ -161,8 +161,10 @@ theorem p4Q2PZ37AGY_centerWidth_le_components
     add_nonneg hk (div_nonneg hf (by norm_num))
   have h1 : |s| * (k + fl / 2) ≤ p * (k + fl / 2) :=
     mul_le_mul_of_nonneg_right hs hnonneg
+  have hAdd : k + fl / 2 ≤ kMax + fl / 2 := by
+    linarith only [hkMax]
   have h2 : p * (k + fl / 2) ≤ p * (kMax + fl / 2) :=
-    mul_le_mul_of_nonneg_left (add_le_add_right hkMax _) hp
+    mul_le_mul_of_nonneg_left hAdd hp
   exact h1.trans h2
 
 /-- Eliminate the AGX center maximum from the inequality in favor of
