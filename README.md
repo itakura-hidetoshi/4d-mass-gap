@@ -1,3 +1,13 @@
+## 検証済み定理 — AGQ／真のHaar質量の有限格子後置精度予算（2026-11-06 JST）
+
+唯一のLean正本は `formal/real-hilbert-uniform-coercive-strong-limit`。[AGQ定理PR #6390](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6390) MERGED。元のBorel格子Nセルの真のproduct-Haar実質量に対し、正の有理総幅epsを指定し、各セルの有理包囲半幅を `delta=eps/(2*(N+1))` とセル数が決まってから選ぶ。質量端点 `[q_i-delta,q_i+delta]` は元の真の質量を含み、区間幅総和 `N*eps/(N+1)<=eps` を形式証明。AGPの元有理中心・セル半径の証拠を使えば、外部Haar質量区間の入力なしで、元signed transferのverifiedIntervalと以前の区間とのtighten-only交差へ接続できる。
+
+[exact-source CI #42178646756](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42178646756)：11,352/11,352 SUCCESS、新規9宣言は標準公理のみ、sorryAxなし、変更Lean warning/error 0/0、独立receipt SUCCESS、source・test-merge・squashのGit tree一致。squash `1c19b6396248e74cce912204b68a59532e5ed514`。初回CIの有限和binder scopeの`Unknown identifier i`は全4箇所の被加算項を括弧化して解消した。
+
+OPEN：この有理包囲は真のHaar測度に対する古典的存在選択で、具体的質量数表の実行ではない。任意の細分で有理座標中心を確保するLean証明と高精度の有効計算は別課題。元のsigned transfer非零符号・二閾値殻・H一様coercivity・Hamiltonian gap・連続体質量ギャップは未証明。正式記録：`docs/proofs/P4-Q2-PZ37AGQ_verified_20261106.md`。既存のAGP以前の本文は全バイト保持する。
+
+---
+
 ## 検証済み定理 — AGP／元の中心依存・セル別signed Haar証明書（2026-11-06 JST）
 
 唯一のLean 4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。[AGP定理PR #6387](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6387) はMERGED。検証済みsource `fc93e5ca42aeef85dce18ed192032c682d2fb235`、定理squash `57be141cd5d21158b5981469bb8f09b073f3ea8f`。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。
