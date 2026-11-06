@@ -177,6 +177,41 @@ theorem p4Q2PZ37AGS_chart_surjective_offPole (x : S3)
       ext j
       fin_cases j <;> rfl
 
+
+/-- Rational triples are dense in genuine real three-dimensional
+parameter space, from pinned mathlib's exact rational-density theorem. -/
+theorem p4Q2PZ37AGS_rationalParameters_dense :
+    DenseRange (fun t : Fin 3 → ℚ => (fun j : Fin 3 => (t j : ℝ))) := by
+  exact DenseRange.piMap (fun _ : Fin 3 =>
+    (Rat.denseRange_cast : DenseRange ((↑) : ℚ → ℝ)))
+
+/-- Every genuine sphere point outside the explicitly excluded pole has
+a stereographic RATIONAL point at every positive Euclidean radius.
+The proof uses the real chart inverse and density, not an oracle net. -/
+theorem p4Q2PZ37AGS_rationalSphere_approaches_offPole (x : S3)
+    (hx0 : (x : E4) 0 ≠ -1) (r : ℝ) (hr : 0 < r) :
+    ∃ t : Fin 3 → ℚ,
+      dist x (p4Q2PZ37AGR_rationalSphere t) < r := by
+  obtain ⟨u, hu⟩ := p4Q2PZ37AGS_chart_surjective_offPole x hx0
+  let U : Set (Fin 3 → ℝ) :=
+    p4Q2PZ37AGS_realStereographicVector ⁻¹' Metric.ball (x : E4) r
+  have hOpen : IsOpen U :=
+    isOpen_ball.preimage p4Q2PZ37AGS_realStereographicVector_continuous
+  have hNonempty : U.Nonempty := by
+    refine ⟨u, ?_⟩
+    change p4Q2PZ37AGS_realStereographicVector u ∈ Metric.ball (x : E4) r
+    rw [hu]
+    exact Metric.mem_ball_self hr
+  obtain ⟨t, ht⟩ :=
+    p4Q2PZ37AGS_rationalParameters_dense.exists_mem_open hOpen hNonempty
+  refine ⟨t, ?_⟩
+  have hDist : dist (x : E4)
+      (p4Q2PZ37AGS_realStereographicVector (fun j : Fin 3 => (t j : ℝ))) < r := by
+    exact Metric.mem_ball.mp ht
+  rw [p4Q2PZ37AGS_rationalVector_exact] at hDist
+  exact hDist
+
+
 end
 end MGAP4D.MathlibAnalytic
 
@@ -184,3 +219,6 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AGS_realStereographicVector_continuous
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AGS_chartAlgebra
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AGS_chart_surjective_offPole
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AGS_rationalParameters_dense
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AGS_rationalSphere_approaches_offPole
