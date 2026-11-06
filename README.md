@@ -1,3 +1,19 @@
+## 検証済み定理 — AGU／選択された真正格子への要求精度保存（2026-11-06 JST）
+
+[定理PR #6400](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6400) MERGED。AGTの正しい格子存在定理とAGQの真のHaar質量予算を使い、**選択した同じデータに対する要求半径R・質量総幅epsの保証**を追加した。
+
+新しい `p4Q2PZ37AGU_precisionGridData H R eps` は元AGPデータと、`data.grid.radius≤R`、各セルの認証有理半径 `data.radii.radius i=R`、元Haar質量区間の総幅 `sum_i(upper_i-lower_i)≤eps` を一つのTypeに保持する。任意H・正の有理R,epsについてこの型の存在を証明し、**この添字付きType**を古典選択するため、選択後も三つの条件を射影できる。セルの最小包絡半径がRに等しいという主張ではない。
+
+**AGTからの補強理由も形式証明。** `unindexedChoice_budget_independent` は、予算を型に持たない旧AGTの選択関数が、任意の正の予算ペアで同じデータを返すことを `rfl` で証明。旧区間の包含は有効なまま、要求精度を結論のTypeに残す必要があることを明確にした。AGUの元signed-transfer評価には、予算が保証されたその選択データの `.data` を渡し、以前の証明済み区間とのtighten-only交差を保持する。
+
+[exact-source CI #42210989555](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42210989555)：**11356/11356 SUCCESS**、新規14宣言は標準公理のみ、sorryAxなし、変更Lean warning/error0/0、workflow・Lean job/step・receipt completed/SUCCESS、source/test-merge/squash Git tree一致。新規Lean葉225行のみ。固定Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。定理squash `b45fb266700b6398cbd34e915806f846e5a3ea5d`。
+
+**次の課題:** 選択データの幾何誤差・中心値区間誤差・質量区間誤差を合わせ、最終signed-transfer区間幅の明示評価へ接続する。今回の半径・質量幅の制御だけで、最終区間幅の任意精度収束、具体的数値表、非零符号、H一様coercivity、Hamiltonian gap、連続体質量ギャップを主張しない。
+
+唯一のLean定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、mainは文書ミラー。[AGU正式証明記録](docs/proofs/P4-Q2-PZ37AGU_verified_20261106.md)。以下のAGS・AGT以前の全文を保持し、旧追補の要求精度保持に関するOPEN項目はこのAGUで解決した。
+
+---
+
 ## 検証済み定理 — AGS・AGT／真正SU(2)の任意精度有理被覆と空間格子（2026-11-06 JST）
 
 唯一のLean定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。mainは文書ミラー。[AGS #6396](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6396)・[AGT #6397](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6397) はMERGED。AGRの正式記録と両ブランチ文書は既に#6394・#6395で同期済みであり、本追補はその後の進展を記録する。
