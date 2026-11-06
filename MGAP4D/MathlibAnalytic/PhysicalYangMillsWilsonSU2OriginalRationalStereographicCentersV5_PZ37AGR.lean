@@ -108,6 +108,74 @@ theorem p4Q2PZ37AGR_originalCenter_energy_exact (t : Fin 3 → ℚ) :
         (1 - p4Q2PZ37AGR_rationalSphereCoordinates t 0 : ℚ) := by
   exact (p4Q2PZ37AGR_originalRationalCenter_coordinates t).energy_exact
 
+
+/-! ## Conditional descent into the unchanged AGQ/AGP physical certificates -/
+
+namespace GroundStatePosteriorJoint
+
+variable (H : ℕ)
+local notation "Link" => PeriodicHypercubicEvenSpatialSliceLink H
+local notation "Cfg" => PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+
+local instance p4Q2PZ37AGR_links : Fintype Link := Fintype.ofFinite _
+
+/-- A *verified* finite covering by exact rational stereographic SU(2)
+centers supplies genuine original spatial Borel cells, per-link rational
+center evidence and AGQ's total-Haar-mass accuracy budget. This theorem
+does not assume a mass oracle or replace the physical Haar measure.
+
+Its finite-cover hypothesis is an explicit, still-open construction
+obligation; this interface does NOT assert arbitrary-radius existence. -/
+def p4Q2PZ37AGR_originalGridDataOfRationalCover
+    (n : ℕ) (parameters : Fin n → Fin 3 → ℚ)
+    (r : ℝ) (hr : 0 < r)
+    (hCover : ∀ g : G, ∃ i : Fin n,
+      g ∈ p4Q2PZ37ADK_trueChordalBall
+        (p4Q2PZ37AGR_originalRationalCenter (parameters i)) r)
+    (R : ℚ) (hR : 0 ≤ R)
+    (hRadius : (Fintype.card Link : ℝ) * r ≤ (R : ℝ))
+    (eps : ℚ) (heps : 0 < eps) :
+    p4Q2PZ37AGP_gridData H := by
+  let centers : Fin n → G := fun i =>
+    p4Q2PZ37AGR_originalRationalCenter (parameters i)
+  let grid := p4Q2PZ37AGH_gridOfCover H n centers r hr hCover
+  have hc : ∀ i : Fin grid.n, ∀ e : Link,
+      p4Q2PZ37AGL_rationalCoordinates (grid.center i e) := by
+    intro i e
+    change p4Q2PZ37AGL_rationalCoordinates
+      (p4Q2PZ37AGR_originalRationalCenter
+        (parameters ((Fintype.equivFin (Link → Fin n)).symm i e)))
+    exact p4Q2PZ37AGR_originalRationalCenter_coordinates _
+  have hGridRadius : grid.radius ≤ (R : ℝ) := by
+    change (Fintype.card Link : ℝ) * r ≤ (R : ℝ)
+    exact hRadius
+  exact p4Q2PZ37AGQ_gridDataOfRationalCenters H grid hc R hR hGridRadius
+    eps heps
+
+/-- Connect rational stereographic covering evidence all the way to the
+unchanged original signed transfer enclosure, with the genuine global
+interval intersected rather than overwritten. -/
+def p4Q2PZ37AGR_originalTransferIntervalOfRationalCover
+    (n : ℕ) (parameters : Fin n → Fin 3 → ℚ)
+    (r : ℝ) (hr : 0 < r)
+    (hCover : ∀ g : G, ∃ i : Fin n,
+      g ∈ p4Q2PZ37ADK_trueChordalBall
+        (p4Q2PZ37AGR_originalRationalCenter (parameters i)) r)
+    (R : ℚ) (hR : 0 ≤ R)
+    (hRadius : (Fintype.card Link : ℝ) * r ≤ (R : ℝ))
+    (eps : ℚ) (heps : 0 < eps)
+    (B : Cfg) (b : ∀ e : Link, p4Q2PZ37AGL_rationalCoordinates (B e))
+    (m k : ℕ) (hk : 0 < k) :
+    p4Q2PZ37AFV_verifiedInterval
+      (decomposableOneSliceTransferIntegral H 2 p4Q2PZ37ADC_fixedCoupling
+        (p4Q2PZ37ZW_originalCenteredPhysicalDirection H) B) :=
+  p4Q2PZ37AGP_originalTightenedInterval H
+    (p4Q2PZ37AGR_originalGridDataOfRationalCover H
+      n parameters r hr hCover R hR hRadius eps heps)
+    B b m k hk (p4Q2PZ37AGN_originalTransferGlobalInterval H B m k hk)
+
+end GroundStatePosteriorJoint
+
 end
 end MGAP4D.MathlibAnalytic
 
@@ -116,3 +184,6 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AGR_rationalSphere
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AGR_originalRationalCenter_coordinates
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AGR_originalCenter_energy_exact
+
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AGR_originalGridDataOfRationalCover
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AGR_originalTransferIntervalOfRationalCover
