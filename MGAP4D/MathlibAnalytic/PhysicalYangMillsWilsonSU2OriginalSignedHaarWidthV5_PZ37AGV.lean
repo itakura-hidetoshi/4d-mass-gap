@@ -151,8 +151,18 @@ theorem p4Q2PZ37AGV_rationalTable_width_le
     (by exact_mod_cast hM)
     hMassLo hMassHi hMassNonneg hMassTotal
     hAReal hBReal
-    (by intro i; exact_mod_cast hCellWidths i)
-    (by exact_mod_cast hMassWidths)
+    (by
+      intro i
+      have hc : (((d.cellUpper i - d.cellLower i : ℚ) : ℝ)) ≤ (A : ℝ) := by
+        exact_mod_cast hCellWidths i
+      push_cast at hc
+      simpa only [] using hc)
+    (by
+      have hm : (((∑ i : Fin N, (d.massUpper i - d.massLower i) : ℚ) : ℚ) : ℝ) ≤
+          (eps : ℝ) := by
+        exact_mod_cast hMassWidths
+      push_cast at hm
+      simpa only [] using hm)
   have hCast : ((d.upper - d.lower : ℚ) : ℝ) =
       (∑ i : Fin N,
         max ((d.cellUpper i : ℝ) * (d.massLower i : ℝ))
