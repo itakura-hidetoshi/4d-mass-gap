@@ -1,3 +1,13 @@
+## 検証済み定理 — AGY／真正kernel・floor幅による元signed-transferの定量上界（2026-11-07 JST）
+
+[AGY定理PR #6412](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6412) **MERGED**。AGUの同じ精度付き真正格子の全元有理中心について、元AGMの本物のclipped Wilson kernel認証区間の幅 `DeltaK_i` とその有限最大値 `DeltaKmax=max_i DeltaK_i`、元AGNの本物のglobal floor認証区間幅 `DeltaF` を定義し、非負性を形式証明した。元AGNの厳密centered sourceについて既証明 `|s_H(C)|≤p_H/2` を有理中心へ輸送し、**`etaMax≤(p_H/2)*(DeltaKmax+DeltaF/2)`** を証明。AGXの元signed-transferの最終区間に代入して **`width(I_H)≤(p_H/2)*(DeltaKmax+DeltaF/2)+2L_H(m)R+2M_H(m,n)eps`** をLean4で確認した。元Haar・source・kernel・floor・signed-transfer・tighten-only交差を維持。
+
+[exact-source CI #42300462050](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42300462050)：**11,360/11,360 SUCCESS**、新規9宣言は標準3公理のみ、sorryAxなし、変更Lean warning/error 0/0、workflow/job/Lean step/独立receipt completed/SUCCESS、source/test-merge/squash Git tree一致 `14987534a1dcc35c440380f5607e24e23468d8e8`。新規Lean219追加行・削除0、元物理モデル・root・固定Lean/mathlib・workflow不変更。
+
+**NEXT/OPEN:** 真正kernel幅の有限最大値およびfloor幅の任意精度制御は未証明。AGK結合幅収束とAGJ指数Taylor残差をAGM・AGNの元区間幅へ接続する。非零transfer符号、H一様coercivity、Hamiltonian gap、連続体mass gapと大体積数値表はOPEN。唯一の定理正本 `formal/real-hilbert-uniform-coercive-strong-limit`、mainは文書ミラー。[AGY正式証明記録](docs/proofs/P4-Q2-PZ37AGY_verified_20261107.md)。以下のAGX以前の履歴は全文保持。
+
+---
+
 ## 検証済み定理 — AGX／元中心幅の真正有限最大値で外部eta仮定を除去（2026-11-07 JST）
 
 [AGX定理PR #6409](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6409) **MERGED**。AGUで選択した**同じ真正Borel格子**は、その元SU(2)全空間partition証拠から添字集合が非空。AGWの元AGN各中心値幅 `width_i=|s_H(C_i)|*(kernelWidth_i+floorWidth/2)` の**有限最大値**を `etaMax_H,d,B,m,n` として定義し、すべての中心値区間がそれ以下、`etaMax≥0` をLean4で形式証明。任意H・正有理R,eps・有理座標元右境界B・n>0に対し、**外部eta証明入力を使わず** `width(I_H)≤etaMax+2L_H(m)R+2M_H(m,n)eps` を元AGVの真正signed-transfer評価から導いた。有限セル数に比例する余分な誤差係数を導入していない。

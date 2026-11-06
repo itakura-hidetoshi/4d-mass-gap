@@ -1,3 +1,15 @@
+## AGY（2026-11-07 JST）— 元center幅を真正kernel最大幅とglobal floor幅へ分解
+
+**CLOSED:** [定理PR #6412](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6412) MERGED。元AGUと同じBorel格子の真正AGM clipped Wilson kernel幅の有限最大 `DeltaKmax`、元AGN global floor幅 `DeltaF` を定義。元AGN中心化sourceの厳密有理値に `|s_H(C)|≤p_H/2` を適用し、AGXの `etaMax≤(p_H/2)*(DeltaKmax+DeltaF/2)`、更に元AGU最終signed-transfer区間の `width(I_H)≤(p_H/2)*(DeltaKmax+DeltaF/2)+2L_H(m)R+2M_H(m,n)eps` を証明。物理model・Haar・signed min/maxを不変更。
+
+**VERIFIED:** [exact-source CI #42300462050](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42300462050)、11,360/11,360 SUCCESS、9公理出力は標準3公理のみ、sorryAxなし、変更warning/error0/0、workflow/job/step/receipt completed/SUCCESS、source/test-merge/squash Git tree一致。新規Lean219行・削除0、root・pins・workflow不変更。
+
+**NEXT — AGZ:** AGK真正結合幅、AGJ Taylor残差を元AGM kernel幅・AGN floor幅へ直接証明付きで接続し、有限中心すべてに対する誤差収束を検討する。DeltaKmax→0／DeltaF→0、真のtransfer非零符号、二閾値殻、H一様coercivity、Hamiltonian gap、連続体gap、具体的大体積数値計算はいずれもOPEN。
+
+[正式証明記録](docs/proofs/P4-Q2-PZ37AGY_verified_20261107.md)。唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、mainは文書ミラー、旧履歴全文保持。
+
+---
+
 ## AGX（2026-11-07 JST）— 真正有限中心幅最大値による外部eta条件の解消
 
 **CLOSED:** [定理PR #6409](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6409) MERGED。元AGUの空でない真正Borel partitionから `Finset.sup'` による実中心幅の有限最大値 `etaMax` を構成。元AGN各中心幅≤etaMaxとetaMax≥0を証明し、元AGVのsigned min/max／Haar質量／AGP評価／tighten-only交差に**外部eta仮定なし**で接続した：`width(I_H)≤etaMax+2L_H(m)R+2M_H(m,n)eps`。同じ選択格子と右境界・source・kernel・floorを保持。
