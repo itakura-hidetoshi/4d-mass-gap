@@ -142,7 +142,7 @@ theorem p4Q2PZ37AGP_originalCenterSlope_le_halfCount (C : Cfg) :
   have h := mul_le_mul_of_nonneg_left
     (p4Q2PZ37AGN_originalContinuousSource_abs_le_halfCount H C)
     (mul_nonneg (by norm_num : (0 : ℝ) ≤ 13) p4Q2PZ37ADC_fixedCoupling_pos.le)
-  exact add_le_add_left h _
+  exact add_le_add (le_refl (6 * (1 - kFloor))) h
 
 /-- The improved uniform analytic slope never exceeds the previous AGG slope. -/
 theorem p4Q2PZ37AGP_halfCountSlope_le_AGG :
