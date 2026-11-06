@@ -274,6 +274,90 @@ theorem p4Q2PZ37AGO_original24_interval_no_sign
   · rw [hHi]
     linarith only [hR]
 
+
+/-- The genuine three spatial directions and the three unordered spatial
+direction pairs have the same finite cardinality. Nat.card avoids reliance
+on the local Fintype.ofFinite enumeration of a physical link carrier. -/
+theorem p4Q2PZ37AGO_originalSpatial_linkCount_eq_plaquetteCount :
+    p4Q2PZ37AGN_countRational H =
+      (Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ℚ) := by
+  have hDir : Nat.card PeriodicHypercubicEvenSpatialDirection = 3 := by
+    rw [Nat.card_eq_fintype_card]
+    decide
+  have hPair : Nat.card PeriodicHypercubicEvenSpatialDirectionPair = 3 := by
+    rw [Nat.card_eq_fintype_card]
+    decide
+  have hNat :
+      Nat.card (PeriodicHypercubicEvenSpatialSliceLink H) =
+        Nat.card (PeriodicHypercubicEvenSpatialSlicePlaquette H) := by
+    simp only [PeriodicHypercubicEvenSpatialSliceLink,
+      PeriodicHypercubicEvenSpatialSlicePlaquette, Nat.card_prod, hDir, hPair]
+  have hList :
+      (periodicHypercubicEvenSpatialSlicePlaquetteList H).length =
+        Nat.card (PeriodicHypercubicEvenSpatialSlicePlaquette H) := by
+    simp [periodicHypercubicEvenSpatialSlicePlaquetteList,
+      Fintype.card_eq_nat_card]
+  have hLink :
+      Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) =
+        Nat.card (PeriodicHypercubicEvenSpatialSliceLink H) :=
+    Fintype.card_eq_nat_card
+  unfold p4Q2PZ37AGN_countRational
+  exact_mod_cast (hList.trans (hNat.symm.trans hLink.symm))
+
+/-- In the actual original model, the 24-center spatial geometry always
+dominates twice the certified transfer radius, with NO geometric hypothesis.
+Refinement of beta0 or Taylor order cannot remove this fixed-cell obstacle. -/
+theorem p4Q2PZ37AGO_original24_geometry_dominates_twoRadius
+    (m n : ℕ) (hn : 0 < n) :
+    2 * p4Q2PZ37AGN_transferRadius H m n hn ≤
+      p4Q2PZ37AGN_original24Geometry H m := by
+  let c : ℚ := p4Q2PZ37AGN_countRational H
+  let beta : ℚ := p4Q2PZ37AGK_upper m
+  let f : ℚ := (p4Q2PZ37AGN_originalFloorInterval H m n hn).lower
+  have hc : 0 ≤ c := by
+    dsimp [c, p4Q2PZ37AGN_countRational]
+    positivity
+  have hbReal : (0 : ℝ) ≤ (beta : ℝ) :=
+    (p4Q2PZ37ADC_fixedCoupling_pos).le.trans
+      (p4Q2PZ37AGK_originalCoupling_bounds m).2
+  have hb : 0 ≤ beta := by exact_mod_cast hbReal
+  have hf : 0 ≤ f := by
+    change (0 : ℚ) ≤ max
+      (p4Q2PZ37AGN_originalFloorRawInterval H m n hn).lower 0
+    exact le_max_right _ _
+  have hcf : 0 ≤ c * f := mul_nonneg hc hf
+  have hbcc : 0 ≤ beta * c * c :=
+    mul_nonneg (mul_nonneg hb hc) hc
+  have hCount := p4Q2PZ37AGO_originalSpatial_linkCount_eq_plaquetteCount H
+  change 2 * (c * (1 - f) / 4) ≤
+    (6 + 13 * beta * c) * ((4 / 5 : ℚ) * (Fintype.card Link : ℚ))
+  rw [← hCount]
+  nlinarith only [hc, hcf, hbcc]
+
+/-- The actual fixed 24-center signed AGI interval is IDENTICALLY the
+improved global envelope, for every original rational boundary and every
+permitted coupling/Taylor truncation order. -/
+theorem p4Q2PZ37AGO_original24_interval_exact
+    (B : Cfg) (b : ∀ e : Link, p4Q2PZ37AGL_rationalCoordinates (B e))
+    (m n : ℕ) (hn : 0 < n) :
+    (p4Q2PZ37AGN_original24TransferInterval H B b m n hn).lower =
+        -p4Q2PZ37AGN_transferRadius H m n hn ∧
+      (p4Q2PZ37AGN_original24TransferInterval H B b m n hn).upper =
+        p4Q2PZ37AGN_transferRadius H m n hn :=
+  p4Q2PZ37AGO_original24_interval_collapses H B b m n hn
+    (p4Q2PZ37AGO_original24_geometry_dominates_twoRadius H m n hn)
+
+/-- Neither sign-checking predicate can succeed on the actual fixed
+24-center enclosure, regardless of m,n, boundary, or original Haar masses.
+This does NOT say that the true physical signed transfer itself is zero. -/
+theorem p4Q2PZ37AGO_original24_no_sign_unconditional
+    (B : Cfg) (b : ∀ e : Link, p4Q2PZ37AGL_rationalCoordinates (B e))
+    (m n : ℕ) (hn : 0 < n) :
+    ¬ (0 < (p4Q2PZ37AGN_original24TransferInterval H B b m n hn).lower) ∧
+      ¬ ((p4Q2PZ37AGN_original24TransferInterval H B b m n hn).upper < 0) :=
+  p4Q2PZ37AGO_original24_interval_no_sign H B b m n hn
+    (p4Q2PZ37AGO_original24_geometry_dominates_twoRadius H m n hn)
+
 end GroundStatePosteriorJoint
 end
 end MGAP4D.MathlibAnalytic
@@ -286,3 +370,8 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AGO_original24_raw_spans_global
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AGO_original24_interval_collapses
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AGO_original24_interval_no_sign
+
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AGO_originalSpatial_linkCount_eq_plaquetteCount
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AGO_original24_geometry_dominates_twoRadius
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AGO_original24_interval_exact
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AGO_original24_no_sign_unconditional
