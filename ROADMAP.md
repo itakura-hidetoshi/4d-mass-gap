@@ -1,3 +1,15 @@
+## AGW（2026-11-07 JST）— 元中心値区間のkernel／floor幅への厳密分解
+
+**CLOSED:** [PR #6406](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6406) MERGED。真正AGNの元source有理値sと元AGM clipped kernel[klo,khi]・元AGN floor[flo,fhi]から、`centerWidth=|s|*((khi-klo)+(fhi-flo)/2)` をmin/max符号処理付きでLean4形式証明。元center intervalの非負幅も証明。物理式・Haar法則・元kernel等を変更しない。
+
+**VERIFIED:** [CI #42274305910](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42274305910)、11,358/11,358 SUCCESS、4宣言標準公理のみ、sorryAxなし、変更warning/error0/0、workflow/job/step/receipt SUCCESS、source/test-merge/squash Git tree一致。新規Lean150追加行のみ。
+
+**NEXT/OPEN:** AGM／AGJ／AGKの元kernel誤差とAGN floor幅の上界・一様精度を証明し、AGVの全中心eta条件を解消する。中心幅恒等式単体は任意精度収束を意味しない。非零transfer符号、二閾値殻、H一様coercivity、Hamiltonian gap、連続体mass gap、具体的大体積計算は引き続き未証明。
+
+[AGW正式記録](docs/proofs/P4-Q2-PZ37AGW_verified_20261107.md)。定理正本 formal/real-hilbert-uniform-coercive-strong-limit、mainは文書ミラー、従来履歴保持。
+
+---
+
 ## AGV（2026-11-07 JST）— 真正Haarによる元signed-transfer区間幅
 
 **CLOSED:** [PR #6403](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6403) MERGED。各セルのAGN中心値区間幅≤etaの条件の下、AGP/AGIの符号付きmin/max、実際のHaar質量の非負性と正規化、AGUの同一選択格子の半径≤R・質量総幅≤epsにより、`width(I_H)≤eta+2L_H(m)R+2M_H(m,n)eps` をLean4で証明。負の有理Haar下端を許容し、有理端点の和を1と仮定しない。元のtransfer・Borel格子・source/kernelは不変更。
