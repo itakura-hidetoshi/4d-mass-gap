@@ -2,6 +2,7 @@ import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalRationalActionV5
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenPrimarySpatialPlaquetteWilsonClassFunction
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpatialPlaquetteOverlapBound
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicNondegenerateShifts
+import Mathlib.SetTheory.Cardinal.Finite
 import Mathlib.Tactic
 
 /-!
@@ -164,9 +165,10 @@ theorem p4Q2PZ37AGN_originalPlaquetteEnergy_integrable (p : Plq) :
       (HasCompactSupport.of_compactSpace _)
   -- The established Haar transport avoids expanding the full dependent
   -- lattice topology during elaboration of four nested coordinate maps.
-  have hCyclic :=
-    (p4Q2PZ37AGN_originalPlaquetteCyclic_measurePreserving H p)
-      .integrable_comp_of_integrable hOne
+  have hMP := p4Q2PZ37AGN_originalPlaquetteCyclic_measurePreserving H p
+  have hCyclic : Integrable (fun A : Cfg => specialUnitaryWilsonPlaquetteEnergy 2
+      (p4Q2PZ37AGN_originalPlaquetteCyclicHolonomy H p A)) muH :=
+    MeasurePreserving.integrable_comp_of_integrable hMP hOne
   apply hCyclic.congr
   exact Filter.Eventually.of_forall
     (fun A => (p4Q2PZ37AGN_originalPlaquette_energy_eq_cyclic H p A).symm)
@@ -218,9 +220,11 @@ theorem p4Q2PZ37AGN_originalWilsonMean_exact : mH = pH := by
       intro p _hp
       exact p4Q2PZ37AGN_originalPlaquetteEnergy_mean_one H p
     _ = pH := by
-      simp [p4Q2PZ37AFZ_plaquetteCount,
+      -- Nat.card forgets the locally chosen Fintype.ofFinite instance.
+      simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul, mul_one,
+        p4Q2PZ37AFZ_plaquetteCount,
         periodicHypercubicEvenSpatialSlicePlaquetteList,
-        PeriodicHypercubicEvenSpatialSlicePlaquette, Fintype.card_prod]
+        Finset.length_toList, Fintype.card_eq_nat_card]
 
 /-- The exact mean is a zero-width rational enclosure of the original scalar. -/
 def p4Q2PZ37AGN_originalWilsonMeanSingleton : p4Q2PZ37AFV_verifiedInterval mH where
