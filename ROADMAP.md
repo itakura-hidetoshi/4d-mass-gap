@@ -1,3 +1,17 @@
+## P4-Q2-PZ37AGO（2026-11-06 JST）— 真正24中心signed-transfer証明書の飽和障害
+
+[定理PR #6384](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6384) MERGED。唯一のLean正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。
+
+**CLOSED（Lean形式証明）**：元空間リンク数＝元plaquette数 `p_H`、元24中心幾何誤差 `gamma_H >= (24/5)*p_H >= 2*R_H`（任意H,m,n>0）、真正Haar質量の上端総和≥1、AGI signed `min/max` raw包囲が `[-R_H,R_H]` を包含。従って、元のfixed-24証明書とAGNの改善された大域区間の交差は**ちょうど `[-R_H,R_H]`**。任意の元有理境界・許容m,nについて、この手法での正負符号判定は不可能。物理transferがゼロとは言っていない。
+
+**VERIFIED**：[CI #42169865632](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42169865632) 11,350/11,350 SUCCESS、12公理依存は標準公理のみ、sorryAxなし、変更Lean warning/error 0/0、receipt SUCCESS、source/test-merge/squash Git tree一致。前CIの有限型cardinalityのsimp循環を列挙補題の`simp only`へ修正。変更は新規Lean葉1件・377追加行のみ、既存Lean・物理定義・workflow・root不変更。
+
+**NEXT（OPEN）**：真正Haar細分による幾何半径の改善、個々の真正セル質量の有理認証、center値と全積分の誤差制御を同時に進める。m,nだけの精密化では幾何障害が残る。非零符号、二閾値殻、H一様coercivity、Hamiltonian gap、連続体4D質量ギャップは未証明。
+
+正式記録：`docs/proofs/P4-Q2-PZ37AGO_verified_20261106.md`。以下のAGN以前の履歴本文は全バイト保持する。
+
+---
+
 ## 検証済み定理 — AGN／元Wilson Haar平均の厳密計算とsigned transfer自動証明書（2026-11-06 JST）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。[AGN定理PR #6381](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6381) はMERGED。AGN定理squashは `c648bd88566d1e5bf06324ada997ab37918cb12c`。 元SU(2)・Wilson作用・核・固定結合・source・Haar/Perron/transfer/FF・Lean公開集約root・Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を維持。
