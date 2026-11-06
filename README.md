@@ -1,3 +1,39 @@
+## 検証済み定理 — AGO／固定24中心signed-transfer幾何障害（2026-11-06 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。[AGO定理PR #6384](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6384) はMERGED。定理squash `c6f0b5b3ed640774f5539813f33c75259224f6ca`、検証済みsource `82dc6a7bae92b40fbff48f23ddc778fb1f552e5d`。元SU(2)・Wilson作用・固定結合・Haar/Perron・中心化source・transfer・公開root・Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` は不変更。
+
+### CLOSED — 真正24中心の幾何誤差がsigned証明書を飽和させる
+
+AGNの元24中心格子について、元空間リンク数と元plaquette数はともに `p_H`。これは元空間頂点数に3空間方向／3方向対を掛けた真正有限型の等式であり、列挙Fintype instanceの選択に依存しない。`m,n`、`0<n` の任意の精密化次数、任意の有理座標右境界Bについて、元transferの独立大域包囲半径
+
+`R_H = p_H*(1-floorLower_H(m,n))/4`, `0<=R_H<=p_H/4`
+
+と元24中心格子の有理幾何誤差
+
+`gamma_H = (6+13*betaUpper(m)*p_H)*(4/5)*p_H >= (24/5)*p_H >= 2*R_H`
+
+をLean4で示した。真正Haarの各セル実質量の合計は1である一方、区間**上端**の合計は1以上であり、これを正しく保持する。
+
+AGIの符号を保持した`min/max`演算に対し、元の中心値の真の有理区間と `|g_B(A)|<=R_H` から、粗い格子のraw区間端点が
+
+`rawLower_H <= -R_H`, `rawUpper_H >= R_H`
+
+を満たす。AGNの独立大域区間との交差は常に**ちょうど `[-R_H,R_H]`**。したがってこの固定24中心・現行幾何誤差の証明書は、真正元右境界で正負どちらの符号判定も成立させられない。これは元transfer `t_H(B)` が0である、実際の符号を持たない、または他の細分方法でも判定不能であるという命題ではない。
+
+### exact-source CI と修正理由
+
+新規Lean葉 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFixed24SignedGeometryObstructionV5_PZ37AGO.lean` **1ファイル377行追加、既存行削除0、12個の公理監査**。[最終CI #42169865632](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42169865632) はworkflow・Changed Lean job `127734898892`・Lean step・独立receipt job `127736380281` がすべてcompleted/SUCCESS。**11,350/11,350成功**、12宣言すべて `propext`・`Classical.choice`・`Quot.sound` の標準公理だけ、`sorryAx` なし、変更Lean warning/error 0/0。source `82dc6a7b...` とtest-merge `9feb90a8673e38e7bfc147ba3f7c1991a2c7c586` とsquash `c6f0b5b3...` のGit treeは `60763de825d87805002e42445325e4b7121bd315` で完全一致。
+
+初期8宣言のLean stepは成功したが、追加した有限型の数え上げで、`simp [Fintype.card_eq_nat_card]` が `Nat.card_eq_fintype_card` と循環し、旧CI #42169137984 はmaximum recursion depthに失敗した。定理・仮定は変えず、`Finset.length_toList`・`Finset.card_univ`・`Fintype.card_eq_nat_card` を指定した `simp only` に修正。heartbeatや再帰深度を増やす回避はしていない。
+
+### OPEN — 次の真正空間計算
+
+固定24中心の球半径 `4/5` と粗いproduct Haar質量区間を維持したまま、結合級数・指数Taylor次数だけを増やしても非零符号は認証できない。次段は真正SU(2)の細分格子、各セルの認証Haar質量、元source・kernelの局所振動の鋭い上界、または直接モーメント／相関積分を接続する。有限体積での符号分離さえ未認証であり、二閾値殻、H一様coercivity、物理Hamiltonian gap、連続体4D Yang–Mills質量ギャップは未証明。
+
+正式記録：[AGO証明記録](docs/proofs/P4-Q2-PZ37AGO_verified_20261106.md)。以下のAGN以前の本文は変更しない履歴であり、旧「次段階」表現より本追補を優先する。
+
+---
+
 ## 検証済み定理 — AGN／元Wilson Haar平均の厳密計算とsigned transfer自動証明書（2026-11-06 JST）
 
 唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。[AGN定理PR #6381](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6381) はMERGED。AGN定理squashは `c648bd88566d1e5bf06324ada997ab37918cb12c`。 元SU(2)・Wilson作用・核・固定結合・source・Haar/Perron/transfer/FF・Lean公開集約root・Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を維持。
