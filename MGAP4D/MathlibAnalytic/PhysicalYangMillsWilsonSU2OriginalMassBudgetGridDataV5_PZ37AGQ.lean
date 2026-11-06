@@ -115,19 +115,19 @@ theorem p4Q2PZ37AGQ_massWidths_sum_exact
     (grid : p4Q2PZ37AGH_originalSpatialGrid H)
     (delta : ℚ) (hdelta : 0 < delta) :
     (∑ i : Fin grid.n,
-        (p4Q2PZ37AGQ_originalMassIntervals H grid delta hdelta).upper i -
-          (p4Q2PZ37AGQ_originalMassIntervals H grid delta hdelta).lower i) =
+        ((p4Q2PZ37AGQ_originalMassIntervals H grid delta hdelta).upper i -
+          (p4Q2PZ37AGQ_originalMassIntervals H grid delta hdelta).lower i)) =
       (grid.n : ℚ) * (2 * delta) := by
   calc
     (∑ i : Fin grid.n,
-        (p4Q2PZ37AGQ_originalMassIntervals H grid delta hdelta).upper i -
-          (p4Q2PZ37AGQ_originalMassIntervals H grid delta hdelta).lower i) =
+        ((p4Q2PZ37AGQ_originalMassIntervals H grid delta hdelta).upper i -
+          (p4Q2PZ37AGQ_originalMassIntervals H grid delta hdelta).lower i)) =
       ∑ _i : Fin grid.n, (2 * delta) := by
         apply Finset.sum_congr rfl
         intro i hi
         exact p4Q2PZ37AGQ_massWidth_exact H grid delta hdelta i
     _ = (grid.n : ℚ) * (2 * delta) := by
-      simp [Finset.sum_const_zero, nsmul_eq_mul]
+      simp [nsmul_eq_mul]
 
 /-- Mass precision is fixed only AFTER the genuine finite grid size n
 has been determined, avoiding the uncontrolled n * delta trap. -/
@@ -156,15 +156,15 @@ theorem p4Q2PZ37AGQ_totalMassWidth_le
     (grid : p4Q2PZ37AGH_originalSpatialGrid H)
     (eps : ℚ) (heps : 0 < eps) :
     (∑ i : Fin grid.n,
-      (p4Q2PZ37AGQ_originalMassIntervalsOfBudget H grid eps heps).upper i -
-      (p4Q2PZ37AGQ_originalMassIntervalsOfBudget H grid eps heps).lower i) ≤
+      ((p4Q2PZ37AGQ_originalMassIntervalsOfBudget H grid eps heps).upper i -
+      (p4Q2PZ37AGQ_originalMassIntervalsOfBudget H grid eps heps).lower i)) ≤
         eps := by
   have h := (p4Q2PZ37AGP_radiusBudget
     (grid.n : ℚ) (grid.n : ℚ) eps (by positivity) le_rfl heps).2
   rw [show
     (∑ i : Fin grid.n,
-      (p4Q2PZ37AGQ_originalMassIntervalsOfBudget H grid eps heps).upper i -
-      (p4Q2PZ37AGQ_originalMassIntervalsOfBudget H grid eps heps).lower i) =
+      ((p4Q2PZ37AGQ_originalMassIntervalsOfBudget H grid eps heps).upper i -
+      (p4Q2PZ37AGQ_originalMassIntervalsOfBudget H grid eps heps).lower i)) =
         (grid.n : ℚ) * (2 * p4Q2PZ37AGQ_deltaOfTotalBudget H grid eps) from
     p4Q2PZ37AGQ_massWidths_sum_exact H grid
       (p4Q2PZ37AGQ_deltaOfTotalBudget H grid eps)
