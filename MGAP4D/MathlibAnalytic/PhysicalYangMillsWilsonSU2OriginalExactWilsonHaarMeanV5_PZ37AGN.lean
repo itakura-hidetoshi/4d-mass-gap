@@ -159,17 +159,17 @@ theorem p4Q2PZ37AGN_originalPlaquette_energy_eq_cyclic (p : Plq) (A : Cfg) :
 theorem p4Q2PZ37AGN_originalPlaquetteEnergy_integrable (p : Plq) :
     Integrable (fun A : Cfg => specialUnitaryWilsonPlaquetteEnergy 2
       (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy A p)) muH := by
-  have hHol : Continuous (fun A : Cfg =>
-      periodicHypercubicEvenSpatialSlicePlaquetteHolonomy A p) := by
-    change Continuous (fun A : Cfg =>
-      A (p.1, p.2.1.1) *
-        A (periodicHypercubicEvenSpatialSliceShift H p.1 p.2.1.1, p.2.1.2) *
-        (A (periodicHypercubicEvenSpatialSliceShift H p.1 p.2.1.2, p.2.1.1))⁻¹ *
-        (A (p.1, p.2.1.2))⁻¹)
-    exact (((continuous_apply _).mul (continuous_apply _)).mul
-      (continuous_apply _).inv).mul (continuous_apply _).inv
-  have hEnergy := (continuous_specialUnitaryWilsonPlaquetteEnergy 2).comp hHol
-  exact hEnergy.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+  have hOne : Integrable (specialUnitaryWilsonPlaquetteEnergy 2) mu :=
+    (continuous_specialUnitaryWilsonPlaquetteEnergy 2).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  -- The established Haar transport avoids expanding the full dependent
+  -- lattice topology during elaboration of four nested coordinate maps.
+  have hCyclic :=
+    (p4Q2PZ37AGN_originalPlaquetteCyclic_measurePreserving H p)
+      .integrable_comp_of_integrable hOne
+  apply hCyclic.congr
+  exact Filter.Eventually.of_forall
+    (fun A => (p4Q2PZ37AGN_originalPlaquette_energy_eq_cyclic H p A).symm)
 
 /-- Every original spatial plaquette, at every finite H, has exact Haar
 energy expectation one. Shared links between different plaquettes require
@@ -219,7 +219,8 @@ theorem p4Q2PZ37AGN_originalWilsonMean_exact : mH = pH := by
       exact p4Q2PZ37AGN_originalPlaquetteEnergy_mean_one H p
     _ = pH := by
       simp [p4Q2PZ37AFZ_plaquetteCount,
-        periodicHypercubicEvenSpatialSlicePlaquetteList]
+        periodicHypercubicEvenSpatialSlicePlaquetteList,
+        PeriodicHypercubicEvenSpatialSlicePlaquette, Fintype.card_prod]
 
 /-- The exact mean is a zero-width rational enclosure of the original scalar. -/
 def p4Q2PZ37AGN_originalWilsonMeanSingleton : p4Q2PZ37AFV_verifiedInterval mH where
