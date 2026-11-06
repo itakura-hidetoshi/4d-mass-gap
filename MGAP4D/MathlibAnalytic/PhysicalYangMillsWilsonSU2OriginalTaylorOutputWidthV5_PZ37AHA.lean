@@ -206,8 +206,9 @@ theorem p4Q2PZ37AHA_scaledExpGap_le_budget
         lo hi k n hk hn hlohi hhi hloSmall hhiSmall
   have hNonneg : 0 ≤ b := le_max_left _ _
   have hBd : c ≤ b + d := by linarith only [hGap]
+  have hCNonneg : 0 ≤ c := le_max_left _ _
   have hPow : c ^ k ≤ (b + d) ^ k :=
-    pow_le_pow_left₀ hNonneg hBd k
+    pow_le_pow_left₀ hCNonneg hBd k
   change c ^ k - b ^ k ≤ (b + d) ^ k - b ^ k
   linarith only [hPow]
 
@@ -287,13 +288,21 @@ theorem p4Q2PZ37AHA_originalExponentGap_le_couplingTaylor
   have hpow : (b + d) ^ k ≤ (b + D) ^ k :=
     pow_le_pow_left₀ (add_nonneg hbase hdiff)
       (by linarith only [hDelta]) k
+  have hBudgetEq : p4Q2PZ37AHA_scaledOutputBudget lo hi k n =
+      (b + d) ^ k - b ^ k := by
+    dsimp [p4Q2PZ37AHA_scaledOutputBudget, b, d, u, v]
+    ring
   have hGap' : p4Q2PZ37AGJ_expUpper hi k n -
-      p4Q2PZ37AGJ_expLower lo k n ≤ (b + d) ^ k - b ^ k := by
-    simpa only [p4Q2PZ37AHA_scaledOutputBudget, u, v, b, d]
-      using hGap
-  change p4Q2PZ37AGJ_expUpper hi k n -
-    p4Q2PZ37AGJ_expLower lo k n ≤ (b + D) ^ k - b ^ k
-  linarith only [hGap', hpow]
+      p4Q2PZ37AGJ_expLower lo k n ≤ (b + d) ^ k - b ^ k :=
+    hGap.trans_eq hBudgetEq
+  have hOutput : p4Q2PZ37AGJ_expUpper hi k n -
+      p4Q2PZ37AGJ_expLower lo k n ≤ (b + D) ^ k - b ^ k := by
+    linarith only [hGap', hpow]
+  have hTargetEq : (b + D) ^ k - b ^ k =
+      p4Q2PZ37AHA_couplingTaylorBudget action m n := by
+    dsimp [p4Q2PZ37AHA_couplingTaylorBudget, b, D, u, k, lo, hi]
+    ring
+  exact hOutput.trans_eq hTargetEq
 
 variable (H : ℕ)
 local notation "Link" => PeriodicHypercubicEvenSpatialSliceLink H
@@ -318,9 +327,13 @@ theorem p4Q2PZ37AHA_originalKernelTaylorGap_le_budget
   let k := p4Q2PZ37AGM_autoScale lo hi
   have ha := p4Q2PZ37AGM_originalActionRational_nonneg H A B a b
   have h := p4Q2PZ37AHA_originalExponentGap_le_couplingTaylor action ha m n hn
-  change p4Q2PZ37AGJ_expUpper hi k n - p4Q2PZ37AGJ_expLower lo k n ≤
-    p4Q2PZ37AHA_couplingTaylorBudget action m n
-  exact h
+  simpa [p4Q2PZ37AGZ_originalKernelTaylorGap,
+    p4Q2PZ37AGM_originalRationalKernelInterval,
+    p4Q2PZ37AGK_originalRefinedKernelInterval,
+    p4Q2PZ37AGJ_boltzmannInterval,
+    p4Q2PZ37AGJ_scaledExpInterval,
+    p4Q2PZ37AGL_originalSlabActionSingleton,
+    p4Q2PZ37AGZ_exponentLower, p4Q2PZ37AGZ_exponentUpper] using h
 
 /-- The same physical floor's raw AGJ output is controlled by its exact
 AGN combinatorial action, not by a hypothetical floor-value oracle. -/
@@ -335,9 +348,13 @@ theorem p4Q2PZ37AHA_originalFloorTaylorGap_le_budget
   let k := p4Q2PZ37AGM_autoScale lo hi
   have ha := p4Q2PZ37AGZ_originalFloorAction_nonneg H
   have h := p4Q2PZ37AHA_originalExponentGap_le_couplingTaylor action ha m n hn
-  change p4Q2PZ37AGJ_expUpper hi k n - p4Q2PZ37AGJ_expLower lo k n ≤
-    p4Q2PZ37AHA_couplingTaylorBudget action m n
-  exact h
+  simpa [p4Q2PZ37AGZ_originalKernelTaylorGap,
+    p4Q2PZ37AGM_originalRationalKernelInterval,
+    p4Q2PZ37AGK_originalRefinedKernelInterval,
+    p4Q2PZ37AGJ_boltzmannInterval,
+    p4Q2PZ37AGJ_scaledExpInterval,
+    p4Q2PZ37AGL_originalSlabActionSingleton,
+    p4Q2PZ37AGZ_exponentLower, p4Q2PZ37AGZ_exponentUpper] using h
 
 /-- Finite genuine spatial AGU center maximum of the new computed
 coupling/factorial output budgets, retaining its nonempty true grid. -/
