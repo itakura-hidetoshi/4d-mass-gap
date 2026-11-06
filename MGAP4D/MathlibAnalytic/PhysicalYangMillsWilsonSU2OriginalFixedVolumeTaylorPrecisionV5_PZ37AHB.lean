@@ -62,7 +62,9 @@ theorem p4Q2PZ37AHB_budget_exact (S : ℚ) (m n : ℕ) :
         p4Q2PZ37AGZ_autoScale S m -
       (p4Q2PZ37AHB_lowerBase S m n) ^
         p4Q2PZ37AGZ_autoScale S m := by
-  rfl
+  dsimp [p4Q2PZ37AHA_couplingTaylorBudget, p4Q2PZ37AHB_lowerBase,
+    p4Q2PZ37AHB_totalBaseError, p4Q2PZ37AGZ_autoScale]
+  ring
 
 /-- The existing AGJ factorial remainder is at most 2/n, with no
 asymptotic or external estimate; n>=1 is essential. -/
@@ -98,7 +100,7 @@ theorem p4Q2PZ37AHB_exists_factorial_precision
     have hzero : n = 0 := Nat.eq_zero_of_not_pos h
     subst n
     have hd : (0 : ℚ) < 2 / eps := div_pos (by norm_num) heps
-    norm_num at hn
+    exact lt_asymm hd hn
   have hnq : (0 : ℚ) < (n : ℚ) := by exact_mod_cast hnPos
   have hnProduct : (2 : ℚ) < eps * (n : ℚ) := by
     have h := (div_lt_iff₀ heps).mp hn
@@ -153,14 +155,16 @@ theorem p4Q2PZ37AHB_autoScale_le
       dsimp [lo, p4Q2PZ37AGZ_exponentLower]
       rw [abs_neg, abs_mul, abs_of_nonneg hbu0, abs_of_nonneg hS]
     rw [hEq]
-    exact (by simpa using hMul).trans hSC
+    have hMul' : p4Q2PZ37AGK_upper m * S ≤ S := by simpa using hMul
+    exact hMul'.trans hSC
   have hHiAbs : |hi| ≤ C := by
     have hMul := mul_le_mul_of_nonneg_right hbl1 hS
     have hEq : |hi| = p4Q2PZ37AGK_lower m * S := by
       dsimp [hi, p4Q2PZ37AGZ_exponentUpper]
       rw [abs_neg, abs_mul, abs_of_nonneg hbl, abs_of_nonneg hS]
     rw [hEq]
-    exact (by simpa using hMul).trans hSC
+    have hMul' : p4Q2PZ37AGK_lower m * S ≤ S := by simpa using hMul
+    exact hMul'.trans hSC
   have hCeil : Nat.ceil (max |lo| |hi|) ≤ Nat.ceil C := by
     apply (Nat.ceil_le).2
     exact (max_le hLoAbs hHiAbs).trans (Nat.le_ceil C)
@@ -287,13 +291,14 @@ theorem p4Q2PZ37AHB_powerGap_le_linear
     calc
       (max |b + delta| |b|) ^ (k - 1) ≤ (2 : ℚ) ^ (k - 1) :=
         pow_le_pow_left₀ (le_max_of_le_left (abs_nonneg _)) hMax _
-      _ ≤ (2 : ℚ) ^ K := by
-        gcongr
-        omega
+      _ ≤ (2 : ℚ) ^ K :=
+        pow_le_pow_right₀ (by norm_num : (1 : ℚ) ≤ 2)
+          ((Nat.sub_le k 1).trans hk)
   have hAbs :
       |(b + delta) ^ k - b ^ k| ≤
         |(b + delta) - b| * (k : ℚ) *
-          (max |b + delta| |b|) ^ (k - 1) := abs_pow_sub_pow_le
+          (max |b + delta| |b|) ^ (k - 1) :=
+      abs_pow_sub_pow_le (b + delta) b k
   have hCast : (k : ℚ) ≤ (K : ℚ) := by exact_mod_cast hk
   have hPowNonneg : 0 ≤ (max |b + delta| |b|) ^ (k - 1) := by
     positivity
@@ -344,10 +349,6 @@ theorem p4Q2PZ37AHB_budget_le_globalPrecisionError
   have hd1 : d ≤ 1 := hdBound.trans hPrec
   have hk : k ≤ K := p4Q2PZ37AHB_autoScale_le S C hS hSC m
   have hPow := p4Q2PZ37AHB_powerGap_le_linear b d hb hb1 hd hd1 k K hk
-  have hPrecNonneg : 0 ≤ p4Q2PZ37AHB_globalPrecisionError C m n := by
-    unfold p4Q2PZ37AHB_globalPrecisionError
-    have hC : 0 ≤ C := hS.trans hSC
-    positivity
   have hReplace :
       d * (K : ℚ) * (2 : ℚ) ^ K ≤
       p4Q2PZ37AHB_globalPrecisionError C m n *
@@ -384,8 +385,7 @@ theorem p4Q2PZ37AHB_exists_jointPrecision
   have hMul := mul_lt_mul_of_pos_left hm hCp
   have hEq : (C + 1) * em = eps / 2 := by
     dsimp [em]
-    field_simp
-    ring
+    field_simp <;> ring
   have hFirst : C * p4Q2PZ37AGK_tail m < eps / 2 :=
     hCmp.trans_lt (hMul.trans_eq hEq)
   have hSecond : 4 * p4Q2PZ37AHA_factorialEnvelope n < eps / 2 := by
@@ -426,7 +426,9 @@ theorem p4Q2PZ37AHB_exists_uniformOriginalOutputPrecision
     have hMul := mul_lt_mul_of_pos_right hLimit hFactorPos
     have hPrecNonneg : 0 ≤ p4Q2PZ37AHB_globalPrecisionError C m n := by
       unfold p4Q2PZ37AHB_globalPrecisionError
-      positivity
+      exact add_nonneg (mul_nonneg hC (p4Q2PZ37AGK_tail_nonneg m))
+        (mul_nonneg (by norm_num)
+          (p4Q2PZ37AHA_factorialEnvelope_nonneg n hn))
     have hProd : p4Q2PZ37AHB_globalPrecisionError C m n * factor ≤
         p4Q2PZ37AHB_globalPrecisionError C m n * (factor + 1) :=
       mul_le_mul_of_nonneg_left (by linarith : factor ≤ factor + 1) hPrecNonneg
@@ -437,9 +439,10 @@ theorem p4Q2PZ37AHB_exists_uniformOriginalOutputPrecision
   intro S hS hSC
   have hB := p4Q2PZ37AHB_budget_le_globalPrecisionError
     S C hS hSC m n hn hOne
-  change p4Q2PZ37AHA_couplingTaylorBudget S m n ≤
-    p4Q2PZ37AHB_globalPrecisionError C m n * factor at hB
-  exact hB.trans_lt hStrict
+  have hB' : p4Q2PZ37AHA_couplingTaylorBudget S m n ≤
+      p4Q2PZ37AHB_globalPrecisionError C m n * factor := by
+    simpa only [factor, K, mul_assoc] using hB
+  exact hB'.trans_lt hStrict
 
 /-- All ORIGINAL kernel/floor physical Taylor gaps, on the same AGU
 grid as AGY, admit arbitrary precision for each FIXED finite H.
