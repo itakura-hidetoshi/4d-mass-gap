@@ -40,22 +40,20 @@ def p4Q2PZ37AGT_originalSignedCenter_rational
     have h := congrArg (fun z : S3 => (z : E4) j)
       (p4Q2PZ37ADS_sphere_roundtrip
         (p4Q2PZ37AGS_signedRationalSphere b t))
-    calc
-      p4Q2PZ37ADR_originalFourCoordinates
+    have hOriginal :
+        p4Q2PZ37ADR_originalFourCoordinates
           (p4Q2PZ37AGS_originalSignedCenter b t) j =
-        (p4Q2PZ37AGS_signedRationalSphere b t : E4) j := by
-          simpa [p4Q2PZ37ADR_originalSU2ToSphere,
-            p4Q2PZ37AGS_originalSignedCenter] using h
-      _ = ((if b then -p4Q2PZ37AGR_rationalSphereCoordinates t j
-          else p4Q2PZ37AGR_rationalSphereCoordinates t j : ℚ) : ℝ) := by
-        cases b
-        · change (p4Q2PZ37AGR_rationalSphere t : E4) j =
-            (p4Q2PZ37AGR_rationalSphereCoordinates t j : ℝ)
-          rfl
-        · change (p4Q2PZ37AGS_antipode (p4Q2PZ37AGR_rationalSphere t) : E4) j =
-            (-(p4Q2PZ37AGR_rationalSphereCoordinates t j : ℚ) : ℝ)
-          rw [p4Q2PZ37AGS_antipode_apply]
-          simp
+            (p4Q2PZ37AGS_signedRationalSphere b t : E4) j := by
+      simpa [p4Q2PZ37ADR_originalSU2ToSphere,
+        p4Q2PZ37AGS_originalSignedCenter] using h
+    cases b with
+    | false =>
+        simpa [p4Q2PZ37AGS_signedRationalSphere,
+          p4Q2PZ37AGR_rationalSphere] using hOriginal
+    | true =>
+        simpa [p4Q2PZ37AGS_signedRationalSphere,
+          p4Q2PZ37AGS_antipode_apply,
+          p4Q2PZ37AGR_rationalSphere] using hOriginal
 
 namespace GroundStatePosteriorJoint
 
@@ -73,7 +71,7 @@ without any supplied external finite-net covering certificate. -/
 theorem p4Q2PZ37AGT_exists_fineOriginalRationalSpatialGrid
     (R : ℚ) (hR : 0 < R) :
     ∃ grid : p4Q2PZ37AGH_originalSpatialGrid H,
-      (∀ i e, p4Q2PZ37AGL_rationalCoordinates (grid.center i e)) ∧
+      Nonempty (∀ i e, p4Q2PZ37AGL_rationalCoordinates (grid.center i e)) ∧
       grid.radius ≤ (R : ℝ) := by
   let L : ℝ := (Fintype.card Link : ℝ)
   let rho : ℝ := (R : ℝ) / (L + 1)
@@ -96,7 +94,7 @@ theorem p4Q2PZ37AGT_exists_fineOriginalRationalSpatialGrid
   have hRadius : grid.radius ≤ (R : ℝ) := by
     change (Fintype.card Link : ℝ) * rho ≤ (R : ℝ)
     exact p4Q2PZ37AGH_normalizedBudget_le L (R : ℝ) hL hRreal.le
-  exact ⟨grid, hCoordinates, hRadius⟩
+  exact ⟨grid, ⟨hCoordinates⟩, hRadius⟩
 
 /-- No external grid, mass oracle, radius proof or rational-center
 assumption remains. Choose true product Haar mass intervals with any
@@ -107,7 +105,7 @@ theorem p4Q2PZ37AGT_exists_fineOriginalGridData
   obtain ⟨grid, hCenters, hRadius⟩ :=
     p4Q2PZ37AGT_exists_fineOriginalRationalSpatialGrid H R hR
   exact ⟨p4Q2PZ37AGQ_gridDataOfRationalCenters
-    H grid hCenters R hR.le hRadius eps heps⟩
+    H grid (Classical.choice hCenters) R hR.le hRadius eps heps⟩
 
 /-- A proof-carrying original spatial grid at any requested rational
 geometry/mass accuracy; noncomputable choice is NOT numeric computation. -/
