@@ -1,3 +1,15 @@
+## AGV（2026-11-07 JST）— 真正Haarによる元signed-transfer区間幅
+
+**CLOSED:** [PR #6403](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6403) MERGED。各セルのAGN中心値区間幅≤etaの条件の下、AGP/AGIの符号付きmin/max、実際のHaar質量の非負性と正規化、AGUの同一選択格子の半径≤R・質量総幅≤epsにより、`width(I_H)≤eta+2L_H(m)R+2M_H(m,n)eps` をLean4で証明。負の有理Haar下端を許容し、有理端点の和を1と仮定しない。元のtransfer・Borel格子・source/kernelは不変更。
+
+**VERIFIED:** [exact-source CI #42271966524](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42271966524)、11,357/11,357 SUCCESS、10公理監査は標準公理のみ、sorryAxなし、変更warning/error0/0、workflow/job/Lean step/receipt SUCCESS、source/test-merge/squash Git tree一致。新規Lean1件450行のみ、削除0。
+
+**NEXT — AGW:** etaは条件として残る。AGKの固定結合区間幅の収束と、AGJ Taylor・AGM kernel・AGN floorの誤差を元定義で統合して中心値幅の任意精度保証へ進む。最終幅の無条件任意精度化、具体的大体積表、真正非零符号、二閾値殻、H一様coercivity、Hamiltonian gap、連続体mass gapは未解決。
+
+[AGV正式証明記録](docs/proofs/P4-Q2-PZ37AGV_verified_20261107.md)。唯一の定理正本 formal/real-hilbert-uniform-coercive-strong-limit、main文書ミラー、既存本文を全文保持。
+
+---
+
 ## AGU（2026-11-06 JST）— 要求精度を保持した元Haar格子とsigned-transfer接続
 
 **CLOSED:** [定理PR #6400](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6400) MERGED。旧AGTの裸の `Nonempty (AGP_gridData H)` に由来する予算非依存性を形式証明し、元AGPデータと半径・セル認証半径・真のHaar質量総幅を持つ添字付きTypeを追加した。任意正有理R,epsで存在し、そのTypeから選んだ実データに `grid.radius≤R`、`cellCertificateRadius_i=R`、`Σ(upper_i-lower_i)≤eps` が成立する。
