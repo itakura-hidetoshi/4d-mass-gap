@@ -1,3 +1,13 @@
+## 検証済み定理 — AHC／固定有限体積の元signed-transfer認証区間幅の任意精度（2026-11-07 JST）
+
+[AHC定理PR #6424](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6424) **MERGED**。AGYの真正signed-transfer幅上界を保ち、元AGV slope `L_H(m)≤6+13p_H/2=:Lcap_H` と元AGN半径 `M_H(m,n)≤p_H/4=:Mcap_H` を固定Hで次数非依存に形式証明。`C_H=p_H+2Lcap_H+2Mcap_H+1>0` と有理 `q=eta/(4C_H)>0` を構成し、元AGUの真正Borel半径 `R=q`・元Haar質量誤差 `eps=q` を選択。AHBで既証明の元kernel最大幅・floor幅の一様任意精度により、全元AGL有理座標右境界に共通 `m,n` が存在する。元signed-transferの真正verified intervalについて `width(I_H)≤(C_H−1)q≤eta/4<eta` をLean4で証明した。元signed source、Wilson kernel、global floor、Haar law、signed min/max、選択Borel格子・root・pinsを保持。固定H・有理座標証拠付き境界での区間収束であり、非零transfer符号や連続体gapを主張しない。
+
+[Exact-source CI #42316089429](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42316089429)：**11,364/11,364 SUCCESS**、新規11宣言の公理依存は標準 `propext`・`Classical.choice`・`Quot.sound` のみ、sorryAxなし、変更Lean warning/error0/0、workflow/job/Lean step/独立completion receipt completed/SUCCESS。source/test-merge/squash Git tree一致 `9da2c909a00d06d6876dc11229b30c376fcff777`。新規Leanファイル1件・削除0、元物理定義・公開root・固定Lean/mathlib・workflow不変更。別Strict Lean/Governance workflowを実行したとは主張しない。
+
+**NEXT/OPEN — AHD:** 精度付き区間で元signed-transfer値を任意に狭く囲めても、真の値の非零符号は自動的には得られない。具体的な符号付き中心値／Haar表の有限認証証人を調べ、非有理境界への拡張・two-threshold shell・H一様coercivity・Hamiltonian gap・連続体mass gapを未解決のまま区別する。[AHC正式証明記録](docs/proofs/P4-Q2-PZ37AHC_verified_20261107.md)。唯一の定理正本 `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。以下AHB以前の履歴は全文保持。
+
+---
+
 ## 検証済み定理 — AHB／固定有限体積における真正kernel・floor幅の全中心一様任意精度（2026-11-07 JST）
 
 [AHB定理PR #6421](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6421) **MERGED**。AGJ元Taylor階乗残差に `E_n=(n+1)/(n!*n)≤2/n` をLean4形式証明し、元AGK幾何尾 `t_m=(5/768)*(1/25)^m` と一緒に任意精度へ選択可能とした。元one-slab Wilson作用の既証明上界 `0≤S_H(A,B)≤V_H` と元AGN floor組合せ作用の厳密値を再利用し、全中心共通の元AGMスケール上界 `k≤K_H=ceil(V_H)+1` と真正AGJ clipped下端 `0≤b≤1` を証明。固定mathlib `abs_pow_sub_pow_le` により `B(S,m,n)≤K_H*2^K_H*(V_H*t_m+4*E_n)`（括弧内≤1）を構成し、**固定Hの全真正AGU格子・元有理右境界に対して共通m,n** を選んで `DeltaKmax<eta, DeltaF<eta` をLean4で証明した。元kernel・floor・Haar・source・signed min/max・既存root/pin不変更。H一様収束や非零transferの主張ではない。
