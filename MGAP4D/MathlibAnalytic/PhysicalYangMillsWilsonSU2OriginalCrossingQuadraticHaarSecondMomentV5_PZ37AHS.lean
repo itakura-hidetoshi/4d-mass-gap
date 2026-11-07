@@ -84,7 +84,6 @@ theorem p4Q2PZ37AHS_originalSource_crossingSquareHaar_zero (B : Cfg) :
   have hSource (A : Cfg) : fCont A = -(h A) := by
     rw [p4Q2PZ37AHR_originalSource_eq_negHalfTrace H A,
       p4Q2PW2_originalCenteredFirstMoment_eq_half_traceSum H A]
-    ring
   have hWard :
       (∫ A : Cfg, (Cross A B)^2 * h A ∂muH) = 0 :=
     p4Q2PW3_originalTwoCrossingCenteredHaar_zero H B
@@ -145,7 +144,24 @@ theorem p4Q2PZ37AHS_originalSource_quadraticCrossingHaar_zero
     _ = (∫ A : Cfg, a * fCont A ∂muH) +
           ((∫ A : Cfg, b * (fCont A * Cross A B) ∂muH) +
             (∫ A : Cfg, c * (fCont A * (Cross A B)^2) ∂muH)) := by
-          rw [integral_add ha (hb.add hcc), integral_add hb hcc]
+          have hSplitOuter :
+              (∫ A : Cfg,
+                a * fCont A +
+                  (b * (fCont A * Cross A B) +
+                    c * (fCont A * (Cross A B)^2)) ∂muH) =
+                (∫ A : Cfg, a * fCont A ∂muH) +
+                  (∫ A : Cfg,
+                    b * (fCont A * Cross A B) +
+                      c * (fCont A * (Cross A B)^2) ∂muH) := by
+            simpa only [Pi.add_apply] using
+              (integral_add ha (hb.add hcc))
+          have hSplitInner :
+              (∫ A : Cfg, b * (fCont A * Cross A B) +
+                c * (fCont A * (Cross A B)^2) ∂muH) =
+                (∫ A : Cfg, b * (fCont A * Cross A B) ∂muH) +
+                  (∫ A : Cfg, c * (fCont A * (Cross A B)^2) ∂muH) := by
+            simpa only [Pi.add_apply] using (integral_add hb hcc)
+          rw [hSplitOuter, hSplitInner]
     _ = a * (∫ A : Cfg, fCont A ∂muH) +
           (b * (∫ A : Cfg, fCont A * Cross A B ∂muH) +
             c * (∫ A : Cfg, fCont A * (Cross A B)^2 ∂muH)) := by
@@ -252,8 +268,23 @@ theorem p4Q2PZ37AHS_originalSecondFullActionHaarMoment_eq (B : Cfg) :
           (∫ A : Cfg, (pH + W B) * (fCont A)^2 ∂muH) +
           (∫ A : Cfg, 2 * ((fCont A)^2 * Cross A B) ∂muH)) +
         0 := by
-      rw [hPolyZero, integral_add (hCube.add hVariance) hMixed,
-        integral_add hCube hVariance]
+      have hSplitOuter :
+          (∫ A : Cfg,
+            ((fCont A)^3 + (pH + W B) * (fCont A)^2) +
+              2 * ((fCont A)^2 * Cross A B) ∂muH) =
+            (∫ A : Cfg,
+              (fCont A)^3 + (pH + W B) * (fCont A)^2 ∂muH) +
+              (∫ A : Cfg,
+                2 * ((fCont A)^2 * Cross A B) ∂muH) := by
+        simpa only [Pi.add_apply] using
+          (integral_add (hCube.add hVariance) hMixed)
+      have hSplitInner :
+          (∫ A : Cfg,
+            (fCont A)^3 + (pH + W B) * (fCont A)^2 ∂muH) =
+            (∫ A : Cfg, (fCont A)^3 ∂muH) +
+              (∫ A : Cfg, (pH + W B) * (fCont A)^2 ∂muH) := by
+        simpa only [Pi.add_apply] using (integral_add hCube hVariance)
+      rw [hPolyZero, hSplitOuter, hSplitInner]
     _ = p4Q2PZ37AHS_originalSourceThirdHaarMoment H +
         (pH + W B) * Vsrc +
         2 * p4Q2PZ37AHS_originalSourceSquareCrossingHaarMoment H B := by
