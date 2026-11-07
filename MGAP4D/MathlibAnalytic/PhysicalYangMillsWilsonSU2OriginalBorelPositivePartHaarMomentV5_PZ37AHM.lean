@@ -291,7 +291,7 @@ theorem p4Q2PZ37AHM_exists_explicitPositivePartMomentFloor :
 first moment of the positive part of f_H*T_H for every finite H. -/
 theorem p4Q2PZ37AHM_originalPositivePartHaarMoment_pos :
     0 < p4Q2PZ37AHM_originalPositivePartHaarMoment H := by
-  obtain ⟨_q, _hq, _B, _R, _hR, _hFloor, hPos⟩ :=
+  obtain ⟨_q, _hq, _B, _R, _hR, _hStable, _hFloor, hPos⟩ :=
     p4Q2PZ37AHM_exists_explicitPositivePartMomentFloor H
   exact hPos
 
