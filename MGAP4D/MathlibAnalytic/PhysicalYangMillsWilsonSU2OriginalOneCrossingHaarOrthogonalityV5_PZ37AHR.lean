@@ -293,9 +293,8 @@ theorem p4Q2PZ37AHR_exists_uniform_negative_smallCoupling :
     nlinarith only [hEq, hbeta, hV]
   refine ⟨beta, hbeta, ?_⟩
   intro B
-  apply p4Q2PZ37AHR_originalTransfer_negative_of_varianceBudget H beta hbeta
-  · simpa only [a] using hSmall
-  · exact B
+  exact p4Q2PZ37AHR_originalTransfer_negative_of_varianceBudget
+    H beta hbeta (by simpa only [a] using hSmall) B
 
 end GroundStatePosteriorJoint
 end
