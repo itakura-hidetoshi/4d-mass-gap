@@ -51,10 +51,13 @@ theorem p4Q2PZ37AHP_exp_neg_quadraticRemainder
       HasDerivAt (fun y : ℝ => Real.exp (-y) - 1 + y)
         (1 - Real.exp (-t)) t := by
     convert (((hasDerivAt_id t).neg.exp).sub_const 1).add
-      (hasDerivAt_id t) using 1 <;> simp <;> ring
+      (hasDerivAt_id t) using 1
+    simp
+    ring
   have hPoly (t : ℝ) :
       HasDerivAt (fun y : ℝ => y ^ 2 / 2) t t := by
-    convert ((hasDerivAt_id t).pow 2).div_const (2 : ℝ) using 1 <;> simp <;> ring
+    convert ((hasDerivAt_id t).pow 2).div_const (2 : ℝ) using 1
+    simp
   have hCont : Continuous (fun y : ℝ => Real.exp (-y) - 1 + y) :=
     ((Real.continuous_exp.comp continuous_id.neg).sub continuous_const).add
       continuous_id
