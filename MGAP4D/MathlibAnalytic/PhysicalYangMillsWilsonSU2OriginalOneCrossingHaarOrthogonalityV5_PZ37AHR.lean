@@ -157,6 +157,11 @@ theorem p4Q2PZ37AHR_originalPlaquette_fullCrossingHaar_zero
       rw [p4Q2PW_originalCrossing_eq_finsetSum H A B]
       simp only [weight]
       rw [Finset.mul_sum]
+      apply Finset.sum_congr
+      · ext e
+        simp
+      · intro e _he
+        rfl
     _ = ∑ e : Link, (∫ A : Cfg, χ p A * weight e A ∂muH) := by
       rw [integral_finset_sum _ (fun e _ => hEach e)]
     _ = 0 := by
@@ -174,8 +179,8 @@ theorem p4Q2PZ37AHR_originalTraceSum_fullCrossingHaar_zero
     p4Q2PZ37AHP_originalCrossing_continuous H B
   have hEach (p : Plaq) :
       Integrable (fun A : Cfg => χ p A * Cross A B) muH :=
-    ((p4Q2PV_originalPlaquetteRealCharacter_continuous H p).mul hCross).
-      integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+    ((p4Q2PV_originalPlaquetteRealCharacter_continuous H p).mul hCross).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
   calc
     (∫ A : Cfg, Φ A * Cross A B ∂muH) =
         ∫ A : Cfg, ∑ p : Plaq, χ p A * Cross A B ∂muH := by
@@ -183,6 +188,11 @@ theorem p4Q2PZ37AHR_originalTraceSum_fullCrossingHaar_zero
       filter_upwards with A
       unfold p4Q2PW2_originalAllPlaquetteRealTrace
       rw [Finset.sum_mul]
+      apply Finset.sum_congr
+      · ext p
+        simp
+      · intro p _hp
+        rfl
     _ = ∑ p : Plaq, (∫ A : Cfg, χ p A * Cross A B ∂muH) := by
       rw [integral_finset_sum _ (fun p _ => hEach p)]
     _ = 0 := by
