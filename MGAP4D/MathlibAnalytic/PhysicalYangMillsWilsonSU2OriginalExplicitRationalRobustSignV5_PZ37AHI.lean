@@ -48,7 +48,7 @@ theorem p4Q2PZ37AHI_exists_largeDenominator
   have hNr : (0 : ℝ) < (N : ℝ) := by linarith only [hNm, hMr]
   have hNpos : 0 < N := by exact_mod_cast hNr
   have hQuot : C / s < (N : ℝ) := by linarith only [hN, hMr]
-  have hBound : C < s * (N : ℝ) := (div_lt_iff₀ hs).mp hQuot
+  have hBound : C < (N : ℝ) * s := (div_lt_iff₀ hs).mp hQuot
   refine ⟨N, hM, hNpos, ?_⟩
   exact (div_lt_iff₀ hNr).mpr (by nlinarith only [hBound])
 
@@ -95,7 +95,7 @@ theorem p4Q2PZ37AHI_transferSlope_le_rational :
   have hb : 0 ≤ 13 * beta0 :=
     mul_nonneg (by norm_num) p4Q2PZ37ADC_fixedCoupling_pos.le
   have hbUpper : 13 * beta0 ≤ (13 / 128 : ℝ) := by
-    have h := p4Q2PZ37AHI_fixedCoupling_le_one128 H
+    have h := p4Q2PZ37AHI_fixedCoupling_le_one128
     linarith only [h]
   have hm : Msrc ≤ pH := p4Q2PZ37AFZ_originalCenteredSource_L1_le_plaquetteCount H
   have hp : 0 ≤ pH := by
@@ -154,7 +154,7 @@ theorem p4Q2PZ37AHI_positiveMargin_onMesh
     (d : p4Q2PZ37AGP_gridData H)
     (B : Cfg) (b : ∀ e : Link, p4Q2PZ37AGL_rationalCoordinates (B e))
     (m n : ℕ) (hn : 0 < n)
-    (q : ℚ) (hq : 0 < q)
+    (q : ℚ)
     (hCert : q ≤ (p4Q2PZ37AGP_originalTable H d B b m n hn).lower)
     (N : ℕ) (hN : 0 < N)
     (hSmall : (13 / 32 : ℝ) * pH ^ 2 / (N : ℝ) < (q : ℝ) / 2) :
@@ -176,7 +176,7 @@ theorem p4Q2PZ37AHI_negativeMargin_onMesh
     (d : p4Q2PZ37AGP_gridData H)
     (B : Cfg) (b : ∀ e : Link, p4Q2PZ37AGL_rationalCoordinates (B e))
     (m n : ℕ) (hn : 0 < n)
-    (q : ℚ) (hq : 0 < q)
+    (q : ℚ)
     (hCert : (p4Q2PZ37AGP_originalTable H d B b m n hn).upper ≤ -q)
     (N : ℕ) (hN : 0 < N)
     (hSmall : (13 / 32 : ℝ) * pH ^ 2 / (N : ℝ) < (q : ℝ) / 2) :
@@ -217,7 +217,7 @@ theorem p4Q2PZ37AHI_unboundedRationalMeshSignMargin :
         ((13 / 32 : ℝ) * pH ^ 2) ((Q : ℝ) / 2)
         hP (div_pos hQr (by norm_num)) M
     obtain ⟨a, ha⟩ := p4Q2PZ37AHI_positiveMargin_onMesh
-      H d B b m n hn Q hQ le_rfl N hNN hSmall
+      H d B b m n hn Q le_rfl N hNN hSmall
     refine ⟨N, hMN, a, ?_⟩
     simpa only [Rat.cast_div, Rat.cast_ofNat] using ha
   · let Q : ℚ := -(p4Q2PZ37AGP_originalTable H d B b m n hn).upper
@@ -233,9 +233,11 @@ theorem p4Q2PZ37AHI_unboundedRationalMeshSignMargin :
         ((13 / 32 : ℝ) * pH ^ 2) ((Q : ℝ) / 2)
         hP (div_pos hQr (by norm_num)) M
     obtain ⟨a, ha⟩ := p4Q2PZ37AHI_negativeMargin_onMesh
-      H d B b m n hn Q hQ hUpper N hNN hSmall
+      H d B b m n hn Q hUpper N hNN hSmall
     refine ⟨N, hMN, a, ?_⟩
-    simpa only [Rat.cast_div, Rat.cast_ofNat] using ha
+    calc
+      t (mesh N a) < -(Q : ℝ) / 2 := ha
+      _ = -(((Q / 2 : ℚ) : ℝ)) := by push_cast; ring
 
 end GroundStatePosteriorJoint
 end
