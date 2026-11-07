@@ -215,9 +215,9 @@ theorem p4Q2PZ37AHD_zero_iff_all_fine_intervals_straddle
     by_contra hNonzero
     have hCert := (p4Q2PZ37AHD_fineSign_iff_nonzero H B b).mpr hNonzero
     rcases hCert with ⟨R, eps, hR, heps, m, n, hn, hp⟩ |
-      ⟨R, eps, hR, heps, m, n, hn, hn⟩
+      ⟨R, eps, hR, heps, m, n, hn, hNegative⟩
     · exact (not_lt_of_ge (hAll R eps hR heps m n hn).1) hp
-    · exact (not_lt_of_ge (hAll R eps hR heps m n hn).2) hn
+    · exact (not_lt_of_ge (hAll R eps hR heps m n hn).2) hNegative
 
 /-- The original signed AGP/Haar table, NOT the AGN symmetric global
 clipping range, must provide the strict positive lower endpoint. The
