@@ -237,12 +237,14 @@ is silently applied to the original signed integral. -/
 theorem p4Q2PZ37AHM_exists_explicitPositivePartMomentFloor :
     ∃ q : ℚ, 0 < q ∧
       ∃ B : Cfg, ∃ R : ℝ, 0 < R ∧
+        (∀ C ∈ p4Q2PZ37AHL_originalSpatialBall H B R,
+          (q : ℝ) < fCont C * t C) ∧
         (q : ℝ) *
             p4Q2PZ37ADQ_sphereRadiusFraction
               (R / ((Fintype.card Link : ℝ) + 1)) ^ Fintype.card Link ≤
           p4Q2PZ37AHM_originalPositivePartHaarMoment H ∧
         0 < p4Q2PZ37AHM_originalPositivePartHaarMoment H := by
-  obtain ⟨q, hq, B, R, hR, _hStable, hMass, _hPos⟩ :=
+  obtain ⟨q, hq, B, R, hR, hStable, hMass, _hPos⟩ :=
     p4Q2PZ37AHL_exists_rationalAlignedRegion_positiveHaarMass H
   let A : Set Cfg := p4Q2PZ37AHL_originalAlignedRegion H q
   have hMeas : MeasurableSet A :=
@@ -283,7 +285,7 @@ theorem p4Q2PZ37AHM_exists_explicitPositivePartMomentFloor :
         0 < kappa (R / ((Fintype.card Link : ℝ) + 1)) := by
       exact p4Q2PZ37ADQ_sphereRadiusFraction_pos _
     exact lt_of_lt_of_le (mul_pos hQreal (pow_pos hPosRadius _)) hFloor
-  exact ⟨q, hq, B, R, hR, hFloor, hStrict⟩
+  exact ⟨q, hq, B, R, hR, hStable, hFloor, hStrict⟩
 
 /-- UNCONDITIONAL strictly positive true original spatial-Haar
 first moment of the positive part of f_H*T_H for every finite H. -/
