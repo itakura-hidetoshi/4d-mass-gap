@@ -65,7 +65,7 @@ theorem p4Q2PZ37AHG_stereographic_dist_sq (u v : Fin 3 → ℝ) :
         ((1 + ((u 0)^2 + (u 1)^2 + (u 2)^2)) *
           (1 + ((v 0)^2 + (v 1)^2 + (v 2)^2)))
   field_simp [ne_of_gt hu, ne_of_gt hv]
-  <;> ring
+  ring
 
 /-- A strict 4*e chord bound from coordinatewise errors <=e.
 The slack 12*e^2<16*e^2 makes the cover OPEN even at mesh endpoints. -/
@@ -315,7 +315,8 @@ theorem p4Q2PZ37AHG_count_pos : (0 : ℚ) < pH := by
   exact_mod_cast (Fintype.card_pos : 0 < Fintype.card Link)
 
 theorem p4Q2PZ37AHG_radius128_exact : p4Q2PZ37AHG_spatialRadius H 128 = pH / 32 := by
-  norm_num [p4Q2PZ37AHG_spatialRadius] <;> ring
+  norm_num [p4Q2PZ37AHG_spatialRadius]
+  ring
 
 /-- N=128 removes AHF's coarse-radius obstruction, NOT all sign obstacles. -/
 theorem p4Q2PZ37AHG_radius128_lt_threshold :
