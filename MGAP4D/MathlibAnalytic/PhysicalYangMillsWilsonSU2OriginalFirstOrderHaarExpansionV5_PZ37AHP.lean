@@ -312,9 +312,19 @@ theorem p4Q2PZ37AHP_originalKernelWeightedSource_integrable
     Integrable (fun A : Cfg => fCont A * K beta A B) muH := by
   have hf : Continuous (fun A : Cfg => fCont A) :=
     (p4Q2PZ37AFZ_originalCenteredContinuous H).continuous
-  have hK : Continuous (fun A : Cfg => K beta A B) :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H 2 beta).comp (continuous_id.prodMk continuous_const)
+  have hS : Continuous (fun A : Cfg => S A B) :=
+    p4Q2PZ37AHP_originalFullAction_continuous H B
+  have hBoltzmann :
+      (fun A : Cfg => K beta A B) =
+        (fun A : Cfg => Real.exp (-beta * S A B)) := by
+    funext A
+    exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_eq_boltzmann
+      H 2 beta A B
+  have hExp : Continuous (fun A : Cfg => Real.exp (-beta * S A B)) :=
+    Real.continuous_exp.comp (continuous_const.mul hS)
+  have hK : Continuous (fun A : Cfg => K beta A B) := by
+    rw [hBoltzmann]
+    exact hExp
   exact (hf.mul hK).integrable_of_hasCompactSupport
     (HasCompactSupport.of_compactSpace _)
 
