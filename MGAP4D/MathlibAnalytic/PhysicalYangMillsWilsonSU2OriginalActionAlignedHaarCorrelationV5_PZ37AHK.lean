@@ -139,8 +139,9 @@ MATCHING nonzero signs, rather than merely nonzero transfer. -/
 theorem p4Q2PZ37AHK_exists_originalActionAlignedBoundary :
     ∃ B : Cfg, 0 < fCont B * t B := by
   by_contra hn
-  push_neg at hn
-  have hNonpos (B : Cfg) : fCont B * t B ≤ 0 := hn B
+  have hNonpos (B : Cfg) : fCont B * t B ≤ 0 := by
+    by_contra hf
+    exact hn ⟨B, lt_of_not_ge hf⟩
   have hInt : (∫ B : Cfg, fCont B * t B ∂muH) ≤ 0 :=
     integral_nonpos hNonpos
   exact (not_lt_of_ge hInt) (p4Q2PZ37AHK_originalSignedCorrelation_pos H)
