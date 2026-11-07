@@ -1,3 +1,15 @@
+## AHC（2026-11-07 JST）— 元signed-transfer区間幅の固定H任意精度
+
+**CLOSED:** [AHC定理PR #6424](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6424) MERGED。AGYの真正signed-transfer幅誤差 `width(I_H)≤(p_H/2)*(DeltaKmax+DeltaF/2)+2L_H(m)R+2M_H(m,n)eps` を一切弱めず、元AGV `L_H(m)≤Lcap_H=6+13p_H/2` と元AGN `M_H(m,n)≤Mcap_H=p_H/4` を次数非依存にLean4で証明した。`C_H=p_H+2Lcap_H+2Mcap_H+1>0`、`q=eta/(4C_H)>0` を構成し、元AGU Borel grid・Haar質量誤差を `R=eps=q` として選択。AHBの固定体積全中心一様kernel/floor幅の任意精度から共通 `m,n` を選択、真正元signed-transfer verified intervalに `width(I_H)≤(C_H−1)q≤eta/4<eta` を形式証明。元kernel/floor/source/measure/signed min/max/root/pinsを維持。固定HかつAGL有理座標の右境界に対する狭区間であり、実transfer非零符号は依然未証明。
+
+**VERIFIED:** [Exact-source CI #42316089429](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42316089429)、**11,364/11,364 SUCCESS**、新規11宣言の公理依存は標準3公理のみ、sorryAxなし、変更Lean warning/error0/0、workflow/job/Lean step/独立completion receipt completed/SUCCESS。source/test-merge/squash共通Git tree `9da2c909a00d06d6876dc11229b30c376fcff777`。新規Lean1件・既存Lean不変更・削除0。Lean/mathlib pinと物理定義、公開root、workflow不変更。
+
+**NEXT — AHD:** 真正元signed-transferを任意に狭い区間へ囲めることと、その値が0ではないことを区別する。真正区間の正下端／負上端を示す有限有理認証、原Haar質量と作用量、元符号付き中心化sourceに基づく構成的な符号証人を検討する。非有理境界への一般化、two-threshold shell、H一様coercivity、Hamiltonian gap、連続体4D質量ギャップ、大体積Haar表は引き続きOPEN。
+
+[AHC正式証明記録](docs/proofs/P4-Q2-PZ37AHC_verified_20261107.md)。唯一のLean定理正本 `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。以下AHB以前の履歴全文保持。
+
+---
+
 ## AHB（2026-11-07 JST）— 元kernel/floorの固定体積一様任意精度
 
 **CLOSED:** [AHB定理PR #6421](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6421) MERGED。既証明元Wilson one-slab作用上界 `0≤S≤V_H` とAGK結合端点 `0≤betaLower≤betaUpper≤1` を継承し、元AGM `autoScale≤K_H=ceil(V_H)+1` を全中心・全次数に証明。元AGJ clipped指数下端 `0≤b≤1`、階乗 `E_n=(n+1)/(n!*n)≤2/n`、幾何尾 `t_m=(5/768)*(1/25)^m` を合成し、`B(S,m,n)≤K_H*2^K_H*(V_H*t_m+4E_n)`（同誤差≤1）を形式証明。全有理元作用量 `0≤S≤V_H` の出力幅に任意精度を与える同じ `m,n` を構成。元AGZ/AHAの真正物理区間への降下により、任意固定H・任意正有理etaに対し、元AGU真正grid・元有理右境界の**全体に共通**の `m,n>0` で `DeltaKmax<eta, DeltaF<eta` をLean4で証明。元Haar・kernel・floor・source・transfer不変更。
