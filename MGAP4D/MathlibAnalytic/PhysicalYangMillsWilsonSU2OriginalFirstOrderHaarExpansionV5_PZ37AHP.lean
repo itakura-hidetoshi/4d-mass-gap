@@ -298,6 +298,38 @@ theorem p4Q2PZ37AHP_originalLinearizedHaar_eq_negFirstMoment
       rw [p4Q2PZ37AHP_originalSource_mean_zero H]
       simp only [zero_sub, p4Q2PZ37AHP_originalFirstActionMoment]
 
+/-- Original continuous ZW source integrability, independently from
+any signed transfer or Taylor comparison. -/
+theorem p4Q2PZ37AHP_originalContinuousSource_integrable :
+    Integrable (fun A : Cfg => fCont A) muH := by
+  exact (p4Q2PZ37AFZ_originalCenteredContinuous H).continuous.integrable_of_hasCompactSupport
+    (HasCompactSupport.of_compactSpace _)
+
+/-- Original full Wilson kernel times original continuous source,
+integrable for every beta and every right boundary under original Haar. -/
+theorem p4Q2PZ37AHP_originalKernelWeightedSource_integrable
+    (beta : ℝ) (B : Cfg) :
+    Integrable (fun A : Cfg => fCont A * K beta A B) muH := by
+  have hf : Continuous (fun A : Cfg => fCont A) :=
+    (p4Q2PZ37AFZ_originalCenteredContinuous H).continuous
+  have hK : Continuous (fun A : Cfg => K beta A B) :=
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+      H 2 beta).comp (continuous_id.prodMk continuous_const)
+  exact (hf.mul hK).integrable_of_hasCompactSupport
+    (HasCompactSupport.of_compactSpace _)
+
+/-- Linearized ORIGINAL slab-action product, still the same source
+and original Haar; this is a separate proof of integrability. -/
+theorem p4Q2PZ37AHP_originalLinearizedWeightedSource_integrable
+    (beta : ℝ) (B : Cfg) :
+    Integrable (fun A : Cfg => fCont A * (1 - beta * S A B)) muH := by
+  have hf : Continuous (fun A : Cfg => fCont A) :=
+    (p4Q2PZ37AFZ_originalCenteredContinuous H).continuous
+  have hS : Continuous (fun A : Cfg => S A B) :=
+    p4Q2PZ37AHP_originalFullAction_continuous H B
+  exact (hf.mul (continuous_const.sub (continuous_const.mul hS))).integrable_of_hasCompactSupport
+    (HasCompactSupport.of_compactSpace _)
+
 /-- The signed original Haar integral of the TRUE Taylor remainder:
 the AEV variation lemma is applied to two genuine original integrands,
 with the same source, same Haar measure, and the existing global action
@@ -308,20 +340,12 @@ theorem p4Q2PZ37AHP_originalSignedTaylorHaarError
       (∫ A : Cfg, fCont A * (1 - beta * S A B) ∂muH)| ≤
       ((beta * Cslab) ^ 2 / 2) *
         (∫ A : Cfg, |fCont A| ∂muH) := by
-  have hf : Continuous (fun A : Cfg => fCont A) :=
-    (p4Q2PZ37AFZ_originalCenteredContinuous H).continuous
   have hfInt : Integrable (fun A : Cfg => fCont A) muH :=
-    hf.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
-  have hS : Continuous (fun A : Cfg => S A B) :=
-    p4Q2PZ37AHP_originalFullAction_continuous H B
-  have hK : Continuous (fun A : Cfg => K beta A B) :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H 2 beta).comp (continuous_id.prodMk continuous_const)
+    p4Q2PZ37AHP_originalContinuousSource_integrable H
   have hKernelInt : Integrable (fun A : Cfg => fCont A * K beta A B) muH :=
-    (hf.mul hK).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+    p4Q2PZ37AHP_originalKernelWeightedSource_integrable H beta B
   have hLinearInt : Integrable (fun A : Cfg => fCont A * (1 - beta * S A B)) muH :=
-    (hf.mul (continuous_const.sub (continuous_const.mul hS))).integrable_of_hasCompactSupport
-      (HasCompactSupport.of_compactSpace _)
+    p4Q2PZ37AHP_originalLinearizedWeightedSource_integrable H beta B
   exact p4Q2PZ37AEV_real_signedWeightedIntegral_absVariation
     muH (fun A : Cfg => fCont A) (fun A : Cfg => K beta A B)
     (fun A : Cfg => 1 - beta * S A B) ((beta * Cslab) ^ 2 / 2)
@@ -344,7 +368,7 @@ theorem p4Q2PZ37AHP_originalTransfer_firstOrder_bound
         |(∫ A : Cfg, fCont A * K beta A B ∂muH) -
           (∫ A : Cfg, fCont A * (1 - beta * S A B) ∂muH)| := by
       rw [p4Q2PZ37AHP_originalTransfer_eq_continuousIntegral H beta B, hLinear]
-      ring
+      simp only [sub_neg_eq_add]
     _ ≤ ((beta * Cslab) ^ 2 / 2) *
         (∫ A : Cfg, |fCont A| ∂muH) := hError
     _ = p4Q2PZ37AHP_originalQuadraticBudget H beta := by
@@ -417,6 +441,9 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AHP_originalKernel_firstOrder_bound
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AHP_originalQuadraticBudget_nonneg
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AHP_originalLinearizedHaar_eq_negFirstMoment
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AHP_originalContinuousSource_integrable
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AHP_originalKernelWeightedSource_integrable
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AHP_originalLinearizedWeightedSource_integrable
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AHP_originalSignedTaylorHaarError
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AHP_originalTransfer_firstOrder_bound
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AHP_originalTransfer_varianceCrossing_bound
