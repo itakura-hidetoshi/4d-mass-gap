@@ -103,4 +103,4 @@ AHDは既存任意精度証明から**conditional completeness**を確立した�
 
 **NEXT — AHE:** 新しい物理的非零値を仮定せず、元AGPの`originalTable`を実際に評価・符号判定するための有限有理数データと本物のHaar mass認証の依存関係を特定する。固定Hでの実行可能・再現可能な証明書を優先する。
 
-[AHＤ Lean全文](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/9e9730d808d2e4e774ae950e1b0c2f64a9a5ceb5/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalSignedTransferSignCertificatesV5_PZ37AHD.lean)。
+[AHD Lean全文](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/9e9730d808d2e4e774ae950e1b0c2f64a9a5ceb5/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalSignedTransferSignCertificatesV5_PZ37AHD.lean)。
