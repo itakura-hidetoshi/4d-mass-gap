@@ -1,3 +1,15 @@
+## AHD（2026-11-07 JST）— 元signed-transfer非零符号の必要十分な真正Haar表証明書
+
+**CLOSED:** [AHD定理PR #6427](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6427) MERGED。AHC元signed-transfer任意精度区間とAFV実値包含から、`t_H(B)>0 iff ∃元AGU区間lower>0`、`t_H(B)<0 iff ∃元AGU区間upper<0` をLean4で形式証明（固定H・元AGL有理座標右境界）。元AGN global対称 `[-M,M]` が非零符号を独力で与えないことを用い、各真正AGU区間の正下端／負上端条件が**同じ元AGP signed-Haar有理表**の正下端／負上端条件と同値と示した。`t_H(B)≠0 iff ∃元AGP有理符号表`、`t_H(B)=0 iff 全真正区間が0をまたぐ iff 正・負表証明書が存在しない` を検証した。`width→0` だけでは `t_H(B)≠0` を導けないことを幅0の例でも証明。元物理transfer、centered source、kernel、global floor、Haar mass、AGU古典選択grid、signed min/max不変更。**具体的な非零符号証人は未証明。**
+
+**VERIFIED:** [exact-source CI #42318237854](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42318237854)、**11,365/11,365 SUCCESS**、新規14定理の標準3公理依存のみ、sorryAxなし、変更Lean warning/error 0/0、workflow/job/Lean step/独立receipt completed/SUCCESS、source/test-merge/squash Git tree一致 `c7a7f3c76072b0549fd3571948338ec07eaeee5d`。新規Lean1件388行・削除0、元root/pins/workflow不変更。
+
+**NEXT — AHE:** ひとつの固定H・真正有理右境界に対して、実際の元AGPの `originalTable.lower>0` または `originalTable.upper<0` を成立させる具体的な有理数・元Haar質量・中心化source証明書を探索し、古典選択格子の実用的評価へ降ろす。非有理境界拡張、two-threshold shell、H一様coercivity、Hamiltonian gap、連続体4D質量ギャップはOPEN。結果の論理的同値は非零値の証拠を作ったことではない。
+
+[正式証明記録](docs/proofs/P4-Q2-PZ37AHD_verified_20261107.md)。定理正本 `formal/real-hilbert-uniform-coercive-strong-limit`／main文書ミラー。以下AHC以前の全履歴保持。
+
+---
+
 ## AHC（2026-11-07 JST）— 元signed-transfer区間幅の固定H任意精度
 
 **CLOSED:** [AHC定理PR #6424](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6424) MERGED。AGYの真正signed-transfer幅誤差 `width(I_H)≤(p_H/2)*(DeltaKmax+DeltaF/2)+2L_H(m)R+2M_H(m,n)eps` を一切弱めず、元AGV `L_H(m)≤Lcap_H=6+13p_H/2` と元AGN `M_H(m,n)≤Mcap_H=p_H/4` を次数非依存にLean4で証明した。`C_H=p_H+2Lcap_H+2Mcap_H+1>0`、`q=eta/(4C_H)>0` を構成し、元AGU Borel grid・Haar質量誤差を `R=eps=q` として選択。AHBの固定体積全中心一様kernel/floor幅の任意精度から共通 `m,n` を選択、真正元signed-transfer verified intervalに `width(I_H)≤(C_H−1)q≤eta/4<eta` を形式証明。元kernel/floor/source/measure/signed min/max/root/pinsを維持。固定HかつAGL有理座標の右境界に対する狭区間であり、実transfer非零符号は依然未証明。

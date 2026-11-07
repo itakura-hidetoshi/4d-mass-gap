@@ -1,3 +1,13 @@
+## 検証済み定理 — AHD／真正signed-transfer非零符号と元AGP signed-Haar有理証明書の条件付き完全性（2026-11-07 JST）
+
+[AHD定理PR #6427](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6427) **MERGED**。AHCの固定H・元AGL有理右境界に対する任意精度真正signed-transfer verified intervalに、元AFV包含と有理数稠密性を接続。実際の元transfer `t_H(B)>0` と `∃元AGU正下端証明書`、`t_H(B)<0` と `∃元AGU負上端証明書` のそれぞれの同値、`t_H(B)≠0 iff 正・負いずれかの証明書が存在`をLean4で証明。さらに元AGNのglobal区間 `[-M_H,M_H]` は `M_H≥0` の対称区間なので、最終AGU区間の厳密な正下端／負上端は、同じ元物理の **AGP本来のsigned-Haar有限有理表** の正下端／負上端と同値と証明した。`t_H(B)=0` iff 全元AGU区間が0をまたぐ iff 元AGPの正・負表証明書がともに存在しない。任意に狭い区間が存在しても、その中の真正値が非零であるとは限らないことを幅0の例で明示。元source/kernel/floor/Haar law、mass signed min/max、Borel grid・root/pinsを不変更。実際の正・負表の数値証人は**未構成**であり、元transferの非零符号そのものを証明したとは主張しない。
+
+[Exact-source CI #42318237854](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42318237854)：**11,365/11,365 SUCCESS**、新規14宣言の公理依存は標準 `propext`・`Classical.choice`・`Quot.sound` のみ、sorryAxなし、変更Lean warning/error0/0、workflow/job/Lean step/独立completion receipt completed/SUCCESS。source/test-merge/squash Git tree一致 `c7a7f3c76072b0549fd3571948338ec07eaeee5d`。新規Lean1件388追加行・削除0、固定Lean/mathlib・元物理定義・workflow・公開root不変更。文書専用Strict Lean実行はしない。
+
+**NEXT/OPEN — AHE:** 元AGP真正Haar有理表の正下端または負上端を実際の固定Hで構成・評価・証明する。AHC/AHDの古典選択格子は具体的大体積表の計算完了を意味しない。非有理境界、two-threshold shell、H一様coercivity、Hamiltonian gap、連続体4D Yang–Mills質量ギャップは未証明。[AHD正式証明記録](docs/proofs/P4-Q2-PZ37AHD_verified_20261107.md)。唯一のLean正本 `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。以下AHC以前の履歴を全文保持。
+
+---
+
 ## 検証済み定理 — AHC／固定有限体積の元signed-transfer認証区間幅の任意精度（2026-11-07 JST）
 
 [AHC定理PR #6424](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6424) **MERGED**。AGYの真正signed-transfer幅上界を保ち、元AGV slope `L_H(m)≤6+13p_H/2=:Lcap_H` と元AGN半径 `M_H(m,n)≤p_H/4=:Mcap_H` を固定Hで次数非依存に形式証明。`C_H=p_H+2Lcap_H+2Mcap_H+1>0` と有理 `q=eta/(4C_H)>0` を構成し、元AGUの真正Borel半径 `R=q`・元Haar質量誤差 `eps=q` を選択。AHBで既証明の元kernel最大幅・floor幅の一様任意精度により、全元AGL有理座標右境界に共通 `m,n` が存在する。元signed-transferの真正verified intervalについて `width(I_H)≤(C_H−1)q≤eta/4<eta` をLean4で証明した。元signed source、Wilson kernel、global floor、Haar law、signed min/max、選択Borel格子・root・pinsを保持。固定H・有理座標証拠付き境界での区間収束であり、非零transfer符号や連続体gapを主張しない。
