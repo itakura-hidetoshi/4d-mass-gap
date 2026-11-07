@@ -101,7 +101,7 @@ theorem p4Q2PZ37AHQ_crossingLinkCount_exact :
     ((periodicHypercubicEvenSpatialSliceLinkList H).length : ℝ) =
         (Fintype.card Link : ℝ) := by
       simp only [periodicHypercubicEvenSpatialSliceLinkList,
-        Finset.length_toList, Finset.card_univ]
+        Finset.length_toList, Finset.card_univ, Fintype.card_eq_nat_card]
     _ = pH := p4Q2PZ37AHI_cardLinks_eq_plaquettes H
 
 /-- Actual original temporal crossing action is nonnegative. -/
