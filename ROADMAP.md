@@ -1,3 +1,15 @@
+## AHE（2026-11-07 JST）— 真正Haar signed min/max表の中心・誤差分解と有理Bool符号認証
+
+**CLOSED:** [AHE定理PR #6430](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6430) MERGED。真正AGP/AGIの質量端点 `l_i≤u_i` を固定したまま、各signed係数 `a_i` に対して `min(a_i*l_i,a_i*u_i)=a_i*(l_i+u_i)/2-|a_i|*(u_i-l_i)/2`、`max(...)=a_i*(l_i+u_i)/2+|a_i|*(u_i-l_i)/2` をℚで厳密証明し、元表の上下端を真正有限有理 `signedMoment±massError` に展開。質量error非負、各Boolean判定と元AGP下端正・上端負の同値、真正Haar体積の同じ元物理transferへの符号健全性、元24中心格子への特殊化、任意精度AGU格子のAHD非零符号条件付き完全性をLean4で証明。**特定H／Bでchecker=trueを与える厳密数値証人は未構成。** 古典選択格子を数値計算完了と主張しない。
+
+**VERIFIED:** [exact-source CI #42321226504](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42321226504)、**11,366/11,366 SUCCESS**、新規16定理は標準3公理のみ、sorryAxなし、変更Lean warning/error 0/0、workflow/job/Lean step/独立completion receipt completed/SUCCESS、source/test-merge/squash共通Git tree `0c978fd763c57fe7c91d9a995732a3d1ee43732b`。新規Lean1件・386行、既存Lean・元物理・root・Lean/mathlib pin・workflow変更なし。
+
+**NEXT — AHF:** 実際の元Wilson作用、centered source、固定H・真正Haarセル質量・有理右境界の明示的有限数値表を構成し、`AGP originalTable.lower>0` または `upper<0` の実証人を探索する。正／負の存在はまだ証明されておらず、two-sign shell、H一様coercivity、Hamiltonian gap、連続体mass gap、非有理境界拡張はOPEN。
+
+[AHE正式証明記録](docs/proofs/P4-Q2-PZ37AHE_verified_20261107.md)。唯一の定理正本 `formal/real-hilbert-uniform-coercive-strong-limit`、mainは文書ミラー。以下AHD以前の履歴を全文保持。
+
+---
+
 ## AHD（2026-11-07 JST）— 元signed-transfer非零符号の必要十分な真正Haar表証明書
 
 **CLOSED:** [AHD定理PR #6427](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6427) MERGED。AHC元signed-transfer任意精度区間とAFV実値包含から、`t_H(B)>0 iff ∃元AGU区間lower>0`、`t_H(B)<0 iff ∃元AGU区間upper<0` をLean4で形式証明（固定H・元AGL有理座標右境界）。元AGN global対称 `[-M,M]` が非零符号を独力で与えないことを用い、各真正AGU区間の正下端／負上端条件が**同じ元AGP signed-Haar有理表**の正下端／負上端条件と同値と示した。`t_H(B)≠0 iff ∃元AGP有理符号表`、`t_H(B)=0 iff 全真正区間が0をまたぐ iff 正・負表証明書が存在しない` を検証した。`width→0` だけでは `t_H(B)≠0` を導けないことを幅0の例でも証明。元物理transfer、centered source、kernel、global floor、Haar mass、AGU古典選択grid、signed min/max不変更。**具体的な非零符号証人は未証明。**
