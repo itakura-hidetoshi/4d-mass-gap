@@ -77,9 +77,9 @@ theorem p4Q2PZ37AHF_count_eq_links :
   let e : PeriodicHypercubicEvenSpatialSlicePlaquette H ≃ Link :=
     Equiv.prodCongr (Equiv.refl (PeriodicHypercubicEvenSpatialSliceVertex H))
       (Fintype.equivOfCardEq hDirs)
-  have hCard := Fintype.card_congr e
+  have hCard := Nat.card_congr e
   unfold p4Q2PZ37AGN_countRational periodicHypercubicEvenSpatialSlicePlaquetteList
-  simp only [Finset.length_toList, Finset.card_univ]
+  simp only [Finset.length_toList, Finset.card_univ, Fintype.card_eq_nat_card]
   exact_mod_cast hCard
 
 /-- The genuine rational floor lower endpoint cannot exceed one. -/
