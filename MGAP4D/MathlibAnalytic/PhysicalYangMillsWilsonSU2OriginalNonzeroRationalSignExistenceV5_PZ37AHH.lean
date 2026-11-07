@@ -105,7 +105,8 @@ theorem p4Q2PZ37AHH_originalSource_ne_zero : fCont ≠ 0 := by
     exact_mod_cast p4Q2PZ37AHG_count_pos H
   intro hz
   have hAt := congrArg (fun f : C(Cfg, ℝ) => f (fun _ : Link => (1 : G))) hz
-  rw [p4Q2PZ37AHH_originalSource_identity H, ContinuousMap.zero_apply] at hAt
+  change fCont (fun _ : Link => (1 : G)) = 0 at hAt
+  rw [p4Q2PZ37AHH_originalSource_identity H] at hAt
   linarith only [hp, hAt]
 
 /-- Strict full-kernel Haar energy of THIS unchanged centered source.
