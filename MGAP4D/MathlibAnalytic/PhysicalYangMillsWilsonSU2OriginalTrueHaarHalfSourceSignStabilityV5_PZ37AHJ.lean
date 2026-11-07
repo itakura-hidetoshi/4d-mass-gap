@@ -55,9 +55,9 @@ theorem p4Q2PZ37AHJ_eventually_small_denominator
   have hN₀real : (0 : ℝ) < (N₀ : ℝ) := by exact_mod_cast hN₀
   have hLe : (N₀ : ℝ) ≤ (N : ℝ) := by exact_mod_cast hN₀N
   have hNreal : (0 : ℝ) < (N : ℝ) := lt_of_lt_of_le hN₀real hLe
-  have hBound : C < (N₀ : ℝ) * s := (div_lt_iff₀ hN₀real).mp hs₀
-  have hBound' : (N₀ : ℝ) * s ≤ (N : ℝ) * s :=
-    mul_le_mul_of_nonneg_right hLe hs.le
+  have hBound : C < s * (N₀ : ℝ) := (div_lt_iff₀ hN₀real).mp hs₀
+  have hBound' : s * (N₀ : ℝ) ≤ s * (N : ℝ) :=
+    mul_le_mul_of_nonneg_left hLe hs.le
   exact (div_lt_iff₀ hNreal).mpr (lt_of_lt_of_le hBound hBound')
 
 local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
