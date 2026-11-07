@@ -212,7 +212,7 @@ theorem p4Q2PZ37AHN_originalSource_L1_explicitFloor :
   have hMeas : MeasurableSet S :=
     p4Q2PZ37AHN_identityBox_measurable H
   have hf : Integrable (fun C : Cfg => fCont C) muH :=
-    fCont.continuous.integrable_of_hasCompactSupport
+    (p4Q2PZ37AFZ_originalCenteredContinuous H).continuous.integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
   have hAbs : Integrable (fun C : Cfg => |fCont C|) muH := by
     simpa only [Real.norm_eq_abs] using hf.norm
@@ -270,7 +270,7 @@ theorem p4Q2PZ37AHN_originalSource_HaarSecondMoment_explicitFloor :
   have hMeas : MeasurableSet S :=
     p4Q2PZ37AHN_identityBox_measurable H
   have hf : Integrable (fun C : Cfg => (fCont C) ^ 2) muH :=
-    (fCont.continuous.pow 2).integrable_of_hasCompactSupport
+    ((p4Q2PZ37AFZ_originalCenteredContinuous H).continuous.pow 2).integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
   have hMonotone :
       (∫ _C in S, (3 * pH / 8) ^ 2 ∂muH) ≤
