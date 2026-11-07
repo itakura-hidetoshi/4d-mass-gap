@@ -100,7 +100,8 @@ theorem p4Q2PZ37AHQ_crossingLinkCount_exact :
   calc
     ((periodicHypercubicEvenSpatialSliceLinkList H).length : ℝ) =
         (Fintype.card Link : ℝ) := by
-      simp [periodicHypercubicEvenSpatialSliceLinkList]
+      simp only [periodicHypercubicEvenSpatialSliceLinkList,
+        Finset.length_toList, Finset.card_univ]
     _ = pH := p4Q2PZ37AHI_cardLinks_eq_plaquettes H
 
 /-- Actual original temporal crossing action is nonnegative. -/
@@ -239,8 +240,10 @@ theorem p4Q2PZ37AHQ_originalTransfer_centeredVarianceError
         |(T beta f0 B + beta * (Vsrc + X B)) - beta * X B| := by
       congr 1
       ring
-    _ ≤ |T beta f0 B + beta * (Vsrc + X B)| + |beta * X B| :=
-      abs_sub_le _ _
+    _ ≤ |T beta f0 B + beta * (Vsrc + X B)| + |beta * X B| := by
+      simpa only [sub_zero, zero_sub, abs_neg] using
+        (abs_sub_le (T beta f0 B + beta * (Vsrc + X B))
+          (0 : ℝ) (beta * X B))
     _ ≤ E beta + beta * (pH * Msrc) :=
       add_le_add hAHP hScaled
 
@@ -263,7 +266,7 @@ theorem p4Q2PZ37AHQ_originalTransfer_centeredVarianceError_halfCount
         E beta + beta * (pH * Msrc) :=
       p4Q2PZ37AHQ_originalTransfer_centeredVarianceError H beta hbeta B
     _ ≤ E beta + beta * (pH * (pH / 2)) :=
-      add_le_add_left hScale (E beta)
+      add_le_add_right hScale (E beta)
     _ = E beta + beta * pH ^ 2 / 2 := by ring
 
 /-- At the ORIGINAL fixed positive beta0, the crossing uncertainty
@@ -286,7 +289,7 @@ theorem p4Q2PZ37AHQ_fixedCoupling_originalTransfer_rationalCrossingBudget
       p4Q2PZ37AHQ_originalTransfer_centeredVarianceError_halfCount
         H beta0 hb B
     _ ≤ E beta0 + pH ^ 2 / 256 :=
-      add_le_add_left hScale (E beta0)
+      add_le_add_right hScale (E beta0)
 
 /-- Retain the ORIGINAL AHN positive variance floor, but remove the
 unresolved crossing correlation from the right side of the upper bound
