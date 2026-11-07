@@ -51,10 +51,10 @@ theorem p4Q2PZ37AHP_exp_neg_quadraticRemainder
       HasDerivAt (fun y : ℝ => Real.exp (-y) - 1 + y)
         (1 - Real.exp (-t)) t := by
     convert (((hasDerivAt_id t).neg.exp).sub_const 1).add
-      (hasDerivAt_id t) using 1 <;> ring
+      (hasDerivAt_id t) using 1 <;> simp <;> ring
   have hPoly (t : ℝ) :
       HasDerivAt (fun y : ℝ => y ^ 2 / 2) t t := by
-    convert ((hasDerivAt_id t).pow 2).div_const (2 : ℝ) using 1 <;> ring
+    convert ((hasDerivAt_id t).pow 2).div_const (2 : ℝ) using 1 <;> simp <;> ring
   have hCont : Continuous (fun y : ℝ => Real.exp (-y) - 1 + y) :=
     ((Real.continuous_exp.comp continuous_id.neg).sub continuous_const).add
       continuous_id
@@ -136,8 +136,8 @@ physical L2 representative. -/
 theorem p4Q2PZ37AHP_originalSource_mean_zero :
     (∫ A : Cfg, fCont A ∂muH) = 0 := by
   have hW : Integrable W muH :=
-    (periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_continuous H 2).
-      integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+    (periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_continuous H 2).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
   have hMean : (∫ A : Cfg, W A ∂muH) = pH := by
     calc
       (∫ A : Cfg, W A ∂muH) = p4Q2PZ37AFZ_originalWilsonMean H :=
@@ -193,8 +193,8 @@ theorem p4Q2PZ37AHP_originalFirstMoment_eq_variance_add_crossing (B : Cfg) :
   have hSq : Integrable (fun A : Cfg => (fCont A) ^ 2) muH :=
     (hf.pow 2).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   have hCross : Integrable (fun A : Cfg => fCont A * Cross A B) muH :=
-    (hf.mul (p4Q2PZ37AHP_originalCrossing_continuous H B)).
-      integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+    (hf.mul (p4Q2PZ37AHP_originalCrossing_continuous H B)).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
   let c : ℝ := (pH + W B) / 2
   have hConst : Integrable (fun A : Cfg => c * fCont A) muH :=
     (continuous_const.mul hf).integrable_of_hasCompactSupport
@@ -208,12 +208,31 @@ theorem p4Q2PZ37AHP_originalFirstMoment_eq_variance_add_crossing (B : Cfg) :
     rw [hW]
     dsimp [c]
     ring
-  unfold p4Q2PZ37AHP_originalFirstActionMoment
-  simp_rw [hPoint]
-  rw [integral_add (hSq.add hCross) hConst, integral_add hSq hCross,
-    integral_const_mul, p4Q2PZ37AHP_originalSource_mean_zero H]
-  simp only [mul_zero, add_zero]
-  rfl
+  have hSplit1 :
+      (∫ A : Cfg, ((fCont A) ^ 2 + fCont A * Cross A B) + c * fCont A ∂muH) =
+        (∫ A : Cfg, (fCont A) ^ 2 + fCont A * Cross A B ∂muH) +
+        (∫ A : Cfg, c * fCont A ∂muH) := by
+    simpa only [Pi.add_apply] using (integral_add (hSq.add hCross) hConst)
+  have hSplit2 :
+      (∫ A : Cfg, (fCont A) ^ 2 + fCont A * Cross A B ∂muH) =
+        (∫ A : Cfg, (fCont A) ^ 2 ∂muH) +
+        (∫ A : Cfg, fCont A * Cross A B ∂muH) := by
+    simpa only [Pi.add_apply] using (integral_add hSq hCross)
+  calc
+    p4Q2PZ37AHP_originalFirstActionMoment H B =
+        ∫ A : Cfg, ((fCont A) ^ 2 + fCont A * Cross A B) +
+          c * fCont A ∂muH := by
+      unfold p4Q2PZ37AHP_originalFirstActionMoment
+      apply integral_congr_ae
+      filter_upwards with A
+      exact hPoint A
+    _ = (∫ A : Cfg, (fCont A) ^ 2 + fCont A * Cross A B ∂muH) +
+        (∫ A : Cfg, c * fCont A ∂muH) := hSplit1
+    _ = (∫ A : Cfg, (fCont A) ^ 2 ∂muH) +
+        (∫ A : Cfg, fCont A * Cross A B ∂muH) := by
+      rw [hSplit2, integral_const_mul, p4Q2PZ37AHP_originalSource_mean_zero H]
+      simp
+    _ = Vsrc + p4Q2PZ37AHP_originalCrossingCorrelation H B := rfl
 
 /-- Uniform kernel Taylor remainder for ALL nonnegative couplings.
 No new action budget and no beta*Cslab <= 1 assumption. -/
@@ -283,15 +302,27 @@ theorem p4Q2PZ37AHP_originalTransfer_firstOrder_bound
         rw [integral_sub hfInt (hActionInt.const_mul beta), integral_const_mul,
           p4Q2PZ37AHP_originalSource_mean_zero H]
         simp only [zero_sub, p4Q2PZ37AHP_originalFirstActionMoment]
-  have hBound := p4Q2PZ37AEV_real_signedWeightedIntegral_absVariation
-    muH (fun A : Cfg => fCont A) (fun A : Cfg => K beta A B)
-    (fun A : Cfg => 1 - beta * S A B) ((beta * Cslab) ^ 2 / 2)
-    hfInt hKernelInt hLinearInt
-    (fun A => p4Q2PZ37AHP_originalKernel_firstOrder_bound H beta hbeta A B)
-  rw [hLinear, sub_neg_eq_add,
-    ← p4Q2PZ37AHP_originalTransfer_eq_continuousIntegral H beta B,
-    ← p4Q2PZ37AHN_originalSource_L1_eq_continuousIntegral H] at hBound
-  exact hBound
+  have hBound :
+      |(∫ A : Cfg, fCont A * K beta A B ∂muH) -
+        (∫ A : Cfg, fCont A * (1 - beta * S A B) ∂muH)| ≤
+        ((beta * Cslab) ^ 2 / 2) *
+          (∫ A : Cfg, |fCont A| ∂muH) := by
+    exact p4Q2PZ37AEV_real_signedWeightedIntegral_absVariation
+      muH (fun A : Cfg => fCont A) (fun A : Cfg => K beta A B)
+      (fun A : Cfg => 1 - beta * S A B) ((beta * Cslab) ^ 2 / 2)
+      hfInt hKernelInt hLinearInt
+      (fun A => p4Q2PZ37AHP_originalKernel_firstOrder_bound H beta hbeta A B)
+  calc
+    |T beta f0 B + beta * p4Q2PZ37AHP_originalFirstActionMoment H B| =
+        |(∫ A : Cfg, fCont A * K beta A B ∂muH) -
+          (∫ A : Cfg, fCont A * (1 - beta * S A B) ∂muH)| := by
+      rw [p4Q2PZ37AHP_originalTransfer_eq_continuousIntegral H beta B, hLinear]
+      ring
+    _ ≤ ((beta * Cslab) ^ 2 / 2) *
+          (∫ A : Cfg, |fCont A| ∂muH) := hBound
+    _ = p4Q2PZ37AHP_originalQuadraticBudget H beta := by
+      rw [← p4Q2PZ37AHN_originalSource_L1_eq_continuousIntegral H]
+      rfl
 
 /-- Explicit source/crossing decomposition inside the true transfer error. -/
 theorem p4Q2PZ37AHP_originalTransfer_varianceCrossing_bound
