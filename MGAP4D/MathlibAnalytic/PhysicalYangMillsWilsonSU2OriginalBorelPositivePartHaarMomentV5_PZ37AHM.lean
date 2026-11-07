@@ -182,10 +182,13 @@ theorem p4Q2PZ37AHM_originalSignedProduct_abs_le_quarterCount
     p4Q2PZ37AGN_originalContinuousSource_abs_le_halfCount H B
   have ht : |t B| ≤ pH / 2 :=
     p4Q2PZ37AHJ_originalTransfer_abs_le_halfCount H B
+  have hpHalf : 0 ≤ pH / 2 := by
+    unfold p4Q2PZ37AFZ_plaquetteCount
+    positivity
   calc
     |fCont B * t B| = |fCont B| * |t B| := abs_mul _ _
     _ ≤ (pH / 2) * (pH / 2) :=
-      mul_le_mul hf ht (abs_nonneg _) (by positivity)
+      mul_le_mul hf ht (abs_nonneg _) hpHalf
     _ = pH ^ 2 / 4 := by ring
 
 /-- The genuine signed action-transfer product is integrable under
@@ -226,7 +229,7 @@ def p4Q2PZ37AHM_originalPositivePartHaarMoment : ℝ :=
 theorem p4Q2PZ37AHM_originalPositivePartHaarMoment_nonneg :
     0 ≤ p4Q2PZ37AHM_originalPositivePartHaarMoment H := by
   unfold p4Q2PZ37AHM_originalPositivePartHaarMoment
-  exact integral_nonneg (fun B => le_max_right _ _)
+  exact integral_nonneg (fun _ => le_max_right _ _)
 
 /-- AHL's positive-mass strict rational superlevel quantitatively
 forces a nonzero FIRST positive-part Haar moment. No cancellation
