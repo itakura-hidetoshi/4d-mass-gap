@@ -150,7 +150,6 @@ theorem p4Q2PZ37AHC_totalCap_mul_mesh (eta : ℚ) :
     ne_of_gt (p4Q2PZ37AHC_totalCap_pos H)
   unfold p4Q2PZ37AHC_meshPrecision
   field_simp
-  ring
 
 /-- ALL original AGV slope certificates are bounded by the same
 genuine original plaquette-count expression, without a dependence on m. -/
