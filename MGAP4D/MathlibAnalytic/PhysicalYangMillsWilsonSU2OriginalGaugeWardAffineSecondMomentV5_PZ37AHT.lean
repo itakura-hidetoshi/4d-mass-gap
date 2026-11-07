@@ -179,7 +179,7 @@ theorem p4Q2PZ37AHT_originalSecondMoment_strictMonoSpatialWilson
   have hScaled := mul_lt_mul_of_pos_right hLess hV
   rw [p4Q2PZ37AHT_originalSecondMoment_affineSpatialWilson H B,
     p4Q2PZ37AHT_originalSecondMoment_affineSpatialWilson H C]
-  exact add_lt_add_left hScaled _
+  exact add_lt_add_right hScaled _
 
 /-- The true second original full-Wilson action source moment is
 spatial-gauge invariant as a corollary of its proved affine
