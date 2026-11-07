@@ -169,6 +169,11 @@ theorem p4Q2PZ37AHU_originalGaugeWeight_crossingHaar_exact
       apply integral_congr_ae
       filter_upwards with A
       rw [p4Q2PW_originalCrossing_eq_finsetSum H A B, Finset.mul_sum]
+      apply Finset.sum_congr
+      · ext e
+        simp
+      · intro e _he
+        rfl
     _ = ∑ e : Link,
           (∫ A : Cfg, φ A * E ((A e)⁻¹ * B e) ∂muH) := by
       rw [integral_finset_sum _ (fun e _ => hEach e)]
