@@ -1,3 +1,13 @@
+## 検証済み定理 — AHE／真正signed-Haar表の中心寄与・質量不確実性分解と有限有理符号check（2026-11-07 JST）
+
+[AHE定理PR #6430](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6430) **MERGED**。元AGP/AGIの真正signed-Haar有理表を、セル質量 `[l_i,u_i]` の中心 `mid_i=(l_i+u_i)/2` と半幅 `err_i=(u_i-l_i)/2` に**厳密分解**し、`originalTable.lower=Σ(a_i^- mid_i)-Σ(|a_i^-|err_i)`、`originalTable.upper=Σ(a_i^+ mid_i)+Σ(|a_i^+|err_i)` をLean4で証明。負係数では質量端点が反転する元AGI signed min/maxを保持した。原表の正下端 iff 下限中心寄与>下限質量誤差、負上端 iff 上限中心寄与+上限質量誤差<0。真正product-Haar質量の既存24中心格子とAGU任意精度格子へBool checkerを接続し、`checker=true` が同一元物理signed transferの厳密符号を与えること、およびAHC/AHDによる固定H条件付き完全性を証明。**元24中心・AGUの実際のstrict signを示す数値証人は未構成**。古典選択表を実行可能な計算完了と同一視しない。
+
+[Exact-source CI #42321226504](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42321226504) **11,366/11,366 SUCCESS**。新規16定理の公理依存は標準 `propext`・`Classical.choice`・`Quot.sound` のみ、sorryAxなし、変更Lean warning/error 0/0、独立completion receipt completed/SUCCESS、source/test-merge/squash Git tree一致 `0c978fd763c57fe7c91d9a995732a3d1ee43732b`。新規Lean1件386行・削除0、固定Lean/mathlib・元Wilson source/kernel/floor/Haar・元AGP・公開root/workflow不変更。
+
+**NEXT/OPEN — AHF:** 元の固定H、真正有理右境界、有限Borelセル、原Wilson作用、centered source、Haar質量有理区間と元AGP signed min/maxを明示的に構成・評価して、実際にchecker=trueとなる正／負符号の有限証人を探索する。得られなければobstructionを明示する。two-sign shell、H一様coercivity、Hamiltonian gap、連続体4D質量ギャップ、非有理境界拡張はOPEN。[AHE正式証明記録](docs/proofs/P4-Q2-PZ37AHE_verified_20261107.md)。定理正本 `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。以下AHD以前の履歴を全文保持。
+
+---
+
 ## 検証済み定理 — AHD／真正signed-transfer非零符号と元AGP signed-Haar有理証明書の条件付き完全性（2026-11-07 JST）
 
 [AHD定理PR #6427](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6427) **MERGED**。AHCの固定H・元AGL有理右境界に対する任意精度真正signed-transfer verified intervalに、元AFV包含と有理数稠密性を接続。実際の元transfer `t_H(B)>0` と `∃元AGU正下端証明書`、`t_H(B)<0` と `∃元AGU負上端証明書` のそれぞれの同値、`t_H(B)≠0 iff 正・負いずれかの証明書が存在`をLean4で証明。さらに元AGNのglobal区間 `[-M_H,M_H]` は `M_H≥0` の対称区間なので、最終AGU区間の厳密な正下端／負上端は、同じ元物理の **AGP本来のsigned-Haar有限有理表** の正下端／負上端と同値と証明した。`t_H(B)=0` iff 全元AGU区間が0をまたぐ iff 元AGPの正・負表証明書がともに存在しない。任意に狭い区間が存在しても、その中の真正値が非零であるとは限らないことを幅0の例で明示。元source/kernel/floor/Haar law、mass signed min/max、Borel grid・root/pinsを不変更。実際の正・負表の数値証人は**未構成**であり、元transferの非零符号そのものを証明したとは主張しない。
