@@ -160,7 +160,7 @@ L_H(\beta)\le
 
 中間source d06e7aac52965ef20347d0893cf985065b6ba52a は convertとringによる代数正規化で [CI #42461508729](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42461508729) を11,393 jobs成功にした。ただし変更Leanに不要な tactic focus 記法のwarningが1件残った。
 
-最終source 7c850988470b6a53b9192b01b8d3e8a4a464f883 では、証明の論理を変えず不要な <escape><;></escape> を通常の逐次タクティクへ修正した。8宣言の型、仮定、定義、imports、元の物理定義、toolchain、workflowに変更はなく、同一HEADに対する完成CI #42461907660 と独立receiptで8宣言すべて標準公理・sorryAxなし・warning/error 0/0を確定した。
+最終source 7c850988470b6a53b9192b01b8d3e8a4a464f883 では、証明の論理を変えず不要な記法（tac1 <;> tac2）を通常の逐次タクティクへ修正した。8宣言の型、仮定、定義、imports、元の物理定義、toolchain、workflowに変更はなく、同一HEADに対する完成CI #42461907660 と独立receiptで8宣言すべて標準公理・sorryAxなし・warning/error 0/0を確定した。
 
 ## 7．未解決のcrossing Haar平均と次段階AIF
 
