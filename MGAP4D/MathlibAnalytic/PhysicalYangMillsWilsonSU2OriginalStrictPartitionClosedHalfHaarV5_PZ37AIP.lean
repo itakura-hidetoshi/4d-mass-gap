@@ -2,7 +2,7 @@ import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalHalfHaarFullMarg
 import Mathlib.Tactic
 
 /-!
-# P4-Q2-PZ37AIP — strict original partition and a larger closed half-Haar interval
+# P4-Q2-PZ37AIP — strict original partition and a larger upper-endpoint half-Haar bound
 
 Keep the ORIGINAL complete SU(2) Wilson slab action, both spatial halfweights,
 signed ZW physical L2 source and its continuous representative, genuine Haar,
@@ -14,7 +14,7 @@ The original single-link energy has genuine Haar mean one. Its actual range
 For 0<beta<1/4 this strengthens to z(beta)<exp(-beta/2). The exact positive
 original link count equals p_H, so the actual product partition satisfies
   Zcross_H(beta)<exp(-beta*p_H/2).
-Thus AIO's unchanged exact margin comparison is strict on the CLOSED interval
+Thus AIO's unchanged exact margin comparison is strict up to the INCLUDED upper endpoint:
   0<beta<=log(2)/p_H.
 The new endpoint is exactly three halves of AIO's old endpoint. Both the old
 endpoint and the strictly larger new endpoint have original full-margin Haar
@@ -200,7 +200,7 @@ theorem p4Q2PZ37AIP_closedCutoff_eq_threeHalf_old :
     cutoff = (3 / 2 : ℝ) * oldCutoff := by
   have hp : pH ≠ 0 := ne_of_gt (p4Q2PZ37AHN_count_pos H)
   unfold p4Q2PZ37AIP_closedHalfHaarCouplingCutoff p4Q2PZ37AIO_halfHaarCouplingCutoff
-  field_simp [hp] <;> ring
+  field_simp [hp]
 
 theorem p4Q2PZ37AIP_oldCutoff_lt_closedCutoff : oldCutoff < cutoff := by
   rw [p4Q2PZ37AIP_closedCutoff_eq_threeHalf_old H]
