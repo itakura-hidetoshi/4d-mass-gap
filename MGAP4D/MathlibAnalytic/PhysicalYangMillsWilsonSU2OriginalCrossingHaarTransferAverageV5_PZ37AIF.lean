@@ -99,9 +99,6 @@ local notation "T" => decomposableOneSliceTransferIntegral H 2
 local notation "LaplaceSrc" => p4Q2PZ37AIE_originalCenteredSourceLaplace H
 local notation "beta0" => p4Q2PZ37ADC_fixedCoupling
 
-local instance p4Q2PZ37AIF_links : Fintype Link := by
-  classical
-  infer_instance
 local instance p4Q2PZ37AIF_probability : IsProbabilityMeasure muH := by
   dsimp [periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure]
   infer_instance
@@ -123,9 +120,18 @@ theorem p4Q2PZ37AIF_originalCrossingKernel_haarIntegral
     (beta : ℝ) (A : Cfg) :
     (∫ B : Cfg, KC beta A B ∂muH) = Zcross beta := by
   classical
+  have hMeasure : muH = Measure.pi (fun _ : Link => nu) := by
+    unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+    exact congrArg
+      (fun i : Fintype Link =>
+        letI : Fintype Link := i
+        Measure.pi (fun _ : Link => nu))
+      (Subsingleton.elim
+        (oneSlabHaarL2SpatialLinkFintype H)
+        (inferInstance : Fintype Link))
+  rw [hMeasure]
   simp only [periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel,
-    periodicHypercubicEvenSpatialSliceLinkList, Finset.prod_map_toList,
-    periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure]
+    periodicHypercubicEvenSpatialSliceLinkList, Finset.prod_map_toList]
   calc
     _ = ∏ e : Link,
         ∫ b : G, specialUnitaryWilsonRelativeKernel 2 beta (A e) b ∂nu :=
