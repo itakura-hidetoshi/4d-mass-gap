@@ -148,9 +148,15 @@ theorem p4Q2PZ37AIG_originalTransfer_continuous (beta : ℝ) :
     Continuous (fun B : Cfg => T beta f0 B) := by
   have hf : Continuous (fun P : Cfg × Cfg => fCont P.2) :=
     (p4Q2PZ37AFZ_originalCenteredContinuous H).continuous.comp continuous_snd
+  have hKernel : Continuous (fun Q : Cfg × Cfg => K beta Q.1 Q.2) :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous H 2 beta
+  have hSwap : Continuous (Prod.swap : Cfg × Cfg → Cfg × Cfg) :=
+    continuous_swap
   have hk : Continuous (fun P : Cfg × Cfg => K beta P.2 P.1) :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H 2 beta).comp (continuous_snd.prodMk continuous_fst)
+    Continuous.comp
+      (g := fun Q : Cfg × Cfg => K beta Q.1 Q.2)
+      (f := (Prod.swap : Cfg × Cfg → Cfg × Cfg))
+      hKernel hSwap
   have hJoint : Continuous (fun P : Cfg × Cfg =>
       fCont P.2 * K beta P.2 P.1) := hf.mul hk
   have hIntegral : Continuous (fun B : Cfg =>
