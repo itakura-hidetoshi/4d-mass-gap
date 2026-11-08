@@ -337,6 +337,9 @@ theorem p4Q2PZ37AHY_originalThirdOrderRemainder_abs_weightedBound
     _ ≤ ∫ A : Cfg, (beta ^ 3 / 6) * (|fCont A| * (S A B) ^ 3) ∂muH := by
       apply integral_mono hAbsError hWeighted
       intro A
+      change |fCont A *
+          (K beta A B - (1 - beta * S A B + (beta * S A B) ^ 2 / 2))| ≤
+        (beta ^ 3 / 6) * (|fCont A| * (S A B) ^ 3)
       rw [abs_mul]
       calc
         |fCont A| *
