@@ -174,21 +174,31 @@ theorem p4Q2PZ37AHW_originalCenterSign_one :
     s 1 = z := by
   simp [p4Q2PZ37AHW_originalCenterSign]
 
+/-- Every Z/2 center phase is genuinely one of its two literal bits.
+A direct finite case proof converts subtype representatives back to
+typed ZMod numerals before simplifying the physical SU(2) factors. -/
+theorem p4Q2PZ37AHW_originalZMod2_zero_or_one (a : ZMod 2) :
+    a = 0 ∨ a = 1 := by
+  fin_cases a
+  · exact Or.inl (by decide)
+  · exact Or.inr (by decide)
+
 theorem p4Q2PZ37AHW_originalCenterSign_add (a b : ZMod 2) :
     s (a + b) = s a * s b := by
   have hOne : (1 : ZMod 2) ≠ 0 := by decide
   have hAdd : (1 : ZMod 2) + 1 = 0 := by decide
-  fin_cases a <;> fin_cases b <;>
-    simp only [p4Q2PZ37AHW_originalCenterSign,
-      zero_add, add_zero, hAdd, if_pos rfl, if_neg hOne,
-      one_mul, mul_one, p4Q2PZ37AHW_originalCenter_square]
+  rcases p4Q2PZ37AHW_originalZMod2_zero_or_one a with ha | ha <;>
+    rcases p4Q2PZ37AHW_originalZMod2_zero_or_one b with hb | hb <;>
+      subst a <;> subst b <;>
+      simp_all [p4Q2PZ37AHW_originalCenterSign,
+        p4Q2PZ37AHW_originalCenter_square]
 
 theorem p4Q2PZ37AHW_originalCenterSign_inv (a : ZMod 2) :
     (s a)⁻¹ = s a := by
   have hOne : (1 : ZMod 2) ≠ 0 := by decide
-  fin_cases a <;>
-    simp only [p4Q2PZ37AHW_originalCenterSign,
-      if_pos rfl, if_neg hOne, inv_one,
+  rcases p4Q2PZ37AHW_originalZMod2_zero_or_one a with ha | ha <;>
+    subst a <;>
+    simp_all [p4Q2PZ37AHW_originalCenterSign,
       p4Q2PV_originalSU2Center_inverse]
 
 theorem p4Q2PZ37AHW_originalCenterSign_commutes (a : ZMod 2) (u : G) :
@@ -249,6 +259,7 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AHW_originalCenter_square
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AHW_originalCenterSign_zero
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AHW_originalCenterSign_one
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AHW_originalZMod2_zero_or_one
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AHW_originalCenterSign_add
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AHW_originalCenterSign_inv
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AHW_originalCenterSign_commutes
