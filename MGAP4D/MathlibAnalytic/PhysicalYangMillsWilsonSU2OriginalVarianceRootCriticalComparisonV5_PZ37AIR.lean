@@ -116,7 +116,7 @@ theorem p4Q2PZ37AIR_originalCharacterMGF_monotoneOn :
     p4Q2PZ37AIQ_originalSingleLinkCharacter_subgaussian.integrable_exp_mul b
   have hIntegral := integral_mono (haInt.add (hChi.const_mul (b - a))) hbInt
     (fun g : G => p4Q2PZ37AIR_real_exp_increment_lower a b (chi g) ha hab)
-  rw [integral_add haInt (hChi.const_mul (b - a)), integral_const_mul,
+  rw [integral_add' haInt (hChi.const_mul (b - a)), integral_const_mul (b - a) chi,
     p4Q2PZ37AIQ_originalSingleLinkCharacter_mean_zero, mul_zero, add_zero] at hIntegral
   exact hIntegral
 
@@ -170,44 +170,75 @@ is retained and vanishes by the existing genuine Haar mean-zero identity. -/
 theorem p4Q2PZ37AIR_originalCharacterMGF_le_varianceQuadratic
     (beta : ℝ) (hSmall : |beta| ≤ 1) :
     ProbabilityTheory.mgf chi nu beta ≤ 1 + beta ^ 2 / 4 := by
+  have hScalar (x : ℝ) (hx : |x| ≤ 1) :
+      Real.exp (beta * x) ≤ 1 + beta * x + beta ^ 2 * x ^ 2 := by
+    have hArg : |beta * x| ≤ 1 := by
+      calc
+        |beta * x| = |beta| * |x| := abs_mul beta x
+        _ ≤ 1 * 1 := mul_le_mul hSmall hx (abs_nonneg x) (by norm_num)
+        _ = 1 := one_mul 1
+    have hRemainder : Real.exp (beta * x) - 1 - beta * x ≤ (beta * x) ^ 2 :=
+      (abs_le.mp (Real.abs_exp_sub_one_sub_id_le hArg)).2
+    calc
+      Real.exp (beta * x) ≤ 1 + beta * x + (beta * x) ^ 2 := by
+        linarith only [hRemainder]
+      _ = 1 + beta * x + beta ^ 2 * x ^ 2 := by ring
+  have hPoint (g : G) : Real.exp (beta * chi g) ≤
+      1 + beta * chi g + beta ^ 2 * (chi g) ^ 2 :=
+    hScalar (chi g)
+      (abs_le.mpr (p4Q2PZ37AIQ_originalSingleLinkCharacter_mem_interval g))
   have hChi := p4Q2PZ37AIQ_originalSingleLinkCharacter_continuous
   have hInt : Integrable chi nu :=
     hChi.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
-  have hSquare : Integrable (fun g : G => (chi g) ^ 2) nu :=
+  have hOneInt : Integrable (fun _ : G => (1 : ℝ)) nu :=
+    integrable_const (μ := nu) (1 : ℝ)
+  have hFirstInt : Integrable (fun g : G => beta * chi g) nu :=
+    hInt.const_mul beta
+  have hSquareInt : Integrable (fun g : G => (chi g) ^ 2) nu :=
     (hChi.pow 2).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
-  have hLinear : Integrable (fun g : G => (1 : ℝ) + beta * chi g) nu :=
-    (integrable_const (μ := nu) (1 : ℝ)).add (hInt.const_mul beta)
-  have hQuadratic : Integrable (fun g : G => beta ^ 2 * (chi g) ^ 2) nu :=
-    hSquare.const_mul (beta ^ 2)
-  have hPoint (g : G) : Real.exp (beta * chi g) ≤
-      1 + beta * chi g + beta ^ 2 * (chi g) ^ 2 := by
-    have hChiAbs : |chi g| ≤ 1 :=
-      abs_le.mpr (p4Q2PZ37AIQ_originalSingleLinkCharacter_mem_interval g)
-    have hArg : |beta * chi g| ≤ 1 := by
-      calc
-        |beta * chi g| = |beta| * |chi g| := abs_mul _ _
-        _ ≤ 1 * 1 := mul_le_mul hSmall hChiAbs (abs_nonneg _) (by norm_num)
-        _ = 1 := by norm_num
-    have hRemainder := (abs_le.mp (Real.abs_exp_sub_one_sub_id_le hArg)).2
+  have hSecondInt : Integrable (fun g : G => beta ^ 2 * (chi g) ^ 2) nu :=
+    hSquareInt.const_mul (beta ^ 2)
+  have hLinearInt : Integrable (fun g : G => (1 : ℝ) + beta * chi g) nu :=
+    hOneInt.add hFirstInt
+  have hOne : (∫ _ : G, (1 : ℝ) ∂nu) = 1 := by
+    simp only [integral_const, probReal_univ, one_smul]
+  have hFirst : (∫ g : G, beta * chi g ∂nu) = 0 := by
     calc
-      Real.exp (beta * chi g) ≤ 1 + beta * chi g + (beta * chi g) ^ 2 := by
-        linarith only [hRemainder]
-      _ = 1 + beta * chi g + beta ^ 2 * (chi g) ^ 2 := by ring
+      (∫ g : G, beta * chi g ∂nu) = beta * (∫ g : G, chi g ∂nu) :=
+        integral_const_mul beta chi
+      _ = beta * 0 := congrArg (fun t : ℝ => beta * t)
+        p4Q2PZ37AIQ_originalSingleLinkCharacter_mean_zero
+      _ = 0 := mul_zero beta
+  have hSecond : (∫ g : G, beta ^ 2 * (chi g) ^ 2 ∂nu) = beta ^ 2 / 4 := by
+    calc
+      (∫ g : G, beta ^ 2 * (chi g) ^ 2 ∂nu) =
+          beta ^ 2 * (∫ g : G, (chi g) ^ 2 ∂nu) :=
+        integral_const_mul (beta ^ 2) (fun g : G => (chi g) ^ 2)
+      _ = beta ^ 2 * (1 / 4 : ℝ) := congrArg (fun t : ℝ => beta ^ 2 * t)
+        p4Q2PZ37ABN_originalTemporalCharacter_haar_secondMoment
+      _ = beta ^ 2 / 4 := by ring
+  have hSum : (∫ g : G, 1 + beta * chi g + beta ^ 2 * (chi g) ^ 2 ∂nu) =
+      1 + beta ^ 2 / 4 := by
+    calc
+      (∫ g : G, 1 + beta * chi g + beta ^ 2 * (chi g) ^ 2 ∂nu) =
+          (∫ g : G, 1 + beta * chi g ∂nu) +
+            (∫ g : G, beta ^ 2 * (chi g) ^ 2 ∂nu) :=
+        integral_add hLinearInt hSecondInt
+      _ = ((∫ _ : G, (1 : ℝ) ∂nu) + (∫ g : G, beta * chi g ∂nu)) +
+          (∫ g : G, beta ^ 2 * (chi g) ^ 2 ∂nu) :=
+        congrArg (fun t : ℝ => t + (∫ g : G, beta ^ 2 * (chi g) ^ 2 ∂nu))
+          (integral_add hOneInt hFirstInt)
+      _ = 1 + beta ^ 2 / 4 := by rw [hOne, hFirst, hSecond, add_zero]
   calc
     ProbabilityTheory.mgf chi nu beta =
         ∫ g : G, Real.exp (beta * chi g) ∂nu := rfl
     _ ≤ ∫ g : G, 1 + beta * chi g + beta ^ 2 * (chi g) ^ 2 ∂nu :=
       integral_mono
+        (f := fun g : G => Real.exp (beta * chi g))
+        (g := fun g : G => 1 + beta * chi g + beta ^ 2 * (chi g) ^ 2)
         (p4Q2PZ37AIQ_originalSingleLinkCharacter_subgaussian.integrable_exp_mul beta)
-        (hLinear.add hQuadratic) hPoint
-    _ = 1 + beta ^ 2 / 4 := by
-      rw [integral_add hLinear hQuadratic,
-        integral_add (integrable_const (μ := nu) (1 : ℝ)) (hInt.const_mul beta)]
-      simp only [integral_const_mul,
-        p4Q2PZ37AIQ_originalSingleLinkCharacter_mean_zero,
-        p4Q2PZ37ABN_originalTemporalCharacter_haar_secondMoment,
-        integral_const, probReal_univ, one_smul, mul_zero, add_zero]
-      ring
+        (hLinearInt.add hSecondInt) hPoint
+    _ = 1 + beta ^ 2 / 4 := hSum
 
 /-- Strict exponential improvement on 0<beta<=1. Strictness comes from
 the proved positive scalar beta^2/4 in 1+x<exp(x), so a later non-strict
@@ -267,8 +298,11 @@ theorem p4Q2PZ37AIR_originalMarginFactor_characterMGF (beta : ℝ) :
 theorem p4Q2PZ37AIR_originalMarginFactor_continuous : Continuous F := by
   change Continuous (fun beta : ℝ => F beta)
   simp_rw [p4Q2PZ37AIR_originalMarginFactor_characterMGF H]
-  exact (((continuous_id.mul continuous_const).div_const (2 : ℝ)).exp).mul
-    (p4Q2PZ37AIR_originalCharacterMGF_continuous.pow nH)
+  have hArg : Continuous (fun beta : ℝ => beta * pH / 2) :=
+    (continuous_id.mul continuous_const).div_const (2 : ℝ)
+  have hExp : Continuous (fun beta : ℝ => Real.exp (beta * pH / 2)) :=
+    Real.continuous_exp.comp hArg
+  exact hExp.mul (p4Q2PZ37AIR_originalCharacterMGF_continuous.pow nH)
 
 /-- Strict increase is restricted to nonnegative couplings. The centered
 MGF is nondecreasing and the positive exponential factor strictly increases. -/
