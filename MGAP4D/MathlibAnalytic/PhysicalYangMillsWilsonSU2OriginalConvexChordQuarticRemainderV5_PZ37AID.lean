@@ -801,7 +801,7 @@ theorem p4Q2PZ37AID_originalTransfer_le_chordSupportBudget
       ring
     _ ≤ Real.exp (-beta * aB B) *
         (-(beta * Vsrc) - (beta ^ 3 / 6) * (Q4 + 3 * D B) + EChord beta) :=
-      mul_le_mul_of_nonneg_left (add_le_add_left he _) (Real.exp_pos _).le
+      mul_le_mul_of_nonneg_left (add_le_add_right he _) (Real.exp_pos _).le
 
 /-- A support-budget certificate is a stronger sufficient condition than the
 true normalized chord margin. Its satisfaction is not assumed as a theorem. -/
