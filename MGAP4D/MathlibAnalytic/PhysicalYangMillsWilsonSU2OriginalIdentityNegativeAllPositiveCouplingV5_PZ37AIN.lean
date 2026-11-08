@@ -110,11 +110,13 @@ theorem p4Q2PZ37AIN_originalSource_eq_centeredPlaquetteSum
   rw [p4Q2PZ37AHR_originalSource_eq_negHalfTrace H A]
   unfold p4Q2PW2_originalAllPlaquetteRealTrace
   rw [Finset.mul_sum, ← Finset.sum_neg_distrib]
-  apply Finset.sum_congr rfl
-  intro p _hp
-  rw [p4Q2LO_originalLocalPlaquetteContinuous_apply]
-  unfold p4Q2PV_originalPlaquetteRealCharacter
-  ring
+  apply Finset.sum_congr
+  · ext p
+    simp only [Finset.mem_univ]
+  · intro p _hp
+    rw [p4Q2LO_originalLocalPlaquetteContinuous_apply]
+    unfold p4Q2PV_originalPlaquetteRealCharacter
+    ring
 
 /-- Undo only the positive temporal normalizer in ABP's already proved
 actual all-link plaquette convolution. No physical transfer is normalized. -/
@@ -143,9 +145,12 @@ theorem p4Q2PZ37AIN_originalCrossingSource_convolution
   have hPair : Continuous (fun A : Cfg => (A, B)) :=
     (continuous_id : Continuous (fun A : Cfg => A)).prodMk
       (continuous_const : Continuous (fun _ : Cfg => B))
-  have hk : Continuous (fun A : Cfg => KC beta A B) :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_continuous
-      H 2 beta).comp hPair
+  have hJoint : Continuous (fun q : Cfg × Cfg => KC beta q.1 q.2) :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_continuous H 2 beta
+  have hk := Continuous.comp'
+    (f := fun A : Cfg => (A, B))
+    (g := fun q : Cfg × Cfg => KC beta q.1 q.2) hJoint hPair
+  change Continuous (fun A : Cfg => KC beta A B) at hk
   have hEach (p : Plaq) : Integrable (fun A : Cfg => KC beta A B *
       ((p4Q2LO_originalLocalPlaquetteContinuous H p A - 1) / 2)) muH := by
     have hp : Continuous (fun A : Cfg =>
@@ -178,8 +183,13 @@ theorem p4Q2PZ37AIN_originalCrossingKernel_leftContinuous
   have hPair : Continuous (fun A : Cfg => (A, B)) :=
     (continuous_id : Continuous (fun A : Cfg => A)).prodMk
       (continuous_const : Continuous (fun _ : Cfg => B))
-  exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_continuous
-    H 2 beta).comp hPair
+  have hJoint : Continuous (fun q : Cfg × Cfg => KC beta q.1 q.2) :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_continuous H 2 beta
+  have hKernel := Continuous.comp'
+    (f := fun A : Cfg => (A, B))
+    (g := fun q : Cfg × Cfg => KC beta q.1 q.2) hJoint hPair
+  change Continuous (fun A : Cfg => KC beta A B) at hKernel
+  exact hKernel
 
 theorem p4Q2PZ37AIN_originalCrossingKernel_pos
     (beta : ℝ) (A B : Cfg) : 0 < KC beta A B := by
@@ -352,8 +362,11 @@ theorem p4Q2PZ37AIN_originalTransfer_neg_of_source_nonpos
     mul_neg_of_pos_of_neg (Real.exp_pos _) (by linarith only [hSource, hCorrection])
   have hWeighted :=
     (p4Q2PZ37AIN_originalRightWeightedTransfer_quadraticUpper H beta hbeta.le B).trans_lt hUpper
-  apply (mul_lt_mul_left (Real.exp_pos ((beta / 2) * W B))).mp
-  simpa only [mul_zero] using hWeighted
+  by_contra hNot
+  have hNonneg : 0 ≤ T beta f0 B := le_of_not_gt hNot
+  have hProduct : 0 ≤ Real.exp ((beta / 2) * W B) * T beta f0 B :=
+    mul_nonneg (Real.exp_pos _).le hNonneg
+  exact (not_lt_of_ge hProduct) hWeighted
 
 /-- The specified boundary is the actual identity on EVERY original
 spatial link. -/
