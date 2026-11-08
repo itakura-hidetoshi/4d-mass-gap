@@ -99,7 +99,9 @@ local notation "T" => decomposableOneSliceTransferIntegral H 2
 local notation "LaplaceSrc" => p4Q2PZ37AIE_originalCenteredSourceLaplace H
 local notation "beta0" => p4Q2PZ37ADC_fixedCoupling
 
-local instance p4Q2PZ37AIF_links : Fintype Link := Fintype.ofFinite _
+local instance p4Q2PZ37AIF_links : Fintype Link := by
+  classical
+  infer_instance
 local instance p4Q2PZ37AIF_probability : IsProbabilityMeasure muH := by
   dsimp [periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure]
   infer_instance
