@@ -124,9 +124,15 @@ theorem p4Q2PZ37AIF_originalCrossingKernel_haarIntegral
   simp only [periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel,
     periodicHypercubicEvenSpatialSliceLinkList, Finset.prod_map_toList,
     periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure]
-  rw [integral_fintype_prod_eq_prod]
-  simp_rw [p4Q2PZ37AIF_originalSingleLinkKernel_haarIntegral beta]
-  simp [p4Q2PZ37AIF_originalCrossingPartition]
+  calc
+    _ = ∏ e : Link,
+        ∫ b : G, specialUnitaryWilsonRelativeKernel 2 beta (A e) b ∂nu :=
+      integral_fintype_prod_eq_prod
+        (μ := fun _ : Link => nu)
+        (fun e : Link => fun b : G => specialUnitaryWilsonRelativeKernel 2 beta (A e) b)
+    _ = Zcross beta := by
+      simp_rw [p4Q2PZ37AIF_originalSingleLinkKernel_haarIntegral beta]
+      simp [p4Q2PZ37AIF_originalCrossingPartition]
 
 /-- The normalized kernel is the exponential of the original crossing action. -/
 theorem p4Q2PZ37AIF_originalCrossingBoltzmann_haarIntegral
@@ -141,7 +147,7 @@ This is the analytic hypothesis used in Fubini, proved from compact continuity. 
 theorem p4Q2PZ37AIF_originalWeightedCrossing_jointIntegrable (beta : ℝ) :
     Integrable (fun P : Cfg × Cfg =>
       (fCont P.1 * Real.exp (-(beta / 2) * W P.1)) *
-        KC beta P.1 P.2) (muH.prod muH) := by
+        KC beta P.1 P.2) (Measure.prod muH muH) := by
   have hf : Continuous (fun P : Cfg × Cfg => fCont P.1) :=
     (p4Q2PZ37AFZ_originalCenteredContinuous H).continuous.comp continuous_fst
   have hw : Continuous (fun P : Cfg × Cfg => W P.1) :=
