@@ -425,7 +425,6 @@ theorem p4Q2PZ37AHZ_cubicIntegral_of_centeredCancellations
         ∫ A : Cfg, main A + vanish A ∂muH := by
       apply integral_congr_ae
       filter_upwards with A
-      change fCont A * (S A B) ^ 3 = main A + vanish A
       rw [hS A]
       dsimp [main, vanish]
       ring
