@@ -129,9 +129,17 @@ theorem p4Q2PZ37AIF_originalCrossingKernel_haarIntegral
       (Subsingleton.elim
         (oneSlabHaarL2SpatialLinkFintype H)
         (inferInstance : Fintype Link))
+  have hKernel (B : Cfg) :
+      KC beta A B = ∏ e : Link, specialUnitaryWilsonRelativeKernel 2 beta (A e) (B e) := by
+    simp only [periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel,
+      periodicHypercubicEvenSpatialSliceLinkList, Finset.prod_map_toList]
+    apply Finset.prod_congr
+    · ext e
+      simp only [Finset.mem_univ]
+    · intro e _
+      rfl
   rw [hMeasure]
-  simp only [periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel,
-    periodicHypercubicEvenSpatialSliceLinkList, Finset.prod_map_toList]
+  simp_rw [hKernel]
   calc
     _ = ∏ e : Link,
         ∫ b : G, specialUnitaryWilsonRelativeKernel 2 beta (A e) b ∂nu :=
