@@ -103,8 +103,10 @@ theorem p4Q2PZ37AHV_originalSourceCube_pointwiseInterval (A : Cfg) :
 unmodified compact spatial SU(2) product Haar probability. -/
 theorem p4Q2PZ37AHV_originalSourceCube_integrable :
     Integrable (fun A : Cfg => (fCont A)^3) muH := by
-  exact (((p4Q2PZ37AFZ_originalCenteredContinuous H).continuous.pow 3)
-    .integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _))
+  have hf : Continuous (fun A : Cfg => fCont A) :=
+    (p4Q2PZ37AFZ_originalCenteredContinuous H).continuous
+  exact (hf.pow 3).integrable_of_hasCompactSupport
+    (HasCompactSupport.of_compactSpace _)
 
 /-- The authentic still-unevaluated source cubic Haar moment lies in a
 two-sided true-moment enclosure. The bounds do not presume a sign for
