@@ -103,8 +103,8 @@ theorem p4Q2PZ37AHV_originalSourceCube_pointwiseInterval (A : Cfg) :
 unmodified compact spatial SU(2) product Haar probability. -/
 theorem p4Q2PZ37AHV_originalSourceCube_integrable :
     Integrable (fun A : Cfg => (fCont A)^3) muH := by
-  exact ((p4Q2PZ37AFZ_originalCenteredContinuous H).continuous.pow 3)
-    .integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+  exact (((p4Q2PZ37AFZ_originalCenteredContinuous H).continuous.pow 3)
+    .integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _))
 
 /-- The authentic still-unevaluated source cubic Haar moment lies in a
 two-sided true-moment enclosure. The bounds do not presume a sign for
@@ -164,12 +164,12 @@ theorem p4Q2PZ37AHV_originalSecondFullActionMoment_interval
       (5 * pH / 2 + W B) * Vsrc =
           -(pH / 2) * Vsrc + (3 * pH + W B) * Vsrc := by ring
       _ ≤ M3 + (3 * pH + W B) * Vsrc :=
-        add_le_add_right h.1 _
+        add_le_add_left h.1 _
       _ = M2 B := hExact.symm
   · calc
       M2 B = M3 + (3 * pH + W B) * Vsrc := hExact
       _ ≤ (pH / 2) * Vsrc + (3 * pH + W B) * Vsrc :=
-        add_le_add_right h.2 _
+        add_le_add_left h.2 _
       _ = (7 * pH / 2 + W B) * Vsrc := by ring
 
 /-- Unlike a sign assertion about the transfer, this is a proved
