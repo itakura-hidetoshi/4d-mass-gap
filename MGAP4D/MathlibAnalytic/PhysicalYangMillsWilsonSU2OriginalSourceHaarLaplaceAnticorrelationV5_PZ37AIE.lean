@@ -180,7 +180,8 @@ theorem p4Q2PZ37AIE_originalCenteredSourceLaplace_le_negativeVariance
       intro A
       convert p4Q2PZ37AIE_real_centeredLaplace_quadraticUpper
         beta (pH / 2) (fCont A) hbeta hCount
-          (p4Q2PZ37AGN_originalContinuousSource_abs_le_halfCount H A) using 1 <;> ring
+          (p4Q2PZ37AGN_originalContinuousSource_abs_le_halfCount H A) using 1
+      ring
     _ = -(beta * Real.exp (-(beta * (pH / 2))) * Vsrc) := by
       rw [integral_const_mul]
       unfold p4Q2PZ37AHN_originalSource_HaarSecondMoment
