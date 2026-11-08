@@ -65,9 +65,6 @@ local notation "Cfg" => PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfigur
 local notation "muH" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
 local notation "μ" => normalizedCompactHaar G
 local notation "z" => specialUnitaryTwoNegativeIdentity
-local notation "τ" => p4Q2PZ37AHW_originalCenterCochain H
-local notation "s" => p4Q2PZ37AHW_originalCenterSign
-local notation "T" => p4Q2PZ37AHW_originalCenterTwist H
 local notation "e0" => p4Q2PU3_originalPlaquetteEdge0 H
 local notation "e1" => p4Q2PU3_originalPlaquetteEdge1 H
 local notation "e2" => p4Q2PU3_originalPlaquetteEdge2 H
@@ -83,6 +80,8 @@ even-periodic spatial-slice positive links. -/
 def p4Q2PZ37AHW_originalCenterCochain (e : Link) : ZMod 2 :=
   ∑ i : Fin 4, if i < e.2.1 then
     periodicHypercubicEvenCoordinateParity H e.1.1 i else 0
+
+local notation "τ" => p4Q2PZ37AHW_originalCenterCochain H
 
 /-- A one-step spatial translation changes the center cochain by 1
 precisely when the shift direction precedes the link direction. -/
@@ -153,6 +152,8 @@ theorem p4Q2PZ37AHW_originalCenter_square :
 def p4Q2PZ37AHW_originalCenterSign (a : ZMod 2) : G :=
   if a = 0 then 1 else z
 
+local notation "s" => p4Q2PZ37AHW_originalCenterSign
+
 theorem p4Q2PZ37AHW_originalCenterSign_zero :
     s 0 = (1 : G) := by simp [p4Q2PZ37AHW_originalCenterSign]
 
@@ -182,6 +183,8 @@ theorem p4Q2PZ37AHW_originalCenterSign_commutes (a : ZMod 2) (u : G) :
 by their explicit even-torus cochain; no substitute configuration. -/
 def p4Q2PZ37AHW_originalCenterTwist (A : Cfg) : Cfg :=
   fun e => A e * s (τ e)
+
+local notation "T" => p4Q2PZ37AHW_originalCenterTwist H
 
 /-- Every actual coordinate's fixed original center translation preserves
 the UNCHANGED normalized SU(2) Haar measure. -/
