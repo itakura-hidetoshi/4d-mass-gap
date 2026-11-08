@@ -49,10 +49,14 @@ theorem p4Q2PZ37AHX_exp_neg_cubicRemainder
         (Real.exp (-t) - 1 + t) t := by
     convert (((hasDerivAt_const t (1 : ℝ)).sub (hasDerivAt_id t)).add
       (((hasDerivAt_id t).pow 2).div_const (2 : ℝ))).sub
-        ((hasDerivAt_id t).neg.exp) using 1 <;> simp <;> ring
+        ((hasDerivAt_id t).neg.exp) using 1
+    simp
+    ring
   have hPoly (t : ℝ) :
       HasDerivAt (fun y : ℝ => y ^ 3 / 6) (t ^ 2 / 2) t := by
-    convert ((hasDerivAt_id t).pow 3).div_const (6 : ℝ) using 1 <;> simp <;> ring
+    convert ((hasDerivAt_id t).pow 3).div_const (6 : ℝ) using 1
+    simp
+    ring
   have hCont : Continuous
       (fun y : ℝ => 1 - y + y ^ 2 / 2 - Real.exp (-y)) := by
     fun_prop
