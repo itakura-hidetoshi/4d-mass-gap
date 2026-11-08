@@ -140,16 +140,23 @@ every plaquette and the actual original finite summation. -/
 theorem p4Q2PZ37AHW2_originalAllPlaquetteTrace_centerTwist_odd
     (A : Cfg) :
     Φ (T A) = -(Φ A) := by
+  have hUniv (B : Cfg) :
+      Φ B = ∑ p : Plaq, χ p B := by
+    unfold p4Q2PW2_originalAllPlaquetteRealTrace
+    apply Finset.sum_congr
+    · ext p
+      simp
+    · intro p _hp
+      rfl
   calc
-    Φ (T A) = ∑ p : Plaq, χ p (T A) := rfl
+    Φ (T A) = ∑ p : Plaq, χ p (T A) := hUniv (T A)
     _ = ∑ p : Plaq, -(χ p A) := by
       apply Finset.sum_congr rfl
       intro p _hp
       exact p4Q2PZ37AHW2_originalPlaquetteRealCharacter_centerTwist_odd
         H p A
-    _ = -(Φ A) := by
-      rw [Finset.sum_neg_distrib]
-      rfl
+    _ = -(∑ p : Plaq, χ p A) := by rw [Finset.sum_neg_distrib]
+    _ = -(Φ A) := by rw [hUniv A]
 
 /-- Full original spatial Wilson action changes to its centered
 complement under the explicit true center twist. -/
