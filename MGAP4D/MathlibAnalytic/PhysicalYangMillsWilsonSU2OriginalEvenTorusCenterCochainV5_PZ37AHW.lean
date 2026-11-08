@@ -180,8 +180,8 @@ typed ZMod numerals before simplifying the physical SU(2) factors. -/
 theorem p4Q2PZ37AHW_originalZMod2_zero_or_one (a : ZMod 2) :
     a = 0 ∨ a = 1 := by
   fin_cases a
-  · exact Or.inl (by decide)
-  · exact Or.inr (by decide)
+  · exact Or.inl rfl
+  · exact Or.inr rfl
 
 theorem p4Q2PZ37AHW_originalCenterSign_add (a b : ZMod 2) :
     s (a + b) = s a * s b := by
