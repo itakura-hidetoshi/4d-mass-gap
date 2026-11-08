@@ -164,8 +164,9 @@ theorem p4Q2PZ37AIA_originalFourthOrderRemainder_integrable
         (1 - beta * S A B + (beta * S A B) ^ 2 / 2)) +
         (beta ^ 3 / 6) * (fCont A * (S A B) ^ 3) := by
     ring
-  simpa only [Pi.add_apply, ← hPoint] using
-    hR3.add (hCube.const_mul (beta ^ 3 / 6))
+  refine (hR3.add (hCube.const_mul (beta ^ 3 / 6))).congr ?_
+  filter_upwards with A
+  exact (hPoint A).symm
 
 /-- Exact remainder bridge; no coupling sign or scalar error bound is required. -/
 theorem p4Q2PZ37AIA_originalFourthOrderRemainder_eq_third_add
