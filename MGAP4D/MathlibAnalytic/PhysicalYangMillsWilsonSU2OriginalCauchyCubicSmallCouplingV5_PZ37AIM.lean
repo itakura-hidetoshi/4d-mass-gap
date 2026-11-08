@@ -83,11 +83,17 @@ Use the authentic continuous representative and the integral of a square;
 no pointwise representative of an L2 equivalence class is invented. -/
 theorem p4Q2PZ37AIM_originalSource_L1_sq_le_secondMoment :
     Msrc ^ 2 ≤ Vsrc := by
-  have hf : Continuous (fun A : Cfg => fCont A) := fCont.continuous
+  have hf : Continuous (fun A : Cfg => fCont A) :=
+    (p4Q2PZ37AFZ_originalCenteredContinuous H).continuous
   have hAbs : Integrable (fun A : Cfg => |fCont A|) muH :=
     hf.abs.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   have hSq : Integrable (fun A : Cfg => (fCont A) ^ 2) muH :=
     (hf.pow 2).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+  have hLinear : Integrable (fun A : Cfg => (2 * Msrc) * |fCont A|) muH :=
+    hAbs.const_mul (2 * Msrc)
+  have hSub : Integrable
+      (fun A : Cfg => (fCont A) ^ 2 - (2 * Msrc) * |fCont A|) muH :=
+    hSq.sub hLinear
   have hNonneg : 0 ≤ ∫ A : Cfg, (|fCont A| - Msrc) ^ 2 ∂muH :=
     integral_nonneg (fun A => sq_nonneg (|fCont A| - Msrc))
   have hExpand :
@@ -100,8 +106,8 @@ theorem p4Q2PZ37AIM_originalSource_L1_sq_le_secondMoment :
         nlinarith only [sq_abs (fCont A)]
       _ = (∫ A : Cfg, (fCont A) ^ 2 ∂muH) -
           (2 * Msrc) * (∫ A : Cfg, |fCont A| ∂muH) + Msrc ^ 2 := by
-        rw [integral_add (hSq.sub (hAbs.const_mul _)) (integrable_const _),
-          integral_sub hSq (hAbs.const_mul _), integral_const_mul]
+        rw [integral_add hSub (integrable_const (Msrc ^ 2)),
+          integral_sub hSq hLinear, integral_const_mul]
         simp only [integral_const, probReal_univ, one_smul]
       _ = Vsrc - Msrc ^ 2 := by
         rw [← p4Q2PZ37AHN_originalSource_L1_eq_continuousIntegral H]
