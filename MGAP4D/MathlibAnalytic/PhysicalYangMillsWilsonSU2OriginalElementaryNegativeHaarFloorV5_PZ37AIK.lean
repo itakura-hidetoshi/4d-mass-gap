@@ -59,7 +59,7 @@ theorem p4Q2PZ37AIK_sphereRadiusFraction_eq
   unfold p4Q2PZ37ADQ_sphereRadiusFraction Measure.toSphereBallBound
   rw [if_pos ⟨by norm_num, hr⟩]
   simp only [NNReal.coe_mul, NNReal.coe_pow, NNReal.coe_div,
-    NNReal.coe_min, NNReal.coe_ofNat, Real.coe_toNNReal r hr.le]
+    NNReal.coe_min, NNReal.coe_natCast, NNReal.coe_ofNat, Real.coe_toNNReal r hr.le]
   ring
 
 /-- The nonpositive-radius fallback is distinct from the geometric branch.
