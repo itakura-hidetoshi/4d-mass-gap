@@ -244,7 +244,7 @@ theorem p4Q2PZ37AIC_originalCenteredAction_abs_le_threeHalfCount
     p4Q2PZ37AHQ_originalCrossing_centered_abs_le_count H A B
   calc
     |Y A B| = |fCont A + X A B| := rfl
-    _ ≤ |fCont A| + |X A B| := abs_add _ _
+    _ ≤ |fCont A| + |X A B| := abs_add_le _ _
     _ ≤ pH / 2 + pH := add_le_add hf hx
     _ = 3 * pH / 2 := by ring
 
@@ -639,9 +639,10 @@ local notation "qWeight" => p4Q2PZ37AIC_originalFactoredRemainderWeight H
 theorem p4Q2PZ37AIC_originalFactoredRemainderWeight_continuous
     (beta : ℝ) (B : Cfg) :
     Continuous (fun A : Cfg => qWeight beta A B) :=
-  (continuous_const.mul
-    (continuous_const.min
-      (p4Q2PZ37AHP_originalFullAction_continuous H B))).exp
+  Real.continuous_exp.comp
+    (continuous_const.mul
+      (continuous_const.min
+        (p4Q2PZ37AHP_originalFullAction_continuous H B)))
 
 /-- Continuous weights times the retained exponential and the actual centered
 fourth power are integrable under the unchanged original product Haar measure. -/
