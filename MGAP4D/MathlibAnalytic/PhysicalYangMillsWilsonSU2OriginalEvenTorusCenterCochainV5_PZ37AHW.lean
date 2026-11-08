@@ -111,7 +111,6 @@ theorem p4Q2PZ37AHW_originalCenterCochain_shift
           if i < nu.1 then periodicHypercubicEvenCoordinateParity H v.1 i else 0) +
           (if mu.1 < nu.1 then 1 else 0) := by
         congr 1
-        simp only [ite_eq_left_iff]
         simp
 
 /-- The true original four-link oriented plaquette has ODD center flux
@@ -132,7 +131,7 @@ theorem p4Q2PZ37AHW_originalCenterCochain_plaquette
   change τ (e2 p) = τ (e0 p) at h2
   rw [h1, h2]
   have hcancel (a : ZMod 2) : a + a = 0 := by
-    have h2zero : (2 : ZMod 2) = 0 := by norm_num
+    have h2zero : (2 : ZMod 2) = 0 := by decide
     calc
       a + a = (2 : ZMod 2) * a := by ring
       _ = 0 := by rw [h2zero]; ring
@@ -163,14 +162,17 @@ theorem p4Q2PZ37AHW_originalCenterSign_one :
 
 theorem p4Q2PZ37AHW_originalCenterSign_add (a b : ZMod 2) :
     s (a + b) = s a * s b := by
+  have hOne : (1 : ZMod 2) ≠ 0 := by decide
+  have hAdd : (1 : ZMod 2) + 1 = 0 := by decide
   fin_cases a <;> fin_cases b <;>
-    simp [p4Q2PZ37AHW_originalCenterSign,
+    simp [p4Q2PZ37AHW_originalCenterSign, hOne, hAdd,
       p4Q2PZ37AHW_originalCenter_square]
 
 theorem p4Q2PZ37AHW_originalCenterSign_inv (a : ZMod 2) :
     (s a)⁻¹ = s a := by
+  have hOne : (1 : ZMod 2) ≠ 0 := by decide
   fin_cases a <;>
-    simp [p4Q2PZ37AHW_originalCenterSign,
+    simp [p4Q2PZ37AHW_originalCenterSign, hOne,
       p4Q2PV_originalSU2Center_inverse]
 
 theorem p4Q2PZ37AHW_originalCenterSign_commutes (a : ZMod 2) (u : G) :
