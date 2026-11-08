@@ -87,7 +87,7 @@ theorem p4Q2PZ37AIQ_originalSingleLinkCharacter_mem_interval (g : G) :
 /-- Hoeffding's lemma is applied to the actual single-link variable and
 the original probability Haar, with its range and mean proved above. -/
 theorem p4Q2PZ37AIQ_originalSingleLinkCharacter_subgaussian :
-    ProbabilityTheory.HasSubgaussianMGF chi (1 : ℝ≥0) nu := by
+    ProbabilityTheory.HasSubgaussianMGF chi (1 : NNReal) nu := by
   have h := ProbabilityTheory.hasSubgaussianMGF_of_mem_Icc_of_integral_eq_zero
     (X := chi) (μ := nu) (a := (-1 : ℝ)) (b := (1 : ℝ))
     p4Q2PZ37AIQ_originalSingleLinkCharacter_continuous.measurable.aemeasurable
