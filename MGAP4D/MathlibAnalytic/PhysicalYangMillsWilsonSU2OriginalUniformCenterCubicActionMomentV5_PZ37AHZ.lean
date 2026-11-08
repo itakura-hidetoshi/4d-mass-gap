@@ -376,7 +376,9 @@ theorem p4Q2PZ37AHZ_cubicIntegral_of_centeredCancellations
     change (∫ A : Cfg,
       (fCont A) ^ 4 + (3 * a ^ 2) * (fCont A) ^ 2 +
         3 * ((fCont A) ^ 2 * (xCross A) ^ 2) ∂muH) = _
-    rw [integral_add (i4.add iV) iD, integral_add i4 iV,
+    have hSplit := integral_add (i4.add iV) iD
+    simp only [Pi.add_apply] at hSplit
+    rw [hSplit, integral_add i4 iV,
       integral_const_mul, integral_const_mul]
     rfl
 
@@ -408,12 +410,13 @@ theorem p4Q2PZ37AHZ_cubicIntegral_of_centeredCancellations
         (6 * a) * ((fCont A) ^ 2 * xCross A) + a ^ 3 * fCont A +
         (3 * a ^ 2) * (fCont A * xCross A) +
         (3 * a) * (fCont A * (xCross A) ^ 2) + fCont A * (xCross A) ^ 3 ∂muH) = 0
-    rw [integral_add (((((j0.add j1).add j2).add j3).add j4).add j5) j6,
-      integral_add ((((j0.add j1).add j2).add j3).add j4) j5,
-      integral_add (((j0.add j1).add j2).add j3) j4,
-      integral_add ((j0.add j1).add j2) j3,
-      integral_add (j0.add j1) j2,
-      integral_add j0 j1]
+    have hSplit2 := integral_add (j0.add j1) j2
+    have hSplit3 := integral_add ((j0.add j1).add j2) j3
+    have hSplit4 := integral_add (((j0.add j1).add j2).add j3) j4
+    have hSplit5 := integral_add ((((j0.add j1).add j2).add j3).add j4) j5
+    have hSplit6 := integral_add (((((j0.add j1).add j2).add j3).add j4).add j5) j6
+    simp only [Pi.add_apply] at hSplit2 hSplit3 hSplit4 hSplit5 hSplit6
+    rw [hSplit6, hSplit5, hSplit4, hSplit3, hSplit2, integral_add j0 j1]
     simp only [integral_const_mul, hCubeZero, h30, h20, hZero,
       h10, h12, h13, mul_zero, add_zero]
 
