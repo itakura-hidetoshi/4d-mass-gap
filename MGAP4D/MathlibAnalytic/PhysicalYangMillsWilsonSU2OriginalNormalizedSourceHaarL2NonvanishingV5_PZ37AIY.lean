@@ -120,7 +120,6 @@ theorem p4Q2PZ37AIY_originalNormalizedPhysicalSource_ne_zero_of_regionMeasure
       ∀ᵐ B : CfgY ∂muY, B ∉ {B : CfgY |
         uY beta hbeta.le B < -(mY beta hbeta.le)} := by
     filter_upwards [hAEsource] with B hB
-    change ¬ (uY beta hbeta.le B < -(mY beta hbeta.le))
     rw [hB]
     linarith
   exact hmeasure ((measure_eq_zero_iff_ae_notMem).2 hAEoutside)
