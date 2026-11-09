@@ -5070,3 +5070,11 @@ Exact-source CI [42574638690](https://github.com/itakura-hidetoshi/4d-mass-gap/a
 追加Lean1件186行／削除0、正準射影定義2・定理7。Exact-source CI [#42617449250](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42617449250)と統合後push [#42618394145](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42618394145)はともに11,417/11,417 SUCCESS、9/9の公理出力は標準3公理のみ、変更warning/error0、新規sorryAxなし、独立receipt SUCCESS。source `6f16501c87ff57941b9244efd0ef7b6465cf9f9c`・squash `eda6b204e5bbbae65809aa968957736ad763b62e` の共通Git tree `caefa8a12dbe42b122f559fe0a6f198e9a49b237`。初回失敗CI #42616327394は未認証として構造理由を正式記録へ保持。
 
 **OPEN／AJD:** 既存top固有ベクトル・全top射影・元ZW物理源の真正top内積を同じH・βの物理Hilbert carrierで型付き接続する。必要な実際のtop-overlap上界が得られなければobstructionを残す。元ZW源のtop直交性を無根拠に挿入せず、H一様正L²振幅、全物理Hilbert coercivity、Hamiltonian spectral gap、非自明4D連続体Yang–Mills mass gapを主張しない。append-only／tighten-only／overwrite-forbidden／same-root、固定Lean/mathlib維持。
+
+## P4-Q2-PZ37AJD — 元ZW源の真正top-overlap不変性（2026-11-09、MERGED／形式認証済み）
+
+**CLOSED:** [定理PR #6584](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6584) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AJD_verified_20261109.md)。元Gauss-law物理Hilbertの既存全top部分空間で、対称な真の正規化Wilson transferがtopを固定することから、元のZW源と正規化転送後源像の全top内積・正準top射影が一致。`Π_Top(N f₀)=Π_Top f₀`。真正AJA証明書を転送**前**元源へ置き換えた残余下界 `‖u_⊥‖²≥C_H,β−‖Π_Top f₀‖²` を形式化。励起sector非零は実top射影が十分小さい**条件付き**に留まる。
+
+新規Lean1件206行（定義1・定理6）、7/7実公理は標準3件のみ、AJD変更warning/error0、sorryAxなし。Exact-source CI [#42634322528](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42634322528)、統合後push CI [#42637270766](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42637270766)ともSUCCESS、11,418/11,418、receipt SUCCESS。source `714aec58d29953b631010cd04d431ca4ccef4ca8` とsquash `f646eb48342eac60f5e05acbbea60c5e846a33fb` のGit tree `ce3176c00891e63ed5b7adaf796113a05fec1409` 一致。
+
+**OPEN／AJE:** 実top射影 `‖Π_Top f₀‖²` を元Wilson–Haar内積とtop部分空間の既存定義から量的評価する。証明書未満の上界、top直交性、体積一様物理gap、Hamiltonian spectral gap、連続体4D mass gapはいずれも未認証。仮定を追加して結論を作らない。固定Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6、append-only／tighten-only／overwrite-forbidden／same-root。
