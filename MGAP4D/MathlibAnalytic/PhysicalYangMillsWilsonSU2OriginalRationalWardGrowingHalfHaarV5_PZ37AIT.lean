@@ -424,7 +424,7 @@ theorem p4Q2PZ37AIT_originalNegativeMargin_rationalWardRatio_identity
   have hDen : 1 + beta * pH / 2 ≠ 0 := ne_of_gt (by positivity)
   have hCancel : (1 + beta * pH / 2) * coeff beta = beta := by
     unfold p4Q2PZ37AIT_rationalSourceCoefficient
-    field_simp [hDen] <;> ring
+    field_simp [hDen]
   unfold p4Q2PZ37AIG_originalNegativeTransferMargin
     p4Q2PZ37AIT_sourceNonpositiveRationalWardFloor
   calc
@@ -713,7 +713,7 @@ theorem p4Q2PZ37AIT_originalCountSquareExp_tendsto_zero
   have hShape (H : ℕ) :
       (1 / a ^ 2) * ((a * pAIT H) ^ 2 * Real.exp (-(a * pAIT H))) =
         (pAIT H) ^ 2 * Real.exp (-(a * pAIT H)) := by
-    field_simp [ne_of_gt ha] <;> ring
+    field_simp [ne_of_gt ha]
   simpa only [hShape] using hScaled
 
 /-- Only THIS rational Ward certificate is bounded by the volume envelope.
