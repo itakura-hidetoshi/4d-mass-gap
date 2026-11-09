@@ -50,7 +50,7 @@ theorem realL2_norm_sq_ge_margin_sq_mul_realMeasure
     m ^ 2 * Measure.real μ s ≤ ‖f‖ ^ 2 := by
   have hSqInt : Integrable (fun x : α => ‖f x‖ ^ 2) μ := by
     simpa only [real_inner_self_eq_norm_sq] using
-      (MeasureTheory.L2.integrable_inner f f)
+      (MeasureTheory.L2.integrable_inner (𝕜 := ℝ) f f)
   have hIndInt :
       Integrable (s.indicator (fun _ : α => m ^ 2)) μ :=
     (integrable_const (μ := μ) (m ^ 2)).indicator hs
