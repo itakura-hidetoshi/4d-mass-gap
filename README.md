@@ -4370,3 +4370,11 @@ Exact-source [#42579467910](https://github.com/itakura-hidetoshi/4d-mass-gap/act
 修正版Exact-source [#42600834308](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42600834308)、定理squash後push [#42603169982](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42603169982) ともSUCCESS。双方11,414/11,414、10/10実公理出力は標準3公理のみ、AIZ変更warning/error0、sorryAxなし、独立receipt SUCCESS。認証source `94f896b1d0cd82b78377384040b7c7e766c3355d`・test-merge `da0e340d692c7cc45ab05762593478a5405a8e0e`・[squash](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/dc334fa6d68eee8f0d75f4c236f02be92b6f14a1) のGit treeは `86f6816c1139a92aee72549ce081d3377e206ae9` で一致。初回warningと中間エラーの履歴は正式記録に保持。
 
 **OPEN / AJA：** 元の正規化余裕と元のHaar負領域質量を用いた有限体積の定量的L²下界、およびtop固有空間への真正物理射影を、独立に検証する。各Hでの非零性を体積一様振幅・top直交・励起gap・Hamiltonian gap・4D連続体mass gapに昇格させない。append-only／tighten-only／overwrite-forbidden／same-root、固定Lean/mathlib維持。
+
+## P4-Q2-PZ37AJA — 元の正規化ZW物理源像の定量的Haar-L²下界（2026-11-09、形式認証・統合済み）
+
+[定理PR #6575](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6575) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AJA_verified_20261109.md)。AIGの元厳密負領域の可測性・正Haar質量、AIWの元正規化積分代表と既存Gauss-law物理L²作用素出力のHaar-a.e.橋、AIZの全有限H・全β>0の非零性を保持して、**全H∈ℕ・β>0で元の余裕二乗×真正Haar負領域の実測度が、元の正規化ZW物理源像の真正L²ノルム二乗以下**と形式証明：`0<m_H,β²·Measure.real μ_H(R_H,β)≤‖N_H,β f0,H‖²`。一般の有限測度実L²補題を先に証明し、任意代表の点ごとの符号を勝手に主張せずに元の物理量へ降下した。新規Leanファイル168行・3定理・削除0・元の物理定義と固定Lean/mathlib不変更。
+
+修正版Exact-source [#42608468069](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42608468069)、統合後push [#42609883742](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42609883742) ともSUCCESS、両run 11,415/11,415、3/3実公理出力は標準`propext`/`Classical.choice`/`Quot.sound`のみ、変更warning/error0、AJA sorryAxなし、独立receipt SUCCESS。最終source `a4cd620ea2c153d2cf2c5dbc5b93d9e2f89b1f9b`・test-merge `e40341db30e8cf0c2ac61f93a11688ff492485ef`・[squash](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/e5beaef8120445c216753125ec31cd8c86a852ed) の共通Git tree `28b728a8dd9f387ff053f21db03f6ec80e7296fe`。初回 #42607467139の `InnerProductSpace ?m ℝ` 型推論失敗と `(𝕜 := ℝ)` 明示修正の履歴は正式記録へ保存した。
+
+**OPEN／AJB:** 元のtop eigenspaceへの射影と真正直交成分を別に形式化する。AJAのH・β依存の証明書を体積一様正振幅、top直交性、励起gap、Hamiltonian gap、連続体4D mass gapへ昇格させない。append-only／tighten-only／overwrite-forbidden／same-root。
