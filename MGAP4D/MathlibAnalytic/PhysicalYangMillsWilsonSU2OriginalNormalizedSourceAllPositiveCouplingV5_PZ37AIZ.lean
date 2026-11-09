@@ -163,6 +163,33 @@ theorem p4Q2PZ37AIZ_originalPositiveCoupling_physicalNormAndRegion
       H 2 (by norm_num) beta hbeta.le,
     p4Q2PZ37AIZ_originalNormalizedNegativeRegion_HaarMeasure_pos H beta hbeta⟩
 
+/-- Explicitly beyond AIY's former finite-volume AIT half-Haar endpoint,
+the true original normalized ZW physical source image is STILL nonzero in
+the SAME original Haar-L². No half-Haar claim is transported past cutoff. -/
+theorem p4Q2PZ37AIZ_originalNormalizedPhysicalSource_norm_pos_above_AIT_cutoff :
+    0 < ‖NZ (p4Q2PZ37AIT_volumeGrowingCouplingCutoff H + 1)
+      (by
+        have hc := p4Q2PZ37AIT_volumeGrowingCouplingCutoff_pos H
+        linarith) fZ‖ := by
+  have hc := p4Q2PZ37AIT_volumeGrowingCouplingCutoff_pos H
+  have hbeta : 0 < p4Q2PZ37AIT_volumeGrowingCouplingCutoff H + 1 := by
+    linarith
+  exact p4Q2PZ37AIZ_originalNormalizedPhysicalSource_norm_pos_allPositive
+    H (p4Q2PZ37AIT_volumeGrowingCouplingCutoff H + 1) hbeta
+
+/-- The same all-positive volume-dependent schedules preserve strict
+nonzero true Haar-L² output of the ORIGINAL RAW Gauss-law physical transfer.
+This does not assert an H-uniform lower amplitude floor. -/
+theorem p4Q2PZ37AIZ_originalRawPhysicalSource_positiveSchedule
+    (beta : ℕ → ℝ) (hbeta : ∀ K : ℕ, 0 < beta K) :
+    ∀ K : ℕ,
+      0 < ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+        K 2 (by norm_num) (beta K) (hbeta K).le
+        (p4Q2PZ37ZW_originalCenteredPhysicalDirection K)‖ := by
+  intro K
+  exact p4Q2PZ37AIZ_originalRawPhysicalSource_norm_pos_allPositive
+    K (beta K) (hbeta K)
+
 end GroundStatePosteriorJoint
 end
 end MGAP4D.MathlibAnalytic
@@ -176,3 +203,5 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AIZ_originalNormalizedPhysicalSource_pos_le_input_allPositive
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AIZ_originalNormalizedPhysicalSource_positiveSchedule
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AIZ_originalPositiveCoupling_physicalNormAndRegion
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AIZ_originalNormalizedPhysicalSource_norm_pos_above_AIT_cutoff
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AIZ_originalRawPhysicalSource_positiveSchedule
