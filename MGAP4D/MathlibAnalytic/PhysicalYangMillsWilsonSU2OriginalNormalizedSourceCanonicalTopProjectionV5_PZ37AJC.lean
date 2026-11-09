@@ -61,21 +61,13 @@ local instance p4Q2PZ37AJC_physicalComplete (K : ℕ) :
   (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule_isClosed
     K 2).completeSpace_coe
 
-local instance p4Q2PZ37AJC_topHasProjection
+local instance p4Q2PZ37AJC_topComplete
     (K : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta) :
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
-      K 2 (by norm_num) beta hbeta).HasOrthogonalProjection := by
-  let F := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
-    K 2 (by norm_num) beta hbeta
-  have hFclosed : IsClosed
-      (F : Set
-        (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule K 2)) := by
-    simpa [F] using
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace_isClosed
-        K 2 (by norm_num) beta hbeta
-  letI : CompleteSpace F := hFclosed.completeSpace_coe
-  change F.HasOrthogonalProjection
-  infer_instance
+    CompleteSpace
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
+        K 2 (by norm_num) beta hbeta) :=
+  (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace_isClosed
+    K 2 (by norm_num) beta hbeta).completeSpace_coe
 
 /-- The actual orthogonal projection of the true normalized physical ZW
 source IMAGE onto the EXISTING full top eigenspace. -/
