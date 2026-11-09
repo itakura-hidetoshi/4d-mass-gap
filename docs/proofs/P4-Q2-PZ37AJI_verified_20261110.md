@@ -103,3 +103,9 @@ Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を固�
 今回の同値性は**有限証人探索の完全性**であり、証人があるという存在主張ではない。真正AJA証明書Cを下回る`n≥2`の上界を未構成のまま保持する。選択真空ΩとHaar定数cの偏差`D=1−|⟨Ω,c⟩|²`に必要な上界、追加top残余`E=‖r‖²`が十分小さいこと、真正top eigenspaceの一次元性、無条件の励起sector非零、正のH一様下界、全物理Hilbert coercivity、Hamiltonian spectral gap、4D連続体Yang–Mills mass gapも未証明。
 
 次段は、真正Wilson transferの`(I−S)c`残差と既証明の有限体積収縮率から、cの**全top空間への距離**を上から抑える可能性を検証し、選択Ωとの差およびtop多重度の残余を別々に保存する。append-only／tighten-only／overwrite-forbidden／same-root。
+
+## 7．統合後push CIの独立再観測（追記）
+
+[統合後push #42711612792](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42711612792) は **completed／SUCCESS**。真正formal定理squash `0548de742afda7894e6647a65dad2348b5a0ceac` のexact headで **11,423／11,423 Lean依存閉包SUCCESS**、AJI全9宣言の実公理出力は標準3公理のみ、変更Lean warning/error 0/0、新規sorryAxなしを実ログで独立確認した。
+
+「Publish MCP CI completion receipt」も completed／SUCCESS。正式squashの `chatgpt-ci-receipt/PR Lean Fast Check` は `state=success` かつ run #42711612792 を指し、独立した完了記録として照合できた。したがって第5節で保留した統合後push結果は認証済みとなった。receiptを二つ目のLean証明とは扱わない。未構成のn≥2予算証人・無条件非零性・H一様gapは引き続きOPEN。
