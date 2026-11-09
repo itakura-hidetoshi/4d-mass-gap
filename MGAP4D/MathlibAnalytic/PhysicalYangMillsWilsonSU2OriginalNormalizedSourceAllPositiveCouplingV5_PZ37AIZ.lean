@@ -104,14 +104,14 @@ theorem p4Q2PZ37AIZ_originalRawPhysicalSource_ne_zero_allPositive
     (beta : ℝ) (hbeta : 0 < beta) :
     PZ beta hbeta.le fZ ≠ 0 := by
   intro hz
-  have hNorm : ‖NZ beta hbeta.le fZ‖ = 0 := by
-    simp [hz] using
-      (p4Q2PZ37AIY_originalNormalizedPhysicalSource_norm_eq_ratio
-        H beta hbeta.le)
+  have hRatio :=
+    p4Q2PZ37AIY_originalNormalizedPhysicalSource_norm_eq_ratio
+      H beta hbeta.le
+  rw [hz, norm_zero, zero_div] at hRatio
   exact
     (ne_of_gt
       (p4Q2PZ37AIZ_originalNormalizedPhysicalSource_norm_pos_allPositive
-        H beta hbeta)) hNorm
+        H beta hbeta)) hRatio
 
 /-- Strict positive true L² amplitude for the ORIGINAL RAW physical
 transfer on its original signed ZW physical source at every beta>0. -/
