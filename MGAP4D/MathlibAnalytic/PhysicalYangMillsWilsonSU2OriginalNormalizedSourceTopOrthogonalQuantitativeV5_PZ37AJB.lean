@@ -42,8 +42,10 @@ theorem realHilbert_topOrthogonal_add_norm_sq
     (F : Submodule ℝ E) (u v : E)
     (hu : u ∈ F) (hv : v ∈ Fᗮ) :
     ‖u + v‖ ^ 2 = ‖u‖ ^ 2 + ‖v‖ ^ 2 :=
-  norm_add_sq_eq_norm_sq_add_norm_sq_of_inner_eq_zero
-    u v (F.inner_right_of_mem_orthogonal hu hv)
+  by
+    simpa only [pow_two] using
+      (norm_add_sq_eq_norm_sq_add_norm_sq_of_inner_eq_zero
+        u v (F.inner_right_of_mem_orthogonal hu hv))
 
 namespace GroundStatePosteriorJoint
 
