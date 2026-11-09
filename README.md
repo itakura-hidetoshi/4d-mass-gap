@@ -4275,3 +4275,19 @@ For a future theorem: inspect current canonical SHA, the **complete Lean file an
 [Exact-source CI #42540948252](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42540948252/attempts/1)：**11407/11407 SUCCESS**、28定理＋1定義、29/29公理出力は標準3公理のみ、sorryAx・全Lean error・変更warning/errorは0。別job receiptもSUCCESS。認証source・実test-merge・[定理squash](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/3dd12415adb88e30abbd97ab6d7d4cf7579eb38b) のGit treeは `a752ee83411955a74b4eddae55707f9c87a4ad40` で一致した。初回の固定mathlib乗法消去APIの失敗と1行修正は正式記録に保持する。
 
 結合区間と質量下界は体積共通だが、`p_H=24(H+1)^3`、`V_H≤p_H²/4`、`D_H=β exp(-60β(H+1)^3)V_H` という振幅の体積依存性は残る。β>1での旧全余裕半Haar性、体積一様の正の余裕・coercivity、作用素の負固有値、Hamiltonian spectral gap、連続体4次元Yang–Mills mass gapは未証明。
+
+
+## 検証済み定理 — AIT／有理Ward評価と体積により拡大する半Haar範囲（2026-11-09 JST）
+
+[AIT定理PR #6554](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6554) **MERGED**。[正式記録](docs/proofs/P4-Q2-PZ37AIT_verified_20261109.md)。定理正本は引き続き `formal/real-hilbert-uniform-coercive-strong-limit`、mainは文書ミラーである。
+
+元の完全SU(2) Wilson作用、両端halfweight、符号付きZW物理源、真正Haar、AIGの元の全余裕を保ち、源の両符号で有理二次係数 `β/(1+βp_H/2)` を証明した。源が非正の集合 `f_H(B)≤0` 上で、元のtransferは `T_β f₀(B)≤-Dhat_H` を満たす。新しい床 `Dhat_H=β/(1+βp_H/2) exp(-2βp_H)V_H` は、全正結合でAISの床より厳密に大きい。
+
+真正分配関数の単調非増加性と結合1のGaussian評価を接続し、**各有限Hと0<β≤b_H=1+p_H/4=1+6(H+1)^3で、同じ元の全余裕厳密負領域のHaar質量が1/2以上**となる。上端b_Hそのものを含む。したがって**全有限体積に共通し上端を含む範囲0<β≤7**が得られ、さらに**任意の固定β>0について、十分大きい全てのHで半Haar下界**が成立する。量化は `∀β>0, ∃N, ∀H≥N` であり、各固定Hで全正結合を覆う定理ではない。b_Hを最適上端や物理的臨界結合とは認定しない。
+
+同じ新補助床について、固定β>0で `0<Dhat_H≤(β/4)p_H² exp(-2βp_H)→0` と、全体積一様の正の下界の不存在を形式証明した。これはこの補助床に限った障害である。実際のtransferの負値振幅の上界・減衰や、別の一様な証明書の不可能性は含まない。
+
+[Exact-source CI #42554354126](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42554354126/attempts/1)：**11408/11408 SUCCESS**、46定理＋3定義、49/49実公理出力は標準3公理のみ、sorryAx・全Lean error・変更warning/errorは0。別job receiptもSUCCESS。認証source・実test-merge・[定理squash](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/57cbe6241f41adbface0d8e379f9e98d81bf723a) のtreeは `95c1647ee996fff0ba88ba9281f4a3207afd02b1` で一致し、[統合後push CI #42555080816](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42555080816/attempts/1) も同じ監査条件でSUCCESS。初回CIはLean検証に成功したが、不要なringの4warningにより統合を見送り、2か所の削除後に再認証した。その履歴は正式記録に保存する。
+
+各固定有限Hにおける任意正結合での全余裕半Haar性、別の構成による体積一様の正の余裕・coercivity、共通の極限作用素への接続、負固有値、Hamiltonian spectral gap、連続体4次元Yang–Mills mass gapは未証明のまま保持する。
+
