@@ -4473,3 +4473,13 @@ Exact-source CI [#42704315781](https://github.com/itakura-hidetoshi/4d-mass-gap/
 **OPEN／AJI:** いずれかn≥2について真正証明書 ‖Sⁿf₀‖²<C_AJA の証人を元Wilson物理から構成できるか、あるいは D上界とE上界を独立に証明して ‖f₀‖²D+E<C_AJA に到達できるかを検証する。現時点でどちらの不等式も認証されていない。top一次元性、正のH一様励起下界、全物理Hilbert coercivity、Hamiltonian spectral gap、4D連続体Yang–Mills mass gapはいずれもOPEN。Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6、append-only／tighten-only／overwrite-forbidden／same-root。
 
 **AJH統合後push CI受領（追記）:** [#42705520744](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42705520744) completed／SUCCESS、11,422／11,422、9宣言公理は標準3のみ、変更warning/error0、sorryAxなし、独立receipt SUCCESS。厳密AJA budgetとH一様gapは依然OPEN。
+
+## P4-Q2-PZ37AJI — 真正元ZW sourceの全top反復漸近と厳密予算の有限証人判定（2026-11-10、Lean形式証明統合）
+
+**CLOSED（形式証明）:** [定理PR #6599](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6599) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AJI_verified_20261110.md)。元正規化Wilson transfer Sを同じ真正Gauss-law物理Hilbertで反復し、有限体積収縮率‖R‖<1による **‖Sⁿf₀−Qf₀‖≤‖R‖ⁿ‖Qᗮf₀‖**、全top射影Qf₀への強収束、**‖Qf₀‖²<C_AJA ⇔ ∃n>0,‖Sⁿf₀‖²<C_AJA** をLean4で証明。n=1がAJA既証明下界と両立しないことも形式証明。**どのn≥2も証人として認証しておらず、全top予算の無条件成立は未証明**。
+
+新規Lean leaf1件336行、9宣言、公理監査9／9は標準3公理のみ。初回FAILURE [#42708843152](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42708843152) の`HasOrthogonalProjection`宣言時型クラス欠落と巨大SU2`isDefEq` timeoutは、固定mathlibのAPIと全文を調査し、仮定を増やさず型付き局所作用素で修正。修正版 [#42710645084](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42710645084) は11,423／11,423 SUCCESS、変更warning/error0、sorryAxなし、独立receipt SUCCESS。source bfe386d1a9d8a236c9605ea1b9914a2a93f8cfb1、squash 0548de742afda7894e6647a65dad2348b5a0ceac、共通Git tree f2fdd35a8f37ce05a8512a2d28f9d2984fee3539。push CI [#42711612792](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42711612792) は独立再観測対象。
+
+**OPEN／AJJ:** 元Wilson (I−S)c 残差と既証明 q<1 によってHaar定数cから**全top空間への距離**に証明可能な上界が得られるかを研究する。選択Ωとの差、topの追加多重度、追加top源残余を互いに混同しない。真のAJA有限反復証人、無条件励起sector非零、H一様正下界、全物理Hilbert coercivity、Hamiltonian spectral gap、4D Yang–Mills continuum mass gapはOPEN。append-only／tighten-only／overwrite-forbidden／same-root、固定Lean v4.30.0-rc2、mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6。
+
+**AJI統合後push再認証（追記）:** [#42711612792](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42711612792) completed／SUCCESS、11,423／11,423、9／9実公理は標準3のみ、変更warning/error0、sorryAxなし、独立receipt SUCCESS。strict AJA budgetの無条件成立には未到達。
