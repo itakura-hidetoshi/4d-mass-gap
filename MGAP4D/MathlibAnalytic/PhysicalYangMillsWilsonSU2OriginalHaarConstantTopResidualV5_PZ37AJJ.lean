@@ -113,8 +113,11 @@ theorem realHilbert_unitConstant_selectedTop_deviation_sq_split_ajj
     realHilbert_starProjection_unitDirection_norm_sq_split
       F c omega homegaMem homega
   rw [hc] at hP
-  rw [real_inner_comm omega c]
-  nlinarith [hP, hQ]
+  have hSymm : inner ℝ omega c = inner ℝ c omega :=
+    (real_inner_comm omega c).symm
+  rw [hSymm]
+  norm_num at hP
+  linarith [hP, hQ]
 
 /-- In the original full-top geometry, the squared selected deviation
 is controlled from above by the true (I-S)c residual DIVIDED by the
@@ -156,7 +159,7 @@ theorem realHilbert_selectedTop_deviation_sq_le_defect_extra_ajj
           ‖F.starProjection c - (inner ℝ c omega) • omega‖ ^ 2 := hsplit
     _ ≤ (‖c - S c‖ / (1 - ‖R‖)) ^ 2 +
           ‖F.starProjection c - (inner ℝ c omega) • omega‖ ^ 2 :=
-      add_le_add_right hsq _
+      add_le_add_left hsq _
 
 namespace GroundStatePosteriorJoint
 
@@ -311,9 +314,9 @@ theorem p4Q2PZ37AJJ_originalSelectedVacuumDeviation_le_defect_extra
           (1 - ‖RJ beta hbeta.le‖)) ^ 2 := by
     nlinarith [mul_nonneg (sub_nonneg.mpr hdist)
       (add_nonneg
-        (norm_nonneg ((TopJ beta hbeta.le)ᗮ).starProjection cJ) hfrac)]
+        (norm_nonneg (((TopJ beta hbeta.le)ᗮ).starProjection cJ)) hfrac)]
   rw [hsplit]
-  exact add_le_add_right hsquared _
+  exact add_le_add_left hsquared _
 
 /-- AJG's ORIGINAL signed centered ZW-source complete-top bound now
 uses the honest original Wilson transfer defect, plus BOTH independent
