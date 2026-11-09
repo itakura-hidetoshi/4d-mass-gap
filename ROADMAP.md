@@ -4391,3 +4391,12 @@ Exact-source CI [42574638690](https://github.com/itakura-hidetoshi/4d-mass-gap/a
 
 **OPEN / AIY:** 実際の正規化ZW源像のHaar-L²振幅・励起sectorへの射影とtop固有空間との関係を、元の定義・真正物理測度・依存型の接続として検証する。今回のm_Hは証明書尺度のみ。a>0や有限bがない任意のβ_H、変動結合での一様半Haar、共通Hilbert空間上のcoercivity・Hamiltonian spectral gap・連続体4D mass gapは未認証のまま保持する。append-only／tighten-only／overwrite-forbidden／same-root、固定Lean/mathlib pinとdocs-only時のStrict Lean非手動起動を継続する。
 
+
+## P4-Q2-PZ37AIY — 実際の正規化ZW源像のHaar-L²非零性（2026-11-09、形式認証・統合済み）
+
+元のSU(2) Wilson、両端halfweight、ZW物理源、真正Haar、既存ノルム正規化を一切変更せず、AIWのa.e.物理代表の橋・AITの厳密負領域半Haar下界から、**実際の正規化源像が真正物理L²クラスとして非零**であることを構成した。全有限H・`0<β≤1+p_H/4` で `0<||N_H,β f0,H||≤||f0,H||`、とくに全H共通 `0<β≤7`、任意固定β>0についてeventual非零を証明。一般のβ≥0では同じ物理normの厳密比 `||N f0||=||P f0||/||P||` と contraction を証明。新規Lean leaf 219行・定理9・削除0。PR [#6569](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6569) MERGED。
+
+認証source `82ee5d0811b2cf4e33a85cf9e3a166235c3a4da0`、test-merge `497000b8d8171c0c82389d917926bfe397822751`、定理squash `0c3413dd7b619918fbfd9de1b51d7238f8e6c7cf` のtree一致 `e4420fa7158a3708eea9f87eb935ee8100623ab0`。修正版Exact-source [#42584457250](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42584457250) と自動push [#42585431281](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42585431281) はいずれも11,413／11,413 SUCCESS・公理9／9標準3件のみ・sorryAx0・Lean error0・変更warning0・実artifact/receipt成功。初回の冗長tactic warning1件は失敗履歴を残し、署名不変で修正した。正式記録：[AIY](docs/proofs/P4-Q2-PZ37AIY_verified_20261109.md)。
+
+**OPEN / AIZ:** 元のLJの完全Wilson kernelの真正厳密正定値を、Gauss-law物理作用素の内積へ直接貼り合わせ、`β>0` の任意有限結合へ非零性を広げられるか検証する。AIG半Haar領域から実L²ノルムへの定量下界を型付きで構成する課題も残る。非零性は一様振幅下限を意味せず、元ZW源のtop固有空間直交性、励起gap、共通Hilbert空間上のcoercivity、Hamiltonian spectral gap、連続体4D mass gapは未認証。append-only／tighten-only／overwrite-forbidden／same-root、固定Lean v4.30.0-rc2/mathlib pinを維持する。
+
