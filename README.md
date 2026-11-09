@@ -4770,3 +4770,11 @@ Exact-source [#42579467910](https://github.com/itakura-hidetoshi/4d-mass-gap/act
 新規Lean1件264行（11宣言・削除0）。Exact-source [#42686668837](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42686668837)および統合後push [#42687789720](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42687789720)は11,420／11,420 SUCCESS、11／11実公理は標準3公理のみ、変更warning/error0、sorryAxなし、独立receipt SUCCESS。source 144ee091cf8821c417d0b54f73ee325d852f6c11 とsquash 31145eea77605526aec2b57a201303387ac8f2ae のGit tree 49b452ae6e86781a43df75e5e0eb928b34c6a99f 一致。
 
 **OPEN／AJG:** 真正選択Ω以外の追加top成分の消滅・定量上界と、選択top元源内積の真正Wilson–Haar上界を独立に調べる。top単純性やH一様coercivity、Hamiltonian gap、4D連続体mass gapを無根拠に挿入しない。append-only／tighten-only／overwrite-forbidden／same-root。
+
+## P4-Q2-PZ37AJG — 真正元ZW中心化源と選択top真空の定数方向偏差（2026-11-10、形式認証・統合済み）
+
+[定理PR #6593](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6593) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AJG_verified_20261110.md)。既存のGauss-law物理Hilbert・Haar定数単位ベクトル c_H・元ZW中心化源 f₀,H・元Wilson transferと全top eigenspaceを変更せず、**⟨f₀,H,c_H⟩=0**を元のZW定義からLean4で直接証明。既存選択単位topΩと追加top残余 r を保ち、**‖Qf₀‖²≤‖f₀‖²(1−|⟨Ω,c_H⟩|²)+‖r‖²**の真正H,β依存上界を形式化。右辺が元AJA証明書C未満という別途の厳密評価がある場合だけ直交成分が非零。**β>0のHaar定数単位ベクトルをtop固有ベクトルとは仮定せず、Ωの偏差とrの真の上界は未証明**。
+
+追加Lean1件255行・新規10宣言・既存削除0。初回CI [#42689972569](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42689972569) と二回目 [#42691058717](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42691058717) のLean4内積書換え・型推論失敗の履歴を正式記録に保持。最終Exact-source [#42692558676](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42692558676)／統合後push [#42693592821](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42693592821) は両方11,421／11,421 SUCCESS、10／10標準3公理のみ、変更warning/error0、sorryAxなし、独立receipt SUCCESS。source 9975cad37f9af393fcd40905df475341c3e89247 とsquash 76951507130749219e08c1b133eb596f633d43ca のGit tree 8bc702e4107d1af14e58d2ff9f4b080254a96068 が一致。
+
+**OPEN／AJH:** 真正ΩとHaar定数のずれ、および追加top成分の厳密なH・β上界を別個に評価する。条件未証明のままtop単純性・励起sector非零・体積一様coercivity・Hamiltonian gap・4D連続体mass gapへ昇格しない。append-only／tighten-only／overwrite-forbidden／same-root。

@@ -5094,3 +5094,11 @@ Exact-source CI [42574638690](https://github.com/itakura-hidetoshi/4d-mass-gap/a
 新規Lean1件264行・11宣言・削除0。Exact-source [#42686668837](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42686668837)・統合後push [#42687789720](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42687789720)ともSUCCESS、11,420／11,420、11／11標準3公理のみ、変更warning/error0、sorryAxなし、独立receipt SUCCESS。source 144ee091cf8821c417d0b54f73ee325d852f6c11・squash 31145eea77605526aec2b57a201303387ac8f2ae、共通Git tree 49b452ae6e86781a43df75e5e0eb928b34c6a99f。
 
 **OPEN／AJG:** (1) r=0 または‖r‖²の真正上界。(2) 元ZW源の選択top内積の厳密上界。両方を真正物理対象から導出しなければAJDの小top条件は未認証。top単純性、励起sector一様下界、全物理Hilbert coercivity、Hamiltonian gap、4D連続体mass gapはいずれもOPEN。append-only／tighten-only／overwrite-forbidden／same-root、固定Lean/mathlib不変更。
+
+## P4-Q2-PZ37AJG — 真正ZW源中心化とtop真空偏差の証明書（2026-11-10、MERGED／形式認証済み）
+
+**CLOSED:** [Lean定理PR #6593](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6593) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AJG_verified_20261110.md)。元ZW源f₀の真正Haar定数単位方向cに対する直交性 ⟨f₀,c⟩=0、選択単位topΩへの内積上界 |⟨f₀,Ω⟩|²≤‖f₀‖²(1−|⟨Ω,c⟩|²)、さらにAJF追加top残余rを保った**全top射影ノルム二乗の上界** ‖Qf₀‖²≤‖f₀‖²(1−|⟨Ω,c⟩|²)+‖r‖² をLean4で証明。AJA証明書C未満の両項上界が別途得られた場合のみ真正直交成分非零。Haar定数が既存top eigenvectorだとは仮定していない。
+
+新規Lean1件255行・10宣言・削除0。初回失敗 #42689972569 のmul_nonneg暗黙項・内積スカラー倍照合・辺順不一致、再失敗 #42691058717 の内積減法rw不一致は、型付き証明項から組み立てるcalcへ修正。修正版source 9975cad37f9af393fcd40905df475341c3e89247 とsquash 76951507130749219e08c1b133eb596f633d43ca の共通tree 8bc702e4107d1af14e58d2ff9f4b080254a96068。Exact-source [#42692558676](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42692558676)／push [#42693592821](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42693592821) SUCCESS、11,421／11,421、10／10公理は標準3のみ、変更warning/error0、sorryAxなし、receipt SUCCESS。
+
+**OPEN／AJH:** 真正真空Ωの定数方向からの定量偏差、全topの追加残余の定量上界、AJA証明書を下回る合計を元Wilson物理対象から導出する。top一次元性、励起sector一様下界、全物理Hilbert coercivity、Hamiltonian gap、4D連続体mass gapは未認証。固定Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6、append-only／tighten-only／overwrite-forbidden／same-root。
