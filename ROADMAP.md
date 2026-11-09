@@ -5062,3 +5062,11 @@ Exact-source CI [42574638690](https://github.com/itakura-hidetoshi/4d-mass-gap/a
 新規Lean1件158行、4定理・削除0。認証source `c776a9585b0082b63b0f834ccaacb60d97b57afe`、squash `0c98fec903366eae58722fdeeb5e2ae0ae81dca7`、共通tree `96f9cccb415fcbffe90271f7ed7cca4515456426`。Exact-source [#42613066943](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42613066943)／push [#42613812145](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42613812145) とも11,416/11,416 SUCCESS、新公理4/4標準3件のみ、変更warning/error0、AJB sorryAxなし、receipt SUCCESS。初回失敗 #42612123173の構造的理由は正式記録に保存。
 
 **OPEN／AJC:** 既存の真のtop固有ベクトル／全top eigenspaceの射影を、元ZW物理源像の内積と合わせて具体評価する。必要なtop寄与の上界が未認証なら条件付き障害を残す。各Hの非零性を全H一様振幅・励起sector非零・coercivity・Hamiltonian spectral gap・連続体4D Yang–Mills mass gapへ昇格させない。固定Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6、append-only／tighten-only／overwrite-forbidden／same-root。
+
+## P4-Q2-PZ37AJC — 正準top射影・直交残余下界（2026-11-09、MERGED／形式認証済み）
+
+**CLOSED:** [Lean定理PR #6581](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6581) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AJC_verified_20261109.md)。元の完全SU(2) Wilson物理transfer、真正Haar確率、符号付きZW Gauss-law物理源とnorm正規化を変更せず、**既存全top eigenspace**への正準starProjectionおよび全top直交補への射影を定義。全有限H・β>0について、元正規化源像の正準再構成と二乗ノルムのピタゴラス等式を証明した。AJA正の証明書 `C=m²*Measure.real μ(R)` に対して `0<C≤‖top‖²+‖orth‖²`、`C-‖top‖²≤‖orth‖²`、そして**実top寄与 `‖top‖²<C` が別途証明された場合に限って** `orth≠0`。後者の不等式はOPEN。
+
+追加Lean1件186行／削除0、正準射影定義2・定理7。Exact-source CI [#42617449250](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42617449250)と統合後push [#42618394145](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42618394145)はともに11,417/11,417 SUCCESS、9/9の公理出力は標準3公理のみ、変更warning/error0、新規sorryAxなし、独立receipt SUCCESS。source `6f16501c87ff57941b9244efd0ef7b6465cf9f9c`・squash `eda6b204e5bbbae65809aa968957736ad763b62e` の共通Git tree `caefa8a12dbe42b122f559fe0a6f198e9a49b237`。初回失敗CI #42616327394は未認証として構造理由を正式記録へ保持。
+
+**OPEN／AJD:** 既存top固有ベクトル・全top射影・元ZW物理源の真正top内積を同じH・βの物理Hilbert carrierで型付き接続する。必要な実際のtop-overlap上界が得られなければobstructionを残す。元ZW源のtop直交性を無根拠に挿入せず、H一様正L²振幅、全物理Hilbert coercivity、Hamiltonian spectral gap、非自明4D連続体Yang–Mills mass gapを主張しない。append-only／tighten-only／overwrite-forbidden／same-root、固定Lean/mathlib維持。
