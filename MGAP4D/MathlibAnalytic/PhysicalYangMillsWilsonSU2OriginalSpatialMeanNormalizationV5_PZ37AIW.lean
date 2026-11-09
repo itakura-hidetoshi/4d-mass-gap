@@ -200,13 +200,17 @@ theorem p4Q2PZ37AIW_originalFullKernel_pair_integral_ge_spatialMean
   have hKC := p4Q2PZ37AIV_originalCrossingKernel_pair_integrable H beta
   have hLeft := p4Q2PZ37AIW_originalCrossing_leftAction_pair_integrable H beta
   have hRight := p4Q2PZ37AIW_originalCrossing_rightAction_pair_integrable H beta
+  have hSum : Integrable (fun P : CfgW × CfgW =>
+      WW P.1 * KCW beta P.1 P.2 +
+        WW P.2 * KCW beta P.1 P.2) pairW :=
+    hLeft.fun_add hRight
   have hTangent : Integrable (fun P : CfgW × CfgW =>
       Real.exp (-(beta * pW)) *
         ((1 + beta * pW) * KCW beta P.1 P.2 -
           (beta / 2) *
             (WW P.1 * KCW beta P.1 P.2 + WW P.2 * KCW beta P.1 P.2))) pairW :=
     ((hKC.const_mul (1 + beta * pW)).sub
-      ((hLeft.add hRight).const_mul (beta / 2))).const_mul
+      (hSum.const_mul (beta / 2))).const_mul
         (Real.exp (-(beta * pW)))
   have hIntegral :
       (∫ P : CfgW × CfgW,
@@ -218,7 +222,7 @@ theorem p4Q2PZ37AIW_originalFullKernel_pair_integral_ge_spatialMean
       Real.exp (-(beta * pW)) * p4Q2PZ37AIF_originalCrossingPartition H beta := by
     rw [integral_const_mul]
     rw [integral_sub (hKC.const_mul (1 + beta * pW))
-      ((hLeft.add hRight).const_mul (beta / 2))]
+      (hSum.const_mul (beta / 2))]
     rw [integral_const_mul, integral_const_mul, integral_add hLeft hRight,
       p4Q2PZ37AIV_originalCrossingKernel_pair_integral H beta,
       p4Q2PZ37AIW_originalCrossing_leftAction_pair_integral H beta,
@@ -317,11 +321,12 @@ theorem p4Q2PZ37AIW_originalPhysicalTransfer_coeFn
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
         H 2 (by norm_num) beta hbeta (f : Lp ℝ 2 muAIWBridge) B) =ᵐ[muAIWBridge]
       decomposableOneSliceTransferIntegral H 2 beta f
+  filter_upwards
+    [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_coeFn
+      H 2 (by norm_num) beta hbeta (f : Lp ℝ 2 muAIWBridge)] with B hB
   simpa only
     [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIntegralRepresentative,
-      decomposableOneSliceTransferIntegral, mul_comm] using
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_coeFn
-      H 2 (by norm_num) beta hbeta (f : Lp ℝ 2 muAIWBridge)
+      decomposableOneSliceTransferIntegral, mul_comm] using hB
 
 /-- For every genuine physical input, divide the original integral by the
 existing positive physical top norm. The result represents the ALREADY
