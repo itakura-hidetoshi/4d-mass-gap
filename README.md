@@ -4615,3 +4615,15 @@ LATER:
 spectral / Wightman mass gap.
 ~~~
 
+
+## 検証済み定理 — AIS／真正Ward交差評価による全有限体積共通の半Haar区間（2026-11-09 JST）
+
+[AIS定理PR #6551](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6551) **MERGED**。[正式記録](docs/proofs/P4-Q2-PZ37AIS_verified_20261109.md)。定理正本は引き続き `formal/real-hilbert-uniform-coercive-strong-limit` であり、mainは文書ミラーである。
+
+元の完全SU(2) Wilson作用、両端halfweight、符号付きZW物理源、真正Haar、AIGの元の全余裕と厳密負領域を保持した。AHUの正確な混合モーメント `∫f_H² Cross_H = p_H V_H` と指数関数の接線評価から、元の交差二次モーメントに `exp(-β p_H) V_H` という新しい下界を与えた。新補助床 `D_H=β exp(-5βp_H/2)V_H` に対して元の余裕が `2ε_H≤D_H` を満たし、**全ての有限Hと0<β≤1（上端1を含む）で、同じ元の全余裕負領域のHaar質量が1/2以上**となる。
+
+β=1ではAIRの旧比較因子が2を超える一方で半Haar下界が成立する。元の固定 `β₀=log(3/2)/64` も全Hで含まれ、H≥2では `θ_H<β₀`、旧床 `δ_H<ε_H<D_H` と半Haar下界を同時に証明した。旧比較法の不成立を物理的な負領域の喪失へ読み替えない。
+
+[Exact-source CI #42540948252](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42540948252/attempts/1)：**11407/11407 SUCCESS**、28定理＋1定義、29/29公理出力は標準3公理のみ、sorryAx・全Lean error・変更warning/errorは0。別job receiptもSUCCESS。認証source・実test-merge・[定理squash](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/3dd12415adb88e30abbd97ab6d7d4cf7579eb38b) のGit treeは `a752ee83411955a74b4eddae55707f9c87a4ad40` で一致した。初回の固定mathlib乗法消去APIの失敗と1行修正は正式記録に保持する。
+
+結合区間と質量下界は体積共通だが、`p_H=24(H+1)^3`、`V_H≤p_H²/4`、`D_H=β exp(-60β(H+1)^3)V_H` という振幅の体積依存性は残る。β>1での旧全余裕半Haar性、体積一様の正の余裕・coercivity、作用素の負固有値、Hamiltonian spectral gap、連続体4次元Yang–Mills mass gapは未証明。
