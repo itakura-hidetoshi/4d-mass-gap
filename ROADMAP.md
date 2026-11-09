@@ -4384,3 +4384,10 @@ Exact-source CI [42574638690](https://github.com/itakura-hidetoshi/4d-mass-gap/a
 
 **OPEN / AIX候補:** 元の正規化源像T f0/λの実際の振幅、または既存top直交sectorの真正相対評価。今回0へ近づくのは元のAIG証明書を正規化した余裕であり、正規化像の減衰や、より深い負領域の不存在ではない。各固定有限Hの大きい正結合での全余裕半Haar評価は別経路として残す。共通Hilbert空間・一様coercivity・励起gap・Hamiltonian spectral gap・連続体4次元Yang–Mills mass gapには、それぞれ互換条件と別の形式証明が必要である。
 
+
+## P4-Q2-PZ37AIX — volume-dependent coupling の正結合window（2026-11-09、MERGED／形式認証済み）
+
+元の既存正規化物理transferとAIG証明書を維持し、**a>0、a≤β_H≤b<∞** に制限されたすべての体積依存結合列について、`m_H(β_H)=δ_H(β_H)/‖P_H,β_H‖≤(b/8)p_H² exp(-a p_H)→0` をLean4で証明。window共通cutoff、正規化証明書の正の体積一様下限の不存在、既存正規化作用素norm=1、元AIG負領域の厳密一致、実源像の非減衰上界を別の定理として保持。新規定理7件・206行追加のみ。canonical formal定理PR [#6566](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6566)、source/test-merge/squash共通tree `28ecc5480bfde0da3625da11c18bf24c520762a4`。Exact-source [#42579467910](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42579467910) と統合後push [#42580324130](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42580324130) は各11,412/11,412・公理7/7・sorryAx0・Lean error0・新規warning0、実artifactおよびreceipt照合済み。正式記録: [AIX](docs/proofs/P4-Q2-PZ37AIX_verified_20261109.md)。
+
+**OPEN / AIY:** 実際の正規化ZW源像のHaar-L²振幅・励起sectorへの射影とtop固有空間との関係を、元の定義・真正物理測度・依存型の接続として検証する。今回のm_Hは証明書尺度のみ。a>0や有限bがない任意のβ_H、変動結合での一様半Haar、共通Hilbert空間上のcoercivity・Hamiltonian spectral gap・連続体4D mass gapは未認証のまま保持する。append-only／tighten-only／overwrite-forbidden／same-root、固定Lean/mathlib pinとdocs-only時のStrict Lean非手動起動を継続する。
+
