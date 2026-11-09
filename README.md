@@ -4410,3 +4410,11 @@ Exact-source [#42579467910](https://github.com/itakura-hidetoshi/4d-mass-gap/act
 新規Lean1件230行・定理9宣言・削除0。初回CI [#42640480799](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42640480799)での乗法不等式APIの型不一致を、定理文・仮定不変の明示的正値背理法に修正。修正版Exact-source [#42641688446](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42641688446)と統合後push [#42642608623](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42642608623)はともにSUCCESS、後者11,419／11,419、9／9実公理出力は標準3公理のみ、変更warning/error0、sorryAxなし、receipt SUCCESS。source 750b0fd38e88e85bc7965ab2ec7386a9abbdd9aa とsquash 661345cdc4100c06996dbf431a84f4ee96dacb35 の共通Git tree c4321886c4420c28d3d5e7782dd4974f964a132e。
 
 **OPEN／AJF:** 真正元ZW源と全top固有空間との実際のWilson–Haar内積を評価し、‖Q f₀‖²<C_H,β を元物理定義から導けるか検証する。無条件の励起非零性、体積一様下界、Hamiltonian spectral gap、4D連続体mass gapは未認証。append-only／tighten-only／overwrite-forbidden／same-root。
+
+## P4-Q2-PZ37AJF — 元ZW源の選択top方向と追加top残余の厳密分解（2026-11-10、形式認証・統合済み）
+
+[定理PR #6590](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6590) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AJF_verified_20261110.md)。元SU(2) Wilson・真正Gauss-law ZW源・既存全top eigenspaceを不変更とし、既存選択単位top固有ベクトルΩに対し追加top残余 r=Qf₀−⟨f₀,Ω⟩Ω を導入。r∈全top、⟨r,Ω⟩=0、**‖Qf₀‖²=|⟨f₀,Ω⟩|²+‖r‖²** をLean4で証明。真正AJA証明書 C から ‖u⊥‖²≥C−|⟨f₀,Ω⟩|²−‖r‖²、両寄与の合計がC未満なら直交成分非零、選択ΩだけでC以上なら全top小条件が不可能という必要障害を得た。**r=0も、双方のC未満の上界も未証明**。
+
+新規Lean1件264行（11宣言・削除0）。Exact-source [#42686668837](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42686668837)および統合後push [#42687789720](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42687789720)は11,420／11,420 SUCCESS、11／11実公理は標準3公理のみ、変更warning/error0、sorryAxなし、独立receipt SUCCESS。source 144ee091cf8821c417d0b54f73ee325d852f6c11 とsquash 31145eea77605526aec2b57a201303387ac8f2ae のGit tree 49b452ae6e86781a43df75e5e0eb928b34c6a99f 一致。
+
+**OPEN／AJG:** 真正選択Ω以外の追加top成分の消滅・定量上界と、選択top元源内積の真正Wilson–Haar上界を独立に調べる。top単純性やH一様coercivity、Hamiltonian gap、4D連続体mass gapを無根拠に挿入しない。append-only／tighten-only／overwrite-forbidden／same-root。

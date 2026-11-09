@@ -4447,3 +4447,11 @@ Exact-source CI [42574638690](https://github.com/itakura-hidetoshi/4d-mass-gap/a
 新規Lean1件230行・9宣言・既存削除0。初回CI #42640480799のmul_le_mul_right API型不一致は、仮定を変えず正値性を明示した背理法で修正。修正source 750b0fd38e88e85bc7965ab2ec7386a9abbdd9aa・squash 661345cdc4100c06996dbf431a84f4ee96dacb35 の共通Git tree c4321886c4420c28d3d5e7782dd4974f964a132e。Exact-source [#42641688446](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42641688446)／統合後push [#42642608623](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42642608623) SUCCESS、11,419／11,419、9／9標準公理のみ、変更warning/error0、sorryAxなし、独立receipt SUCCESS。
 
 **OPEN／AJF:** 既存物理top全ベクトルの真正元ZW源とのWilson–Haar内積の厳密評価、およびAJA証明書未満の一様上界の**実構成**。単なる選好・同値式を励起sector非零、全H一様coercivity、Hamiltonian gap、4D連続体Yang–Mills mass gapの証明へ昇格させない。固定Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6、append-only／tighten-only／overwrite-forbidden／same-root。
+
+## P4-Q2-PZ37AJF — 真正選択top・追加top二寄与の認証（2026-11-10、MERGED／形式認証済み）
+
+**CLOSED:** [Lean定理PR #6590](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6590) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AJF_verified_20261110.md)。元のZW物理源f₀、既存全top射影Q、既存選択単位top固有ベクトルΩについて、r=Qf₀−⟨f₀,Ω⟩Ωはr∈全topかつ⟨r,Ω⟩=0、‖Qf₀‖²=|⟨f₀,Ω⟩|²+‖r‖²。真正AJA証明書Cから直交残余下界C−|⟨f₀,Ω⟩|²−‖r‖²≤‖u⊥‖²を証明。和がC未満の場合だけu⊥≠0。選択Ω寄与がC以上なら全top小条件を満たせない。単独Ωへの評価を全topへの評価に昇格しない。
+
+新規Lean1件264行・11宣言・削除0。Exact-source [#42686668837](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42686668837)・統合後push [#42687789720](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42687789720)ともSUCCESS、11,420／11,420、11／11標準3公理のみ、変更warning/error0、sorryAxなし、独立receipt SUCCESS。source 144ee091cf8821c417d0b54f73ee325d852f6c11・squash 31145eea77605526aec2b57a201303387ac8f2ae、共通Git tree 49b452ae6e86781a43df75e5e0eb928b34c6a99f。
+
+**OPEN／AJG:** (1) r=0 または‖r‖²の真正上界。(2) 元ZW源の選択top内積の厳密上界。両方を真正物理対象から導出しなければAJDの小top条件は未認証。top単純性、励起sector一様下界、全物理Hilbert coercivity、Hamiltonian gap、4D連続体mass gapはいずれもOPEN。append-only／tighten-only／overwrite-forbidden／same-root、固定Lean/mathlib不変更。
