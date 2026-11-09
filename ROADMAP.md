@@ -5054,3 +5054,11 @@ Exact-source CI [42574638690](https://github.com/itakura-hidetoshi/4d-mass-gap/a
 修正版source `a4cd620ea2c153d2cf2c5dbc5b93d9e2f89b1f9b`、test-merge `e40341db30e8cf0c2ac61f93a11688ff492485ef`、定理squash `e5beaef8120445c216753125ec31cd8c86a852ed` の共通Git tree `28b728a8dd9f387ff053f21db03f6ec80e7296fe`。Exact-source CI [#42608468069](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42608468069) とsquash後push CI [#42609883742](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42609883742) とも11,415/11,415 SUCCESS、3/3公理標準3件のみ、変更warning/error0、AJA sorryAxなし、独立receipt SUCCESS。初回CI #42607467139の型推論失敗と修正を消さず正式記録に保持。
 
 **OPEN／AJB（二つの別課題）:** (1) 既存top eigenspaceの実際の直交射影と元ZW源像／元源を同じH・βの物理Hilbert空間で接続し、射影ノルムと直交成分を識別する。(2) 原証明書のH・β依存・Haar質量・余裕の量的評価を独立に調べる。いずれの未証明条件も仮定として挿入しない。真正励起sector下界、体積一様coercivity、Hamiltonian spectral gap、非自明4D連続体Yang–Mills mass gapは未認証。固定Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6、append-only／tighten-only／overwrite-forbidden／same-root。
+
+## P4-Q2-PZ37AJB — 元ZW物理源像の全top／直交定量分解（2026-11-09、MERGED／形式認証済み）
+
+**CLOSED:** [Lean定理PR #6578](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6578) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AJB_verified_20261109.md)。既存の全top eigenspace/orthogonal分解に、元AJAの正Haar-L²証明書を条件・型付きで接続した。全有限H・β>0で `N f0=u_top+u_⊥`、`‖N f0‖²=‖u_top‖²+‖u_⊥‖²`、`0<m²·Measure.real μ_H(R)≤‖u_top‖²+‖u_⊥‖²`。実top成分の二乗ノルムがこの証明書**未満**という追加条件の下でのみ`u_⊥≠0`を証明。元ZW源のtop直交性やその小ささを仮定として挿入していない。
+
+新規Lean1件158行、4定理・削除0。認証source `c776a9585b0082b63b0f834ccaacb60d97b57afe`、squash `0c98fec903366eae58722fdeeb5e2ae0ae81dca7`、共通tree `96f9cccb415fcbffe90271f7ed7cca4515456426`。Exact-source [#42613066943](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42613066943)／push [#42613812145](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42613812145) とも11,416/11,416 SUCCESS、新公理4/4標準3件のみ、変更warning/error0、AJB sorryAxなし、receipt SUCCESS。初回失敗 #42612123173の構造的理由は正式記録に保存。
+
+**OPEN／AJC:** 既存の真のtop固有ベクトル／全top eigenspaceの射影を、元ZW物理源像の内積と合わせて具体評価する。必要なtop寄与の上界が未認証なら条件付き障害を残す。各Hの非零性を全H一様振幅・励起sector非零・coercivity・Hamiltonian spectral gap・連続体4D Yang–Mills mass gapへ昇格させない。固定Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6、append-only／tighten-only／overwrite-forbidden／same-root。

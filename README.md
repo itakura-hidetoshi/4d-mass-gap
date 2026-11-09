@@ -4730,3 +4730,11 @@ Exact-source [#42579467910](https://github.com/itakura-hidetoshi/4d-mass-gap/act
 修正版Exact-source [#42608468069](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42608468069)、統合後push [#42609883742](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42609883742) ともSUCCESS、両run 11,415/11,415、3/3実公理出力は標準`propext`/`Classical.choice`/`Quot.sound`のみ、変更warning/error0、AJA sorryAxなし、独立receipt SUCCESS。最終source `a4cd620ea2c153d2cf2c5dbc5b93d9e2f89b1f9b`・test-merge `e40341db30e8cf0c2ac61f93a11688ff492485ef`・[squash](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/e5beaef8120445c216753125ec31cd8c86a852ed) の共通Git tree `28b728a8dd9f387ff053f21db03f6ec80e7296fe`。初回 #42607467139の `InnerProductSpace ?m ℝ` 型推論失敗と `(𝕜 := ℝ)` 明示修正の履歴は正式記録へ保存した。
 
 **OPEN／AJB:** 元のtop eigenspaceへの射影と真正直交成分を別に形式化する。AJAのH・β依存の証明書を体積一様正振幅、top直交性、励起gap、Hamiltonian gap、連続体4D mass gapへ昇格させない。append-only／tighten-only／overwrite-forbidden／same-root。
+
+## P4-Q2-PZ37AJB — 真正ZW正規化物理源像の全top／直交成分定量分解（2026-11-09、形式認証・統合済み）
+
+[定理PR #6578](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6578) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AJB_verified_20261109.md)。既存の元SU(2) Wilson物理Hilbert空間・Gauss-law ZW源・正規化transfer・全top eigenspaceの直交補空間を変更せず、**各有限H・全β>0**における真の正規化源像 `N f0=u_top+u_⊥`、`‖N f0‖²=‖u_top‖²+‖u_⊥‖²` を形式化。元AJAの真正Haar-L²証明書 `0<m²·Measure.real μ(R)≤‖u_top‖²+‖u_⊥‖²` を同じ元物理Hilbert空間で証明した。さらに、**実際のtop成分が証明書より小さいという条件が別途成立するときに限り**直交成分が非零となる。実top成分の上界・top直交性そのものは未認証。
+
+新規Lean 158行・4定理・削除0、固定Lean/mathlib・元物理定義・公開root/workflow変更なし。Exact-source [#42613066943](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42613066943) とsquash後push [#42613812145](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42613812145) はともに11,416/11,416 SUCCESS、4/4公理出力が標準3公理のみ、変更warning/error0、AJB sorryAxなし、独立receipt SUCCESS。認証source `c776a9585b0082b63b0f834ccaacb60d97b57afe` と[squash](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/0c98fec903366eae58722fdeeb5e2ae0ae81dca7) はGit tree `96f9cccb415fcbffe90271f7ed7cca4515456426` で一致。初回CI #42612123173でのノルム積と`^2`の型不一致、`simpa only [pow_two]`による修正も正式記録に保持した。
+
+**OPEN／AJC:** 真正元ZW源像の全top射影・top内積を評価し、条件付き直交成分非零を無条件へ強化可能か検証する。単独の正L²ノルム証明書をtop直交や励起gapへ昇格させない。体積一様coercivity、Hamiltonian gap、4D連続体mass gapは未証明。append-only／tighten-only／overwrite-forbidden／same-root。
