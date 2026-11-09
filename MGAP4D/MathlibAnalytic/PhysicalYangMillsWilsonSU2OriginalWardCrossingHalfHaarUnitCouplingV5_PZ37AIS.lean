@@ -473,7 +473,7 @@ theorem p4Q2PZ37AIS_oldComparisonCeiling_lt_originalFixedCoupling
   have hCount := p4Q2PZ37AIQ_originalCount_mul_previousCutoff H
   have hLower :=
     p4Q2PZ37AIS_originalFixedCoupling_count_ge_twentySevenEighths H hH
-  apply (mul_lt_mul_right (p4Q2PZ37AHN_count_pos H)).mp
+  apply (mul_lt_mul_iff_left₀ (p4Q2PZ37AHN_count_pos H)).mp
   nlinarith only [hLog, hCount, hLower]
 
 /-- AIR's exact OLD comparison threshold is also strictly below beta0. -/
