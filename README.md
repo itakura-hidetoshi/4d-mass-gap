@@ -4778,3 +4778,13 @@ Exact-source [#42579467910](https://github.com/itakura-hidetoshi/4d-mass-gap/act
 追加Lean1件255行・新規10宣言・既存削除0。初回CI [#42689972569](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42689972569) と二回目 [#42691058717](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42691058717) のLean4内積書換え・型推論失敗の履歴を正式記録に保持。最終Exact-source [#42692558676](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42692558676)／統合後push [#42693592821](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42693592821) は両方11,421／11,421 SUCCESS、10／10標準3公理のみ、変更warning/error0、sorryAxなし、独立receipt SUCCESS。source 9975cad37f9af393fcd40905df475341c3e89247 とsquash 76951507130749219e08c1b133eb596f633d43ca のGit tree 8bc702e4107d1af14e58d2ff9f4b080254a96068 が一致。
 
 **OPEN／AJH:** 真正ΩとHaar定数のずれ、および追加top成分の厳密なH・β上界を別個に評価する。条件未証明のままtop単純性・励起sector非零・体積一様coercivity・Hamiltonian gap・4D連続体mass gapへ昇格しない。append-only／tighten-only／overwrite-forbidden／same-root。
+
+## P4-Q2-PZ37AJH — 元Wilson transfer反復による全topと追加top残余の上界（2026-11-10、定理MERGED／形式認証済み）
+
+[定理PR #6596](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6596) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AJH_verified_20261110.md)。元SU(2) Gauss-law Hilbert・正規化Wilson transfer S・真正中心化ZW源 f₀・全top射影 Q・選択単位Ω・Haar定数単位cを変更せず、すべての n∈ℕ で **Q(Sⁿf₀)=Qf₀**、**‖Qf₀‖²≤‖Sⁿf₀‖²**、AJF追加top残余 **‖r‖²≤‖Sⁿf₀−⟨f₀,Ω⟩Ω‖²** をLean4で形式証明。定数方向偏差 D に関して得たのは **1−‖Sⁿc‖²≤D** という下界であり、必要な上界ではない。
+
+新規Lean leaf1件304行・9宣言・削除0。Exact-source [#42704315781](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42704315781) は11,422／11,422 SUCCESS、9／9の標準3公理のみ、warning/error0、sorryAxなし、独立receipt SUCCESS。認証source 55160801c2dd9b9ec728bb6b20a08cefb9fcc3b5、squash 76bca4c6b505dc5506696c95dbd0d71ea422fe8c、共通Git tree 82a90be5f9336bbd60af44566370d73d58271a53。統合後push [#42705520744](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42705520744) の結果は正式記録の独立検証欄で追う。
+
+**OPEN／AJI:** 真正偏差Dの上界と追加top残余EのH,β依存定量上界が、AJA証明書C未満の合計を実現することは未証明。n=1の反復power予算はAJA既証明下界と矛盾するため成立不可。top一次元性、無条件励起sector非零、H一様coercivity、Hamiltonian gap、連続体4D Yang–Mills mass gapを主張しない。append-only／tighten-only／overwrite-forbidden／same-root。
+
+**AJH統合後push再認証（追記）:** 正式squashを対象とする [#42705520744](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42705520744) は completed／SUCCESS、11,422／11,422、9／9の公理出力は標準3のみ、変更warning/error0、sorryAxなし、独立receipt SUCCESS。正本証明記録と区別して保存。
