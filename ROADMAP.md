@@ -4945,3 +4945,17 @@ LATER:
   spectral / Wightman mass gap.
 ~~~
 
+
+## AIS（2026-11-09 JST）— 真正Ward交差評価、全有限Hで0<β≤1の半Haar下界
+
+**CLOSED:** [AIS定理PR #6551](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6551) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AIS_verified_20261109.md)。元の作用・両端halfweight・符号付きZW源・真正Haar・AIG全余裕を保持し、AHUの混合Haar恒等式から交差二次モーメントの下界を改善した。
+
+- 全実βで `∫Kcross_β f_H²≥exp(-βp_H)V_H`。
+- β>0、f_H(B)≤0で、元transferは `T_β f₀(B)≤-D_H`、`D_H=β exp(-5βp_H/2)V_H`。
+- **全有限H・0<β≤1で、元の厳密全余裕負領域の実Haar質量≥1/2**。β=1を含み、源ゼロ集合の零測度仮定は不要。
+- β=1で旧比較因子>2と新半Haar性が両立する。元の固定β₀は全Hで適用可能。H≥2では `θ_H<β₀`、`δ_H<ε_H<D_H` と半Haar性が同時に成立する。
+- 元の体積表示と `V_H≤p_H²/4`、`D_H≤β exp(-5βp_H/2)p_H²/4` を形式化した。
+
+[Exact-source CI #42540948252](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42540948252/attempts/1) は11407/11407 SUCCESS、29/29標準3公理のみ、sorryAx 0、変更warning/error 0/0、独立receipt SUCCESS。定理squash `3dd12415adb88e30abbd97ab6d7d4cf7579eb38b` のtree/blobは認証sourceと一致した。
+
+**OPEN / AIT候補:** 元の交差作用と源の追加相関評価によるβ>1の範囲、または既存の明示体積上界から新補助床の非一様性を分離する極限定理。物理対象・旧余裕・固定環境を維持し、新しい結果が得られるまで未証明として残す。体積一様の正の振幅・coercivity、負固有値、Hamiltonian spectral gap、連続体4次元Yang–Mills mass gapへの移行には別の証明が必要である。
