@@ -4327,3 +4327,19 @@ Exact-source CI [#42567459390](https://github.com/itakura-hidetoshi/4d-mass-gap/
 
 元の源・余裕・厳密負領域は変更していない。正規化後のノルム1はgapを意味せず、正規化後のcoercivity・励起スペクトル、共通の極限作用素、各固定Hでの任意正結合における元の全余裕半Haar下界、Hamiltonian spectral gap、連続体4次元Yang–Mills mass gapには別の形式証明が必要である。源像の負値を作用素の負固有値へ昇格させない。
 
+
+
+## 検証済み定理 — AIW／真正空間平均による正規化相対評価と元の負領域（2026-11-09 JST）
+
+[AIW定理PR #6563](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6563) **MERGED**。[正式記録](docs/proofs/P4-Q2-PZ37AIW_verified_20261109.md)。定理正本は引き続き `formal/real-hilbert-uniform-coercive-strong-limit`、mainは文書ミラーである。
+
+元の完全SU(2) Wilson作用、両端halfweight、真正Haar、符号付きZW物理源、AIGの元の余裕δと厳密負領域、既存の正規化作用素N=P/‖P‖を保持する。全有限H・β≥0で、元の空間作用の正確なHaar平均p_Hとcrossing kernelの両周辺積分から、**exp(-βp_H)Zcross_H(β)≤Q_H(β)≤‖P_H,β‖≤Zcross_H(β)** を証明した。Qは元の完全one-slab・自由境界のpair-Haar積分であり、既存物理定数単位ベクトルの行列要素に一致する。周期時間方向のtrace分配関数や物理ノルムそのものとは同一視しない。AIVの下界exp(-2βp_H)Zcrossを同じ条件のもとで強めた。
+
+λ=‖P‖とおくと、**exp(-βp_H)≤λ/Zcross≤1、1≤Zcross/λ≤exp(βp_H)**。AIUの真正率ρ=-log zとの接続により、既存逆ノルム正規化尺度は **exp(ρp_H)≤λ⁻¹≤exp((β+ρ)p_H)** を満たす。元の積分像T f0/λが既存の正規化物理作用素Nの出力L² classをHaar-a.e.に表すことも証明し、点ごとの評価はこの連続な指定積分代表に対して行う。
+
+元の余裕を同じλで割ったm_H=δ_H/λ_Hは、V_Hを元のsource Haar二次モーメントとして、**(βV_H/2)exp(-2βp_H)≤m_H≤(βV_H/2)exp(-βp_H)≤(β/8)p_H²exp(-βp_H)**。全有限H・β>0で正、固定β>0でH→∞に0へ収束する。正規化厳密負領域 **{B:T f0(B)/λ<-δ/λ}={B:T f0(B)<-δ}** は元のAIG領域と集合として一致する。任意の固定β>0・η>0について、AITのeventual半Haar下界、0<m_H<η、既存作用素の‖N‖=1を一つの共通cutoffで同時に得た。元のβ₀=log(3/2)/64では **m_H(β₀)≤72β₀(H+1)^6 exp(-(H+1)^3/8)**。
+
+Exact-source CI [42574638690](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42574638690/attempts/1) と統合後自動push CI [42575438682](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42575438682/attempts/1) は、全workflow・必須Lean step・独立receiptがSUCCESS。依存閉包は両runとも11411/11411、30定理＋2定義、全32実公理出力は標準3公理のみ。この最終認証2 runのsorryAx・全Lean error・変更warning/errorは0。認証source・実test-merge・[定理squash](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/bd7357e21e0ab24de11d7f957d0000e503f95851) のtreeは `a0315279084e58d44de4daafc4645168f1bc494f` で一致し、Lean全文とblobも一致した。初回失敗run [42573651318](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42573651318/attempts/1) の2件のelaboration errorと回復用sorryAx出力は正式記録に保持する。点ごとの関数形を明示する2か所の証明修正に限り、全32宣言の署名・仮定・固定環境・heartbeatを保持して再認証した。
+
+消失を証明したのは、元のAIG余裕を既存物理ノルムで割った証明書である。実際の正規化源像の全境界上界は(p_H/2)Zcross/λ≤(p_H/2)exp(βp_H)であり、これから像の減衰は導かない。より深い正規化負領域の不存在、正規化coercivity、励起gap、共通Hilbert空間上の極限、各固定Hで任意正結合の全余裕半Haar性、Hamiltonian spectral gap、連続体4次元Yang–Mills mass gapは未証明のまま保持する。
+
