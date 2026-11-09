@@ -4704,3 +4704,12 @@ Exact-source CI [42574638690](https://github.com/itakura-hidetoshi/4d-mass-gap/a
 
 Exact-source [#42579467910](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42579467910)・統合後push [#42580324130](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42580324130)はともにSUCCESS。両runでLean依存閉包11,412/11,412、7/7公理出力は標準3公理のみ、sorryAx・Lean error・新規warning0。実artifact SHA256と独立receipt照合済み。Source/test-merge/squash共通Git tree `28ecc5480bfde0da3625da11c18bf24c520762a4`、定理squash `84b822848e825c8aa46aefc416af3864b1b39259`。正式記録: [P4-Q2-PZ37AIX_verified_20261109](docs/proofs/P4-Q2-PZ37AIX_verified_20261109.md)。
 
+
+## P4-Q2-PZ37AIY — 元の正規化ZW物理源像の真正Haar-L²非零性（2026-11-09、形式認証済み）
+
+[AIY定理PR #6569](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6569)をformalへMERGED。元の完全SU(2) Wilson one-slab作用・両端halfweight・真正Haar・符号付きZW物理L²源・既存物理ノルム正規化を保持し、新規独立Lean leaf 219行（9定理、新規定義0、削除0）を追加した。
+
+実際のGauss-law物理Hilbert空間内で `||N_H,β f0,H||=||P_H,β f0,H||/||P_H,β||≤||f0,H||` を全H・β≥0で証明。AIWの元の正規化積分代表と既存L²作用素出力のHaar-a.e.等式、およびAITの元の厳密負領域の半Haar測度を接続し、各有限H・`0<β≤1+p_H/4` で `0<||N_H,β f0,H||` を証明した。全有限Hに共通の`0<β≤7`、固定β>0でのeventual非零性も含む。これは実L²クラスの非零性であって、体積一様な正の振幅下限・振幅極限・sourceのtop固有空間直交性・Hamiltonianや連続体gapを証明しない。
+
+修正版Exact-source [CI #42584457250](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42584457250)・定理squash統合後自動push [CI #42585431281](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42585431281)ともSUCCESS。両runで11,413／11,413・公理9／9標準3公理のみ・sorryAx0・Lean error0・新規warning0、実artifact SHA256と独立receiptを監査済み。初回 [CI #42583714289](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42583714289) は型検査成功・冗長`change`のwarning1件で、証明署名を変えず当該1行を削除して再認証した。認証source/test-merge/squashの共通tree `e4420fa7158a3708eea9f87eb935ee8100623ab0`、定理squash `0c3413dd7b619918fbfd9de1b51d7238f8e6c7cf`。正式記録：[AIY verified](docs/proofs/P4-Q2-PZ37AIY_verified_20261109.md)。
+
