@@ -4434,3 +4434,5 @@ Exact-source [#42579467910](https://github.com/itakura-hidetoshi/4d-mass-gap/act
 新規Lean leaf1件304行・9宣言・削除0。Exact-source [#42704315781](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42704315781) は11,422／11,422 SUCCESS、9／9の標準3公理のみ、warning/error0、sorryAxなし、独立receipt SUCCESS。認証source 55160801c2dd9b9ec728bb6b20a08cefb9fcc3b5、squash 76bca4c6b505dc5506696c95dbd0d71ea422fe8c、共通Git tree 82a90be5f9336bbd60af44566370d73d58271a53。統合後push [#42705520744](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42705520744) の結果は正式記録の独立検証欄で追う。
 
 **OPEN／AJI:** 真正偏差Dの上界と追加top残余EのH,β依存定量上界が、AJA証明書C未満の合計を実現することは未証明。n=1の反復power予算はAJA既証明下界と矛盾するため成立不可。top一次元性、無条件励起sector非零、H一様coercivity、Hamiltonian gap、連続体4D Yang–Mills mass gapを主張しない。append-only／tighten-only／overwrite-forbidden／same-root。
+
+**AJH統合後push再認証（追記）:** 正式squashを対象とする [#42705520744](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42705520744) は completed／SUCCESS、11,422／11,422、9／9の公理出力は標準3のみ、変更warning/error0、sorryAxなし、独立receipt SUCCESS。正本証明記録と区別して保存。
