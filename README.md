@@ -4444,3 +4444,5 @@ Exact-source [#42579467910](https://github.com/itakura-hidetoshi/4d-mass-gap/act
 新規Lean leaf1件336行・9宣言、既存証明変更・削除0。初回 [CI #42708843152](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42708843152) の射影インスタンス不足・巨大isDefEq timeoutは固定mathlibの実際のインスタンス署名を照合し、型付き局所作用素へ修正。修正版exact-source [#42710645084](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42710645084) completed／SUCCESS、11,423／11,423、9／9宣言は標準3公理のみ、変更warning/error0、sorryAxなし、独立receipt SUCCESS。認証source bfe386d1a9d8a236c9605ea1b9914a2a93f8cfb1／squash 0548de742afda7894e6647a65dad2348b5a0ceac／共通Git tree f2fdd35a8f37ce05a8512a2d28f9d2984fee3539。統合後push [#42711612792](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42711612792) は別途終了観測する。
 
 **OPEN／AJJ:** 有限n≥2の厳密AJA証明書を下回る真正物理上界、真空ΩのHaar定数方向偏差Dの上界、追加top残余E、top多重度の評価を維持。H一様coercivity、Hamiltonian gap、4D連続体mass gapへ未証明のまま昇格しない。append-only／tighten-only／overwrite-forbidden／same-root。
+
+**AJI統合後push独立受領（追記）:** [#42711612792](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42711612792) completed／SUCCESS、11,423／11,423、全9宣言の実公理出力は標準3のみ、変更warning/error0、sorryAxなし、独立completion receipt SUCCESS。実際のAJA有限n証人は未構成。
