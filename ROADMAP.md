@@ -5007,3 +5007,19 @@ Exact-source CI [#42567459390](https://github.com/itakura-hidetoshi/4d-mass-gap/
 
 **OPEN / AIW候補:** 既存正規化作用素の相対評価と、真正のスペクトル・coercivityへの接続条件。既存のノルム1をgap証明と扱わず、今回示した正規化尺度の体積依存性を保持する。異なるHの共通Hilbert空間、正規化励起gap、各固定Hで任意正結合の元の全余裕半Haar性、Hamiltonian spectral gap、連続体4次元Yang–Mills mass gapには、それぞれ対応する別の形式証明が必要である。
 
+
+
+## AIW（2026-11-09 JST）— 真正空間平均による正規化相対評価と元の余裕の正規化
+
+**CLOSED:** [AIW定理PR #6563](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6563) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AIW_verified_20261109.md)。元の完全作用・両端halfweight・真正Haar・物理源・AIG余裕と厳密負領域・既存正規化を保持する。
+
+- 全H・β≥0で、∫W_H dμ_H=p_Hと両crossing周辺積分から、exp(-βp_H)Zcross≤Q≤λ=‖P‖≤Zcrossを証明。Qは元の自由境界one-slab pair-Haar積分で、物理定数単位ベクトルの行列要素。指数関数の接線不等式の一次項を厳密平均で相殺する。端点の独立性を仮定しない。
+- 相対尺度をexp(-βp_H)≤λ/Zcross≤1、1≤Zcross/λ≤exp(βp_H)で挟み、逆ノルム上界をexp((2β+ρ)p_H)からexp((β+ρ)p_H)へ改善した。λとZcrossの漸近同値は未証明。
+- 元の積分像T f0/λと、既存正規化物理作用素N=P/‖P‖の出力とのHaar-a.e.橋を構成した。任意のL²代表に点ごとの等式を付与せず、元の指定積分代表を明示する。
+- 同じ正のλで元の余裕δを割ったm=δ/λについて、(βV_H/2)exp(-2βp_H)≤m≤(βV_H/2)exp(-βp_H)≤(β/8)p_H²exp(-βp_H)。固定β>0ではm→0だが、各有限Hではm>0。
+- 正規化strict sublevelは元のAIG負領域と正確に一致する。AITのeventual半Haar性、任意η>0で0<m<η、‖N‖=1を同じcutoffで同時に証明した。元の固定β₀ではm≤72β₀(H+1)^6 exp(-(H+1)^3/8)。
+
+Exact-source CI [42574638690](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42574638690/attempts/1) と統合後自動push CI [42575438682](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42575438682/attempts/1) は、全workflow・必須Lean step・独立receiptがSUCCESS。依存閉包は両runとも11411/11411、30定理＋2定義、全32実公理出力は標準3公理のみ。この最終認証2 runのsorryAx・全Lean error・変更warning/errorは0。認証source・実test-merge・[定理squash](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/bd7357e21e0ab24de11d7f957d0000e503f95851) のtreeは `a0315279084e58d44de4daafc4645168f1bc494f` で一致し、Lean全文とblobも一致した。初回失敗run [42573651318](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42573651318/attempts/1) の2件のelaboration errorと回復用sorryAx出力は正式記録に保持する。点ごとの関数形を明示する2か所の証明修正に限り、全32宣言の署名・仮定・固定環境・heartbeatを保持して再認証した。
+
+**OPEN / AIX候補:** 元の正規化源像T f0/λの実際の振幅、または既存top直交sectorの真正相対評価。今回0へ近づくのは元のAIG証明書を正規化した余裕であり、正規化像の減衰や、より深い負領域の不存在ではない。各固定有限Hの大きい正結合での全余裕半Haar評価は別経路として残す。共通Hilbert空間・一様coercivity・励起gap・Hamiltonian spectral gap・連続体4次元Yang–Mills mass gapには、それぞれ互換条件と別の形式証明が必要である。
+
