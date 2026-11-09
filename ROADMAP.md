@@ -4471,3 +4471,5 @@ Exact-source CI [42574638690](https://github.com/itakura-hidetoshi/4d-mass-gap/a
 Exact-source CI [#42704315781](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42704315781) は11,422／11,422 SUCCESS、9／9宣言公理監査は標準3公理のみ、sorryAxなし、変更warning/error0、独立receipt SUCCESS。304行追加・既存証明改変0。認証source 55160801c2dd9b9ec728bb6b20a08cefb9fcc3b5／正式squash 76bca4c6b505dc5506696c95dbd0d71ea422fe8c／共通Git tree 82a90be5f9336bbd60af44566370d73d58271a53。統合後push CI [#42705520744](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42705520744) は完了後別途独立観測。
 
 **OPEN／AJI:** いずれかn≥2について真正証明書 ‖Sⁿf₀‖²<C_AJA の証人を元Wilson物理から構成できるか、あるいは D上界とE上界を独立に証明して ‖f₀‖²D+E<C_AJA に到達できるかを検証する。現時点でどちらの不等式も認証されていない。top一次元性、正のH一様励起下界、全物理Hilbert coercivity、Hamiltonian spectral gap、4D連続体Yang–Mills mass gapはいずれもOPEN。Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6、append-only／tighten-only／overwrite-forbidden／same-root。
+
+**AJH統合後push CI受領（追記）:** [#42705520744](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42705520744) completed／SUCCESS、11,422／11,422、9宣言公理は標準3のみ、変更warning/error0、sorryAxなし、独立receipt SUCCESS。厳密AJA budgetとH一様gapは依然OPEN。
