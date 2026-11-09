@@ -4661,3 +4661,21 @@ spectral / Wightman mass gap.
 
 この振幅の障害は元の非正規化transferと一つの元の源の固定正結合familyに限る。正規化後のtransfer、別の源族、作用素ノルム、coercivity一般の不可能性、負固有値、Hamiltonian spectral gap、連続体4次元Yang–Mills mass gapへは昇格しない。各固定Hにおける任意正結合での元の全余裕半Haar性も、別の未証明課題として残す。
 
+
+
+## 検証済み定理 — AIV／元transfer作用素ノルムの体積減衰と既存正規化尺度（2026-11-09 JST）
+
+[AIV定理PR #6560](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6560) **MERGED**。[正式記録](docs/proofs/P4-Q2-PZ37AIV_verified_20261109.md)。定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、mainは文書ミラーである。
+
+元の完全SU(2) Wilson作用、両端halfweight、真正Haar、符号付きZW物理源、AIGの元の余裕と厳密負領域を保持した。**AIUの単一源の点ごとの評価に加え、全L²単位球を作用素ノルムで評価した**。既存ambient Haar L²作用素をR、既存のGauss-law物理制限をPとすると、全H・全β≥0で `‖P‖≤‖R‖≤‖K_β‖_L²≤√Zcross_H(2β)`。2βは元kernelを二乗する恒等式から生じ、評価対象の作用素の結合を置き換えない。
+
+さらに、両端halfweightから真正kernelの行積分を上下評価し、既存の正値連続top eigenvectorの最大・最小を用いて、**`exp(-2βp_H)Zcross_H(β)≤‖P‖≤Zcross_H(β)`** を証明した。Haar L² classと連続代表の接続は既存a.e.等式を明示する。このZcross(β)上界は物理制限の評価であり、ambient側には上記√Zcross(2β)上界を用いる。
+
+`p_H=24(H+1)^3`、既存の真正分配関数率 `ρ(β)=-log z(β)>0` により、**固定β>0で両作用素ノルムはHとともに0へ近づく**。任意η>0に対し、十分大きい全Hのambient L²単位球全体で `‖R_H,β f‖<η` が同時に成立し、元の物理ノルムに正の体積一様下限は存在しない。異なるHのHilbert空間を同一視する仮定は置かない。L²ノルム評価だけからAIUの全境界点ごとの評価が従うとは主張しない。
+
+同じ物理ノルムλの**既存の逆ノルム正規化尺度**は `exp(ρp_H)≤λ⁻¹≤exp((2β+ρ)p_H)` を満たし、固定β>0で+∞へ発散する。一方、既存正規化物理作用素のノルムは各Hで1であり、rawノルムの減衰と両立する。元の `β₀=log(3/2)/64` では `λ_H(β₀)≤exp(-(H+1)^3/16)`、`λ_H(β₀)⁻¹≥exp((H+1)^3/16)`。
+
+Exact-source CI [#42567459390](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42567459390/attempts/1) と 統合後push CI [#42568082026](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42568082026/attempts/1) は全workflow・必須Lean step・独立receiptがSUCCESS。依存閉包はそれぞれ 11410/11410、11410/11410 SUCCESS、38定理＋0定義、38/38実公理出力が標準3公理のみ、この最終認証2 runのsorryAx・全Lean error・変更warning/errorは0。認証source・実test-merge・[定理squash](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/33cb9e84a415ac46275cc8a118c54b5e4336aa3a) のtreeは `52191ac4df018b4b7307825c09fd67ffb09ec371` で一致し、Lean全文とblobも一致した。初回・2回目の実CI失敗 [#42564655886](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42564655886/attempts/1)、[#42566323927](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42566323927/attempts/1) は、実ログ・artifact・failure receiptの照合結果と識別情報を正式記録に保存した。初回の35定理の署名を維持して構造補題3件を追加し、2回目の38定理の全署名も最終sourceと一致する。元の物理定理への仮定追加、固定heartbeatの増加、元対象の変更はない。
+
+元の源・余裕・厳密負領域は変更していない。正規化後のノルム1はgapを意味せず、正規化後のcoercivity・励起スペクトル、共通の極限作用素、各固定Hでの任意正結合における元の全余裕半Haar下界、Hamiltonian spectral gap、連続体4次元Yang–Mills mass gapには別の形式証明が必要である。源像の負値を作用素の負固有値へ昇格させない。
+

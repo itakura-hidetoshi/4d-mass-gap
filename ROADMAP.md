@@ -4991,3 +4991,19 @@ LATER:
 
 **OPEN / AIV候補:** 元の真正分配関数・正規化因子との相対評価、または各固定Hで残る大きい正結合における元の全余裕負領域の追加評価。今回証明した非正規化source-imageの減衰を保持し、その対象に正の一様振幅があるかのように扱わない。正規化後のtransferや別の源族、共通の極限作用素、coercivity、負固有値、Hamiltonian spectral gap、連続体4次元Yang–Mills mass gapには、それぞれ別の形式証明が必要である。
 
+
+
+## AIV（2026-11-09 JST）— 元作用素ノルムの体積減衰と既存正規化尺度の発散
+
+**CLOSED:** [AIV定理PR #6560](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6560) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AIV_verified_20261109.md)。元の完全作用・両端halfweight・真正Haar・符号付きZW源・AIGの余裕と厳密負領域を保持する。以下のノルム評価は全H・β≥0、体積極限は固定β>0である。
+
+- 元のkernelの二乗と真正pair-Haar積分から `‖P_H,β‖≤‖R_H,β‖≤√Zcross_H(2β)` を証明。literal kernelと既存L²代表のa.e.橋、既存ambient作用素と物理制限の関係を明示した。
+- 両端halfweightを保った行積分評価と、既存の正値連続物理top eigenvectorのコンパクト最大・最小から `exp(-2βp_H)Zcross_H(β)≤‖P_H,β‖≤Zcross_H(β)`。正規化された代替作用素やH一様のvacuum正値下限を仮定しない。
+- **固定β>0でambient・物理作用素ノルムは0へ収束し、ambient L²単位球全体に共通の小ささのcutoffがある**。元の物理ノルムに正の体積一様下限は存在しない。AIUの単一源の点ごとの評価に、異なる型の全単位球L²評価を追加した。
+- 既存の正規化尺度は `exp(ρp_H)≤‖P‖⁻¹≤exp((2β+ρ)p_H)`、固定β>0で+∞へ発散する。rawノルムの正値性と減衰、逆ノルムの増大、既存正規化作用素ノルム1を一つの共通cutoffで同時に記述した。
+- 元のβ₀で `‖P_H,β₀‖≤exp(-(H+1)^3/16)` と逆ノルムの対応する指数下界を得た。`λ_H~Zcross_H` という漸近同値や正確な物理ノルム指数率は主張しない。
+
+Exact-source CI [#42567459390](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42567459390/attempts/1) と 統合後push CI [#42568082026](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42568082026/attempts/1) は全workflow・必須Lean step・独立receiptがSUCCESS。依存閉包はそれぞれ 11410/11410、11410/11410 SUCCESS、38定理＋0定義、38/38実公理出力が標準3公理のみ、この最終認証2 runのsorryAx・全Lean error・変更warning/errorは0。認証source・実test-merge・[定理squash](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/33cb9e84a415ac46275cc8a118c54b5e4336aa3a) のtreeは `52191ac4df018b4b7307825c09fd67ffb09ec371` で一致し、Lean全文とblobも一致した。初回・2回目の実CI失敗 [#42564655886](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42564655886/attempts/1)、[#42566323927](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42566323927/attempts/1) は、実ログ・artifact・failure receiptの照合結果と識別情報を正式記録に保存した。初回の35定理の署名を維持して構造補題3件を追加し、2回目の38定理の全署名も最終sourceと一致する。元の物理定理への仮定追加、固定heartbeatの増加、元対象の変更はない。
+
+**OPEN / AIW候補:** 既存正規化作用素の相対評価と、真正のスペクトル・coercivityへの接続条件。既存のノルム1をgap証明と扱わず、今回示した正規化尺度の体積依存性を保持する。異なるHの共通Hilbert空間、正規化励起gap、各固定Hで任意正結合の元の全余裕半Haar性、Hamiltonian spectral gap、連続体4次元Yang–Mills mass gapには、それぞれ対応する別の形式証明が必要である。
+
