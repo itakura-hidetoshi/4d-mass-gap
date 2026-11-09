@@ -4754,3 +4754,11 @@ Exact-source [#42579467910](https://github.com/itakura-hidetoshi/4d-mass-gap/act
 新規Lean 1ファイル206行、派生定義1・定理6・削除0、7/7公理出力は標準3公理のみ、AJD変更warning/error0、sorryAxなし。Exact-source [#42634322528](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42634322528)／統合後push [#42637270766](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42637270766) ともSUCCESS（統合後11,418/11,418）、独立receipt SUCCESS。source `714aec58d29953b631010cd04d431ca4ccef4ca8`・squash `f646eb48342eac60f5e05acbbea60c5e846a33fb` の共通Git tree `ce3176c00891e63ed5b7adaf796113a05fec1409`。
 
 **OPEN／AJE:** 元のZW源の真正全top射影ノルム二乗 `‖Π_Top f₀‖²` を既存物理定義から評価する。必要な `‖Π_Top f₀‖²<C_H,β` を無証明に仮定せず、励起sector一様下界・全物理Hilbert coercivity・Hamiltonian gap・4D連続体mass gapへ昇格しない。append-only／tighten-only／overwrite-forbidden／same-root。
+
+## P4-Q2-PZ37AJE — 元ZW源の全top射影の双対上界と真正障害（2026-11-10、形式認証・統合済み）
+
+[Lean定理PR #6587](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6587) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AJE_verified_20261110.md)。既存Gauss-law物理Hilbert、完全SU(2) Wilson one-slab、中心化ZW物理源、真の全top eigenspaceを不変更とし、任意b≥0について **‖Q_H,β f₀,H‖≤b と ∀v∈Top_H,β, |⟨f₀,H,v⟩|≤b‖v‖ が同値** とLean4で証明。既存選択単位top固有ベクトル Ω に対して |⟨f₀,Ω⟩|≤‖Q f₀‖ も証明するが、Ωが全topを張るとは主張しない。元AJA正のHaar-L²証明書 C_H,β に対して、‖Q f₀‖²<C_H,β と C_H,β 未満の**全top一様内積予算bの存在**が同値であることも証明。**必要なbは未構成**であり、元源の真のtop射影の小ささも未証明。
+
+新規Lean1件230行・定理9宣言・削除0。初回CI [#42640480799](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42640480799)での乗法不等式APIの型不一致を、定理文・仮定不変の明示的正値背理法に修正。修正版Exact-source [#42641688446](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42641688446)と統合後push [#42642608623](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42642608623)はともにSUCCESS、後者11,419／11,419、9／9実公理出力は標準3公理のみ、変更warning/error0、sorryAxなし、receipt SUCCESS。source 750b0fd38e88e85bc7965ab2ec7386a9abbdd9aa とsquash 661345cdc4100c06996dbf431a84f4ee96dacb35 の共通Git tree c4321886c4420c28d3d5e7782dd4974f964a132e。
+
+**OPEN／AJF:** 真正元ZW源と全top固有空間との実際のWilson–Haar内積を評価し、‖Q f₀‖²<C_H,β を元物理定義から導けるか検証する。無条件の励起非零性、体積一様下界、Hamiltonian spectral gap、4D連続体mass gapは未認証。append-only／tighten-only／overwrite-forbidden／same-root。
