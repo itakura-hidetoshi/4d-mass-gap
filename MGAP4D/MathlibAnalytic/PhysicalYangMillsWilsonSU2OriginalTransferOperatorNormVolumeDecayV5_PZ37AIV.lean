@@ -348,10 +348,15 @@ theorem p4Q2PZ37AIV_originalFullKernel_leftContinuous
     (beta : ℝ) (B : CfgAIV) :
     Continuous (fun A : CfgAIV => KAIV beta A B) := by
   have hInsert : Continuous (fun A : CfgAIV => (A, B)) :=
-    Continuous.prodMk continuous_id continuous_const
+    (continuous_id : Continuous (fun A : CfgAIV => A)).prodMk
+      (continuous_const : Continuous (fun _ : CfgAIV => B))
   have hJoint : Continuous (fun P : CfgAIV × CfgAIV => KAIV beta P.1 P.2) :=
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous H 2 beta
-  exact hJoint.comp hInsert
+  have hKernel := Continuous.comp'
+    (f := fun A : CfgAIV => (A, B))
+    (g := fun P : CfgAIV × CfgAIV => KAIV beta P.1 P.2) hJoint hInsert
+  change Continuous (fun A : CfgAIV => KAIV beta A B) at hKernel
+  exact hKernel
 
 /-- Both ORIGINAL spatial halfweights have this explicit finite-volume floor.
 The complete spatial Wilson action is bounded by twice its original count. -/
