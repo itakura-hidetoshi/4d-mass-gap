@@ -278,6 +278,58 @@ theorem p4Q2PZ37AIV_originalPhysicalTransfer_norm_lt_one
   exact (p4Q2PZ37AIV_originalPhysicalTransfer_norm_le_sqrtCrossingPartition
     H beta hbeta.le).trans_lt hRoot
 
+/-- Abstract compact positive-eigenfunction comparison with a uniform upper
+row mass. Keeping the scalar eigenvalue abstract separates extrema and
+integration from the concrete physical operator's typeclass reductions. -/
+theorem p4Q2PZ37AIV_compactPositiveEigenfunction_le_uniformRowMass
+    {X : Type*} [TopologicalSpace X] [CompactSpace X] [Nonempty X]
+    [MeasurableSpace X]
+    (mu : Measure X) (K : X → X → ℝ) (v : X → ℝ) (lambda c : ℝ)
+    (hv : Continuous v) (hvPos : ∀ A : X, 0 < v A)
+    (hKNonneg : ∀ A B : X, 0 ≤ K A B)
+    (hKInt : ∀ B : X, Integrable (fun A : X => K A B) mu)
+    (hvKInt : ∀ B : X, Integrable (fun A : X => v A * K A B) mu)
+    (hEigen : ∀ B : X, lambda * v B = ∫ A : X, v A * K A B ∂mu)
+    (hRow : ∀ B : X, (∫ A : X, K A B ∂mu) ≤ c) : lambda ≤ c := by
+  obtain ⟨B, _, hMax⟩ :=
+    isCompact_univ.exists_isMaxOn Set.univ_nonempty hv.continuousOn
+  have hWeighted : lambda * v B ≤ c * v B := by
+    calc
+      lambda * v B = ∫ A : X, v A * K A B ∂mu := hEigen B
+      _ ≤ ∫ A : X, v B * K A B ∂mu :=
+        integral_mono (hvKInt B) ((hKInt B).const_mul (v B))
+          (fun A => mul_le_mul_of_nonneg_right (hMax (Set.mem_univ A)) (hKNonneg A B))
+      _ = v B * (∫ A : X, K A B ∂mu) := integral_const_mul _ _
+      _ ≤ v B * c := mul_le_mul_of_nonneg_left (hRow B) (hvPos B).le
+      _ = c * v B := mul_comm _ _
+  exact (mul_le_mul_iff_left₀ (hvPos B)).mp hWeighted
+
+/-- The corresponding abstract lower comparison uses the positive attained
+minimum. No volume-uniform lower bound on the eigenfunction is assumed. -/
+theorem p4Q2PZ37AIV_uniformRowMass_le_compactPositiveEigenfunction
+    {X : Type*} [TopologicalSpace X] [CompactSpace X] [Nonempty X]
+    [MeasurableSpace X]
+    (mu : Measure X) (K : X → X → ℝ) (v : X → ℝ) (lambda c : ℝ)
+    (hv : Continuous v) (hvPos : ∀ A : X, 0 < v A)
+    (hKNonneg : ∀ A B : X, 0 ≤ K A B)
+    (hKInt : ∀ B : X, Integrable (fun A : X => K A B) mu)
+    (hvKInt : ∀ B : X, Integrable (fun A : X => v A * K A B) mu)
+    (hEigen : ∀ B : X, lambda * v B = ∫ A : X, v A * K A B ∂mu)
+    (hRow : ∀ B : X, c ≤ ∫ A : X, K A B ∂mu) : c ≤ lambda := by
+  obtain ⟨B, _, hMin⟩ :=
+    isCompact_univ.exists_isMinOn Set.univ_nonempty hv.continuousOn
+  have hWeighted : v B * c ≤ v B * lambda := by
+    calc
+      v B * c ≤ v B * (∫ A : X, K A B ∂mu) :=
+        mul_le_mul_of_nonneg_left (hRow B) (hvPos B).le
+      _ = ∫ A : X, v B * K A B ∂mu := (integral_const_mul _ _).symm
+      _ ≤ ∫ A : X, v A * K A B ∂mu :=
+        integral_mono ((hKInt B).const_mul (v B)) (hvKInt B)
+          (fun A => mul_le_mul_of_nonneg_right (hMin (Set.mem_univ A)) (hKNonneg A B))
+      _ = lambda * v B := (hEigen B).symm
+      _ = v B * lambda := mul_comm _ _
+  exact (mul_le_mul_iff_right₀ (hvPos B)).mp hWeighted
+
 section PZ37AIVPhysicalNormBounds
 
 variable (H : ℕ)
@@ -289,6 +341,17 @@ local notation "WAIV" => periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonA
 local notation "KAIV" => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2
 local notation "KCAIV" => periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel H 2
 local notation "ZAIV" => p4Q2PZ37AIF_originalCrossingPartition H
+
+/-- A fully typed insertion into the existing jointly continuous full
+kernel fixes both product types before composition is elaborated. -/
+theorem p4Q2PZ37AIV_originalFullKernel_leftContinuous
+    (beta : ℝ) (B : CfgAIV) :
+    Continuous (fun A : CfgAIV => KAIV beta A B) := by
+  have hInsert : Continuous (fun A : CfgAIV => (A, B)) :=
+    Continuous.prodMk continuous_id continuous_const
+  have hJoint : Continuous (fun P : CfgAIV × CfgAIV => KAIV beta P.1 P.2) :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous H 2 beta
+  exact hJoint.comp hInsert
 
 /-- Both ORIGINAL spatial halfweights have this explicit finite-volume floor.
 The complete spatial Wilson action is bounded by twice its original count. -/
@@ -351,8 +414,7 @@ theorem p4Q2PZ37AIV_originalFullKernel_leftHaarIntegral_le_crossingPartition
     (beta : ℝ) (hbeta : 0 ≤ beta) (B : CfgAIV) :
     (∫ A : CfgAIV, KAIV beta A B ∂muAIV) ≤ ZAIV beta := by
   have hK : Continuous (fun A : CfgAIV => KAIV beta A B) :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H 2 beta).comp (continuous_id.prodMk continuous_const)
+    p4Q2PZ37AIV_originalFullKernel_leftContinuous H beta B
   have hKC := p4Q2PZ37AIN_originalCrossingKernel_leftContinuous H beta B
   calc
     _ ≤ ∫ A : CfgAIV, KCAIV beta A B ∂muAIV :=
@@ -369,8 +431,7 @@ theorem p4Q2PZ37AIV_originalFullKernel_leftHaarIntegral_ge_halfweightFloorCrossi
     Real.exp (-(2 * beta * pAIV)) * ZAIV beta ≤
       ∫ A : CfgAIV, KAIV beta A B ∂muAIV := by
   have hK : Continuous (fun A : CfgAIV => KAIV beta A B) :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H 2 beta).comp (continuous_id.prodMk continuous_const)
+    p4Q2PZ37AIV_originalFullKernel_leftContinuous H beta B
   have hKC := p4Q2PZ37AIN_originalCrossingKernel_leftContinuous H beta B
   calc
     _ = ∫ A : CfgAIV, Real.exp (-(2 * beta * pAIV)) * KCAIV beta A B ∂muAIV := by
@@ -414,34 +475,26 @@ theorem p4Q2PZ37AIV_originalPhysicalTransfer_norm_le_crossingPartition
   have hv : Continuous v :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
       H 2 (by norm_num) beta hbeta
-  obtain ⟨B, _, hMax⟩ :=
-    isCompact_univ.exists_isMaxOn Set.univ_nonempty hv.continuousOn
-  have hvB : 0 < v B :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_pos
-      H 2 (by norm_num) beta hbeta B
-  have hK : Continuous (fun A : CfgAIV => KAIV beta A B) :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H 2 beta).comp (continuous_id.prodMk continuous_const)
-  have hWeighted :
-      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-        H 2 (by norm_num) beta hbeta‖ * v B ≤ ZAIV beta * v B := by
-    calc
-      _ = ∫ A : CfgAIV, v A * KAIV beta A B ∂muAIV :=
-        p4Q2PZ37AIV_originalContinuousVacuum_eigenIntegral H beta hbeta B
-      _ ≤ ∫ A : CfgAIV, v B * KAIV beta A B ∂muAIV :=
-        integral_mono
-          ((hv.mul hK).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _))
-          ((continuous_const.mul hK).integrable_of_hasCompactSupport
-            (HasCompactSupport.of_compactSpace _))
-          (fun A => mul_le_mul_of_nonneg_right (hMax (Set.mem_univ A))
-            (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
-              H 2 beta A B).le)
-      _ = v B * (∫ A : CfgAIV, KAIV beta A B ∂muAIV) := integral_const_mul _ _
-      _ ≤ v B * ZAIV beta := mul_le_mul_of_nonneg_left
-        (p4Q2PZ37AIV_originalFullKernel_leftHaarIntegral_le_crossingPartition
-          H beta hbeta B) hvB.le
-      _ = ZAIV beta * v B := mul_comm _ _
-  exact (mul_le_mul_iff_left₀ hvB).mp hWeighted
+  have hKInt (B : CfgAIV) : Integrable (fun A : CfgAIV => KAIV beta A B) muAIV :=
+    (p4Q2PZ37AIV_originalFullKernel_leftContinuous H beta B).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  have hvKInt (B : CfgAIV) : Integrable (fun A : CfgAIV => v A * KAIV beta A B) muAIV :=
+    (hv.mul (p4Q2PZ37AIV_originalFullKernel_leftContinuous H beta B)).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  exact p4Q2PZ37AIV_compactPositiveEigenfunction_le_uniformRowMass
+    (X := CfgAIV) muAIV (KAIV beta) v
+    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+      H 2 (by norm_num) beta hbeta‖ (ZAIV beta)
+    hv
+    (fun A =>
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_pos
+        H 2 (by norm_num) beta hbeta A)
+    (fun A B =>
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos H 2 beta A B).le)
+    hKInt hvKInt
+    (fun B => p4Q2PZ37AIV_originalContinuousVacuum_eigenIntegral H beta hbeta B)
+    (fun B =>
+      p4Q2PZ37AIV_originalFullKernel_leftHaarIntegral_le_crossingPartition H beta hbeta B)
 
 /-- The norm of the SAME physical transfer also retains a genuine
 crossing-partition lower bound. The existing positive continuous top
@@ -457,38 +510,27 @@ theorem p4Q2PZ37AIV_originalCrossingPartition_mul_halfweightFloor_le_physicalTra
   have hv : Continuous v :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
       H 2 (by norm_num) beta hbeta
-  obtain ⟨B, _, hMin⟩ :=
-    isCompact_univ.exists_isMinOn Set.univ_nonempty hv.continuousOn
-  have hvB : 0 < v B :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_pos
-      H 2 (by norm_num) beta hbeta B
-  have hK : Continuous (fun A : CfgAIV => KAIV beta A B) :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H 2 beta).comp (continuous_id.prodMk continuous_const)
-  have hWeighted :
-      v B * (Real.exp (-(2 * beta * pAIV)) * ZAIV beta) ≤
-        v B * ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-          H 2 (by norm_num) beta hbeta‖ := by
-    calc
-      _ ≤ v B * (∫ A : CfgAIV, KAIV beta A B ∂muAIV) :=
-        mul_le_mul_of_nonneg_left
-          (p4Q2PZ37AIV_originalFullKernel_leftHaarIntegral_ge_halfweightFloorCrossingPartition
-            H beta hbeta B) hvB.le
-      _ = ∫ A : CfgAIV, v B * KAIV beta A B ∂muAIV := (integral_const_mul _ _).symm
-      _ ≤ ∫ A : CfgAIV, v A * KAIV beta A B ∂muAIV :=
-        integral_mono
-          ((continuous_const.mul hK).integrable_of_hasCompactSupport
-            (HasCompactSupport.of_compactSpace _))
-          ((hv.mul hK).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _))
-          (fun A => mul_le_mul_of_nonneg_right (hMin (Set.mem_univ A))
-            (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
-              H 2 beta A B).le)
-      _ = ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-          H 2 (by norm_num) beta hbeta‖ * v B :=
-        (p4Q2PZ37AIV_originalContinuousVacuum_eigenIntegral H beta hbeta B).symm
-      _ = v B * ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-          H 2 (by norm_num) beta hbeta‖ := mul_comm _ _
-  exact (mul_le_mul_iff_right₀ hvB).mp hWeighted
+  have hKInt (B : CfgAIV) : Integrable (fun A : CfgAIV => KAIV beta A B) muAIV :=
+    (p4Q2PZ37AIV_originalFullKernel_leftContinuous H beta B).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  have hvKInt (B : CfgAIV) : Integrable (fun A : CfgAIV => v A * KAIV beta A B) muAIV :=
+    (hv.mul (p4Q2PZ37AIV_originalFullKernel_leftContinuous H beta B)).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  exact p4Q2PZ37AIV_uniformRowMass_le_compactPositiveEigenfunction
+    (X := CfgAIV) muAIV (KAIV beta) v
+    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+      H 2 (by norm_num) beta hbeta‖ (Real.exp (-(2 * beta * pAIV)) * ZAIV beta)
+    hv
+    (fun A =>
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_pos
+        H 2 (by norm_num) beta hbeta A)
+    (fun A B =>
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos H 2 beta A B).le)
+    hKInt hvKInt
+    (fun B => p4Q2PZ37AIV_originalContinuousVacuum_eigenIntegral H beta hbeta B)
+    (fun B =>
+      p4Q2PZ37AIV_originalFullKernel_leftHaarIntegral_ge_halfweightFloorCrossingPartition
+        H beta hbeta B)
 
 end PZ37AIVPhysicalNormBounds
 
@@ -571,7 +613,8 @@ theorem p4Q2PZ37AIV_originalAmbientTransfer_norm_tendsto_zero
   exact tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds
     (p4Q2PZ37AIV_originalExponentialVolume_tendsto_zero
       (rhoAIV (2 * beta) / 2) hRate)
-    (fun H => norm_nonneg _)
+    (fun H => ContinuousLinearMap.opNorm_nonneg
+      (TAIV H 2 (by norm_num) beta hbeta.le))
     (fun H => p4Q2PZ37AIV_originalAmbientTransfer_norm_le_exactRate H beta hbeta.le)
 
 /-- The same scalar norm limit holds on the existing physical Hilbert
@@ -583,7 +626,8 @@ theorem p4Q2PZ37AIV_originalPhysicalTransfer_norm_tendsto_zero
   exact tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds
     (p4Q2PZ37AIV_originalExponentialVolume_tendsto_zero (rhoAIV beta)
       (p4Q2PZ37AIU_originalPartitionDecayRate_pos beta hbeta))
-    (fun H => norm_nonneg _)
+    (fun H => ContinuousLinearMap.opNorm_nonneg
+      (PAIV H 2 (by norm_num) beta hbeta.le))
     (fun H => p4Q2PZ37AIV_originalPhysicalTransfer_norm_le_exactRate H beta hbeta.le)
 
 /-- Uniform over every original ambient Haar L2 vector in the unit ball,
@@ -604,7 +648,8 @@ theorem p4Q2PZ37AIV_originalAmbientTransfer_unitBall_small_eventually
         ‖TAIV H 2 (by norm_num) beta hbeta.le‖ * ‖f‖ :=
       ContinuousLinearMap.le_opNorm _ f
     _ ≤ ‖TAIV H 2 (by norm_num) beta hbeta.le‖ * 1 :=
-      mul_le_mul_of_nonneg_left hf (norm_nonneg _)
+      mul_le_mul_of_nonneg_left hf
+        (ContinuousLinearMap.opNorm_nonneg (TAIV H 2 (by norm_num) beta hbeta.le))
     _ < eta := by simpa only [mul_one] using hN H hH
 
 /-- The physical operator norms cannot have a positive volume-uniform
@@ -738,6 +783,9 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AIV_originalAmbientTransfer_norm_le_sqrtCrossingPartition
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AIV_originalPhysicalTransfer_norm_le_sqrtCrossingPartition
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AIV_originalPhysicalTransfer_norm_lt_one
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AIV_compactPositiveEigenfunction_le_uniformRowMass
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AIV_uniformRowMass_le_compactPositiveEigenfunction
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AIV_originalFullKernel_leftContinuous
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AIV_originalSpatialHalfweight_ge_expFloor
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AIV_originalFullKernel_le_crossingKernel
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AIV_originalFullKernel_ge_halfweightFloorCrossing
