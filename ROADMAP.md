@@ -4959,3 +4959,19 @@ LATER:
 [Exact-source CI #42540948252](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42540948252/attempts/1) は11407/11407 SUCCESS、29/29標準3公理のみ、sorryAx 0、変更warning/error 0/0、独立receipt SUCCESS。定理squash `3dd12415adb88e30abbd97ab6d7d4cf7579eb38b` のtree/blobは認証sourceと一致した。
 
 **OPEN / AIT候補:** 元の交差作用と源の追加相関評価によるβ>1の範囲、または既存の明示体積上界から新補助床の非一様性を分離する極限定理。物理対象・旧余裕・固定環境を維持し、新しい結果が得られるまで未証明として残す。体積一様の正の振幅・coercivity、負固有値、Hamiltonian spectral gap、連続体4次元Yang–Mills mass gapへの移行には別の証明が必要である。
+
+
+## AIT（2026-11-09 JST）— 有理Ward transfer、体積により増大する閉半Haar上端、補助床の消失
+
+**CLOSED:** [AIT定理PR #6554](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6554) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AIT_verified_20261109.md)。元の完全作用・両端halfweight・符号付きZW源・真正Haar・AIG全余裕を保持する。
+
+- 源の両符号で有理二次補正を証明し、源が非正の集合 `f_H(B)≤0` 上で元transferの負値床を `Dhat_H=β/(1+βp_H/2) exp(-2βp_H)V_H` に改善。全β>0でAISの床より厳密に大きい。
+- 元の一リンクHaar積分と交差分配関数の単調非増加性を証明。単位結合の既存Gaussian上界から、**全有限H・0<β≤1+6(H+1)^3で、元の全余裕厳密負領域のHaar質量≥1/2**。
+- **全H共通の0<β≤7**と、**固定β>0に対する `∃N, ∀H≥N` の半Haar下界**を形式化。上端自体を含む。各固定Hで全β>0の成立や最適閾値の認証は含まない。
+- 固定β>0で `Dhat_H→0`、およびこの補助床に全H共通の正の下界がないことを証明。半Haarのeventual-H結果と同時に成立する統合証明書を追加した。
+- この床の消失は、実際のtransfer振幅の消失や別の評価法の不可能性を意味しない。有限体積ごとの関数・Haar・領域を、共通空間の極限へ貼り合わせたという主張も行わない。
+
+[Exact-source CI #42554354126](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42554354126/attempts/1) は11408/11408 SUCCESS、49/49標準3公理のみ、sorryAx・Lean error・変更warning/errorは0、独立receipt SUCCESS。[定理squash](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/57cbe6241f41adbface0d8e379f9e98d81bf723a) のtree/blobは認証sourceと一致し、[統合後push #42555080816](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42555080816/attempts/1) もSUCCESS。初回の4warningと2か所だけの修正履歴を正式記録に保持する。
+
+**OPEN / AIU候補:** 各固定有限Hで残る大きい正結合を扱う、元の真正分配関数の結合依存減衰評価。または、今回の消失する証明書を超えて、既存の正規化を保持したまま、元transferの負値振幅や正規化因子の体積依存性を制御する新しい評価。体積一様の正の余裕・coercivity、作用素の負固有値、Hamiltonian spectral gap、連続体4次元Yang–Mills mass gapには別の証明が必要である。
+
