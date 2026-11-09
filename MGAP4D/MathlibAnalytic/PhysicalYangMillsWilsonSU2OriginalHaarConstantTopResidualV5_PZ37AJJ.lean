@@ -116,7 +116,7 @@ theorem realHilbert_unitConstant_selectedTop_deviation_sq_split_ajj
   have hSymm : inner ℝ omega c = inner ℝ c omega :=
     (real_inner_comm omega c).symm
   rw [hSymm]
-  norm_num at hP
+  simp only [one_pow, F.starProjection_orthogonal_val] at hP ⊢
   linarith [hP, hQ]
 
 /-- In the original full-top geometry, the squared selected deviation
