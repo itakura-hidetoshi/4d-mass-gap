@@ -4975,3 +4975,19 @@ LATER:
 
 **OPEN / AIU候補:** 各固定有限Hで残る大きい正結合を扱う、元の真正分配関数の結合依存減衰評価。または、今回の消失する証明書を超えて、既存の正規化を保持したまま、元transferの負値振幅や正規化因子の体積依存性を制御する新しい評価。体積一様の正の余裕・coercivity、作用素の負固有値、Hamiltonian spectral gap、連続体4次元Yang–Mills mass gapには別の証明が必要である。
 
+
+
+## AIU（2026-11-09 JST）— 実際の元transfer像の一様体積減衰と正の一様負値深さの不存在
+
+**CLOSED:** [AIU定理PR #6557](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6557) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AIU_verified_20261109.md)。元の完全作用・両端halfweight・符号付きZW源・真正Haar・AIGの余裕と厳密負領域を保持する。
+
+- 真正crossing kernelの左Haar積分を、元のkernel対称性と右Haar積分から導出。全β≥0・全H・全Bで、実際の元transfer像に `|T f0(B)|≤exp(-βW(B)/2)(p_H/2)Zcross≤(p_H/2)Zcross` を証明した。
+- 真正分配関数の正確な率 `ρ=-log z` と明示率 `d=β exp(-2β)` を構成し、`Zcross=exp(-ρp_H)`、β>0で `0<d≤ρ` を証明。**固定β>0のもとで、全境界について一様に元transfer像が0へ近づく**。
+- 元のsource-image familyの正の一様絶対振幅・負値深さは存在せず、固定した正の深さの負部分集合は十分大きいHで空になる。この対象では、別の評価法だけによって真に正の体積一様な深さを作ることもできない。正規化や源族を変えた対象への不可能性は含まない。
+- 元のAIG余裕は `0<ε_H≤(β/8)p_H² exp(-2βp_H)→0`。AITのeventual半Haar下界、元の正の余裕の小ささ、全境界での実像の小ささを一つの共通cutoffで同時に証明した。
+- 元のβ₀で `d(β₀)≥1/384` と `|T_β₀ f0(B)|≤12(H+1)^3 exp(-(H+1)^3/16)`。AITの補助床消失と区別して、実際の元transfer像の上界から得た結果である。
+
+[Exact-source CI #42559591642](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42559591642/attempts/1) と [統合後push CI #42560361781](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42560361781/attempts/1) は11409/11409 SUCCESS、35/35標準3公理のみ、sorryAx・全Lean error・変更warning/errorは0、独立receipt SUCCESS。[定理squash](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/ac30f9db7932c94f5a2cb82fd6d1998102cf0c4e) のtree/blob/全文は認証sourceと一致する。初回CIで認証され、統合後pushも同じ監査条件を満たした。
+
+**OPEN / AIV候補:** 元の真正分配関数・正規化因子との相対評価、または各固定Hで残る大きい正結合における元の全余裕負領域の追加評価。今回証明した非正規化source-imageの減衰を保持し、その対象に正の一様振幅があるかのように扱わない。正規化後のtransferや別の源族、共通の極限作用素、coercivity、負固有値、Hamiltonian spectral gap、連続体4次元Yang–Mills mass gapには、それぞれ別の形式証明が必要である。
+
