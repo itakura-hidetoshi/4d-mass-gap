@@ -79,7 +79,7 @@ theorem realHilbert_centered_selected_overlap_sq_le_deviation
   have hpos : 0 ≤ ‖f‖ * ‖v‖ := by positivity
   have hsq : |inner ℝ f omega| ^ 2 ≤ (‖f‖ * ‖v‖) ^ 2 := by
     nlinarith [mul_nonneg (sub_nonneg.mpr hbound)
-      (add_nonneg (abs_nonneg _) hpos)]
+      (add_nonneg (abs_nonneg (inner ℝ f omega)) hpos)]
   have hnorm : ‖v‖ ^ 2 = 1 - (inner ℝ omega c) ^ 2 := by
     exact realHilbert_unitDirection_deviation_norm_sq omega c homega hc
   calc
@@ -133,10 +133,16 @@ theorem p4Q2PZ37AJG_originalCenteredZWSource_inner_constant_eq_zero :
   have hself : inner ℝ c c = 1 := by
     rw [real_inner_self_eq_norm_sq, hc]
     norm_num
+  have hbase : inner ℝ (W - (inner ℝ W c) • c) c = 0 := by
+    rw [inner_sub_left, real_inner_smul_left, hself]
+    ring
   change inner ℝ
     ((1 / 2 : ℝ) • (W - (inner ℝ W c) • c)) c = 0
-  rw [real_inner_smul_left, inner_sub_left, real_inner_smul_left, hself]
-  ring
+  calc
+    inner ℝ ((1 / 2 : ℝ) • (W - (inner ℝ W c) • c)) c =
+        (1 / 2 : ℝ) * inner ℝ (W - (inner ℝ W c) • c) c :=
+          real_inner_smul_left (W - (inner ℝ W c) • c) c (1 / 2 : ℝ)
+    _ = 0 := by rw [hbase]; ring
 
 /-- The true source's overlap with the chosen normalized top eigenvector
 comes solely from that eigenvector's deviation from the constant source
@@ -199,7 +205,7 @@ theorem p4Q2PZ37AJG_originalFullTop_norm_sq_le_constantDeviation_add_extra
         ‖fG‖ ^ 2 *
           (1 - (inner ℝ (OmegaG beta hbeta.le) cG) ^ 2) := by
     simpa only [sq_abs] using hbound
-  exact add_le_add_right hs _
+  linarith [hs]
 
 /-- The real centered-vacuum deviation bound yields true
 nonzero original transfer orthogonal source only IF its two
