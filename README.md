@@ -4394,3 +4394,11 @@ Exact-source [#42579467910](https://github.com/itakura-hidetoshi/4d-mass-gap/act
 新規Lean 186行（定義2・定理7・削除0）、実公理9/9標準3公理のみ。Exact-source [#42617449250](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42617449250)と統合後push [#42618394145](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42618394145)はいずれも11,417/11,417 SUCCESS、変更warning/error0・新規sorryAxなし、独立receipt SUCCESS。認証source `6f16501c87ff57941b9244efd0ef7b6465cf9f9c`・[squash](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/eda6b204e5bbbae65809aa968957736ad763b62e) のGit tree同一 `caefa8a12dbe42b122f559fe0a6f198e9a49b237`。初回CI #42616327394のLean `No goals to be solved` と閉部分空間CompleteSpaceインスタンス明示による修正は正式記録に保持。
 
 **OPEN／AJD:** 元のZW源像の真正top-overlapを評価し、条件付き直交成分の正値化に必要な厳密不等式を検証する。体積一様coercivity、真の励起gap、Hamiltonian gap、4D連続体mass gapは未認証。append-only／tighten-only／overwrite-forbidden／same-root、固定Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6。
+
+## P4-Q2-PZ37AJD — 真正元ZW源の全top射影不変性（2026-11-09、形式認証・統合済み）
+
+[Lean定理PR #6584](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6584) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AJD_verified_20261109.md)。元のSU(2) Wilson one-slab、真正Haar、中心化ZW Gauss-law物理源、対称正規化transfer、既存**全top eigenspace**を変更せず、全有限H・β>0で `Π_Top(N f₀)=Π_Top(f₀)` と全topベクトルに対する内積不変性をLean4で証明。AJCの定量証明書を**転送前の元ZW源の真正top射影**で書き直し、`‖u_⊥‖²≥C_H,β−‖Π_Top f₀‖²` と、厳密上界が別途成立するときのみ直交成分非零となることを証明。**top射影の小ささ自体は未証明**。
+
+新規Lean 1ファイル206行、派生定義1・定理6・削除0、7/7公理出力は標準3公理のみ、AJD変更warning/error0、sorryAxなし。Exact-source [#42634322528](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42634322528)／統合後push [#42637270766](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42637270766) ともSUCCESS（統合後11,418/11,418）、独立receipt SUCCESS。source `714aec58d29953b631010cd04d431ca4ccef4ca8`・squash `f646eb48342eac60f5e05acbbea60c5e846a33fb` の共通Git tree `ce3176c00891e63ed5b7adaf796113a05fec1409`。
+
+**OPEN／AJE:** 元のZW源の真正全top射影ノルム二乗 `‖Π_Top f₀‖²` を既存物理定義から評価する。必要な `‖Π_Top f₀‖²<C_H,β` を無証明に仮定せず、励起sector一様下界・全物理Hilbert coercivity・Hamiltonian gap・4D連続体mass gapへ昇格しない。append-only／tighten-only／overwrite-forbidden／same-root。
