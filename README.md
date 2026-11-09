@@ -4343,3 +4343,12 @@ Exact-source CI [42574638690](https://github.com/itakura-hidetoshi/4d-mass-gap/a
 
 消失を証明したのは、元のAIG余裕を既存物理ノルムで割った証明書である。実際の正規化源像の全境界上界は(p_H/2)Zcross/λ≤(p_H/2)exp(βp_H)であり、これから像の減衰は導かない。より深い正規化負領域の不存在、正規化coercivity、励起gap、共通Hilbert空間上の極限、各固定Hで任意正結合の全余裕半Haar性、Hamiltonian spectral gap、連続体4次元Yang–Mills mass gapは未証明のまま保持する。
 
+
+## P4-Q2-PZ37AIX — 正結合windowにおける元の正規化余裕の一様消失（2026-11-09、形式認証済み）
+
+[Lean定理PR #6566](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6566)はMERGED。新規独立Lean leafに7定理（206行追加／削除0）を構成し、元の完全SU(2) Wilson作用、両端halfweight、真正Haar、元の符号付きZW物理L²源、AIG負領域、既存物理norm正規化、固定環境を変更していない。
+
+任意の固定a>0と有限bについて、すべての有限Hおよびa≤β≤bで元の正規化AIG証明書は `0<m_H(β)≤(b/8)p_H² exp(-a p_H)`。同一cutoffでwindow内の**全β**について任意の正閾値を下回り、すべての結合列β_H∈[a,b]でm_H(β_H)→0。元の正規化物理作用素はノルム1で、厳密負領域は元のAIG領域と集合として一致する。一方で、変動結合の半Haar一様下界、正規化源像の実振幅減衰、top固有空間との関係、Hamiltonian spectral gap、連続体mass gapは未証明。β_Hが正の下限や有限上限を持たない場合へ適用しない。
+
+Exact-source [#42579467910](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42579467910)・統合後push [#42580324130](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42580324130)はともにSUCCESS。両runでLean依存閉包11,412/11,412、7/7公理出力は標準3公理のみ、sorryAx・Lean error・新規warning0。実artifact SHA256と独立receipt照合済み。Source/test-merge/squash共通Git tree `28ecc5480bfde0da3625da11c18bf24c520762a4`、定理squash `84b822848e825c8aa46aefc416af3864b1b39259`。正式記録: [P4-Q2-PZ37AIX_verified_20261109](docs/proofs/P4-Q2-PZ37AIX_verified_20261109.md)。
+
