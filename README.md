@@ -4291,3 +4291,21 @@ For a future theorem: inspect current canonical SHA, the **complete Lean file an
 
 各固定有限Hにおける任意正結合での全余裕半Haar性、別の構成による体積一様の正の余裕・coercivity、共通の極限作用素への接続、負固有値、Hamiltonian spectral gap、連続体4次元Yang–Mills mass gapは未証明のまま保持する。
 
+
+
+## 検証済み定理 — AIU／元transfer像の全境界一様な体積減衰と振幅の障害（2026-11-09 JST）
+
+[AIU定理PR #6557](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6557) **MERGED**。[正式記録](docs/proofs/P4-Q2-PZ37AIU_verified_20261109.md)。定理正本は引き続き `formal/real-hilbert-uniform-coercive-strong-limit`、mainは文書ミラーである。
+
+元の完全SU(2) Wilson作用、両端halfweight、符号付きZW物理源、真正Haar、AIGの元の余裕と厳密負領域を保持した。元のcrossing kernelの対称性とHaar積分、源の絶対値上界から、**全有限H・全β≥0・全境界B**で `|T_H,β f0_H(B)|≤exp(-βW_H(B)/2)(p_H/2)Zcross_H(β)≤(p_H/2)Zcross_H(β)` を形式証明した。
+
+真正一リンク分配関数から `ρ(β)=-log z(β)`、`d(β)=β exp(-2β)` を構成し、`Zcross_H(β)=exp(-ρ(β)p_H)`、正結合で `0<d(β)≤ρ(β)` を証明。`p_H=24(H+1)^3` により、**任意の固定β>0とη>0について、十分大きい全Hで、全境界の実際の元transfer像が絶対値η未満**となる。Hに依存する境界空間を同一視する仮定は置かない。
+
+したがって、この元の非正規化transferと元の源のfamilyには、各Hで境界を選んでも維持できる正の一様絶対振幅・負値深さがない。固定した深さηの集合 `{B:T_H,β f0_H(B)≤-η}` はeventually emptyである。AITの特定補助床の消失からこの結論を推測したのではなく、実際のtransferに対する独立した上界を用いる。
+
+同時に、**元の正の余裕ε_H,βも0へ近づき、AITの元の全余裕半Haar性と全境界のtransfer振幅の小ささが、同じ十分大きいHで成立する**。各有限体積での負値境界の存在と、既存の認証範囲での半Haar下界は保持され、Hに依存する元の余裕の領域が空になるとは主張しない。元の固定 `β₀=log(3/2)/64` では全H・全Bに `|T_H,β₀ f0_H(B)|≤12(H+1)^3 exp(-(H+1)^3/16)` を得た。
+
+[Exact-source CI #42559591642](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42559591642/attempts/1) と [統合後push CI #42560361781](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42560361781/attempts/1) は、ともに **11409/11409 SUCCESS**、32定理＋3定義、35/35実公理出力が標準3公理のみ、sorryAx・全Lean error・変更warning/errorは0、独立receiptもSUCCESS。認証source・実test-merge・[定理squash](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/ac30f9db7932c94f5a2cb82fd6d1998102cf0c4e) のtreeは `18b2c818e2266ca590ffd484498e4f1964959e78` で一致し、Lean全文とblobも一致した。初回CIで認証され、CI後のsource修正・再試行はなかった。
+
+この振幅の障害は元の非正規化transferと一つの元の源の固定正結合familyに限る。正規化後のtransfer、別の源族、作用素ノルム、coercivity一般の不可能性、負固有値、Hamiltonian spectral gap、連続体4次元Yang–Mills mass gapへは昇格しない。各固定Hにおける任意正結合での元の全余裕半Haar性も、別の未証明課題として残す。
+
