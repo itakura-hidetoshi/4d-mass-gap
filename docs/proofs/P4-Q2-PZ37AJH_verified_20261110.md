@@ -105,3 +105,9 @@ Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を維�
 - 次段は厳密な元Wilson kernel/正性/対称性/コンパクト性/積分のもとで、有限反復上界の数値的制御と、偏差上界を保証する追加*証明*が得られるかを調べる。仮定追加・緩和は禁止。
 
 append-only／tighten-only／overwrite-forbidden／same-root。
+
+## 7．統合後push CIの独立完了再観測（追記）
+
+[統合後push #42705520744](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42705520744) は **completed／SUCCESS**。正式squash `76bca4c6b505dc5506696c95dbd0d71ea422fe8c` をexact-headとして **11,422／11,422 Lean依存閉包 SUCCESS**、AJHの全9宣言に対する実際の公理出力（標準3公理のみ）、変更Lean warning/error 0/0、新規sorryAxなしを実ログから独立再確認した。
+
+独立「Publish MCP CI completion receipt」ジョブも **completed／SUCCESS**。認証squashへの `chatgpt-ci-receipt/PR Lean Fast Check` は `state=success`、run #42705520744を指す。今回の再観測により第5節で保留とした統合後push結果は**認証済み**となった。受領書は別個のLean kernel証明ではない。定理が含まない数値的真空偏差上界・AJA budget・H一様gapは引き続きOPEN。
