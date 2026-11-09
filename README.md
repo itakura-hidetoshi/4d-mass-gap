@@ -4436,3 +4436,11 @@ Exact-source [#42579467910](https://github.com/itakura-hidetoshi/4d-mass-gap/act
 **OPEN／AJI:** 真正偏差Dの上界と追加top残余EのH,β依存定量上界が、AJA証明書C未満の合計を実現することは未証明。n=1の反復power予算はAJA既証明下界と矛盾するため成立不可。top一次元性、無条件励起sector非零、H一様coercivity、Hamiltonian gap、連続体4D Yang–Mills mass gapを主張しない。append-only／tighten-only／overwrite-forbidden／same-root。
 
 **AJH統合後push再認証（追記）:** 正式squashを対象とする [#42705520744](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42705520744) は completed／SUCCESS、11,422／11,422、9／9の公理出力は標準3のみ、変更warning/error0、sorryAxなし、独立receipt SUCCESS。正本証明記録と区別して保存。
+
+## P4-Q2-PZ37AJI — 元Wilson transfer反復の全topへの幾何収束とAJA予算有限証人の同値性（2026-11-10、形式認証・定理MERGED）
+
+[定理PR #6599](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6599) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AJI_verified_20261110.md)。真正SU(2)正規化物理transfer S、元の中心化ZW源f₀、全top正準射影Qおよび全top直交補の既証明の有限体積収縮率 q=‖R‖<1 を用いて、**‖Sⁿf₀−Qf₀‖≤qⁿ‖Qᗮf₀‖**（n≥1）と全topへの強収束をLean4で証明。**‖Qf₀‖²<C_AJA ⇔ ∃n>0,‖Sⁿf₀‖²<C_AJA**も形式証明。AJA既証明によりn=1は不可能だが、**n≥2の証人自体は未構成**。top一次元性・元Haar定数cのtop固有性・体積一様縮小率は一切仮定していない。
+
+新規Lean leaf1件336行・9宣言、既存証明変更・削除0。初回 [CI #42708843152](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42708843152) の射影インスタンス不足・巨大isDefEq timeoutは固定mathlibの実際のインスタンス署名を照合し、型付き局所作用素へ修正。修正版exact-source [#42710645084](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42710645084) completed／SUCCESS、11,423／11,423、9／9宣言は標準3公理のみ、変更warning/error0、sorryAxなし、独立receipt SUCCESS。認証source bfe386d1a9d8a236c9605ea1b9914a2a93f8cfb1／squash 0548de742afda7894e6647a65dad2348b5a0ceac／共通Git tree f2fdd35a8f37ce05a8512a2d28f9d2984fee3539。統合後push [#42711612792](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42711612792) は別途終了観測する。
+
+**OPEN／AJJ:** 有限n≥2の厳密AJA証明書を下回る真正物理上界、真空ΩのHaar定数方向偏差Dの上界、追加top残余E、top多重度の評価を維持。H一様coercivity、Hamiltonian gap、4D連続体mass gapへ未証明のまま昇格しない。append-only／tighten-only／overwrite-forbidden／same-root。
