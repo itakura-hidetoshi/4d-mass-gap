@@ -76,6 +76,7 @@ theorem realHilbert_fullTop_power_sub_projection_norm_le_aji
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     [CompleteSpace E]
     (S : E →L[ℝ] E)
+    [(realHilbertTopEigenspace S).HasOrthogonalProjection]
     (hSymm : (S : E →ₗ[ℝ] E).IsSymmetric)
     (n : ℕ) (hn : 0 < n) (x : E) :
     ‖(S ^ n) x - (realHilbertTopEigenspace S).starProjection x‖ ≤
@@ -121,6 +122,7 @@ theorem realHilbert_fullTop_power_succ_tendsto_projection_aji
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     [CompleteSpace E]
     (S : E →L[ℝ] E)
+    [(realHilbertTopEigenspace S).HasOrthogonalProjection]
     (hSymm : (S : E →ₗ[ℝ] E).IsSymmetric)
     (hq :
       ‖realHilbertTopEigenspaceOrthogonalRestriction S hSymm‖ < 1)
@@ -208,16 +210,20 @@ theorem p4Q2PZ37AJI_originalSource_power_sub_fullTop_norm_le
       p4Q2PZ37AJD_originalSourceTopComponent H beta hbeta‖ ≤
       ‖RI beta hbeta.le‖ ^ n *
         ‖((TopI beta hbeta.le)ᗮ).starProjection fI‖ := by
+  let S : PhysI →L[ℝ] PhysI := SI beta hbeta.le
+  let hS : (S : PhysI →ₗ[ℝ] PhysI).IsSymmetric :=
+    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
+      H 2 (by norm_num) beta hbeta.le
+  let F : Submodule ℝ PhysI := realHilbertTopEigenspace S
+  let R := realHilbertTopEigenspaceOrthogonalRestriction S hS
+  letI : CompleteSpace F :=
+    (realHilbertTopEigenspace_isClosed S).completeSpace_coe
+  letI : CompleteSpace Fᗮ := F.isClosed_orthogonal.completeSpace_coe
   change
-    ‖((SI beta hbeta.le) ^ n) fI -
-      (TopI beta hbeta.le).starProjection fI‖ ≤
-      ‖RI beta hbeta.le‖ ^ n *
-        ‖((TopI beta hbeta.le)ᗮ).starProjection fI‖
+    ‖(S ^ n) fI - F.starProjection fI‖ ≤
+      ‖R‖ ^ n * ‖(Fᗮ).starProjection fI‖
   exact realHilbert_fullTop_power_sub_projection_norm_le_aji
-    (SI beta hbeta.le)
-    (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
-      H 2 (by norm_num) beta hbeta.le)
-    n hn fI
+    S hS n hn fI
 
 /-- Fixed finite H,beta: the actual ORIGINAL normalized transfer powers
 converge in the true physical Hilbert norm to the complete full-top
@@ -227,17 +233,23 @@ theorem p4Q2PZ37AJI_originalSource_power_succ_tendsto_fullTop
     Tendsto (fun n : ℕ => ((SI beta hbeta.le) ^ (n + 1)) fI)
       atTop
       (nhds (p4Q2PZ37AJD_originalSourceTopComponent H beta hbeta)) := by
+  let S : PhysI →L[ℝ] PhysI := SI beta hbeta.le
+  let hS : (S : PhysI →ₗ[ℝ] PhysI).IsSymmetric :=
+    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
+      H 2 (by norm_num) beta hbeta.le
+  let F : Submodule ℝ PhysI := realHilbertTopEigenspace S
+  let R := realHilbertTopEigenspaceOrthogonalRestriction S hS
+  letI : CompleteSpace F :=
+    (realHilbertTopEigenspace_isClosed S).completeSpace_coe
+  letI : CompleteSpace Fᗮ := F.isClosed_orthogonal.completeSpace_coe
+  have hR : ‖R‖ < 1 :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_norm_lt_one
+      H 2 (by norm_num) beta hbeta.le
   change
-    Tendsto (fun n : ℕ => ((SI beta hbeta.le) ^ (n + 1)) fI)
-      atTop
-      (nhds ((TopI beta hbeta.le).starProjection fI))
+    Tendsto (fun n : ℕ => (S ^ (n + 1)) fI)
+      atTop (nhds (F.starProjection fI))
   exact realHilbert_fullTop_power_succ_tendsto_projection_aji
-    (SI beta hbeta.le)
-    (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
-      H 2 (by norm_num) beta hbeta.le)
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_norm_lt_one
-      H 2 (by norm_num) beta hbeta.le)
-    fI
+    S hS hR fI
 
 /-- A strict ORIGINAL full-top smallness condition is EQUIVALENT to the
 existence of a positive finite power of the same original Wilson transfer
