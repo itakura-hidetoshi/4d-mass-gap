@@ -5078,3 +5078,11 @@ Exact-source CI [42574638690](https://github.com/itakura-hidetoshi/4d-mass-gap/a
 新規Lean1件206行（定義1・定理6）、7/7実公理は標準3件のみ、AJD変更warning/error0、sorryAxなし。Exact-source CI [#42634322528](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42634322528)、統合後push CI [#42637270766](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42637270766)ともSUCCESS、11,418/11,418、receipt SUCCESS。source `714aec58d29953b631010cd04d431ca4ccef4ca8` とsquash `f646eb48342eac60f5e05acbbea60c5e846a33fb` のGit tree `ce3176c00891e63ed5b7adaf796113a05fec1409` 一致。
 
 **OPEN／AJE:** 実top射影 `‖Π_Top f₀‖²` を元Wilson–Haar内積とtop部分空間の既存定義から量的評価する。証明書未満の上界、top直交性、体積一様物理gap、Hamiltonian spectral gap、連続体4D mass gapはいずれも未認証。仮定を追加して結論を作らない。固定Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6、append-only／tighten-only／overwrite-forbidden／same-root。
+
+## P4-Q2-PZ37AJE — 真正元源全top射影の双対証明書（2026-11-10、MERGED／形式認証済み）
+
+**CLOSED:** [Lean定理PR #6587](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6587) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AJE_verified_20261110.md)。既存真正ZW Gauss-law源・全top eigenspaceに対する厳密な双対評価：‖Q f₀‖≤b ↔ 全top vに対し |⟨f₀,v⟩|≤b‖v‖（b≥0）。さらに既存選択top単位ベクトルΩに対して |⟨f₀,Ω⟩|≤‖Q f₀‖、AJA証明書C_H,βに関し ‖Q f₀‖²<C_H,β ↔ C_H,β未満の全top一様内積予算の存在をLean4で形式化。**証拠となるbは未構成**。一本のΩと全topを同一視しない。
+
+新規Lean1件230行・9宣言・既存削除0。初回CI #42640480799のmul_le_mul_right API型不一致は、仮定を変えず正値性を明示した背理法で修正。修正source 750b0fd38e88e85bc7965ab2ec7386a9abbdd9aa・squash 661345cdc4100c06996dbf431a84f4ee96dacb35 の共通Git tree c4321886c4420c28d3d5e7782dd4974f964a132e。Exact-source [#42641688446](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42641688446)／統合後push [#42642608623](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42642608623) SUCCESS、11,419／11,419、9／9標準公理のみ、変更warning/error0、sorryAxなし、独立receipt SUCCESS。
+
+**OPEN／AJF:** 既存物理top全ベクトルの真正元ZW源とのWilson–Haar内積の厳密評価、およびAJA証明書未満の一様上界の**実構成**。単なる選好・同値式を励起sector非零、全H一様coercivity、Hamiltonian gap、4D連続体Yang–Mills mass gapの証明へ昇格させない。固定Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6、append-only／tighten-only／overwrite-forbidden／same-root。
