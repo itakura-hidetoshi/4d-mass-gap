@@ -4361,3 +4361,12 @@ Exact-source [#42579467910](https://github.com/itakura-hidetoshi/4d-mass-gap/act
 
 修正版Exact-source [CI #42584457250](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42584457250)・定理squash統合後自動push [CI #42585431281](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42585431281)ともSUCCESS。両runで11,413／11,413・公理9／9標準3公理のみ・sorryAx0・Lean error0・新規warning0、実artifact SHA256と独立receiptを監査済み。初回 [CI #42583714289](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42583714289) は型検査成功・冗長`change`のwarning1件で、証明署名を変えず当該1行を削除して再認証した。認証source/test-merge/squashの共通tree `e4420fa7158a3708eea9f87eb935ee8100623ab0`、定理squash `0c3413dd7b619918fbfd9de1b51d7238f8e6c7cf`。正式記録：[AIY verified](docs/proofs/P4-Q2-PZ37AIY_verified_20261109.md)。
 
+## P4-Q2-PZ37AIZ — 全正結合での真正正規化ZW源像Haar-L²非零性（2026-11-09、形式認証・統合済み）
+
+[定理PR #6572](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6572)はformalへsquash MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AIZ_verified_20261109.md)。AIGの元厳密負領域が **各有限H・任意β>0で真正Haar正測度** を持つ定理と、AIWの元領域＝既存物理ノルム正規化後の領域一致、AIYのHaar-a.e.代表から真正物理L²非零性への橋を、元のSU(2) Wilson one-slab作用・両端halfweight・署名付きZW物理源・真正Haarのまま接続した。
+
+**全H∈ℕ、全β>0で `0<‖N_H,β f0,H‖_(L²)≤‖f0,H‖_(L²)`、および `0<‖P_H,β f0,H‖_(L²)`。** 任意正結合列β_Hでも各有限Hで成立する。AIT半Haar結合上端はこのL²非零性には不要となったが、任意β>0で半Haar下界を得たわけではない。新規独立Lean leaf 207行・10定理・追加定義0・削除0。
+
+修正版Exact-source [#42600834308](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42600834308)、定理squash後push [#42603169982](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42603169982) ともSUCCESS。双方11,414/11,414、10/10実公理出力は標準3公理のみ、AIZ変更warning/error0、sorryAxなし、独立receipt SUCCESS。認証source `94f896b1d0cd82b78377384040b7c7e766c3355d`・test-merge `da0e340d692c7cc45ab05762593478a5405a8e0e`・[squash](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/dc334fa6d68eee8f0d75f4c236f02be92b6f14a1) のGit treeは `86f6816c1139a92aee72549ce081d3377e206ae9` で一致。初回warningと中間エラーの履歴は正式記録に保持。
+
+**OPEN / AJA：** 元の正規化余裕と元のHaar負領域質量を用いた有限体積の定量的L²下界、およびtop固有空間への真正物理射影を、独立に検証する。各Hでの非零性を体積一様振幅・top直交・励起gap・Hamiltonian gap・4D連続体mass gapに昇格させない。append-only／tighten-only／overwrite-forbidden／same-root、固定Lean/mathlib維持。

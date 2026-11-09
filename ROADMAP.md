@@ -4400,3 +4400,10 @@ Exact-source CI [42574638690](https://github.com/itakura-hidetoshi/4d-mass-gap/a
 
 **OPEN / AIZ:** 元のLJの完全Wilson kernelの真正厳密正定値を、Gauss-law物理作用素の内積へ直接貼り合わせ、`β>0` の任意有限結合へ非零性を広げられるか検証する。AIG半Haar領域から実L²ノルムへの定量下界を型付きで構成する課題も残る。非零性は一様振幅下限を意味せず、元ZW源のtop固有空間直交性、励起gap、共通Hilbert空間上のcoercivity、Hamiltonian spectral gap、連続体4D mass gapは未認証。append-only／tighten-only／overwrite-forbidden／same-root、固定Lean v4.30.0-rc2/mathlib pinを維持する。
 
+## P4-Q2-PZ37AIZ — 任意正結合での元の真正物理L²非零性（2026-11-09、MERGED／形式認証済み）
+
+**CLOSED:** [定理PR #6572](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6572) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AIZ_verified_20261109.md)。AIG（全正結合・元厳密負領域の正Haar測度）→AIW（元領域と既存norm正規化積分代表の厳密一致）→AIY（a.e.代表と既存Gauss-law物理L²源像の非零橋）により、全有限H・任意β>0で `0<‖N_H,β f0,H‖≤‖f0,H‖` および `0<‖P_H,β f0,H‖` を証明。任意正結合列β_Hの各Hでも成立し、AIT結合上端を超えるβでも非零。半Haar測度の全正結合化は主張しない。
+
+新規Lean 207行・10定理・追加定義0・削除0。修正版source `94f896b1d0cd82b78377384040b7c7e766c3355d`、test-merge `da0e340d692c7cc45ab05762593478a5405a8e0e`、squash `dc334fa6d68eee8f0d75f4c236f02be92b6f14a1` のtreeはすべて `86f6816c1139a92aee72549ce081d3377e206ae9`。Exact-source CI [#42600834308](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42600834308) と統合後push CI [#42603169982](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42603169982) は双方11,414/11,414 SUCCESS、10/10実公理出力標準3公理のみ、AIZ変更warning/error0、sorryAxなし、独立receipt SUCCESS。失敗runと修正理由は正式記録へ保存。
+
+**OPEN / AJA（二つの別ゲート）:** (i) 既存の正規化連続積分代表、同じ元Haar負領域、元の正余裕から実際のL²源像の **H・β依存の定量下界** を証明する。厳密負集合R上の下界とその真正測度を接続する必要があり、正測度だけで一様半Haarや体積一様floorを仮定しない。(ii) 元のtop固有空間への射影と元ZW源のtop直交性／励起成分を別の命題として検証する。定量L²下界、射影、coercivity、Hamiltonian spectral gap、連続体mass gapの間の貼合条件が未証明である以上、結論を昇格しない。固定Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6、append-only／tighten-only／overwrite-forbidden／same-root。
