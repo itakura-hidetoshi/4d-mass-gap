@@ -99,7 +99,12 @@ theorem realHilbert_starProjection_norm_le_iff_uniform_inner_bound
           ‖F.starProjection x‖ * ‖F.starProjection x‖ ≤
             b * ‖F.starProjection x‖ := by
         simpa only [pow_two] using h
-      exact (mul_le_mul_right hp).mp hmul
+      by_contra hnot
+      have hgt : b < ‖F.starProjection x‖ := lt_of_not_ge hnot
+      have hpositive :
+          0 < ‖F.starProjection x‖ * (‖F.starProjection x‖ - b) :=
+        mul_pos hp (sub_pos.mpr hgt)
+      nlinarith [hpositive]
 
 namespace GroundStatePosteriorJoint
 
