@@ -105,7 +105,7 @@ theorem p4Q2PZ37AIZ_originalRawPhysicalSource_ne_zero_allPositive
     PZ beta hbeta.le fZ ≠ 0 := by
   intro hz
   have hNorm : ‖NZ beta hbeta.le fZ‖ = 0 := by
-    simpa [hz] using
+    simp [hz] using
       (p4Q2PZ37AIY_originalNormalizedPhysicalSource_norm_eq_ratio
         H beta hbeta.le)
   exact
