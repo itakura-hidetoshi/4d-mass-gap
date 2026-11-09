@@ -52,7 +52,10 @@ theorem realHilbert_symmetric_fixedSubspace_starProjection_eq
     (F.starProjection_apply_mem x)
   intro w hw
   have hIw : inner ℝ (S x) w = inner ℝ x w := by
-    simpa only [hFix w hw] using hSymm x w
+    have h := hSymm x w
+    change inner ℝ (S x) w = inner ℝ x (S w) at h
+    rw [hFix w hw] at h
+    exact h
   calc
     inner ℝ (S x - F.starProjection x) w =
         inner ℝ (S x) w - inner ℝ (F.starProjection x) w :=
@@ -119,7 +122,11 @@ theorem p4Q2PZ37AJD_originalNormalizedSource_topInner_eq_source
   have hvfix : ND beta hbeta.le v = v :=
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace_mem
       H 2 (by norm_num) beta hbeta.le v).mp hv
-  simpa only [hvfix] using hSymm fD v
+  have h := hSymm fD v
+  change inner ℝ (ND beta hbeta.le fD) v =
+    inner ℝ fD (ND beta hbeta.le v) at h
+  rw [hvfix] at h
+  exact h
 
 /-- Unlike mere nonzero source L2 norm, this precisely IDENTIFIES the
 top-mode overlap of the original normalized source image with the true
