@@ -4463,3 +4463,13 @@ Exact-source CI [42574638690](https://github.com/itakura-hidetoshi/4d-mass-gap/a
 新規Lean1件255行・10宣言・削除0。初回失敗 #42689972569 のmul_nonneg暗黙項・内積スカラー倍照合・辺順不一致、再失敗 #42691058717 の内積減法rw不一致は、型付き証明項から組み立てるcalcへ修正。修正版source 9975cad37f9af393fcd40905df475341c3e89247 とsquash 76951507130749219e08c1b133eb596f633d43ca の共通tree 8bc702e4107d1af14e58d2ff9f4b080254a96068。Exact-source [#42692558676](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42692558676)／push [#42693592821](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42693592821) SUCCESS、11,421／11,421、10／10公理は標準3のみ、変更warning/error0、sorryAxなし、receipt SUCCESS。
 
 **OPEN／AJH:** 真正真空Ωの定数方向からの定量偏差、全topの追加残余の定量上界、AJA証明書を下回る合計を元Wilson物理対象から導出する。top一次元性、励起sector一様下界、全物理Hilbert coercivity、Hamiltonian gap、4D連続体mass gapは未認証。固定Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6、append-only／tighten-only／overwrite-forbidden／same-root。
+
+## P4-Q2-PZ37AJH — 元ZW source全topへの反復transfer上界（2026-11-10、Lean定理MERGED／CI監査済み）
+
+**CLOSED（形式証明）:** [Lean定理PR #6596](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6596) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AJH_verified_20261110.md)。元の対称正規化Wilson transfer Sの任意の冪で全top正準射影 Q が不変：Q(Sⁿf₀)=Qf₀。全top元sourceとAJF残余は元sourceの真の反復物理ノルムにより上から抑えられる。追加top残余をゼロと置かず、top固有空間が一次元とも仮定しない。選択topの定数方向偏差について得たのは**下界 1−‖Sⁿc‖²≤D**であり、目標上界の構成とは区別する。
+
+Exact-source CI [#42704315781](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42704315781) は11,422／11,422 SUCCESS、9／9宣言公理監査は標準3公理のみ、sorryAxなし、変更warning/error0、独立receipt SUCCESS。304行追加・既存証明改変0。認証source 55160801c2dd9b9ec728bb6b20a08cefb9fcc3b5／正式squash 76bca4c6b505dc5506696c95dbd0d71ea422fe8c／共通Git tree 82a90be5f9336bbd60af44566370d73d58271a53。統合後push CI [#42705520744](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42705520744) は完了後別途独立観測。
+
+**OPEN／AJI:** いずれかn≥2について真正証明書 ‖Sⁿf₀‖²<C_AJA の証人を元Wilson物理から構成できるか、あるいは D上界とE上界を独立に証明して ‖f₀‖²D+E<C_AJA に到達できるかを検証する。現時点でどちらの不等式も認証されていない。top一次元性、正のH一様励起下界、全物理Hilbert coercivity、Hamiltonian spectral gap、4D連続体Yang–Mills mass gapはいずれもOPEN。Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6、append-only／tighten-only／overwrite-forbidden／same-root。
+
+**AJH統合後push CI受領（追記）:** [#42705520744](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42705520744) completed／SUCCESS、11,422／11,422、9宣言公理は標準3のみ、変更warning/error0、sorryAxなし、独立receipt SUCCESS。厳密AJA budgetとH一様gapは依然OPEN。
