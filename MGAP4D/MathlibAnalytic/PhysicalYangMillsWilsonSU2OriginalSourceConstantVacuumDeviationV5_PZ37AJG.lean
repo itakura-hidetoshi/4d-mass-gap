@@ -134,8 +134,20 @@ theorem p4Q2PZ37AJG_originalCenteredZWSource_inner_constant_eq_zero :
     rw [real_inner_self_eq_norm_sq, hc]
     norm_num
   have hbase : inner ℝ (W - (inner ℝ W c) • c) c = 0 := by
-    rw [inner_sub_left, real_inner_smul_left, hself]
-    ring
+    have hsub :
+        inner ℝ (W - (inner ℝ W c) • c) c =
+          inner ℝ W c - inner ℝ ((inner ℝ W c) • c) c :=
+      inner_sub_left W ((inner ℝ W c) • c) c
+    have hsmul :
+        inner ℝ ((inner ℝ W c) • c) c =
+          (inner ℝ W c) * inner ℝ c c :=
+      real_inner_smul_left c c (inner ℝ W c)
+    calc
+      inner ℝ (W - (inner ℝ W c) • c) c =
+          inner ℝ W c - inner ℝ ((inner ℝ W c) • c) c := hsub
+      _ = inner ℝ W c - (inner ℝ W c) * inner ℝ c c :=
+        congrArg (fun z : ℝ => inner ℝ W c - z) hsmul
+      _ = 0 := by simp only [hself, mul_one, sub_self]
   change inner ℝ
     ((1 / 2 : ℝ) • (W - (inner ℝ W c) • c)) c = 0
   calc
