@@ -84,7 +84,7 @@ local instance p4Q2PZ37AJT_probability : IsProbabilityMeasure muT := by
 /-- The exact right spatial Wilson halfweight, as an ORIGINAL continuous
 function on the actual spatial link-configuration compact space. -/
 def p4Q2PZ37AJT_originalRightHalfweightContinuous
-    (beta : ℝ) : CfgT →��� ℝ :=
+    (beta : ℝ) : ContinuousMap CfgT ℝ :=
   ⟨(fun B : CfgT => Real.exp ((beta / 2) * WT B)),
     Real.continuous_exp.comp
       (continuous_const.mul
@@ -125,7 +125,7 @@ theorem p4Q2PZ37AJT_originalRightHalfweightL2_norm_le
   have h :=
     Lp.norm_le_of_ae_bound (f := w) (Real.exp_pos _).le hBound
   simpa only [measureUnivNNReal, measure_univ, ENNReal.toNNReal_one,
-    NNReal.coe_one, one_rpow, one_mul] using h
+    NNReal.coe_one, Real.one_rpow, one_mul] using h
 
 /-- Original true physical L² source-minus-normalized-transfer and its
 continuous Haar representative are almost everywhere the SAME object.
@@ -163,7 +163,7 @@ theorem p4Q2PZ37AJT_originalOneStepDefect_ae
     [Lp.coeFn_sub (fT : Lp ℝ 2 muT)
       ((ST beta hbeta fT : PhysT) : Lp ℝ 2 muT),
       hSource, hTransfer'] with B hSub hSrc hT
-  rw [hSub, hSrc, hT]
+  rw [hSub, Pi.sub_apply, hSrc, hT]
 
 /-- AJS genuine weighted integral is the exact scalar product in
 the true original physical-Haar L² carrier, not a surrogate norm. -/
@@ -184,7 +184,7 @@ theorem p4Q2PZ37AJT_originalWeightedDefect_eq_realL2_inner
   filter_upwards [hw, hd] with B hWB hDB
   rw [hWB, hDB]
   simp only [real_inner_eq_re_inner (𝕜 := ℝ),
-    RCLike.inner_apply, RCLike.re_to_real, conj_trivial]
+    RCLike.inner_apply, RCLike.re_to_real, conj_trivial] <;> ring
 
 /-- Duality bridge: the genuine AJS weighted deficit cannot exceed the
 physical Haar-L² one-step defect times the ACTUAL halfweight norm. -/
@@ -236,7 +236,11 @@ theorem p4Q2PZ37AJT_originalPhysicalDefect_ge_explicitVariance
   have hUpper :=
     p4Q2PZ37AJT_originalWeightedDefect_le_exp_mul_physicalDefect
       H beta hbeta.le
-  exact (div_le_iff₀ (Real.exp_pos _)).2 (hLower.trans hUpper)
+  have hUpper' :
+      DwT beta hbeta.le ≤
+        ‖fT - ST beta hbeta.le fT‖ * Real.exp (beta * pT) := by
+    simpa only [mul_comm] using hUpper
+  exact (div_le_iff₀ (Real.exp_pos _)).2 (hLower.trans hUpper')
 
 /-- Explicit RATIONAL finite-power source witness v_H =
 (3*p_H/8)^2 (1/384)^(4*n_H), inherited without alteration from AIK.
@@ -256,7 +260,7 @@ end GroundStatePosteriorJoint
 end
 end MGAP4D.MathlibAnalytic
 
-/-! The ten newly declared statements are separately kernel-axiom audited. -/
+/-! The nine newly declared statements are separately kernel-axiom audited. -/
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AJT_originalRightHalfweightContinuous
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AJT_originalRightHalfweightL2
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AJT_originalRightHalfweightL2_ae
