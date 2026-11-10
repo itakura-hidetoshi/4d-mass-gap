@@ -4501,3 +4501,11 @@ Exact-source CI [#42704315781](https://github.com/itakura-hidetoshi/4d-mass-gap/
 **OPEN／AJL:** 真正元Wilson物理で‖c−Sc‖、2つの有限冪偏差norm、‖Qᗮf₀‖の数値的に十分強い独立上界と、その和の厳密AJA証明書未満の証人が未構成。一般のn→∞極限のみから追加top残余の消失を結論してはならない。top一次元性・無条件励起sector非零・体積一様coercivity・Hamiltonian spectral gap・連続体Yang–Mills mass gapは引き続きOPEN。固定Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6、append-only／tighten-only／overwrite-forbidden／same-root。
 
 **AJK統合後push CI独立受領（追記）:** [#42741398639](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42741398639) completed／SUCCESS。正式merge `dea4a9117fe257ce4f490ae5606a451cb7473a83` で11,425／11,425、全4宣言公理は標準3のみ、変更warning/error0、sorryAxなし。completion receiptの `event=push exact_sha` は同一merge commitを指す。厳密AJA予算と4D Yang–Mills mass gapは未証明のまま維持する。
+
+## P4-Q2-PZ37AJL — 全top極限と真正二残余の有限冪漸近（2026-11-10、定理MERGED）
+
+**CLOSED（Lean形式証明）:** [定理PR #6610](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6610) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AJL_verified_20261110.md)。元のWilson正規化transfer SとGauss-law実Hilbert、全top正準射影Q、Haar定数単位c、元中心化ZW源f₀、選択top Ωを保持し、各固定有限H・β>0で **lim‖Sⁿ⁺¹c−⟨c,Ω⟩Ω‖=‖rᶜ‖** と **lim‖Sⁿ⁺¹f₀−⟨f₀,Ω⟩Ω‖=‖rᶠ‖**、各二乗ノルム版をLean4で形式証明。rᶜ（定数側）とrᶠ（元ZW源側）を混同しない。極限の存在は証明済みだが、その値0または小ささは未認証。
+
+新規Lean1件+207行・6宣言、元ソース削除0。初回 [#42743082760](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42743082760) FAILUREは `open Filter` 欠落とその連鎖エラー。定理条件を変更せず修正後 [#42743773415](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42743773415) は11,426／11,426 SUCCESS、公理監査6／6標準3公理のみ、error/warning0、sorryAxなし、独立receipt SUCCESS。source `49a7d20aff1483e84129e40bfb6b3dae64383732`、formal merge `a2fc5d9f25d8e551364812d2375fbb59bf8ee636`、ファイル差分0。push CIは独立観測まで保留。
+
+**OPEN／AJM:** 既証明の全topと選択Ωの相違から、元AJA厳密予算を成立させるための必要条件・不可能性の証明書を研究する。有限n証人、追加top残余のゼロ・十分小さい上界、体積一様coercivity、Hamiltonian gap、連続体Yang–Mills mass gapはOPEN。append-only／tighten-only／overwrite-forbidden／same-root、固定Lean/mathlib。
