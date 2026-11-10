@@ -4863,3 +4863,10 @@ AJH/AJI/AJF/AJMの全top正射影と元Wilson冪を使用し、`‖S^n x−⟨x,
 [Lean定理PR #6628](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6628) **MERGED**。修正版exact-source [CI #42904188256](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42904188256) completed／SUCCESS、11,430/11,430、2定義＋5定理すべて標準3公理のみ、sorryAxなし、変更warning/error0、独立receipt SUCCESS。初回CI #42902166859の巨大Wilson定義whnf heartbeat超過を、新規leafの型付き局所表現と局所ring証明で解消した。formal squash `57cbb9c8dc338e54014bb2748bff1cc75781cf17`、認証source・統合後Lean Git blobは同一 `124591833461c10b50566cbb49650f98f764029a`。
 
 真正中心化ZW元源の `D_n=‖Sⁿf₀−⟨f₀,Ω⟩Ω‖²`、`q=‖R‖<1`、真正追加top残余二乗`r²`について、`L_n=(D_(n+2)−q²D_(n+1))/(1−q²)` を定義し、`L_n≤r²≤D_(n+2)`と**上下両端のr²への収束**を形式証明。元AJA厳密小／大予算は各々独立に仮定された場合に限り、やがて有限の十分判定／必要障害へ反映される。等号境界、具体的数値証人、追加top残余の大小・消失、top一次元性、無条件励起非零、H一様coercivity、Hamiltonian gap、4D continuum mass gapは**OPEN**。[正式記録](docs/proofs/P4-Q2-PZ37AJP_verified_20261111.md)。統合後push CI #42905294183は完了・受領再認証待ち。
+
+
+### P4-Q2-PZ37AJS — 真正元Wilson重み付き一時点欠損の独立下界（2026-11-11）
+
+[定理PR #6633](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6633) はMERGED。認証source `59c5a9759f60f043204dc406d0d021d7654ee3cf`、[exact-source CI #42917279603](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42917279603) completed/SUCCESS（11,433/11,433、6/6標準3公理、sorryAxなし、変更warning/error0、独立receipt SUCCESS）。元定理formal squash `8295e64a19cacb9d96945a2d5f603deed1ca314a`、source/merge tree `64b050a125274b767c2ca7bd860a1abe2056a230` 一致、元Lean blob `de658374cf76f6a934640317f084d4a214a5d67c` 一致。新規Lean1ファイル263行・既存ファイル変更削除0。
+
+AJQ正源半重みHaar積分とAIG真正負Wilson転送平均を接続し、`D_w=∫e^(β W_H/2)(f₀−T_H f₀/||P_H||)dμ_H` について `D_w≥βV_H+||P_H||⁻¹β Z_cross e^(−βp_H)V_H>0` と、AHN真正Haar箱から `D_w≥β(3p_H/8)²κ(1/96)^card(Link_H)` を形式証明。**これは重み付き実数積分の下界であり、真正物理Hilbertの`||f₀−S_Hf₀||`下界ではない。** L²双対評価、AJA予算との厳密比較、具体的有限冪証人、転送後励起sector非零、top一次元性、H一様coercivity、Hamiltonian gap、連続体4D mass gapはOPEN。[正式記録](docs/proofs/P4-Q2-PZ37AJS_verified_20261111.md)。統合後push CI #42918264258は独立受領待ち。固定pin・元物理定義・root不変更、append-only／tighten-only／overwrite-forbidden／same-root。
