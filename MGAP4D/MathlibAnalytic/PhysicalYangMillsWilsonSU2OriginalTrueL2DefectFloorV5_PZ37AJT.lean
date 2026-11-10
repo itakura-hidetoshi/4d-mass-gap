@@ -184,7 +184,7 @@ theorem p4Q2PZ37AJT_originalWeightedDefect_eq_realL2_inner
   filter_upwards [hw, hd] with B hWB hDB
   rw [hWB, hDB]
   simp only [real_inner_eq_re_inner (𝕜 := ℝ),
-    RCLike.inner_apply, RCLike.re_to_real, conj_trivial] <;> ring
+    RCLike.inner_apply, RCLike.re_to_real, conj_trivial]; ring
 
 /-- Duality bridge: the genuine AJS weighted deficit cannot exceed the
 physical Haar-L² one-step defect times the ACTUAL halfweight norm. -/
