@@ -4828,3 +4828,12 @@ Exact-source [#42579467910](https://github.com/itakura-hidetoshi/4d-mass-gap/act
 **OPEN／AJM:** 選択Ωを引いた冪極限が残余ノルムへ収束するという結果を、残余消失や数値的小ささへ飛躍させない。元AJA厳密予算が不可能となる必要障害を検討する。無条件励起sector非零性、H一様coercivity、Hamiltonian spectral gap、連続体4D mass gapは未認証。append-only／tighten-only／overwrite-forbidden／same-root、固定Lean v4.30.0-rc2・mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6。
 
 **AJL統合後push独立認証（追記）:** [#42755310628](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42755310628) completed／SUCCESS。定理merge `a2fc5d9f25d8e551364812d2375fbb59bf8ee636` のexact pushで11,426／11,426 Lean依存閉包SUCCESS、AJL6／6宣言の実公理は標準3のみ、変更warning/error0、sorryAxなし、独立receiptのevent=pushとexact_shaが一致。先行の「push CI別途認証」を追認した。AJA厳密予算とmass gapは依然OPEN。
+
+
+### P4-Q2-PZ37AJM — 元Wilson有限冪の二側残余評価とAJA予算の必要障害（Lean4認証・統合済み、2026-11-10）
+
+[定理PR #6615](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6615) はMERGED、正式定理merge `0ebbab58cae7f42043f61392dba40020380df37d`。新規Lean leaf317行・7宣言／7公理監査。修正後source `eeee78092d89093d63f8d9d8c0436b7f0c59a39e` の[CI #42757780577](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42757780577)はcompleted／SUCCESS、11,427／11,427、標準3公理のみ、sorryAxなし、変更warning/error0。独立exact-head receiptもSUCCESS、sourceとmergeのLean Git blobは `be7824ea909751b81bf8c1accb1ff8391bf84a23` で一致。
+
+AJI/AJKの元Wilson冪・全top射影誤差から、固定H・β>0、n>0の選択top偏差`dₙ(x)`と追加top残余`r(x)`に `|dₙ(x)−r(x)|≤‖R‖ⁿ‖Q⊥x‖` が成り立つことを形式証明。Haar定数側は真正(I−S)c欠陥のtail、中心化ZW源側は独立の直交source tailを使う。源の追加top残余が元AJA証明書の予算以上なら、全top射影が予算未満という**厳密小条件は不可能**。また十分な有限冪下界とtail評価による条件付き否定判定も形式化した。数値的な条件の成立、残余ゼロ、top一次元性、無条件励起、H一様coercivityと4D Yang–Mills mass gapは**OPEN**。
+
+[正式検証記録](docs/proofs/P4-Q2-PZ37AJM_verified_20261110.md)に初回CI #42757038071の加法不等式のLean順序不一致と3箇所修正を保存。定理統合後push CI #42758364446の独立完成認証は追記まで保留。Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6、元Wilson物理定義とrootは不変更。append-only／tighten-only／overwrite-forbidden／same-root。
