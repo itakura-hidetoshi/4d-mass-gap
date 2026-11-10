@@ -21,6 +21,7 @@ is inferred from finite-volume convergence.
 namespace MGAP4D.MathlibAnalytic
 
 open MeasureTheory
+open Filter
 open scoped InnerProductSpace Topology Classical ENNReal
 
 noncomputable section
