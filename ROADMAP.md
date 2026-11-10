@@ -5148,3 +5148,5 @@ Exact-source CI [#42704315781](https://github.com/itakura-hidetoshi/4d-mass-gap/
 新規Lean1件+207行・6宣言、元ソース削除0。初回 [#42743082760](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42743082760) FAILUREは `open Filter` 欠落とその連鎖エラー。定理条件を変更せず修正後 [#42743773415](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42743773415) は11,426／11,426 SUCCESS、公理監査6／6標準3公理のみ、error/warning0、sorryAxなし、独立receipt SUCCESS。source `49a7d20aff1483e84129e40bfb6b3dae64383732`、formal merge `a2fc5d9f25d8e551364812d2375fbb59bf8ee636`、ファイル差分0。push CIは独立観測まで保留。
 
 **OPEN／AJM:** 既証明の全topと選択Ωの相違から、元AJA厳密予算を成立させるための必要条件・不可能性の証明書を研究する。有限n証人、追加top残余のゼロ・十分小さい上界、体積一様coercivity、Hamiltonian gap、連続体Yang–Mills mass gapはOPEN。append-only／tighten-only／overwrite-forbidden／same-root、固定Lean/mathlib。
+
+**AJL統合後push CI独立受領（追記）:** [#42755310628](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42755310628) completed／SUCCESS。正式merge `a2fc5d9f25d8e551364812d2375fbb59bf8ee636`、11,426／11,426、6／6実公理は標準3のみ、変更warning/error0、新規sorryAxなし。completion receiptは `event=push exact_sha=a2fc5d9f25d8e551364812d2375fbb59bf8ee636` を確認。二種類の追加top残余の小ささ、厳密AJA予算、4D Yang–Mills mass gapは未証明。
