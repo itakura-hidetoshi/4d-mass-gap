@@ -4461,6 +4461,6 @@ Exact-source [#42579467910](https://github.com/itakura-hidetoshi/4d-mass-gap/act
 
 **‖rᶜ‖≤‖Sⁿc−⟨c,Ω⟩Ω‖+‖R‖ⁿ(‖c−Sc‖/(1−‖R‖))**、**‖rᶠ‖≤‖Sⁿf₀−⟨f₀,Ω⟩Ω‖+‖R‖ⁿ‖Qᗮf₀‖**。AJI・AJJの既証明の真の固定H,β全top評価を再利用し、追加top消滅・top一次元性・H一様gapを仮定しない。**右辺の実際の小ささ、AJA厳密予算の有限n証人は未証明**。
 
-新規Lean1件190行／4宣言、既存ソース変更・削除0。初回 [#42731583927](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42731583927) FAILUREは68／101行の\`add_le_add_left\`に対する加法順不一致。仮定・定理文を不変更で\`add_le_add_right\`へ修正。修正Exact-source [#42740594286](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42740594286) は11,425／11,425 SUCCESS、4／4標準3公理のみ、sorryAxなし、変更warning/error0、独立receipt SUCCESS。source e822c2118f15d3a4a8b912a6d60826829f4332b9、formal merge dea4a9117fe257ce4f490ae5606a451cb7473a83。source/mergeファイル差分0。統合後push CIは別途認証対象。
+新規Lean1件190行／4宣言、既存ソース変更・削除0。初回 [#42731583927](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42731583927) FAILUREは68／101行の`add_le_add_left`に対する加法順不一致。仮定・定理文を不変更で`add_le_add_right`へ修正。修正Exact-source [#42740594286](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42740594286) は11,425／11,425 SUCCESS、4／4標準3公理のみ、sorryAxなし、変更warning/error0、独立receipt SUCCESS。source e822c2118f15d3a4a8b912a6d60826829f4332b9、formal merge dea4a9117fe257ce4f490ae5606a451cb7473a83。source/mergeファイル差分0。統合後push CIは別途認証対象。
 
 **OPEN／AJL:** 元物理の有限冪normや(I−S)cの非自明な定量評価を実際に構成できるか、全topへの漸近と追加top残余の非消滅を別々に検証する。AJA予算、無条件励起非零、H一様coercivity、Hamiltonian gap、4D質量ギャップはOPEN。append-only／tighten-only／overwrite-forbidden／same-root、固定Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6。
