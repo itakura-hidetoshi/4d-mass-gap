@@ -139,13 +139,27 @@ theorem p4Q2PZ37AJP_originalSource_twoStep_posterior_interval
   have hcoef : 0 < 1 - ‖RP beta hbeta.le‖ ^ 2 := by
     have hnonneg : 0 ≤ ‖RP beta hbeta.le‖ := norm_nonneg (RP beta hbeta.le)
     nlinarith
+  let S : PhysP →L[ℝ] PhysP := SP beta hbeta.le
+  let omega : PhysP := OmegaP beta hbeta.le
+  let R := RP beta hbeta.le
   constructor
   · unfold p4Q2PZ37AJP_originalSourceTwoStepLower
     apply (div_le_iff₀ hcoef).2
-    simpa [p4Q2PZ37AJP_originalSourceSelectedSquare, Nat.add_assoc,
-      mul_comm] using hbracket.1
-  · simpa [p4Q2PZ37AJP_originalSourceSelectedSquare, Nat.add_assoc]
-      using hbracket.2
+    change
+      ‖(S ^ (n + 2)) fP - (inner ℝ fP omega) • omega‖ ^ 2 -
+          ‖R‖ ^ 2 * ‖(S ^ (n + 1)) fP -
+            (inner ℝ fP omega) • omega‖ ^ 2 ≤
+        ‖p4Q2PZ37AJF_originalSourceExtraTopComponent H beta hbeta‖ ^ 2 *
+          (1 - ‖R‖ ^ 2)
+    calc
+      _ ≤ (1 - ‖R‖ ^ 2) *
+        ‖p4Q2PZ37AJF_originalSourceExtraTopComponent H beta hbeta‖ ^ 2 :=
+          hbracket.1
+      _ = _ := by ring
+  · change
+      ‖p4Q2PZ37AJF_originalSourceExtraTopComponent H beta hbeta‖ ^ 2 ≤
+        ‖(S ^ (n + 2)) fP - (inner ℝ fP omega) • omega‖ ^ 2
+    exact hbracket.2
 
 /-- Unlike an independent numerical witness, this is an exact limiting
 IDENTIFICATION: the lower two-step endpoint converges to the same
