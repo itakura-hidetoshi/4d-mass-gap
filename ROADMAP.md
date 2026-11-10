@@ -4483,3 +4483,11 @@ Exact-source CI [#42704315781](https://github.com/itakura-hidetoshi/4d-mass-gap/
 **OPEN／AJJ:** 元Wilson (I−S)c 残差と既証明 q<1 によってHaar定数cから**全top空間への距離**に証明可能な上界が得られるかを研究する。選択Ωとの差、topの追加多重度、追加top源残余を互いに混同しない。真のAJA有限反復証人、無条件励起sector非零、H一様正下界、全物理Hilbert coercivity、Hamiltonian spectral gap、4D Yang–Mills continuum mass gapはOPEN。append-only／tighten-only／overwrite-forbidden／same-root、固定Lean v4.30.0-rc2、mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6。
 
 **AJI統合後push再認証（追記）:** [#42711612792](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42711612792) completed／SUCCESS、11,423／11,423、9／9実公理は標準3のみ、変更warning/error0、sorryAxなし、独立receipt SUCCESS。strict AJA budgetの無条件成立には未到達。
+
+## P4-Q2-PZ37AJJ — 真正Wilson Haar定数残差と選択top多重度の障害分解（2026-11-10、Lean形式認証・定理MERGED）
+
+**CLOSED（条件付き形式証明）:** [定理PR #6602](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6602) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AJJ_verified_20261110.md)。元の正規化Wilson transfer S、全top射影Qとその直交補制限R、Haar定数c、選択単位top Ω、元中心化ZW源 f₀ を不変とする。各固定有限Hとβ>0で既証明の 1−‖R‖>0 から **‖Qᗮc‖≤‖c−Sc‖/(1−‖R‖)** を証明。定数側追加top残余 rᶜ=Qc−⟨c,Ω⟩Ω と源側 rᶠ=Qf₀−⟨f₀,Ω⟩Ω を別個に保ち、**‖Qf₀‖²≤‖f₀‖²[(‖c−Sc‖/(1−‖R‖))²+‖rᶜ‖²]+‖rᶠ‖²** を証明。3寄与の和がAJAの正証明書Cを下回れば直交ZW源非零、という条件付き帰結を形式化。前件の厳密不等式は未証明。
+
+新規Lean leaf391行（13宣言・既存変更削除0）。初回 [CI #42718290328](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42718290328) と第2回 [#42719671153](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42719671153) の算術正規化・add_leの左右の型・norm_nonnegの適用を根拠に修正し、Exact-source [#42720802925](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42720802925) 11,424／11,424 SUCCESS、13／13標準3公理のみ、変更warning/error0、sorryAxなし、completion receipt SUCCESS。source c1c116a2f3de28104b411614e2070de975c321b0、formal merge 2857d5b2a566a28b32f0268333d684d1f24d829d。統合後push CIは独立観測まで保留。
+
+**OPEN／AJK:** ①真正‖c−Sc‖の物理的な実上界、②定数側追加top残余の上界、③ZW源側追加top残余の上界、④その合計と元AJA正Haar-L²証明書の厳密比較。真のtop eigenspaceの一次元性、無条件の励起sector非零性、H一様coercivity、Hamiltonian spectral gap、連続体4D Yang–Mills mass gapは引き続き障害。固定Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6、append-only／tighten-only／overwrite-forbidden／same-root。
