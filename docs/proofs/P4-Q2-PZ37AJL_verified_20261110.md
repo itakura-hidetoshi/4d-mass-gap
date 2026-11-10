@@ -76,3 +76,13 @@ CI completion receiptは原Lean kernel証明とは別種の運用上の確認記
 AJLは**二つの追加top残余が残る正確な極限を同定**したが、それらがゼロか非ゼロか、十分小さいかを決めていない。元Wilsonの固有ベクトル選択と全topの追加多重度を混同できない。AJMでは、有限冪による予算判定の**逆方向の必要条件**、特に追加top残余の大きさが厳密AJA証明書の予算を不可能にするかを調べ、未知の真値をNO_DATAのまま保持する。
 
 元AJA有限冪の厳密数値証人、励起sector無条件非零、体積一様coercivity、Hamiltonian spectral gap、4D連続体Yang–Mills mass gapはOPEN。append-only／tighten-only／overwrite-forbidden／same-root。
+
+## 7. 統合後push CIの独立再観測（追記）
+
+定理PR #6610で正式統合したcommit `a2fc5d9f25d8e551364812d2375fbb59bf8ee636` について、[push CI #42755310628](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42755310628) は **completed／SUCCESS**。GitHub MCPで両ジョブと実ログを独立に確認した。
+
+- `Changed Lean fast check` completed／SUCCESS。Lean依存閉包は **11,426／11,426 SUCCESS**。AJL新規6宣言の実公理出力は `propext`、`Classical.choice`、`Quot.sound` のみ、変更Lean warning/error 0／0、新規`sorryAx`なし。
+- `Publish MCP CI completion receipt` completed／SUCCESS。実ログの受領書は `event=push exact_sha=a2fc5d9f25d8e551364812d2375fbb59bf8ee636 source_result=success run=42755310628 attempt=1`。同一コミットへの `chatgpt-ci-receipt/PR Lean Fast Check` は `state=success`。
+- 第5節の「統合後push CI保留」は当時の観測であり、上の独立再観測により **認証済み**となった。receiptは別個のLean定理ではない。
+
+AJLが同定した二つの追加top残余の極限がゼロ・十分小さいという主張、AJA厳密予算証人、top一次元性、H一様coercivity、Hamiltonian spectral gap、4D連続体mass gapは、いずれもなお **OPEN**。
