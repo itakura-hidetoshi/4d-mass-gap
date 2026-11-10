@@ -4466,3 +4466,11 @@ Exact-source [#42579467910](https://github.com/itakura-hidetoshi/4d-mass-gap/act
 **OPEN／AJL:** 元物理の有限冪normや(I−S)cの非自明な定量評価を実際に構成できるか、全topへの漸近と追加top残余の非消滅を別々に検証する。AJA予算、無条件励起非零、H一様coercivity、Hamiltonian gap、4D質量ギャップはOPEN。append-only／tighten-only／overwrite-forbidden／same-root、固定Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6。
 
 **AJK統合後push独立認証（追記）:** [#42741398639](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42741398639) completed／SUCCESS。正式AJK定理merge `dea4a9117fe257ce4f490ae5606a451cb7473a83` のexact pushで11,425／11,425 Lean依存閉包SUCCESS、4／4実公理は標準3のみ、変更warning/error0、sorryAxなし。独立receiptの `event=push exact_sha` とrunが一致。先行のpush未確認状態を追認したが、厳密AJA予算・H一様gapは依然OPEN。
+
+## P4-Q2-PZ37AJL — 元Wilson有限冪の選択top偏差の正確な極限と二種類の残余（2026-11-10、Lean4形式証明MERGED）
+
+[定理PR #6610](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6610) **MERGED**。[正式記録](docs/proofs/P4-Q2-PZ37AJL_verified_20261110.md)。元の正規化SU(2) Wilson transfer S、全top射影Q、選択top単位Ω、Haar定数cと中心化ZW源f₀を不変更とし、固定H,β>0でのAJI全top冪収束を使って **‖Sⁿ⁺¹c−⟨c,Ω⟩Ω‖→‖rᶜ‖**、**‖Sⁿ⁺¹f₀−⟨f₀,Ω⟩Ω‖→‖rᶠ‖**、各二乗ノルムの収束もLean4で証明。rᶜ=Qc−⟨c,Ω⟩Ωとrᶠ=Qf₀−⟨f₀,Ω⟩Ωは、既存AJJとAJFの**別個の追加top残余**である。極限が0となることは**未証明**。
+
+新規Lean leaf1件207行／6宣言・既存削除0。初回 [CI #42743082760](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42743082760) FAILUREは `open Filter` 欠落による `Tendsto` 未認識および後続の型束縛連鎖。Lean定理文・物理定義を不変更で1行追加。修正source `49a7d20aff1483e84129e40bfb6b3dae64383732` の [Exact-source #42743773415](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42743773415) は11,426／11,426 SUCCESS、全6宣言の公理は標準3のみ、変更warning/error0、sorryAxなし、独立receipt SUCCESS。formal merge `a2fc5d9f25d8e551364812d2375fbb59bf8ee636`、source/mergeファイル差分0。統合後push CIは別途認証。
+
+**OPEN／AJM:** 選択Ωを引いた冪極限が残余ノルムへ収束するという結果を、残余消失や数値的小ささへ飛躍させない。元AJA厳密予算が不可能となる必要障害を検討する。無条件励起sector非零性、H一様coercivity、Hamiltonian spectral gap、連続体4D mass gapは未認証。append-only／tighten-only／overwrite-forbidden／same-root、固定Lean v4.30.0-rc2・mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6。
