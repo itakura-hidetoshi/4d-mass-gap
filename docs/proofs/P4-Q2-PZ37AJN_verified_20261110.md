@@ -69,3 +69,8 @@ r(x)² ≤ d_n(x)² ≤ r(x)² + (‖R‖^n ‖Q⊥x‖)²
 元AJA厳密予算Bに入る具体的有限冪証人、追加top残余の数値的消失・上界、top一次元性、無条件の元ZW励起sector非零性、体積H一様coercivity、Hamiltonian spectral gap、連続体4D Yang–Mills mass gap はなお **OPEN**。局所有限H・βの条件付き関係を全体の物理的結論へ昇格させない。
 
 運用：append-only／tighten-only／overwrite-forbidden／same-root。docs-onlyではStrict Leanを再実行しない。
+
+
+## 7. AJN統合後pushの独立完了認証（2026-11-11 追記）
+
+先行第5節で未認証だった [push CI #42809741159](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42809741159) はGitHub MCP独立再観測で **completed/SUCCESS**。正式AJN定理merge `ef62746f1abbe37f960d6967aa93865fa1e31859` とexact event SHA一致、Lean依存閉包 **11,428/11,428** SUCCESS、7/7公理出力は標準3公理のみ、変更Lean warning/error 0/0、sorryAxなし。二ジョブcompleted/SUCCESS。独立receipt `event=push exact_sha=ef62746f1abbe37f960d6967aa93865fa1e31859 source_result=success run=42809741159 attempt=1`。commit status `chatgpt-ci-receipt/PR Lean Fast Check` はsuccess。第5節のin_progress表記は観測当時の履歴として残す。物理的未証明条件は変化しない。
