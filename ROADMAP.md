@@ -5191,3 +5191,12 @@ AJMの三角型二側誤差帯を正真正銘の元Wilson冪の直交Pythagoras�
 既存AJO二時点上限下限から `L_n≤r²≤D_(n+2)` を示し、真正元ZW源について両端が同一追加top残余二乗に収束することをLean形式証明。真正AJA全top予算の厳密小または厳密大が別途成立した場合のみに、やがて有限二時点判定が存在する。等号境界`B=‖Qf₀‖²`は未決定。
 
 **OPEN／AJQ:** AJA厳密予算の具体的有限冪数値証人、元ZW源追加top残余の独立上界／消失、全top一次元性、無条件励起sector非零、体積H一様coercivity、Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップ。[正式記録](docs/proofs/P4-Q2-PZ37AJP_verified_20261111.md)。統合後push CI #42905294183の独立完了受領は未認証。元の物理定義・固定Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6・root不変更。append-only／tighten-only／overwrite-forbidden／same-root。
+
+
+### P4-Q2-PZ37AJS — original weighted one-step Wilson defect scalar（2026-11-11）
+
+AJS [Lean PR #6633](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6633) MERGED at formal HEAD `8295e64a19cacb9d96945a2d5f603deed1ca314a`. Exact source `59c5a9759f60f043204dc406d0d021d7654ee3cf`, [CI #42917279603](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42917279603) 11,433/11,433 SUCCESS; 6/6 axiom audits only standard 3; no sorryAx, no changed warning/error, independent receipt SUCCESS; same source/merge tree and AJS Lean blob. New 263-line append-only leaf, no changed original Lean.
+
+True original SU(2) Wilson/Haar positive source halfweight integral `J_+≥βV_H` and original negative complete-transfer average `A≤−βZ_cross e^(−βp_H)V_H` yield explicit `D_w=J_+−A/||P_H||≥β V_H + β Z_cross e^(−βp_H) V_H/||P_H||>0`, plus AHN genuine `κ(1/96)` Haar box floor. **D_w is a weighted integral, NOT YET a canonical Hilbert defect-norm floor.** [正式記録](docs/proofs/P4-Q2-PZ37AJS_verified_20261111.md)。統合後push #42918264258は別途独立受領。
+
+**OPEN／次段:** 元Haar連続代表と真正物理Hilbert差`f₀−Sf₀`のL²同一性、bounded original weight + norm-dualityに基づく明示欠損ノルム下界、AJR追加top残余上界への接続、真正AJA厳密予算比較と具体的有限冪証人、top rank-one、転送後励起非零、体積一様coercivity、Hamiltonian gap、4D continuum mass gap。元の物理仮定・固定Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6・root不変更。append-only／tighten-only／overwrite-forbidden／same-root。
