@@ -4857,3 +4857,9 @@ AJH/AJI/AJF/AJMの全top正射影と元Wilson冪を使用し、`‖S^n x−⟨x,
 **AJN統合後push追認（2026-11-11）:** [CI #42809741159](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42809741159) completed/SUCCESS、exact merge `ef62746f1abbe37f960d6967aa93865fa1e31859`、11,428/11,428、7/7標準公理のみ、独立push receipt SUCCESS、変更warning/error0、sorryAxなし。旧「未認証」は当時の履歴として保持。
 
 **AJO定理統合後push独立認証（2026-11-11追記）:** [CI #42897129027](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42897129027) completed/SUCCESS、exact formal merge `c6612ee088e9938dadf1d011b8e0451c28f4bcf8`、11,429/11,429、6/6定理は標準3公理のみ、sorryAxなし、変更Lean warning/error0、独立receipt `event=push exact_sha=c6612ee088e9938dadf1d011b8e0451c28f4bcf8 source_result=success run=42897129027 attempt=1`。元AJA証人と4D質量ギャップはOPEN。
+
+### P4-Q2-PZ37AJP — original Wilson two-step posterior interval asymptotic sharpness（2026-11-11）
+
+[Lean定理PR #6628](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6628) **MERGED**。修正版exact-source [CI #42904188256](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42904188256) completed／SUCCESS、11,430/11,430、2定義＋5定理すべて標準3公理のみ、sorryAxなし、変更warning/error0、独立receipt SUCCESS。初回CI #42902166859の巨大Wilson定義whnf heartbeat超過を、新規leafの型付き局所表現と局所ring証明で解消した。formal squash `57cbb9c8dc338e54014bb2748bff1cc75781cf17`、認証source・統合後Lean Git blobは同一 `124591833461c10b50566cbb49650f98f764029a`。
+
+真正中心化ZW元源の `D_n=‖Sⁿf₀−⟨f₀,Ω⟩Ω‖²`、`q=‖R‖<1`、真正追加top残余二乗`r²`について、`L_n=(D_(n+2)−q²D_(n+1))/(1−q²)` を定義し、`L_n≤r²≤D_(n+2)`と**上下両端のr²への収束**を形式証明。元AJA厳密小／大予算は各々独立に仮定された場合に限り、やがて有限の十分判定／必要障害へ反映される。等号境界、具体的数値証人、追加top残余の大小・消失、top一次元性、無条件励起非零、H一様coercivity、Hamiltonian gap、4D continuum mass gapは**OPEN**。[正式記録](docs/proofs/P4-Q2-PZ37AJP_verified_20261111.md)。統合後push CI #42905294183は完了・受領再認証待ち。
