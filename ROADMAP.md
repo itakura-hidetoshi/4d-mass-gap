@@ -5181,3 +5181,5 @@ AJMの三角型二側誤差帯を正真正銘の元Wilson冪の直交Pythagoras�
 **OPEN／AJP:** 元の二時点量とAJA正予算の具体的証人、追加top残余の独立上界／消失、top一次元性、無条件励起sector非零、H一様coercivity、Hamiltonian spectral gap、連続体4次元Yang–Mills質量ギャップ。固定Lean v4.30.0-rc2、mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6。append-only／tighten-only／overwrite-forbidden／same-root。
 
 **AJN統合後push独立追認（2026-11-11）:** [#42809741159](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42809741159) completed/SUCCESS、merge `ef62746f1abbe37f960d6967aa93865fa1e31859`、11,428/11,428、7/7標準3公理のみ、独立push receipt `event=push exact_sha=ef62746f1abbe37f960d6967aa93865fa1e31859 source_result=success run=42809741159 attempt=1`。以前の未認証表記は履歴のまま残す。
+
+**AJO統合後push独立受領（2026-11-11追記）:** [#42897129027](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42897129027) completed/SUCCESS、formal merge `c6612ee088e9938dadf1d011b8e0451c28f4bcf8` とsourceの厳密一致。11,429/11,429 Lean、6/6定理の公理出力は標準3のみ、sorryAxなし、変更warning/error0、独立receipt `event=push exact_sha=c6612ee088e9938dadf1d011b8e0451c28f4bcf8 source_result=success run=42897129027 attempt=1`。旧未認証状態は履歴として保存。H一様coercivity、Hamiltonian gap、連続体4D Yang–Mills質量ギャップはOPEN。
