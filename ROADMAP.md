@@ -5150,3 +5150,12 @@ Exact-source CI [#42704315781](https://github.com/itakura-hidetoshi/4d-mass-gap/
 **OPEN／AJM:** 既証明の全topと選択Ωの相違から、元AJA厳密予算を成立させるための必要条件・不可能性の証明書を研究する。有限n証人、追加top残余のゼロ・十分小さい上界、体積一様coercivity、Hamiltonian gap、連続体Yang–Mills mass gapはOPEN。append-only／tighten-only／overwrite-forbidden／same-root、固定Lean/mathlib。
 
 **AJL統合後push CI独立受領（追記）:** [#42755310628](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42755310628) completed／SUCCESS。正式merge `a2fc5d9f25d8e551364812d2375fbb59bf8ee636`、11,426／11,426、6／6実公理は標準3のみ、変更warning/error0、新規sorryAxなし。completion receiptは `event=push exact_sha=a2fc5d9f25d8e551364812d2375fbb59bf8ee636` を確認。二種類の追加top残余の小ささ、厳密AJA予算、4D Yang–Mills mass gapは未証明。
+
+
+### P4-Q2-PZ37AJM — finite-power two-sided source test and genuine AJA necessary obstruction (2026-11-10)
+
+AJM定理PR [#6615](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6615) MERGED、merge `0ebbab58cae7f42043f61392dba40020380df37d`。追加Lean317行、7宣言・実公理監査7/7標準3のみ。source `eeee78092d89093d63f8d9d8c0436b7f0c59a39e` のexact-source [CI #42757780577](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42757780577) completed/SUCCESS、11,427/11,427、独立receipt SUCCESS。変更Lean warning/error0、sorryAxなし、source/merge Git blob完全一致（`be7824ea909751b81bf8c1accb1ff8391bf84a23`）。
+
+元SU(2) Wilsonの有限冪選択top偏差と全top追加残余の二側誤差帯を証明。Haar定数の(I−S)c欠陥側と元中心化ZW source側を別々に制御。源の追加top残余（または実証された有限冪下界）が元AJA厳密予算を使い切る場合の**必要障害**を形式化した。これは元AJA予算の成立／不成立や励起非零、質量ギャップの無条件証明ではない。[正式記録](docs/proofs/P4-Q2-PZ37AJM_verified_20261110.md)。
+
+**OPEN／AJN:** AJA厳密予算の具体的有限冪証人、追加top源残余の独立数値上下界／ゼロ判定、finite-HからH一様coercivityへの降下条件、Hamiltonian gap、4D Yang–Mills mass gap。AJM統合後push CI #42758364446は別途独立受領まで未認証。元物理定義・pin・root不変更、append-only／tighten-only／overwrite-forbidden／same-root。
