@@ -75,8 +75,23 @@ theorem realHilbert_fullTop_oneStep_defect_norm_le_ajr
     _ ≤ ‖(Fᗮ).starProjection x‖ +
           ‖R‖ * ‖(Fᗮ).starProjection x‖ := by
           rw [hproj]
-          exact add_le_add_left hstep _
+          exact add_le_add_right hstep _
     _ = (1 + ‖R‖) * ‖(Fᗮ).starProjection x‖ := by ring
+
+local notation "GR" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local instance p4Q2PZ37AJR_group : IsTopologicalGroup GR :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37AJR_compact : CompactSpace GR :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37AJR_secondCountable : SecondCountableTopology GR :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37AJR_measurable : MeasurableSpace GR :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37AJR_borel : BorelSpace GR :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37AJR_linkFintype (K : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink K) :=
+  Fintype.ofFinite _
 
 namespace GroundStatePosteriorJoint
 
@@ -171,6 +186,7 @@ theorem p4Q2PZ37AJR_originalSource_extraTop_oneStep_variance_budget
   have hP := F.norm_sq_eq_add_norm_sq_starProjection fR
   simp only [F.starProjection_orthogonal_val] at hP
   rw [p4Q2PZ37AJR_originalSource_norm_sq_eq_HaarVariance H, hFull] at hP
+  rw [F.starProjection_orthogonal_val] at hSq
   change
     (inner ℝ fR (OmegaR beta hbeta.le)) ^ 2 +
       ‖p4Q2PZ37AJF_originalSourceExtraTopComponent H beta hbeta‖ ^ 2 +
