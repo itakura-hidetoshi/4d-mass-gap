@@ -4454,3 +4454,13 @@ Exact-source [#42579467910](https://github.com/itakura-hidetoshi/4d-mass-gap/act
 新規Lean leaf1件391行、13宣言の実公理監査13／13は標準3公理のみ、sorryAxなし、変更warning/error0。初回 [CI #42718290328](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42718290328) と第2回 [#42719671153](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42719671153) の線形算術正規化・加法単調性の辺順・norm_nonneg適用失敗を仮定不変更で修正。最終Exact-source [#42720802925](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42720802925) は11,424／11,424 SUCCESS、独立receipt SUCCESS。認証source c1c116a2f3de28104b411614e2070de975c321b0、統合merge 2857d5b2a566a28b32f0268333d684d1f24d829d。統合後push CIは別途完了認証まで保留。
 
 **OPEN／AJK:** 元Wilson残差‖c−Sc‖、定数側追加top残余‖rᶜ‖²、源側追加top残余‖rᶠ‖²を独立に評価し、AJA証明書との厳密比較を試みる。top一次元性、無条件励起sector非零、H一様coercivity、Hamiltonian spectral gap、連続体4D mass gapは未認証。append-only／tighten-only／overwrite-forbidden／same-root、固定Lean/mathlib維持。
+
+## P4-Q2-PZ37AJK — 真正Wilson有限冪による定数側・ZW源側の追加top残余の別々の上界（2026-11-10、Lean定理MERGED）
+
+[定理PR #6605](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6605) MERGED。[正式証明記録](docs/proofs/P4-Q2-PZ37AJK_verified_20261110.md)。元SU(2) Wilson物理Hilbert、正規化transfer S、全top射影Q、直交補制限R、選択Ω、Haar定数c、真正中心化ZW源f₀を不変更とし、任意のn>0で**定数側残余** rᶜ=Qc−⟨c,Ω⟩Ω と**ZW源側残余** rᶠ=Qf₀−⟨f₀,Ω⟩Ω を別々に評価した。
+
+**‖rᶜ‖≤‖Sⁿc−⟨c,Ω⟩Ω‖+‖R‖ⁿ(‖c−Sc‖/(1−‖R‖))**、**‖rᶠ‖≤‖Sⁿf₀−⟨f₀,Ω⟩Ω‖+‖R‖ⁿ‖Qᗮf₀‖**。AJI・AJJの既証明の真の固定H,β全top評価を再利用し、追加top消滅・top一次元性・H一様gapを仮定しない。**右辺の実際の小ささ、AJA厳密予算の有限n証人は未証明**。
+
+新規Lean1件190行／4宣言、既存ソース変更・削除0。初回 [#42731583927](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42731583927) FAILUREは68／101行の`add_le_add_left`に対する加法順不一致。仮定・定理文を不変更で`add_le_add_right`へ修正。修正Exact-source [#42740594286](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42740594286) は11,425／11,425 SUCCESS、4／4標準3公理のみ、sorryAxなし、変更warning/error0、独立receipt SUCCESS。source e822c2118f15d3a4a8b912a6d60826829f4332b9、formal merge dea4a9117fe257ce4f490ae5606a451cb7473a83。source/mergeファイル差分0。統合後push CIは別途認証対象。
+
+**OPEN／AJL:** 元物理の有限冪normや(I−S)cの非自明な定量評価を実際に構成できるか、全topへの漸近と追加top残余の非消滅を別々に検証する。AJA予算、無条件励起非零、H一様coercivity、Hamiltonian gap、4D質量ギャップはOPEN。append-only／tighten-only／overwrite-forbidden／same-root、固定Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6。
