@@ -4798,3 +4798,11 @@ Exact-source [#42579467910](https://github.com/itakura-hidetoshi/4d-mass-gap/act
 **OPEN／AJJ:** 有限n≥2の厳密AJA証明書を下回る真正物理上界、真空ΩのHaar定数方向偏差Dの上界、追加top残余E、top多重度の評価を維持。H一様coercivity、Hamiltonian gap、4D連続体mass gapへ未証明のまま昇格しない。append-only／tighten-only／overwrite-forbidden／same-root。
 
 **AJI統合後push独立受領（追記）:** [#42711612792](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42711612792) completed／SUCCESS、11,423／11,423、全9宣言の実公理出力は標準3のみ、変更warning/error0、sorryAxなし、独立completion receipt SUCCESS。実際のAJA有限n証人は未構成。
+
+## P4-Q2-PZ37AJJ — 真正Haar定数Wilson残差からの全top距離上界と追加top二残余（2026-11-10、形式証明MERGED）
+
+[定理PR #6602](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6602) MERGED。[正式証明記録](docs/proofs/P4-Q2-PZ37AJJ_verified_20261110.md)。元SU(2) Wilson one-slab、真正物理Hilbert、正規化transfer S、Haar定数単位ベクトルc、全top射影Q、直交補制限R、選択Ωを不変更とし、固定H,βでの既証明‖R‖<1から **‖Qᗮ c‖≤‖c−Sc‖/(1−‖R‖)** をLean4で証明。選択Ωからの定数方向偏差 **D=1−⟨Ω,c⟩²=‖Qᗮc‖²+‖Qc−⟨c,Ω⟩Ω‖²** を厳密分解。AJGの元ZW源f₀に接続し、**‖Qf₀‖²≤‖f₀‖²[(‖c−Sc‖/(1−‖R‖))²+‖rᶜ‖²]+‖rᶠ‖²** を得た（rᶜは定数側、rᶠはZW源側の別々の追加top残余）。**この3項和がAJA正Haar-L²証明書未満という厳密予算は未証明**。Ω一方向の評価を全topと同一視しない。
+
+新規Lean leaf1件391行、13宣言の実公理監査13／13は標準3公理のみ、sorryAxなし、変更warning/error0。初回 [CI #42718290328](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42718290328) と第2回 [#42719671153](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42719671153) の線形算術正規化・加法単調性の辺順・norm_nonneg適用失敗を仮定不変更で修正。最終Exact-source [#42720802925](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42720802925) は11,424／11,424 SUCCESS、独立receipt SUCCESS。認証source c1c116a2f3de28104b411614e2070de975c321b0、統合merge 2857d5b2a566a28b32f0268333d684d1f24d829d。統合後push CIは別途完了認証まで保留。
+
+**OPEN／AJK:** 元Wilson残差‖c−Sc‖、定数側追加top残余‖rᶜ‖²、源側追加top残余‖rᶠ‖²を独立に評価し、AJA証明書との厳密比較を試みる。top一次元性、無条件励起sector非零、H一様coercivity、Hamiltonian spectral gap、連続体4D mass gapは未認証。append-only／tighten-only／overwrite-forbidden／same-root、固定Lean/mathlib維持。
