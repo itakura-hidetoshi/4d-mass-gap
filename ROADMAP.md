@@ -4491,3 +4491,11 @@ Exact-source CI [#42704315781](https://github.com/itakura-hidetoshi/4d-mass-gap/
 新規Lean leaf391行（13宣言・既存変更削除0）。初回 [CI #42718290328](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42718290328) と第2回 [#42719671153](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42719671153) の算術正規化・add_leの左右の型・norm_nonnegの適用を根拠に修正し、Exact-source [#42720802925](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42720802925) 11,424／11,424 SUCCESS、13／13標準3公理のみ、変更warning/error0、sorryAxなし、completion receipt SUCCESS。source c1c116a2f3de28104b411614e2070de975c321b0、formal merge 2857d5b2a566a28b32f0268333d684d1f24d829d。統合後push CIは独立観測まで保留。
 
 **OPEN／AJK:** ①真正‖c−Sc‖の物理的な実上界、②定数側追加top残余の上界、③ZW源側追加top残余の上界、④その合計と元AJA正Haar-L²証明書の厳密比較。真のtop eigenspaceの一次元性、無条件の励起sector非零性、H一様coercivity、Hamiltonian spectral gap、連続体4D Yang–Mills mass gapは引き続き障害。固定Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6、append-only／tighten-only／overwrite-forbidden／same-root。
+
+## P4-Q2-PZ37AJK — 真正Wilson有限冪の二種類の追加top残余上界（2026-11-10、定理形式認証・MERGED）
+
+**CLOSED（証明済みの条件付き評価）:** [定理PR #6605](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6605) MERGED。[形式証明記録](docs/proofs/P4-Q2-PZ37AJK_verified_20261110.md)。真正SU2 Wilson正規化transfer Sの各固定H,β>0での全top射影Qと直交補制限R、元Haar定数c・中心化ZW源f₀を用い、任意のn>0で **‖rᶜ‖≤‖Sⁿc−α_cΩ‖+‖R‖ⁿ‖c−Sc‖/(1−‖R‖)** および **‖rᶠ‖≤‖Sⁿf₀−α_fΩ‖+‖R‖ⁿ‖Qᗮf₀‖** をLean4で証明。ここでα_c=⟨c,Ω⟩、α_f=⟨f₀,Ω⟩、rᶜ=Qc−α_cΩ、rᶠ=Qf₀−α_fΩ。元の二種類のtop残余は**別の障害**であり、同一視しない。
+
+新規Lean leaf+190行・4宣言、既存変更・削除0。初回CI [#42731583927](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42731583927)の加法不等式の左右順型エラー2件を、全文・上流定理の型署名・実ログをもとに\`add_le_add_right\`へ修正。修正 [#42740594286](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42740594286) exact-source SUCCESS（11,425／11,425、4／4公理は標準3のみ、変更error/warning0、sorryAxなし、独立receipt SUCCESS）。source e822c2118f15d3a4a8b912a6d60826829f4332b9、merge dea4a9117fe257ce4f490ae5606a451cb7473a83、比較差分0。push CIは完了ログ独立確認まで保留。
+
+**OPEN／AJL:** 真正元Wilson物理で‖c−Sc‖、2つの有限冪偏差norm、‖Qᗮf₀‖の数値的に十分強い独立上界と、その和の厳密AJA証明書未満の証人が未構成。一般のn→∞極限のみから追加top残余の消失を結論してはならない。top一次元性・無条件励起sector非零・体積一様coercivity・Hamiltonian spectral gap・連続体Yang–Mills mass gapは引き続きOPEN。固定Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6、append-only／tighten-only／overwrite-forbidden／same-root。
