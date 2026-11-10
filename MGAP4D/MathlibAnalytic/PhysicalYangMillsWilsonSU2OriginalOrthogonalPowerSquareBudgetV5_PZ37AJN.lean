@@ -51,7 +51,7 @@ theorem realHilbert_fixedSubspace_selectedPower_sq_split_ajn
     F.sub_mem (F.starProjection_apply_mem x) (F.smul_mem _ homega)
   have hCross : inner ℝ a b = 0 := by
     calc
-      inner ℝ a b = inner ℝ b a := real_inner_comm a b
+      inner ℝ a b = inner ℝ b a := (real_inner_comm a b).symm
       _ = inner ℝ ((S ^ n) x) a - inner ℝ (F.starProjection x) a := by
         dsimp [b]
         rw [inner_sub_left]
@@ -118,7 +118,7 @@ theorem realHilbert_fullTop_selectedPower_sq_interval_ajn
   · rw [hSplit]
     exact le_add_of_nonneg_right (sq_nonneg _)
   · rw [hSplit]
-    exact add_le_add_left hTailSq _
+    exact add_le_add_right hTailSq _
 
 namespace GroundStatePosteriorJoint
 
@@ -150,6 +150,16 @@ local instance p4Q2PZ37AJN_physicalComplete (K : ℕ) :
       (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule K 2) :=
   (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule_isClosed
     K 2).completeSpace_coe
+
+/-- The unchanged original finite-H top space is closed, hence complete,
+and thus admits the fixed-mathlib orthogonal projection. -/
+local instance p4Q2PZ37AJN_topComplete
+    (K : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta) :
+    CompleteSpace
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
+        K 2 (by norm_num) beta hbeta) :=
+  (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace_isClosed
+    K 2 (by norm_num) beta hbeta).completeSpace_coe
 
 /-- ORIGINAL Haar constant; exact squared finite-power Pythagoras, with
 its own extra-top residual and genuine orthogonal Wilson power. -/
