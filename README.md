@@ -4840,3 +4840,10 @@ AJI/AJKの元Wilson冪・全top射影誤差から、固定H・β>0、n>0の選�
 
 
 **AJM統合後push独立認証（追記、2026-11-10）:** [#42758364446](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42758364446) completed／SUCCESS。定理merge `0ebbab58cae7f42043f61392dba40020380df37d` のexact pushで11,427／11,427 Lean依存閉包SUCCESS、AJM新規7／7宣言は標準3公理のみ、変更Lean warning/error0、新規sorryAxなし。二ジョブSUCCESS、独立receipt `event=push exact_sha=0ebbab58cae7f42043f61392dba40020380df37d source_result=success run=42758364446`。先行の「push未認証」は歴史的記録として残し、追記で認証確定。元AJA厳密予算と4D mass gapはOPEN。
+
+
+### P4-Q2-PZ37AJN — 元Wilson冪の厳密直交二乗分解とAJA条件付き証明書（2026-11-10）
+
+[定理PR #6620](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6620) **MERGED**。新規Lean leaf323行、7宣言・7件の核公理監査、元の物理定義・固定Lean/mathlib・root不変更。初回CI #42760340150で4件のLean elaboration error（`real_inner_comm`等式方向、`add_le_add_left`位置、元top空間の`CompleteSpace`局所インスタンス不足2件）を全文・imports・固定APIから修正。修正source `47f5a1aa4e3b80f9113204d8252042deffd090b6` の[CI #42805725280](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42805725280) はcompleted／SUCCESS、**11,428／11,428**、7／7宣言は標準3公理のみ、sorryAxなし、変更warning/error0、独立exact-head receipt SUCCESS。正式merge `ef62746f1abbe37f960d6967aa93865fa1e31859` は認証sourceと同一Lean Git blob `40dd45d72282ca0743e4f36e0a33cc37fd34f2bd`。
+
+AJH/AJI/AJF/AJMの全top正射影と元Wilson冪を使用し、`‖S^n x−⟨x,Ω⟩Ω‖²=‖Qx−⟨x,Ω⟩Ω‖²+‖S^n x−Qx‖²` を一般実Hilbertと真正Haar定数・元中心化ZW源で形式証明。元AJA厳密予算に対し、有限冪観測による**条件付き**十分条件と平方tailを含む必要障害を証明。数値的証人は未提出であり、追加top残余の消失、top一次元性、H一様coercivity、Hamiltonian gap、4次元連続体Yang–Mills mass gapは依然OPEN。[正式証明記録](docs/proofs/P4-Q2-PZ37AJN_verified_20261110.md)。定理統合後push CI #42809741159の独立認証は別途追記。append-only／tighten-only／overwrite-forbidden／same-root。
