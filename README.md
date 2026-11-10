@@ -4837,3 +4837,6 @@ Exact-source [#42579467910](https://github.com/itakura-hidetoshi/4d-mass-gap/act
 AJI/AJKの元Wilson冪・全top射影誤差から、固定H・β>0、n>0の選択top偏差`dₙ(x)`と追加top残余`r(x)`に `|dₙ(x)−r(x)|≤‖R‖ⁿ‖Q⊥x‖` が成り立つことを形式証明。Haar定数側は真正(I−S)c欠陥のtail、中心化ZW源側は独立の直交source tailを使う。源の追加top残余が元AJA証明書の予算以上なら、全top射影が予算未満という**厳密小条件は不可能**。また十分な有限冪下界とtail評価による条件付き否定判定も形式化した。数値的な条件の成立、残余ゼロ、top一次元性、無条件励起、H一様coercivityと4D Yang–Mills mass gapは**OPEN**。
 
 [正式検証記録](docs/proofs/P4-Q2-PZ37AJM_verified_20261110.md)に初回CI #42757038071の加法不等式のLean順序不一致と3箇所修正を保存。定理統合後push CI #42758364446の独立完成認証は追記まで保留。Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6、元Wilson物理定義とrootは不変更。append-only／tighten-only／overwrite-forbidden／same-root。
+
+
+**AJM統合後push独立認証（追記、2026-11-10）:** [#42758364446](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42758364446) completed／SUCCESS。定理merge `0ebbab58cae7f42043f61392dba40020380df37d` のexact pushで11,427／11,427 Lean依存閉包SUCCESS、AJM新規7／7宣言は標準3公理のみ、変更Lean warning/error0、新規sorryAxなし。二ジョブSUCCESS、独立receipt `event=push exact_sha=0ebbab58cae7f42043f61392dba40020380df37d source_result=success run=42758364446`。先行の「push未認証」は歴史的記録として残し、追記で認証確定。元AJA厳密予算と4D mass gapはOPEN。

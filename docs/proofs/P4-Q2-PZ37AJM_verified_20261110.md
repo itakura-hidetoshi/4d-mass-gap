@@ -66,3 +66,13 @@ AJI/AJJ/AJK/AJLで認証した `‖R‖<1`、全top強収束、元Wilson冪の�
 元AJAの厳密予算を満たす具体的有限冪証人、追加top残余の数値的な大小または消失、全top一次元性、無条件の真正励起sector非零性、体積Hに一様な強制性とHamiltonian spectral gap、連続体4D Yang–Mills質量ギャップはいずれも**OPEN**。条件付き不可能性定理を質量ギャップ問題の不可能性へ拡大解釈しない。
 
 運用はappend-only／tighten-only／overwrite-forbidden／same-root。文書を追加するだけでLean再検証を不要に実行せず、docs-only Strict LeanはSKIPPEDのはずである（CI結果とは区別）。 
+
+## 7. 統合後push CIの独立完了認証（追記）
+
+定理merge `0ebbab58cae7f42043f61392dba40020380df37d` に対する [push CI #42758364446](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42758364446) は **completed／SUCCESS**。GitHub MCPで実行イベント、二つのジョブの完了、Lean実ログ、公理監査の7出力、独立completion receipt、GitHub commit status を再観測した。
+
+- `Changed Lean fast check`: completed／SUCCESS。Lean依存閉包 **11,427／11,427 SUCCESS**。7宣言の実公理監査はすべて標準の `propext`、`Classical.choice`、`Quot.sound` のみ、新規 `sorryAx` なし、変更Lean warning/error 0／0。
+- `Publish MCP CI completion receipt`: completed／SUCCESS。実ログ `event=push exact_sha=0ebbab58cae7f42043f61392dba40020380df37d source_result=success run=42758364446 attempt=1`。同コミットの `chatgpt-ci-receipt/PR Lean Fast Check` は `state=success`。
+- 第5節の「統合後push CI未認証」は当時の観測を保存した履歴であり、この追記で**独立再認証済み**に更新する。受領書はLean定理ではない。
+
+依然として元AJA厳密予算証人、残余ゼロ・大小、top一次元性、無条件励起sector非零性、H一様coercivity、Hamiltonian gap、4次元連続体Yang–Mills質量ギャップは **OPEN**。
