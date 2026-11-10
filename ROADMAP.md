@@ -5183,3 +5183,11 @@ AJMの三角型二側誤差帯を正真正銘の元Wilson冪の直交Pythagoras�
 **AJN統合後push独立追認（2026-11-11）:** [#42809741159](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42809741159) completed/SUCCESS、merge `ef62746f1abbe37f960d6967aa93865fa1e31859`、11,428/11,428、7/7標準3公理のみ、独立push receipt `event=push exact_sha=ef62746f1abbe37f960d6967aa93865fa1e31859 source_result=success run=42809741159 attempt=1`。以前の未認証表記は履歴のまま残す。
 
 **AJO統合後push独立受領（2026-11-11追記）:** [#42897129027](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42897129027) completed/SUCCESS、formal merge `c6612ee088e9938dadf1d011b8e0451c28f4bcf8` とsourceの厳密一致。11,429/11,429 Lean、6/6定理の公理出力は標準3のみ、sorryAxなし、変更warning/error0、独立receipt `event=push exact_sha=c6612ee088e9938dadf1d011b8e0451c28f4bcf8 source_result=success run=42897129027 attempt=1`。旧未認証状態は履歴として保存。H一様coercivity、Hamiltonian gap、連続体4D Yang–Mills質量ギャップはOPEN。
+
+### P4-Q2-PZ37AJP — asymptotically sharp original Wilson two-step residual interval（2026-11-11）
+
+[定理PR #6628](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6628) MERGED。正本formal squash `57cbb9c8dc338e54014bb2748bff1cc75781cf17`、新規Lean leaf 304行、2定義・5定理・7公理監査、既存ファイル変更／削除なし。修正source `765126110300d387e9402f688c07ab27bacf3fa3` は[exact-source CI #42904188256](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42904188256) SUCCESS、11,430/11,430、7／7標準3公理のみ、sorryAxなし。初回CI #42902166859の`simpa`定義展開heartbeat超過を、同じ元Wilson作用素・同一仮定・型付き局所`let`＋`change`で解消。
+
+既存AJO二時点上限下限から `L_n≤r²≤D_(n+2)` を示し、真正元ZW源について両端が同一追加top残余二乗に収束することをLean形式証明。真正AJA全top予算の厳密小または厳密大が別途成立した場合のみに、やがて有限二時点判定が存在する。等号境界`B=‖Qf₀‖²`は未決定。
+
+**OPEN／AJQ:** AJA厳密予算の具体的有限冪数値証人、元ZW源追加top残余の独立上界／消失、全top一次元性、無条件励起sector非零、体積H一様coercivity、Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップ。[正式記録](docs/proofs/P4-Q2-PZ37AJP_verified_20261111.md)。統合後push CI #42905294183の独立完了受領は未認証。元の物理定義・固定Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6・root不変更。append-only／tighten-only／overwrite-forbidden／same-root。
