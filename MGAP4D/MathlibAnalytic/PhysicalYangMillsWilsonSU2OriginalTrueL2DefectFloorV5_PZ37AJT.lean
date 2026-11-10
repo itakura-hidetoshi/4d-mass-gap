@@ -124,7 +124,7 @@ theorem p4Q2PZ37AJT_originalRightHalfweightL2_norm_le
     exact p4Q2PZ37AIG_originalRightWeight_le_expCount H beta hbeta B
   have h :=
     Lp.norm_le_of_ae_bound (f := w) (Real.exp_pos _).le hBound
-  simpa only [measureUnivNNReal, measure_univ, ENNReal.one_toNNReal,
+  simpa only [measureUnivNNReal, measure_univ, ENNReal.toNNReal_one,
     NNReal.coe_one, one_rpow, one_mul] using h
 
 /-- Original true physical L² source-minus-normalized-transfer and its
