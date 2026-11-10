@@ -44,6 +44,21 @@ theorem realHilbert_centered_reverseLaplace_scalar_lower_ajq
   simp only [mul_neg, neg_neg, even_two, Even.neg_pow] at h
   nlinarith only [h]
 
+local notation "GQ" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local instance p4Q2PZ37AJQ_group : IsTopologicalGroup GQ :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37AJQ_compact : CompactSpace GQ :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37AJQ_secondCountable : SecondCountableTopology GQ :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37AJQ_measurable : MeasurableSpace GQ :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37AJQ_borel : BorelSpace GQ :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37AJQ_linkFintype (K : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink K) :=
+  Fintype.ofFinite _
+
 namespace GroundStatePosteriorJoint
 
 variable (H : ℕ)
@@ -163,11 +178,19 @@ theorem p4Q2PZ37AJQ_originalPositiveWeightedSourceIntegral_eq
     rw [p4Q2PZ37AGN_originalCenteredContinuous_eq H B]
     ring
   unfold p4Q2PZ37AJQ_originalPositiveWeightedSourceIntegral
-  rw [← integral_const_mul]
-  apply integral_congr_ae
-  filter_upwards with B
-  rw [hFactor B]
-  ring
+    p4Q2PZ37AJQ_originalPositiveSourceLaplace
+  calc
+    (∫ B : CfgQ, Real.exp ((beta / 2) * WQ B) * fcQ B ∂muQ) =
+        ∫ B : CfgQ,
+          Real.exp (beta * (pQ / 2)) *
+            (fcQ B * Real.exp (beta * fcQ B)) ∂muQ := by
+          apply integral_congr_ae
+          filter_upwards with B
+          rw [hFactor B]
+          ring
+    _ = Real.exp (beta * (pQ / 2)) *
+        ∫ B : CfgQ, fcQ B * Real.exp (beta * fcQ B) ∂muQ := by
+          rw [integral_const_mul]
 
 theorem p4Q2PZ37AJQ_originalPositiveWeightedSourceIntegral_pos
     (beta : ℝ) (hbeta : 0 < beta) :
@@ -191,9 +214,13 @@ theorem p4Q2PZ37AJQ_originalSource_not_fixed_all_positive
   intro hFix
   have hRaw : P fQ = ‖P‖ • fQ := by
     change ‖P‖⁻¹ • P fQ = fQ at hFix
-    have h := congrArg (fun x : PhysQ => ‖P‖ • x) hFix
-    rw [smul_smul, mul_inv_cancel₀ hNormNe, one_smul] at h
-    exact h
+    calc
+      P fQ = (‖P‖ * ‖P‖⁻¹) • P fQ := by
+        rw [mul_inv_cancel₀ hNormNe, one_smul]
+      _ = ‖P‖ • (‖P‖⁻¹ • P fQ) := by
+        rw [smul_smul]
+      _ = ‖P‖ • fQ :=
+        congrArg (fun x : PhysQ => ‖P‖ • x) hFix
   have hRep :
       (fun B : CfgQ => ((P fQ : PhysQ) : Lp ℝ 2 muQ) B) =ᵐ[muQ]
         (fun B : CfgQ => TQ beta fQ B) :=
