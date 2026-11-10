@@ -72,7 +72,7 @@ theorem realHilbert_selectedPowerDeviation_norm_le_extraTop_add_tail_ajm
       abel
     rw [heq]
     exact norm_add_le _ _
-  exact hTriangle.trans (add_le_add_left hPower _)
+  exact hTriangle.trans (add_le_add_right hPower _)
 
 /-- At every actual positive finite power, the unknown extra-top
 residual is certified within a symmetric additive power-tail band.
@@ -182,8 +182,8 @@ theorem p4Q2PZ37AJM_originalHaarConstant_powerDeviation_twoSided
         ‖R‖ ^ n * (‖cM - S cM‖ / (1 - ‖R‖)) :=
     mul_le_mul_of_nonneg_left hDef (pow_nonneg (norm_nonneg R) n)
   exact ⟨
-    hTwo.1.trans (add_le_add_left hTail _),
-    hTwo.2.trans (add_le_add_left hTail _)⟩
+    hTwo.1.trans (add_le_add_right hTail _),
+    hTwo.2.trans (add_le_add_right hTail _)⟩
 
 /-- The independent ORIGINAL signed centered ZW source gets its own
 two-sided error band with the actual orthogonal-source power tail,
