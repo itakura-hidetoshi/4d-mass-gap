@@ -273,7 +273,7 @@ theorem p4Q2PZ37AJO_originalSource_twoStep_sq_budget_obstruction
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_norm_lt_one
       H 2 (by norm_num) beta hbeta.le
   have hCoef : 0 < 1 - ‖RO beta hbeta.le‖ ^ 2 := by
-    have hNonneg : 0 ≤ ‖RO beta hbeta.le‖ := norm_nonneg _
+    have hNonneg : 0 ≤ ‖RO beta hbeta.le‖ := norm_nonneg (RO beta hbeta.le)
     nlinarith
   intro hSmall
   rw [hFull] at hSmall
