@@ -89,3 +89,13 @@ rᶠ := Qf₀ − α_f Ω
 AJLでは元演算子における有限冪と全topの直交分解を厳密に保持しつつ、追加top残余に十分な定量情報が得られるかを検討する。もし得られなければ障害をそのまま記録する。
 
 top一次元性、厳密AJA予算、無条件の励起sector非零性、体積一様coercivity、Hamiltonian spectral gap、4D連続体Yang–Mills mass gapは**OPEN**。append-only／tighten-only／overwrite-forbidden／same-root。
+
+## 7. formal統合後push CIの独立認証（追記）
+
+AJK定理merge commit `dea4a9117fe257ce4f490ae5606a451cb7473a83` について、[正式統合後push #42741398639](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42741398639) は **completed／SUCCESS**。GitHub MCPで両ジョブを独立に再観測した。
+
+- `Changed Lean fast check`：completed／SUCCESS、`Run changed Lean fast check`：completed／SUCCESS、Lean依存閉包 **11,425／11,425 SUCCESS**。AJKの4宣言はすべて `propext`、`Classical.choice`、`Quot.sound` のみを使用し、変更ファイルのwarning/errorは0/0、新規`sorryAx`なし。
+- `Publish MCP CI completion receipt`：completed／SUCCESS。実ログには `event=push exact_sha=dea4a9117fe257ce4f490ae5606a451cb7473a83 source_result=success run=42741398639 attempt=1` と記録され、同一commitの `chatgpt-ci-receipt/PR Lean Fast Check` は `state=success` を返した。
+- 先行する第5節の「push CI未認証」は当時の時点状態であり、上の独立確認によって認証済みとなった。ただし独立receipt自体を別個のLean定理とはみなさない。
+
+真正元AJAの厳密予算証人・追加top残余の数値的小ささ・top一次元性・体積一様coercivity・Hamiltonian spectral gap・連続体4D mass gapは引き続きOPEN。
