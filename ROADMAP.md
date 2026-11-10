@@ -4523,3 +4523,12 @@ AJM定理PR [#6615](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6615) 
 
 
 **AJM統合後push独立受領（追記、2026-11-10）:** [#42758364446](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42758364446) completed／SUCCESS、元定理merge `0ebbab58cae7f42043f61392dba40020380df37d` とexact SHA一致。11,427／11,427 Lean SUCCESS、新規7／7宣言の実公理は標準3のみ、sorryAxなし、変更Lean warning/error0、二ジョブSUCCESS、独立受領書 `event=push exact_sha=0ebbab58cae7f42043f61392dba40020380df37d source_result=success run=42758364446`。有限AJA厳密予算証人、H一様coercivity、連続体4D Yang–Mills mass gapはOPEN。
+
+
+### P4-Q2-PZ37AJN — exact orthogonal-square original-Wilson power certificate（2026-11-10）
+
+AJN新規Lean定理 [#6620](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6620) MERGED、merge `ef62746f1abbe37f960d6967aa93865fa1e31859`。認証source `47f5a1aa4e3b80f9113204d8252042deffd090b6`、[CI #42805725280](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42805725280) completed/SUCCESS、**11,428／11,428**、7／7定理の実公理監査は標準3のみ、sorryAxなし、変更Lean warning/error0、独立receipt SUCCESS。同一Lean blob `40dd45d72282ca0743e4f36e0a33cc37fd34f2bd`。新規leaf323行・既存Lean変更削除0。
+
+AJMの三角型二側誤差帯を正真正銘の元Wilson冪の直交Pythagorasへ強化：`d_n(x)²=r(x)²+‖S^n x−Qx‖²`。元Haar定数と元中心化ZW源を別々に評価し、有限H,βにおけるAJA厳密予算の条件付き十分証人と平方tailによる不可能性証明書を形式化。初回失敗の4件（内積対称の方向、加法項位置、top空間completeインスタンス2件）を原Lean・固定mathlibに合わせて修正。[正式記録](docs/proofs/P4-Q2-PZ37AJN_verified_20261110.md)。push CI #42809741159の完成認証は独立再観測まで未確定。
+
+**OPEN／AJO:** 真正Wilson finite-HのAJA厳密予算を満たす有限冪の数値的証人、元ZW源追加top残余の絶対的な上界または消失、H一様coercivityへの条件付き接続、Hamiltonian gap、4次元連続体Yang–Mills mass gap。変えないもの：元Wilson物理定義、既存定理、Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6、root。append-only／tighten-only／overwrite-forbidden／same-root。
