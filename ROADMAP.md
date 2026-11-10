@@ -5171,3 +5171,13 @@ AJN新規Lean定理 [#6620](https://github.com/itakura-hidetoshi/4d-mass-gap/pul
 AJMの三角型二側誤差帯を正真正銘の元Wilson冪の直交Pythagorasへ強化：`d_n(x)²=r(x)²+‖S^n x−Qx‖²`。元Haar定数と元中心化ZW源を別々に評価し、有限H,βにおけるAJA厳密予算の条件付き十分証人と平方tailによる不可能性証明書を形式化。初回失敗の4件（内積対称の方向、加法項位置、top空間completeインスタンス2件）を原Lean・固定mathlibに合わせて修正。[正式記録](docs/proofs/P4-Q2-PZ37AJN_verified_20261110.md)。push CI #42809741159の完成認証は独立再観測まで未確定。
 
 **OPEN／AJO:** 真正Wilson finite-HのAJA厳密予算を満たす有限冪の数値的証人、元ZW源追加top残余の絶対的な上界または消失、H一様coercivityへの条件付き接続、Hamiltonian gap、4次元連続体Yang–Mills mass gap。変えないもの：元Wilson物理定義、既存定理、Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6、root。append-only／tighten-only／overwrite-forbidden／same-root。
+
+### P4-Q2-PZ37AJO — genuine two-step Wilson selected-top square residual and AJA obstruction（2026-11-11）
+
+定理PR [#6623](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6623) MERGED、正式merge `c6612ee088e9938dadf1d011b8e0451c28f4bcf8`、新規Lean1ファイル318行追加、既存Lean変更削除0。修正後exact-source [#42877533307](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42877533307) completed/SUCCESS（11,429/11,429、6/6標準3公理、sorryAxなし、warning/error0、独立receipt SUCCESS）、認証source `6c8014755dbf0753d74847766dc57abbe670c374`、元Lean blob `9d1b502c66191e5992da5bb3a6fa8787ab3e7648` 一致。初回 [#42811595277](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42811595277) は`norm_nonneg _`の未確定作用素型クラスによるFAILURE、既存仮定を変えず作用素を明示して修正。
+
+固定有限H,βの元Wilson真正二連続冪で`D_(n+1)−q²D_n≤(1−q²)r²≤(1−q²)D_(n+1)`（後半はq<1）、元ZW源の二時点量による厳密AJAの条件付き十分／必要障害が形式認証済み。統合後push [#42897129027](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42897129027) は完成認証待ち。[正式記録](docs/proofs/P4-Q2-PZ37AJO_verified_20261111.md)。
+
+**OPEN／AJP:** 元の二時点量とAJA正予算の具体的証人、追加top残余の独立上界／消失、top一次元性、無条件励起sector非零、H一様coercivity、Hamiltonian spectral gap、連続体4次元Yang–Mills質量ギャップ。固定Lean v4.30.0-rc2、mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6。append-only／tighten-only／overwrite-forbidden／same-root。
+
+**AJN統合後push独立追認（2026-11-11）:** [#42809741159](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42809741159) completed/SUCCESS、merge `ef62746f1abbe37f960d6967aa93865fa1e31859`、11,428/11,428、7/7標準3公理のみ、独立push receipt `event=push exact_sha=ef62746f1abbe37f960d6967aa93865fa1e31859 source_result=success run=42809741159 attempt=1`。以前の未認証表記は履歴のまま残す。
