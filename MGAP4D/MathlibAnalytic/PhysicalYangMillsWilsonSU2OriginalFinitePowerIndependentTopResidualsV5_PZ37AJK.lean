@@ -65,7 +65,7 @@ theorem realHilbert_extraTop_norm_le_finitePower_ajk
     rw [heq]
     simpa only [norm_neg] using
       (norm_add_le ((S ^ n) x - a) (-((S ^ n) x - F.starProjection x)))
-  exact htriangle.trans (add_le_add_left hpower _)
+  exact htriangle.trans (add_le_add_right hpower _)
 
 /-- AJJ additionally controls the selected-direction constant residual
 by a finite ORIGINAL transfer power plus a defect-dependent tail. The
@@ -98,7 +98,7 @@ theorem realHilbert_extraTop_norm_le_finitePower_defect_ajk
       ‖R‖ ^ n * ‖(Fᗮ).starProjection c‖ ≤
         ‖R‖ ^ n * (‖c - S c‖ / (1 - ‖R‖)) :=
     mul_le_mul_of_nonneg_left hdef (pow_nonneg (norm_nonneg R) n)
-  exact hpow.trans (add_le_add_left htail _)
+  exact hpow.trans (add_le_add_right htail _)
 
 namespace GroundStatePosteriorJoint
 
