@@ -4855,3 +4855,5 @@ AJH/AJI/AJF/AJMの全top正射影と元Wilson冪を使用し、`‖S^n x−⟨x,
 真正元SU(2) Wilson `S`、全top射影`Q`、選択top`Ω`、全top直交補制限`R`から、`D_(n+1)−q²D_n≤(1−q²)r²`、`r²≤D_(n+1)`（`q=‖R‖`）を形式証明。元中心化ZW源の二時点有限冪観測による厳密AJA予算の条件付き十分判定と必要障害を示した。数値的証人、top一次元性、残余消失、無条件励起、H一様coercivity、Hamiltonian spectral gap、連続体mass gapは引き続きOPEN。[正式記録](docs/proofs/P4-Q2-PZ37AJO_verified_20261111.md)。統合後push CI #42897129027は独立完了認証待ち。append-only／tighten-only／overwrite-forbidden／same-root。
 
 **AJN統合後push追認（2026-11-11）:** [CI #42809741159](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42809741159) completed/SUCCESS、exact merge `ef62746f1abbe37f960d6967aa93865fa1e31859`、11,428/11,428、7/7標準公理のみ、独立push receipt SUCCESS、変更warning/error0、sorryAxなし。旧「未認証」は当時の履歴として保持。
+
+**AJO定理統合後push独立認証（2026-11-11追記）:** [CI #42897129027](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42897129027) completed/SUCCESS、exact formal merge `c6612ee088e9938dadf1d011b8e0451c28f4bcf8`、11,429/11,429、6/6定理は標準3公理のみ、sorryAxなし、変更Lean warning/error0、独立receipt `event=push exact_sha=c6612ee088e9938dadf1d011b8e0451c28f4bcf8 source_result=success run=42897129027 attempt=1`。元AJA証人と4D質量ギャップはOPEN。
