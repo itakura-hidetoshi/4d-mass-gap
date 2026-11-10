@@ -4520,3 +4520,6 @@ AJM定理PR [#6615](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6615) 
 元SU(2) Wilsonの有限冪選択top偏差と全top追加残余の二側誤差帯を証明。Haar定数の(I−S)c欠陥側と元中心化ZW source側を別々に制御。源の追加top残余（または実証された有限冪下界）が元AJA厳密予算を使い切る場合の**必要障害**を形式化した。これは元AJA予算の成立／不成立や励起非零、質量ギャップの無条件証明ではない。[正式記録](docs/proofs/P4-Q2-PZ37AJM_verified_20261110.md)。
 
 **OPEN／AJN:** AJA厳密予算の具体的有限冪証人、追加top源残余の独立数値上下界／ゼロ判定、finite-HからH一様coercivityへの降下条件、Hamiltonian gap、4D Yang–Mills mass gap。AJM統合後push CI #42758364446は別途独立受領まで未認証。元物理定義・pin・root不変更、append-only／tighten-only／overwrite-forbidden／same-root。
+
+
+**AJM統合後push独立受領（追記、2026-11-10）:** [#42758364446](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42758364446) completed／SUCCESS、元定理merge `0ebbab58cae7f42043f61392dba40020380df37d` とexact SHA一致。11,427／11,427 Lean SUCCESS、新規7／7宣言の実公理は標準3のみ、sorryAxなし、変更Lean warning/error0、二ジョブSUCCESS、独立受領書 `event=push exact_sha=0ebbab58cae7f42043f61392dba40020380df37d source_result=success run=42758364446`。有限AJA厳密予算証人、H一様coercivity、連続体4D Yang–Mills mass gapはOPEN。
