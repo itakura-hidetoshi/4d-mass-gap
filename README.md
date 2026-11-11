@@ -4582,3 +4582,10 @@ AJTの真正欠損下界 `d=βv_H/e^(βp_H)>0` とAJRの `‖f₀−Sf₀‖≤(
 
 [定理PR #6659](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6659) MERGED、source `85ca5eb4575fbc89d69fd43eb17d9316bad0c4bf`、formal squash `b508a059daa252507f02ec175143d975188556c9`、共通tree `388f6a17df60650a9191d47e388e3f8da9e93970`。[Exact-source CI #43104537528](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43104537528)とformal push独立[CI #43105393399](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43105393399) completed/SUCCESS、11,442/11,442、8/8新宣言の公理は標準3のみ、新規sorryAxなし、変更warning/error0/0、独立receipt成功。真正対称Wilson作用素とHaar源に対し、**`0<B³/V²≤‖S³f₀‖²`**、かつ **`B³/V²<B`** を形式認証。第三冪AJA区間 `[B³/V²,B)` は実際の厳密上界を**別途仮定した条件付き**。無条件のn=2/n=3 AJA証人、top一次元性、一様coercivity、質量ギャップはOPEN。[正式記録](docs/proofs/P4-Q2-PZ37AKB_verified_20261112.md)。既存定義・pin・root不変、append-only。
 
+
+
+### P4-Q2-PZ37AKC — 真正Wilson全正整数冪のHaar–Cauchy下界（2026-11-12）
+
+[定理PR #6662](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6662) MERGED。修正版source `0ee259ee8c712b88a0a2a030e86a5322e40f43e4`、formal squash `a36bf6966611c557a07aec182495e21aa3c15f82`、共通tree `f2cda6c622aa9dedb3f281fb2e40373e76fac533`。[Exact-source #43109258870](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43109258870)と独立formal push [#43110233807](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43110233807) completed/SUCCESS、Lean **11,443/11,443**、6/6公理は標準`propext`/`Classical.choice`/`Quot.sound`のみ、sorryAxなし、変更error/warning0/0、独立completion receipt SUCCESS。初回CIの型・簡約不一致2件と不要simpa警告を新規leaf内だけで解消。既存Lean変更0、1新規leaf268行、pinとroot維持。
+
+真正SU(2) Wilson対称転送`S`、元ZW物理源`f₀`、Haar分散`V>0`、元AJA証明書`0<B≤‖Sf₀‖²`から、全有限`H`・`β>0`・`n:ℕ`で **`0<B^(n+1)/V^n≤‖S^(n+1)f₀‖²`** をLean4形式認証。log-convex energyの帰納法に基づく真の元Wilson冪下界。無条件AJA厳密上界・具体的`n=2,n=3`証人、top一次元性、H一様coercivity、Hamiltonian／4D continuum質量ギャップは**OPEN**。[正式記録](docs/proofs/P4-Q2-PZ37AKC_verified_20261112.md)。append-only／tighten-only／overwrite-forbidden／same-root。
