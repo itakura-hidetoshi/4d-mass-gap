@@ -269,10 +269,10 @@ theorem p4Q2PZ37AJX_originalPower_budget_implies_excitedSource_gt_fifteenSixteen
   have hPyth := F.norm_sq_eq_add_norm_sq_starProjection fX
   simp only [F.starProjection_orthogonal_val] at hPyth
   have hVariance := p4Q2PZ37AJR_originalSource_norm_sq_eq_HaarVariance H
-  have hExcited : 15 * VX / 16 < ‖(Fᗮ).starProjection fX‖ ^ 2 := by
+  have hExcited : 15 * VX / 16 < ‖fX - F.starProjection fX‖ ^ 2 := by
     linarith only [hTop, hPyth, hVariance]
   change 15 * VX / 16 < ‖(Fᗮ).starProjection fX‖ ^ 2
-  exact hExcited
+  simpa only [F.starProjection_orthogonal_val] using hExcited
 
 /-- Direct numerical-top obstruction: a true full-top source fraction >=1/16
 would exclude ALL positive finite-power witnesses for the genuine AJA budget.
