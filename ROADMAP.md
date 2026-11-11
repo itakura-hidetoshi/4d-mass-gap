@@ -5271,3 +5271,10 @@ True original SU(2) Wilson/Haar positive source halfweight integral `J_+≥βV_H
 元のSU(2) Wilson対称作用素`S`、中心化ZW源`f₀`、Haar`B>0`、`V=‖f₀‖²>0`から、全自然数`n`について真の`(n+1)`冪の定量下界 **`0<B^(n+1)/V^n≤‖S^(n+1)f₀‖²`** を形式証明。log-convex moment列と正の初期二項の帰納的比率比較を使用。これは有限体積ごとの証明であり、`n`／体積の一様下界を意味しない。[正式証明記録](docs/proofs/P4-Q2-PZ37AKC_verified_20261112.md)。
 
 **NEXT/OPEN:** 実際のWilson有限冪`‖Sⁿf₀‖²`の独立**上界**、全top射影とAJA予算`B`の直接比較、無条件`n=2,n=3`厳密AJA証人／不存在、top一次元性、H一様coercivity、Hamiltonian spectral gap、4D mass gap。形式的下界をこれらへ降下させない。元物理定義、pin、root不変更、append-only／same-root。docs-only Lean手動実行禁止。
+
+
+### P4-Q2-PZ37AKD — genuine adjacent Wilson-power Haar retention ratio（2026-11-12）
+
+[PR #6665](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6665) MERGED、exact-source [CI #43112959710](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43112959710) と正式formal push [CI #43114001431](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43114001431) completed/SUCCESS。真正finite-H sourceに対し `B*a_n≤V*a_(n+1)`, `B/V≤a_(n+1)/a_n` (全n:ℕ)、さらに条件 `qV<B` のもとで `a_(n+1)≤q*a_n` を否定。新規7定理・7公理監査は標準3のみ、11,444/11,444 Lean、warning/error0、sorryAxなし、独立receipt成功。source `d4fd6295f23f77040296d10692cfaafe01026391`、正式squash `9f71815ec5df4336493f492b28f6d9108538b456`、共通tree `a1f4842fea48791b75551b02c2d6640e295a7e6e`。旧Lean／元Wilson/Haar/ZW/AJA／pin／rootは不変。[正式証明記録](docs/proofs/P4-Q2-PZ37AKD_verified_20261112.md)。
+
+**NEXT/OPEN:** AJA予算に対する実際の冪エネルギー**上界**、full-topの真正定量評価、無条件n=2/n=3 AJA証人/不存在、top一次元性、H一様coercivity、Hamiltonian spectral gap、4D continuum mass gap。B/VはH・β依存の正の局所下界であり、一様スペクトルギャップへの降下は不可。docs-only Strict Leanの手動実行なし。append-only／same-root。
