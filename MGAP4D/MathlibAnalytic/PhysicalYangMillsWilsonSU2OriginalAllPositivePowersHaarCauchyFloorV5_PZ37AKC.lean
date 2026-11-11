@@ -81,7 +81,7 @@ theorem real_positive_logConvex_sequence_powerFloor_akc
   intro n
   induction n with
   | zero =>
-      simpa using (le_refl (a 1))
+      simp
   | succ n ih =>
       have hR : a (n + 1) * a 1 ≤ a (n + 1 + 1) * a 0 :=
         (hRatio (n + 1)).2.2
@@ -191,8 +191,13 @@ theorem p4Q2PZ37AKC_originalAllPositivePowers_HaarFloor_mul
     (p4Q2PZ37AHN_originalSource_twoHaarMoments_pos H).2
   have hVariance : ‖fC‖ ^ 2 = VC :=
     p4Q2PZ37AJR_originalSource_norm_sq_eq_HaarVariance H
+  have hA0Eq : a 0 = VC := by
+    calc
+      a 0 = ‖fC‖ ^ 2 := by simp [a]
+      _ = VC := hVariance
   have hA0 : 0 < a 0 := by
-    simpa [a, hVariance] using hV
+    rw [hA0Eq]
+    exact hV
   have hA1 : 0 < a 1 := by
     simpa [a] using hBpos.trans_le hBA
   have hLog : ∀ k : ℕ,
@@ -208,7 +213,8 @@ theorem p4Q2PZ37AKC_originalAllPositivePowers_HaarFloor_mul
     calc
       (‖S fC‖ ^ 2) ^ (n + 1) = (a 1) ^ (n + 1) := by simp [a]
       _ ≤ (a 0) ^ n * a (n + 1) := hPower
-      _ = VC ^ n * ‖(S ^ (n + 1)) fC‖ ^ 2 := by simp [a, hVariance]
+      _ = VC ^ n * a (n + 1) := by rw [hA0Eq]
+      _ = VC ^ n * ‖(S ^ (n + 1)) fC‖ ^ 2 := by rfl
   exact (pow_le_pow_left₀ hBpos.le hBA (n + 1)).trans hPower'
 
 /-- Genuine unconditional normalized Haar-Cauchy floor for every n+1>0.
