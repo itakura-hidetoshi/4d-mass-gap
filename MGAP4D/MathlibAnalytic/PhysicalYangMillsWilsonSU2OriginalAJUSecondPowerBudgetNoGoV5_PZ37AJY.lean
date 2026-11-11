@@ -151,25 +151,25 @@ theorem p4Q2PZ37AJY_originalAJU_twoPowerCorrection_le_quarter_variance
       _ ≤ 1 := hDiv
   have hvV : vY ≤ VY :=
     p4Q2PZ37AIK_elementarySourceVarianceFloor_le_original H
-  have hd0 : 0 ≤ dY :=
+  have hd0 : 0 ≤ dY beta :=
     (p4Q2PZ37AJU_originalDefectFloor_pos H beta hbeta).le
-  have hdub : dY ≤ b * vY := by
+  have hdub : dY beta ≤ b * vY := by
     apply le_of_eq
     unfold p4Q2PZ37AJU_originalDefectFloor
     dsimp [b]
     rw [Real.exp_neg]
     ring
   have hCorrection :
-      p4Q2PZ37AJU_originalTwoPowerCorrection H beta hbeta.le ≤ dY ^ 2 := by
+      p4Q2PZ37AJU_originalTwoPowerCorrection H beta hbeta.le ≤ (dY beta) ^ 2 := by
     have hRaw := real_secondPower_correction_le_defect_sq_ajy
-      ‖RY beta hbeta.le‖ dY (norm_nonneg _) hd0
+      ‖RY beta hbeta.le‖ (dY beta) (norm_nonneg _) hd0
     change
-      p4Q2PZ37AJU_originalTwoPowerCorrection H beta hbeta.le ≤ dY ^ 2
+      p4Q2PZ37AJU_originalTwoPowerCorrection H beta hbeta.le ≤ (dY beta) ^ 2
       at hRaw
     exact hRaw
   exact hCorrection.trans
     (real_defect_floor_sq_le_variance_quarter_ajy
-      pY VY vY b dY hp hV hVcap hb hbp hvV hd0 hdub)
+      pY VY vY b (dY beta) hp hV hVcap hb hbp hvV hd0 hdub)
 
 /-- Joint quantitative obstruction, using the TRUE AJA certificate
 rather than a surrogate margin. The combined quantities take at most
