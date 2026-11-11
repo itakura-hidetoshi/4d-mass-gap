@@ -4551,3 +4551,5 @@ AJTの真正欠損下界 `d=βv_H/e^(βp_H)>0` とAJRの `‖f₀−Sf₀‖≤(
 固定有限H、β>0の真正元物理系で `V_H=‖f₀‖²>0`、`d_H=βe^(−βp_H)v_H>0`、元AJA Haar-L²予算`B_H,β=m_H,β²·Measure.real μ_H({u_H,β<−m_H,β})>0`とすると、**新規Lean認証** `B_H,β+(d_H/2)²≤V_H/8<V_H`。従って`B_H,β<V_H−(d_H/2)²`であり、AJVが**十分条件**として留保していた`V_H−(d_H/2)²<B_H,β`は**全有限H・β>0で不可能**と証明された。AIW余裕上界、AIK/Haar分散、AIS上界、Haar確率と`βp_H e^(−βp_H)≤1`のみから得る。
 
 **重要:** この不可能性はAJVの粗い上界による判定方法に限定され、実際の`‖Qf₀‖²<B_H,β`や真正Wilson有限冪証人の存在を否定しない。top一次元性、体積一様coercivity、Hamiltonian gap、4D continuum mass gapはいずれもOPEN。[正式証明記録](docs/proofs/P4-Q2-PZ37AJW_verified_20261111.md)。元Wilson定義、Haar、ZW源、AJA予算、root・pinを変更せず。append-only／tighten-only／overwrite-forbidden／same-root。
+
+**AJW正式formal push独立追認（2026-11-11）:** [CI #42988868560](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42988868560) `event=push`、exact merge `c2b2c769dc31375768767cffc60469956ad9ede2`、completed／SUCCESS。Lean依存閉包 11,437／11,437、AJW新規5/5公理は標準3のみ、sorryAxなし、変更warning/error0/0、独立receipt job SUCCESS、exact-head status `chatgpt-ci-receipt/PR Lean Fast Check` SUCCESS。形式結論`B+c≤V/8`を無条件の有限冪証人不存在とは解釈しない。
