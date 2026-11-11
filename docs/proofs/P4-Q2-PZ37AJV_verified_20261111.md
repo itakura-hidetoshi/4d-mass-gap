@@ -55,3 +55,8 @@ V_H - (d_H(β)/2)² < B_H,β
 真正AJA予算との上の厳密比較は**NO_DATA／未認証**である。従って無条件AJA有限冪数値証人、転送後の無条件励起sector非零性は依然OPEN。加えてtop一次元性、追加top残余のAJA予算内への十分小さい実数評価、体積一様coercivity、Hamiltonian spectral gap、連続体4次元Yang–Mills質量ギャップも未証明。
 
 append-only / tighten-only / overwrite-forbidden / same-root。
+
+
+## AJV統合後pushの独立追認（同日追記）
+
+[CI #42973075691](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42973075691) は `completed/SUCCESS`、formal exact merge HEAD `716693195bc51c8f45776b089c16e516bd8529b3` で **11,436/11,436** Lean依存閉包 SUCCESS。新規AJV9/9宣言の実公理は`propext`、`Classical.choice`、`Quot.sound`のみ、`sorryAx`なし、変更AJV warning/error 0/0。独立completion receipt `event=push exact_sha=716693195bc51c8f45776b089c16e516bd8529b3 source_result=success run=42973075691 attempt=1` と一致。上記の「push未認証」は記録作成時点の履歴として保存し、本追記で正式認証が完了した。
