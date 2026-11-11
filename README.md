@@ -4883,3 +4883,13 @@ AJQ正源半重みHaar積分とAIG真正負Wilson転送平均を接続し、`D_w
 定理PR [#6637](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6637) **MERGED**、source `edf8d3ba1ed574687c6a32fba8a19d81447ac15c`、[CI #42957344244](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42957344244) completed/SUCCESS、11,435/11,435、12/12実公理は標準3のみ、sorryAxなし、変更warning/error0、独立receipt SUCCESS。formal squash `033420df2039e5bed9e9509bb55e6343266b0683`、source/merge Git tree `ee4ef1452fcaab89047a19580f59c05701705e0e`一致、Lean blob `32db516f2b130693bda7e2c63917eb81ae9bd3d6`一致。[統合後push #42958127760](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42958127760) 11,435/11,435 SUCCESS・receipt SUCCESS。初回と2回目の失敗CIを修正、証明手順のみ変更。
 
 元有限H,βの`d=βv_H/e^(βp_H)`、全top直交補制限`q=‖R‖<1`について`‖S²f₀‖²+(1−q⁴)(d/(1+q))²≤V_H`および`‖S²f₀‖²<V_H`を**無条件に**形式証明。元AJA証明書予算`B_H`に対して`V_H−(1−q⁴)(d/(1+q))²<B_H`が成立する**場合に限り**、具体的`n=2`証人と転送後励起sector非零を得る。比較の真偽は未証明。H一様coercivity、Hamiltonian gap、連続体4D Yang–Mills mass gapもOPEN。[正式証明記録](docs/proofs/P4-Q2-PZ37AJU_verified_20261111.md)。元Wilson、root、固定Lean/mathlib・既存Lean不変更。
+
+
+### P4-Q2-PZ37AJV — 真正元Wilson全top射影のq-free明示分散補正（2026-11-11）
+
+[Lean定理PR #6640](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6640) MERGED。認証source `d295c85ffa10d4c097ecab20e9d6312ca705f852`、[CI #42972219152](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42972219152) 11,436/11,436 SUCCESS、9/9公理は標準3のみ、sorryAxなし、変更Lean warning/error 0/0、独立receipt SUCCESS。正式squash `716693195bc51c8f45776b089c16e516bd8529b3`、source/merge Git tree `783c21db4fb2e869315eae8551c6e452dcfc50af`一致、Lean blob `8dd7dca631b5bf14dc1280792291cfde43049a18`一致。既存Lean変更0、新規Lean 273行。統合後push [#42973075691](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42973075691)は独立完成受領を別途確認。
+
+AJTの真正欠損下界 `d=βv_H/e^(βp_H)>0` とAJRの `‖f₀−Sf₀‖≤(1+q)‖Q⊥f₀‖`、元`q=‖R‖<1`を用い、**qを消去した無条件定量上界** `‖Qf₀‖²+(d/2)²≤V_H`、追加top残余 `‖r‖²≤V_H−⟨f₀,Ω⟩²−(d/2)²` を形式証明。元AJA厳密予算`B_H`との`V_H−(d/2)²<B_H`は未認証であり、条件付き有限冪存在・転送後励起非零を無条件とは扱わない。top一次元性、数値的AJA証人、H一様coercivity、Hamiltonian gap、4D Yang–Mills mass gapもOPEN。[正式記録](docs/proofs/P4-Q2-PZ37AJV_verified_20261111.md)。元模型・root・pins不変更。append-only／tighten-only／overwrite-forbidden／same-root。
+
+
+**AJV統合後push独立追認（2026-11-11）:** [#42973075691](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42973075691) completed／SUCCESS。formal exact merge `716693195bc51c8f45776b089c16e516bd8529b3`、11,436／11,436 Lean、9／9新規公理は標準3のみ、変更AJV warning/error0、新規sorryAxなし。独立receipt `event=push exact_sha=716693195bc51c8f45776b089c16e516bd8529b3 source_result=success run=42973075691`。源の全top射影のq-free上界は認証済みだが、真正AJA予算との厳密比較・具体的有限冪数値証人は依然OPEN。
