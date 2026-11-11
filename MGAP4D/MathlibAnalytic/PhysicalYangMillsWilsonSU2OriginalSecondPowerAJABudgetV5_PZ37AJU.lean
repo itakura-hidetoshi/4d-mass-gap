@@ -119,10 +119,7 @@ theorem realHilbert_fullTop_secondPower_defect_floor_aju
   have hPyth :
       ‖x‖ ^ 2 = ‖F.starProjection x‖ ^ 2 + p ^ 2 := by
     have h := F.norm_sq_eq_add_norm_sq_starProjection x
-    have hproj : ‖x - F.starProjection x‖ = p := by
-      change ‖x - F.starProjection x‖ = ‖(Fᗮ).starProjection x‖
-      rw [F.starProjection_orthogonal_val]
-    rw [hproj] at h
+    change ‖x‖ ^ 2 = ‖F.starProjection x‖ ^ 2 + p ^ 2 at h
     exact h
   change ‖(S ^ 2) x‖ ^ 2 + (1 - q ^ 4) * c ^ 2 ≤ ‖x‖ ^ 2
   calc
@@ -131,7 +128,7 @@ theorem realHilbert_fullTop_secondPower_defect_floor_aju
           (1 - q ^ 4) * c ^ 2 := by rw [hPower]
     _ ≤ ‖F.starProjection x‖ ^ 2 + q ^ 4 * p ^ 2 +
           (1 - q ^ 4) * c ^ 2 :=
-      add_le_add_right (add_le_add_left hTailSq _) _
+      add_le_add_left (add_le_add_right hTailSq _) _
     _ ≤ ‖F.starProjection x‖ ^ 2 + q ^ 4 * p ^ 2 +
           (1 - q ^ 4) * p ^ 2 :=
       add_le_add_right hCorr _
@@ -362,8 +359,15 @@ theorem p4Q2PZ37AJU_originalTransferredOrthogonal_ne_zero_of_threshold
     p4Q2PZ37AJD_sourceImage_norm_sq_eq_sourceTop_add_orthogonal
       H beta hbeta
   intro hz
-  simp [hz] at hSplit
-  rw [hSplit] at hAJA
+  have hSplit' :
+      ‖(SU beta hbeta.le) fU‖ ^ 2 =
+        ‖p4Q2PZ37AJD_originalSourceTopComponent H beta hbeta‖ ^ 2 := by
+    calc
+      _ = ‖p4Q2PZ37AJD_originalSourceTopComponent H beta hbeta‖ ^ 2 +
+          ‖p4Q2PZ37AJC_originalNormalizedSourceOrthogonalComponent H beta hbeta‖ ^ 2 :=
+        hSplit
+      _ = _ := by rw [hz]; norm_num
+  rw [hSplit'] at hAJA
   exact (not_lt_of_ge hAJA) hTop
 
 end GroundStatePosteriorJoint
