@@ -143,14 +143,14 @@ theorem p4Q2PZ37AKF_twoSector_tendsto_fullTop :
       Tendsto (fun n : ℕ => ((3 : ℝ) / 4) * ((1 : ℝ) / 4) ^ n)
         atTop (nhds 0) := by
     convert (tendsto_const_nhds : Tendsto (fun _ : ℕ => (3 : ℝ) / 4)
-      atTop (nhds ((3 : ℝ) / 4))).mul hp using 1 <;> norm_num
+      atTop (nhds ((3 : ℝ) / 4))).mul hp using 1; norm_num
   simpa only [p4Q2PZ37AKF_twoSectorEnergy, add_zero] using
     hconst.add htail
 
 end
 end MGAP4D.MathlibAnalytic
 
-/-! Eight kernel declarations audited on pinned Lean/mathlib; no sorry/admit/new axiom. -/
+/-! Nine kernel declarations audited on pinned Lean/mathlib; no sorry/admit/new axiom. -/
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AKF_twoSectorEnergy
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AKF_twoSectorEnergy_zero
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AKF_twoSectorEnergy_one
