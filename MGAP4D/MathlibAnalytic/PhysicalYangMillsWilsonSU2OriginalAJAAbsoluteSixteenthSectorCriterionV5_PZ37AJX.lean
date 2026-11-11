@@ -258,23 +258,21 @@ theorem p4Q2PZ37AJX_originalPower_budget_implies_excitedSource_gt_fifteenSixteen
             {B : CfgX | uX beta hbeta.le B < -(mX beta hbeta.le)}) :
     15 * VX / 16 <
       ‖((TopX beta hbeta.le)ᗮ).starProjection fX‖ ^ 2 := by
+  let S : PhysX →L[ℝ] PhysX := SX beta hbeta.le
+  let F : Submodule ℝ PhysX := realHilbertTopEigenspace S
+  letI : CompleteSpace F := (realHilbertTopEigenspace_isClosed S).completeSpace_coe
+  letI : CompleteSpace Fᗮ := F.isClosed_orthogonal.completeSpace_coe
   have hTop :=
     p4Q2PZ37AJX_originalPower_budget_implies_fullTop_sixteenth
       H beta hbeta n hPower
-  have hSplit :
-      VX =
-        ‖p4Q2PZ37AJD_originalSourceTopComponent H beta hbeta‖ ^ 2 +
-          ‖((TopX beta hbeta.le)ᗮ).starProjection fX‖ ^ 2 := by
-    let F : Submodule ℝ PhysX := TopX beta hbeta.le
-    have h := F.norm_sq_eq_add_norm_sq_starProjection fX
-    simp only [F.starProjection_orthogonal_val] at h
-    rw [p4Q2PZ37AJR_originalSource_norm_sq_eq_HaarVariance H] at h
-    change
-      VX =
-        ‖p4Q2PZ37AJD_originalSourceTopComponent H beta hbeta‖ ^ 2 +
-          ‖((TopX beta hbeta.le)ᗮ).starProjection fX‖ ^ 2 at h
-    exact h
-  linarith only [hTop, hSplit]
+  change ‖F.starProjection fX‖ ^ 2 < VX / 16 at hTop
+  have hPyth := F.norm_sq_eq_add_norm_sq_starProjection fX
+  simp only [F.starProjection_orthogonal_val] at hPyth
+  have hVariance := p4Q2PZ37AJR_originalSource_norm_sq_eq_HaarVariance H
+  have hExcited : 15 * VX / 16 < ‖(Fᗮ).starProjection fX‖ ^ 2 := by
+    linarith only [hTop, hPyth, hVariance]
+  change 15 * VX / 16 < ‖(Fᗮ).starProjection fX‖ ^ 2
+  exact hExcited
 
 /-- Direct numerical-top obstruction: a true full-top source fraction >=1/16
 would exclude ALL positive finite-power witnesses for the genuine AJA budget.
