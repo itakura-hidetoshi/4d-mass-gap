@@ -4614,3 +4614,5 @@ True original SU(2) Wilson/Haar positive source halfweight integral `J_+≥βV_H
 ### P4-Q2-PZ37AJZ — exact original Wilson AJA budget test via genuine full-top residual（2026-11-11）
 
 [定理PR #6652](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6652) MERGED、source `529a9354426c2d3d18ef78bb44605c6d59ccbdf8`、[CI #43008681741](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43008681741) SUCCESS（11,440/11,440 Lean、6/6 standard3 axioms、no sorryAx、changed warning/error0、independent receipt）、squash `a8b410d9a907b00697a3da2f7358060a10d4f17c`、共通Git tree `bd83d90cf1d67d0d982cc9ff458c0eb63b029693`。**厳密等式** `‖Sⁿf₀‖²=‖Qf₀‖²+‖Sⁿf₀−Qf₀‖²` と、同じAJA Haar証明書Bに対する **`‖Sⁿf₀‖²<B ↔ ‖Sⁿf₀−Qf₀‖²<B−‖Qf₀‖²`** を形式認証。n=2、およびあるn≥2の証人と同値な厳密残余判定も確認。真の数値上界／証人存在・不存在はNO_DATA。[正式記録](docs/proofs/P4-Q2-PZ37AJZ_verified_20261111.md)。次AKAでは元Haar/Wilsonによる数値定量評価が必要。元物理定義、root、Lean/mathlib pinは不変。
+
+**AJZ formal post-merge push独立確認:** [CI #43009561728](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43009561728) completed/SUCCESS、exact squash HEAD `a8b410d9a907b00697a3da2f7358060a10d4f17c`、11,440/11,440 Lean、新規6/6標準3公理、sorryAxなし、変更warning/error0/0、独立receipt SUCCESS。
