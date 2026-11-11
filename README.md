@@ -4870,3 +4870,16 @@ AJH/AJI/AJF/AJMの全top正射影と元Wilson冪を使用し、`‖S^n x−⟨x,
 [定理PR #6633](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6633) はMERGED。認証source `59c5a9759f60f043204dc406d0d021d7654ee3cf`、[exact-source CI #42917279603](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42917279603) completed/SUCCESS（11,433/11,433、6/6標準3公理、sorryAxなし、変更warning/error0、独立receipt SUCCESS）。元定理formal squash `8295e64a19cacb9d96945a2d5f603deed1ca314a`、source/merge tree `64b050a125274b767c2ca7bd860a1abe2056a230` 一致、元Lean blob `de658374cf76f6a934640317f084d4a214a5d67c` 一致。新規Lean1ファイル263行・既存ファイル変更削除0。
 
 AJQ正源半重みHaar積分とAIG真正負Wilson転送平均を接続し、`D_w=∫e^(β W_H/2)(f₀−T_H f₀/||P_H||)dμ_H` について `D_w≥βV_H+||P_H||⁻¹β Z_cross e^(−βp_H)V_H>0` と、AHN真正Haar箱から `D_w≥β(3p_H/8)²κ(1/96)^card(Link_H)` を形式証明。**これは重み付き実数積分の下界であり、真正物理Hilbertの`||f₀−S_Hf₀||`下界ではない。** L²双対評価、AJA予算との厳密比較、具体的有限冪証人、転送後励起sector非零、top一次元性、H一様coercivity、Hamiltonian gap、連続体4D mass gapはOPEN。[正式記録](docs/proofs/P4-Q2-PZ37AJS_verified_20261111.md)。統合後push CI #42918264258は独立受領待ち。固定pin・元物理定義・root不変更、append-only／tighten-only／overwrite-forbidden／same-root。
+
+
+### P4-Q2-PZ37AJT — 真正Wilson物理L²一時点欠損下界（2026-11-11、正式追記）
+
+定理PR [#6636](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6636) **MERGED**、source `db521df94a095ad1e3c76267163d2ba5e10037dc`、[exact-source CI #42925478976](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42925478976) 11,434/11,434 SUCCESS、9/9公理は標準3のみ、sorryAxなし、変更warning/error0、独立receipt SUCCESS。formal merge `b45bf3a17004a765c73dc66c2bea171a7fcb7e2a`、source/merge Git tree一致、Lean blob `e3803fcfb82af46c3025d2fed90999968da1edc6`一致。[統合後push #42926260138](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42926260138)も同一HEADで11,434/11,434 SUCCESS・receipt SUCCESS。
+
+元の中心化ZW物理L²源`f₀`、元SU(2) Wilson正規化転送`S`と真正Haarの重み付き積分を実Hilbert内積へ型付きa.e.同一性で接続し、`‖f₀−Sf₀‖≥β e^(−βp_H) (3p_H/8)²(1/384)^(4n_H)>0`をLean4形式証明。これは真正物理L²欠損の有限H,β下界。AJA厳密予算の成立、無条件有限冪証人、H一様coercivity、Hamiltonian gap、4D continuum mass gapはOPEN。[正式証明記録](docs/proofs/P4-Q2-PZ37AJT_verified_20261111.md)。append-only／tighten-only／overwrite-forbidden／same-root。
+
+### P4-Q2-PZ37AJU — 真正Wilson二時点冪の定量補正とAJA条件付きn=2証人（2026-11-11、正式追記）
+
+定理PR [#6637](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6637) **MERGED**、source `edf8d3ba1ed574687c6a32fba8a19d81447ac15c`、[CI #42957344244](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42957344244) completed/SUCCESS、11,435/11,435、12/12実公理は標準3のみ、sorryAxなし、変更warning/error0、独立receipt SUCCESS。formal squash `033420df2039e5bed9e9509bb55e6343266b0683`、source/merge Git tree `ee4ef1452fcaab89047a19580f59c05701705e0e`一致、Lean blob `32db516f2b130693bda7e2c63917eb81ae9bd3d6`一致。[統合後push #42958127760](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42958127760) 11,435/11,435 SUCCESS・receipt SUCCESS。初回と2回目の失敗CIを修正、証明手順のみ変更。
+
+元有限H,βの`d=βv_H/e^(βp_H)`、全top直交補制限`q=‖R‖<1`について`‖S²f₀‖²+(1−q⁴)(d/(1+q))²≤V_H`および`‖S²f₀‖²<V_H`を**無条件に**形式証明。元AJA証明書予算`B_H`に対して`V_H−(1−q⁴)(d/(1+q))²<B_H`が成立する**場合に限り**、具体的`n=2`証人と転送後励起sector非零を得る。比較の真偽は未証明。H一様coercivity、Hamiltonian gap、連続体4D Yang–Mills mass gapもOPEN。[正式証明記録](docs/proofs/P4-Q2-PZ37AJU_verified_20261111.md)。元Wilson、root、固定Lean/mathlib・既存Lean不変更。

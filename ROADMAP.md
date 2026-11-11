@@ -5200,3 +5200,14 @@ AJS [Lean PR #6633](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6633) 
 True original SU(2) Wilson/Haar positive source halfweight integral `J_+≥βV_H` and original negative complete-transfer average `A≤−βZ_cross e^(−βp_H)V_H` yield explicit `D_w=J_+−A/||P_H||≥β V_H + β Z_cross e^(−βp_H) V_H/||P_H||>0`, plus AHN genuine `κ(1/96)` Haar box floor. **D_w is a weighted integral, NOT YET a canonical Hilbert defect-norm floor.** [正式記録](docs/proofs/P4-Q2-PZ37AJS_verified_20261111.md)。統合後push #42918264258は別途独立受領。
 
 **OPEN／次段:** 元Haar連続代表と真正物理Hilbert差`f₀−Sf₀`のL²同一性、bounded original weight + norm-dualityに基づく明示欠損ノルム下界、AJR追加top残余上界への接続、真正AJA厳密予算比較と具体的有限冪証人、top rank-one、転送後励起非零、体積一様coercivity、Hamiltonian gap、4D continuum mass gap。元の物理仮定・固定Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6・root不変更。append-only／tighten-only／overwrite-forbidden／same-root。
+
+
+### AJT — original one-step true L² defect floor（2026-11-11）
+
+[定理PR #6636](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6636) MERGED、exact-source [CI #42925478976](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42925478976) 11,434/11,434 SUCCESS、9/9標準3公理のみ、sorryAxなし、変更warning/error0、receipt SUCCESS。正式squash `b45bf3a17004a765c73dc66c2bea171a7fcb7e2a`、統合後push #42926260138 completed/SUCCESS。元Haar連続代表の型付きL²一致と右halfweight重みの双対評価で`d_H(β)=β e^(−βp_H)(3p_H/8)²(1/384)^(4n_H)≤‖f₀−Sf₀‖`を証明。元物理定義・固定Lean/mathlib不変更。[正式記録](docs/proofs/P4-Q2-PZ37AJT_verified_20261111.md)。AJAとの閾値比較は別問題。
+
+### AJU — original second-power Wilson strict loss, conditional AJA witness n=2（2026-11-11）
+
+[定理PR #6637](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6637) MERGED、exact-source [CI #42957344244](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42957344244) 11,435/11,435 SUCCESS、12/12標準公理のみ、新規sorryAxなし、変更warning/error0、独立receipt SUCCESS。正式formal HEAD `033420df2039e5bed9e9509bb55e6343266b0683`、統合後push #42958127760 completed/SUCCESS、source/merge tree・Lean blob同一。元Wilson二時点`‖S²f₀‖²+(1−q⁴)(d/(1+q))²≤V_H`、`q=‖R‖<1`、`d=βv_H/e^(βp_H)>0`、よって`‖S²f₀‖²<V_H`。元AJA予算`B_H`と`V_H−(1−q⁴)(d/(1+q))²<B_H`の**未認証比較を仮定する場合にのみ**具体的`n=2`と転送後直交成分非零を証明。[正式記録](docs/proofs/P4-Q2-PZ37AJU_verified_20261111.md)。
+
+**OPEN／次段AJV:** AJTとAJRを合成し、元sourceの全top射影`‖Qf₀‖²`について`q`を除いた明示上界を認証する。その上で真正AJA予算`B_H`との比較可否を調べる。無条件AJA有限冪数値証人、元追加top残余の十分小さい上界、top一次元性、転送後無条件非零、体積一様coercivity、Hamiltonian gap、4D continuum mass gapは依然OPEN。元物理定義、Lean v4.30.0-rc2、mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6、root不変更。append-only／tighten-only／overwrite-forbidden／same-root。
