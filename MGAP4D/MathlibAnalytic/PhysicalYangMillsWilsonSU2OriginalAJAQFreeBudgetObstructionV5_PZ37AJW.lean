@@ -51,7 +51,8 @@ theorem real_margin_defect_budget_eighth_bound_ajw
     (hmass : mass ≤ 1) :
     m ^ 2 * mass + (d / 2) ^ 2 ≤ V / 8 := by
   have hbp0 : 0 ≤ b * p := mul_nonneg hb hp.le
-  have hbp2 : (b * p) ^ 2 ≤ (1 : ℝ) := (sq_le_sq₀ hbp0 (by norm_num)).2 hbp
+  have hbp2 : (b * p) ^ 2 ≤ (1 : ℝ) := by
+    simpa only [one_pow] using (sq_le_sq₀ hbp0 (by norm_num)).2 hbp
   have hbp2' : b ^ 2 * p ^ 2 ≤ (1 : ℝ) := by
     nlinarith only [hbp2]
   have hScaledV : b ^ 2 * V ≤ b ^ 2 * (p ^ 2 / 4) :=
