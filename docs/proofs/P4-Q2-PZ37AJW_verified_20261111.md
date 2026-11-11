@@ -85,3 +85,9 @@ Lean新規5宣言:
 Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。
 
 append-only／tighten-only／overwrite-forbidden／same-root。
+
+## 6. AJW統合後pushの独立追認（同日追記）
+
+[CI #42988868560](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42988868560) は `event=push`、`head_sha=c2b2c769dc31375768767cffc60469956ad9ede2`、**completed／SUCCESS**。正式mergeを正本として変更Lean依存閉包 **11,437／11,437 SUCCESS**。新規5/5公理監査は標準 `propext`、`Classical.choice`、`Quot.sound`のみ、`sorryAx`なし、変更AJW warning/error 0/0。独立の `Publish MCP CI completion receipt` jobはcompleted／SUCCESS、当該merge HEAD上の `chatgpt-ci-receipt/PR Lean Fast Check` statusもsuccess。前節の「push追認待ち」は起草時点の履歴として残し、本追記で完了を記録する。
+
+この独立受領書はLean kernel証明自体ではなく、同一正式sourceが検証された実行時の来歴である。元AJA予算の正値と、AJV十分条件が全有限H・β>0で不可能という定理の射程を分離する。
