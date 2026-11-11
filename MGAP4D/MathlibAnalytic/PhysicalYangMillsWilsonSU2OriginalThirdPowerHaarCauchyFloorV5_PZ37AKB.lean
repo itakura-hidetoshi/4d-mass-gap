@@ -81,7 +81,7 @@ theorem realHilbert_symmetric_thirdPower_normSq_Cauchy_akb
       a1 * (a1 ^ 3) = a1 ^ 4 := by ring
       _ ≤ a0 ^ 2 * (a1 * a3) := hFour
       _ = a1 * (a0 ^ 2 * a3) := by ring
-  exact (mul_le_mul_left hFirstPos).mp hCancel
+  exact (mul_le_mul_iff_of_pos_left hFirstPos).mp hCancel
 
 /-- Transfer a genuine positive one-step Haar budget to the third power. -/
 theorem realHilbert_oneStep_margin_thirdPower_Cauchy_akb
