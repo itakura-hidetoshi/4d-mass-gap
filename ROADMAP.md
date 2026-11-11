@@ -4594,3 +4594,5 @@ True original SU(2) Wilson/Haar positive source halfweight integral `J_+≥βV_H
 真正有限H・β>0の元AJA証明書`B=m²μ_real({u<−m})`、元AJV q-free補正`c=(d/2)²`、元分散`V=‖f₀‖²`について、**無条件に** `B+c≤V/8<V` を証明。従って **`B<V−c`**、AJVの**十分条件**`V−c<B`は**不可能**。AJAの正値性は保持。粗い上界の障害を有限Wilson冪証人の不存在や質量ギャップの否定と混同しない。[正式記録](docs/proofs/P4-Q2-PZ37AJW_verified_20261111.md)。
 
 **次段AJX:** 実際の全top射影ノルム`‖Qf₀‖²`または有限冪ノルムをAJAと直接比較できる、元Haar/Wilson固有のより鋭い評価を探す。AJU`q`依存`n=2`条件、top一次元性、無条件有限冪証人、H一様coercivity、Hamiltonian gap、4D continuum mass gapは本段の結論外。元物理定義・同一root・Lean/mathlib pin不変。append-only／tighten-only／overwrite-forbidden／same-root。
+
+**AJW formal push独立追認（2026-11-11）:** [CI #42988868560](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42988868560) completed／SUCCESS、正式merge `c2b2c769dc31375768767cffc60469956ad9ede2`、11,437／11,437 Lean依存閉包、新規公理5/5標準3のみ、sorryAxなし、変更warning/error0/0、独立completion receiptとexact-head commit status SUCCESS。AJVの十分条件不成立は形式認証済みだが、実際の全top射影・元AJA予算による有限冪証人判定は別問題。
