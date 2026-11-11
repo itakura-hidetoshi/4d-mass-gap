@@ -4574,3 +4574,15 @@ True original SU(2) Wilson/Haar positive source halfweight integral `J_+≥βV_H
 [定理PR #6637](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6637) MERGED、exact-source [CI #42957344244](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42957344244) 11,435/11,435 SUCCESS、12/12標準公理のみ、新規sorryAxなし、変更warning/error0、独立receipt SUCCESS。正式formal HEAD `033420df2039e5bed9e9509bb55e6343266b0683`、統合後push #42958127760 completed/SUCCESS、source/merge tree・Lean blob同一。元Wilson二時点`‖S²f₀‖²+(1−q⁴)(d/(1+q))²≤V_H`、`q=‖R‖<1`、`d=βv_H/e^(βp_H)>0`、よって`‖S²f₀‖²<V_H`。元AJA予算`B_H`と`V_H−(1−q⁴)(d/(1+q))²<B_H`の**未認証比較を仮定する場合にのみ**具体的`n=2`と転送後直交成分非零を証明。[正式記録](docs/proofs/P4-Q2-PZ37AJU_verified_20261111.md)。
 
 **OPEN／次段AJV:** AJTとAJRを合成し、元sourceの全top射影`‖Qf₀‖²`について`q`を除いた明示上界を認証する。その上で真正AJA予算`B_H`との比較可否を調べる。無条件AJA有限冪数値証人、元追加top残余の十分小さい上界、top一次元性、転送後無条件非零、体積一様coercivity、Hamiltonian gap、4D continuum mass gapは依然OPEN。元物理定義、Lean v4.30.0-rc2、mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6、root不変更。append-only／tighten-only／overwrite-forbidden／same-root。
+
+
+### P4-Q2-PZ37AJV — q-free genuine source full-top and extra-top correction（2026-11-11）
+
+[定理PR #6640](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6640) MERGED。source `d295c85ffa10d4c097ecab20e9d6312ca705f852` の[CI #42972219152](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42972219152) 11,436/11,436 SUCCESS、9/9標準3公理、sorryAxなし、変更Lean warning/error0、exact-source receipt SUCCESS。formal squash `716693195bc51c8f45776b089c16e516bd8529b3`、Git tree/Lean blob一致。push #42973075691は独立受領まで未確定。
+
+元Wilson真正物理源の全top射影`Qf₀`と追加top残余`r`の厳密上界を、前段の未知`q=‖R‖`を右辺へ残さず`‖Qf₀‖²≤V_H−(d/2)²`、`‖r‖²≤V_H−⟨f₀,Ω⟩²−(d/2)²`としてLean4形式証明。ここで`d=βe^(−βp_H)(3p_H/8)²(1/384)^(4n_H)>0`はAJT/AIK元Haar由来である。[正式記録](docs/proofs/P4-Q2-PZ37AJV_verified_20261111.md)。
+
+**OPEN／次段:** 真正AJA予算`B_H,β`と数値上界`V_H−(d/2)²`の厳密大小の具体的評価・証人、無条件有限冪n、top一次元性、転送後無条件励起sector非零、H一様coercivity、Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップ。条件付き存在を無条件の物理結論に昇格させない。元物理定義、Lean v4.30.0-rc2、mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6、root不変更。append-only／tighten-only／overwrite-forbidden／same-root。
+
+
+**AJV formal push独立追認（2026-11-11）:** [#42973075691](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42973075691) completed／SUCCESS、merge `716693195bc51c8f45776b089c16e516bd8529b3`、Lean 11,436／11,436、9／9公理は標準3のみ、sorryAxなし、変更warning/error0、独立receipt `event=push exact_sha=716693195bc51c8f45776b089c16e516bd8529b3 source_result=success run=42973075691 attempt=1`。旧「push未認証」は当時の記録として残す。AJA厳密比較、無条件有限冪証人、体積一様gapはOPEN。
