@@ -5223,3 +5223,13 @@ True original SU(2) Wilson/Haar positive source halfweight integral `J_+≥βV_H
 
 
 **AJV formal push独立追認（2026-11-11）:** [#42973075691](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42973075691) completed／SUCCESS、merge `716693195bc51c8f45776b089c16e516bd8529b3`、Lean 11,436／11,436、9／9公理は標準3のみ、sorryAxなし、変更warning/error0、独立receipt `event=push exact_sha=716693195bc51c8f45776b089c16e516bd8529b3 source_result=success run=42973075691 attempt=1`。旧「push未認証」は当時の記録として残す。AJA厳密比較、無条件有限冪証人、体積一様gapはOPEN。
+
+### P4-Q2-PZ37AJW — genuine original AJA budget versus AJV q-free threshold: certified obstruction（2026-11-11）
+
+[定理PR #6643](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6643) MERGED。認証source `a7bad255ae2c080a9f78d0077975d3677d8babb5`、[exact-source CI #42988068487](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42988068487) completed／SUCCESS、11,437/11,437、5/5新規公理は標準3のみ、sorryAxなし、変更warning/error0、独立receipt SUCCESS。formal squash `c2b2c769dc31375768767cffc60469956ad9ede2`、source/test-merge/merge Git tree `4108358f9c044f614dcc8436a184f5b22454500d`一致、新規Lean blob `2c555dbd368ff78051a45704f407d1e9a4746e1d`一致。新規leaf1件・221行、既存Lean変更なし。
+
+真正有限H・β>0の元AJA証明書`B=m²μ_real({u<−m})`、元AJV q-free補正`c=(d/2)²`、元分散`V=‖f₀‖²`について、**無条件に** `B+c≤V/8<V` を証明。従って **`B<V−c`**、AJVの**十分条件**`V−c<B`は**不可能**。AJAの正値性は保持。粗い上界の障害を有限Wilson冪証人の不存在や質量ギャップの否定と混同しない。[正式記録](docs/proofs/P4-Q2-PZ37AJW_verified_20261111.md)。
+
+**次段AJX:** 実際の全top射影ノルム`‖Qf₀‖²`または有限冪ノルムをAJAと直接比較できる、元Haar/Wilson固有のより鋭い評価を探す。AJU`q`依存`n=2`条件、top一次元性、無条件有限冪証人、H一様coercivity、Hamiltonian gap、4D continuum mass gapは本段の結論外。元物理定義・同一root・Lean/mathlib pin不変。append-only／tighten-only／overwrite-forbidden／same-root。
+
+**AJW formal push独立追認（2026-11-11）:** [CI #42988868560](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42988868560) completed／SUCCESS、正式merge `c2b2c769dc31375768767cffc60469956ad9ede2`、11,437／11,437 Lean依存閉包、新規公理5/5標準3のみ、sorryAxなし、変更warning/error0/0、独立completion receiptとexact-head commit status SUCCESS。AJVの十分条件不成立は形式認証済みだが、実際の全top射影・元AJA予算による有限冪証人判定は別問題。
