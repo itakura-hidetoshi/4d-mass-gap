@@ -161,8 +161,10 @@ theorem p4Q2PZ37AJY_originalAJU_twoPowerCorrection_le_quarter_variance
     ring
   have hCorrection :
       p4Q2PZ37AJU_originalTwoPowerCorrection H beta hbeta.le ≤ (dY beta) ^ 2 := by
+    have hq0 : 0 ≤ ‖RY beta hbeta.le‖ :=
+      norm_nonneg (RY beta hbeta.le)
     have hRaw := real_secondPower_correction_le_defect_sq_ajy
-      ‖RY beta hbeta.le‖ (dY beta) (norm_nonneg _) hd0
+      ‖RY beta hbeta.le‖ (dY beta) hq0 hd0
     change
       p4Q2PZ37AJU_originalTwoPowerCorrection H beta hbeta.le ≤ (dY beta) ^ 2
       at hRaw
