@@ -4641,3 +4641,12 @@ True original SU(2) Wilson/Haar positive source halfweight integral `J_+≥βV_H
 [PR #6665](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6665) MERGED、exact-source [CI #43112959710](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43112959710) と正式formal push [CI #43114001431](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43114001431) completed/SUCCESS。真正finite-H sourceに対し `B*a_n≤V*a_(n+1)`, `B/V≤a_(n+1)/a_n` (全n:ℕ)、さらに条件 `qV<B` のもとで `a_(n+1)≤q*a_n` を否定。新規7定理・7公理監査は標準3のみ、11,444/11,444 Lean、warning/error0、sorryAxなし、独立receipt成功。source `d4fd6295f23f77040296d10692cfaafe01026391`、正式squash `9f71815ec5df4336493f492b28f6d9108538b456`、共通tree `a1f4842fea48791b75551b02c2d6640e295a7e6e`。旧Lean／元Wilson/Haar/ZW/AJA／pin／rootは不変。[正式証明記録](docs/proofs/P4-Q2-PZ37AKD_verified_20261112.md)。
 
 **NEXT/OPEN:** AJA予算に対する実際の冪エネルギー**上界**、full-topの真正定量評価、無条件n=2/n=3 AJA証人/不存在、top一次元性、H一様coercivity、Hamiltonian spectral gap、4D continuum mass gap。B/VはH・β依存の正の局所下界であり、一様スペクトルギャップへの降下は不可。docs-only Strict Leanの手動実行なし。append-only／same-root。
+
+
+### P4-Q2-PZ37AKE — genuine AJA witness-tail stability and conditional finite-power test（2026-11-12）
+
+[定理PR #6666](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6666) MERGED。最終source `a82d74542653d42c4d564486429934d29c6eb47f`、formal squash `08e4fe2a92df2595cbfb2da141baa588e44d9eea`、source/test-merge/squash共通tree `92499907d8cf255b1de62e45bccc5e6c5c9a71c6`。[Exact-source #43115696190](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43115696190) と独立[formal push #43116444718](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43116444718) は completed/SUCCESS。Lean 11,444/11,444、新規8/8公理監査は標準3のみ、sorryAxなし、変更warning/error 0/0、独立completion receipt SUCCESS。新規Lean leaf 1件278行追加・既存Lean変更0。
+
+真正元SU(2) Wilson正規化転送`S`・元ZW源`f0`・真正全top射影`Q`・元AJA Haar予算`B`を維持。全有限`H`・`β>0`で`||S^k f0||²≤||S^n f0||²`（n≤k）を証明し、もし実際のAJA厳密証人`||S^n f0||²<B`が存在すれば**以後すべての冪**で成立すること、および`||Qf0||²<B ↔ ∃N≥2 ∀k≥N:||S^k f0||²<B`を形式化。真正`Q,R,f0,B`の有限幾何学的十分テストも認証した。さらにAJV補正`C>0`により`∃n≥2:||S^n f0||²<V−C/2`を**無条件**に証明したが、**この不等式はAJA証人ではない**。
+
+**OPEN:** `||Qf0||²<B`、実際の無条件AJA有限冪証人、真正Haar数値比較、top一次元性、H一様coercivity、Hamiltonian・連続体4D mass gap。AJXの`B≤V/16`とAJWの粗い十分条件no-goを消さず保持。[AKE正式証明記録](docs/proofs/P4-Q2-PZ37AKE_verified_20261112.md)。元物理定義・pin・root不変、append-only/same-root。docs-only Strict Lean手動実行禁止。
