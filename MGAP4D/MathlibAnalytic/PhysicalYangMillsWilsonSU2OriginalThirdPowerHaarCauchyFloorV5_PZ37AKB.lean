@@ -71,9 +71,16 @@ theorem realHilbert_symmetric_thirdPower_normSq_Cauchy_akb
   have hStep1Mul : a0 ^ 2 * a2 ^ 2 ≤ a0 ^ 2 * (a1 * a3) :=
     mul_le_mul_of_nonneg_left hStep1 (sq_nonneg _)
   have hFour : a1 ^ 4 ≤ a0 ^ 2 * (a1 * a3) := by
-    nlinarith only [hStep0Sq, hStep1Mul]
+    calc
+      a1 ^ 4 = (a1 ^ 2) ^ 2 := by ring
+      _ ≤ (a0 * a2) ^ 2 := hStep0Sq
+      _ = a0 ^ 2 * a2 ^ 2 := by ring
+      _ ≤ a0 ^ 2 * (a1 * a3) := hStep1Mul
   have hCancel : a1 * (a1 ^ 3) ≤ a1 * (a0 ^ 2 * a3) := by
-    nlinarith only [hFour]
+    calc
+      a1 * (a1 ^ 3) = a1 ^ 4 := by ring
+      _ ≤ a0 ^ 2 * (a1 * a3) := hFour
+      _ = a1 * (a0 ^ 2 * a3) := by ring
   exact (mul_le_mul_left hFirstPos).mp hCancel
 
 /-- Transfer a genuine positive one-step Haar budget to the third power. -/
@@ -221,8 +228,9 @@ theorem p4Q2PZ37AKB_originalAJA_cube_div_varianceSq_lt_AJA
     mul_pos (sub_pos.mpr hLess) (add_pos hV hB)
   have hSq : B ^ 2 < VB ^ 2 := by nlinarith only [hDiff]
   have hCube : B ^ 3 < B * VB ^ 2 := by
-    have hMul := mul_lt_mul_of_pos_left hSq hB
-    nlinarith only [hMul]
+    calc
+      B ^ 3 = B * B ^ 2 := by ring
+      _ < B * VB ^ 2 := mul_lt_mul_of_pos_left hSq hB
   apply (div_lt_iff₀ (pow_pos hV 2)).2
   nlinarith only [hCube]
 
