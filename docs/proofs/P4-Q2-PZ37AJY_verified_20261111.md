@@ -32,3 +32,7 @@ AJUの `‖S²f₀‖²≤V_H−C₂` は実際の冪ノルムの**上界**に�
 - 三回目source `86ae17bbf2a4789d55843029a96291877aa6eeca`、[CI #43005620828](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43005620828) SUCCESS。 `dY beta` と `norm_nonneg (RY beta hbeta.le)` を明示し、定理署名・物理仮定を弱めず6宣言すべて確認。
 
 次段AJZは、粗い十分条件を繰り返さず、実際の `‖Qf₀‖²` 又は `‖Sⁿf₀‖²` と同じ真正AJA証明書を直接比較する橋を探る。append-only／tighten-only／overwrite-forbidden／same-root。
+
+## 統合後push CI独立追認（同日追記）
+
+[CI #43006708442](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43006708442) は `event=push`, `head_sha=879bd96508d4d89f92a8d1cd6659fe858ce81091`、completed/SUCCESS。Changed Lean fast check job/stepはSUCCESS、実ログで11,439/11,439依存閉包と新規AJY 6件の `#print axioms` が標準3公理のみと確認。新規sorryAxなし、変更warning/error 0/0。別job Publish MCP CI completion receipt completed/SUCCESS、正本の `chatgpt-ci-receipt/PR Lean Fast Check` commit status success。本文起草時のpending表現は歴史的状態であり、この追記が確定した完了受領書である。
