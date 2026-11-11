@@ -4893,3 +4893,13 @@ AJTの真正欠損下界 `d=βv_H/e^(βp_H)>0` とAJRの `‖f₀−Sf₀‖≤(
 
 
 **AJV統合後push独立追認（2026-11-11）:** [#42973075691](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42973075691) completed／SUCCESS。formal exact merge `716693195bc51c8f45776b089c16e516bd8529b3`、11,436／11,436 Lean、9／9新規公理は標準3のみ、変更AJV warning/error0、新規sorryAxなし。独立receipt `event=push exact_sha=716693195bc51c8f45776b089c16e516bd8529b3 source_result=success run=42973075691`。源の全top射影のq-free上界は認証済みだが、真正AJA予算との厳密比較・具体的有限冪数値証人は依然OPEN。
+
+### P4-Q2-PZ37AJW — 真正AJA予算とAJV q-free上界の**厳密障害**（2026-11-11）
+
+[Lean定理PR #6643](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6643) **MERGED**。修正版source `a7bad255ae2c080a9f78d0077975d3677d8babb5`、[Exact-source CI #42988068487](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42988068487) completed/SUCCESS、**11,437／11,437**、5/5公理監査は`propext`・`Classical.choice`・`Quot.sound`のみ、新規sorryAxなし、変更warning/error0/0、独立MCP CI receipt SUCCESS。正式squash `c2b2c769dc31375768767cffc60469956ad9ede2`、source/test-merge/merge Git tree `4108358f9c044f614dcc8436a184f5b22454500d`一致、Lean blob `2c555dbd368ff78051a45704f407d1e9a4746e1d`一致。新規Lean leaf221行追加、既存ファイル変更0。
+
+固定有限H、β>0の真正元物理系で `V_H=‖f₀‖²>0`、`d_H=βe^(−βp_H)v_H>0`、元AJA Haar-L²予算`B_H,β=m_H,β²·Measure.real μ_H({u_H,β<−m_H,β})>0`とすると、**新規Lean認証** `B_H,β+(d_H/2)²≤V_H/8<V_H`。従って`B_H,β<V_H−(d_H/2)²`であり、AJVが**十分条件**として留保していた`V_H−(d_H/2)²<B_H,β`は**全有限H・β>0で不可能**と証明された。AIW余裕上界、AIK/Haar分散、AIS上界、Haar確率と`βp_H e^(−βp_H)≤1`のみから得る。
+
+**重要:** この不可能性はAJVの粗い上界による判定方法に限定され、実際の`‖Qf₀‖²<B_H,β`や真正Wilson有限冪証人の存在を否定しない。top一次元性、体積一様coercivity、Hamiltonian gap、4D continuum mass gapはいずれもOPEN。[正式証明記録](docs/proofs/P4-Q2-PZ37AJW_verified_20261111.md)。元Wilson定義、Haar、ZW源、AJA予算、root・pinを変更せず。append-only／tighten-only／overwrite-forbidden／same-root。
+
+**AJW正式formal push独立追認（2026-11-11）:** [CI #42988868560](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42988868560) `event=push`、exact merge `c2b2c769dc31375768767cffc60469956ad9ede2`、completed／SUCCESS。Lean依存閉包 11,437／11,437、AJW新規5/5公理は標準3のみ、sorryAxなし、変更warning/error0/0、独立receipt job SUCCESS、exact-head status `chatgpt-ci-receipt/PR Lean Fast Check` SUCCESS。形式結論`B+c≤V/8`を無条件の有限冪証人不存在とは解釈しない。
