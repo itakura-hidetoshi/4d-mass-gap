@@ -4625,3 +4625,12 @@ True original SU(2) Wilson/Haar positive source halfweight integral `J_+≥βV_H
 
 [PR #6659](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6659) MERGED、source `85ca5eb4575fbc89d69fd43eb17d9316bad0c4bf`、formal squash `b508a059daa252507f02ec175143d975188556c9`、source/test-merge/squash tree `388f6a17df60650a9191d47e388e3f8da9e93970`。[Exact-source #43104537528](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43104537528)とformal push独立[CI #43105393399](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43105393399) SUCCESS：11,442/11,442 Lean、8/8標準3公理のみ、sorryAxなし、変更error/warning0/0、独立receipt SUCCESS。真正Haar分散 `V` とAJA証明書 `B` に対し、**`0<B³/V²≤‖S³f₀‖²`** および **`B³/V²<B`** を実際の対称Wilson作用素から導出。厳密n=3 AJA証人 `‖S³f₀‖²<B` はNO_DATA、n=2もOPEN。次は第三冪上界・全top直交残余の独立評価。top一次元性・体積一様coercivity・質量ギャップはOPEN。[正式記録](docs/proofs/P4-Q2-PZ37AKB_verified_20261112.md)。元物理定義、root、pin不変。append-only。
 
+
+
+### P4-Q2-PZ37AKC — genuine all-positive Wilson-power Haar–Cauchy certificate（2026-11-12）
+
+[定理PR #6662](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6662) MERGED。source `0ee259ee8c712b88a0a2a030e86a5322e40f43e4`、formal squash `a36bf6966611c557a07aec182495e21aa3c15f82`、source/test-merge/squash tree `f2cda6c622aa9dedb3f281fb2e40373e76fac533`。[Exact CI #43109258870](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43109258870)と独立[formal push #43110233807](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43110233807) completed/SUCCESS、11,443/11,443 Lean、6/6標準3公理のみ、sorryAxなし、AKC error/warning0、独立receipt成功。初回失敗[#43108140913](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43108140913)は局所`a₀=V`の明示とunnecessary`simpa`修正で解消。既存Lean変更0、1新規268行。
+
+元のSU(2) Wilson対称作用素`S`、中心化ZW源`f₀`、Haar`B>0`、`V=‖f₀‖²>0`から、全自然数`n`について真の`(n+1)`冪の定量下界 **`0<B^(n+1)/V^n≤‖S^(n+1)f₀‖²`** を形式証明。log-convex moment列と正の初期二項の帰納的比率比較を使用。これは有限体積ごとの証明であり、`n`／体積の一様下界を意味しない。[正式証明記録](docs/proofs/P4-Q2-PZ37AKC_verified_20261112.md)。
+
+**NEXT/OPEN:** 実際のWilson有限冪`‖Sⁿf₀‖²`の独立**上界**、全top射影とAJA予算`B`の直接比較、無条件`n=2,n=3`厳密AJA証人／不存在、top一次元性、H一様coercivity、Hamiltonian spectral gap、4D mass gap。形式的下界をこれらへ降下させない。元物理定義、pin、root不変更、append-only／same-root。docs-only Lean手動実行禁止。
