@@ -5233,3 +5233,11 @@ True original SU(2) Wilson/Haar positive source halfweight integral `J_+≥βV_H
 **次段AJX:** 実際の全top射影ノルム`‖Qf₀‖²`または有限冪ノルムをAJAと直接比較できる、元Haar/Wilson固有のより鋭い評価を探す。AJU`q`依存`n=2`条件、top一次元性、無条件有限冪証人、H一様coercivity、Hamiltonian gap、4D continuum mass gapは本段の結論外。元物理定義・同一root・Lean/mathlib pin不変。append-only／tighten-only／overwrite-forbidden／same-root。
 
 **AJW formal push独立追認（2026-11-11）:** [CI #42988868560](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42988868560) completed／SUCCESS、正式merge `c2b2c769dc31375768767cffc60469956ad9ede2`、11,437／11,437 Lean依存閉包、新規公理5/5標準3のみ、sorryAxなし、変更warning/error0/0、独立completion receiptとexact-head commit status SUCCESS。AJVの十分条件不成立は形式認証済みだが、実際の全top射影・元AJA予算による有限冪証人判定は別問題。
+
+### P4-Q2-PZ37AJX — original AJA 1/16 certificate ceiling and conditional 15/16 excited-sector test（2026-11-11）
+
+[定理PR #6646](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6646) MERGED。認証source `8d0394673bbd7ab20c35e39a6ca4f6709cd61b00`、[CI #42993769844](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42993769844) completed/SUCCESS、11,438／11,438 Lean依存閉包、新規9/9公理は標準3のみ、sorryAxなし、変更warning/error0、独立receipt SUCCESS。正式formal squash `e552961d3533df32f653b4213443144120f413c2`、source/test-merge/merge共通Git tree `e70ced55c1d6786da137728716e16d4ac7be953c`、Lean blob `098176c09ba56886d388d1602ac3d07bb4806e9b`一致。新規leaf326行、既存Lean変更なし。[正式記録](docs/proofs/P4-Q2-PZ37AJX_verified_20261111.md)。
+
+真正元AJA証明書は有限H・β>0で`0<B_H,β≤V_H/16`を**無条件に**形式証明。ここから実際の元Wilson有限冪のAJA予算内証人が**別途得られる場合のみ**、元source全top `‖Qf₀‖²<V_H/16`、元全top直交 `‖Q⊥f₀‖²>15V_H/16`、選択topと追加topの個別二乗`<V_H/16`が必要。逆に実際のtopが`≥V_H/16`なら予算証人不存在。いずれも角度の実測評価は**NO_DATA**、無条件証人不存在とは扱わない。
+
+**次段AJY:** 真正Haar/Wilson源の全top射影、選択top＋追加top、または実際の反復冪ノルムを、必要条件だけでなく元AJA予算に対して直接計算・評価する橋を優先。無条件有限冪証人、top一次元性、体積一様coercivity、Hamiltonian spectral gap、4D continuum mass gapは依然OPEN。元物理定義、root、固定Lean/mathlib pinは不変更。append-only／tighten-only／overwrite-forbidden／same-root。
