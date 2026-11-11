@@ -73,3 +73,7 @@
 次段AJYは既存の粗い分散上界 `V−c` や必要条件の反復ではなく、元のWilson/Haar作用素・sourceの真の全top射影／有限冪ノルムを直接評価して `B_H,β` と比較する橋を優先する。
 
 append-only／tighten-only／overwrite-forbidden／same-root。
+
+## 6. 正式formal統合後pushの独立追認（同日追記）
+
+[CI #42994602655](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42994602655) は `event=push`、`exact_sha=e552961d3533df32f653b4213443144120f413c2`、completed／SUCCESS。正式mergeを対象に **11,438／11,438 Lean依存閉包 SUCCESS**、AJX新規9/9公理監査は`propext`、`Classical.choice`、`Quot.sound`のみ、新規`sorryAx`なし、変更leaf warning/error 0/0。独立 `Publish MCP CI completion receipt` jobもcompleted／SUCCESS、exact-head commit status `chatgpt-ci-receipt/PR Lean Fast Check` はsuccess。この追記により第1節の当時の「push追認待ち」は完了した。receiptはLean証明自体とは別の実行時来歴である。
