@@ -4604,3 +4604,9 @@ True original SU(2) Wilson/Haar positive source halfweight integral `J_+≥βV_H
 真正元AJA証明書は有限H・β>0で`0<B_H,β≤V_H/16`を**無条件に**形式証明。ここから実際の元Wilson有限冪のAJA予算内証人が**別途得られる場合のみ**、元source全top `‖Qf₀‖²<V_H/16`、元全top直交 `‖Q⊥f₀‖²>15V_H/16`、選択topと追加topの個別二乗`<V_H/16`が必要。逆に実際のtopが`≥V_H/16`なら予算証人不存在。いずれも角度の実測評価は**NO_DATA**、無条件証人不存在とは扱わない。
 
 **次段AJY:** 真正Haar/Wilson源の全top射影、選択top＋追加top、または実際の反復冪ノルムを、必要条件だけでなく元AJA予算に対して直接計算・評価する橋を優先。無条件有限冪証人、top一次元性、体積一様coercivity、Hamiltonian spectral gap、4D continuum mass gapは依然OPEN。元物理定義、root、固定Lean/mathlib pinは不変更。append-only／tighten-only／overwrite-forbidden／same-root。
+
+### P4-Q2-PZ37AJY — original AJU n=2 *sufficient* threshold obstruction（2026-11-11）
+
+[PR #6649](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6649) MERGED、exact-source [CI #43005620828](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43005620828) SUCCESS（11,439/11,439 Lean、6/6 standard3 axioms、no sorryAx、changed warning/error 0/0、independent receipt）。元のAJA `B` とAJU二乗冪補正 `C₂` に対し `B+C₂≤5V/16<V` を同一H,βで形式証明：`V−C₂<B` という**特定の十分条件**のみ不可能。真の二乗冪ノルムや全top射影とBの直接比較、数値有限冪証人はOPEN。[証明記録](docs/proofs/P4-Q2-PZ37AJY_verified_20261111.md)。次AJZは実際のWilson/Haar冪と証明書との直接比較を優先。root・pin・元物理定義不変。
+
+**AJY formal push独立照合:** [#43006708442](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43006708442) completed/SUCCESS、formal exact squash HEAD `879bd96508d4d89f92a8d1cd6659fe858ce81091`、11,439/11,439 Lean、6/6標準3公理、sorryAxなし、変更warning/error 0/0、独立completion receipt・exact-head status SUCCESS。
