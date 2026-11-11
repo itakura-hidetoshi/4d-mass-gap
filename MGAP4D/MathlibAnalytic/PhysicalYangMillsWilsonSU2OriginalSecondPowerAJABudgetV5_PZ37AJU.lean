@@ -82,7 +82,7 @@ theorem realHilbert_fullTop_secondPower_defect_floor_aju
   have hRatio : c ≤ p := by
     change d / (1 + q) ≤ p
     apply (div_le_iff₀ hDen).2
-    exact hdef.trans hOne
+    simpa only [mul_comm] using (hdef.trans hOne)
   have hc0 : 0 ≤ c := div_nonneg hd hDen.le
   have hRatioSq : c ^ 2 ≤ p ^ 2 :=
     (sq_le_sq₀ hc0 hp0).2 hRatio
