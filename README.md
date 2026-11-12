@@ -4730,3 +4730,11 @@ The unchanged original Wilson SU(2) normalized transfer `S=P/||P||`, signed cent
 ### AKQ independent formal-push authentication — 2026-11-12 JST
 
 The separately triggered canonical formal-squash [CI #43204266634](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43204266634) at exact integrated HEAD `517ed6be3b9032c9d6c01fc52ec9432fa924f7da` completed **SUCCESS**. Direct Lean 11,453/11,453, 7/7 AKQ axioms exactly the standard three, no sorryAx, changed-file warning/error 0/0. The independent exact-SHA `event=push` receipt job `131138679934` completed/SUCCESS. The original-model source/test-merge/squash Git tree is identical. The actual H14 negative-region mass remains unmeasured/NO_DATA; conditional mathematics does not become an unconditional no-witness statement.
+
+## AKR — H=14真正Haar負領域と有限Borel補集合証明書（2026-11-12 JST）
+
+[AKR定理PR #6700](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6700) **MERGED**。元Wilson SU2の固定β₀=log(3/2)/64、H=14、元Haar確率測度、元ZW符号付きsource、正規化transfer u、元のmargin m、真のtop Qおよび元AJA予算を変更しない。AITの真正負領域半Haar下界とAIBのβ₀<7、AIWの負領域同一性から **r₁₄≥1/2** をLean4で導出。新規の有限Borelセル証明書は、互いに素な可測補集合セル Cᵢ の元Haar質量有理下界 qᵢ と、全セル内部で厳密に認証した元transfer有理下界（−m₁₄以上）が与えられると **r₁₄≤1−Σqᵢ** を証明。Σqᵢ≥1−4exp(−β₀²·81000/2) が別途認証されればAKQの元AJA有限冪証人不存在へ降下する。**具体的なセル質量表・r₁₄の上界はNO_DATA**。閾値約0.212791447は実測質量ではない。
+
+[Exact-source CI #43222014058](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43222014058) completed/SUCCESS、Lean 11,454/11,454、AKR新規5定理の公理監査5/5は標準3公理のみ、sorryAxなし、変更AKR error/warning 0/0。認証source `a6b2ac20a83c79371a557771920ab2b2b256001e`、canonical squash `a1184bd3840f39e0753cd096703f397028dbf96a`、source/test-merge/squash共通Git tree `7e45dcafe8945d152b588617333be408d57b59ab`。独立formal push [CI #43223016144](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43223016144) は別途検証する。[AKR正式記録](docs/proofs/P4-Q2-PZ37AKR_verified_20261112.md)。
+
+**NEXT/OPEN:** 真正H14 Borelセルと全点Wilson作用量の厳密有理下界、元Haar質量下界総和の明示的検証。AGP/AGU/AGQの非計算的区間選択と実際の数値表を区別する。元AJA証人の存在・不存在、Δ₁₄符号、H一様Rayleigh下界、Hamiltonian gap、連続体4D質量ギャップは未証明。append-only／same-root／元物理・固定Lean/mathlib不変更。
