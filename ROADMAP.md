@@ -4693,3 +4693,26 @@ Exact-source CI [43161340043](https://github.com/itakura-hidetoshi/4d-mass-gap/a
 **Finite-volume scope correction:** canonical source already contains a top-simplicity theorem for this same finite-volume physical Wilson operator, successfully built in [#5012](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5012). The record above distinguishes that existing theorem and historical build evidence from a fresh current-head replay or theorem-specific axiom audit, which are not claimed here. A blanket finite-volume “top simplicity OPEN” description should not be repeated.
 
 Original definitions, assumptions, roots and Lean/mathlib pins are preserved. Formal receives the new Lean leaf; main mirrors only this record and the identical public-document appendices.
+
+
+### P4-Q2-PZ37AKL — original Wilson H-uniform top-orthogonal coercivity (2026-11-12 JST)
+
+[Theorem PR #6683](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6683) explicitly formalizes H-uniform coercivity for the unchanged genuine SU(2) Wilson normalized physical transfer `S=P/||P||` on the orthogonal complement of its **full** eigenvalue-one space. The canonical two-sided twelve-spatial cutoff at `s=9` gives one `beta_*>0`, independent of H. For every `0<=beta<=beta_*`, every H and every `x` in that sector:
+
+$$
+\frac1{3072}\|x\|^2\le\langle x-Sx,x\rangle,
+\qquad
+\frac1{3072}\|x\|\le\|x-Sx\|,
+\qquad
+\frac{6143}{9437184}\|x\|^2\le\|x\|^2-\|Sx\|^2.
+$$
+
+The proof uses the existing genuine physical contraction `||S|_(full-top-perp)||<=3071/3072`, Cauchy--Schwarz and the exact raw/normalized transport. It also proves that one positive coupling `beta_*/2` can be fixed before all H. The raw squared-defect bound retains `||P||^2`; no volume-dependent replacement coupling or assumed uniform frame is introduced.
+
+The leaf also repairs an inherited compiled-decision dependency in the six-color cardinality proof: it supplies the identical proposition by ordinary kernel reduction and reconstructs the affected proof terms, with explicit kernel checking and final axiom audits, while preserving every imported declaration and physical definition.
+
+**Scope correction:** older blanket statements that H-uniform coercivity is OPEN are retained as history. This result certifies the specified normalized full-top-orthogonal coercivity on a common positive small-coupling interval. It makes no coercivity claim at the original numerical `beta0=log(3/2)/64`, no H-uniform original GL-source Rayleigh claim, and no common-carrier/Hamiltonian/continuum mass-gap conclusion. At positive coupling the original source retains the AKI/AKK nonzero top component, so the AJA non-witness results are unchanged.
+
+Exact-source CI [43169160435](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43169160435) and independent formal-push CI [43169855373](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43169855373) are completed/SUCCESS, including Lean step 17, post-build processing and separate exact-SHA receipts. Each reports **9443/9443**, all **11 new mathematical declarations** and the separate existing cutoff-positivity audit use only `[propext, Classical.choice, Quot.sound]`, no sorryAx/native dependency remains in the new mathematical declarations, and changed AKL warning/error is **0/0**. The three private Meta helper definitions and one tactic registration are counted separately. Existing imported-source warnings are preserved. Source/test-merge/squash share tree `c047dc43f8ec69266add2cd78968e90715c90904`. [Formal proof and audit record](docs/proofs/P4-Q2-PZ37AKL_verified_20261112.md).
+
+One new 327-line Lean leaf; existing definitions, assumptions, roots and Lean/mathlib pins preserved. Formal receives the leaf; main mirrors only the identical proof-record blob and public-document appendices. append-only / tighten-only / overwrite-forbidden / same-root.
