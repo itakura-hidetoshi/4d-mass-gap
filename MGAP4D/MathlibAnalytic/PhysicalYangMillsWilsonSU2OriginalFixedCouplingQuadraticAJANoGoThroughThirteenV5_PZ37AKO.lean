@@ -145,7 +145,8 @@ theorem p4Q2PZ37AKO_originalFixedCoupling_le_thirteen_no_AJA_power_witness
 assumption about the unknown original full-top versus Haar-budget sign. -/
 theorem p4Q2PZ37AKO_originalFixedCoupling_at_thirteen_no_AJA_power_witness :
     ¬ ∃ n : ℕ,
-      ‖((SO beta0 p4Q2PZ37ADC_fixedCoupling_pos.le) ^ n)
+      ‖((periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+          13 2 (by norm_num) beta0 p4Q2PZ37ADC_fixedCoupling_pos.le) ^ n)
         (p4Q2PZ37ZW_originalCenteredPhysicalDirection 13)‖ ^ 2 <
         (p4Q2PZ37AIW_originalNormalizedNegativeMargin 13
           beta0 p4Q2PZ37ADC_fixedCoupling_pos.le) ^ 2 *
