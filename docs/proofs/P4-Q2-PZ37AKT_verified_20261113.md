@@ -107,3 +107,24 @@ four-dimensional Yang--Mills mass gap remain OPEN.
 The theorem canonical is formal; the public main branch must
 receive only byte-identical proof-record mirroring and append-only
 README/ROADMAP documentation, never a copy of Lean sources.
+
+
+## Independent AKT canonical formal-squash push certification — 2026-11-13 JST
+
+The separate actual canonical formal-branch `push`
+[CI #43318982017](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43318982017)
+at integrated SHA `8d9f8b7db2da7cb29b6506518f9f9d4b2ac561b0`
+completed **SUCCESS**. Changed-Lean job `131534355270` completed
+SUCCESS and emitted `[11455/11455] Built ...PZ37AKT`.
+All five `#print axioms` audits retain only `propext`,
+`Classical.choice` and `Quot.sound`, no `sorryAx`, and
+changed AKT warning/error 0/0. The independent exact-head MCP
+completion receipt job `131537470852` completed SUCCESS, with
+`event=push`, the exact integrated SHA and
+`source_result=success`, publishing GitHub commit status `success`.
+The integrated tree is the previously certified exact-source/test-merge
+tree `2fef4b6d8ed7951cd2ef4a6d935124ab7cfa13be`.
+
+This certifies ONLY the stated unchanged-original-model strict AJA
+no-witness for every H<=16. It does not certify an actual Haar
+negative-region numerical value or a continuum mass gap.
