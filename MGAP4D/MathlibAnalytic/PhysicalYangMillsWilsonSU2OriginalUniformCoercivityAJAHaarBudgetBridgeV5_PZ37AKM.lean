@@ -135,7 +135,7 @@ theorem p4Q2PZ37AKM_originalPower_uniformGeometricEnvelope
         ‖p4Q2PZ37AJD_originalSourceTopComponent H beta hbeta‖ ^ 2 +
         (qM ^ n *
           ‖((TopM beta hbeta.le)ᗮ).starProjection fM‖) ^ 2 :=
-      add_le_add_left hTailSq _
+      add_le_add_right hTailSq _
 
 /-- The unconditional ORIGINAL quantitative sandwich and actual Haar
 certificate ceiling, for one and the same finite H, beta, physical f0 and S. -/
