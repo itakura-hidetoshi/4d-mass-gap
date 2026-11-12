@@ -114,3 +114,21 @@ Append-only / tighten-only / overwrite-forbidden / same-root.
 The authoritative Lean theorem belongs on formal; the public main
 branch mirrors this exact proof record and appended README/ROADMAP
 only after separate CI verification.
+
+
+## Independent canonical AKR squash push verification — 2026-11-13 JST
+
+The actual, separate canonical formal push workflow
+[CI #43223016144](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43223016144)
+on exact integrated SHA `a1184bd3840f39e0753cd096703f397028dbf96a`
+completed **SUCCESS**. Lean job `131199092171` completed/SUCCESS with
+`[11454/11454] Built ...PZ37AKR`; five/ five actual multiline
+`#print axioms` results contain only `propext`, `Classical.choice`,
+`Quot.sound`, no sorryAx and changed-file error/warning 0/0.
+Independent completion receipt job `131202291241` completed/SUCCESS:
+`event=push`, exact integrated SHA,
+`source_result=success`, published GitHub commit status `success`.
+The integrated Git tree is exactly the tested tree
+`7e45dcafe8945d152b588617333be408d57b59ab`.
+This authenticates the conditional AKR theorem, **not** any actual
+H14 upper Haar mass nor unconditional finite-power AJA no-go.
