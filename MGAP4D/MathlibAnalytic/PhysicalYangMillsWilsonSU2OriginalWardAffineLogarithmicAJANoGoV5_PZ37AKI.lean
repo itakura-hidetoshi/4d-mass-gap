@@ -250,7 +250,10 @@ theorem p4Q2PZ37AKI_originalSource_top_overlap_allPositive
   have hcF : c * F ≤ 0 := mul_nonpos_of_nonneg_of_nonpos hCoeff.1 hFneg.le
   have hdMass : d * ‖P‖ ≤ d * I := mul_le_mul_of_nonneg_left hMass hd.le
   have hBound : ‖P‖ * F ≤ ‖P‖ * (-d) := by nlinarith only [hPair, hcF, hdMass]
-  exact (mul_le_mul_left hNorm).mp hBound
+  change F ≤ -d
+  by_contra hNot
+  have hGt : -d < F := lt_of_not_ge hNot
+  exact (not_lt_of_ge hBound) (mul_lt_mul_of_pos_left hGt hNorm)
 
 /-- All-coupling power lower bound from the SAME original top overlap.
 This is finite-H and beta-dependent; it is not uniform coercivity. -/
