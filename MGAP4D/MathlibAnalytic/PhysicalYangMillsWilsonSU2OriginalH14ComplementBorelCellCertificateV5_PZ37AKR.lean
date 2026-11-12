@@ -133,9 +133,11 @@ theorem p4Q2PZ37AKR_originalH14_negativeHaarMass_le_of_rationalCells
     (hMassLower : ∀ i, (massLower i : ℝ) ≤ Measure.real muR (cells i)) :
     Measure.real muR negativeR ≤ 1 - ∑ i, (massLower i : ℝ) := by
   have hNegative : MeasurableSet negativeR := by
-    rw [p4Q2PZ37AIW_originalNormalizedNegativeRegion_eq_original
-      14 beta0 p4Q2PZ37ADC_fixedCoupling_pos.le]
-    exact p4Q2PZ37AIG_originalNegativeTransferRegion_measurable 14 beta0
+    have hOriginal :=
+      p4Q2PZ37AIG_originalNegativeTransferRegion_measurable 14 beta0
+    rw [← p4Q2PZ37AIW_originalNormalizedNegativeRegion_eq_original
+      14 beta0 p4Q2PZ37ADC_fixedCoupling_pos.le] at hOriginal
+    exact hOriginal
   have hOutside : ∀ i, cells i ⊆ negativeRᶜ := by
     intro i A hCell hNegativeA
     have hLower := hTransferLower i A hCell
