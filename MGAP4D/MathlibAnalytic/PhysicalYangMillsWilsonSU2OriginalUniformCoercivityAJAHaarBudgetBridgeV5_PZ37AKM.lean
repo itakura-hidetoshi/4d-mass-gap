@@ -101,9 +101,11 @@ theorem p4Q2PZ37AKM_originalPower_uniformGeometricEnvelope
       ‖RM beta hbeta.le‖ ≤ qM :=
     p4Q2PZ37AKL_originalTopOrthogonal_norm_le
       H beta hbeta.le hcut
+  have hRnonneg : (0 : ℝ) ≤ ‖RM beta hbeta.le‖ :=
+    norm_nonneg (RM beta hbeta.le)
   have hRpow :
       ‖RM beta hbeta.le‖ ^ n ≤ qM ^ n :=
-    pow_le_pow_left₀ (norm_nonneg _) hR n
+    pow_le_pow_left₀ hRnonneg hR n
   have hMul :
       ‖RM beta hbeta.le‖ ^ n *
         ‖((TopM beta hbeta.le)ᗮ).starProjection fM‖ ≤
