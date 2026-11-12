@@ -72,3 +72,9 @@ do **not** themselves imply an original AJA witness. AKN now certifies the oppos
 OPEN/NO_DATA: fixed beta0 and H>10 outside the certified scalar regime; unqualified top-vs-Haar comparison for all H and beta; whether fixed beta0 lies in AKL's H-independent coercivity cutoff; a common finite-power AJA witness; original GL/Rayleigh lower bound, Hamiltonian gap and continuum 4D Yang–Mills mass gap. No new global gap claim follows.
 
 Provenance: append-only / tighten-only / overwrite-forbidden / same-root; fixed Lean `v4.30.0-rc2`, mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`. No changes to existing physical files, root, pinned dependency or workflow. Documentation-only Strict Lean must not be manually dispatched.
+
+## Independent formal-squash push verification — 2026-11-12 JST
+
+The independent canonical formal `push` [CI #43192002019](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43192002019) on exact squash HEAD `ca23a8d07c522e3a9e893d814936275619bc085d` completed **SUCCESS**. The kernel-build job `131093406388` and the independent exact-head receipt job `131095723504` both completed **SUCCESS**. The full log has `[11450/11450] Built ...PZ37AKN` and all **14/14** multiline axiom prints include exactly `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`, modified AKN warning/error **0/0**. The separate receipt records `event=push`, exact squash HEAD, `source_result=success`, and published commit status `success`.
+
+This independently checks the actual integrated tree `9206ca6befa39921a31e0e7bfd0fc9d93cb0ecb6`; the source, test merge and formal squash tree identities were also checked directly. It does not extend AKN beyond `beta²*p_H/2<=log4` nor the fixed-beta0 `H<=10` consequence.
