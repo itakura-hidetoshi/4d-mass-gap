@@ -49,7 +49,7 @@ theorem real_probability_finite_complement_cells_budget_akr
     (negative : Set α) (hNegative : MeasurableSet negative)
     {n : ℕ} (cells : Fin n → Set α)
     (hMeas : ∀ i, MeasurableSet (cells i))
-    (hDisjoint : Pairwise (Disjoint on cells))
+    (hDisjoint : Pairwise (fun i j => Disjoint (cells i) (cells j)))
     (hOutside : ∀ i, cells i ⊆ negativeᶜ)
     (massLower : Fin n → ℚ)
     (hMassLower : ∀ i, (massLower i : ℝ) ≤ μ.real (cells i)) :
@@ -97,7 +97,7 @@ local notation "uR" =>
 local notation "mR" =>
   p4Q2PZ37AIW_originalNormalizedNegativeMargin 14 beta0
     p4Q2PZ37ADC_fixedCoupling_pos.le
-local notation "negativeR" => {A : CfgR | uR A < -(mR)}
+local notation "negativeR" => (fun A : CfgR => uR A < -(mR))
 
 local instance p4Q2PZ37AKR_probability : IsProbabilityMeasure muR := by
   dsimp [periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure]
@@ -124,7 +124,7 @@ they are never inferred from approximate values alone. -/
 theorem p4Q2PZ37AKR_originalH14_negativeHaarMass_le_of_rationalCells
     {n : ℕ} (cells : Fin n → Set CfgR)
     (hMeas : ∀ i, MeasurableSet (cells i))
-    (hDisjoint : Pairwise (Disjoint on cells))
+    (hDisjoint : Pairwise (fun i j => Disjoint (cells i) (cells j)))
     (transferFloor : Fin n → ℚ)
     (hTransferLower : ∀ i (A : CfgR), A ∈ cells i →
       (transferFloor i : ℝ) ≤ uR A)
@@ -152,7 +152,7 @@ uncertified cell table is promoted to a physical claim. -/
 theorem p4Q2PZ37AKR_originalH14_gaussianHaarTest_of_rationalCells
     {n : ℕ} (cells : Fin n → Set CfgR)
     (hMeas : ∀ i, MeasurableSet (cells i))
-    (hDisjoint : Pairwise (Disjoint on cells))
+    (hDisjoint : Pairwise (fun i j => Disjoint (cells i) (cells j)))
     (transferFloor : Fin n → ℚ)
     (hTransferLower : ∀ i (A : CfgR), A ∈ cells i →
       (transferFloor i : ℝ) ≤ uR A)
@@ -185,7 +185,7 @@ computationally checkable rational Borel-cell input. -/
 theorem p4Q2PZ37AKR_originalH14_no_AJA_witness_of_rationalCells
     {n : ℕ} (cells : Fin n → Set CfgR)
     (hMeas : ∀ i, MeasurableSet (cells i))
-    (hDisjoint : Pairwise (Disjoint on cells))
+    (hDisjoint : Pairwise (fun i j => Disjoint (cells i) (cells j)))
     (transferFloor : Fin n → ℚ)
     (hTransferLower : ∀ i (A : CfgR), A ∈ cells i →
       (transferFloor i : ℝ) ≤ uR A)
