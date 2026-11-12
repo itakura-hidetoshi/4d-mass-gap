@@ -109,3 +109,22 @@ Hamiltonian or continuum 4D Yang--Mills mass gap is claimed.
 Formal is the theorem canonical branch; main mirrors only exact
 proof-record blob and appended public documentation. Docs-only
 Strict Lean is not manually dispatched.
+
+## Independent canonical formal-squash push verification — 2026-11-12 JST
+
+The separately triggered actual canonical squash `push`
+[CI #43204266634](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43204266634)
+at integrated SHA `517ed6be3b9032c9d6c01fc52ec9432fa924f7da`
+completed **SUCCESS**, with independent Lean job `131135320208`
+and exact-head receipt job `131138679934` both completed/SUCCESS.
+The full job log has `[11453/11453] Built ...PZ37AKQ`, all 7/7
+multiline axiom prints only `[propext, Classical.choice, Quot.sound]`,
+no `sorryAx`, modified AKQ warning/error **0/0**. The separate
+receipt shows `event=push`, the exact integrated SHA,
+`source_result=success` and published status `success`.
+
+This independently authenticates the original-model theorem squash tree
+`33dc7aaa323ce4948b8c8cbb224b5f11413f253c`,
+not the unknown actual H14 Haar mass. The mathematical statement remains
+a **conditional no-witness criterion** and a necessary mass condition
+for any hypothesized strict original finite-power AJA witness.
