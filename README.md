@@ -4770,3 +4770,17 @@ The actual canonical AKS squash `0481923e78a323faf04c6efc1c77dd402ec3bb3c` passe
 ### AKT independent canonical formal-push authentication — 2026-11-13 JST
 
 AKT canonical formal-squash `8d9f8b7db2da7cb29b6506518f9f9d4b2ac561b0` passed independent actual push [CI #43318982017](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43318982017): **completed/SUCCESS**; Lean 11,455/11,455, 5/5 standard-three axioms, no sorryAx, changed AKT warning/error 0/0. Completion receipt job `131537470852` completed SUCCESS and published exact-head `event=push`, `source_result=success`, commit status `success`. Original source/test-merge/integrated tree `2fef4b6d8ed7951cd2ef4a6d935124ab7cfa13be` remains identical. This certifies finite-power original AJA no-witness at H<=16 only; H>=17 and mass gap OPEN.
+
+
+## AKU — H≤16の元AJA予算・真正full-top残差の非正性（2026-11-13 JST）
+
+[AKU定理PR #6709](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6709) **MERGED**。元の固定結合β₀=log(3/2)/64、元の真正SU(2) Wilson作用素・正規化S・ZW符号付きsource・Haar確率測度・元AIG負margin・真正top射影Q・元のAJA予算を一切変更しない。既存AKQの元Haar-budget/full-top比較 `r_H Z_H²≤4||P_H|| => B_H≤||Qf0_H||²` を、AKTが既に形式認証した元partition-Haar比較とAIWの元物理ノルム下界へ接続。**全H≤16で真正 `B_(H,β₀)≤||Qf0_H||²`、従って `Δ_H:=B_H−||Qf0_H||²≤0`** を新規Lean4定理として形式証明した。H=16を個別認証。**Δ_Hが厳密負か零かは未判定**であり、H≥17に自動拡張せず、元Haar質量の具体値も未認証。
+
+[Exact-source CI #43320891189](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43320891189) completed/SUCCESS、Lean 11,456/11,456、AKU4定理の公理監査4/4標準3公理のみ、sorryAxなし、変更warning/error 0/0、completion receipt SUCCESS。source `d5879fde1935ba140fbd0e5f942ceee3242d7574`／test-merge／canonical squash `468196fa09489101b857d65d054dd0d3c2ecbae1` でGit tree `8b5026f5c6861e5d9787c443f9771a3884b5c60b` 一致。独立formal push [CI #43321778660](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43321778660) は別途認証。[AKU正式証明記録](docs/proofs/P4-Q2-PZ37AKU_verified_20261113.md)。append-only／same-root、物理定義・固定Lean/mathlib維持。
+
+**OPEN:** Δの厳密な負値／零判定、元Haar質量の数値認証、H≥17、H一様GL Rayleigh、Hamiltonian gap、連続体mass gap。
+
+
+### AKU independent canonical formal-push authentication — 2026-11-13 JST
+
+The actual canonical AKU theorem squash `468196fa09489101b857d65d054dd0d3c2ecbae1` independently passed [push CI #43321778660](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43321778660), event `push`, run attempt 1, completed/**SUCCESS**. The pinned Lean build completed **11,456/11,456**, all four AKU axiom audits used only `propext`, `Classical.choice`, `Quot.sound`, with no new `sorryAx` and AKU changed-file warning/error **0/0**. Exact-HEAD receipt job `131547094006` completed/**SUCCESS**, logged `event=push; exact_sha=468196fa09489101b857d65d054dd0d3c2ecbae1; source_result=success`, and published commit status `success` under `chatgpt-ci-receipt/PR Lean Fast Check`. Integrated AKU Git tree remains `8b5026f5c6861e5d9787c443f9771a3884b5c60b`, identical to the authenticated source/test-merge tree. This authenticates only the original finite-volume budget/top inequality `Delta_H<=0` for H<=16; strict sign/equality, H>=17, Hamiltonian spectral gap and continuum mass gap remain **OPEN/NO_DATA**. Append-only; no source/physics/root/pin/workflow alteration.
