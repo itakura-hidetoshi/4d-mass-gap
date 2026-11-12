@@ -161,7 +161,7 @@ theorem p4Q2PZ37AKG_originalNonnegativeTop_mass_ge_norm
   let P : PhysK →L[ℝ] PhysK := PK beta hbeta
   let psi : PhysK := psiK beta hbeta
   let g : Lp ℝ 2 muK := psi
-  let K : Lp ℝ 2 (muK.prod muK) :=
+  let K : Lp ℝ 2 (Measure.prod muK muK) :=
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2
       H 2 (by norm_num) beta hbeta
   let I : ℝ := ∫ A : CfgK, g A ∂muK
@@ -174,7 +174,7 @@ theorem p4Q2PZ37AKG_originalNonnegativeTop_mass_ge_norm
   have hEigen : P psi = ‖P‖ • psi :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_eigen
       H 2 (by norm_num) beta hbeta
-  have hK : ∀ᵐ z ∂(muK.prod muK), K z ≤ 1 := by
+  have hK : ∀ᵐ z ∂(Measure.prod muK muK), K z ≤ 1 := by
     have hRep := periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2_coeFn
       H 2 (by norm_num) beta hbeta
     filter_upwards [hRep] with z hz
@@ -247,7 +247,9 @@ theorem p4Q2PZ37AKG_originalSource_nonnegativeTop_overlap_le
   have hEq : inner ℝ (P fK) psi = ‖P‖ * inner ℝ fK psi := by
     calc
       inner ℝ (P fK) psi = inner ℝ fK (P psi) := hSymm fK psi
-      _ = ‖P‖ * inner ℝ fK psi := by rw [hEigen, real_inner_smul_right]
+      _ = ‖P‖ * inner ℝ fK psi := by
+        rw [hEigen]
+        exact real_inner_smul_right (fK : PhysK) psi ‖P‖
   have hMass : ‖P‖ ≤ I :=
     p4Q2PZ37AKG_originalNonnegativeTop_mass_ge_norm H beta hbeta.le
   have hBound : ‖P‖ * inner ℝ fK psi ≤ ‖P‖ * (-a) := by
