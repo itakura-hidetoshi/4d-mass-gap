@@ -99,3 +99,12 @@ without it through H16.
 Canonical Lean only on formal; docs-only main mirror must use an
 identical proof-record blob and append README/ROADMAP without
 replacing prior material.
+
+
+## Independent canonical formal-push certification (2026-11-13 JST)
+
+The separately triggered, actual canonical squash-push [CI #43321778660](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43321778660) for exact formal HEAD `468196fa09489101b857d65d054dd0d3c2ecbae1` has now completed **SUCCESS** (event `push`, run attempt 1). The first job, `Changed Lean fast check` (`131543987497`), completed **SUCCESS** and built the pinned dependency closure **11,456/11,456**. The four AKU `#print axioms` declarations each use only `propext`, `Classical.choice`, `Quot.sound`; new `sorryAx` absent, modified AKU warning/error **0/0**.
+
+The independent `Publish MCP CI completion receipt` job `131547094006` completed **SUCCESS**. Its execution log records `event=push`, `exact_sha=468196fa09489101b857d65d054dd0d3c2ecbae1`, `source_result=success`, `run=43321778660`, `attempt=1`. The independent GitHub commit status is `success` (`chatgpt-ci-receipt/PR Lean Fast Check`) on that exact SHA. Actual canonical commit Git tree `8b5026f5c6861e5d9787c443f9771a3884b5c60b` equals the previously authenticated source/test-merge/squash tree. The earlier monitored/not-yet-certified wording above is preserved as its historical pre-completion state; this later record certifies completion.
+
+This independent verification adds no stronger physics theorem. For H<=16 only, `B_(H,beta0)<=||Qf0_H||²` and `Delta_H<=0` are certified; `Delta_H<0` versus equality is **NO_DATA**, and H>=17, true Haar numerical mass, H-uniform Rayleigh, Hamiltonian/continuum mass gaps remain **OPEN**. This docs-only append preserves the original Wilson definitions, signed source, Haar measure, AJA budget, pinned Lean/mathlib and canonical root.
