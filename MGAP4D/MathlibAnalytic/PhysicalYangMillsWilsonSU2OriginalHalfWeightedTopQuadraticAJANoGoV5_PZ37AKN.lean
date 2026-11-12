@@ -62,7 +62,8 @@ theorem realL2_weighted_kernelPairing_le_mass_sq_akn
     rw [← memLp_one_iff_integrable]
     exact (realL2ExternalTensorFunction_memLp_two g g).mono_exponent (by norm_num)
   have hww : Measurable (fun z : X × X => w z.1 * w z.2) :=
-    (hw.comp measurable_fst).mul (hw.comp measurable_snd)
+    (continuous_mul : Continuous (fun z : ℝ × ℝ => z.1 * z.2)).measurable.comp
+      ((hw.comp measurable_fst).prodMk (hw.comp measurable_snd))
   have hweighted : Integrable
       (fun z : X × X => (w z.1 * w z.2) *
         realL2ExternalTensorFunction g g z) (mu.prod mu) := by
@@ -217,6 +218,7 @@ theorem p4Q2PZ37AKN_originalTransfer_weightedAffineUpper
   let q : ℝ := Real.exp (-(beta * pN))
   let w : ℝ := wN beta B
   let M : ℝ := ∫ A : CfgN, KCN beta A B * (fcN A) ^ 2 ∂muN
+  have hp : 0 < pN := p4Q2PZ37AHN_count_pos H
   have he : 0 < e := Real.exp_pos _
   have hq : 0 < q := Real.exp_pos _
   have hw : 0 < w := periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeight_pos H 2 beta B
@@ -437,6 +439,11 @@ theorem p4Q2PZ37AKN_originalAJA_budget_le_fullTop_of_quadratic
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos H 2 (by norm_num) beta hbeta.le
   have hm : mN beta hbeta.le * lambda = a * ZN beta / 2 := by
     rw [p4Q2PZ37AIW_originalNormalizedNegativeMargin_eq_relativeFactor H beta hbeta.le]
+    have haEq : beta * Real.exp (-(2 * (beta * pN))) * VN = a := by
+      change beta * Real.exp (-(2 * (beta * pN))) * VN =
+        beta * Real.exp (-(2 * beta * pN)) * VN
+      rw [show (2 : ℝ) * (beta * pN) = 2 * beta * pN by ring]
+    rw [haEq]
     change (a / 2 * (ZN beta / lambda)) * lambda = a * ZN beta / 2
     field_simp [hNorm.ne']
     <;> ring
@@ -490,7 +497,6 @@ theorem p4Q2PZ37AKN_originalFixedCoupling_quadratic_at_le_ten
   have hlog4 : (1 : ℝ) ≤ Real.log 4 := by
     have heq : Real.log (4 : ℝ) = 2 * Real.log 2 := by
       rw [show (4 : ℝ) = 2 ^ (2 : ℕ) by norm_num, Real.log_pow]
-      norm_num
     norm_num at hlog2
     linarith only [heq, hlog2]
   exact hSmall.le.trans hlog4
