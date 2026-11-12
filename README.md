@@ -5090,3 +5090,16 @@ The separately triggered canonical formal-squash [CI #43204266634](https://githu
 ### AKR canonical formal-push independent authentication — 2026-11-13 JST
 
 Canonical AKR squash `a1184bd3840f39e0753cd096703f397028dbf96a` received an independent actual push [CI #43223016144](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43223016144) completed **SUCCESS**: Lean 11,454/11,454, 5/5 AKR axiom prints standard three only, no sorryAx, changed AKR warning/error 0/0, source/test-merge/squash Git tree identical `7e45dcafe8945d152b588617333be408d57b59ab`. Exact-head completion receipt job `131202291241` completed/SUCCESS and published `event=push; source_result=success`. Genuine H14 upper mass and concrete complement-cell certificate remain **NO_DATA**.
+
+## AKS — 元H=14 AJA有限冪証人の無条件不存在を形式認証（2026-11-13 JST）
+
+[AKS定理PR #6703](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6703) **MERGED**。真正SU(2) Haarの元single-link character χについてAIQの平均0とACKの二次モーメントEχ²=1/4を、固定mathlibの指数関数Taylor厳密剰余と接続。0≤β≤1で元partition Z_H(β)≤exp(p_H(-β+β²/4)) をLean4証明。AKOの元固定β₀≤1/156、log4≥11/8、p₁₄=81000から β₀²·81000/4≤log4。真正Haar負領域質量r₁₄≤1のみを用い、AKQの元partition-Haar判定 r₁₄ Z₁₄≤4exp(-β₀p₁₄) が**無条件成立**。元の正規化Wilson transfer S、符号付きZW源f0、元Haar、元margin、元AJA厳密予算を変更せず **H=14のAJA有限冪証人不存在**、AKOと合わせ **全H≤14の証人不存在** を認証した。AKPの指数係数1/2の判定がH≥14で不成立であることと矛盾しない。今回の指数係数1/4は真正Haar二次モーメントからの改善である。
+
+[Exact-source CI #43309954309](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43309954309) completed/SUCCESS、Lean依存閉包11,454/11,454、新規9宣言の公理監査9/9は標準3公理のみ、sorryAxなし、変更AKS warning/error 0/0、独立exact-HEAD受領書SUCCESS。認証source `cba7df900ed607959531c01905e68a125705ee34`、canonical squash `0481923e78a323faf04c6efc1c77dd402ec3bb3c`、source/test-merge/squash共通Git tree `3b45ae6a224dbc81293c10b37a985c31d151cb83`。独立formal-push [CI #43311024308](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43311024308) は別途認証する。[AKS正式記録](docs/proofs/P4-Q2-PZ37AKS_verified_20261113.md)。
+
+**境界:** 真正H=14 Haar質量r₁₄の実値・上界、Δ₁₄符号、H≥15判定、H一様Rayleigh、Hamiltonian gap、連続体4D質量ギャップは依然未認証（NO_DATA）。元物理定義・Lean/mathlib pins・same-root・workflow不変更、追記のみ。
+
+
+### AKS independent canonical formal-push verification — 2026-11-13 JST
+
+The actual canonical AKS squash `0481923e78a323faf04c6efc1c77dd402ec3bb3c` passed independently triggered [push CI #43311024308](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43311024308), **completed/SUCCESS**. Direct Lean 11,454/11,454, nine/nine axioms only the standard three, no sorryAx, changed AKS warning/error 0/0. The exact integrated HEAD independent completion receipt job `131509548538` completed/SUCCESS and published `event=push`, `source_result=success`, status `success`. Source/test-merge/squash Git tree `3b45ae6a224dbc81293c10b37a985c31d151cb83` identical. The H=14 AJA no-witness is now unconditional, while the actual negative Haar mass r14 and Delta14 sign are still NO_DATA.
