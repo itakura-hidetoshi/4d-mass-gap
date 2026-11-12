@@ -43,6 +43,7 @@ theorem realL2_bounded_weight_integrable_akn
     (Lp.memLp g).integrable (by norm_num)
   apply hg.norm.mono' (hw.aestronglyMeasurable.mul hg.aestronglyMeasurable)
   filter_upwards with x
+  change ‖w x * g x‖ ≤ ‖g x‖
   rw [norm_mul, Real.norm_of_nonneg (hw0 x)]
   simpa only [one_mul] using
     mul_le_mul_of_nonneg_right (hw1 x) (norm_nonneg (g x))
@@ -75,6 +76,8 @@ theorem realL2_weighted_kernelPairing_le_mass_sq_akn
         w z.1 * w z.2 ≤ 1 * w z.2 :=
           mul_le_mul_of_nonneg_right (hw1 z.1) (hw0 z.2)
         _ ≤ 1 := by simpa only [one_mul] using hw1 z.2
+    change ‖(w z.1 * w z.2) * realL2ExternalTensorFunction g g z‖ ≤
+      ‖realL2ExternalTensorFunction g g z‖
     rw [norm_mul, Real.norm_of_nonneg (mul_nonneg (hw0 z.1) (hw0 z.2))]
     simpa only [one_mul] using mul_le_mul_of_nonneg_right hww1
       (norm_nonneg (realL2ExternalTensorFunction g g z))
@@ -106,7 +109,10 @@ theorem realL2_weighted_kernelPairing_le_mass_sq_akn
           (fun z : X × X => (w z.1 * g z.1) * (w z.2 * g z.2)) := by
         funext z
         ring
-      rw [hfun, integral_prod_mul, pow_two]
+      rw [hfun]
+      simpa only [pow_two] using
+        (MeasureTheory.integral_prod_mul (μ := mu) (ν := mu)
+          (fun x : X => w x * g x) (fun y : X => w y * g y))
 
 /-- Pair a weighted negative floor with the genuine nonnegative vector. -/
 theorem realL2_inner_le_negative_weighted_mass_akn
@@ -240,7 +246,8 @@ theorem p4Q2PZ37AKN_originalTransfer_weightedAffineUpper
     ring
   have hM : q * VN ≤ M := p4Q2PZ37AIS_originalCrossingSecondMoment_wardLower H beta B
   have hScalar := p4Q2PZ37AIE_real_centeredLaplace_quadraticUpper
-    beta (pN / 2) (fcN B) hbeta.le (by positivity)
+    beta (pN / 2) (fcN B) hbeta.le
+      (div_nonneg (p4Q2PZ37AHN_count_pos H).le (by norm_num))
     (p4Q2PZ37AGN_originalContinuousSource_abs_le_halfCount H B)
   have hCorr : 0 ≤ (beta * e) * (fcN B) ^ 2 := by positivity
   have hScalar' : fcN B * Real.exp (-(beta * fcN B)) ≤ fcN B := by
@@ -287,7 +294,7 @@ theorem p4Q2PZ37AKN_originalHalfWeightedTop_massSq_ge_norm
   let P : PhysN →L[ℝ] PhysN := PN beta hbeta
   let psi : PhysN := psiN beta hbeta
   let g : Lp ℝ 2 muN := psi
-  let K : Lp ℝ 2 (muN.prod muN) :=
+  let K : Lp ℝ 2 ((muN).prod muN) :=
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2 H 2 (by norm_num) beta hbeta
   have hg : ∀ᵐ A ∂muN, 0 ≤ g A :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_ae_nonnegative
@@ -296,7 +303,7 @@ theorem p4Q2PZ37AKN_originalHalfWeightedTop_massSq_ge_norm
     fun A => (periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeight_pos H 2 beta A).le
   have hw1 : ∀ A : CfgN, wN beta A ≤ 1 :=
     p4Q2PZ37AKN_originalHalfWeight_le_one H beta hbeta
-  have hK : ∀ᵐ z ∂(muN.prod muN), K z ≤ wN beta z.1 * wN beta z.2 := by
+  have hK : ∀ᵐ z ∂((muN).prod muN), K z ≤ wN beta z.1 * wN beta z.2 := by
     have hRep := periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2_coeFn
       H 2 (by norm_num) beta hbeta
     filter_upwards [hRep] with z hz
@@ -446,7 +453,6 @@ theorem p4Q2PZ37AKN_originalAJA_budget_le_fullTop_of_quadratic
     rw [haEq]
     change (a / 2 * (ZN beta / lambda)) * lambda = a * ZN beta / 2
     field_simp [hNorm.ne']
-    <;> ring
   have hMargin : (mN beta hbeta.le) ^ 2 ≤ F ^ 2 :=
     real_original_margin_le_overlap_of_partition_sq_akn
       lambda a (ZN beta) (mN beta hbeta.le) F hNorm
