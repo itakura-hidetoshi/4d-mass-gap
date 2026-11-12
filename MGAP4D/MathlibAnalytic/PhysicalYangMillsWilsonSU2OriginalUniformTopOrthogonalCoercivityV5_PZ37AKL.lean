@@ -110,7 +110,20 @@ elab "p4_akl_kernel_replay " t:term : tactic =>
     let output ← replayColorCard input
     unless (← isDefEq (← inferType output) target) do
       throwError "AKL replay changed the theorem type"
-    Lean.Meta.checkWithKernel output
+    let output ← instantiateMVars output
+    let lctx ← instantiateLCtxMVars (← getLCtx)
+    if output.hasMVar then
+      throwError "AKL replay: unresolved variables remain in the proof"
+    for localDecl in lctx do
+      if localDecl.type.hasMVar then
+        throwError "AKL replay: unresolved variables in local type {localDecl.userName}"
+      if let some value := localDecl.value? (allowNondep := true) then
+        if value.hasMVar then
+          throwError "AKL replay: unresolved variables in local value {localDecl.userName}"
+    match Lean.Kernel.check (← getEnv) lctx output with
+    | .ok .. => pure ()
+    | .error ex =>
+        throwError "AKL replay kernel check: {ex.toMessageData (← getOptions)}"
     return output
 
 end PZ37AKLProofReplay
@@ -169,10 +182,11 @@ theorem p4Q2PZ37AKL_originalTopOrthogonal_apply_norm_le
     (hcut : beta ≤ p4Q2PZ37AKL_originalUniformCoercivityCutoff)
     (x : K) :
     ‖S (x : G)‖ ≤ (3071 / 3072 : ℝ) * ‖(x : G)‖ := by
-  have hApply := ContinuousLinearMap.le_opNorm
-    (realHilbertTopEigenspaceOrthogonalRestriction S
+  have hApply :=
+    realHilbertTopEigenspaceOrthogonalRestriction_pow_apply_norm_le S
       (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
-        H 2 (Nat.succ_pos 1) beta hbeta)) x
+        H 2 (Nat.succ_pos 1) beta hbeta) 1 x
+  simp only [pow_one] at hApply
   change ‖S (x : G)‖ ≤ ‖R‖ * ‖(x : G)‖ at hApply
   exact hApply.trans
     (mul_le_mul_of_nonneg_right
