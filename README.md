@@ -4605,3 +4605,16 @@ AJTの真正欠損下界 `d=βv_H/e^(βp_H)>0` とAJRの `‖f₀−Sf₀‖≤(
 真正元SU(2) Wilson正規化転送`S`・元ZW源`f0`・真正全top射影`Q`・元AJA Haar予算`B`を維持。全有限`H`・`β>0`で`||S^k f0||²≤||S^n f0||²`（n≤k）を証明し、もし実際のAJA厳密証人`||S^n f0||²<B`が存在すれば**以後すべての冪**で成立すること、および`||Qf0||²<B ↔ ∃N≥2 ∀k≥N:||S^k f0||²<B`を形式化。真正`Q,R,f0,B`の有限幾何学的十分テストも認証した。さらにAJV補正`C>0`により`∃n≥2:||S^n f0||²<V−C/2`を**無条件**に証明したが、**この不等式はAJA証人ではない**。
 
 **OPEN:** `||Qf0||²<B`、実際の無条件AJA有限冪証人、真正Haar数値比較、top一次元性、H一様coercivity、Hamiltonian・連続体4D mass gap。AJXの`B≤V/16`とAJWの粗い十分条件no-goを消さず保持。[AKE正式証明記録](docs/proofs/P4-Q2-PZ37AKE_verified_20261112.md)。元物理定義・pin・root不変、append-only/same-root。docs-only Strict Lean手動実行禁止。
+
+
+### P4-Q2-PZ37AKF — 抽象二成分列の証人推論障害と現行Wilson境界（2026-11-12）
+
+[定理PR #6672](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6672) MERGED。AKI正本へ同期したsource `09b3f601682889eda8dacd83007e92f7e2cfbf71`、formal squash `2b8b15f8317d8e2b449b5c047a2f9b0e447a5175`、source/test-merge/squash共通tree `803f6b61d4e85e8bf9cb883d28793d2df2823aed`。[Exact-source CI #43152268848](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43152268848)と独立[formal push CI #43152945449](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43152945449)はworkflow/job/Lean step/receiptまでcompleted/SUCCESS。Lean **11,445/11,445**、9/9宣言公理監査は標準3のみ、sorryAxなし、変更AKF warning/error 0/0。新規leaf162行、既存Lean変更・削除0。[正式証明記録](docs/proofs/P4-Q2-PZ37AKF_verified_20261112.md)。
+
+AKFは抽象実数列 `a_n=1/4+(3/4)*(1/4)^n` と `B=1/32`について、log-convex性・厳密減衰・全冪Cauchy下界・`a_n→1/4`と、**`¬∃n>0:a_n<B`**の同時成立を形式認証した。各nで`a_n≥1/4>B`。実数列の認証を真正Wilson模型の不存在定理や新しい作用素構成へ読み替えない。
+
+**現行正本の追記:** AKI [#6675](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6675)は`0<beta≤kappa_H=log(2)/(2*p_H)`で元AJA証人不存在。さらにMERGED済みAKJ [#6676](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6676)は、元ABN係数を使う `C_H(beta)=2*exp(-2*beta*p_H)+exp(-beta*p_H)*r(beta)^4` に対し`beta>0 ∧ 1≤C_H(beta)`から全冪の元証人不存在を証明し、`beta>kappa_H`にも不存在の結合が存在することを形式化した。AKJの[source CI #43153265889](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43153265889)と[formal push #43154080548](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43154080548)もcompleted/SUCCESS。旧OPEN記述は履歴として保持し、現行範囲はこの追記を参照する。
+
+**NEXT/OPEN:** 存在探索では`beta>kappa_H`に加えて必要条件`C_H(beta)<1`を確認し、真正full-topと元Haar予算の差 `Delta=B-||Qf0||²` を直接評価する。`C_H(beta)<1`は十分条件ではない。既知不存在範囲外のDeltaの符号、top一次元性、H一様coercivity、Hamiltonian/4D連続体質量ギャップはOPEN。全H・全beta>0での一律の元AJA証人存在は既知不存在範囲により否定。元Wilson/Haar/ZW/AJA・pin・root不変、append-only/same-root。mainは同一正式記録blobと同一文書追記だけをミラーし、formal専用Lean leafは含めない。
+
+**具体的候補:** 元固定結合`beta0=log(3/2)/64`と`H=1`では、既存ADC/AIB/ABNから`p_1=192`、`exp(-beta0*p_1)=8/27`、`C_1(beta0)≤344/729<1`、`kappa_1<beta0`を算術的に導ける。この組合せは新規Lean宣言として未認証であり、真正`Delta_(1,beta0)`の符号はNO_DATA。次の直接比較の対象候補として区別して保持する。
