@@ -5021,3 +5021,17 @@ The leaf also repairs an inherited compiled-decision dependency in the six-color
 Exact-source CI [43169160435](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43169160435) and independent formal-push CI [43169855373](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43169855373) are completed/SUCCESS, including Lean step 17, post-build processing and separate exact-SHA receipts. Each reports **9443/9443**, all **11 new mathematical declarations** and the separate existing cutoff-positivity audit use only `[propext, Classical.choice, Quot.sound]`, no sorryAx/native dependency remains in the new mathematical declarations, and changed AKL warning/error is **0/0**. The three private Meta helper definitions and one tactic registration are counted separately. Existing imported-source warnings are preserved. Source/test-merge/squash share tree `c047dc43f8ec69266add2cd78968e90715c90904`. [Formal proof and audit record](docs/proofs/P4-Q2-PZ37AKL_verified_20261112.md).
 
 One new 327-line Lean leaf; existing definitions, assumptions, roots and Lean/mathlib pins preserved. Formal receives the leaf; main mirrors only the identical proof-record blob and public-document appendices. append-only / tighten-only / overwrite-forbidden / same-root.
+
+## P4-Q2-PZ37AKM — genuine AJA Haar-budget comparison with H-uniform coercivity (2026-11-12, verified)
+
+The original SU(2) Wilson normalized transfer `S=P/||P||`, true signed centered ZW source `f0`, entire fixed-top projection `Q`, genuine Haar variance `V=||f0||²` and unchanged original AJA negative-region certificate `B` are retained. For **every finite H**, **0<beta<=beta_*** with one `H`-independent positive AKL cutoff, and **n>=1**, the kernel-certified AKM comparison is
+
+```text
+L_AKK(H,beta) <= ||Q f0||² <= ||S^n f0||²
+  <= ||Q f0||² + ((3071/3072)^n * ||Q^perp f0||)^2,
+B_original(H,beta) <= V_H/16.
+```
+
+If the actual upper envelope is strictly below the **original B**, the same finite n is a genuine AJA witness; any genuine witness requires `L_AKK<B`, `||Q f0||²<B`, and `||Q^perp f0||²>15V/16`. On overlap with AKI's logarithmic no-witness region, actual top-orthogonal coercivity and absence of a strict AJA witness hold simultaneously. **NO_DATA remains** for the independent numerical comparison `||Q f0||²<B`; no unconditional AJA witness at arbitrary H/beta, no beta0 inclusion in the uniform cutoff, no GL/Hamiltonian/continuum mass gap is claimed. AKI's explicit no-witness theorem at H=0 and original beta0 is preserved.
+
+[AKM theorem PR #6686](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6686) is MERGED as formal `37f0fd533bd4a1758215f6c612e67114834b1f2d`. Exact-source [CI 43176986881](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43176986881) and independent formal-push [CI 43178103712](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43178103712) are both completed/SUCCESS: **11,451/11,451**, all **5/5** new theorem axiom prints standard three only, no sorryAx, AKM warning/error **0/0**, separate exact-SHA receipts SUCCESS. Source, actual test-merge and squash share tree `a311ed1efd7e4f5931681265fc69758ead193523`. Initial two failed attempts and Lean4 type/order repairs remain in the [append-only AKM proof record](docs/proofs/P4-Q2-PZ37AKM_verified_20261112.md). Original physical definitions, hypotheses, Lean/mathlib pins, root and workflows remain unchanged.
