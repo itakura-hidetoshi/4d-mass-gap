@@ -355,11 +355,11 @@ theorem p4Q2PZ37AKJ_WardEnhancedCriterion_gt_one_at_logarithmic :
 kappa_H, some explicit existential coupling strictly ABOVE kappa_H
 still has NO genuine original AJA finite-power witness. -/
 theorem p4Q2PZ37AKJ_exists_above_logarithmic_no_AJA_power_witness :
-    ∃ beta : ℝ, kappaJ < beta ∧ 0 < beta ∧
-      ¬ ∃ n : ℕ, ‖((SJ beta (by positivity)) ^ n) fJ‖ ^ 2 <
-        (mJ beta (by positivity)) ^ 2 *
+    ∃ beta : ℝ, ∃ hbeta : 0 < beta, kappaJ < beta ∧
+      ¬ ∃ n : ℕ, ‖((SJ beta hbeta.le) ^ n) fJ‖ ^ 2 <
+        (mJ beta hbeta.le) ^ 2 *
           Measure.real muJ
-            {A : CfgJ | uJ beta (by positivity) A < -(mJ beta (by positivity))} := by
+            {A : CfgJ | uJ beta hbeta.le A < -(mJ beta hbeta.le)} := by
   have hOpen : IsOpen {beta : ℝ | 1 < p4Q2PZ37AKJ_WardEnhancedCriterion H beta} :=
     isOpen_Ioi.preimage (p4Q2PZ37AKJ_WardEnhancedCriterion_continuous H)
   have hEndpoint :
@@ -380,7 +380,7 @@ theorem p4Q2PZ37AKJ_exists_above_logarithmic_no_AJA_power_witness :
     linarith only [hepsilon]
   have hCriterion : 1 ≤ p4Q2PZ37AKJ_WardEnhancedCriterion H beta :=
     (hBall hBallMem).le
-  refine ⟨beta, hGreater, hbeta, ?_⟩
+  refine ⟨beta, hbeta, hGreater, ?_⟩
   exact p4Q2PZ37AKJ_originalWardEnhanced_no_AJA_power_witness
     H beta hbeta hCriterion
 
