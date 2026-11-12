@@ -41,8 +41,8 @@ This is a pure scalar descent lemma, with the true physical hypotheses
 supplied separately below. -/
 theorem real_affine_top_overlap_le_negative_budget_akj
     (lambda c d I F m : ℝ)
-    (hlambda : 0 < lambda) (hc0 : 0 ≤ c) (hc : c ≤ lambda)
-    (hd : 0 < d) (hm : 0 ≤ m) (hMass : lambda ≤ I)
+    (hlambda : 0 < lambda) (_hc0 : 0 ≤ c) (hc : c ≤ lambda)
+    (hd : 0 < d) (_hm : 0 ≤ m) (hMass : lambda ≤ I)
     (hPair : (lambda - c) * F ≤ -d * I)
     (hBudget : (lambda - c) * m ≤ d * lambda) :
     F ≤ -m := by
@@ -250,6 +250,7 @@ theorem p4Q2PZ37AKJ_originalTop_overlap_le_negative_originalMargin
       H 2 (by norm_num) beta hbeta.le
   have hc : 0 ≤ c ∧ c ≤ lambda :=
     p4Q2PZ37AKI_originalAffineCoefficient_bounds H beta hbeta
+  have hV : 0 < VJ := (p4Q2PZ37AHN_originalSource_twoHaarMoments_pos H).2
   have hd : 0 < d := by dsimp [d, p4Q2PZ37AKI_originalWardTopFloor]; positivity
   have hm : 0 ≤ m :=
     (p4Q2PZ37AIW_originalNormalizedNegativeMargin_pos H beta hbeta).le
@@ -338,7 +339,6 @@ theorem p4Q2PZ37AKJ_WardEnhancedCriterion_gt_one_at_logarithmic :
   have hkEq : 2 * kappaJ * pJ = Real.log 2 := by
     unfold p4Q2PZ37AKI_logarithmicNoWitnessCutoff
     field_simp
-    ring
   have hExp : Real.exp (-(2 * kappaJ * pJ)) = (1 / 2 : ℝ) := by
     rw [hkEq, Real.exp_neg, Real.exp_log (by norm_num : (0 : ℝ) < 2)]
     norm_num
@@ -370,6 +370,7 @@ theorem p4Q2PZ37AKJ_exists_above_logarithmic_no_AJA_power_witness :
   let beta : ℝ := kappaJ + epsilon / 2
   have hGreater : kappaJ < beta := by dsimp [beta]; linarith only [hepsilon]
   have hk : 0 < kappaJ := by
+    have hp : 0 < pJ := p4Q2PZ37AHN_count_pos H
     unfold p4Q2PZ37AKI_logarithmicNoWitnessCutoff
     exact div_pos (Real.log_pos (by norm_num)) (by positivity)
   have hbeta : 0 < beta := hk.trans hGreater
