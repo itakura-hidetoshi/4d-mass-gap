@@ -5448,3 +5448,17 @@ Canonical AKS integrated SHA `0481923e78a323faf04c6efc1c77dd402ec3bb3c` [CI #433
 ### AKT independent formal-push check — 2026-11-13 JST
 
 AKT canonical theorem squash `8d9f8b7db2da7cb29b6506518f9f9d4b2ac561b0` independently passed [formal push CI #43318982017](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43318982017): completed/SUCCESS; 11,455/11,455 Lean, 5/5 new axiom prints standard three, sorryAx absent, changed warning/error 0/0, source/test-merge/squash Git tree `2fef4b6d8ed7951cd2ef4a6d935124ab7cfa13be`. Exact-head receipt job `131537470852` completed/SUCCESS with `event=push` and published `source_result=success`. Nothing is certified at H>=17 or for a continuum mass gap.
+
+
+## P4-Q2-PZ37AKU — genuine original H<=16 Haar-budget/top residual nonpositivity (2026-11-13 JST)
+
+**THEOREM MERGED:** [AKU #6709](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6709), canonical formal `468196fa09489101b857d65d054dd0d3c2ecbae1`. Original SU2 Wilson, normalized P/S, signed ZW source, true Haar, AIG negative margin, fixed beta0, original true full-top Q and AJA strict budget remain identical. AKQ's original weighted Haar/top theorem, together with AIW physical spatial-mean norm floor and AKT's already-certified genuine partition-Haar criterion, proves `B_(H,beta0)<=||Qf0_H||²` and `Delta_H=B_(H,beta0)-||Qf0_H||²<=0` **for every genuine finite H<=16**, including explicit H16. No actual r_H numerical value is introduced. Strict Delta<0 versus equality is OPEN; H>=17 unproved.
+
+**EXACT-SOURCE CI [#43320891189](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43320891189):** completed/SUCCESS, 11,456/11,456; 4/4 standard-three axiom audits, sorryAx absent, AKU warning/error 0/0, independent completion receipt SUCCESS, exact source/test-merge/squash Git tree `8b5026f5c6861e5d9787c443f9771a3884b5c60b` identical. Independent canonical push [#43321778660](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43321778660) separately monitored. [AKU formal record](docs/proofs/P4-Q2-PZ37AKU_verified_20261113.md). Docs-only Strict Lean SKIPPED.
+
+**NEXT:** Prove strict Δ_H<0 or equality where supported, investigate H>=17 genuine Haar/partition improvements. H-uniform coercivity, Hamiltonian and continuum Yang-Mills mass gap remain OPEN. No changes to original physics, pins, workflows or canonical root.
+
+
+### AKU independent canonical formal-push receipt — 2026-11-13 JST
+
+Actual canonical AKU formal HEAD `468196fa09489101b857d65d054dd0d3c2ecbae1` passed [push run #43321778660](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43321778660), completed/**SUCCESS**, event `push` (attempt 1). Lean **11,456/11,456**, 4/4 axiom audits standard three only (`propext`, `Classical.choice`, `Quot.sound`), sorryAx none, changed AKU warning/error **0/0**. Exact-head receipt job `131547094006` completed/**SUCCESS**, reporting `source_result=success` and publishing the combined commit status `success`. Canonical theorem tree `8b5026f5c6861e5d9787c443f9771a3884b5c60b` matches the authenticated source/test-merge tree. **NEXT/OPEN:** `Delta_H<0` versus equality on H<=16, genuine Haar-mass values and H>=17 bounds require separate proofs; no Hamiltonian/continuum gap claim. Source/model/pinned environment unchanged.
