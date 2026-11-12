@@ -4672,3 +4672,24 @@ AKFは抽象実数列 `a_n=1/4+(3/4)*(1/4)^n` と `B=1/32`について、log-con
 Exact-source runs: [AKG #43127198792](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43127198792) (11,445 Lean,11/11 axioms); [AKH #43143567948](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43143567948) (11,446,7/7); [AKI #43148059365](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43148059365) (11,447,13/13); [AKJ #43153265889](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43153265889) (11,448,9/9). All completed/SUCCESS, standard 3 axioms only, new sorryAx absent, changed warning/error 0, exact-head independent receipts SUCCESS, source/merge trees equal. Formal pushes AKG [#43128076902](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43128076902), AKH [#43144248736](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43144248736), AKI [#43148760017](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43148760017) all completed/SUCCESS; AKJ [#43154080548](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43154080548) is a separately pending push audit in this record. Proof receipts: [AKG](docs/proofs/P4-Q2-PZ37AKG_verified_20261112.md), [AKH](docs/proofs/P4-Q2-PZ37AKH_verified_20261112.md), [AKI](docs/proofs/P4-Q2-PZ37AKI_verified_20261112.md), [AKJ](docs/proofs/P4-Q2-PZ37AKJ_verified_20261112.md). Original definitions, fixed Lean/mathlib, formal proof branch, same-root, append-only/tighten-only retained; main is docs-only mirror.
 
 **Subsequent AKJ push confirmation (2026-11-12):** the pending state above is retained as history. Independent [formal push #43154080548](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43154080548) at exact squash `2403229c6db3ba3e7702cc014a875fa9f91493d6` is now completed/SUCCESS, including actual Lean job `130969835468`, Lean step 17 and exact-head receipt job `130972144127`. Complete job logs confirm 11,448/11,448, nine standard-only axiom audits, no sorryAx and changed AKJ warning/error 0/0; source/test-merge/squash tree equality is independently rechecked. [Appended AKJ receipt](docs/proofs/P4-Q2-PZ37AKJ_verified_20261112.md#subsequent-independent-formal-push-confirmation-2026-11-12). The mathematical scope and OPEN boundaries above are unchanged.
+
+
+### P4-Q2-PZ37AKK — squared Haar mass strengthens the genuine full-top floor (2026-11-12 JST)
+
+[Theorem PR #6681](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6681) proves, for every original finite `H`, `β>0`, and `n:ℕ`, with `λ=‖P‖`, the unchanged AKI `c,d`, and `L=d²λ/(λ−c)²`:
+
+$$
+0<\lambda-c,\qquad
+d^2<\frac{d^2\lambda}{(\lambda-c)^2}
+\le\|Qf_0\|^2\le\|S^n f_0\|^2.
+$$
+
+The proof retains AKG's squared Haar mass estimate and AKJ's affine Ward pairing, and uses AJE's general full-top overlap bound and AJH's power invariance. It does not use top simplicity or identify the nonnegative top vector with a separately selected vacuum.
+
+For the original AJA Haar budget `B`, `B≤L` excludes every strict finite-power witness, and a witness requires `L<B`. The reverse implication and a new numerical coupling decision are not established. In particular, the actual full-top/Haar budget difference at `H=1, β₀`, H-uniform coercivity, Hamiltonian spectral gap and the continuum 4D mass gap remain outside this result.
+
+Exact-source CI [43161340043](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43161340043) and independent formal-push CI [43162137343](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43162137343) are completed/SUCCESS, including Lean step 17, post-build processing and separate exact-SHA receipts. Each reports 11449/11449, all 10 declarations use only the standard axiom set, no sorryAx, and changed AKK warning/error 0/0. Source/test-merge/squash share tree `23315c7084b766284aae2865f49ff40e026c1457`. [Formal proof and audit record](docs/proofs/P4-Q2-PZ37AKK_verified_20261112.md).
+
+**Finite-volume scope correction:** canonical source already contains a top-simplicity theorem for this same finite-volume physical Wilson operator, successfully built in [#5012](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5012). The record above distinguishes that existing theorem and historical build evidence from a fresh current-head replay or theorem-specific axiom audit, which are not claimed here. A blanket finite-volume “top simplicity OPEN” description should not be repeated.
+
+Original definitions, assumptions, roots and Lean/mathlib pins are preserved. Formal receives the new Lean leaf; main mirrors only this record and the identical public-document appendices.
