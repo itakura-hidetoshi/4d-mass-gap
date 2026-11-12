@@ -140,3 +140,24 @@ for any H>=15; no global mass-gap conclusion follows.
 Append-only / tighten-only / overwrite-forbidden / same-root.
 The authoritative Lean theorem is on formal and any public main
 mirror uses an identical proof-record blob, with no Lean transfer.
+
+
+## Independent canonical AKS formal-squash push certification — 2026-11-13 JST
+
+The separately triggered actual canonical squash `push`
+[CI #43311024308](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43311024308)
+at integrated SHA `0481923e78a323faf04c6efc1c77dd402ec3bb3c`
+completed **SUCCESS**. The Lean job `131506828029` completed/SUCCESS;
+the independent run logged `[11454/11454] Built ...PZ37AKS` and
+all nine `#print axioms` checks only `propext`, `Classical.choice`,
+`Quot.sound`, **no sorryAx**, changed AKS warning/error 0/0.
+Exact-head completion receipt job `131509548538` completed/SUCCESS,
+logged `event=push` with exact integrated SHA and
+`source_result=success`, and published commit status `success`.
+The canonical integrated Git tree
+`3b45ae6a224dbc81293c10b37a985c31d151cb83`
+remains identical to certified source/test-merge/squash.
+
+These receipts certify only the stated original-model strict
+finite-power no-witness through H=14, NOT an actual H14 Haar
+mass value, Delta14 sign, Hamiltonian gap, or continuum mass gap.
