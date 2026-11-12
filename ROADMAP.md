@@ -4743,3 +4743,12 @@ If the actual upper envelope is strictly below the **original B**, the same fini
 ### AKN independent formal-push authentication (2026-11-12 JST)
 
 The separately triggered canonical squash `push` [CI #43192002019](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43192002019) completed **SUCCESS**, with exact integrated HEAD `ca23a8d07c522e3a9e893d814936275619bc085d`, 11,450/11,450 Lean closure, new AKN `#print axioms` **14/14** standard three only, no `sorryAx`, modified-leaf warning/error **0/0**, and independent receipt job `131095723504` SUCCESS (`event=push`, exact SHA matched, commit status success). This is independent of the earlier certified PR exact-source run; see [AKN proof record](docs/proofs/P4-Q2-PZ37AKN_verified_20261112.md). No scope enlargement.
+
+
+## P4-Q2-PZ37AKO — unchanged fixed coupling original AJA Haar no-witness through H=13 (2026-11-12 JST)
+
+**THEOREM MERGED:** [AKO #6691](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6691), formal `06a9f3448894f1b3f3311660949e74fc98f382b6`. Exact-source [CI #43195520536](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43195520536) completed/SUCCESS, 11,451/11,451, new 7/7 declarations with only standard three axioms, no sorryAx, AKO warning/error 0/0, independent receipt SUCCESS. Source/test-merge/squash same tree `f5c79a356e8f734cc0255316247d7477c7742601`; independent formal-push [#43196476342](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43196476342) separately audited.
+
+**PROVED:** Original beta0=log(3/2)/64<=1/156 by rational 32nd-power/log bound; log4>=11/8 from the pinned theorem; genuine plaquette count p_H<=65856 for H<=13, so beta0²*p_H/2<=686/507<11/8<=log4. Applying the existing genuine AKN weighted Haar/top theorem proves the **nonexistence** of every strict original AJA finite-power witness for **all H<=13**, including previously unresolved H=11,12,13. No substitution for original source/operator/Haar/margin/region/top or weakened assumptions.
+
+**NEXT / OBSTRUCTION:** Need independent actual original Haar/top comparison beyond the scalar quadratic region, especially H>=14 at beta0. Failure of the scalar sufficient no-go inequality does **not** imply any AJA witness. No full GL-source uniform Rayleigh, Hamiltonian or continuum mass-gap conclusion. [Formal proof record](docs/proofs/P4-Q2-PZ37AKO_verified_20261112.md). main mirrors only identical record and appended notes; docs-only Strict Lean SKIPPED.
