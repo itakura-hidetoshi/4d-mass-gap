@@ -446,11 +446,6 @@ theorem p4Q2PZ37AKN_originalAJA_budget_le_fullTop_of_quadratic
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos H 2 (by norm_num) beta hbeta.le
   have hm : mN beta hbeta.le * lambda = a * ZN beta / 2 := by
     rw [p4Q2PZ37AIW_originalNormalizedNegativeMargin_eq_relativeFactor H beta hbeta.le]
-    have haEq : beta * Real.exp (-(2 * (beta * pN))) * VN = a := by
-      change beta * Real.exp (-(2 * (beta * pN))) * VN =
-        beta * Real.exp (-(2 * beta * pN)) * VN
-      rw [show (2 : ℝ) * (beta * pN) = 2 * beta * pN by ring]
-    rw [haEq]
     change (a / 2 * (ZN beta / lambda)) * lambda = a * ZN beta / 2
     field_simp [hNorm.ne']
   have hMargin : (mN beta hbeta.le) ^ 2 ≤ F ^ 2 :=
@@ -503,6 +498,7 @@ theorem p4Q2PZ37AKN_originalFixedCoupling_quadratic_at_le_ten
   have hlog4 : (1 : ℝ) ≤ Real.log 4 := by
     have heq : Real.log (4 : ℝ) = 2 * Real.log 2 := by
       rw [show (4 : ℝ) = 2 ^ (2 : ℕ) by norm_num, Real.log_pow]
+      norm_num
     norm_num at hlog2
     linarith only [heq, hlog2]
   exact hSmall.le.trans hlog4
