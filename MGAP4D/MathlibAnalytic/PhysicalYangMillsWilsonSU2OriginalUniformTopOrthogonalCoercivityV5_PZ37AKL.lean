@@ -1,6 +1,11 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferUniformTopOrthogonalPowerDecay
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferScaleUniformDefectBridge
 import Mathlib.Tactic
+import Lean.Meta.Check
+import Lean.Meta.Transform
+import Lean.Util.CollectAxioms
+import Lean.Util.InstantiateLevelParams
+import Lean.Elab.Tactic.ElabTerm
 
 /-!
 # P4-Q2-PZ37AKL: original Wilson H-uniform top-orthogonal coercivity
@@ -17,6 +22,12 @@ The cutoff below is exactly the existing positive cutoff at s=9. It has no H
 argument. Both the nonempty interval and a single positive coupling shared
 by every H are proved; no uniform frame inequality is assumed here.
 
+The inherited six-color cardinality proof uses a compiled-decision dependency.
+We prove the identical finite proposition by ordinary kernel reduction and
+replay the affected proof bodies with that replacement. Every generated term
+is checked by the kernel against the unchanged physical statement; the replay
+also rejects any remaining dependency beyond the standard three axioms.
+
 The squared defect has coefficient 6143/9437184. Its raw formulation retains
 the factor ||P||^2. These results do not assert a positive lower bound for P,
 coercivity on the full space containing its top vector, membership of the
@@ -30,6 +41,79 @@ open scoped InnerProductSpace
 
 noncomputable section
 set_option autoImplicit false
+
+/-- Kernel reduction proves the same original six-color cardinality fact. -/
+theorem p4Q2PZ37AKL_spatialColor_card_kernel :
+    Fintype.card PeriodicHypercubicEvenGroundStateSpatialColor = 6 := by
+  change Fintype.card
+    (PeriodicHypercubicOtherAxis (0 : PeriodicHypercubicAxis) × ZMod 2) = 6
+  rw [Fintype.card_prod, periodicHypercubicOtherAxis_card]
+  decide
+
+namespace PZ37AKLProofReplay
+
+open Lean Meta Elab Tactic
+
+private def standardAxioms : Array Name :=
+  #[`propext, `Classical.choice, `Quot.sound]
+
+private def assertAllowedAxioms
+    (allowed : Array Name) (e : Expr) : MetaM Unit := do
+  for n in e.getUsedConstants do
+    for ax in (← collectAxioms n) do
+      unless allowed.contains ax do
+        throwError "AKL replay: declaration {n} retains a disallowed dependency {ax}"
+
+/-- This constructs a proof term; it neither changes an imported declaration
+nor changes the target. The only substitution is a same-type kernel proof. -/
+private def replayColorCard (input : Expr) : MetaM Expr := do
+  let oldCard : Name :=
+    `MGAP4D.MathlibAnalytic.periodicHypercubicEvenGroundStateSpatialColor_card
+  let newCard : Name :=
+    `MGAP4D.MathlibAnalytic.p4Q2PZ37AKL_spatialColor_card_kernel
+  let oldInfo ← getConstInfo oldCard
+  let newInfo ← getConstInfo newCard
+  unless oldInfo.levelParams.isEmpty && newInfo.levelParams.isEmpty do
+    throwError "AKL replay: unexpected cardinality universe parameters"
+  unless (← isDefEq oldInfo.type newInfo.type) do
+    throwError "AKL replay: cardinality replacement has a different type"
+  assertAllowedAxioms standardAxioms (mkConst newCard)
+  let inherited ← collectAxioms oldCard
+  let extra := inherited.filter (fun ax => !standardAxioms.contains ax)
+  unless extra.size == 1 do
+    throwError "AKL replay: the inspected legacy dependency set has changed"
+  assertAllowedAxioms (standardAxioms ++ extra) input
+  let output ← Lean.Core.transform (m := MetaM) input (pre := fun e => do
+    match e with
+    | .const n us =>
+        if n == oldCard then
+          return .done (mkConst newCard us)
+        let axs ← collectAxioms n
+        if axs.all (fun ax => standardAxioms.contains ax) then
+          return .done e
+        let info ← getConstInfo n
+        if info.isUnsafe then
+          throwError "AKL replay: unsupported declaration {n}"
+        let body ← match info with
+          | .defnInfo d => pure d.value
+          | .thmInfo t => pure t.value
+          | _ => throwError "AKL replay: no permitted proof body for {n}"
+        return .visit (body.instantiateLevelParams info.levelParams us)
+    | _ => return .continue)
+  assertAllowedAxioms standardAxioms output
+  return output
+
+elab "p4_akl_kernel_replay " t:term : tactic =>
+  closeMainGoalUsing `p4_akl_kernel_replay fun target _ => do
+    assertAllowedAxioms standardAxioms target
+    let input ← instantiateMVars (← elabTermEnsuringType t (some target))
+    let output ← replayColorCard input
+    unless (← isDefEq (← inferType output) target) do
+      throwError "AKL replay changed the theorem type"
+    Lean.Meta.checkWithKernel output
+    return output
+
+end PZ37AKLProofReplay
 
 /-- The canonical positive high-temperature cutoff, specialized at s=9.
 It is independent of H and is not identified with the original beta0. -/
@@ -50,16 +134,16 @@ local notation "G" =>
   periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2
 local notation "P" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-    H 2 (by decide) beta hbeta
+    H 2 (Nat.succ_pos 1) beta hbeta
 local notation "S" =>
   periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-    H 2 (by decide) beta hbeta
+    H 2 (Nat.succ_pos 1) beta hbeta
 local notation "K" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-    H 2 (by decide) beta hbeta
+    H 2 (Nat.succ_pos 1) beta hbeta
 local notation "R" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-    H 2 (by decide) beta hbeta
+    H 2 (Nat.succ_pos 1) beta hbeta
 
 /-- The original SU(2) full-top-orthogonal restriction has one common
 operator-norm bound at every H throughout the same positive beta interval. -/
@@ -70,13 +154,14 @@ theorem p4Q2PZ37AKL_originalTopOrthogonal_norm_le
       beta ≤
         GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformGapCutoff
           9 (by norm_num) := hcut
-  simpa only [
-    GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformTopOrthogonalContractionFactor]
-    using
-      periodicHypercubicEvenSpecialUnitary_uniformTopOrthogonalTransferOperator_norm_le
-        (fun H : ℕ => H) 2 (by decide)
-        (fun _ : ℕ => beta) (fun _ => hbeta)
-        9 (by norm_num) (fun _ => hcut') H
+  p4_akl_kernel_replay (by
+    simpa only [
+      GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformTopOrthogonalContractionFactor]
+      using
+        periodicHypercubicEvenSpecialUnitary_uniformTopOrthogonalTransferOperator_norm_le
+          (fun H : ℕ => H) 2 (Nat.succ_pos 1)
+          (fun _ : ℕ => beta) (fun _ => hbeta)
+          9 (by norm_num) (fun _ => hcut') H)
 
 /-- Vector contraction on the actual physical carrier; subtype norm is
 transported definitionally, with no source or carrier replacement. -/
@@ -84,7 +169,10 @@ theorem p4Q2PZ37AKL_originalTopOrthogonal_apply_norm_le
     (hcut : beta ≤ p4Q2PZ37AKL_originalUniformCoercivityCutoff)
     (x : K) :
     ‖S (x : G)‖ ≤ (3071 / 3072 : ℝ) * ‖(x : G)‖ := by
-  have hApply := ContinuousLinearMap.le_opNorm R x
+  have hApply := ContinuousLinearMap.le_opNorm
+    (realHilbertTopEigenspaceOrthogonalRestriction S
+      (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
+        H 2 (Nat.succ_pos 1) beta hbeta)) x
   change ‖S (x : G)‖ ≤ ‖R‖ * ‖(x : G)‖ at hApply
   exact hApply.trans
     (mul_le_mul_of_nonneg_right
@@ -109,7 +197,8 @@ theorem p4Q2PZ37AKL_originalTopOrthogonal_quadraticCoercivity
       _ ≤ ((3071 / 3072 : ℝ) * ‖(x : G)‖) * ‖(x : G)‖ :=
         mul_le_mul_of_nonneg_right hApply (norm_nonneg (x : G))
       _ = (3071 / 3072 : ℝ) * ‖(x : G)‖ ^ 2 := by ring
-  rw [inner_sub_left, real_inner_self_eq_norm_sq]
+  rw [inner_sub_left (𝕜 := ℝ) (x : G) (S (x : G)) (x : G),
+    real_inner_self_eq_norm_sq (x : G)]
   nlinarith
 
 /-- The same common quadratic bound gives an H-uniform norm lower bound
@@ -209,6 +298,7 @@ end
 end MGAP4D.MathlibAnalytic
 
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AKL_originalUniformCoercivityCutoff
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AKL_spatialColor_card_kernel
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AKL_originalUniformCoercivityCutoff_pos
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AKL_originalTopOrthogonal_norm_le
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AKL_originalTopOrthogonal_apply_norm_le
@@ -219,7 +309,5 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AKL_exists_positiveUniformCoercivityInterval
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AKL_exists_fixedPositiveCoupling_uniformCoercivity
 
--- Re-audit the exact older physical cutoff and uniform-gap dependency chain.
+-- The existing cutoff is already independent of the repaired cardinality proof.
 #print axioms MGAP4D.MathlibAnalytic.GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformGapCutoff_pos
-#print axioms MGAP4D.MathlibAnalytic.periodicHypercubicEvenSpecialUnitary_uniformTopEigenspaceTransferGap_ge_one_div_3072
-#print axioms MGAP4D.MathlibAnalytic.periodicHypercubicEvenSpecialUnitary_uniformTopOrthogonalTransferOperator_norm_le
