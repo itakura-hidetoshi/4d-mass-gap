@@ -5300,3 +5300,33 @@ AKFは抽象実数列 `a_n=1/4+(3/4)*(1/4)^n` と `B=1/32`について、log-con
 **NEXT/OPEN:** 存在探索では`beta>kappa_H`に加えて必要条件`C_H(beta)<1`を確認し、真正full-topと元Haar予算の差 `Delta=B-||Qf0||²` を直接評価する。`C_H(beta)<1`は十分条件ではない。既知不存在範囲外のDeltaの符号、top一次元性、H一様coercivity、Hamiltonian/4D連続体質量ギャップはOPEN。全H・全beta>0での一律の元AJA証人存在は既知不存在範囲により否定。元Wilson/Haar/ZW/AJA・pin・root不変、append-only/same-root。mainは同一正式記録blobと同一文書追記だけをミラーし、formal専用Lean leafは含めない。
 
 **具体的候補:** 元固定結合`beta0=log(3/2)/64`と`H=1`では、既存ADC/AIB/ABNから`p_1=192`、`exp(-beta0*p_1)=8/27`、`C_1(beta0)≤344/729<1`、`kappa_1<beta0`を算術的に導ける。この組合せは新規Lean宣言として未認証であり、真正`Delta_(1,beta0)`の符号はNO_DATA。次の直接比較の対象候補として区別して保持する。
+
+
+### P4-Q2-PZ37AKG—AKJ — original Wilson AJA non-witness cutoffs and Ward coefficient extension (2026-11-12 JST)
+
+[AKG #6673](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6673) MERGED: certified original finite-H no-witness for all n and 0<β≤τ_H; (9/4) B≤‖Sⁿf₀‖². [AKH #6674](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6674) MERGED: extends interval to original AIM θ_H>τ_H. [AKI #6675](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6675) MERGED: genuine Ward d_H=β exp(-3βp_H)V_H>0 ensures ‖Sⁿf₀‖²≥d_H² for all β>0; excludes AJA witness through κ_H=log2/(2p_H)>θ_H, including original β0 at H=0 only. [AKJ #6676](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6676) MERGED: retains original positive Ward coefficient r(β) and proves D_H(β)=2exp(-2βp_H)+exp(-βp_H)r(β)^4≥1 implies no original finite-power AJA witness; D_H(κ_H)>1 and continuity yield ∃β>κ_H with no witness for every finite H. **This does not decide all β>κ_H, any global witness existence, top rank-one, uniform coercivity, Hamiltonian or 4D continuum mass gap.**
+
+Exact-source runs: [AKG #43127198792](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43127198792) (11,445 Lean,11/11 axioms); [AKH #43143567948](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43143567948) (11,446,7/7); [AKI #43148059365](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43148059365) (11,447,13/13); [AKJ #43153265889](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43153265889) (11,448,9/9). All completed/SUCCESS, standard 3 axioms only, new sorryAx absent, changed warning/error 0, exact-head independent receipts SUCCESS, source/merge trees equal. Formal pushes AKG [#43128076902](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43128076902), AKH [#43144248736](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43144248736), AKI [#43148760017](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43148760017) all completed/SUCCESS; AKJ [#43154080548](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43154080548) is a separately pending push audit in this record. Proof receipts: [AKG](docs/proofs/P4-Q2-PZ37AKG_verified_20261112.md), [AKH](docs/proofs/P4-Q2-PZ37AKH_verified_20261112.md), [AKI](docs/proofs/P4-Q2-PZ37AKI_verified_20261112.md), [AKJ](docs/proofs/P4-Q2-PZ37AKJ_verified_20261112.md). Original definitions, fixed Lean/mathlib, formal proof branch, same-root, append-only/tighten-only retained; main is docs-only mirror.
+
+**Subsequent AKJ push confirmation (2026-11-12):** the pending state above is retained as history. Independent [formal push #43154080548](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43154080548) at exact squash `2403229c6db3ba3e7702cc014a875fa9f91493d6` is now completed/SUCCESS, including actual Lean job `130969835468`, Lean step 17 and exact-head receipt job `130972144127`. Complete job logs confirm 11,448/11,448, nine standard-only axiom audits, no sorryAx and changed AKJ warning/error 0/0; source/test-merge/squash tree equality is independently rechecked. [Appended AKJ receipt](docs/proofs/P4-Q2-PZ37AKJ_verified_20261112.md#subsequent-independent-formal-push-confirmation-2026-11-12). The mathematical scope and OPEN boundaries above are unchanged.
+
+
+### P4-Q2-PZ37AKK — squared Haar mass strengthens the genuine full-top floor (2026-11-12 JST)
+
+[Theorem PR #6681](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6681) proves, for every original finite `H`, `β>0`, and `n:ℕ`, with `λ=‖P‖`, the unchanged AKI `c,d`, and `L=d²λ/(λ−c)²`:
+
+$$
+0<\lambda-c,\qquad
+d^2<\frac{d^2\lambda}{(\lambda-c)^2}
+\le\|Qf_0\|^2\le\|S^n f_0\|^2.
+$$
+
+The proof retains AKG's squared Haar mass estimate and AKJ's affine Ward pairing, and uses AJE's general full-top overlap bound and AJH's power invariance. It does not use top simplicity or identify the nonnegative top vector with a separately selected vacuum.
+
+For the original AJA Haar budget `B`, `B≤L` excludes every strict finite-power witness, and a witness requires `L<B`. The reverse implication and a new numerical coupling decision are not established. In particular, the actual full-top/Haar budget difference at `H=1, β₀`, H-uniform coercivity, Hamiltonian spectral gap and the continuum 4D mass gap remain outside this result.
+
+Exact-source CI [43161340043](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43161340043) and independent formal-push CI [43162137343](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43162137343) are completed/SUCCESS, including Lean step 17, post-build processing and separate exact-SHA receipts. Each reports 11449/11449, all 10 declarations use only the standard axiom set, no sorryAx, and changed AKK warning/error 0/0. Source/test-merge/squash share tree `23315c7084b766284aae2865f49ff40e026c1457`. [Formal proof and audit record](docs/proofs/P4-Q2-PZ37AKK_verified_20261112.md).
+
+**Finite-volume scope correction:** canonical source already contains a top-simplicity theorem for this same finite-volume physical Wilson operator, successfully built in [#5012](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5012). The record above distinguishes that existing theorem and historical build evidence from a fresh current-head replay or theorem-specific axiom audit, which are not claimed here. A blanket finite-volume “top simplicity OPEN” description should not be repeated.
+
+Original definitions, assumptions, roots and Lean/mathlib pins are preserved. Formal receives the new Lean leaf; main mirrors only this record and the identical public-document appendices.
