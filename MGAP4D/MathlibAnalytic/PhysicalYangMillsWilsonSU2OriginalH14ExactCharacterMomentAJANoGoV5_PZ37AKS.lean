@@ -107,6 +107,10 @@ theorem p4Q2PZ37AKS_originalSingleLinkCharacter_mgf_le_quarter
   have hPolyIntegral :
       (∫ g : GK, ((1 : ℝ) + beta * chiK g + beta ^ 2 * chiK g ^ 2) ∂nuK) =
       1 + beta ^ 2 / 4 := by
+    change (∫ g : GK,
+        (((fun _ : GK => (1 : ℝ)) + (fun g : GK => beta * chiK g)) +
+          (fun g : GK => beta ^ 2 * chiK g ^ 2)) g ∂nuK) =
+        1 + beta ^ 2 / 4
     rw [integral_add (hConst.add hScaled) hQuadratic,
       integral_add hConst hScaled, integral_const_mul, integral_const_mul,
       p4Q2PZ37AIQ_originalSingleLinkCharacter_mean_zero,
