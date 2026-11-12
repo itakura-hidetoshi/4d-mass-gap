@@ -158,7 +158,7 @@ theorem p4Q2PZ37AKI_originalTransfer_affineUpper
   have hCancel : w * Real.exp ((beta / 2) * WI B) = 1 := by
     dsimp [w]
     rw [← Real.exp_add]
-    convert Real.exp_zero using 1 <;> ring
+    convert Real.exp_zero using 1; ring
   calc
     TI beta fI B = w * (Real.exp ((beta / 2) * WI B) * TI beta fI B) := by
       rw [← mul_assoc, hCancel, one_mul]
@@ -225,7 +225,8 @@ theorem p4Q2PZ37AKI_originalSource_top_overlap_allPositive
   have hPair := realL2_inner_le_neg_floor_mul_mass_akg muI
     (((P fI : PhysI) : Lp ℝ 2 muI) - c • (fI : Lp ℝ 2 muI)) g d hRaw hg
   change inner ℝ (P fI - c • fI) psi ≤ -d * I at hPair
-  rw [inner_sub_left, real_inner_smul_left (fI : PhysI) psi c] at hPair
+  rw [inner_sub_left (𝕜 := ℝ) (P fI : PhysI) (c • fI) psi,
+    real_inner_smul_left (fI : PhysI) psi c] at hPair
   have hSymm : (P : PhysI →ₗ[ℝ] PhysI).IsSymmetric :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_isSymmetric
       H 2 (by norm_num) beta hbeta.le
@@ -336,7 +337,9 @@ theorem p4Q2PZ37AKI_oldCubicCutoff_lt_logarithmic :
   have hp := p4Q2PZ37AHN_count_pos H
   have hu := p4Q2PZ37AIM_identityHaarRoot_le_one H
   have hLog : (1 / 2 : ℝ) ≤ Real.log 2 := by
-    simpa using (Real.one_sub_inv_le_log_of_pos (by norm_num : (0 : ℝ) < 2))
+    have h := Real.one_sub_inv_le_log_of_pos (by norm_num : (0 : ℝ) < 2)
+    norm_num at h
+    linarith only [h]
   calc
     p4Q2PZ37AIM_elementaryCubicSmallCoupling H ≤ 1 / (16 * pI + 1) :=
       div_le_div_of_nonneg_right hu (by positivity)
