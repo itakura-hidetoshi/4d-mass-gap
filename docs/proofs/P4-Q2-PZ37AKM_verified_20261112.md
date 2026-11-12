@@ -171,3 +171,9 @@ append-only / tighten-only / overwrite-forbidden / same-root. Formal has
 the Lean leaf and proof record. Main will receive only the identical
 proof-record blob and public-document appendices, never the formal-only
 Lean leaf. Documentation-only Strict Lean is not manually dispatched.
+
+## Independent formal-squash push certification — 2026-11-12 JST
+
+Independent formal `push` [CI 43178103712](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43178103712) at exact squash `37f0fd533bd4a1758215f6c612e67114834b1f2d` completed **SUCCESS**, including the source job, diagnostics, cache and receipt. Actual build job `131047156766` directly checks the squash: **11,451/11,451**, AKM leaf built in 19s, complete multiline axiom arrays for all five declarations exactly `[propext, Classical.choice, Quot.sound]`, `sorryAx` absent, AKM warning/error **0/0**. Independent receipt job `131049498998` also completed/SUCCESS with `event=push`, matching exact squash SHA, `source_result=success`, and published commit status `state=success`.
+
+Certified source, actual test-merge, and actual formal squash share Git tree `a311ed1efd7e4f5931681265fc69758ead193523`. No initial failure is counted as certification. Formal-branch mathematics is complete **for the listed AKM conditional comparisons only**. A true original numerical top-below-Haar budget inequality remains an independent open obligation.
