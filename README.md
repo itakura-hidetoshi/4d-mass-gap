@@ -4756,3 +4756,17 @@ Canonical AKR squash `a1184bd3840f39e0753cd096703f397028dbf96a` received an inde
 ### AKS independent canonical formal-push verification — 2026-11-13 JST
 
 The actual canonical AKS squash `0481923e78a323faf04c6efc1c77dd402ec3bb3c` passed independently triggered [push CI #43311024308](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43311024308), **completed/SUCCESS**. Direct Lean 11,454/11,454, nine/nine axioms only the standard three, no sorryAx, changed AKS warning/error 0/0. The exact integrated HEAD independent completion receipt job `131509548538` completed/SUCCESS and published `event=push`, `source_result=success`, status `success`. Source/test-merge/squash Git tree `3b45ae6a224dbc81293c10b37a985c31d151cb83` identical. The H=14 AJA no-witness is now unconditional, while the actual negative Haar mass r14 and Delta14 sign are still NO_DATA.
+
+
+## AKT — 元SU(2)固定結合β₀の真正AJA有限冪証人不存在をH≤16へ拡張（2026-11-13 JST）
+
+[AKT定理PR #6706](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6706) **MERGED**。元Wilson SU(2)作用素、元ZW符号付きsource、元Haar確率、負領域 `{u_H<-m_H}`、margin、top、元のAJA厳密予算 `B_H=m_H² mu_H{u_H<-m_H}`、β₀=log(3/2)/64は不変。AKSが認証した**真正Haar character二次モーメント1/4**に基づく元のcrossing partition上界 `Z_H(beta)<=exp(p_H*(-beta+beta²/4))` を再利用。H≤16では元plaq数 `p_H=24(H+1)^3≤117912`、既存AKOの `β₀≤1/156` と `11/8≤log4` により `β₀²p_H/4≤log4`。元の真正Haar確率質量 `r_H≤1` だけからAKQの実際のpartition–Haar比較を満たし、**H≤16すべてで元AJA有限冪証人は存在しない**とLean4で証明。H=15、16は今回の新規結果。H≥17に自動拡張しない。
+
+[Exact-source CI #43317972326](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43317972326) completed/SUCCESS：Lean 11,455/11,455、新規5定理公理監査5/5（標準 `propext`, `Classical.choice`, `Quot.sound` のみ）、sorryAxなし、変更AKT error/warning 0/0、completion receipt SUCCESS。source `45a513f59d90aced02a4d1787e42c98bd81c954e`／test-merge／canonical squash `8d9f8b7db2da7cb29b6506518f9f9d4b2ac561b0` のGit treeは `2fef4b6d8ed7951cd2ef4a6d935124ab7cfa13be` で一致。[正式証明記録](docs/proofs/P4-Q2-PZ37AKT_verified_20261113.md)。独立正式push CI [#43318982017](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43318982017) の受領書は別途監査。
+
+**OPEN:** H≥17の新たな解析、元Haar負領域質量の具体値、top–Haar残差の厳密なstrict sign、H一様Rayleigh下界、Hamiltonian spectral gap、連続体4次元質量ギャップ。元物理・Lean/mathlib pin・公開rootは不変。append-only／same-root。
+
+
+### AKT independent canonical formal-push authentication — 2026-11-13 JST
+
+AKT canonical formal-squash `8d9f8b7db2da7cb29b6506518f9f9d4b2ac561b0` passed independent actual push [CI #43318982017](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43318982017): **completed/SUCCESS**; Lean 11,455/11,455, 5/5 standard-three axioms, no sorryAx, changed AKT warning/error 0/0. Completion receipt job `131537470852` completed SUCCESS and published exact-head `event=push`, `source_result=success`, commit status `success`. Original source/test-merge/integrated tree `2fef4b6d8ed7951cd2ef4a6d935124ab7cfa13be` remains identical. This certifies finite-power original AJA no-witness at H<=16 only; H>=17 and mass gap OPEN.
