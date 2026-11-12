@@ -104,19 +104,31 @@ theorem p4Q2PZ37AKS_originalSingleLinkCharacter_mgf_le_quarter
   have hPoly : Integrable (fun g : GK =>
       (1 : ℝ) + beta * chiK g + beta ^ 2 * chiK g ^ 2) nuK :=
     (hConst.add hScaled).add hQuadratic
+  have hConstIntegral : (∫ g : GK, (1 : ℝ) ∂nuK) = 1 := by
+    simp
+  have hLinearIntegral : (∫ g : GK, beta * chiK g ∂nuK) = 0 := by
+    rw [integral_const_mul, p4Q2PZ37AIQ_originalSingleLinkCharacter_mean_zero, mul_zero]
+  have hQuadraticIntegral :
+      (∫ g : GK, beta ^ 2 * chiK g ^ 2 ∂nuK) = beta ^ 2 / 4 := by
+    rw [integral_const_mul,
+      p4Q2PZ37AKS_originalSingleLinkCharacter_secondMoment]
+    ring
   have hPolyIntegral :
       (∫ g : GK, ((1 : ℝ) + beta * chiK g + beta ^ 2 * chiK g ^ 2) ∂nuK) =
       1 + beta ^ 2 / 4 := by
-    change (∫ g : GK,
-        (((fun _ : GK => (1 : ℝ)) + (fun g : GK => beta * chiK g)) +
-          (fun g : GK => beta ^ 2 * chiK g ^ 2)) g ∂nuK) =
-        1 + beta ^ 2 / 4
-    rw [integral_add (hConst.add hScaled) hQuadratic,
-      integral_add hConst hScaled, integral_const_mul, integral_const_mul,
-      p4Q2PZ37AIQ_originalSingleLinkCharacter_mean_zero,
-      p4Q2PZ37AKS_originalSingleLinkCharacter_secondMoment]
-    simp only [integral_const, probReal_univ, one_smul, mul_zero, add_zero]
-    ring
+    calc
+      _ = (∫ g : GK, ((1 : ℝ) + beta * chiK g) ∂nuK) +
+          (∫ g : GK, beta ^ 2 * chiK g ^ 2 ∂nuK) :=
+        integral_add (hConst.add hScaled) hQuadratic
+      _ = ((∫ g : GK, (1 : ℝ) ∂nuK) +
+          (∫ g : GK, beta * chiK g ∂nuK)) +
+          (∫ g : GK, beta ^ 2 * chiK g ^ 2 ∂nuK) := by
+        exact congrArg
+          (fun t : ℝ => t + (∫ g : GK, beta ^ 2 * chiK g ^ 2 ∂nuK))
+          (integral_add hConst hScaled)
+      _ = 1 + beta ^ 2 / 4 := by
+        rw [hConstIntegral, hLinearIntegral, hQuadraticIntegral]
+        ring
   have hExp : Integrable (fun g : GK => Real.exp (beta * chiK g)) nuK :=
     p4Q2PZ37AIQ_originalSingleLinkCharacter_subgaussian.integrable_exp_mul beta
   have hTaylor (g : GK) :
