@@ -4770,3 +4770,8 @@ The separately triggered canonical squash `push` [CI #43192002019](https://githu
 **EXACT-SOURCE CI [#43203431326](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43203431326):** 11,453/11,453 completed/SUCCESS, seven/seven standard-three axiom audits, no sorryAx, warning/error 0/0, exact-head completion receipt SUCCESS; source/test-merge/squash tree `33dc7aaa323ce4948b8c8cbb224b5f11413f253c` same. Independent formal push [#43204266634](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43204266634) separately assessed. [Formal record](docs/proofs/P4-Q2-PZ37AKQ_verified_20261112.md). Docs-only Strict Lean skipped.
 
 **NEXT:** Rigorously enclose the **actual** negative set by genuine measurable Haar cells and certify an upper mass below the exact H14 threshold, or evaluate the actual full-top/Haar budget difference via independent finite certificates. No existential witness at H14 is claimed, nor Hamiltonian or continuum Yang–Mills gap. No rewritten source, physics, root or pins.
+
+
+### AKQ independent formal-push authentication — 2026-11-12 JST
+
+The separately triggered canonical formal-squash [CI #43204266634](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43204266634) at exact integrated HEAD `517ed6be3b9032c9d6c01fc52ec9432fa924f7da` completed **SUCCESS**. Direct Lean 11,453/11,453, 7/7 AKQ axioms exactly the standard three, no sorryAx, changed-file warning/error 0/0. The independent exact-SHA `event=push` receipt job `131138679934` completed/SUCCESS. The original-model source/test-merge/squash Git tree is identical. The actual H14 negative-region mass remains unmeasured/NO_DATA; conditional mathematics does not become an unconditional no-witness statement.
