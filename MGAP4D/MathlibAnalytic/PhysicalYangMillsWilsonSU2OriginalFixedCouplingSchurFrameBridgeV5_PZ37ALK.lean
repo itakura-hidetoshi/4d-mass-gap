@@ -216,6 +216,142 @@ theorem p4Q2PZ37ALK_originalFixedCouplingCoercivity_and_strictNormalizer
     (p4Q2PZ37ALJ_originalPartitionOverNormCeiling_lt_old H beta0
       p4Q2PZ37ADC_fixedCoupling_pos)
 
+
+/-!
+## Fixed-coupling no-go for the *selected* AKL high-temperature route
+
+The physical beta0 is not merely of unknown relation to the chosen AKL
+cutoff. The exact original normalized C5 background-update Harnack
+influence is 2/5 at beta0, and the pre-existing half-barrier scalar at
+s=9 exceeds one by a wide algebraic margin. Because the actual
+AKL cutoff lies inside that half-barrier interval, beta_* < beta0.
+
+This obstruction is specific to this quantitative two-boundary
+Harnack/Schur/frame proof route. It does not assert that the genuine
+Wilson transfer lacks coercivity or a gap at beta0.
+-/
+
+/-- No numerical floating-point approximation: the *original* background
+Harnack influence at beta0 is exactly 2/5. -/
+theorem p4Q2PZ37ALK_originalFixedCoupling_HarnackInfluence_eq_twoFifths :
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceBackgroundUpdateHarnackInfluence
+        beta0 = (2 / 5 : ℝ) := by
+  have hExp :
+      (Real.exp (32 * beta0)) ^ 2 = (3 / 2 : ℝ) := by
+    calc
+      (Real.exp (32 * beta0)) ^ 2 =
+          Real.exp (32 * beta0 + 32 * beta0) := by
+            rw [Real.exp_add, pow_two]
+      _ = Real.exp (64 * beta0) := by
+        congr 1
+        ring
+      _ = (3 / 2 : ℝ) := p4Q2PZ37ADC_fixedCoupling_exp_eq
+  change
+    2 * (((Real.exp (32 * beta0)) ^ 2 - 1) /
+      ((Real.exp (32 * beta0)) ^ 2 + 1)) = (2 / 5 : ℝ)
+  rw [hExp]
+  norm_num
+
+/-- At s=9 the *unchanged* fixed-coupling original half-barrier
+coefficient is strictly ABOVE one, so the high-temperature half-barrier
+certificate cannot cover beta0. -/
+theorem p4Q2PZ37ALK_originalFixedCoupling_s9HalfBarrier_gt_one :
+    (1 : ℝ) <
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierPinFreeCoefficient
+        9 beta0 := by
+  change
+    (1 : ℝ) <
+      18 *
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceBackgroundUpdateHarnackInfluence
+          beta0 * (9 : ℝ) ^ 2 +
+        Real.exp (16 * beta0) * (1 / 2 : ℝ)
+  rw [p4Q2PZ37ALK_originalFixedCoupling_HarnackInfluence_eq_twoFifths]
+  have hExpPos : 0 < Real.exp (16 * beta0) := Real.exp_pos _
+  nlinarith
+
+/-- An unconditional obstruction to beta0 belonging to the ACTUAL
+AKL chosen interval, obtained by tracing every dependency from the
+two-boundary frame and Schur cutoffs to the original half-barrier.
+No physical Wilson transfer counterexample is asserted. -/
+theorem p4Q2PZ37ALK_originalFixedCoupling_not_le_AKLcutoff :
+    ¬ beta0 ≤ betaStar := by
+  intro hAKL
+  have hFrame :
+      beta0 ≤
+        GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialFrameCutoff
+          9 (by norm_num) :=
+    p4Q2PZ37ALK_originalFixedCoupling_frameNecessary hAKL
+  have hLoss :
+      beta0 ≤
+        GroundStateSourceFixedPairEnergy.twoBoundaryOrderedLossContractionCutoff
+          9 (by norm_num) :=
+    hFrame.trans
+      (GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialFrameCutoff_le_twoBoundary
+        9 (by norm_num))
+  have hSchurCut :
+      beta0 ≤
+        GroundStateSourceFixedPairEnergy.twoBoundaryOrderedSchurCutoff
+          9 (by norm_num) :=
+    hLoss.trans
+      (GroundStateSourceFixedPairEnergy.twoBoundaryOrderedLossContractionCutoff_le_schurCutoff
+        9 (by norm_num))
+  have hJointCut :
+      beta0 ≤
+        GroundStateSourceFixedPairEnergy.jointLeakageSchurCutoff
+          9 (by norm_num) :=
+    hSchurCut.trans
+      (GroundStateSourceFixedPairEnergy.twoBoundaryOrderedSchurCutoff_le_jointLeakageSchurCutoff
+        9 (by norm_num))
+  have hShellCut :
+      beta0 ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightPinFreeBidirectionalShellCutoff
+          9 (by norm_num) :=
+    hJointCut.trans
+      (GroundStateSourceFixedPairEnergy.jointLeakageSchurCutoff_le_shellCutoff
+        9 (by norm_num))
+  have hStrictCut :
+      beta0 ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHighTemperatureStrictPhysicalSweepCutoff
+          9 :=
+    hShellCut.trans
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightPinFreeBidirectionalShellCutoff_le_strictPhysicalSweepCutoff
+        9 (by norm_num))
+  have hHalfCut :
+      beta0 ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierCutoff
+          9 :=
+    hStrictCut.trans
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHighTemperatureStrictPhysicalSweepCutoff_le_halfBarrierCutoff
+        9)
+  have hHalfLtOne :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierPinFreeCoefficient
+          9 beta0 < 1 :=
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierCutoff_spec
+      9 beta0 p4Q2PZ37ADC_fixedCoupling_pos hHalfCut).1
+  exact
+    (not_lt_of_ge
+      p4Q2PZ37ALK_originalFixedCoupling_s9HalfBarrier_gt_one.le)
+      hHalfLtOne
+
+/-- The original fixed coupling is rigorously LARGER than the selected
+H-uniform AKL coupling cutoff. The AKL theorem itself remains valid
+on the smaller interval. -/
+theorem p4Q2PZ37ALK_AKLuniformCutoff_lt_originalFixedCoupling :
+    betaStar < beta0 := by
+  exact lt_of_not_ge p4Q2PZ37ALK_originalFixedCoupling_not_le_AKLcutoff
+
+/-- Therefore the previously constructed common safe coupling is
+EXACTLY the existing selected AKL cutoff, and is not beta0. -/
+theorem p4Q2PZ37ALK_originalFixedCouplingUniformClip_eq_AKLcutoff :
+    betaSafe = betaStar := by
+  exact p4Q2PZ37ALK_originalFixedCouplingUniformClip_eq_cutoff_of_lt
+    p4Q2PZ37ALK_AKLuniformCutoff_lt_originalFixedCoupling
+
+theorem p4Q2PZ37ALK_originalFixedCouplingUniformClip_lt_original :
+    betaSafe < beta0 := by
+  rw [p4Q2PZ37ALK_originalFixedCouplingUniformClip_eq_AKLcutoff]
+  exact p4Q2PZ37ALK_AKLuniformCutoff_lt_originalFixedCoupling
+
 end GroundStatePosteriorJoint
 end
 end MGAP4D.MathlibAnalytic
@@ -235,3 +371,10 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ALK_safeOriginalCoercivity_and_strictNormalizer
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ALK_safeOriginalAJABudget_le_ALJ
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ALK_originalFixedCouplingCoercivity_and_strictNormalizer
+
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ALK_originalFixedCoupling_HarnackInfluence_eq_twoFifths
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ALK_originalFixedCoupling_s9HalfBarrier_gt_one
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ALK_originalFixedCoupling_not_le_AKLcutoff
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ALK_AKLuniformCutoff_lt_originalFixedCoupling
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ALK_originalFixedCouplingUniformClip_eq_AKLcutoff
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ALK_originalFixedCouplingUniformClip_lt_original
