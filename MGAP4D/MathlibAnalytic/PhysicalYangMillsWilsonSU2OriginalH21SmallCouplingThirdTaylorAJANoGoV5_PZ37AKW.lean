@@ -219,7 +219,7 @@ local instance p4Q2PZ37AKW_probability : IsProbabilityMeasure muT := by
 This is NOT a rescaled or synthetic lattice count. -/
 theorem p4Q2PZ37AKW_originalPlaquetteCount_le_twentyOne
     (hH : H ≤ 21) : pT ≤ 255552 := by
-  have hHR : (H : ℝ) ≤ 18 := by exact_mod_cast hH
+  have hHR : (H : ℝ) ≤ 21 := by exact_mod_cast hH
   have hCube : ((H : ℝ) + 1) ^ 3 ≤ (22 : ℝ) ^ 3 :=
     pow_le_pow_left₀ (by positivity : (0 : ℝ) ≤ (H : ℝ) + 1)
       (by linarith only [hHR]) 3
@@ -228,7 +228,7 @@ theorem p4Q2PZ37AKW_originalPlaquetteCount_le_twentyOne
   nlinarith only [hCube]
 
 /-- A fully rational certificate for AKS's *sharper* genuine SU(2)
-Haar-character thirteen-seventy-two Gaussian partition test through H=21. -/
+Haar-character forty-four/three-fifty-one small-coupling partition test through H=21. -/
 theorem p4Q2PZ37AKW_originalFixedCoupling_fortyFourThreeFiftyOneBudget_le_logFour
     (hH : H ≤ 21) :
     44 * beta0 ^ 2 * pT / 351 ≤ Real.log 4 := by
@@ -301,7 +301,7 @@ theorem p4Q2PZ37AKW_originalH21_no_AJA_power_witness :
     ¬ ∃ n : ℕ,
       ‖((periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
           21 2 (by norm_num) beta0 p4Q2PZ37ADC_fixedCoupling_pos.le) ^ n)
-        (p4Q2PZ37ZW_originalCenteredPhysicalDirection 18)‖ ^ 2 <
+        (p4Q2PZ37ZW_originalCenteredPhysicalDirection 21)‖ ^ 2 <
       (p4Q2PZ37AIW_originalNormalizedNegativeMargin 21 beta0
         p4Q2PZ37ADC_fixedCoupling_pos.le) ^ 2 *
         Measure.real (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure 21 2)
