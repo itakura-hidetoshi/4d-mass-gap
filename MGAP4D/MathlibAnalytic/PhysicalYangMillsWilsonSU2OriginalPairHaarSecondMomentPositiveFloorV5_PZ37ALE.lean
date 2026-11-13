@@ -71,8 +71,6 @@ local notation "KC" =>
   periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel H 2
 local notation "Cross" =>
   periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2
-local notation "ellH" =>
-  ((periodicHypercubicEvenSpatialSliceLinkList H).length : ℝ)
 local notation "Vsrc" => p4Q2PZ37AHN_originalSource_HaarSecondMoment H
 local notation "M2pair" => p4Q2PZ37ALC_originalPairCrossingSecondMoment H
 local notation "Zcross" => p4Q2PZ37AIF_originalCrossingPartition H
@@ -87,7 +85,7 @@ local instance p4Q2PZ37ALE_probability : IsProbabilityMeasure muH := by
 /-- A named bound for the unchanged exponential crossing KERNEL, not
 a modified original operator or probability distribution. -/
 def p4Q2PZ37ALE_originalCrossingKernelFloor (beta : ℝ) : ℝ :=
-  Real.exp (-(2 * beta * ellH))
+  Real.exp (-(2 * beta * ((periodicHypercubicEvenSpatialSliceLinkList H).length : ℝ)))
 
 local notation "kFloor" => p4Q2PZ37ALE_originalCrossingKernelFloor H
 
@@ -105,7 +103,7 @@ theorem p4Q2PZ37ALE_originalCrossingKernel_ge_floor
   rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_eq_boltzmann]
   apply Real.exp_le_exp.mpr
   have hAction :
-      Cross A B ≤ 2 * ellH :=
+      Cross A B ≤ 2 * ((periodicHypercubicEvenSpatialSliceLinkList H).length : ℝ) :=
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_le_two_mul_length
       H 2 (by norm_num) A B
   have hScale := mul_le_mul_of_nonneg_left hAction hbeta
@@ -153,7 +151,7 @@ theorem p4Q2PZ37ALE_originalPair_leftSourceSquare_eq_variance :
     (((p4Q2PZ37AFZ_originalCenteredContinuous H).continuous.comp
       continuous_fst).pow 2).integrable_of_hasCompactSupport
         (HasCompactSupport.of_compactSpace _)
-  change (∫ P : Cfg × Cfg, (fCont P.1) ^ 2 ∂muH.prod muH) = _
+  change (∫ P : Cfg × Cfg, (fCont P.1) ^ 2 ∂(Measure.prod muH muH)) = _
   rw [integral_prod _ hLeft]
   simp [p4Q2PZ37AHN_originalSource_HaarSecondMoment]
 
@@ -164,7 +162,7 @@ theorem p4Q2PZ37ALE_originalPair_rightSourceSquare_eq_variance :
     (((p4Q2PZ37AFZ_originalCenteredContinuous H).continuous.comp
       continuous_snd).pow 2).integrable_of_hasCompactSupport
         (HasCompactSupport.of_compactSpace _)
-  change (∫ P : Cfg × Cfg, (fCont P.2) ^ 2 ∂muH.prod muH) = _
+  change (∫ P : Cfg × Cfg, (fCont P.2) ^ 2 ∂(Measure.prod muH muH)) = _
   rw [integral_prod_symm _ hRight]
   simp [p4Q2PZ37AHN_originalSource_HaarSecondMoment]
 
@@ -180,7 +178,7 @@ theorem p4Q2PZ37ALE_originalPair_unweightedSourceMixed_zero :
       fCont P.1 * fCont P.2) pairH :=
     (hf1.mul hf2).integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
-  change (∫ P : Cfg × Cfg, fCont P.1 * fCont P.2 ∂muH.prod muH) = 0
+  change (∫ P : Cfg × Cfg, fCont P.1 * fCont P.2 ∂(Measure.prod muH muH)) = 0
   rw [integral_prod _ hMixed]
   simp_rw [integral_const_mul]
   rw [p4Q2PZ37ALE_originalCenteredSource_realHaarMean_zero H]
@@ -215,6 +213,11 @@ theorem p4Q2PZ37ALE_originalUnweightedPairSourceSquare_eq_twiceVariance :
     _ = (∫ P : Cfg × Cfg, (fCont P.1) ^ 2 ∂pairH) +
           (∫ P : Cfg × Cfg, (fCont P.2) ^ 2 ∂pairH) +
             2 * (∫ P : Cfg × Cfg, fCont P.1 * fCont P.2 ∂pairH) := by
+      change
+        (∫ P : Cfg × Cfg,
+          (((fun Q : Cfg × Cfg => (fCont Q.1) ^ 2) +
+            (fun Q : Cfg × Cfg => (fCont Q.2) ^ 2)) +
+            (fun Q : Cfg × Cfg => 2 * (fCont Q.1 * fCont Q.2))) P ∂pairH) = _
       rw [integral_add (hLeft.add hRight) (hMixed.const_mul 2),
         integral_add hLeft hRight, integral_const_mul]
     _ = 2 * Vsrc := by
