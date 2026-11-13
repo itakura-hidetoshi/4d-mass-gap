@@ -120,3 +120,12 @@ is NOT the physical spectral gap or a continuum mass-gap proof.
 
 Any docs-only main mirror must preserve this proof record's
 identical Git blob and append README/ROADMAP without overwrites.
+
+
+## Independent canonical formal-push certification (2026-11-13 JST)
+
+The earlier monitored/unverified push description above is preserved as a historical snapshot. The actual independently triggered canonical formal squash [push CI #43365907391](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43365907391), exact integrated HEAD `ee5f4f91a72ee01bb859420df5eb4c5022db1ccd`, event `push`, run attempt 1, has completed **SUCCESS**. Changed Lean fast check job `131690160600` built **11,459/11,459** and independently printed all 9 AKX declarations' axioms: only `propext`, `Classical.choice`, `Quot.sound`; no new `sorryAx`, AKX warning/error 0/0.
+
+The exact-head completion receipt job `131692258724` completed **SUCCESS** and recorded `event=push; exact_sha=ee5f4f91a72ee01bb859420df5eb4c5022db1ccd; source_result=success; run=43365907391; attempt=1`. GitHub combined status reports `success` in `chatgpt-ci-receipt/PR Lean Fast Check`. The actual canonical squash tree `d48502479e8c5089a88246fd6182f4c48f6c9c88` is identical to the authenticated theorem source/test-merge tree.
+
+This independent receipt verifies ONLY the already certified **conditional** H22 original Haar mass threshold theorems. It supplies no numerical bound on actual r22, no unconditional H22 no-witness, no strict Delta22 sign/equality, no H-uniform Rayleigh, and no Hamiltonian or continuum Yang–Mills mass gap.
