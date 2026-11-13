@@ -53,7 +53,8 @@ local notation "Cfg" =>
   PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
 local notation "muH" =>
   periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
-local notation "pairH" => (muH.prod muH)
+local notation "pairH" =>
+  periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H 2
 local notation "T" => p4Q2PZ37AHW_originalCenterTwist H
 local notation "KC" =>
   periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel H 2
