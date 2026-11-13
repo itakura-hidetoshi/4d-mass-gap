@@ -36,13 +36,13 @@ theorem real_exp_le_one_add_thirteenEighteenths_sq_akv
   have hPoly :
       (∑ m ∈ Finset.range 3, x ^ m / (m.factorial : ℝ)) =
         1 + x + x ^ 2 / 2 := by
-    norm_num [Finset.sum_range_succ, Nat.factorial] <;> ring
+    norm_num [Finset.sum_range_succ, Nat.factorial]
   have hBound := Real.exp_bound (x := x) hx (n := 3) (by decide)
   rw [hPoly] at hBound
   have hRem :
       |Real.exp x - (1 + x + x ^ 2 / 2)| ≤
         |x| ^ 3 * (2 / 9 : ℝ) := by
-    convert hBound using 1 <;> norm_num [Nat.factorial]
+    convert hBound using 1; norm_num [Nat.factorial]
   have hAbs3 : |x| ^ 3 ≤ x ^ 2 := by
     calc
       |x| ^ 3 = |x| ^ 2 * |x| := by ring
