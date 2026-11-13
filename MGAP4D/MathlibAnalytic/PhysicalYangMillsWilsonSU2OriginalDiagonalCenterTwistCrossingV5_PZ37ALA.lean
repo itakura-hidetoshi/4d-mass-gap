@@ -140,6 +140,38 @@ theorem p4Q2PZ37ALA_originalHalfweight_diagonalCenter_dual
   congr 1
   ring
 
+
+/-- This is the REAL product-Haar descent of the verified local
+diagonal center twist. It is a genuine two-endpoint measure identity,
+not an informal replacement of pair measures. -/
+theorem p4Q2PZ37ALA_originalPairHaar_diagonalCenter_preserving :
+    MeasurePreserving (Prod.map T T)
+      ((periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2).prod
+        (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2))
+      ((periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2).prod
+        (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2)) := by
+  exact (p4Q2PZ37AHW_originalCenterTwist_Haar_measurePreserving H).prod
+    (p4Q2PZ37AHW_originalCenterTwist_Haar_measurePreserving H)
+
+/-- The same original crossing factor multiplying the pair source is
+odd under the already authenticated diagonal pair-Haar symmetry. -/
+theorem p4Q2PZ37ALA_originalPairCrossingSource_diagonalCenter_odd
+    (beta : ℝ) (A B : Cfg) :
+    KC beta (T A) (T B) * (fCont (T A) + fCont (T B)) =
+      -(KC beta A B * (fCont A + fCont B)) := by
+  rw [p4Q2PZ37ALA_originalCrossingKernel_diagonalCenter H beta A B,
+    p4Q2PZ37ALA_originalPairSource_diagonalCenter_odd H A B]
+  ring
+
+/-- Its original crossing-weighted pair-square is even, so a future
+norm lower bound can use the genuine measured second Haar moment. -/
+theorem p4Q2PZ37ALA_originalPairCrossingSourceSquare_diagonalCenter_even
+    (beta : ℝ) (A B : Cfg) :
+    KC beta (T A) (T B) * (fCont (T A) + fCont (T B)) ^ 2 =
+      KC beta A B * (fCont A + fCont B) ^ 2 := by
+  rw [p4Q2PZ37ALA_originalCrossingKernel_diagonalCenter H beta A B,
+    p4Q2PZ37ALA_originalPairSourceSquare_diagonalCenter_even H A B]
+
 end GroundStatePosteriorJoint
 end
 end MGAP4D.MathlibAnalytic
@@ -150,3 +182,6 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ALA_originalPairSource_diagonalCenter_odd
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ALA_originalPairSourceSquare_diagonalCenter_even
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ALA_originalHalfweight_diagonalCenter_dual
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ALA_originalPairHaar_diagonalCenter_preserving
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ALA_originalPairCrossingSource_diagonalCenter_odd
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ALA_originalPairCrossingSourceSquare_diagonalCenter_even
