@@ -5158,3 +5158,17 @@ AKV canonical formal squash `da81af5042b1dcab219912423d966c982ef0c351` independe
 ### AKW independent canonical formal-push authentication — 2026-11-13 JST
 
 AKW canonical squash `d250db7baffefdaeb02b399e8a528ec407a53646` separately passed actual [formal push CI #43362764404](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43362764404), completed/**SUCCESS**, build **11,458/11,458**, 12/12 AKW standard-three axiom audits, no sorryAx, changed warning/error 0/0. The independent exact-head completion receipt job `131681746397` completed/**SUCCESS** and logged `event=push; exact_sha=d250db7baffefdaeb02b399e8a528ec407a53646; source_result=success; run=43362764404; attempt=1`; GitHub commit status `success`. Actual canonical tree `0ce53f3e6d88692b58e2ab73b41f5a2afaf3bbb3` matches exact-source/test-merge/squash tree. This certifies only H<=21 genuine finite-AJA no-witness and B_H<=||Qf0_H||²; strict Delta, H>=22 and Hamiltonian/continuum gaps OPEN.
+
+
+## AKX — H=22 genuine Haar-negative mass conditional threshold (2026-11-13 JST)
+
+[AKX定理PR #6718](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6718) **MERGED**。元の固定 `beta0=log(3/2)/64`、真正SU(2) Haar負領域 `r_H=mu_H{u_H<-m_H}` と、認証済みAKWの真正crossing partition係数 `44/351` を変更せず保持。**厳密な条件付き判定** `r_H*exp((44/351)*beta0²*p_H)<=4` からAKQの元partition–Haar条件を導き、元AJA厳密有限冪証人不存在と `B_H<=||Qf0_H||²`、`Delta_H<=0` を形式証明。元H22プラケット数 `p22=292008` について必要な追加上界 `r22<=4*exp(-(44/351)*beta0²*292008)`（約0.920418）を明示した。**実際のr22上界はNO_DATA、無条件H22判定は未証明**。
+
+[Exact-source CI #43364965116](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43364965116) completed/SUCCESS、Lean 11,459/11,459、AKX新規9宣言の公理監査9/9標準3公理のみ、sorryAxなし、変更warning/error 0/0、独立exact-head completion receipt SUCCESS。認証source `90eb68e7c3662d3dfa85dc1eefe4093f18dd4654`、formal squash `ee5f4f91a72ee01bb859420df5eb4c5022db1ccd`、source/test-merge/squash Git tree `d48502479e8c5089a88246fd6182f4c48f6c9c88`。独立formal push [#43365907391](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43365907391) は別途認証。[AKX正式記録](docs/proofs/P4-Q2-PZ37AKX_verified_20261113.md)。
+
+**OPEN:** 真正H22 Haar負領域質量の数値・厳密上界、H22無条件AJA判定、Delta厳密負／零、H>=23、Hamiltonian/連続体mass gap。元Wilson/Haar/ZW-source/margin/top/AJA予算・Lean/mathlib固定を変更せずappend-only／same-root。
+
+
+### AKX independent canonical formal-push verification — 2026-11-13 JST
+
+AKX conditional H22 theorem squash `ee5f4f91a72ee01bb859420df5eb4c5022db1ccd` independently passed actual [formal push CI #43365907391](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43365907391), completed/**SUCCESS**, Lean **11,459/11,459**, 9/9 AKX standard-three axiom audits, new sorryAx none, changed AKX warning/error **0/0**. Exact-head completion receipt job `131692258724` completed/**SUCCESS**: `event=push; exact_sha=ee5f4f91a72ee01bb859420df5eb4c5022db1ccd; source_result=success; run=43365907391; attempt=1`, published GitHub commit status `success`. Canonical Git tree `d48502479e8c5089a88246fd6182f4c48f6c9c88` equals original source/test-merge/squash tree. **H22 numerical Haar-mass bound remains NO_DATA**; this is authentication of conditional results only, not unconditional H22 no-witness or mass gap.
