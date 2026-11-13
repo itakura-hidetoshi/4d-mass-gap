@@ -42,3 +42,8 @@ AKZ certifies `r_H >= 1/2` for every H. At H=22 the unchanged AKX sufficient cri
 Next source-level work: bridge the **unchanged original full one-slab spatial halfweights** to the ALC original pair-Haar Laplace expression using the certified centered source `f_H=(W_H-p_H)/2`, then prove a genuine physical norm lower bound. Separately, H22 genuine complementary Haar-cell certificate or another norm/top comparison is required for an unconditional AJA decision. No H-uniform coercivity, Hamiltonian mass gap or continuum 4D Yang--Mills mass gap established.
 
 Operating rules: append-only / tighten-only / overwrite-forbidden / same-root.
+
+
+## Independent authoritative formal push: final completed receipt (2026-11-13 JST)
+
+The pending snapshot above is historical. On direct GitHub MCP re-observation, genuine canonical [formal push CI #43403627674](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43403627674) completed **SUCCESS** at exact formal HEAD `ee0843243261bfe239d6269f5a1dc2d6c3add2d8`: genuine pinned Lean **11,465/11,465**, all **9/9** ALC public actual `#print axioms` only `propext`, `Classical.choice`, `Quot.sound`; no new sorryAx and changed ALC warning/error **0/0**. Changed Lean job `131812405167` completed SUCCESS, independent exact-head receipt job `131814762641` completed SUCCESS and emitted `[mcp-receipt] event=push exact_sha=ee0843243261bfe239d6269f5a1dc2d6c3add2d8 source_result=success run=43403627674 attempt=1`. Tested/source/canonical squash Git tree remains `f0ed94feba23b15a1ae98387f7c27c332be93680`. This does not supply an original r22 Haar upper bound or AJA witness verdict.
