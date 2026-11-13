@@ -74,7 +74,7 @@ local instance p4Q2PZ37AKY_probability : IsProbabilityMeasure muY := by
   dsimp [periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure]
   infer_instance
 
-private theorem originalH22_negativeY_measurable : MeasurableSet negativeY := by
+theorem p4Q2PZ37AKY_originalH22_negativeEvent_measurable : MeasurableSet negativeY := by
   have hOriginal :=
     p4Q2PZ37AIG_originalNegativeTransferRegion_measurable 22 beta0
   rw [← p4Q2PZ37AIW_originalNormalizedNegativeRegion_eq_original
@@ -100,7 +100,7 @@ half, a compatibility constraint on any proposed complementary cells. -/
 theorem p4Q2PZ37AKY_originalH22_complementHaarMass_le_half :
     Measure.real muY negativeYᶜ ≤ (1 / 2 : ℝ) := by
   have hProb : rY + Measure.real muY negativeYᶜ = 1 :=
-    probReal_add_probReal_compl originalH22_negativeY_measurable
+    probReal_add_probReal_compl p4Q2PZ37AKY_originalH22_negativeEvent_measurable
   have hHalf := p4Q2PZ37AKY_originalH22_negativeHaarMass_ge_half
   linarith only [hProb, hHalf]
 
@@ -125,7 +125,7 @@ theorem p4Q2PZ37AKY_originalH22_negativeHaarMass_le_of_rationalCells
     exact (not_lt_of_ge (hMargin.trans hLower)) hNegativeA
   have hMass :=
     real_probability_finite_complement_cells_budget_akr
-      muY negativeY originalH22_negativeY_measurable cells
+      muY negativeY p4Q2PZ37AKY_originalH22_negativeEvent_measurable cells
       hMeas hDisjoint hOutside massLower hMassLower
   linarith only [hMass]
 
@@ -142,7 +142,7 @@ theorem p4Q2PZ37AKY_originalH22_certifiedCellTotal_le_half
     (∑ i, (massLower i : ℝ)) ≤ (1 / 2 : ℝ) := by
   have hMass :=
     real_probability_finite_complement_cells_budget_akr
-      muY negativeY originalH22_negativeY_measurable cells
+      muY negativeY p4Q2PZ37AKY_originalH22_negativeEvent_measurable cells
       hMeas hDisjoint hOutside massLower hMassLower
   have hHalf := p4Q2PZ37AKY_originalH22_negativeHaarMass_ge_half
   linarith only [hMass, hHalf]
@@ -240,6 +240,7 @@ end GroundStatePosteriorJoint
 end
 end MGAP4D.MathlibAnalytic
 
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AKY_originalH22_negativeEvent_measurable
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AKY_originalH22_negativeHaarMass_ge_half
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AKY_originalH22_complementHaarMass_le_half
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AKY_originalH22_negativeHaarMass_le_of_rationalCells
