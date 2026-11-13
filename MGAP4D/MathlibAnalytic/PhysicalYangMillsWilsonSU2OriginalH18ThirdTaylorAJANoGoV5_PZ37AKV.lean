@@ -196,7 +196,6 @@ local notation "muT" =>
   periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
 local notation "pT" => p4Q2PZ37AFZ_plaquetteCount H
 local notation "ZT" => p4Q2PZ37AIF_originalCrossingPartition H
-local notation "beta0" => p4Q2PZ37ADC_fixedCoupling
 local notation "fT" => p4Q2PZ37ZW_originalCenteredPhysicalDirection H
 local notation "ST" =>
   periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
@@ -225,7 +224,7 @@ theorem p4Q2PZ37AKV_originalPlaquetteCount_le_eighteen
   nlinarith only [hCube]
 
 /-- A fully rational certificate for AKS's *sharper* genuine SU(2)
-Haar-character quarter-Gaussian partition test through H=18. -/
+Haar-character thirteen-seventy-two Gaussian partition test through H=18. -/
 theorem p4Q2PZ37AKV_originalFixedCoupling_thirteenSeventyTwoBudget_le_logFour
     (hH : H ≤ 18) :
     13 * beta0 ^ 2 * pT / 72 ≤ Real.log 4 := by
@@ -243,7 +242,7 @@ theorem p4Q2PZ37AKV_originalFixedCoupling_thirteenSeventyTwoBudget_le_logFour
 
 /-- The genuine original negative-set Haar mass is bounded by one
 and AKS's original SU(2) partition estimate proves AKQ's ACTUAL
-partition-Haar no-go criterion, for every H<=16. -/
+partition-Haar no-go criterion, for every H<=18. -/
 theorem p4Q2PZ37AKV_originalFixedCoupling_partitionHaarMass_of_le_eighteen
     (hH : H ≤ 18) :
     Measure.real muT ET * ZT beta0 ≤
@@ -261,7 +260,7 @@ theorem p4Q2PZ37AKV_originalFixedCoupling_partitionHaarMass_of_le_eighteen
       ZT beta0 ≤ Real.exp (-(beta0 * pT)) *
         Real.exp (13 * beta0 ^ 2 * pT / 72) := by
     calc
-      _ ≤ Real.exp (pT * (-beta0 + beta0 ^ 2 / 4)) :=
+      _ ≤ Real.exp (pT * (-beta0 + 13 * beta0 ^ 2 / 72)) :=
         p4Q2PZ37AKV_originalCrossingPartition_le_thirteenSeventyTwoGaussian H
           beta0 p4Q2PZ37ADC_fixedCoupling_pos.le hOne
       _ = Real.exp (-(beta0 * pT)) * Real.exp (13 * beta0 ^ 2 * pT / 72) := by
@@ -281,7 +280,7 @@ theorem p4Q2PZ37AKV_originalFixedCoupling_partitionHaarMass_of_le_eighteen
     _ = 4 * Real.exp (-(beta0 * pT)) := by ring
 
 /-- No strict ORIGINAL AJA finite-power witness exists at fixed beta0
-for any genuine original finite volume H<=16; the result does not
+for any genuine original finite volume H<=18; the result does not
 use measured negative Haar masses or change the strict original budget. -/
 theorem p4Q2PZ37AKV_originalFixedCoupling_le_eighteen_no_AJA_power_witness
     (hH : H ≤ 18) :
