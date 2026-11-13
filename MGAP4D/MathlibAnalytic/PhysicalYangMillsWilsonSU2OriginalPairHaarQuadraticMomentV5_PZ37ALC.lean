@@ -188,6 +188,7 @@ theorem p4Q2PZ37ALC_originalPairLaplace_quadraticMoment_lower
     have hI := (hPlus.add hMinus).const_mul (1 / 2 : ℝ)
     convert hI using 1
     ext P
+    dsimp only [Pi.add_apply]
     ring
   have hPointwise (P : Cfg × Cfg) :
       KC beta P.1 P.2 +
