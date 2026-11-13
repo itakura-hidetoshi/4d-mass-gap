@@ -51,3 +51,10 @@ The new quadratic correction `M2pair_H(beta)` has certified nonnegativity, but *
 The actual original H22 Haar-negative-region upper mass `r22 <= 4*exp(-(44/351)*beta0^2*292008)`, about 0.920418, is still **NO_DATA**; AKY's complementary cells remain conditional. H>=25 is an obstruction for the OLD AKX sufficient scalar premise only, NOT for every future norm-based criterion or a proof of AJA witness existence. H-uniform coercivity, physical Hamiltonian gap and continuum Yang--Mills 4D mass gap remain OPEN.
 
 Append-only / tighten-only / overwrite-forbidden / same-root.
+
+
+## Compatibility obstruction for the proposed next second-moment descent
+
+The preceding exploratory note about AHR is **not** a proof of exact pair-Haar factorization. Source inspection confirms AHR's `p4Q2PZ37AHR_originalCrossingCorrelation_zero` is the identity `∫ f_H(A)*C_cross,H(A,B) dmu_H(A)=0` for the original **crossing action** `C_cross,H`, whereas ALD/ALC use the exponential **crossing kernel** `K_cross,H(beta,A,B)=exp(-beta*C_cross,H(A,B))`. Orthogonality against the linear crossing action does not imply orthogonality against its exponential. In particular no `M2pair_H(beta)=2*V_H*Zcross_H(beta)` equality is established, and it MUST NOT be assumed.
+
+A more reliable next task is a separately proven uniform strictly positive lower bound for the *actual* crossing kernel on the finite compact product SU(2) configuration space, combined with the independently certified AHN positive original source second Haar moment and exact original Haar centering. Only after proving the required integrability, measure-preserving or product-Haar compatibility and lower-kernel inequality may one infer a strictly positive original `M2pair_H(beta)`. Any quantitative bound remains NO_DATA until its Lean CI succeeds.
