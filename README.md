@@ -4896,3 +4896,8 @@ Authentic [exact-source CI #43408076701](https://github.com/itakura-hidetoshi/4d
 ### ALD next-step obstruction: original crossing ACTION is not crossing KERNEL
 
 The AHR theorem about vanishing `∫ f_H(A)*C_cross,H(A,B) dmu_H(A)` concerns the **linear crossing action** `C_cross,H`; it cannot be substituted for `∫ f_H(A)*exp(-beta*C_cross,H(A,B)) dmu_H(A)`. Thus the tempting equality `M2pair_H(beta)=2*V_H*Zcross_H(beta)` is **UNPROVED** and must not be used to certify strict ALD improvement. A safer subsequent proof is an independently verified positive lower bound for the original exponential crossing kernel, combined with the original AHN positive Haar source variance and exact centering. No unconditional quantitative M2pair bound is yet certified by ALD.
+
+
+### ALD independently certified canonical formal push (2026-11-13 JST)
+
+Formal ALD squash `4683de2e6aeffbbb26baa58d7b87d8eeb669a1a1` independently passed [push CI #43408865099](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43408865099), completed/**SUCCESS**, pinned Lean **11,466/11,466**, all ALD 9/9 standard-three `#print axioms`, no sorryAx or changed warning/error. Changed Lean job `131829934752` and independent receipt job `131833042147` both SUCCESS, exact push receipt `[mcp-receipt] event=push exact_sha=4683de2e6aeffbbb26baa58d7b87d8eeb669a1a1 source_result=success run=43408865099 attempt=1`. Source/test-merge/squash tree `7d1d9304e0e9da0712c6bfea6c183b52aa5d8f9e` consistent. M2pair positivity and genuine H22 r22 upper mass remain unproved.
