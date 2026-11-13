@@ -213,13 +213,28 @@ theorem p4Q2PZ37ALE_originalUnweightedPairSourceSquare_eq_twiceVariance :
     _ = (∫ P : Cfg × Cfg, (fCont P.1) ^ 2 ∂pairH) +
           (∫ P : Cfg × Cfg, (fCont P.2) ^ 2 ∂pairH) +
             2 * (∫ P : Cfg × Cfg, fCont P.1 * fCont P.2 ∂pairH) := by
-      change
-        (∫ P : Cfg × Cfg,
-          (((fun Q : Cfg × Cfg => (fCont Q.1) ^ 2) +
-            (fun Q : Cfg × Cfg => (fCont Q.2) ^ 2)) +
-            (fun Q : Cfg × Cfg => 2 * (fCont Q.1 * fCont Q.2))) P ∂pairH) = _
-      rw [integral_add (hLeft.add hRight) (hMixed.const_mul 2),
-        integral_add hLeft hRight, integral_const_mul]
+      have hOuter :
+          (∫ P : Cfg × Cfg,
+            ((fCont P.1) ^ 2 + (fCont P.2) ^ 2) +
+              2 * (fCont P.1 * fCont P.2) ∂pairH) =
+          (∫ P : Cfg × Cfg,
+            (fCont P.1) ^ 2 + (fCont P.2) ^ 2 ∂pairH) +
+          (∫ P : Cfg × Cfg,
+            2 * (fCont P.1 * fCont P.2) ∂pairH) := by
+        simpa only [Pi.add_apply] using
+          (integral_add (hLeft.add hRight) (hMixed.const_mul 2))
+      have hInner :
+          (∫ P : Cfg × Cfg,
+            (fCont P.1) ^ 2 + (fCont P.2) ^ 2 ∂pairH) =
+          (∫ P : Cfg × Cfg, (fCont P.1) ^ 2 ∂pairH) +
+          (∫ P : Cfg × Cfg, (fCont P.2) ^ 2 ∂pairH) := by
+        simpa only [Pi.add_apply] using (integral_add hLeft hRight)
+      calc
+        _ = (∫ P : Cfg × Cfg,
+            (fCont P.1) ^ 2 + (fCont P.2) ^ 2 ∂pairH) +
+          (∫ P : Cfg × Cfg,
+            2 * (fCont P.1 * fCont P.2) ∂pairH) := hOuter
+        _ = _ := by rw [hInner, integral_const_mul]
     _ = 2 * Vsrc := by
       rw [p4Q2PZ37ALE_originalPair_leftSourceSquare_eq_variance H,
         p4Q2PZ37ALE_originalPair_rightSourceSquare_eq_variance H,
@@ -288,7 +303,8 @@ theorem p4Q2PZ37ALE_originalPhysicalNorm_ge_explicitSourceVariance
       Zcross beta +
         (beta ^ 2 / 4) * (2 * kFloor beta * Vsrc) ≤
       Zcross beta + (beta ^ 2 / 4) * M2pair beta := by
-    exact add_le_add_left (mul_le_mul_of_nonneg_left hMoment hFactor) _
+    have hProduct := mul_le_mul_of_nonneg_left hMoment hFactor
+    linarith only [hProduct]
   exact (mul_le_mul_of_nonneg_left hInner
     (Real.exp_pos (-(beta * pH))).le).trans
       (p4Q2PZ37ALD_originalPhysicalTransfer_norm_ge_quadraticMoment
