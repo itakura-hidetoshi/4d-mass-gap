@@ -4793,3 +4793,8 @@ The actual canonical AKU theorem squash `468196fa09489101b857d65d054dd0d3c2ecbae
 [Exact-source CI #43341670288](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43341670288) completed/SUCCESS、Lean 11,457/11,457、新規12宣言の公理監査12/12標準3公理のみ、新規sorryAxなし、変更warning/error 0/0、exact-head receipt SUCCESS。認証source `af98ad2279e3698c8f6d9ebcde531d66d600fc4f`／canonical formal squash `da81af5042b1dcab219912423d966c982ef0c351` の共通Git tree `6878c4853cc8e790a96c7b437998b386be4178de`。独立formal push [#43342455181](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43342455181) は別途認証。[AKV正式記録](docs/proofs/P4-Q2-PZ37AKV_verified_20261113.md)。
 
 **OPEN:** H≤18のΔが厳密負か零か、真正Haar負領域質量値、H≥19、H一様Rayleigh、Hamiltonian gap、連続体mass gap。証人不存在はスペクトルギャップの証明ではない。append-only／same-root／元Lean/mathlib・物理定義維持。
+
+
+### AKV independent canonical formal-push verification — 2026-11-13 JST
+
+AKV canonical formal squash `da81af5042b1dcab219912423d966c982ef0c351` independently passed actual [push CI #43342455181](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43342455181), **completed/SUCCESS**, with pinned Lean **11,457/11,457**, 12/12 AKV axiom prints standard three only, sorryAx none and changed warning/error **0/0**. Exact-head completion receipt job `131616632898` completed/SUCCESS; execution log `event=push; exact_sha=da81af5042b1dcab219912423d966c982ef0c351; source_result=success; run=43342455181; attempt=1`, GitHub commit status `success`. Formal tree `6878c4853cc8e790a96c7b437998b386be4178de` matches the exact-source/test-merge/squash tree. This separately certifies original H<=18 finite-AJA no-witness and B_H<=||Qf0_H||² only; Delta strictness, H>=19, Hamiltonian/continuum gap OPEN.

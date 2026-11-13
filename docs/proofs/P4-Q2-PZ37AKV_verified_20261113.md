@@ -32,7 +32,7 @@ integral, not an artificial Gaussian measure or altered transfer kernel.
 For H<=18, exact p_H<=164616, existing beta0<=1/156 and
 `11/8<=log(4)` give
 `13*beta0^2*p_H/72 <= (6859/5616) <= 11/8 <= log(4)`.
-The *true* negative-region Haar mass satisfies `r_H<=1) by
+The *true* negative-region Haar mass satisfies `r_H<=1` by
 probability, without a numerical measurement. Hence the unchanged AKQ
 partition-Haar sufficient condition
 `r_H*Z_H(beta0)<=4*exp(-beta0*p_H)` holds for H<=18.
@@ -115,3 +115,12 @@ be identified with a physical mass-gap theorem.
 Proof record on canonical formal; any docs-only main mirror must
 preserve this record's Git blob byte-identically and append
 README/ROADMAP without overwriting prior text.
+
+
+## Independently authenticated canonical formal-push receipt (2026-11-13 JST)
+
+After the above pre-completion record, the independently triggered actual canonical squash [formal push CI #43342455181](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43342455181) has now completed **SUCCESS**, targeting exact canonical HEAD `da81af5042b1dcab219912423d966c982ef0c351`, `event=push`, run attempt 1. Its Changed Lean fast check built **11,457/11,457**, and all twelve AKV declarations have only the standard three axioms (`propext`, `Classical.choice`, `Quot.sound`); no `sorryAx`, AKV warning/error 0/0.
+
+Independent completion receipt job `131616632898` completed **SUCCESS** and logged `event=push; exact_sha=da81af5042b1dcab219912423d966c982ef0c351; source_result=success; run=43342455181; attempt=1`. Combined GitHub commit status reports `success` for `chatgpt-ci-receipt/PR Lean Fast Check`. Actual canonical tree `6878c4853cc8e790a96c7b437998b386be4178de` matches authenticated source/test-merge/squash tree. The earlier monitored/pending statement is preserved as a historical pre-completion observation.
+
+No stronger inference is licensed: only original H<=18 strict finite-power AJA witness nonexistence and B_H<=||Qf0_H||²/Delta_H<=0 are certified. Strict negativity versus equality, exact numerical Haar masses, H>=19, H-uniform GL Rayleigh, Hamiltonian and continuum Yang--Mills mass gap remain OPEN/NO_DATA.
