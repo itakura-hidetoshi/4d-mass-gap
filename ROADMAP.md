@@ -4941,3 +4941,8 @@ Source `8ec67a50d8b0ee3b9a447ac2f423099921a65d38`; genuine [exact-source CI #434
 ### ALD next-step guard: action orthogonality cannot be exponentiated
 
 AHR's Haar-crossing orthogonality uses the original **crossing action** rather than the exponential crossing **kernel** used in ALC/ALD. Consequently neither `∫ f_H(A)*Kcross_H(beta,A,B)=0` nor `M2pair_H(beta)=2*V_H*Zcross_H(beta)` follows from AHR. These are NOT certified and must NOT be used as implicit lemmas. Replace the speculative exact mixed-term cancellation with a direct original exponential kernel lower-bound and genuine product-Haar source second-moment proof, checked in pinned Lean4. Keep r22 and all physical spectral conclusions NO_DATA.
+
+
+### ALD independently certified formal push — 2026-11-13 JST
+
+ALD theorem squash `4683de2e6aeffbbb26baa58d7b87d8eeb669a1a1` actual [formal push CI #43408865099](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43408865099) completed/**SUCCESS** with pinned Lean **11,466/11,466**, ALD all 9/9 `#print axioms` only standard three, no new sorryAx, changed warning/error **0/0**. Changed-Lean job `131829934752` and exact-head receipt job `131833042147` both SUCCESS; actual receipt `[mcp-receipt] event=push exact_sha=4683de2e6aeffbbb26baa58d7b87d8eeb669a1a1 source_result=success run=43408865099 attempt=1`. Source/test-merge/squash tree identical `7d1d9304e0e9da0712c6bfea6c183b52aa5d8f9e`. The AHR crossing ACTION versus exponential kernel obstruction is still active; no r22 upper mass proof.
