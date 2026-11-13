@@ -72,3 +72,8 @@ upper bound or alternate sufficient norm/top estimate is still NO_DATA.
 AKX is proved incompatible for H>=25, but its failure does not
 imply any original AJA witness. Preserve all obstructions.
 Append-only / tighten-only / overwrite-forbidden / same-root.
+
+
+## Independent authoritative canonical formal-push verification (2026-11-13 JST)
+
+The earlier pending-status description is preserved as the initial draft snapshot. ALA canonical squash `7134b92179196b40b0e454060b4ef77e69bb0be3` independently passed genuine [formal push CI #43382985587](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43382985587), completed/**SUCCESS**, pinned Lean **11,463/11,463**, all 9/9 new ALA actual `#print axioms` only `propext`, `Classical.choice`, `Quot.sound`, sorryAx none, ALA changed warning/error **0/0**. Main Lean job `131744850974` completed SUCCESS and exact-head completion receipt job `131746833019` completed SUCCESS, with actual `[mcp-receipt] event=push exact_sha=7134b92179196b40b0e454060b4ef77e69bb0be3 source_result=success run=43382985587 attempt=1`; published GitHub commit status SUCCESS. The integrated tree `4a32fbc9e9cf7f55d70f2d60126b63c5da647fdd` matches certified source and test-merge. It still does not numerically bound r22 or prove a new AJA no-witness.
