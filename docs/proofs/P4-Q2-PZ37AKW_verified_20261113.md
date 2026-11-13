@@ -137,3 +137,12 @@ continuum four-dimensional Yang–Mills mass gap remain OPEN.
 The inability to produce an AJA witness is NOT a mass-gap proof.
 When mirrored to main, preserve this exact proof-record Git blob
 and append only the corresponding README/ROADMAP notes.
+
+
+## Independent canonical formal-push certification — 2026-11-13 JST
+
+The earlier pending receipt above remains preserved as the historical pre-completion record. The independently triggered actual canonical squash [push CI #43362764404](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43362764404) for exact formal HEAD `d250db7baffefdaeb02b399e8a528ec407a53646` is now completed/**SUCCESS**, event `push`, run attempt 1. Its changed Lean fast-check job `131679911916` built **11,458/11,458**, all 12 AKW declarations have only `propext`, `Classical.choice`, `Quot.sound`, no new `sorryAx`, changed AKW warning/error **0/0**.
+
+Independent completion receipt job `131681746397` completed/**SUCCESS** and logged `event=push; exact_sha=d250db7baffefdaeb02b399e8a528ec407a53646; source_result=success; run=43362764404; attempt=1`. GitHub status `chatgpt-ci-receipt/PR Lean Fast Check` was published as `success` for that exact integrated commit. Actual canonical Git tree `0ce53f3e6d88692b58e2ab73b41f5a2afaf3bbb3` is identical to authenticated theorem source/test-merge/squash tree.
+
+Only the actual original SU(2) finite-volume H<=21 AJA strict-power no-witness, B_H<=||Qf0_H||² and Delta_H<=0 are authenticated. Strict Delta_H<0 versus equality, actual Haar negative-region numerical masses, H>=22, H-uniform GL Rayleigh, Hamiltonian gap and continuum Yang–Mills mass gap remain OPEN/NO_DATA. No original physics/pin/root/workflow alteration.

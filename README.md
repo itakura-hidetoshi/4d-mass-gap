@@ -4807,3 +4807,8 @@ AKV canonical formal squash `da81af5042b1dcab219912423d966c982ef0c351` independe
 [Exact-source CI #43345340030](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43345340030) completed/SUCCESS、Lean 11,458/11,458、AKW新規12宣言の公理監査12/12標準3公理のみ、新規sorryAxなし、変更AKW warning/error 0/0、独立exact-head completion receipt SUCCESS。認証source `861d23d3940f766616562632ac89534638b47444`、canonical formal squash `d250db7baffefdaeb02b399e8a528ec407a53646`、source/test-merge/squash共通tree `0ce53f3e6d88692b58e2ab73b41f5a2afaf3bbb3`。独立formal squash push [#43362764404](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43362764404) は別途認証。[AKW正式記録](docs/proofs/P4-Q2-PZ37AKW_verified_20261113.md)。
 
 **OPEN:** Delta_Hの厳密負／零、真正r_Hの数値認証、H>=22、H一様Rayleigh、Hamiltonian gap、連続体4D mass gap。有限体積AJA証人不存在はHamiltonian spectral gapの証明ではない。append-only／same-root／固定Lean/mathlib変更なし。
+
+
+### AKW independent canonical formal-push authentication — 2026-11-13 JST
+
+AKW canonical squash `d250db7baffefdaeb02b399e8a528ec407a53646` separately passed actual [formal push CI #43362764404](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43362764404), completed/**SUCCESS**, build **11,458/11,458**, 12/12 AKW standard-three axiom audits, no sorryAx, changed warning/error 0/0. The independent exact-head completion receipt job `131681746397` completed/**SUCCESS** and logged `event=push; exact_sha=d250db7baffefdaeb02b399e8a528ec407a53646; source_result=success; run=43362764404; attempt=1`; GitHub commit status `success`. Actual canonical tree `0ce53f3e6d88692b58e2ab73b41f5a2afaf3bbb3` matches exact-source/test-merge/squash tree. This certifies only H<=21 genuine finite-AJA no-witness and B_H<=||Qf0_H||²; strict Delta, H>=22 and Hamiltonian/continuum gaps OPEN.
