@@ -4784,3 +4784,12 @@ AKT canonical formal-squash `8d9f8b7db2da7cb29b6506518f9f9d4b2ac561b0` passed in
 ### AKU independent canonical formal-push authentication — 2026-11-13 JST
 
 The actual canonical AKU theorem squash `468196fa09489101b857d65d054dd0d3c2ecbae1` independently passed [push CI #43321778660](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43321778660), event `push`, run attempt 1, completed/**SUCCESS**. The pinned Lean build completed **11,456/11,456**, all four AKU axiom audits used only `propext`, `Classical.choice`, `Quot.sound`, with no new `sorryAx` and AKU changed-file warning/error **0/0**. Exact-HEAD receipt job `131547094006` completed/**SUCCESS**, logged `event=push; exact_sha=468196fa09489101b857d65d054dd0d3c2ecbae1; source_result=success`, and published commit status `success` under `chatgpt-ci-receipt/PR Lean Fast Check`. Integrated AKU Git tree remains `8b5026f5c6861e5d9787c443f9771a3884b5c60b`, identical to the authenticated source/test-merge tree. This authenticates only the original finite-volume budget/top inequality `Delta_H<=0` for H<=16; strict sign/equality, H>=17, Hamiltonian spectral gap and continuum mass gap remain **OPEN/NO_DATA**. Append-only; no source/physics/root/pin/workflow alteration.
+
+
+## AKV — genuine original H<=18 third-Taylor AJA no-witness and nonpositive full-top/Haar residual (2026-11-13 JST)
+
+[AKV定理PR #6712](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6712) **MERGED**。固定mathlib `Real.exp_bound (n=3)` を使い、元SU(2) Haar characterの平均0・二次モーメント1/4から `exp x<=1+x+13*x²/18`、元MGF上界 `1+13*beta²/72`、元AIF crossing partition `Z_H<=exp(p_H*(-beta+13*beta²/72))` をLean4で証明。真正 `p_H=24(H+1)^3`、固定 `beta0=log(3/2)/64`、H≤18の `p_H≤164616` と有理認証から、**H≤18の元AJA厳密有限冪証人不存在および `B_H<=||Q f0_H||²`、`Delta_H<=0` を無条件形式証明**。H17・H18が新規拡張。数値Haar負領域質量の仮定を追加せず、元Wilson物理・source・margin・top・予算は不変。
+
+[Exact-source CI #43341670288](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43341670288) completed/SUCCESS、Lean 11,457/11,457、新規12宣言の公理監査12/12標準3公理のみ、新規sorryAxなし、変更warning/error 0/0、exact-head receipt SUCCESS。認証source `af98ad2279e3698c8f6d9ebcde531d66d600fc4f`／canonical formal squash `da81af5042b1dcab219912423d966c982ef0c351` の共通Git tree `6878c4853cc8e790a96c7b437998b386be4178de`。独立formal push [#43342455181](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43342455181) は別途認証。[AKV正式記録](docs/proofs/P4-Q2-PZ37AKV_verified_20261113.md)。
+
+**OPEN:** H≤18のΔが厳密負か零か、真正Haar負領域質量値、H≥19、H一様Rayleigh、Hamiltonian gap、連続体mass gap。証人不存在はスペクトルギャップの証明ではない。append-only／same-root／元Lean/mathlib・物理定義維持。
