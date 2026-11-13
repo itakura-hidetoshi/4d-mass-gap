@@ -4927,3 +4927,22 @@ Initial failed #43401508412 used incomplete function-addition elaboration. Sourc
 ### ALC canonical formal-push machine receipt — 2026-11-13 JST
 
 ALC formal squash `ee0843243261bfe239d6269f5a1dc2d6c3add2d8` passed independent actual [formal push CI #43403627674](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43403627674), completed/**SUCCESS**, pinned Lean **11,465/11,465**, all new ALC 9/9 standard-three axioms only, no sorryAx, changed warning/error **0/0**. Independent job `131814762641` completed SUCCESS with `[mcp-receipt] event=push exact_sha=ee0843243261bfe239d6269f5a1dc2d6c3add2d8 source_result=success run=43403627674 attempt=1`. Original source/test-merge/squash tree `f0ed94feba23b15a1ae98387f7c27c332be93680`. Original r22 upper mass and AJA no-witness remain unproved.
+
+
+## ALD — original complete Wilson physical norm quadratic improvement (2026-11-13 JST)
+
+[Theorem PR #6734](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6734) **MERGED** into formal as `4683de2e6aeffbbb26baa58d7b87d8eeb669a1a1`. Nine authenticated Lean4 declarations bridge original true `f_H=(W_H-p_H)/2` to the complete original full Wilson one-slab kernel (two unchanged spatial halfweights). The exact true product-Haar pair integral `=exp(-beta*p_H)*Lpair_H(beta,-beta)` and true physical constant-vector coefficient imply `||P_H(beta)|| >= exp(-beta*p_H)*(Zcross_H(beta)+beta²*M2pair_H(beta)/4)` for every finite H and beta>=0. H22 fixed original beta0 specializes to exact p22=292008. Strict gain from the new second moment is **conditional** on M2pair>0; H22 upper Haar mass is still NO_DATA.
+
+Source `8ec67a50d8b0ee3b9a447ac2f423099921a65d38`; genuine [exact-source CI #43408076701](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43408076701) completed SUCCESS with Lean **11,466/11,466**, all nine #print axioms standard-three only, new sorryAx absent, changed warnings/errors 0/0 and independent PR exact-head receipt SUCCESS. Source/test-merge/squash tree = `7d1d9304e0e9da0712c6bfea6c183b52aa5d8f9e`. Independent formal push [#43408865099](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43408865099) initially in_progress; wait for actual independent CI/receipt confirmation before certifying final postmerge status. [Formal proof record](docs/proofs/P4-Q2-PZ37ALD_verified_20261113.md).
+
+**NEXT:** use AHR exact original crossing-source orthogonality, AIF/AIU Haar marginal integrals and AHN strict positive source Haar variance to obtain a genuine strictly positive quantified pair second moment. Then rederive a revised sufficient AJA/top-budget test without promoting the impossible old AKX criterion at H>=25. Independently pursue actual H22 positive-complement Haar cell floors. Physical Hamiltonian and continuum mass gap remain OPEN.
+
+
+### ALD next-step guard: action orthogonality cannot be exponentiated
+
+AHR's Haar-crossing orthogonality uses the original **crossing action** rather than the exponential crossing **kernel** used in ALC/ALD. Consequently neither `∫ f_H(A)*Kcross_H(beta,A,B)=0` nor `M2pair_H(beta)=2*V_H*Zcross_H(beta)` follows from AHR. These are NOT certified and must NOT be used as implicit lemmas. Replace the speculative exact mixed-term cancellation with a direct original exponential kernel lower-bound and genuine product-Haar source second-moment proof, checked in pinned Lean4. Keep r22 and all physical spectral conclusions NO_DATA.
+
+
+### ALD independently certified formal push — 2026-11-13 JST
+
+ALD theorem squash `4683de2e6aeffbbb26baa58d7b87d8eeb669a1a1` actual [formal push CI #43408865099](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43408865099) completed/**SUCCESS** with pinned Lean **11,466/11,466**, ALD all 9/9 `#print axioms` only standard three, no new sorryAx, changed warning/error **0/0**. Changed-Lean job `131829934752` and exact-head receipt job `131833042147` both SUCCESS; actual receipt `[mcp-receipt] event=push exact_sha=4683de2e6aeffbbb26baa58d7b87d8eeb669a1a1 source_result=success run=43408865099 attempt=1`. Source/test-merge/squash tree identical `7d1d9304e0e9da0712c6bfea6c183b52aa5d8f9e`. The AHR crossing ACTION versus exponential kernel obstruction is still active; no r22 upper mass proof.

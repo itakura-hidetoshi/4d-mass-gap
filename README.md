@@ -4882,3 +4882,22 @@ Failed initial CI #43401508412 (unexpanded `Pi.add_apply` in the new integrabili
 ### ALC independent canonical formal-push completion (2026-11-13 JST)
 
 ALC canonical squash `ee0843243261bfe239d6269f5a1dc2d6c3add2d8` independently passed actual [formal push CI #43403627674](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43403627674), completed/**SUCCESS**, pinned Lean **11,465/11,465**, ALC 9/9 standard-three `#print axioms`, sorryAx absent, ALC warning/error **0/0**. Main job `131812405167` completed SUCCESS; exact-HEAD receipt job `131814762641` completed SUCCESS with actual `[mcp-receipt] event=push exact_sha=ee0843243261bfe239d6269f5a1dc2d6c3add2d8 source_result=success run=43403627674 attempt=1`. Verified source/test-merge/squash tree `f0ed94feba23b15a1ae98387f7c27c332be93680`. H22 genuine Haar upper mass and unconditional AJA still OPEN.
+
+
+## ALD — genuine full-Wilson physical norm from true pair-Haar source moments (2026-11-13 JST)
+
+[ALD theorem PR #6734](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6734) **MERGED**, canonical formal `4683de2e6aeffbbb26baa58d7b87d8eeb669a1a1`. One append-only Lean4 leaf certifies original AGN `W_H=p_H+2*f_H` within the **UNCHANGED complete Wilson one-slab kernel retaining both spatial halfweights**, so its genuine product-Haar integral is exactly `exp(-beta*p_H)*Lpair_H(beta,-beta)`. AIW's actual physical constant vector and original operator norm prove, for every H and beta>=0, `exp(-beta*p_H)*(Zcross_H(beta)+(beta^2/4)*M2pair_H(beta)) <= ||P_H(beta)||`. H22 and exact original `beta0=log(3/2)/64`, `p22=292008` included; strict gain over AIW is conditional on true `M2pair_H(beta)>0` at beta>0, **not unconditional**.
+
+Authentic [exact-source CI #43408076701](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43408076701) completed/**SUCCESS**, pinned Lean **11,466/11,466**, all nine ALD `#print axioms` standard-three only, sorryAx absent, ALD warning/error **0/0**, independent PR exact-source receipt SUCCESS. Exact source `8ec67a50d8b0ee3b9a447ac2f423099921a65d38`, source/test-merge/squash tree `7d1d9304e0e9da0712c6bfea6c183b52aa5d8f9e`. Independent formal push [CI #43408865099](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43408865099) was initially in progress; append actual completed result after independent observation. [Formal proof record](docs/proofs/P4-Q2-PZ37ALD_verified_20261113.md).
+
+**OPEN:** actual H22 genuine Haar negative-region upper mass (AKX), explicit unconditional positive original second-moment lower bound, strict AJA classification, H-uniform coercivity, Hamiltonian gap and continuum 4D mass gap. Potential next exact source route: AHR original crossing-source orthogonality and AHN positive variance to evaluate true pair second moment, without changing the physical model.
+
+
+### ALD next-step obstruction: original crossing ACTION is not crossing KERNEL
+
+The AHR theorem about vanishing `∫ f_H(A)*C_cross,H(A,B) dmu_H(A)` concerns the **linear crossing action** `C_cross,H`; it cannot be substituted for `∫ f_H(A)*exp(-beta*C_cross,H(A,B)) dmu_H(A)`. Thus the tempting equality `M2pair_H(beta)=2*V_H*Zcross_H(beta)` is **UNPROVED** and must not be used to certify strict ALD improvement. A safer subsequent proof is an independently verified positive lower bound for the original exponential crossing kernel, combined with the original AHN positive Haar source variance and exact centering. No unconditional quantitative M2pair bound is yet certified by ALD.
+
+
+### ALD independently certified canonical formal push (2026-11-13 JST)
+
+Formal ALD squash `4683de2e6aeffbbb26baa58d7b87d8eeb669a1a1` independently passed [push CI #43408865099](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43408865099), completed/**SUCCESS**, pinned Lean **11,466/11,466**, all ALD 9/9 standard-three `#print axioms`, no sorryAx or changed warning/error. Changed Lean job `131829934752` and independent receipt job `131833042147` both SUCCESS, exact push receipt `[mcp-receipt] event=push exact_sha=4683de2e6aeffbbb26baa58d7b87d8eeb669a1a1 source_result=success run=43408865099 attempt=1`. Source/test-merge/squash tree `7d1d9304e0e9da0712c6bfea6c183b52aa5d8f9e` consistent. M2pair positivity and genuine H22 r22 upper mass remain unproved.
