@@ -129,8 +129,8 @@ theorem p4Q2PZ37ALF_originalPhysicalNorm_ge_identityBoxFloor
   have hScaled := mul_le_mul_of_nonneg_left hMoment hBeta
   have hInner :
       Zcross beta + (beta ^ 2 / 4) * (2 * kFloor beta * vBox) ≤
-      Zcross beta + (beta ^ 2 / 4) * M2pair beta :=
-    add_le_add_left hScaled _
+      Zcross beta + (beta ^ 2 / 4) * M2pair beta := by
+    linarith only [hScaled]
   have hExp : 0 ≤ Real.exp (-(beta * pH)) := (Real.exp_pos _).le
   exact (mul_le_mul_of_nonneg_left hInner hExp).trans
     (p4Q2PZ37ALD_originalPhysicalTransfer_norm_ge_quadraticMoment
