@@ -83,7 +83,7 @@ theorem p4Q2PZ37ALG_real_expSymm_ge_halfQuadratic (x : ℝ) :
     have hd0 :=
       p4Q2PZ37ALG_exp_sub_exp_neg_ge_two_mul (y / 2) hy2
     have hd : y ≤ Real.exp (y / 2) - Real.exp (-(y / 2)) := by
-      convert hd0 using 1 <;> ring
+      convert hd0 using 1; ring
     have hnonnegDiff :
         0 ≤ Real.exp (y / 2) - Real.exp (-(y / 2)) :=
       hy.trans hd
