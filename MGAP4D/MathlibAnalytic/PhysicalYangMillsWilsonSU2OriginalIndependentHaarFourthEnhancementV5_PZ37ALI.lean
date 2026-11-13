@@ -90,16 +90,16 @@ local notation "U4" => p4Q2PZ37ALI_originalSourceFourthHaarMoment H
 
 theorem p4Q2PZ37ALI_originalSourceFourth_integrable :
     Integrable (fun A : Cfg => (fCont A) ^ 4) muH := by
-  exact ((p4Q2PZ37AFZ_originalCenteredContinuous H).continuous.pow 4)
-    .integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+  exact ((p4Q2PZ37AFZ_originalCenteredContinuous H).continuous.pow 4).integrable_of_hasCompactSupport
+    (HasCompactSupport.of_compactSpace _)
 
 /-- Ordinary Jensen/Cauchy variance-square estimate for the ORIGINAL
 single Haar boundary. This uses no Gaussian moment hypothesis. -/
 theorem p4Q2PZ37ALI_originalSourceFourth_ge_varianceSq :
     Vsrc ^ 2 ≤ U4 := by
   have hSecond : Integrable (fun A : Cfg => (fCont A) ^ 2) muH :=
-    ((p4Q2PZ37AFZ_originalCenteredContinuous H).continuous.pow 2)
-      .integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+    ((p4Q2PZ37AFZ_originalCenteredContinuous H).continuous.pow 2).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
   have hFourth := p4Q2PZ37ALI_originalSourceFourth_integrable H
   have hLower :
       Integrable (fun A : Cfg => (2 * Vsrc) * (fCont A) ^ 2 - Vsrc ^ 2) muH :=
@@ -226,14 +226,14 @@ theorem p4Q2PZ37ALI_originalUnweightedPairFourth_eq_twoU4_plus_sixV2 :
   have hF4 : Integrable F4 pairH :=
     (hf1.pow 4).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   have hF31 : Integrable F31 pairH :=
-    (((hf1.pow 3).mul hf2).const_mul 4)
-      .integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+    (((hf1.pow 3).mul hf2).const_mul 4).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
   have hF22 : Integrable F22 pairH :=
-    (((hf1.pow 2).mul (hf2.pow 2)).const_mul 6)
-      .integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+    (((hf1.pow 2).mul (hf2.pow 2)).const_mul 6).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
   have hF13 : Integrable F13 pairH :=
-    ((hf1.mul (hf2.pow 3)).const_mul 4)
-      .integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+    ((hf1.mul (hf2.pow 3)).const_mul 4).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
   have hF04 : Integrable F04 pairH :=
     (hf2.pow 4).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   have hF41 : Integrable (fun P => F4 P + F31 P) pairH := hF4.add hF31
