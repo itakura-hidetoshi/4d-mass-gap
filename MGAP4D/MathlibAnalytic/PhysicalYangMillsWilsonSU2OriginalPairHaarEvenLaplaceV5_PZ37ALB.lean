@@ -120,7 +120,6 @@ theorem p4Q2PZ37ALB_originalPairLaplace_even (beta t : ℝ) :
     _ = ∫ P : Cfg × Cfg,
           KC beta (T P.1) (T P.2) *
             Real.exp (t * (fCont (T P.1) + fCont (T P.2))) ∂pairH := by
-      symm
       exact MeasureTheory.integral_map hPres.measurable.aemeasurable hMeasMap
     _ = Lpair beta (-t) := by
       unfold p4Q2PZ37ALB_originalPairCrossingLaplace
