@@ -324,13 +324,57 @@ theorem p4Q2PZ37ALH_originalPairLaplace_ge_genuineFourthMoment
       Zcross beta +
         (t ^ 2 / 2) * M2pair beta +
         (t ^ 4 / 32) * M4pair beta := by
-    rw [integral_add
-      (hKCInt.add (hM2Int.const_mul (t ^ 2 / 2)))
-      (hM4Int.const_mul (t ^ 4 / 32)),
-      integral_add hKCInt (hM2Int.const_mul (t ^ 2 / 2)),
-      integral_const_mul, integral_const_mul,
-      p4Q2PZ37AIV_originalCrossingKernel_pair_integral H beta]
-    rfl
+    have hOuter :
+        (∫ P : Cfg × Cfg,
+          KC beta P.1 P.2 +
+            (t ^ 2 / 2) *
+              (KC beta P.1 P.2 * (fCont P.1 + fCont P.2) ^ 2) +
+            (t ^ 4 / 32) *
+              (KC beta P.1 P.2 * (fCont P.1 + fCont P.2) ^ 4) ∂pairH) =
+        (∫ P : Cfg × Cfg,
+          KC beta P.1 P.2 +
+            (t ^ 2 / 2) *
+              (KC beta P.1 P.2 * (fCont P.1 + fCont P.2) ^ 2) ∂pairH) +
+        (∫ P : Cfg × Cfg,
+          (t ^ 4 / 32) *
+            (KC beta P.1 P.2 * (fCont P.1 + fCont P.2) ^ 4) ∂pairH) := by
+      simpa only [Pi.add_apply] using
+        (integral_add
+          (hKCInt.add (hM2Int.const_mul (t ^ 2 / 2)))
+          (hM4Int.const_mul (t ^ 4 / 32)))
+    have hInner :
+        (∫ P : Cfg × Cfg,
+          KC beta P.1 P.2 +
+            (t ^ 2 / 2) *
+              (KC beta P.1 P.2 * (fCont P.1 + fCont P.2) ^ 2) ∂pairH) =
+        (∫ P : Cfg × Cfg, KC beta P.1 P.2 ∂pairH) +
+        (∫ P : Cfg × Cfg,
+          (t ^ 2 / 2) *
+            (KC beta P.1 P.2 * (fCont P.1 + fCont P.2) ^ 2) ∂pairH) := by
+      simpa only [Pi.add_apply] using
+        (integral_add hKCInt (hM2Int.const_mul (t ^ 2 / 2)))
+    calc
+      _ = (∫ P : Cfg × Cfg,
+            KC beta P.1 P.2 +
+              (t ^ 2 / 2) *
+                (KC beta P.1 P.2 * (fCont P.1 + fCont P.2) ^ 2) ∂pairH) +
+          (∫ P : Cfg × Cfg,
+            (t ^ 4 / 32) *
+              (KC beta P.1 P.2 * (fCont P.1 + fCont P.2) ^ 4) ∂pairH) :=
+        hOuter
+      _ = (∫ P : Cfg × Cfg, KC beta P.1 P.2 ∂pairH) +
+            (∫ P : Cfg × Cfg,
+              (t ^ 2 / 2) *
+                (KC beta P.1 P.2 * (fCont P.1 + fCont P.2) ^ 2) ∂pairH) +
+            (∫ P : Cfg × Cfg,
+              (t ^ 4 / 32) *
+                (KC beta P.1 P.2 * (fCont P.1 + fCont P.2) ^ 4) ∂pairH) := by
+          rw [hInner]
+      _ = Zcross beta + (t ^ 2 / 2) * M2pair beta +
+            (t ^ 4 / 32) * M4pair beta := by
+          rw [integral_const_mul, integral_const_mul,
+            p4Q2PZ37AIV_originalCrossingKernel_pair_integral H beta]
+          rfl
   calc
     Zcross beta + (t ^ 2 / 2) * M2pair beta +
         (t ^ 4 / 32) * M4pair beta =
