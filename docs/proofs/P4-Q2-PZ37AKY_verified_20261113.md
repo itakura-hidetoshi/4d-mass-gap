@@ -66,3 +66,8 @@ Independent physical alternatives include a true H22 transfer-sign or second-mom
 Unconditional H22 no-AJA, strict Delta22 negativity/equality, H>=23, H-uniform Gauss-law coercivity, Hamiltonian spectral gap and continuum four-dimensional Yang–Mills mass gap remain **OPEN**.
 
 Docs-only formal and main changes do not replace exact-source Lean CI. Mirror this identical proof-record blob to main only after the formal documentation integration is certified.
+
+
+## 5. Independent canonical formal-squash push authentication (2026-11-13 JST)
+
+The historical pending-status paragraph above is retained as the original state at draft creation. Canonical formal squash `f34fc3334decf7d2e525cffd05878b17948e0890` independently passed its actual [formal push CI #43370875467](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43370875467), completed/**SUCCESS**, event=push. The changed Lean job `131706055882` completed/SUCCESS with pinned **11,461/11,461** build and all **9/9** AKY declaration axiom outputs restricted to `propext`, `Classical.choice`, `Quot.sound`; new sorryAx absent, AKY warning/error **0/0**. The independent exact-head completion receipt job `131708103665` completed/SUCCESS and logged `[mcp-receipt] event=push exact_sha=f34fc3334decf7d2e525cffd05878b17948e0890 source_result=success run=43370875467 attempt=1`, with published commit status `success`. Integrated Git tree `ee881a351fa32fa78f909673a6bb698c7b690d25` matches certified source and synthetic test-merge. The actual H22 numerical Haar upper bound remains **NO_DATA**; all cell descent statements are conditional.
