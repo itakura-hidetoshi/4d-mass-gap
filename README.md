@@ -4944,3 +4944,14 @@ ALTは元のβ₀における既証明の各有限Hの平方欠損 δ_H>0 を使
 #### ALV統合後の独立認証（2026-11-15 JST）
 
 元の固定β₀ ALV canonical formal HEAD `7b33f85634aae0a93f2d4665336a2df4359f3b6a` は、独立した[event=push CI #43643707032](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43643707032) **completed/SUCCESS**、Pinned Lean **11,486/11,486**、ALV **8/8標準3公理のみ**、新規sorryAxなし・ALV警告/エラー0/0。Lean job `132596625899`とcompletion receipt job `132598258246` はともにSUCCESS。実ログの `[mcp-receipt] event=push exact_sha=7b33f85634aae0a93f2d4665336a2df4359f3b6a source_result=success run=43643707032 attempt=1` を確認。真のWilson体積間幾何増分評価は依然未証明。
+
+
+### ALW — 元β₀ Wilson raw-moment体積段階評価から一様gapへ（2026-11-15 JST）
+
+[ALW定理PR #6761](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6761) **MERGED**、正本squash `2760ea8269b03a1e712306fdd8643de15bcc7137`。元の固定結合 `β₀=log(3/2)/64`、真正SU(2) Wilson `P_H`・正規化励起制限 `R_H`・Haar/AJA・公開rootは不変。ALNで実際に証明済みの `0<F_H≤‖P_H‖` を使用し、次体積の真正励起空間 `K_(H+1)` 上で `‖P_(H+1)x‖≤√(q_H+b_H)F_(H+1)‖x‖`（`q_H=‖R_H‖²`、`b_H≥0`）が**独立に成立する場合に限り**、Lean4で `q_(H+1)≤q_H+b_H` とALUの下降損失 `L_H≤b_H` を証明。さらに `∑_{i<H}b_i≤B<δ₀`、幾何減衰 `b_H=Cρ^H`、および有限prefix後のtail予算について条件付き一様gap定理を形式化した。
+
+**真正なWilson物理モデルでこれらのraw評価、総予算、係数C/ρが成立することは未証明（NO_DATA）**。ALJのFは作用素ノルムの下界であり、raw励起上界へ自動変換はできない。元β₀の全H一様gap、Hamiltonian・連続体4D Yang–Mills質量ギャップはOPEN。
+
+初回〜4回目のLean4失敗は補題`sq_le_sq₀`の方向、`Q`略記を通る型推論、繰返しdependent CLMインスタンス探索に起因し、同じ型付き`Rnext`を共有した最終source `14c07266dc45fbf330550e962fe463889310eac9`で修復。[Exact-source CI #43649964065](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43649964065) **completed/SUCCESS**、Lean **11,487/11,487**、全8/8標準3公理のみ、sorryAxなし・ALW warning/error 0/0、独立completion receipt SUCCESS。source/test-merge/squash tree `b3065d6a5cd663c8f16136489ad4a48c86646d73` 一致。[ALW正式証明記録](docs/proofs/P4-Q2-PZ37ALW_verified_20261115.md)。
+
+**NEXT:** 実Wilson raw励起上界と独立normalizer下界を同一体積で評価し、真正な2体積スカラー増分の総予算を導く。統合後独立push CI #43650478333は別途実測して記録する。
