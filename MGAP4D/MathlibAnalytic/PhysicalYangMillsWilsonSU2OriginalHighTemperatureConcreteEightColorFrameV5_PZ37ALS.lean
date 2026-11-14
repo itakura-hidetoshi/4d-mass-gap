@@ -238,20 +238,20 @@ theorem p4Q2PZ37ALS_originalSU2UniformSharpGap_of_cutoff
 /-- A selected strictly positive fixed coupling no greater than the ORIGINAL
 beta0 but not asserted to equal it. Choice is independent of all H. -/
 noncomputable def p4Q2PZ37ALS_smallPositiveCouplingBelowOriginalBeta0 : ℝ :=
-  min p4Q2PZ37ADC_fixedCoupling
+  min GroundStatePosteriorJoint.p4Q2PZ37ADC_fixedCoupling
     (p4Q2PZ37AKL_originalUniformCoercivityCutoff / 2)
 
 theorem p4Q2PZ37ALS_smallPositiveCouplingBelowOriginalBeta0_pos :
     0 < p4Q2PZ37ALS_smallPositiveCouplingBelowOriginalBeta0 := by
   unfold p4Q2PZ37ALS_smallPositiveCouplingBelowOriginalBeta0
   apply lt_min
-  · exact p4Q2PZ37ADC_fixedCoupling_pos
+  · exact GroundStatePosteriorJoint.p4Q2PZ37ADC_fixedCoupling_pos
   · have h := p4Q2PZ37AKL_originalUniformCoercivityCutoff_pos
     positivity
 
 theorem p4Q2PZ37ALS_smallPositiveCouplingBelowOriginalBeta0_le_original :
     p4Q2PZ37ALS_smallPositiveCouplingBelowOriginalBeta0 ≤
-      p4Q2PZ37ADC_fixedCoupling := by
+      GroundStatePosteriorJoint.p4Q2PZ37ADC_fixedCoupling := by
   unfold p4Q2PZ37ALS_smallPositiveCouplingBelowOriginalBeta0
   exact min_le_left _ _
 
@@ -260,7 +260,7 @@ theorem p4Q2PZ37ALS_smallPositiveCouplingBelowOriginalBeta0_le_cutoff :
       p4Q2PZ37AKL_originalUniformCoercivityCutoff := by
   unfold p4Q2PZ37ALS_smallPositiveCouplingBelowOriginalBeta0
   have hhalf :
-      min p4Q2PZ37ADC_fixedCoupling
+      min GroundStatePosteriorJoint.p4Q2PZ37ADC_fixedCoupling
         (p4Q2PZ37AKL_originalUniformCoercivityCutoff / 2) ≤
           p4Q2PZ37AKL_originalUniformCoercivityCutoff / 2 :=
     min_le_right _ _
@@ -296,22 +296,22 @@ theorem p4Q2PZ37ALS_selectedPositiveOriginalSU2UniformSharpGap :
 is its inclusion in the already-certified high-temperature interval.
 This theorem neither asserts nor hides that presently unproved comparison. -/
 theorem p4Q2PZ37ALS_originalFixedBeta0UniformSharpGap_if_cutoff
-    (hcut : p4Q2PZ37ADC_fixedCoupling ≤
+    (hcut : GroundStatePosteriorJoint.p4Q2PZ37ADC_fixedCoupling ≤
       p4Q2PZ37AKL_originalUniformCoercivityCutoff) :
     ∀ H : ℕ,
       1 - Real.sqrt (1 - (1 / 1536 : ℝ)) ≤
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap
           H 2 (by norm_num)
-          p4Q2PZ37ADC_fixedCoupling
-          p4Q2PZ37ADC_fixedCoupling_pos.le := by
+          GroundStatePosteriorJoint.p4Q2PZ37ADC_fixedCoupling
+          GroundStatePosteriorJoint.p4Q2PZ37ADC_fixedCoupling_pos.le := by
   exact p4Q2PZ37ALS_originalSU2UniformSharpGap_of_cutoff
-    p4Q2PZ37ADC_fixedCoupling p4Q2PZ37ADC_fixedCoupling_pos.le hcut
+    GroundStatePosteriorJoint.p4Q2PZ37ADC_fixedCoupling GroundStatePosteriorJoint.p4Q2PZ37ADC_fixedCoupling_pos.le hcut
 
 
 /-- Existing PZ37ALK proves the *actual original prescribed beta0* lies
 STRICTLY outside the selected AKL high-temperature interval. -/
 theorem p4Q2PZ37ALS_originalBeta0_not_in_AKLHighTemperatureInterval :
-    ¬ p4Q2PZ37ADC_fixedCoupling ≤
+    ¬ GroundStatePosteriorJoint.p4Q2PZ37ADC_fixedCoupling ≤
       p4Q2PZ37AKL_originalUniformCoercivityCutoff :=
   GroundStatePosteriorJoint.p4Q2PZ37ALK_originalFixedCoupling_not_le_AKLcutoff
 
@@ -329,7 +329,7 @@ theorem p4Q2PZ37ALS_smallPositiveCoupling_eq_half_AKLcutoff :
 
 theorem p4Q2PZ37ALS_smallPositiveCoupling_strictly_lt_originalBeta0 :
     p4Q2PZ37ALS_smallPositiveCouplingBelowOriginalBeta0 <
-      p4Q2PZ37ADC_fixedCoupling := by
+      GroundStatePosteriorJoint.p4Q2PZ37ADC_fixedCoupling := by
   exact lt_of_le_of_lt
     p4Q2PZ37ALS_smallPositiveCouplingBelowOriginalBeta0_le_cutoff
     GroundStatePosteriorJoint.p4Q2PZ37ALK_AKLuniformCutoff_lt_originalFixedCoupling
