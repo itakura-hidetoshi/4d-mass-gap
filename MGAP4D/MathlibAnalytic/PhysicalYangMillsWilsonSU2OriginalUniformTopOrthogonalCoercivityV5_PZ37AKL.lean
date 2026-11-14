@@ -80,9 +80,16 @@ private def replayColorCard (input : Expr) : MetaM Expr := do
   assertAllowedAxioms standardAxioms (mkConst newCard)
   let inherited ← collectAxioms oldCard
   let extra := inherited.filter (fun ax => !standardAxioms.contains ax)
-  unless extra.size == 1 do
-    throwError "AKL replay: the inspected legacy dependency set has changed"
-  assertAllowedAxioms (standardAxioms ++ extra) input
+  -- Kernel hardening of the upstream six-color proof removes the legacy
+  -- native_decide axiom.  In that case the ORIGINAL input proof must already
+  -- have only standard axioms.  In the legacy case, retain the old exactly-one
+  -- extra-axiom restriction and demand a standard-only replayed output.
+  if extra.isEmpty then
+    assertAllowedAxioms standardAxioms input
+  else
+    unless extra.size == 1 do
+      throwError "AKL replay: the inspected legacy dependency set has changed"
+    assertAllowedAxioms (standardAxioms ++ extra) input
   let output ← Lean.Core.transform (m := MetaM) input (pre := fun e => do
     match e with
     | .const n us =>
