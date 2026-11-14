@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalFixedWilsonConcreteGroundStateSharpSqrtGapV5_PZ37ALR
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalUniformTopOrthogonalCoercivityV5_PZ37AKL
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalFixedCouplingSchurFrameBridgeV5_PZ37ALK
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTwoSidedTwelveSpatialUniformGap
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateTwelveSpatialPoincareSixSpatialGap
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateSixSpatialFrameGap
@@ -24,7 +25,9 @@ Consequently the *certified existing* 1/2304 lower bound for E12 gives the
 new actual concrete eight-color frame 1/1536 on the genuine physical K_H,
 uniformly in H under the existing chosen high-temperature cutoff.
 
-The sharp ALR squared-defect theorem then yields, for every finite H and beta
+The original fixed numerical beta0 is ALREADY PROVED *outside* that AKL
+cutoff by certified PZ37ALK; no inference at beta0 is made here. The
+sharp ALR squared-defect theorem yields, for every finite H and beta
 under the same cutoff,
 
   ||R_H|| <= sqrt(1 - 1/1536),
@@ -32,13 +35,14 @@ under the same cutoff,
 
 This is a genuine physical frame construction, NOT merely a new abstract
 frame assumption, but its scope is the already-established high-temperature
-interval. It DOES NOT prove the original prescribed numerical coupling beta0
-lies inside the existing nonconstructively chosen cutoff.
+interval. PZ37ALK already proves the original prescribed numerical beta0 DOES NOT
+lie inside that particular high-temperature cutoff. This is an obstruction
+to THIS proof route, not a counterexample to an original Wilson gap.
 
 One concrete positive coupling betaSmall <= beta0 is selected before all H
 using min(beta0, cutoff/2). This changes NO original beta0 definition;
-betaSmall is deliberately a DISTINCT physical coupling unless equality
-has been independently proved.
+PZ37ALK proves betaStar < beta0; hence betaSmall = betaStar/2 < beta0.
+We also construct the full frame at the stronger certified betaSafe=betaStar.
 
 Only additions, unchanged Wilson SU(2)/Haar/AJA source/root.
 All newly introduced declarations are inspected with #print axioms.
@@ -303,6 +307,59 @@ theorem p4Q2PZ37ALS_originalFixedBeta0UniformSharpGap_if_cutoff
   exact p4Q2PZ37ALS_originalSU2UniformSharpGap_of_cutoff
     p4Q2PZ37ADC_fixedCoupling p4Q2PZ37ADC_fixedCoupling_pos.le hcut
 
+
+/-- Existing PZ37ALK proves the *actual original prescribed beta0* lies
+STRICTLY outside the selected AKL high-temperature interval. -/
+theorem p4Q2PZ37ALS_originalBeta0_not_in_AKLHighTemperatureInterval :
+    ¬ p4Q2PZ37ADC_fixedCoupling ≤
+      p4Q2PZ37AKL_originalUniformCoercivityCutoff :=
+  GroundStatePosteriorJoint.p4Q2PZ37ALK_originalFixedCoupling_not_le_AKLcutoff
+
+/-- The auxiliary selected betaSmall is provably exactly betaStar/2,
+not the prescribed beta0; no unproved numerical comparison remains. -/
+theorem p4Q2PZ37ALS_smallPositiveCoupling_eq_half_AKLcutoff :
+    p4Q2PZ37ALS_smallPositiveCouplingBelowOriginalBeta0 =
+      p4Q2PZ37AKL_originalUniformCoercivityCutoff / 2 := by
+  unfold p4Q2PZ37ALS_smallPositiveCouplingBelowOriginalBeta0
+  apply min_eq_right
+  have hCut := p4Q2PZ37AKL_originalUniformCoercivityCutoff_pos
+  have hBound :=
+    GroundStatePosteriorJoint.p4Q2PZ37ALK_AKLuniformCutoff_lt_originalFixedCoupling
+  linarith
+
+theorem p4Q2PZ37ALS_smallPositiveCoupling_strictly_lt_originalBeta0 :
+    p4Q2PZ37ALS_smallPositiveCouplingBelowOriginalBeta0 <
+      p4Q2PZ37ADC_fixedCoupling := by
+  exact lt_of_le_of_lt
+    p4Q2PZ37ALS_smallPositiveCouplingBelowOriginalBeta0_le_cutoff
+    GroundStatePosteriorJoint.p4Q2PZ37ALK_AKLuniformCutoff_lt_originalFixedCoupling
+
+/-- The *maximal currently selected* safe physical coupling betaSafe of ALK
+has an unconditionally constructed concrete eight-color frame, at every H.
+It is exactly betaStar, strictly smaller than original beta0. -/
+theorem p4Q2PZ37ALS_existingALKSafeCoupling_hasUniformConcreteEightFrame :
+    p4Q2PZ37ALS_hasUniformConcreteEightFrameAt
+      GroundStatePosteriorJoint.p4Q2PZ37ALK_originalFixedCouplingUniformClip
+      GroundStatePosteriorJoint.p4Q2PZ37ALK_originalFixedCouplingUniformClip_pos.le := by
+  exact p4Q2PZ37ALS_originalSU2UniformEightFrame_of_cutoff
+    GroundStatePosteriorJoint.p4Q2PZ37ALK_originalFixedCouplingUniformClip
+    GroundStatePosteriorJoint.p4Q2PZ37ALK_originalFixedCouplingUniformClip_pos.le
+    GroundStatePosteriorJoint.p4Q2PZ37ALK_originalFixedCouplingUniformClip_le_cutoff
+
+/-- The SAME exact ALK safe coupling, not betaSmall or beta0, carries an
+unconditional physical SU(2) all-H sharp sqrt gap. -/
+theorem p4Q2PZ37ALS_existingALKSafeCoupling_uniformSharpGap :
+    ∀ H : ℕ,
+      1 - Real.sqrt (1 - (1 / 1536 : ℝ)) ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap
+          H 2 (by norm_num)
+          GroundStatePosteriorJoint.p4Q2PZ37ALK_originalFixedCouplingUniformClip
+          GroundStatePosteriorJoint.p4Q2PZ37ALK_originalFixedCouplingUniformClip_pos.le := by
+  exact p4Q2PZ37ALS_originalSU2UniformSharpGap_of_cutoff
+    GroundStatePosteriorJoint.p4Q2PZ37ALK_originalFixedCouplingUniformClip
+    GroundStatePosteriorJoint.p4Q2PZ37ALK_originalFixedCouplingUniformClip_pos.le
+    GroundStatePosteriorJoint.p4Q2PZ37ALK_originalFixedCouplingUniformClip_le_cutoff
+
 end HighTemperatureEightColor
 end
 end MGAP4D.MathlibAnalytic
@@ -321,3 +378,9 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.HighTemperatureEightColor.p4Q2PZ37ALS_selectedPositiveOriginalSU2HasUniformEightFrame
 #print axioms MGAP4D.MathlibAnalytic.HighTemperatureEightColor.p4Q2PZ37ALS_selectedPositiveOriginalSU2UniformSharpGap
 #print axioms MGAP4D.MathlibAnalytic.HighTemperatureEightColor.p4Q2PZ37ALS_originalFixedBeta0UniformSharpGap_if_cutoff
+
+#print axioms MGAP4D.MathlibAnalytic.HighTemperatureEightColor.p4Q2PZ37ALS_originalBeta0_not_in_AKLHighTemperatureInterval
+#print axioms MGAP4D.MathlibAnalytic.HighTemperatureEightColor.p4Q2PZ37ALS_smallPositiveCoupling_eq_half_AKLcutoff
+#print axioms MGAP4D.MathlibAnalytic.HighTemperatureEightColor.p4Q2PZ37ALS_smallPositiveCoupling_strictly_lt_originalBeta0
+#print axioms MGAP4D.MathlibAnalytic.HighTemperatureEightColor.p4Q2PZ37ALS_existingALKSafeCoupling_hasUniformConcreteEightFrame
+#print axioms MGAP4D.MathlibAnalytic.HighTemperatureEightColor.p4Q2PZ37ALS_existingALKSafeCoupling_uniformSharpGap
