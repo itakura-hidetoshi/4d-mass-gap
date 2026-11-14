@@ -83,27 +83,16 @@ theorem p4Q2PZ37ALW_rawMomentStep_implies_excitedNormSqStep
     unfold p4Q2PZ37ALV_originalFixedExcitedNormSq
     positivity
   have hq : 0 ≤ Q H + b := add_nonneg hq0 hb
-  have hNorm :
-      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-          (H + 1) 2 (by norm_num) beta0 p4Q2PZ37ADC_fixedCoupling_pos.le‖ ≤
-        Real.sqrt (Q H + b) := by
+  let Rnext :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+      (H + 1) 2 (by norm_num) beta0 p4Q2PZ37ADC_fixedCoupling_pos.le
+  have hNorm : ‖Rnext‖ ≤ Real.sqrt (Q H + b) := by
     exact p4Q2PZ37ALN_originalFixedNormalizedRestriction_norm_le_of_rawMomentBound
       (H + 1) (Real.sqrt (Q H + b)) (Real.sqrt_nonneg _) hRaw
   have hMul :
-      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-          (H + 1) 2 (by norm_num) beta0 p4Q2PZ37ADC_fixedCoupling_pos.le‖ *
-        ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-          (H + 1) 2 (by norm_num) beta0 p4Q2PZ37ADC_fixedCoupling_pos.le‖ ≤
-      Real.sqrt (Q H + b) * Real.sqrt (Q H + b) :=
-    mul_self_le_mul_self
-      (norm_nonneg
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-          (H + 1) 2 (by norm_num) beta0 p4Q2PZ37ADC_fixedCoupling_pos.le))
-      hNorm
-  change
-    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-        (H + 1) 2 (by norm_num) beta0 p4Q2PZ37ADC_fixedCoupling_pos.le‖ ^ 2 ≤
-      Q H + b
+      ‖Rnext‖ * ‖Rnext‖ ≤ Real.sqrt (Q H + b) * Real.sqrt (Q H + b) :=
+    mul_self_le_mul_self (norm_nonneg Rnext) hNorm
+  change ‖Rnext‖ ^ 2 ≤ Q H + b
   nlinarith only [hMul, Real.sq_sqrt hq]
 
 /-- Any independent scalar upper certificate a for the TRUE raw physical
