@@ -197,6 +197,7 @@ theorem p4Q2PZ37ALT_originalFixedTailRawMoment_descent
     exact hεle.trans hgap
 
 end GroundStatePosteriorJoint
+end
 end MGAP4D.MathlibAnalytic
 
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ALT_originalFixedGapAt
