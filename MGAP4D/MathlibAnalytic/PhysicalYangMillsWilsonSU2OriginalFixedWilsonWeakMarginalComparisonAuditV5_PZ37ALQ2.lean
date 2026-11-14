@@ -71,6 +71,12 @@ theorem p4Q2PZ37ALQ2_genericWeakComparisonFrameToEnergy
             linarith
     _ = (1 - η * κ) * ‖A‖ ^ 2 * ‖x‖ ^ 2 := by ring
 
+local instance p4Q2PZ37ALQ2_physicalCompleteSpace (H : ℕ) :
+    CompleteSpace
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2) :=
+  (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule_isClosed
+    H 2).completeSpace_coe
+
 variable (H : ℕ)
 
 local notation "beta0" => p4Q2PZ37ADC_fixedCoupling
@@ -153,44 +159,50 @@ theorem p4Q2PZ37ALQ2_originalFixedGap_ge_of_weakComparison
   change η * κ ≤ 1 - ‖R‖
   linarith
 
-/-- One fixed color count and a common positive eta*kappa yield a
-volume-independent original physical gap IF the genuine frame and
-weak Wilson feature-variance comparison can be supplied uniformly. -/
+/-- Explicit, fixed-color physical data for the WEAKER comparison at ALL
+finite H. This package contains hypotheses only: no Wilson realization is
+constructed or claimed here. -/
+structure p4Q2PZ37ALQ2_UniformWeakComparisonData
+    (C : Type*) [Fintype C] (κ η : ℝ) where
+  localP : ∀ H : ℕ,
+    C →
+      periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2 →L[ℝ]
+      periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2
+  frame : ∀ (H : ℕ)
+    (x : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H 2 (by norm_num) p4Q2PZ37ADC_fixedCoupling p4Q2PZ37ADC_fixedCoupling_pos.le),
+    κ * ‖(x : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2)‖ ^ 2 ≤
+      boundedColorNormalizedResidualEnergy (localP H)
+        (x : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2)
+  comparison : ∀ (H : ℕ)
+    (x : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H 2 (by norm_num) p4Q2PZ37ADC_fixedCoupling p4Q2PZ37ADC_fixedCoupling_pos.le),
+    η *
+      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabFeatureAnalysisOperator
+        H 2 (by norm_num) p4Q2PZ37ADC_fixedCoupling p4Q2PZ37ADC_fixedCoupling_pos.le‖ ^ 2 *
+      boundedColorNormalizedResidualEnergy (localP H)
+        (x : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2) ≤
+    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabFeatureAnalysisOperator
+      H 2 (by norm_num) p4Q2PZ37ADC_fixedCoupling p4Q2PZ37ADC_fixedCoupling_pos.le‖ ^ 2 *
+      ‖(x : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2)‖ ^ 2 -
+      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabFeatureAnalysisOperator
+        H 2 (by norm_num) p4Q2PZ37ADC_fixedCoupling p4Q2PZ37ADC_fixedCoupling_pos.le
+        (x : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2)‖ ^ 2
+
+/-- One fixed color count and common nonnegative eta,kappa give the
+SHARP all-H physical gap IF the explicit weak comparison package exists. -/
 theorem p4Q2PZ37ALQ2_allH_gap_ge_of_weakComparison
     {C : Type*} [Fintype C]
-    (localP : ∀ H : ℕ,
-      C →
-        periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2 →L[ℝ]
-        periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2)
     (κ η : ℝ) (hκ0 : 0 ≤ κ) (hη0 : 0 ≤ η)
     (hηκ1 : η * κ ≤ 1)
-    (hframe : ∀ (H : ℕ)
-      (x : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H 2 (by norm_num) beta0 p4Q2PZ37ADC_fixedCoupling_pos.le),
-      κ * ‖(x : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2)‖ ^ 2 ≤
-        boundedColorNormalizedResidualEnergy (localP H)
-          (x : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2))
-    (hComparison : ∀ (H : ℕ)
-      (x : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H 2 (by norm_num) beta0 p4Q2PZ37ADC_fixedCoupling_pos.le),
-      η *
-        ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabFeatureAnalysisOperator
-          H 2 (by norm_num) beta0 p4Q2PZ37ADC_fixedCoupling_pos.le‖ ^ 2 *
-        boundedColorNormalizedResidualEnergy (localP H)
-          (x : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2) ≤
-      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabFeatureAnalysisOperator
-        H 2 (by norm_num) beta0 p4Q2PZ37ADC_fixedCoupling_pos.le‖ ^ 2 *
-        ‖(x : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2)‖ ^ 2 -
-        ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabFeatureAnalysisOperator
-          H 2 (by norm_num) beta0 p4Q2PZ37ADC_fixedCoupling_pos.le
-          (x : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2)‖ ^ 2) :
+    (D : p4Q2PZ37ALQ2_UniformWeakComparisonData C κ η) :
     ∀ H : ℕ,
       η * κ ≤
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap
           H 2 (by norm_num) beta0 p4Q2PZ37ADC_fixedCoupling_pos.le := by
   intro H
   exact p4Q2PZ37ALQ2_originalFixedGap_ge_of_weakComparison
-    H (localP H) κ η hκ0 hη0 hηκ1 (hframe H) (hComparison H)
+    H (D.localP H) κ η hκ0 hη0 hηκ1 (D.frame H) (D.comparison H)
 
 /-- The model's OLD exact marginal data forces the physical analysis map to
 annihilate every local residual. This is a concrete separate obstruction
@@ -250,6 +262,7 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ALQ2_originalFixedWeakFrameToEnergy
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ALQ2_originalFixedNorm_le_of_weakComparison
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ALQ2_originalFixedGap_ge_of_weakComparison
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ALQ2_UniformWeakComparisonData
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ALQ2_allH_gap_ge_of_weakComparison
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ALQ2_exactMarginalForcesPhysicalResidualKernel
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ALQ2_exactMarginalForcesColorIdentity_of_injective
