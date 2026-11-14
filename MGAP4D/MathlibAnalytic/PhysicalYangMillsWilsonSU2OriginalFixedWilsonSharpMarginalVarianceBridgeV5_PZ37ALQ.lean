@@ -166,7 +166,7 @@ theorem p4Q2PZ37ALQ_originalFixedNorm_le_of_marginalFrame
     {C : Type*} [Fintype C] [Nonempty C]
     (localP : C → G →L[ℝ] G)
     (D : WilsonMarginalCondExpComparisonData localP A)
-    (κ : ℝ) (hκ0 : 0 ≤ κ) (hκ1 : κ ≤ 1)
+    (κ : ℝ) (hκ1 : κ ≤ 1)
     (hframe : ∀ x : K,
       κ * ‖(x : G)‖ ^ 2 ≤
         boundedColorNormalizedResidualEnergy localP (x : G)) :
@@ -187,7 +187,7 @@ theorem p4Q2PZ37ALQ_originalFixedGap_ge_of_marginalFrame
     {C : Type*} [Fintype C] [Nonempty C]
     (localP : C → G →L[ℝ] G)
     (D : WilsonMarginalCondExpComparisonData localP A)
-    (κ : ℝ) (hκ0 : 0 ≤ κ) (hκ1 : κ ≤ 1)
+    (κ : ℝ) (hκ1 : κ ≤ 1)
     (hframe : ∀ x : K,
       κ * ‖(x : G)‖ ^ 2 ≤
         boundedColorNormalizedResidualEnergy localP (x : G)) :
@@ -196,7 +196,7 @@ theorem p4Q2PZ37ALQ_originalFixedGap_ge_of_marginalFrame
         H 2 (by norm_num) beta0 p4Q2PZ37ADC_fixedCoupling_pos.le := by
   have hNorm :=
     p4Q2PZ37ALQ_originalFixedNorm_le_of_marginalFrame
-      H localP D κ hκ0 hκ1 hframe
+      H localP D κ hκ1 hframe
   change κ ≤ 1 - ‖R‖
   linarith
 
@@ -207,7 +207,7 @@ theorem p4Q2PZ37ALQ_originalFixedSpectrum_subset_of_marginalFrame
     {C : Type*} [Fintype C] [Nonempty C]
     (localP : C → G →L[ℝ] G)
     (D : WilsonMarginalCondExpComparisonData localP A)
-    (κ : ℝ) (hκ0 : 0 ≤ κ) (hκ1 : κ ≤ 1)
+    (κ : ℝ) (hκ1 : κ ≤ 1)
     (hframe : ∀ x : K,
       κ * ‖(x : G)‖ ^ 2 ≤
         boundedColorNormalizedResidualEnergy localP (x : G)) :
@@ -218,7 +218,7 @@ theorem p4Q2PZ37ALQ_originalFixedSpectrum_subset_of_marginalFrame
       H 2 (by norm_num) beta0 p4Q2PZ37ADC_fixedCoupling_pos.le
   have hNorm :=
     p4Q2PZ37ALQ_originalFixedNorm_le_of_marginalFrame
-      H localP D κ hκ0 hκ1 hframe
+      H localP D κ hκ1 hframe
   intro mu hmu
   rcases hSpectrum hmu with hExcited | hTop
   · exact Or.inl ⟨hExcited.1, hExcited.2.trans hNorm⟩
@@ -275,7 +275,7 @@ theorem p4Q2PZ37ALQ_allH_gap_ge_of_uniformMarginalFrame
         (localP H)
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabFeatureAnalysisOperator
           H 2 (by norm_num) beta0 p4Q2PZ37ADC_fixedCoupling_pos.le))
-    (κ : ℝ) (hκ0 : 0 ≤ κ) (hκ1 : κ ≤ 1)
+    (κ : ℝ) (hκ1 : κ ≤ 1)
     (hframe : ∀ (H : ℕ)
       (x : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
         H 2 (by norm_num) beta0 p4Q2PZ37ADC_fixedCoupling_pos.le),
@@ -287,7 +287,7 @@ theorem p4Q2PZ37ALQ_allH_gap_ge_of_uniformMarginalFrame
         H 2 (by norm_num) beta0 p4Q2PZ37ADC_fixedCoupling_pos.le := by
   intro H
   exact p4Q2PZ37ALQ_originalFixedGap_ge_of_marginalFrame
-    H (localP H) (D H) κ hκ0 hκ1 (hframe H)
+    H (localP H) (D H) κ hκ1 (hframe H)
 
 /-- The conditional all-H Wilson marginal theorem certifies a true common
 positive transfer-gap coefficient IF, AND ONLY IF USED WITH, its physical
@@ -315,7 +315,7 @@ theorem p4Q2PZ37ALQ_allH_uniformGap_of_uniformMarginalFrame
       (fun _ : ℕ => p4Q2PZ37ADC_fixedCoupling_pos.le) := by
   refine ⟨κ, hκ, ?_⟩
   exact p4Q2PZ37ALQ_allH_gap_ge_of_uniformMarginalFrame
-    localP D κ hκ.le hκ1 hframe
+    localP D κ hκ1 hframe
 
 end GroundStatePosteriorJoint
 end
