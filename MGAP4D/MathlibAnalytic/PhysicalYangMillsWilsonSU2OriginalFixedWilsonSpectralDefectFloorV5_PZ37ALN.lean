@@ -49,6 +49,25 @@ set_option maxHeartbeats 4900000
 
 namespace GroundStatePosteriorJoint
 
+/-- Generic Hilbert-space bridge elaborated before specialization to the
+original dependent physical K_H. This prevents a premature concrete subtype
+NormedSpace synthesis from leaving the positivity proof parameter unsolved.
+No alternative carrier or different operator enters the statement. -/
+theorem p4Q2PZ37ALN_genericTopOrthogonalNorm_le_of_pointwise
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    (T : E →L[ℝ] E)
+    (hSymm : (T : E →ₗ[ℝ] E).IsSymmetric)
+    (q : ℝ) (hq : 0 ≤ q)
+    (hApply : ∀ y : (realHilbertTopEigenspace T)ᗮ,
+      ‖T (y : E)‖ ≤ q * ‖(y : E)‖) :
+    ‖realHilbertTopEigenspaceOrthogonalRestriction T hSymm‖ ≤ q := by
+  apply ContinuousLinearMap.opNorm_le_bound _ hq
+  intro y
+  change ‖T (y : E)‖ ≤ q * ‖(y : E)‖
+  exact hApply y
+
 variable (H : ℕ)
 
 local notation "beta0" => p4Q2PZ37ADC_fixedCoupling
@@ -206,9 +225,13 @@ theorem p4Q2PZ37ALN_originalFixedNormalizedRestriction_norm_le_of_rawMomentBound
     (q : ℝ) (hq : 0 ≤ q)
     (hRaw : ∀ x : K, ‖P (x : G)‖ ≤ q * Fphys * ‖(x : G)‖) :
     ‖R‖ ≤ q := by
-  apply ContinuousLinearMap.opNorm_le_bound R hq
+  have hSymm :
+      (S : G →ₗ[ℝ] G).IsSymmetric :=
+    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
+      H 2 (by norm_num) beta0 p4Q2PZ37ADC_fixedCoupling_pos.le
+  apply p4Q2PZ37ALN_genericTopOrthogonalNorm_le_of_pointwise
+    S hSymm q hq
   intro x
-  change ‖S (x : G)‖ ≤ q * ‖(x : G)‖
   have hScale :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_raw_normalized_norm_scale
       H 2 (by norm_num) beta0 p4Q2PZ37ADC_fixedCoupling_pos.le x
@@ -270,7 +293,9 @@ theorem p4Q2PZ37ALN_allH_originalFixedUniformGap_of_directRawWilsonMomentBound
     (p4Q2PZ37ALN_originalFixedGap_ge_of_rawMomentBound
       H (3071 / 3072 : ℝ) (by norm_num) (by norm_num)
       (hRaw H)).2
-  convert h using 1 <;> norm_num
+  have hEq : (1 - (3071 / 3072 : ℝ)) = (1 / 3072 : ℝ) := by norm_num
+  rw [hEq] at h
+  exact h
 
 end GroundStatePosteriorJoint
 end
@@ -289,3 +314,5 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ALN_originalFixedNormalizedRestriction_norm_le_of_rawMomentBound
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ALN_originalFixedGap_ge_of_rawMomentBound
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ALN_allH_originalFixedUniformGap_of_directRawWilsonMomentBound
+
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ALN_genericTopOrthogonalNorm_le_of_pointwise
