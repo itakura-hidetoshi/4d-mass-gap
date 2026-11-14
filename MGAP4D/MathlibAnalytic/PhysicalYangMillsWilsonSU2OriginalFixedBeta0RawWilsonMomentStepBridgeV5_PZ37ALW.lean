@@ -91,7 +91,7 @@ theorem p4Q2PZ37ALW_rawMomentStep_implies_excitedNormSqStep
       (H + 1) (Real.sqrt (Q H + b)) (Real.sqrt_nonneg _) hRaw
   have hSquare :
       Q (H + 1) ≤ (Real.sqrt (Q H + b)) ^ 2 :=
-    (sq_le_sq₀ (norm_nonneg _) (Real.sqrt_nonneg _)).mp hNorm
+    (sq_le_sq₀ (norm_nonneg _) (Real.sqrt_nonneg _)).mpr hNorm
   simpa only [Real.sq_sqrt hq] using hSquare
 
 /-- Any independent scalar upper certificate a for the TRUE raw physical
