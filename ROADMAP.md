@@ -4985,3 +4985,20 @@ Exact-source [CI #43643045960](https://github.com/itakura-hidetoshi/4d-mass-gap/
 #### ALV final independent authoritative push certification (2026-11-15 JST)
 
 Original fixed-beta0 canonical formal commit `7b33f85634aae0a93f2d4665336a2df4359f3b6a` passed independent [event=push CI #43643707032](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43643707032), **completed/SUCCESS**. Pinned Lean **11,486/11,486**, all **8/8** new ALV `#print axioms` use only `propext`, `Classical.choice`, `Quot.sound`; no ALV `sorryAx` or changed warnings/errors. Changed-Lean job `132596625899` and exact-source receipt job `132598258246` completed/SUCCESS; observed `[mcp-receipt] event=push exact_sha=7b33f85634aae0a93f2d4665336a2df4359f3b6a source_result=success run=43643707032 attempt=1`. Physical original-Wilson step decay, all-H fixed-beta0 gap and continuum mass gap remain OPEN.
+
+
+### ALW — original Wilson fixed-beta0 raw moment step to summable deficit budget (2026-11-15 JST)
+
+**MERGED:** [ALW theorem PR #6761](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6761), canonical formal theorem `2760ea8269b03a1e712306fdd8643de15bcc7137`. On unchanged true physical original beta0 SU(2) Wilson `P_H`, normalized full-top-orthogonal `R_H`, and true ALN moment floor `0<F_H<=||P_H||`, ALW proves the conditional step bridge
+
+```text
+forall x in K_(H+1), ||P_(H+1)x||<=sqrt(Q_H+b_H)*F_(H+1)*||x||; b_H>=0
+    => Q_(H+1)<=Q_H+b_H => L_H<=b_H,
+where Q_H=||R_H(beta0)||^2.
+```
+
+An independent summable budget `sum_{i<H}b_i<=B<delta_0`, geometric `b_H=C*r^H` with `0<=r<1` and `C<(1-r)*delta0`, or tail-only geometric budget after ALT-certified finite prefix would imply a common original-beta0 finite-volume gap. These are **conditional sufficiency statements**, NOT verified true original Wilson raw kernel estimates. ALJ's floor is lower, not a sector-wide upper bound.
+
+**Certified:** exact-source repaired `14c07266dc45fbf330550e962fe463889310eac9`, [CI #43649964065](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43649964065) completed/SUCCESS, pinned Lean **11,487/11,487**, all ALW **8/8** public axioms standard-three only, no sorryAx and ALW warning/error 0/0, independent PR receipt SUCCESS; source/test-merge/squash tree `b3065d6a5cd663c8f16136489ad4a48c86646d73`. Four historical failed elab iterations with structural root causes retained in [proof record](docs/proofs/P4-Q2-PZ37ALW_verified_20261115.md). Canonical push #43650478333 requires independent observation.
+
+**NEXT/OPEN:** derive a true original-beta0 Wilson raw K-sector ceiling and an independent sufficiently sharp full normalization lower bound for successive finite H, or a directly verified two-volume scalar transfer comparison. Avoid cross-H Hilbert operator subtraction and the disproved attempt to include beta0 inside the AKL high-temperature cutoff. Original fixed-beta0 all-H, Hamiltonian and continuum 4D Yang–Mills mass gaps remain OPEN.
