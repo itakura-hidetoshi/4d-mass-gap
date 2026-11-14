@@ -4955,3 +4955,8 @@ ALTは元のβ₀における既証明の各有限Hの平方欠損 δ_H>0 を使
 初回〜4回目のLean4失敗は補題`sq_le_sq₀`の方向、`Q`略記を通る型推論、繰返しdependent CLMインスタンス探索に起因し、同じ型付き`Rnext`を共有した最終source `14c07266dc45fbf330550e962fe463889310eac9`で修復。[Exact-source CI #43649964065](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43649964065) **completed/SUCCESS**、Lean **11,487/11,487**、全8/8標準3公理のみ、sorryAxなし・ALW warning/error 0/0、独立completion receipt SUCCESS。source/test-merge/squash tree `b3065d6a5cd663c8f16136489ad4a48c86646d73` 一致。[ALW正式証明記録](docs/proofs/P4-Q2-PZ37ALW_verified_20261115.md)。
 
 **NEXT:** 実Wilson raw励起上界と独立normalizer下界を同一体積で評価し、真正な2体積スカラー増分の総予算を導く。統合後独立push CI #43650478333は別途実測して記録する。
+
+
+#### ALW統合後の独立認証（2026-11-15 JST）
+
+Original Wilson固定β₀ ALW正本コミット `2760ea8269b03a1e712306fdd8643de15bcc7137` は[独立event=push CI #43650478333](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43650478333) **completed/SUCCESS**。Pinned Lean **11,487/11,487**、ALW全8/8標準3公理のみ、ALW `sorryAx`なし・warning/error 0/0。Lean job `132617591073` と独立completion receipt job `132618904816` ともにSUCCESS。実受領書は `[mcp-receipt] event=push exact_sha=2760ea8269b03a1e712306fdd8643de15bcc7137 source_result=success run=43650478333 attempt=1`。真正Wilson raw体積段階評価は引き続き未証明。
