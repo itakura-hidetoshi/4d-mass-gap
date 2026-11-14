@@ -44,3 +44,16 @@ All changes append-only / tighten-only / overwrite-forbidden / same-root. No exi
 ## Next physical research step
 
 Construct original-beta0 SU(2) Wilson excited-sector upper bounds together with **separate physical full operator normalizer lower bounds**, and prove the needed volume-step comparison without identifying incompatible `H`-dependent Hilbert carriers. A closer normalizer bound may be required because the existing ALJ moment floor can be too weak for this sufficient test. The exact sharp-sqrt gap from a uniform squared-norm budget is a separate formal refinement; neither it nor conditional ALW asserts an actual Wilson mass-gap proof.
+
+
+## Independent canonical formal push certification — completed (2026-11-15 JST)
+
+The preceding push CI PENDING record reflects the correct status at initial source-writing time. GitHub MCP has independently reobserved [push CI #43650478333](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43650478333) **completed/SUCCESS**, triggered by **event=push** for the EXACT authoritative canonical formal HEAD `2760ea8269b03a1e712306fdd8643de15bcc7137`.
+
+The actual pinned Lean full dependency closure **11,487/11,487** completed SUCCESS, all 8/8 ALW `#print axioms` are exactly `propext`, `Classical.choice`, `Quot.sound`; no `sorryAx` in the new audited declarations and no ALW warnings/errors. Changed-Lean job `132617591073` completed SUCCESS and independent receipt job `132618904816` completed SUCCESS, with the actually observed exact-head completion log:
+
+```text
+[mcp-receipt] event=push exact_sha=2760ea8269b03a1e712306fdd8643de15bcc7137 source_result=success run=43650478333 attempt=1
+```
+
+The actual source/test-merge/squash tree remains `b3065d6a5cd663c8f16136489ad4a48c86646d73`. This machine result certifies ALW's **conditional** physical Wilson raw-moment step bridge, not the still-unproved genuine raw premise, summable volume-loss budget, original-beta0 uniform gap or continuum Yang–Mills mass gap.
