@@ -4910,3 +4910,23 @@ Formal ALD squash `4683de2e6aeffbbb26baa58d7b87d8eeb669a1a1` independently passe
 Initial [CI #43418097047](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43418097047) FAILURE (16 direct Lean elaboration errors: local notation/projected field, product measure syntax, dependent rewriting), intermediate [CI #43419061238](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43419061238) FAILURE (two residual elaboration errors); both failures remain in provenance. Final exact-source `9091fd8489b5a2a7a4583b0404a7eb6b89abe73b` passed [PR CI #43419944499](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43419944499) completed/**SUCCESS**. Separate canonical [formal push CI #43420956000](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43420956000) completed/**SUCCESS** at exact squash HEAD. Both pinned Lean **11,467/11,467**; all 15/15 new `#print axioms` only `propext`, `Classical.choice`, `Quot.sound`, no new `sorryAx`, ALE warning/error **0/0**, independent exact-head completion receipts SUCCESS. Formal source/squash tree `1a9de2ce638756f593bc491518a39b759f956a62` identical. [Formal proof record](docs/proofs/P4-Q2-PZ37ALE_verified_20261113.md).
 
 **OPEN:** the positive finite-H floor decays in H and is NOT H-uniform coercivity or physical Hamiltonian/continuum mass gap. Actual H22 negative-region Haar upper mass r22 and unconditional AJA witness verdict remain NO_DATA. AKX fails as a sufficient condition at H>=25, not as a statement of witness existence. NEXT: test a new exact norm/top/AJA sufficient criterion with proven inequalities and unchanged genuine physics, independently seek AKY complementary Haar-cell certificate for H22.
+
+## ALS／ALT — 8色frame高温認証と元のβ₀有限prefixの厳密な到達範囲（2026-11-15 JST）
+
+[ALS theorem PR #6753](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6753) と [ALT theorem PR #6754](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6754) はいずれも **MERGED**、exact-source CIと統合後独立push CIがそれぞれ completed/SUCCESS。元のSU(2) Wilson作用素、Haar/AJA、物理的固定結合 β₀=log(3/2)/64、Lean/mathlib固定値は不変更。
+
+ALSは正しい右境界・同一ground-state carrierで E₁₂=(1/2)E₆、E₈=(3/4)E₆=(3/2)E₁₂ を形式化し、**既存高温cutoff内のみ** E₈≥(1/1536)‖x‖² と gap_H≥1−√(1−1/1536)>1/3072 を証明。ALK/ALMは当該cutoffが元の β₀ に届かないことを証明済みであり、β₀での一様gapを主張しない。[ALS形式証明記録](docs/proofs/P4-Q2-PZ37ALS_verified_20261115.md)。
+
+ALTは元のβ₀における既証明の各有限Hの平方欠損 δ_H>0 を使い、**任意の有限M**について d_M=min_{H≤M}δ_H>0、全H≤Mで gap_H≥d_M/2>0 を無条件に構成。全Hへの接続は、H>Mの元物理Wilson raw-moment上界という未証明条件を明示し、成立した場合だけ gap_H≥min(d_M/2,1−q)>0 を結論する。[ALT形式証明記録](docs/proofs/P4-Q2-PZ37ALT_verified_20261115.md)。
+
+**検証来歴：** ALS source `8074fa960e15`, 正本squash `d15e4f4d094b`, [source CI #43607964235](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43607964235) と [push CI #43608757057](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43608757057) は各11,483/11,483 SUCCESS、19/19標準3公理のみ、sorryAxなし・ALS警告／エラー0/0、source/test-merge/squash tree `d01d426820ad` 完全一致。ALT source `06d35cbb3dba`、正本squash `e251dad5b805`、[source CI #43612424066](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43612424066) と [push CI #43613074250](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43613074250) は各11,484/11,484 SUCCESS、11/11標準3公理のみ、sorryAxなし・ALT警告／エラー0/0、共通tree `9fcfbb150f26`。誤識別子（ALS）・無名section終端（ALT）の失敗歴も記録に保持。
+
+**OPEN：** 実際の元β₀における大体積tailの一様定量上界。有限Hごとの正値性や高温βの一様下界を、元β₀での全H一様gap・Hamiltonian gap・連続体4D Yang–Mills mass gapへ無条件昇格しない。新たな体積間欠損変動予算（ALU）は独立研究PRとして認証結果を別途記録する。
+
+### ALU — 体積段階の平方欠損減少予算：正本統合・独立認証完了（2026-11-15 JST）
+
+[ALU定理PR #6755](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6755) **MERGED**、正本squash `c45c3df5a4cde0a8744ed5ccb18bcc774c839a39`。異なるHのHilbert空間上の作用素を直接引かず、元の固定結合β₀の真正な実数値平方欠損 δ_H=1−‖R_H‖²>0 に対して L_H=max(0,δ_H−δ_{H+1})≥0、V_H=∑_{i<H}L_i を定義。Lean4で正確な δ_H≥δ₀−V_H と gap_H≥(δ₀−V_H)/2 を無条件に証明。**全H一様の正gapは別途 V_H≤B<δ₀ を証明した場合に限る**。元Wilson模型でこの一様総変動予算が成立することは未証明（NO_DATA）。
+
+初回source `bc0895a88af9` のLeanは全依存成功でも未使用 `hb` 警告1件が残り、証明だけを修正したsource `28e4a62081ad` の [exact-source CI #43628524967](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43628524967) **11,485/11,485 SUCCESS**、15/15標準3公理のみ・sorryAxなし・ALU警告／エラー0/0、独立completion receipt SUCCESS。[正本独立push CI #43629063478](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43629063478)も同じ認証基準で **completed/SUCCESS**。source/test-merge/squash共通tree `1c63d76800fb8119a7ac0b02431d264a387b38d9`。[ALU形式証明記録](docs/proofs/P4-Q2-PZ37ALU_verified_20261115.md)。
+
+**NEXT/OPEN:** 元β₀の真のWilson作用から、Hごとの下降変動L_Hの上界と全体積での総予算を独立に示す。高温cutoffのβ₀延長、元β₀一様gap、Hamiltonian/連続体Yang–Mills質量ギャップは未証明。
