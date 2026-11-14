@@ -61,3 +61,16 @@ No existing proof, root import, physics implementation, workflow or pinned depen
 ## Next research step
 
 Derive the required *genuine* original fixed-beta0 Wilson two-volume scalar excited-norm estimates. Candidate methods include independently verified finite-size correlation/locality, an appropriately typed inter-volume comparison, or a model-specific kernel estimate that avoids cross-carrier subtraction; none is presently certified by ALV. A finite-prefix calculation alone cannot establish the geometric tail hypothesis. Obstruction remains explicit.
+
+
+## Independent authoritative formal push — completed certificate (2026-11-15 JST)
+
+The preceding independent-push PENDING snapshot was accurate at record creation. Direct GitHub MCP re-observation now establishes the [canonical push CI #43643707032](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43643707032) **completed/SUCCESS** for **event=push** at the exact authoritative original-beta0 ALV squash `7b33f85634aae0a93f2d4665336a2df4359f3b6a`.
+
+The actual pinned Lean **11,486/11,486** dependency closure completed SUCCESS; all **8/8** ALV public `#print axioms` audits use only `propext`, `Classical.choice`, `Quot.sound`, without new `sorryAx` or ALV warning/error. Independent canonical Changed Lean job `132596625899` completed SUCCESS, and the separate completion receipt job `132598258246` completed SUCCESS with the exact observed receipt:
+
+```text
+[mcp-receipt] event=push exact_sha=7b33f85634aae0a93f2d4665336a2df4359f3b6a source_result=success run=43643707032 attempt=1
+```
+
+Git source, synthetic test merge and canonical formal tree remain equal at `2ba386aef10da531805bb20be2e965a9b0cc5128`. The actual original fixed-beta0 Wilson geometric norm-increment physical premise is still **unproved**; no unconditional all-H beta0 or continuum mass gap results from this machine certification.
