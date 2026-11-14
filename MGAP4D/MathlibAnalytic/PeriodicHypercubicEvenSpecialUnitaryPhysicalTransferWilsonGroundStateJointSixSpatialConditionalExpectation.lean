@@ -50,7 +50,7 @@ theorem periodicHypercubicEvenGroundStateSpatialColor_card :
   change Fintype.card
     (PeriodicHypercubicOtherAxis (0 : PeriodicHypercubicAxis) × ZMod 2) = 6
   rw [Fintype.card_prod, periodicHypercubicOtherAxis_card]
-  native_decide
+  decide
 
 /-- Canonical finite indexing of the six spatial colors. -/
 noncomputable def periodicHypercubicEvenGroundStateSpatialColorEquivFin :
