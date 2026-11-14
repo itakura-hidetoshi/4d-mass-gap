@@ -213,8 +213,9 @@ theorem p4Q2PZ37ALU_originalFixedUniformGap_of_stepwiseBudget
   have htel :=
     p4Q2PZ37ALU_originalFixedTelescoping_of_stepwiseBound b hstep
   have hB0 : 0 ≤ B := by
-    have hsum := htotal 0
-    simpa using hsum
+    have hOne : b 0 ≤ B := by
+      simpa [Finset.sum_range_succ] using (htotal 1)
+    exact (hb 0).trans hOne
   refine ⟨(D 0 - B) / 2, by linarith, ?_⟩
   intro H
   have hH := htel H
