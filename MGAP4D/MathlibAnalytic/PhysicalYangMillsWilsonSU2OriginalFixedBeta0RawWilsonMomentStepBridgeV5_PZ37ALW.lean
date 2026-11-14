@@ -90,8 +90,14 @@ theorem p4Q2PZ37ALW_rawMomentStep_implies_excitedNormSqStep
     exact p4Q2PZ37ALN_originalFixedNormalizedRestriction_norm_le_of_rawMomentBound
       (H + 1) (Real.sqrt (Q H + b)) (Real.sqrt_nonneg _) hRaw
   have hSquare :
-      Q (H + 1) ≤ (Real.sqrt (Q H + b)) ^ 2 :=
+      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          (H + 1) 2 (by norm_num) beta0 p4Q2PZ37ADC_fixedCoupling_pos.le‖ ^ 2 ≤
+        (Real.sqrt (Q H + b)) ^ 2 :=
     (sq_le_sq₀ (norm_nonneg _) (Real.sqrt_nonneg _)).mpr hNorm
+  change
+    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        (H + 1) 2 (by norm_num) beta0 p4Q2PZ37ADC_fixedCoupling_pos.le‖ ^ 2 ≤
+      Q H + b
   simpa only [Real.sq_sqrt hq] using hSquare
 
 /-- Any independent scalar upper certificate a for the TRUE raw physical
