@@ -41,6 +41,7 @@ Only a new Lean4 leaf, append-only, all declarations axiom-audited.
 
 namespace MGAP4D.MathlibAnalytic
 
+open MeasureTheory
 open scoped InnerProductSpace
 noncomputable section
 set_option autoImplicit false
