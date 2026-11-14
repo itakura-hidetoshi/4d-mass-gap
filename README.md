@@ -4939,3 +4939,8 @@ ALTは元のβ₀における既証明の各有限Hの平方欠損 δ_H>0 を使
 [Exact-source CI #43643045960](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43643045960) completed/SUCCESS、Lean **11,486/11,486**、新規8/8宣言標準3公理のみ、sorryAxなし、ALV warning/error 0/0、completion receipt SUCCESS。source／test-merge／統合後 Git tree は `2ba386aef10da531805bb20be2e965a9b0cc5128` で一致。[ALV形式証明記録](docs/proofs/P4-Q2-PZ37ALV_verified_20261115.md)。
 
 **未解決（NO_DATA）：** 原Wilson模型の固定β₀で、幾何減衰を満たす体積間ノルム平方増分上界および係数C,ρはまだ証明されていない。条件付き補題の機械認証を元のβ₀全H一様gap、Hamiltonian/連続体Yang–Mills質量ギャップの無条件認証に昇格させない。統合後の独立push CI #43643707032は別途確認・記録する。
+
+
+#### ALV統合後の独立認証（2026-11-15 JST）
+
+元の固定β₀ ALV canonical formal HEAD `7b33f85634aae0a93f2d4665336a2df4359f3b6a` は、独立した[event=push CI #43643707032](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43643707032) **completed/SUCCESS**、Pinned Lean **11,486/11,486**、ALV **8/8標準3公理のみ**、新規sorryAxなし・ALV警告/エラー0/0。Lean job `132596625899`とcompletion receipt job `132598258246` はともにSUCCESS。実ログの `[mcp-receipt] event=push exact_sha=7b33f85634aae0a93f2d4665336a2df4359f3b6a source_result=success run=43643707032 attempt=1` を確認。真のWilson体積間幾何増分評価は依然未証明。
