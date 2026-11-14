@@ -4930,3 +4930,12 @@ ALTは元のβ₀における既証明の各有限Hの平方欠損 δ_H>0 を使
 初回source `bc0895a88af9` のLeanは全依存成功でも未使用 `hb` 警告1件が残り、証明だけを修正したsource `28e4a62081ad` の [exact-source CI #43628524967](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43628524967) **11,485/11,485 SUCCESS**、15/15標準3公理のみ・sorryAxなし・ALU警告／エラー0/0、独立completion receipt SUCCESS。[正本独立push CI #43629063478](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43629063478)も同じ認証基準で **completed/SUCCESS**。source/test-merge/squash共通tree `1c63d76800fb8119a7ac0b02431d264a387b38d9`。[ALU形式証明記録](docs/proofs/P4-Q2-PZ37ALU_verified_20261115.md)。
 
 **NEXT/OPEN:** 元β₀の真のWilson作用から、Hごとの下降変動L_Hの上界と全体積での総予算を独立に示す。高温cutoffのβ₀延長、元β₀一様gap、Hamiltonian/連続体Yang–Mills質量ギャップは未証明。
+
+
+### ALV — 元Wilson固定β₀の体積間励起ノルム平方・幾何下降予算（2026-11-15 JST）
+
+[ALV定理PR #6758](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6758) **MERGED**。正本commit `7b33f85634aae0a93f2d4665336a2df4359f3b6a`。元の固定β₀、真正SU(2) Wilson作用素、規格化、Hilbert carrier、Haar/AJAは変更しない。異なるHの作用素を直接引かず、元の物理的励起ノルム平方 `n_H=‖R_H(β₀)‖²` の実数値を用い、ALUの一段階下降損失について **`L_H=max(0,n_(H+1)-n_H)`** をLean4で厳密に証明。加えて、各段階の真正な実数値増分が `n_(H+1)≤n_H+Cρ^H`（`0≤ρ<1`, `C≥0`, `C<(1−ρ)δ₀`）を満たすと **別途証明できた場合のみ**、全有限Hで `gap_H(β₀)≥(δ₀−C/(1−ρ))/2>0`。有限prefix Mまでを無条件に証明済みのALTで扱い、tail `H>M`だけに幾何増分評価を要求する条件付き経路も形式化した。
+
+[Exact-source CI #43643045960](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43643045960) completed/SUCCESS、Lean **11,486/11,486**、新規8/8宣言標準3公理のみ、sorryAxなし、ALV warning/error 0/0、completion receipt SUCCESS。source／test-merge／統合後 Git tree は `2ba386aef10da531805bb20be2e965a9b0cc5128` で一致。[ALV形式証明記録](docs/proofs/P4-Q2-PZ37ALV_verified_20261115.md)。
+
+**未解決（NO_DATA）：** 原Wilson模型の固定β₀で、幾何減衰を満たす体積間ノルム平方増分上界および係数C,ρはまだ証明されていない。条件付き補題の機械認証を元のβ₀全H一様gap、Hamiltonian/連続体Yang–Mills質量ギャップの無条件認証に昇格させない。統合後の独立push CI #43643707032は別途確認・記録する。
