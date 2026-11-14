@@ -118,7 +118,7 @@ WEAKER, direct Wilson feature-variance comparison, not exact D. -/
 theorem p4Q2PZ37ALQ2_originalFixedNorm_le_of_weakComparison
     {C : Type*} [Fintype C]
     (localP : C → G →L[ℝ] G)
-    (κ η : ℝ) (hκ0 : 0 ≤ κ) (hη0 : 0 ≤ η)
+    (κ η : ℝ) (hη0 : 0 ≤ η)
     (hηκ1 : η * κ ≤ 1)
     (hframe : ∀ x : K,
       κ * ‖(x : G)‖ ^ 2 ≤
@@ -142,7 +142,7 @@ This remains conditional on a model-side weak comparison at the true beta0. -/
 theorem p4Q2PZ37ALQ2_originalFixedGap_ge_of_weakComparison
     {C : Type*} [Fintype C]
     (localP : C → G →L[ℝ] G)
-    (κ η : ℝ) (hκ0 : 0 ≤ κ) (hη0 : 0 ≤ η)
+    (κ η : ℝ) (hη0 : 0 ≤ η)
     (hηκ1 : η * κ ≤ 1)
     (hframe : ∀ x : K,
       κ * ‖(x : G)‖ ^ 2 ≤
@@ -155,7 +155,7 @@ theorem p4Q2PZ37ALQ2_originalFixedGap_ge_of_weakComparison
         H 2 (by norm_num) beta0 p4Q2PZ37ADC_fixedCoupling_pos.le := by
   have hNorm :=
     p4Q2PZ37ALQ2_originalFixedNorm_le_of_weakComparison
-      H localP κ η hκ0 hη0 hηκ1 hframe hComparison
+      H localP κ η hη0 hηκ1 hframe hComparison
   change η * κ ≤ 1 - ‖R‖
   linarith
 
@@ -193,7 +193,7 @@ structure p4Q2PZ37ALQ2_UniformWeakComparisonData
 SHARP all-H physical gap IF the explicit weak comparison package exists. -/
 theorem p4Q2PZ37ALQ2_allH_gap_ge_of_weakComparison
     {C : Type*} [Fintype C]
-    (κ η : ℝ) (hκ0 : 0 ≤ κ) (hη0 : 0 ≤ η)
+    (κ η : ℝ) (hη0 : 0 ≤ η)
     (hηκ1 : η * κ ≤ 1)
     (D : p4Q2PZ37ALQ2_UniformWeakComparisonData C κ η) :
     ∀ H : ℕ,
@@ -202,7 +202,7 @@ theorem p4Q2PZ37ALQ2_allH_gap_ge_of_weakComparison
           H 2 (by norm_num) beta0 p4Q2PZ37ADC_fixedCoupling_pos.le := by
   intro H
   exact p4Q2PZ37ALQ2_originalFixedGap_ge_of_weakComparison
-    H (D.localP H) κ η hκ0 hη0 hηκ1 (D.frame H) (D.comparison H)
+    H (D.localP H) κ η hη0 hηκ1 (D.frame H) (D.comparison H)
 
 /-- The model's OLD exact marginal data forces the physical analysis map to
 annihilate every local residual. This is a concrete separate obstruction
