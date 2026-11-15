@@ -112,7 +112,7 @@ theorem p4Q2PZ37AMA_generic_canonicalScaledCostWitness
   have hcost : (eta + (0 : ℝ)) / (s * p - 0) = t := by
     rw [add_zero, sub_zero, hsp]
     dsimp [eta]
-    field_simp [ne_of_gt hpn] <;> ring
+    field_simp [ne_of_gt hpn]
   exact ⟨s, eta, 0, hs, mul_nonneg hpn.le ht,
     le_refl (0 : ℝ), hden, hraw, hfull, hcost⟩
 
