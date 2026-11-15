@@ -141,6 +141,7 @@ top-orthogonal normalized restriction. It involves no ALJ moment estimate. -/
 theorem p4Q2PZ37ALX_originalFixedRawExcitation_norm_eq :
     p4Q2PZ37ALX_originalFixedRawExcitationNorm H =
       p4Q2PZ37ALX_originalFixedFullNorm H * ‖R‖ := by
+  letI : NormedSpace ℝ K := Submodule.normedSpace K
   change ‖p4Q2PZ37ALX_originalFixedRawExcitationMap H‖ = ‖P‖ * ‖R‖
   exact p4Q2PZ37ALX_generic_opNorm_eq_of_pointwise_norm_scale
     (p4Q2PZ37ALX_originalFixedRawExcitationMap H) R ‖P‖
