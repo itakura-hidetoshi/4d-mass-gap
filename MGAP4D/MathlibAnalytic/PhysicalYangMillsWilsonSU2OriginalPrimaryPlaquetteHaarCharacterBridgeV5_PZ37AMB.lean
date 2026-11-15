@@ -119,7 +119,8 @@ theorem p4Q2PZ37AMB_primaryPlaquetteCharacter_Haar_mgf_le
       Real.exp (beta * chiK (PhiK H 2 b)) ∂muK H 2) ≤
     1 + 44 * beta ^ 2 / 351 := by
   have hcontinuous : Continuous (fun g : GK => Real.exp (beta * chiK g)) := by
-    fun_prop
+    exact Real.continuous_exp.comp
+      (continuous_const.mul p4Q2PZ37AIQ_originalSingleLinkCharacter_continuous)
   have hf : AEStronglyMeasurable (fun g : GK => Real.exp (beta * chiK g)) nuK :=
     hcontinuous.measurable.aestronglyMeasurable
   have htransport :=
