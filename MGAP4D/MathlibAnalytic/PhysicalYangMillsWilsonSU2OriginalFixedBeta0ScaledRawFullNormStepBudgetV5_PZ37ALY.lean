@@ -113,7 +113,9 @@ noncomputable def p4Q2PZ37ALY_originalFixedExcitedNorm (H : ℕ) : ℝ :=
 theorem p4Q2PZ37ALY_originalFixedExcitedNorm_nonneg (H : ℕ) :
     0 ≤ p4Q2PZ37ALY_originalFixedExcitedNorm H := by
   unfold p4Q2PZ37ALY_originalFixedExcitedNorm
-  exact norm_nonneg _
+  exact norm_nonneg
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+      H 2 (by norm_num) beta0 p4Q2PZ37ADC_fixedCoupling_pos.le)
 
 theorem p4Q2PZ37ALY_originalFixedExcitedNorm_le_one (H : ℕ) :
     p4Q2PZ37ALY_originalFixedExcitedNorm H ≤ 1 := by
