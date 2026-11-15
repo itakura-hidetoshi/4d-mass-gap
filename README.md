@@ -5319,3 +5319,16 @@ Original Wilson固定β₀ ALW正本コミット `2760ea8269b03a1e712306fdd8643d
 #### ALX統合後の独立認証（2026-11-15 JST）
 
 元の固定β₀ SU(2) Wilson ALX定理正本 `d9f5c4210a9afcf742ec5da573f83efc8dd7cf57` は、[独立event=push CI #43663546613](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43663546613) **completed/SUCCESS**。Pinned Lean **11,488/11,488**、ALX15/15標準3公理のみ、sorryAxなし、ALX warning/error 0/0。Lean job `132657882564`／独立completion receipt job `132659360957` ともにSUCCESS。実受領書 `[mcp-receipt] event=push exact_sha=d9f5c4210a9afcf742ec5da573f83efc8dd7cf57 source_result=success run=43663546613 attempt=1` を確認。真正Wilson二体積ノルム比の物理的な上界は依然未証明。
+
+
+### ALY・ALZ — 元Wilson固定β₀の体積間スケール共変／線形誤差予算（2026-11-16 JST 正式認証記録）
+
+[ALY定理 #6767](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6767)／[ALZ定理 #6768](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6768) は共にauthoritative `formal/real-hilbert-uniform-coercive-strong-limit` に **MERGED**。ALY canonical `c951f4f669b7f50226303ba2fd7e634270153382`、ALZ／現正本 canonical `4e0f4d894dfab5f4ebc426b946052db825ca6c6d`。元のSU(2) Wilson物理作用素・Haar/AJA・固定結合 `β₀=log(3/2)/64`・公開root・Lean/mathlib pinは**不変**。
+
+ALXの真正な同体積関係 `||A_H||=||P_H||*||R_H||` に、ALYは**独立に未証明**の物理的実数スカラー条件 `a_(H+1)<=s_H*a_H+eta_H`、`p_(H+1)>=s_H*p_H-xi_H>0`（`eta_H,xi_H>=0`）を結び、`t_H=(eta_H+xi_H)/(s_H*p_H-xi_H)` による `r_(H+1)<=r_H+t_H` および `Q_(H+1)<=Q_H+2*t_H+t_H²` を証明した。ALZは線形誤差を先に望遠和にして `r_H<=r_0+sum_{i<H}t_i` を証明。独立に `sum_{i<H}t_i<=T<1-r_0` が得られれば、元β₀の全有限Hで条件付きに `gap_H>=(1-r_0-T)/2>0`。有限prefix／tailと幾何級数型tailも形式化。異なるHのHilbert作用素を不正に減算・同一視しない。
+
+ALY修正前 [CI #43665639036](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43665639036) の `norm_nonneg _` 型推論失敗を、同一の真正Wilson作用素を明示する証明項に修正（元の定理文・物理定義は不変）。最終ALY source `3ecdfd60aa339f8fc463708d8ad24c1298f5c504`、[PR CI #43676401197](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43676401197) completed/SUCCESS **11,489／11,489・15／15標準3公理のみ・sorryAxなし・ALY warning/error 0／0**。ALZ source `2a9a4ec7c047fe3a722b41f00d4d1cac6c2d516f`、[PR CI #43676467795](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43676467795) completed/SUCCESS **11,490／11,490・7／7標準3公理のみ・sorryAxなし・ALZ warning/error 0／0**。ALY単独push #43693028187はALZ後続マージによりCANCELLED（SUCCESSへ読み替えない）。
+
+双方統合した正本HEAD `4e0f4d894dfa...` は、独立[formal push CI #43693765510](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43693765510) **completed/SUCCESS**。Lean **11,490／11,490**、ALY **15／15**＋ALZ **7／7** の公理監査は `propext`／`Classical.choice`／`Quot.sound` のみ、sorryAxなし、両ファイルwarning/error **0／0**。Lean job `132750063860`／独立receipt `132783704522` 成功、実受領書 `[mcp-receipt] event=push exact_sha=4e0f4d894dfab5f4ebc426b946052db825ca6c6d source_result=success run=43693765510 attempt=1`。ALZ source/test-merge/canonical Git tree `1f3227d815b37d39909d0a509c1092ae0f74bc3c` 一致。[ALY正式証明記録](docs/proofs/P4-Q2-PZ37ALY_verified_20261116.md)／[ALZ正式証明記録](docs/proofs/P4-Q2-PZ37ALZ_verified_20261116.md)。
+
+**OPEN／NO_DATA:** 実際のWilson SU(2)模型からの `s_H,eta_H,xi_H` の独立構成・相対誤差和の厳密な小ささは未証明。条件付き形式定理から元β₀の無条件全H一様gap、Hamiltonian gap、連続体4D Yang–Mills質量ギャップを結論しない。次段は真正Wilson kernel/Haar・体積間normalizerの物理的評価を扱う。
