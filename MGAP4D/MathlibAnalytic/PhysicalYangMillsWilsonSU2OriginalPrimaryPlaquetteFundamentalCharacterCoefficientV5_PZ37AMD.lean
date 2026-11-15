@@ -144,7 +144,10 @@ theorem p4Q2PZ37AMD_originalFixedBeta0_primaryPlaquetteCoefficient_certificate
     beta0 * Real.exp (-2 * beta0) / 4 ≤
       p4Q2PZ37AMD_originalPrimaryPlaquetteWilsonCharacterCoefficient H beta0 ∧
     p4Q2PZ37AMD_originalPrimaryPlaquetteWilsonCharacterCoefficient H beta0 ≤ 1 := by
-  refine ⟨by positivity, ?_, ?_⟩
+  refine ⟨?_, ?_, ?_⟩
+  · exact div_pos
+      (mul_pos p4Q2PZ37ADC_fixedCoupling_pos (Real.exp_pos _))
+      (by norm_num : (0 : ℝ) < 4)
   · exact p4Q2PZ37AMD_originalPrimaryPlaquetteCoefficient_ge
       H beta0 p4Q2PZ37ADC_fixedCoupling_pos.le
   · rw [p4Q2PZ37AMD_originalPrimaryPlaquetteCoefficient_eq_originalABN]
