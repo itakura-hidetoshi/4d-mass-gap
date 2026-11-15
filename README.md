@@ -5009,3 +5009,9 @@ ALY修正前 [CI #43665639036](https://github.com/itakura-hidetoshi/4d-mass-gap/
 [AMC #6776](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6776) **MERGED** canonical `95d9290ef8a7053cf36eb91a5b772367cd9a23d8`。実際の向き付きSU(2) Wilson primary plaquette文字と巡回Haar代表の厳密一致を証明。真正境界積Haarにおける `∫exp(-beta*E(Phi_H))=z_original_SU2(beta)` を無条件で全H・全実betaで示し、固定beta0で `0<z_original_SU2(beta0)<=exp(-beta0+(44/351)beta0^2)`。Exact-source CI #43764567401 completed/SUCCESS、Lean **11,460/11,460**、4/4標準3公理のみ、sorryAxなし・変更警告/エラー0/0。source/testmerge/canonical Git tree `f5a24cad79c9472424b7cda5a541f12e5be151d7` 一致。[正式記録](docs/proofs/P4-Q2-PZ37AMC_verified_20261116.md)。この記録の作成時、**別run #43765204840の独立統合後push認証は未完了**であり、旧PR CIで代用しない。
 
 **OPEN/NO_DATA:** これらは真の4辺の局所plaquetteを自由積Haar参照法で評価した結果で、相互作用したWilson Gibbs測度のplaquette同士の独立性／connected clusterの総和可能性や、Gauss-law/Haar互換の異体積Hilbert写像を認証するものではない。元beta0全H一様transfer gap、Hamiltonian gap、連続体4D Yang–Mills質量ギャップは未証明。
+
+
+
+#### AMC統合後の独立CI認証（2026-11-16 JST）
+
+旧「pending」の観測記録はその時点の状態として保持する。AMC実正本 `95d9290ef8a7053cf36eb91a5b772367cd9a23d8` は別途[event=push CI #43765204840](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43765204840) **completed/SUCCESS**。Lean依存閉包 **11,460/11,460**、AMC公理監査4/4標準 `propext`／`Classical.choice`／`Quot.sound` のみ、sorryAx・対象warning/error 0/0、Lean job `132968633031` と独立completion receipt job `132969998406` 共にSUCCESS。実受領書 `event=push exact_sha=95d9290ef8a7053cf36eb91a5b772367cd9a23d8 source_result=success run=43765204840 attempt=1`。Source/test-merge/canonical tree `f5a24cad79c9472424b7cda5a541f12e5be151d7` 一致。自由Haar一plaquette計算を相互作用Gibbs系の全H一様gapに昇格しない。
