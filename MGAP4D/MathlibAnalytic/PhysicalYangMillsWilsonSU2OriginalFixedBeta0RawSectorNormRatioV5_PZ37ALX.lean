@@ -79,7 +79,7 @@ theorem p4Q2PZ37ALX_generic_opNorm_eq_of_pointwise_norm_scale
         _ = (‖A‖ / c) * ‖x‖ := by ring
     calc
       c * ‖B‖ ≤ c * (‖A‖ / c) := mul_le_mul_of_nonneg_left hB hc.le
-      _ = ‖A‖ := by field_simp [hc.ne']; ring
+      _ = ‖A‖ := by field_simp [hc.ne']
 
 section GenuinePhysicalVolume
 variable (H : ℕ)
@@ -103,7 +103,7 @@ local notation "R" =>
 real original top-orthogonal excited sector K_H and still valued in G_H.
 No substitution of a different Wilson kernel or model is involved. -/
 noncomputable def p4Q2PZ37ALX_originalFixedRawExcitationMap : K →L[ℝ] G :=
-  P.comp K.subtypeL
+  (P).comp (K).subtypeL
 
 /-- The true full Wilson one-slab normalization at the original beta0. -/
 noncomputable def p4Q2PZ37ALX_originalFixedFullNorm : ℝ := ‖P‖
@@ -126,8 +126,14 @@ theorem p4Q2PZ37ALX_originalFixedRawExcitation_apply_norm
   have hs :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_raw_normalized_norm_scale
       H 2 (by norm_num) beta0 p4Q2PZ37ADC_fixedCoupling_pos.le x
-  change ‖P (x : G)‖ = ‖P‖ * ‖S (x : G)‖
-  exact hs.symm
+  have hRaw :
+      p4Q2PZ37ALX_originalFixedRawExcitationMap H x = P (x : G) := rfl
+  have hR : ‖R x‖ = ‖S (x : G)‖ := rfl
+  calc
+    ‖p4Q2PZ37ALX_originalFixedRawExcitationMap H x‖ =
+        ‖P (x : G)‖ := congrArg norm hRaw
+    _ = ‖P‖ * ‖S (x : G)‖ := hs.symm
+    _ = ‖P‖ * ‖R x‖ := by rw [hR]
 
 /-- An EXACT, unconditional identity between the true original physical
 raw excited operator norm, the genuine full normalizer and the full
