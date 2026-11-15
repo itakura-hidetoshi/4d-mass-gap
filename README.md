@@ -4960,3 +4960,14 @@ ALTは元のβ₀における既証明の各有限Hの平方欠損 δ_H>0 を使
 #### ALW統合後の独立認証（2026-11-15 JST）
 
 Original Wilson固定β₀ ALW正本コミット `2760ea8269b03a1e712306fdd8643de15bcc7137` は[独立event=push CI #43650478333](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43650478333) **completed/SUCCESS**。Pinned Lean **11,487/11,487**、ALW全8/8標準3公理のみ、ALW `sorryAx`なし・warning/error 0/0。Lean job `132617591073` と独立completion receipt job `132618904816` ともにSUCCESS。実受領書は `[mcp-receipt] event=push exact_sha=2760ea8269b03a1e712306fdd8643de15bcc7137 source_result=success run=43650478333 attempt=1`。真正Wilson raw体積段階評価は引き続き未証明。
+
+
+### ALX — 元のSU(2) Wilson物理励起rawノルムと全規格化の厳密比（2026-11-15 JST）
+
+[ALX定理PR #6764](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6764) **MERGED**、authoritative formal定理commit `d9f5c4210a9afcf742ec5da573f83efc8dd7cf57`。元の固定結合 `β₀=log(3/2)/64`、実際のWilson `P_H` と正規化励起制限 `R_H`、Haar/AJA/物理carrier・公開rootは不変。真正なraw制限 `A_H=P_H.comp(K_H.subtypeL): K_H→L[ℝ]G_H` を構成し、各Hで無条件に `‖A_H x‖=‖P_H‖‖R_H x‖`、`‖A_H‖=‖P_H‖‖R_H‖`、`‖A_H‖²=q_H‖P_H‖²` （`q_H=‖R_H‖²`）をLean4形式化。ALWのHaar-moment下界 `F_H≤‖P_H‖` による余裕を取り除いた**正確な物理的作用素ノルム関係**である。
+
+体積間の十分条件 `‖A_(H+1)‖²≤(q_H+b_H)‖P_(H+1)‖²` は依然**独立に未証明**。その条件からのみ `q_(H+1)≤q_H+b_H`、非負の損失 `L_H≤b_H`、条件付きの総予算／幾何減衰gap定理へ接続する。raw/full比の書換え自体は元β₀での全H一様gapの証明ではない（NO_DATA）。
+
+初回から5回目までの失敗CIを保存し、最後に同じ物理的 `K_H` の `Submodule.normedSpace` をジェネリック定理へ直接渡すことでLean4の型クラス障害を解消。Source `5c086f63023aed0bff2bb8f5d2ea1135daeaf3a6`、[Exact-source CI #43663023266](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43663023266) **completed/SUCCESS**、Lean **11,488/11,488**、全15/15標準3公理のみ・新規sorryAxなし・ALX warning/error 0/0・独立receipt SUCCESS。source/test-merge/squash同一tree `26cc3e880dbb4efdd29b0ae25de1e29a7649e236`。[ALX正式証明記録](docs/proofs/P4-Q2-PZ37ALX_verified_20261115.md)。
+
+**NEXT/OPEN:** 真正Wilson模型の`‖A_H‖/‖P_H‖`について、異体積carrierを不当に同一視しない実際の体積間上界と小さい総変動を証明する。元β₀全H一様gap・Hamiltonian/連続体4D Yang–Mills質量ギャップは未証明。統合後独立push CI #43663546613は別途観測する。
