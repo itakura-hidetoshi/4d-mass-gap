@@ -144,6 +144,7 @@ theorem p4Q2PZ37ALX_originalFixedRawExcitation_norm_eq :
   letI : NormedSpace ℝ K := Submodule.normedSpace K
   change ‖p4Q2PZ37ALX_originalFixedRawExcitationMap H‖ = ‖P‖ * ‖R‖
   exact p4Q2PZ37ALX_generic_opNorm_eq_of_pointwise_norm_scale
+    (E := K) (F := G)
     (p4Q2PZ37ALX_originalFixedRawExcitationMap H) R ‖P‖
     (p4Q2PZ37ALX_originalFixedFullNorm_pos H)
     (p4Q2PZ37ALX_originalFixedRawExcitation_apply_norm H)
