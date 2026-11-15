@@ -5056,3 +5056,9 @@ Exact canonical formal source `d9f5c4210a9afcf742ec5da573f83efc8dd7cf57` passed 
 **形式CI:** AMB [source #43763739841](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43763739841) と [独立canonical push #43764326088](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43764326088) は各 completed/SUCCESS、Lean **11,459/11,459**、5/5標準3公理のみ・新規sorryAx/対象warning/error=0/0。初回CI #43763080385の `fun_prop` がオリジナル文字の連続性lemmaを自動発見できない原因と、明示的な連続性合成での修復を[記録](docs/proofs/P4-Q2-PZ37AMB_verified_20261116.md)に保存。AMC [source #43764567401](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43764567401) completed/SUCCESS、Lean **11,460/11,460**、4/4標準3公理のみ・sorryAx/対象warning/error=0/0、[記録](docs/proofs/P4-Q2-PZ37AMC_verified_20261116.md)。**AMC独立canonical push #43765204840は作成時未認証**。同一時点の正本treeはAMB `8dfa25d3c5c554ee27376611fb875ea093d6d275`、AMC `f5a24cad79c9472424b7cda5a541f12e5be151d7`。
 
 **NEXT:** 既存ABNの真正非自明SU(2) temporal character係数と、同じ4辺のplaquette幾何を接続する。リンクを共有する隣接plaquetteの真正なHaar積分、連結cluster展開の局所weight、実Wilson相互作用の体積一様cluster定数をLean4で評価する。さらに実Gauss-law Hilbert carrierとの型付き接続を構成して初めてALY／ALZまたは独立の直接gap基準へ進む。**元beta0の全H一様gap、Hamiltonian・連続体4D質量ギャップはOPEN/NO_DATA**。自由Haarの一plaquette恒等式から相互作用系のfactorizationを推論しない。
+
+
+
+#### PZ37AMC: 独立canonical push完了受領書（2026-11-16 JST）
+
+AMCの初回記録における未完了状態は保持し、後日の独立再観測を追加する。真正formal merge `95d9290ef8a7053cf36eb91a5b772367cd9a23d8` に対する[event=push CI #43765204840](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43765204840) completed/SUCCESS、Lean **11,460/11,460**、新AMC 4/4標準3公理のみ、sorryAx・対象warning/error 0/0。Lean job `132968633031`・completion receipt `132969998406` 共にSUCCESS、`event=push exact_sha=95d9290ef8a7053cf36eb91a5b772367cd9a23d8 source_result=success run=43765204840 attempt=1`。Source/test-merge/canonical tree `f5a24cad79c9472424b7cda5a541f12e5be151d7` 一致。自由Haar一plaquette因子の正値・上界に過ぎず、相互作用 Wilson 連結cluster・全H gap・4d continuum mass gap は依然OPEN。
