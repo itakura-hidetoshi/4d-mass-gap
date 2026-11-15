@@ -55,3 +55,16 @@ Namespace `MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint`; common prefix `p4Q
 ## Next independent physical obstruction
 
 True `SU(2)` Wilson single-plaquette coupling coefficient is now attached to an actual four-edge primary plaquette, but it is still under free Haar. Next independent mathematical target is to control two **distinct** neighboring plaquettes with shared links in the actual interacting Wilson Gibbs/one-slab transfer, prove explicit volume-uniform cluster constants compatible with the Gauss-law Hilbert sector, then connect to genuinely physical ALY/ALZ cross-volume ratios or a direct uniform spectral criterion. The all-H beta0 transfer gap, Hamiltonian gap and continuum 4D Yang–Mills mass gap remain **OPEN/NO_DATA**.
+
+
+## Independent canonical postmerge push certification — 2026-11-16 JST
+
+The historical *in_progress* state above remains recorded as observed then. The independently re-observed [event=push workflow #43774439459](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43774439459) on the **actual integrated canonical formal HEAD `69ed84590a06cf0f6ecfea10abfe0cba6e744a2e`** is now **completed/SUCCESS**. Main changed-Lean job `132997374925`, required `Run changed Lean fast check` step and independent completion receipt job `132999310483` all completed/SUCCESS.
+
+Real pinned Lean dependency closure **11,461/11,461**; all **7/7** original AMD `#print axioms` prints only `propext`, `Classical.choice`, `Quot.sound`, with no `sorryAx`, AMD changed-file warning or error. Exact issued completion receipt:
+
+```text
+[mcp-receipt] event=push exact_sha=69ed84590a06cf0f6ecfea10abfe0cba6e744a2e source_result=success run=43774439459 attempt=1
+```
+
+The merged canonical Git tree `a3e7f2620a830830ec248946278cc3b6c7362ff8` matches exact source and GitHub synthetic test merge. This verifies the actual four-edge free-product-Haar primary-plaquette coefficient and **single-plaquette** connected covariance, not interacting full Wilson multi-plaquette clustering or a transfer/Hamiltonian/continuum mass gap.
