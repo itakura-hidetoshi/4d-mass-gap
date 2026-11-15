@@ -49,3 +49,16 @@ Four matching `#print axioms` commands, with no new assumptions or sorry.
 ## OPEN obstruction
 
 Actual multiple-plaquette connected SU2 character/cluster coefficients with overlapping links, **uniform-in-volume** small constants for the interacting Wilson Gibbs and original fixed-beta0 one-slab transfer norm, Gauss-law-compatible typed cross-volume maps, ALY/ALZ independent summable raw/full budgets, H-uniform transfer gap, Hamiltonian and continuum 4D Yang–Mills mass gap all remain **OPEN/NO_DATA**. Do not promote this one-plaquette identity into any of these unsupported global claims.
+
+
+## Independent exact canonical postmerge certification — 2026-11-16 JST
+
+The pending-state observation above is deliberately preserved. Separately re-observed canonical [event=push workflow #43765204840](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43765204840) on the **actual merge HEAD `95d9290ef8a7053cf36eb91a5b772367cd9a23d8`** is now **completed/SUCCESS**, attempt 1. The main changed-Lean job `132968633031`, actual `Run changed Lean fast check` step and independent exact-HEAD completion receipt job `132969998406` all completed/SUCCESS.
+
+The observed pinned Lean dependency closure is **11,460/11,460**, and all **4/4** exact AMC `#print axioms` output records only `propext`, `Classical.choice`, `Quot.sound`; no new `sorryAx`, AMC warning or error. Full real receipt:
+
+```text
+[mcp-receipt] event=push exact_sha=95d9290ef8a7053cf36eb91a5b772367cd9a23d8 source_result=success run=43765204840 attempt=1
+```
+
+The genuine actual canonical Git tree remains `f5a24cad79c9472424b7cda5a541f12e5be151d7`, matching source and synthetic test merge. Neither the exact one-plaquette Haar reference coefficient nor its formal certification establishes interacting multi-plaquette Gibbs cluster summability, an H-uniform beta0 transfer gap, the Hamiltonian gap, or the 4D continuum mass gap. Those remain **OPEN/NO_DATA**.
