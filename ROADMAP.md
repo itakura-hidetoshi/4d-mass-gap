@@ -5046,3 +5046,19 @@ Exact canonical formal source `d9f5c4210a9afcf742ec5da573f83efc8dd7cf57` passed 
 **Machine-certified:** final [PR CI #43759790656](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43759790656) and independently triggered [canonical event=push CI #43760759944](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43760759944) completed/SUCCESS; 11,491/11,491 pinned Lean, AMA 10/10 standard-three-only axiom audit, no sorryAx or changed AMA warnings/errors. Push source SHA `fbb609791eb0ad93e78b5c266eb34d39b24737da`, receipt job `132956229058` success; source/test-merge/canonical tree `97239e84f3760795ada2a504119806ded20cc9f2`. [Formal proof record](docs/proofs/P4-Q2-PZ37AMA_verified_20261116.md).
 
 **NEXT / physical priority:** (1) genuine original `SU(2)` plaquette character coefficient under true one-link Haar; (2) gauge-Haar compatible correlated cluster control with constants uniform in spatial volume; (3) typed Gauss-law transfer between distinct H Hilbert carriers or direct intrinsic norm estimates; (4) an independent `beta0` raw/full comparison with summably small relative cost, or a *different* directly proved uniform-gap criterion. **OPEN / NO_DATA** until the physical lemmas are actually established. Do not weaken original Wilson SU(2), Haar/AJA, beta0, public roots or pinned Lean/mathlib.
+
+
+
+### PZ37AMB・AMC — 物理plaquetteの真正SU(2) Haar文字とBoltzmann局所係数（2026-11-16 JST）
+
+**定理統合済み:** [AMB #6775](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6775) canonical `1e141c99ba8c8b2f9ffd6203f9dbabb838ad4233`、[AMC #6776](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6776) canonical `95d9290ef8a7053cf36eb91a5b772367cd9a23d8`。元の4辺のprimary spatial SU(2) Wilson plaquetteは、巡回共役holonomyの積Haar pushforwardを用い、真正文字平均0／二次モーメント1/4、および真のWilson Boltzmann一plaquette係数 `∫exp(-beta*E(Phi_H))=z_original_SU2(beta)` を得た。**元beta0を変更せず** `0<z_original_SU2(beta0)<=exp(-beta0+(44/351)beta0^2)` が全有限Hで成立。これは自由Haar下の実局所物理評価であり、全作用素や相互作用分布について新しい未証明仮定を置かない。
+
+**形式CI:** AMB [source #43763739841](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43763739841) と [独立canonical push #43764326088](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43764326088) は各 completed/SUCCESS、Lean **11,459/11,459**、5/5標準3公理のみ・新規sorryAx/対象warning/error=0/0。初回CI #43763080385の `fun_prop` がオリジナル文字の連続性lemmaを自動発見できない原因と、明示的な連続性合成での修復を[記録](docs/proofs/P4-Q2-PZ37AMB_verified_20261116.md)に保存。AMC [source #43764567401](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43764567401) completed/SUCCESS、Lean **11,460/11,460**、4/4標準3公理のみ・sorryAx/対象warning/error=0/0、[記録](docs/proofs/P4-Q2-PZ37AMC_verified_20261116.md)。**AMC独立canonical push #43765204840は作成時未認証**。同一時点の正本treeはAMB `8dfa25d3c5c554ee27376611fb875ea093d6d275`、AMC `f5a24cad79c9472424b7cda5a541f12e5be151d7`。
+
+**NEXT:** 既存ABNの真正非自明SU(2) temporal character係数と、同じ4辺のplaquette幾何を接続する。リンクを共有する隣接plaquetteの真正なHaar積分、連結cluster展開の局所weight、実Wilson相互作用の体積一様cluster定数をLean4で評価する。さらに実Gauss-law Hilbert carrierとの型付き接続を構成して初めてALY／ALZまたは独立の直接gap基準へ進む。**元beta0の全H一様gap、Hamiltonian・連続体4D質量ギャップはOPEN/NO_DATA**。自由Haarの一plaquette恒等式から相互作用系のfactorizationを推論しない。
+
+
+
+#### PZ37AMC: 独立canonical push完了受領書（2026-11-16 JST）
+
+AMCの初回記録における未完了状態は保持し、後日の独立再観測を追加する。真正formal merge `95d9290ef8a7053cf36eb91a5b772367cd9a23d8` に対する[event=push CI #43765204840](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43765204840) completed/SUCCESS、Lean **11,460/11,460**、新AMC 4/4標準3公理のみ、sorryAx・対象warning/error 0/0。Lean job `132968633031`・completion receipt `132969998406` 共にSUCCESS、`event=push exact_sha=95d9290ef8a7053cf36eb91a5b772367cd9a23d8 source_result=success run=43765204840 attempt=1`。Source/test-merge/canonical tree `f5a24cad79c9472424b7cda5a541f12e5be151d7` 一致。自由Haar一plaquette因子の正値・上界に過ぎず、相互作用 Wilson 連結cluster・全H gap・4d continuum mass gap は依然OPEN。
