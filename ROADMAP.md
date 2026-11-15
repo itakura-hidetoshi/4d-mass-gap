@@ -5062,3 +5062,19 @@ Exact canonical formal source `d9f5c4210a9afcf742ec5da573f83efc8dd7cf57` passed 
 #### PZ37AMC: 独立canonical push完了受領書（2026-11-16 JST）
 
 AMCの初回記録における未完了状態は保持し、後日の独立再観測を追加する。真正formal merge `95d9290ef8a7053cf36eb91a5b772367cd9a23d8` に対する[event=push CI #43765204840](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43765204840) completed/SUCCESS、Lean **11,460/11,460**、新AMC 4/4標準3公理のみ、sorryAx・対象warning/error 0/0。Lean job `132968633031`・completion receipt `132969998406` 共にSUCCESS、`event=push exact_sha=95d9290ef8a7053cf36eb91a5b772367cd9a23d8 source_result=success run=43765204840 attempt=1`。Source/test-merge/canonical tree `f5a24cad79c9472424b7cda5a541f12e5be151d7` 一致。自由Haar一plaquette因子の正値・上界に過ぎず、相互作用 Wilson 連結cluster・全H gap・4d continuum mass gap は依然OPEN。
+
+
+
+### PZ37AMD — physical four-edge SU(2) plaquette nontrivial Haar character coefficient (2026-11-16 JST)
+
+[AMD #6779](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6779) **MERGED**, authoritative formal theorem `69ed84590a06cf0f6ecfea10abfe0cba6e744a2e`. Actual primary four-link Wilson-weighted fundamental character integral and mass under the authentic boundary product-Haar law are **exactly** the original ABN SU(2) Haar moment and mass (no synthetic law), hence `r_primary(H,beta)=r_ABN(beta)`. The original ABN positive lower bound transports to every H and the connected **one-plaquette Haar** Wilson character covariance has explicit lower `beta*exp(-2beta)/4`, in particular `0<beta0*exp(-2beta0)/4<=r_primary(H,beta0)<=1`. The original Wilson SU(2) model, beta0, physical Gauss/AJA/transfer operators, Lean/mathlib pins and public roots are untouched.
+
+**Exact source certification:** repaired HEAD `3b71d89e17c56f9a2397d68e0e69a2b513509e46`, [CI #43773899078](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43773899078) completed/SUCCESS, **11,461/11,461** pinned Lean, 7/7 standard-three-only axioms, zero changed AMD warnings/errors and no sorryAx; source/test-merge/canonical Git tree `a3e7f2620a830830ec248946278cc3b6c7362ff8` exact match. Initial source [CI #43773246230](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43773246230) failed on a missing `positivity` side-condition; the concrete fixed-coupling positivity theorem was supplied without weakening the result. [Proof record](docs/proofs/P4-Q2-PZ37AMD_verified_20261116.md). Independent canonical event=push #43774439459 initially pending (no premature success claim).
+
+**NEXT PHYSICAL TARGET:** verify actual neighboring primary plaquettes with shared edges under the *interacting Wilson Gibbs law*, obtain explicit fundamental-character connected cluster weights with constants uniform in physical lattice volume and Gauss-law compatibility, then physically control two-volume raw/full operator norms or prove an independent direct uniform-transfer gap criterion. Existing ABN/AMD local positivity is insufficient. Keep original beta0 all-H gap, Hamiltonian and continuum 4D Yang–Mills mass gap **OPEN/NO_DATA**.
+
+
+
+#### PZ37AMD independent canonical push result (2026-11-16 JST)
+
+Actual authoritative AMD merge `69ed84590a06cf0f6ecfea10abfe0cba6e744a2e` has independent [event=push CI #43774439459](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43774439459) **completed/SUCCESS**. Pinned Lean **11,461/11,461**, new AMD seven/seven public declarations use only the three standard axioms, no new sorryAx or changed AMD warnings/errors; main Lean job `132997374925`, exact-head receipt job `132999310483` SUCCESS. Exact receipt `event=push exact_sha=69ed84590a06cf0f6ecfea10abfe0cba6e744a2e source_result=success run=43774439459 attempt=1`. Same source/test-merge/canonical tree `a3e7f2620a830830ec248946278cc3b6c7362ff8`. The truly interacting Wilson Gibbs multi-plaquette estimate and mass-gap remain OPEN/NO_DATA.
