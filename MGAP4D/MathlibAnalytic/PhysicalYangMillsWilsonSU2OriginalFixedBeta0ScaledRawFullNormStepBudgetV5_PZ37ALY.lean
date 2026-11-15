@@ -74,7 +74,13 @@ theorem p4Q2PZ37ALY_generic_scaledRatio_linearStep
       mul_nonneg (sub_nonneg.mpr hr1) hxi
     nlinarith only [h]
   have hStep : pn * rn ≤ (r + t) * (s * p - xi) := by
-    nlinarith only [hRaw, hCost, hrxi]
+    calc
+      pn * rn ≤ s * (p * r) + eta := hRaw
+      _ ≤ s * (p * r) + (t * (s * p - xi) - xi) := by
+        linarith only [hCost]
+      _ ≤ s * (p * r) + (t * (s * p - xi) - r * xi) := by
+        linarith only [hrxi]
+      _ = (r + t) * (s * p - xi) := by ring
   have hRight :
       (r + t) * (s * p - xi) ≤ (r + t) * pn :=
     mul_le_mul_of_nonneg_left hFull (add_nonneg hr0 ht)
