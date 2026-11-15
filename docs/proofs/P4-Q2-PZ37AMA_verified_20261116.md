@@ -57,3 +57,15 @@ All in `MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint`, prefix `p4Q2PZ37AMA_`
 ## Physical next task and obstruction (OPEN / NO_DATA)
 
 Independent physical original SU(2) Wilson plaquette/character cluster coefficients; Gauss-law/Haar-compatible typed neighboring-volume embeddings; quantitative raw and full two-volume comparison; summably small relative cost, or an independent direct spectral criterion, are unproved. The certified original Haar character moments `E[chi]=0`, `E[chi^2]=1/4`, `|chi|<=1` are legitimate starting data, **not** already a cluster bound. Original beta0 uniform all-finite-volume transfer gap, Hamiltonian mass gap and continuum four-dimensional Yang–Mills mass gap remain **OPEN/NO_DATA**.
+
+## Independent authoritative postmerge CI certification — 2026-11-16 JST
+
+The separately triggered [event=push workflow #43760759944](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43760759944) on **canonical formal HEAD `fbb609791eb0ad93e78b5c266eb34d39b24737da`** completed **SUCCESS**. Changed Lean job `132954813399` and independent completion receipt job `132956229058` both completed/SUCCESS; the actual `Run changed Lean fast check` step completed/SUCCESS.
+
+The full pinned dependency closure built **11,491/11,491**; new AMA 10/10 full-qualified `#print axioms` outputs showed only `propext`, `Classical.choice`, `Quot.sound`. No AMA `sorryAx` or changed-file warnings/errors. The independently published observed receipt is:
+
+```text
+[mcp-receipt] event=push exact_sha=fbb609791eb0ad93e78b5c266eb34d39b24737da source_result=success run=43760759944 attempt=1
+```
+
+This verifies the *actual merged* unchanged tree `97239e84f3760795ada2a504119806ded20cc9f2`; prior PR-source CI was not reused as postmerge evidence. The certification covers the exact stated conditional Lean mathematics, **not** an independent original-Wilson cross-volume physical estimate or continuum Yang–Mills gap.
