@@ -4971,3 +4971,8 @@ Original Wilson固定β₀ ALW正本コミット `2760ea8269b03a1e712306fdd8643d
 初回から5回目までの失敗CIを保存し、最後に同じ物理的 `K_H` の `Submodule.normedSpace` をジェネリック定理へ直接渡すことでLean4の型クラス障害を解消。Source `5c086f63023aed0bff2bb8f5d2ea1135daeaf3a6`、[Exact-source CI #43663023266](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43663023266) **completed/SUCCESS**、Lean **11,488/11,488**、全15/15標準3公理のみ・新規sorryAxなし・ALX warning/error 0/0・独立receipt SUCCESS。source/test-merge/squash同一tree `26cc3e880dbb4efdd29b0ae25de1e29a7649e236`。[ALX正式証明記録](docs/proofs/P4-Q2-PZ37ALX_verified_20261115.md)。
 
 **NEXT/OPEN:** 真正Wilson模型の`‖A_H‖/‖P_H‖`について、異体積carrierを不当に同一視しない実際の体積間上界と小さい総変動を証明する。元β₀全H一様gap・Hamiltonian/連続体4D Yang–Mills質量ギャップは未証明。統合後独立push CI #43663546613は別途観測する。
+
+
+#### ALX統合後の独立認証（2026-11-15 JST）
+
+元の固定β₀ SU(2) Wilson ALX定理正本 `d9f5c4210a9afcf742ec5da573f83efc8dd7cf57` は、[独立event=push CI #43663546613](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43663546613) **completed/SUCCESS**。Pinned Lean **11,488/11,488**、ALX15/15標準3公理のみ、sorryAxなし、ALX warning/error 0/0。Lean job `132657882564`／独立completion receipt job `132659360957` ともにSUCCESS。実受領書 `[mcp-receipt] event=push exact_sha=d9f5c4210a9afcf742ec5da573f83efc8dd7cf57 source_result=success run=43663546613 attempt=1` を確認。真正Wilson二体積ノルム比の物理的な上界は依然未証明。
