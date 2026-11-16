@@ -49,3 +49,15 @@ One new source: `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFixedB
 This establishes a finite-volume genuine Gibbs covariance **upper** bound on the plaquette ℓ² operator. It does NOT identify this kernel with physical Euclidean one-slab time transfer, prove OS transfer spectral gap, Gauss-law Hamiltonian spectral gap, all-distance clustering, varying-beta weak-coupling continuum reconstruction or the four-dimensional Yang–Mills mass gap.
 
 The distinct currently unresolved physical gluing seam is witnessed in `PhysicalYangMillsWilsonSU2CompletedBoundaryTransferOneSlabIntertwining.lean`, where `CompletedBoundaryTransferOneSlabPairIntertwiningAt` is a structural physical-boundary/one-slab operator compatibility condition that must be established on the original gauge-invariant carrier, not inferred from a static covariance norm. KuuOS CodeAI or independent Lean-MCP execution is not claimed; this record certifies actual GitHub Actions Lean only.
+
+## Independent canonical postmerge push proof — later exact-HEAD reobservation
+
+The earlier in-progress state of canonical push CI #43848369472 is preserved as historical observation, not overwritten. GitHub MCP independently reobserved the **actual merged Formal theorem HEAD** `bcd4b548606b51d5e4336f2f06e370431ef98426`, run #43848369472 **event=push workflow completed/SUCCESS**. Main changed-Lean job `133234255856` and required `Run changed Lean fast check` step both **completed/SUCCESS**. The exact pinned dependency-aware Lean build was **11,514/11,514**, all three AMK declarations' `#print axioms` output contained only `propext`, `Classical.choice`, and `Quot.sound`; no `sorryAx` and changed AMK warnings/errors **0/0**.
+
+Distinct independent exact-head receipt job `133236792790` completed/SUCCESS, and actual logs state:
+
+```text
+[mcp-receipt] event=push exact_sha=bcd4b548606b51d5e4336f2f06e370431ef98426 source_result=success run=43848369472 attempt=1
+```
+
+Source head `9242090554ab8ccddddea9a9760e85fc9e45d4de`, synthetic test-merge `8e9bcfc34bb208ac873f55436ed1b4f07665056a` and canonical theorem merge `bcd4b548606b51d5e4336f2f06e370431ef98426` have the identical Git tree `20b5dc8aeb2209bf60f12abbe9de0b2d21c9e776`. This authenticates AMK only in the stated finite-volume original-Gibbs ℓ² scope. The physical OS and four-dimensional continuum gaps above remain OPEN.
