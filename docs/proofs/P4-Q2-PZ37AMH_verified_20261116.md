@@ -65,3 +65,14 @@ Namespace `MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint`, all with prefix `p
 3. Alternative possible route: genuine Dobrushin Green influence kernel row/column summability + finite link-to-plaquette incidence (at most six) + Gibbs covariance Green comparison. Each interface must be checked on the **same actual compact SU2 Gibbs system**. This is an unverified research plan, not a new AMH theorem.
 4. The original H=0 (side length two), adjacent shared-link positive separation, Gauss-law OS physical one-slab transfer Hilbert identification, all-H physical transfer/Hamiltonian gap and continuum 4D Yang–Mills mass gap remain **OPEN/NO_DATA**.
 5. The separate KuuOS CodeAI/standalone Lean MCP execution receipt is **NO_DATA**. Proof authority here is the exact GitHub Actions machine run, not an asserted CodeAI action.
+
+
+## Postmerge canonical independent push receipt — observed after the pending entry
+
+**Certified:** The actual Formal merge commit `851a1f3f5da209bd5c8238af00cd533dd472be6b` passed [independent event=push CI #43798561047](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43798561047), workflow **completed/SUCCESS**. Main Lean job `133072968316`, required `Run changed Lean fast check` step **completed/SUCCESS**, pinned dependency build **11,511/11,511** with newly built AMH leaf. All six AMH `#print axioms` again reported only `propext`, `Classical.choice`, `Quot.sound`, with no sorryAx and **0 direct AMH warnings/errors**. The distinct independent receipt job `133075116685` **completed/SUCCESS** and issued:
+
+```text
+[mcp-receipt] event=push exact_sha=851a1f3f5da209bd5c8238af00cd533dd472be6b source_result=success run=43798561047 attempt=1
+```
+
+The source `7db514b...`, GitHub PR test-merge `3d15cd6...` and canonical merged commit `851a1f3...` share identical Git tree `30005de0f63818558f6e86fa49b81e7392ee8d69`. This later observation **resolves the earlier pending canonical push status** without altering the historical entry.
