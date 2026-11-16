@@ -5145,3 +5145,12 @@ Exact source `7db514b877bf57635a8bcb0d38d9727823c53b52` [PR CI #43797665387](htt
 ```
 
 The source `7db514b...`, GitHub PR test-merge `3d15cd6...` and canonical merged commit `851a1f3...` share identical Git tree `30005de0f63818558f6e86fa49b81e7392ee8d69`. This later observation **resolves the earlier pending canonical push status** without altering the historical entry.
+
+
+#### PZ37AMI original SU2 Wilson plaquette incidence and Green L¹ — 2026-11-16 JST
+
+[Lean theorem PR #6794](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6794) **MERGED** as original Formal two-parent theorem SHA `8194a5d107cbb4e2477457c9b6115da851c49374`. The **actual four-edge physical positive-link support** matches canonical touching incidence; at most six oriented coordinate plaquettes meet any physical link in four dimensions, and the original Wilson SU2 fundamental-character family obeys `sum_p variation_e(chi_p) <= 12` for every physical link e. For every H>0, every original physical plaquette p and finite random-scan cutoff M, its genuine compact-Haar Wilson fixed-beta0 Dobrushin Green-resolvent link mass obeys **`sum_e w[p,M](e) <= 8/(1-rho0)`**, with `rho0=18*(exp(4beta0)-1)/(exp(4beta0)+1)<1`, `beta0=log(3/2)/64`.
+
+Final exact source `c790585f058014b6a1f6402c1af0373865eaef5a`, [CI #43825859327](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43825859327) **completed/SUCCESS**, pinned Lean **11,512/11,512**, AMI six/six standard-three-only axiom prints, no sorryAx, direct warning/error 0/0, independent exact-head receipt success. Actual source/test-merge/canonical Git tree `a5ea3dad73c570aead556492f1fc60202eff1888` exact match. Two earlier FAILED source candidates were repaired by fixing post-simp redundant tactic, the n>=3 side-length arithmetic and implicit compact system/link parameter inference; all theorem strengths retained. Canonical integrated [event=push CI #43826552529](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43826552529) was pending at this observation and needs separate verification. [Full AMI proof/evidence](docs/proofs/P4-Q2-PZ37AMI_verified_20261116.md).
+
+**OPEN next:** Sum the *actual interacting Gibbs connected plaquette covariances* by a finite-family random-scan covariance telescope plus finite-sum limit; the prospective `96/(1-rho0)` bound is **not yet a proven AMI theorem**. No all-H Gauss-law OS transfer gap, Hamiltonian gap, continuum scaling, or 4D Yang–Mills mass gap is obtained. 
