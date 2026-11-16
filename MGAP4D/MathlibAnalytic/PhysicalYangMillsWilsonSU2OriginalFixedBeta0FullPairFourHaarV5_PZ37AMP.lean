@@ -209,7 +209,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairBothOneStep_inner_eq_fou
     _ = _ := by
       rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_inner_externalTensor_eq_fourHaar
         H N hN beta hbeta F G z]
-      rfl
 
 private instance p4Q2PZ37AMP_su2Nontrivial :
     Nontrivial (Matrix.specialUnitaryGroup (Fin 2) ℂ) := by
