@@ -5056,3 +5056,8 @@ Initial [CI #43782230120](https://github.com/itakura-hidetoshi/4d-mass-gap/actio
 
 **OPEN:** link-local Dobrushin control is NOT joint Gibbs connected-plaquette covariance decay. Construct an actual `SU(2)` conditional-to-covariance comparison and physical link-support Green-tail bound, then prove H-uniform summability and Gauss-law/physical transfer compatibility. H=0 (periodic side two) is outside the existing n>=3 uniqueness hypothesis and remains explicit. No fixed-beta0 transfer, Hamiltonian or continuum 4D mass gap claimed.
 
+
+
+#### PZ37AMF independent canonical push result — 2026-11-16 JST
+
+Independent [event=push CI #43783428357](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43783428357) on **actual formal theorem merge `73b1c310f34f9158957dc942988cc30613215e3c`** completed/SUCCESS, distinct from source CI. Pinned Lean **11,467/11,467**, eight/eight AMF declarations only the three standard axioms, no sorryAx, AMF warning/error 0/0; main Lean job `133025628213`, required Lean step, independent receipt job `133027681892` completed/SUCCESS. Exact receipt `event=push exact_sha=73b1c310f34f9158957dc942988cc30613215e3c source_result=success run=43783428357 attempt=1`, canonical Git tree `ac2ed3e62e3e82d021b3db620802b2b873116c01`. Physical joint-plaquette Gibbs covariance decay, all-H beta0 transfer/Hamiltonian/continuum mass gap still OPEN.
