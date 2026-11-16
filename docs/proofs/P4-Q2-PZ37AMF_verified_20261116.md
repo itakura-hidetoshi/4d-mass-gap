@@ -60,3 +60,16 @@ Namespace `MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint`, prefix `p4Q2PZ37AM
 ## Next mathematical obstruction (AMG)
 
 Derive the missing conditional-law-to-joint-observable **Gibbs covariance comparison** from genuine Wilson conditional distributions and their Dobrushin matrix. Need to preserve the true shared-link dependencies for adjacent plaquettes and then prove explicit decaying link-influence Green-tail estimates for separated physical plaquette supports. Prove volume-independent cluster summability and Gauss-law/physical transfer compatibility before any gap claim. Nontrivial `Cov_Gibbs(chi_p,chi_q)` decay, all-H beta0 transfer gap, Hamiltonian gap and continuum four-dimensional Yang-Mills mass gap remain OPEN/NO_DATA.
+
+
+## Independent canonical postmerge push certification — 2026-11-16 JST
+
+The earlier *in_progress* observation for [actual canonical event=push CI #43783428357](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43783428357) remains in the record as historical. Independent GitHub MCP reobservation now verifies the **actual two-parent AMF theorem canonical HEAD `73b1c310f34f9158957dc942988cc30613215e3c`** with **workflow completed/SUCCESS**, main changed-Lean job `133025628213`, required `Run changed Lean fast check` step, and independent receipt job `133027681892` all **completed/SUCCESS**. Pinned Lean full dependency closure **11,467/11,467 SUCCESS**, eight AMF `#print axioms` only `propext` / `Classical.choice` / `Quot.sound`, no `sorryAx`, AMF changed-file warning/error **0/0**. Source/test-merge/canonical Git tree `ac2ed3e62e3e82d021b3db620802b2b873116c01` is exact.
+
+Actual independent receipt:
+
+```text
+event=push exact_sha=73b1c310f34f9158957dc942988cc30613215e3c source_result=success run=43783428357 attempt=1
+```
+
+This verifies the original SU2 Wilson local fixed-beta0 Dobrushin influence theorem at the integrated HEAD, NOT a new Gibbs plaquette connected-covariance decay theorem, transfer gap or continuum Yang-Mills mass gap.
