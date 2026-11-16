@@ -58,3 +58,14 @@ event=pull_request exact_sha=7afe4a94d897b48bd6947d588018c65117d5dec0 source_res
 - It does **not** by itself prove physical four-dimensional Euclidean-distance exponential decay from AMH's one-coordinate statement, or a polymer/continuum limit at changing beta.
 - Original H=0 degenerate two-site even periodic side length remains outside the strict n>=3 uniqueness used here.
 - KuuOS CodeAI and standalone Lean MCP execution receipts remain **NO_DATA**; the authoritative machine proof evidence in this stage is exact-source and canonical GitHub Actions Lean, not an asserted unobserved external agent.
+
+
+## Independent canonical postmerge push proof — later exact-HEAD reobservation
+
+The historical `in_progress` status for actual original Formal AMJ theorem merge `eac442f17d84c6856a3efa1ec8c475aaf1d3b207` above is retained as observed, not overwritten. GitHub MCP independently reobserved [event=push CI #43843337150](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43843337150) at that **same exact canonical theorem HEAD**, **workflow completed/SUCCESS**. Main changed-Lean job `133217215316` and required `Run changed Lean fast check` step both completed/SUCCESS; pinned dependency-aware Lean build **11,513/11,513**, both new AMJ theorem `#print axioms` results only `propext`, `Classical.choice`, `Quot.sound`, no `sorryAx`, changed AMJ warnings/errors **0/0**. The distinct independent receipt job `133220693947` was completed/SUCCESS and emitted:
+
+```text
+[mcp-receipt] event=push exact_sha=eac442f17d84c6856a3efa1ec8c475aaf1d3b207 source_result=success run=43843337150 attempt=1
+```
+
+The source `7afe4a94d897b48bd6947d588018c65117d5dec0`, GitHub synthetic test-merge `8f56a746dad227373cbd2fa4601accababe6aa0b` and actual canonical integrated Formal theorem commit `eac442f17d84c6856a3efa1ec8c475aaf1d3b207` are exactly tree-equal at `545a52f83a1b286365c47bee6a042a911e458745`. This certifies original fixed-beta0 finite-volume SU2 *full interacting Gibbs connected covariance all-plaquette L1* theorem only, not an OS/Hamiltonian/continuum mass-gap conclusion.
