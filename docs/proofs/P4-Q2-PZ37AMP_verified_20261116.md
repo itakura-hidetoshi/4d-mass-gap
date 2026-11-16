@@ -56,3 +56,19 @@ The original completed boundary-OS pair weak intertwining predicate
 still demands, for all `f,g,z`, equality between the completed boundary time-`2` coefficient and the genuine both-endpoint one-slab pair coefficient. AMP has proved **the true Wilson side** of that equality as four Haar integrals, not the OS side. Showing those four-Haar coefficients actually equal the separately defined OS operator requires finite model-facing Markov/Fubini + correct physical time-scaling + source observational range/descent compatibility, none of which is discharged merely by having the right-hand-side formula.
 
 One should not replace this missing identity with AMN's finite-order periodic deterministic shift or postulate its vanishing defect. True Haar one-slab physical transfer spectral bounds uniform in H and the continuum four-dimensional Yang–Mills mass gap remain **unproved / OPEN / NO_DATA**.
+
+## Independent canonical theorem push — later exact-HEAD certification
+
+The original `in_progress` observation for canonical run #43871520062 above is retained as a historical observation, **not overwritten**. GitHub MCP subsequently reobserved [event=push CI #43871520062](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43871520062), actual canonical two-parent theorem merge `head_sha=d6ab7a593c70e5db73b6bfd19627a32d407e7cb1`, **workflow completed/SUCCESS**. Main changed-Lean job `133313659620` and its required `Run changed Lean fast check` step both **completed/SUCCESS**.
+
+The independent exact canonical push `lean-fast.log` from GitHub Actions artifact `14228601480` verifies pinned Lean dependency-closed build **11,491/11,491**, all three AMP `#print axioms` outputs **3/3** each only `propext`, `Classical.choice`, `Quot.sound`, no `sorryAx`, and AMP directly changed-file warning/error **0/0**.
+
+The separate independent exact-HEAD completion receipt job `133316902074` also **completed/SUCCESS** and actually emitted:
+
+```text
+[mcp-receipt] event=push exact_sha=d6ab7a593c70e5db73b6bfd19627a32d407e7cb1 source_result=success run=43871520062 attempt=1
+```
+
+The exact repaired source `7c3c64cd8c1eca22bc260538cbf74ff5478853fc`, synthetic GitHub test-merge `ec46cac7974ee8b781edf5dbf3c79c100a01d4aa`, and actual canonical Formal theorem merge `d6ab7a593c70e5db73b6bfd19627a32d407e7cb1` all share the exact Git tree `b92a3708ab86b1d25fad8f24dac084a28e9e8769`.
+
+**Scope stays fixed:** the true finite full physical Wilson pair on decomposable Gauss-law physical input and arbitrary pair-Haar `L²` test has an exact four-Haar coefficient. This is the *physical one-slab right-hand side* needed for OS gluing, **not a proof of the independent completed OS boundary weak-intertwining predicate**, all-volume gap or continuum 4D Yang–Mills mass gap.
