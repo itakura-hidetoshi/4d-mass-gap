@@ -37,6 +37,9 @@ set_option maxHeartbeats 2300000
 local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
 local notation "beta0" => GroundStatePosteriorJoint.p4Q2PZ37ADC_fixedCoupling
 
+local instance p4Q2PZ37AMF_SU2_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+
 local instance p4Q2PZ37AMF_neZero (H : ℕ) :
     NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
   change 2 * (H + 1) ≠ 0
@@ -160,7 +163,9 @@ theorem p4Q2PZ37AMF_originalFixedBeta0PhysicalInfluence_l2_nonexpansive
     dsimp [alpha, periodicHypercubicSpecialUnitaryDobrushinCoefficient,
       periodicHypercubicSpecialUnitaryDobrushinEta]
     exact mul_nonneg (by norm_num)
-      (compactHaarOscillationInfluence_nonneg (by positivity))
+      (compactHaarOscillationInfluence_nonneg
+        (mul_nonneg p4Q2PZ37ADC_fixedCoupling_pos.le
+          (by norm_num : (0 : ℝ) ≤ 4)))
   have hAlphaLt : alpha < 1 := by
     exact p4Q2PZ37AMF_originalFixedBeta0_DobrushinCoefficient_lt_one
   have hAlphaSq : alpha ^ 2 ≤ 1 := by nlinarith only [hAlpha0, hAlphaLt]
