@@ -49,3 +49,17 @@ These are not conditional physical OS gluing statements: the two theorems assert
 AMM already exposed an exact residual between the separately specified completed OS boundary time-one action and the genuinely realizable deterministic integer lattice-step pullback. AMN showed that a strict norm decay for that *periodic deterministic shift* would collapse nontrivial physical OS excitations. AMO has now put the *actual distinct Wilson positive Haar one-slab transfer* on the other side as a complete, concrete, three-Haar-integral coefficient for an arbitrary pair-Haar test.
 
 The next model construction must use true finite Wilson Markov/Fubini conditional integration, on a certified class of positive-time physical observables, to identify the original **Haar-averaging one-slab transfer** with a correctly time-calibrated OS boundary action, and then independently prove density/range compatibility for the completed physical OS carrier. Neither the original `CommonSemigroupOneStepCoherentAt` deterministic periodic-shift identification nor a fake assumed zero residual can be substituted. Physical lattice spacing and scale-uniformity are separate constraints; original continuum 4D SU2 Yang–Mills mass gap remains **OPEN / NO_DATA**.
+
+## Independent canonical push verification — later exact-HEAD observation
+
+The preceding historical status of independent canonical event=push CI #43866727941 remains as originally observed; it is not overwritten. GitHub MCP subsequently observed that [run #43866727941](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43866727941), **event=push**, actual merged Formal theorem `head_sha=2a8678ce835bb6bccdfeee7be107223b1bba253f`, **workflow completed/SUCCESS**. Required changed-Lean job `133297064763` and `Run changed Lean fast check` step both **completed/SUCCESS**. Actual independent push-head Lean diagnostic `lean-fast.log` from GitHub Actions artifact ID `14226127795` confirms pinned dependency-checked build **11,490/11,490**, 2/2 AMO new theorem `#print axioms` prints only `propext`, `Classical.choice`, `Quot.sound`, no `sorryAx`, and AMO directly changed-file warning/error **0/0**.
+
+Independent completion receipt job `133300621389` separately **completed/SUCCESS**, actual line:
+
+```text
+[mcp-receipt] event=push exact_sha=2a8678ce835bb6bccdfeee7be107223b1bba253f source_result=success run=43866727941 attempt=1
+```
+
+Source `aadb8407872722c31c1f8df9173198bf696be471`, test-merge `c02cea5f19f6b00396b6fb112e485a6527d7872c`, and canonical theorem integration `2a8678ce835bb6bccdfeee7be107223b1bba253f` share the same verified Git tree `d2bf4eed0bc10a1a9b282e5f0e79a33afbcc6e47`.
+
+**Claim boundaries retained:** genuine Wilson finite physical one-slab triple-Haar coefficient certified; actual OS boundary identification, uniform volume scaling, Hamiltonian and continuum 4D Yang–Mills mass gap remain unproved.
