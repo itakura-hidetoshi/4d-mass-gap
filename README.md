@@ -5416,3 +5416,25 @@ Initial source `a3c9597...` [CI #43793544193](https://github.com/itakura-hidetos
 #### PZ37AMG independently certified canonical theorem push — 2026-11-16 JST
 
 Independently reobserved actual two-parent AMG Formal theorem merge `6b48eabefc06aeeb7e508745167d598693ab0135` under [event=push CI #43795226737](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43795226737): completed/SUCCESS, pinned Lean **11,510/11,510**, AMG 12/12 standard-three-only axiom audit, no sorryAx, AMG warning/error 0/0; Lean job `133062412337`, required Lean step and independent receipt job `133064594630` all SUCCESS. Actual receipt `event=push exact_sha=6b48eabefc06aeeb7e508745167d598693ab0135 source_result=success run=43795226737 attempt=1`. Source/test-merge/canonical Git tree `a91ceb217a4028324c01efbc1d49ee49764f66d1`. Geometric Gibbs covariance remains conditional on physically separated actual plaquette supports and is NOT an OS transfer/Hamiltonian/continuum mass-gap proof.
+
+
+#### PZ37AMH physical periodic-time separation → actual SU2 Wilson Gibbs covariance — 2026-11-16 JST
+
+[Theorem PR #6791](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6791) MERGED as Formal two-parent SHA `851a1f3f5da209bd5c8238af00cd533dd472be6b`. From actual four-edge plaquette boundaries, Lean certifies source-time cyclic distance `d_t(p,q) <= 2+d_t(e,f)`, and the typed D-step Wilson-local support-separation condition whenever `D+2<=d_t(p,q)`. Connecting to original exact beta0 full interacting SU2 Wilson Gibbs covariance (AMG) yields, for H>0, **unconditionally for every two physical plaquettes**, `|Cov_Gibbs(chi_p,chi_q)| <= 64*rho0^(d_t(p,q)-2)/(1-rho0)`; natural exponent subtraction is truncated at zero, preserving shared-link obstruction. This is a physical **single time-coordinate** separation bound, NOT full four-dimensional distance, total covariance shell summability or Gauss-law physical transfer/Hamiltonian/continuum mass gap.
+
+Exact source `7db514b877bf57635a8bcb0d38d9727823c53b52` [PR CI #43797665387](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43797665387) **completed/SUCCESS**, pinned Lean **11,511/11,511**, AMH **6/6** standard-three-only axiom audits, no sorryAx, changed-file warnings/errors 0/0, required Lean step and independent receipt SUCCESS. Source/testmerge/actual canonical tree `30005de0f63818558f6e86fa49b81e7392ee8d69`. Formal [canonical push CI #43798561047](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43798561047) was still in progress at this point and must be separately audited before promotion. [Full AMH proof record](docs/proofs/P4-Q2-PZ37AMH_verified_20261116.md). Next: polynomial 4D physical shell count or actual Dobrushin Green-kernel incidence-sum bridge, and separately physical Gauss-law OS transfer; no final Yang–Mills mass gap.
+
+
+#### PZ37AMH independently certified canonical event=push — 2026-11-16 JST
+
+
+
+## Postmerge canonical independent push receipt — observed after the pending entry
+
+**Certified:** The actual Formal merge commit `851a1f3f5da209bd5c8238af00cd533dd472be6b` passed [independent event=push CI #43798561047](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43798561047), workflow **completed/SUCCESS**. Main Lean job `133072968316`, required `Run changed Lean fast check` step **completed/SUCCESS**, pinned dependency build **11,511/11,511** with newly built AMH leaf. All six AMH `#print axioms` again reported only `propext`, `Classical.choice`, `Quot.sound`, with no sorryAx and **0 direct AMH warnings/errors**. The distinct independent receipt job `133075116685` **completed/SUCCESS** and issued:
+
+```text
+[mcp-receipt] event=push exact_sha=851a1f3f5da209bd5c8238af00cd533dd472be6b source_result=success run=43798561047 attempt=1
+```
+
+The source `7db514b...`, GitHub PR test-merge `3d15cd6...` and canonical merged commit `851a1f3...` share identical Git tree `30005de0f63818558f6e86fa49b81e7392ee8d69`. This later observation **resolves the earlier pending canonical push status** without altering the historical entry.
