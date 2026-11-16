@@ -5118,3 +5118,8 @@ Initial source [CI #43793544193](https://github.com/itakura-hidetoshi/4d-mass-ga
 
 **NEXT — AMH:** link-support separation from actual spatial lattice distance, uniform finite-volume shell sums, and compare fixed beta0 domain against true continuum coupling trajectory. Independently check Gauss-law Hilbert and one-slab physical transfer mapping; no mass gap follows yet. No H=0, all-H physical transfer/Hamiltonian, or continuum 4D Yang–Mills mass-gap theorem is claimed.
 
+
+
+#### PZ37AMG canonical push independently certified — 2026-11-16 JST
+
+Actual authoritative integrated AMG theorem commit `6b48eabefc06aeeb7e508745167d598693ab0135` passed independent [event=push CI #43795226737](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43795226737) **completed/SUCCESS**: pinned Lean **11,510/11,510**, all 12 AMG new declarations only standard `propext` / `Classical.choice` / `Quot.sound`, no sorryAx and direct AMG warning/error 0/0; main Lean job `133062412337`, required Lean step, independent exact-head receipt `133064594630` SUCCESS. Receipt `event=push exact_sha=6b48eabefc06aeeb7e508745167d598693ab0135 source_result=success run=43795226737 attempt=1`. Identical source/testmerge/canonical tree `a91ceb217a4028324c01efbc1d49ee49764f66d1`. Only finite Gibbs physical-link-supported clustering; AMH shell summability / physical Gauss-law transfer and continuum are OPEN.
