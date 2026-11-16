@@ -5103,3 +5103,8 @@ Initial source `5233ffa9a51d154aeaaceb7718e896be3dff9229` [CI #43782230120](http
 
 **NEXT — AMG:** prove an actual conditional-to-joint-Gibbs covariance comparison / resolvent Green-tail estimate for separated true SU2 plaquette support, obtain explicit H-uniform cluster summability, then independently bridge to genuine physical Gauss-law transfer. AMF's local influence strictness alone implies **neither** nontrivial Gibbs cluster decay nor beta0 all-H transfer gap, Hamiltonian gap or continuum mass gap; `H=0` excluded from the current shared-plaquette uniqueness lemma.
 
+
+
+#### PZ37AMF canonical push independently certified — 2026-11-16 JST
+
+Reobserved actual two-parent theorem merge HEAD `73b1c310f34f9158957dc942988cc30613215e3c` under separate [event=push #43783428357](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43783428357): workflow/Lean job `133025628213`/required step/receipt job `133027681892` **completed/SUCCESS**. Pinned Lean **11,467/11,467**, AMF 8/8 standard-three axioms only, no sorryAx, warning/error 0/0, identical source/test-merge/canonical Git tree `ac2ed3e62e3e82d021b3db620802b2b873116c01`. Receipt `event=push exact_sha=73b1c310f34f9158957dc942988cc30613215e3c source_result=success run=43783428357 attempt=1`. Keep conditional-link contraction and unproved joint Gibbs clustering distinct.
