@@ -54,3 +54,19 @@ Consequently any actually established nonzero OS physical excitation at that cut
 AMJ/AMK/AML proved finite static genuine interacting SU2 Wilson Gibbs plaquette covariance decay/Schur L2/Gram PSD. AMM proved exact finite Wilson/OS **discrepancy** identity and sharp HS norm bound with no zero-defect assumption. AMN rejects an inappropriate deterministic periodic shift as a stand-in for the strictly decaying physical transfer on nonzero excitations, **conditional** on the explicitly certified nontrivial witness.
 
 Next physical step: construct the **genuine** positive Haar-averaging one-slab transfer from the verified Markov/Fubini finite Wilson kernel and prove a *type-compatible* boundary/OS transfer intertwining, with correct physical lattice-spacing time calibration, rather than importing a strict gap for finite-order configuration shifts. The original Yang–Mills spectral-uniformity and 4D continuum mass gap remain **unproved**. No theorem asserts that a genuine Wilson one-slab transfer must have zero mass gap; AMN does not imply this.
+
+## Independent canonical theorem push — later observation, separately certified
+
+The previous `in_progress` historical observation for run #43862334860 is **retained above**. GitHub MCP subsequently verified the canonical two-parent Formal theorem merge `b4201a67949c1ce0ca9aa13ea6da62438bbc69e2` with [event=push run #43862334860](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43862334860) **workflow completed/SUCCESS**. Changed Lean job `133282057314` and its required `Run changed Lean fast check` step both **completed/SUCCESS**.
+
+Actual integrated exact-HEAD Lean log artifact from GitHub Actions `lean-fast-check-log` (artifact ID `14224781914`, verified against canonical push commit) confirms pinned dependency build **8,900/8,900**, all five AMN `#print axioms` outputs only `propext`, `Classical.choice`, `Quot.sound`, no `sorryAx`, and AMN direct warning/error **0/0**.
+
+The distinct independent exact-HEAD receipt job `133286619233` completed/SUCCESS and printed:
+
+```text
+[mcp-receipt] event=push exact_sha=b4201a67949c1ce0ca9aa13ea6da62438bbc69e2 source_result=success run=43862334860 attempt=1
+```
+
+The original exact source `cc6e7098eaa70842923da2d917aad68a88af7dae`, synthetic test merge `27275f413b9dd664bdfca11a39d195bcee44fcce`, and certified actual canonical theorem two-parent merge share precisely Git tree `668866f058cbfcb1470568f372200a460c10f361`.
+
+This independent integration result **does not** strengthen any conditional premise of the SU2 range-witness theorem, nor does it transform this *finite deterministic periodic translation* no-go into a no-go for the true Haar one-slab transfer or the four-dimensional continuum Yang–Mills mass gap.
