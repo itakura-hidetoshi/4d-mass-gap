@@ -29,7 +29,7 @@ not assert existence of this witness without those hypotheses.
 
 namespace MGAP4D.MathlibAnalytic
 
-open MeasureTheory
+open MeasureTheory Set Topology Function
 open scoped InnerProductSpace InnerProduct
 noncomputable section
 set_option autoImplicit false
@@ -86,7 +86,8 @@ theorem p4Q2PZ37AMN_everyVacuumCenteredCarrier_norm_eq_zero
   let L := PeriodicHypercubicEvenSideLength (halfExtent n)
   let q := physicalYangMillsExact3320OneStepNormFactor S n
   have hL : 0 < L := by
-    simp [L, PeriodicHypercubicEvenSideLength]
+    dsimp [L, PeriodicHypercubicEvenSideLength]
+    omega
   have hq0 : 0 ≤ q :=
     (physicalYangMillsExact3320OneStepNormFactor_pos S n).le
   have hq1 : q < 1 :=
