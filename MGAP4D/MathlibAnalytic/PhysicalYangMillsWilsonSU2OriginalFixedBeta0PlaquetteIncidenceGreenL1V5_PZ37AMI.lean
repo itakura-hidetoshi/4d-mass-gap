@@ -204,7 +204,7 @@ theorem p4Q2PZ37AMI_originalPhysicalPlaquetteRandomScanGreenL1_le_eight
       ∀ e : PeriodicHypercubicEvenEdge H, e ∉ T → P.variation e = 0 := by
     intro e he
     exact continuous_compact_oriented_centeredOfFiniteSupport_variation_eq_zero_of_not_mem
-      O T (fun A B hAB =>
+      (C := C) (e := e) O T (fun A B hAB =>
         p4Q2PZ37AMG_originalPhysicalPlaquetteCharacterBCF_eq_of_eqOn_edges H p A B hAB) he
   have hTotal :
       continuousCompactOrientedGaugeWilsonTotalVariation P.variation ≤ 8 := by
@@ -217,7 +217,7 @@ theorem p4Q2PZ37AMI_originalPhysicalPlaquetteRandomScanGreenL1_le_eight
         apply Finset.sum_congr rfl
         intro e he
         exact continuous_compact_oriented_centeredOfFiniteSupport_variation_eq_two_mul_norm_of_mem
-          O T (fun A B hAB =>
+          (C := C) (e := e) O T (fun A B hAB =>
             p4Q2PZ37AMG_originalPhysicalPlaquetteCharacterBCF_eq_of_eqOn_edges H p A B hAB) he
       _ ≤ 8 :=
         p4Q2PZ37AMG_originalPhysicalPlaquetteCharacterVariationSum_le_eight H p
