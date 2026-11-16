@@ -54,6 +54,7 @@ theorem compactOrientedGibbsCovarianceReal_self_eq_varianceBCF
     filter_upwards [] with A
     ring
   rw [hSq]
+  simp only [Pi.pow_apply]
   ring
 
 /-- Expand the genuine covariance of a finite weighted sum in both slots.
