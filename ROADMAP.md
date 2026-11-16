@@ -5793,3 +5793,23 @@ After preserving the earlier `in_progress` observation, GitHub MCP independently
 ```
 
 Actual canonical Git tree `a5ea3dad73c570aead556492f1fc60202eff1888` matches source/test-merge exactly. This authenticates the *finite physical plaquette incidence and fixed-beta0 finite Green L1 resolvent* declarations only; the finite-family Gibbs covariance sum `96/(1-rho0)` remains a separate unverified target.
+
+
+#### PZ37AMJ — original SU2 Wilson all-plaquette Gibbs connected covariance L¹ — 2026-11-16 JST
+
+[Theorem PR #6797](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6797) **MERGED** as actual Formal two-parent theorem commit `eac442f17d84c6856a3efa1ec8c475aaf1d3b207`. For every original even periodic four-dimensional physical Wilson SU(2) finite lattice H>0, and any REAL oriented four-link plaquette p, the exact FULL INTERACTING Gibbs fundamental-character connected-correlation family satisfies the **unconditional** uniform finite sum `sum_q |Cov_(mu[H,beta0])(chi_q,chi_p)| <= 96/(1-rho0)`; `beta0=log(3/2)/64`, `rho0=18*(exp(4beta0)-1)/(exp(4beta0)+1)<1`. No pairwise positive-support-separation hypothesis is needed, including shared-link neighbors.
+
+New generic proof directly uses the genuine finite Gibbs random-scan covariance telescope, typed left variation sum B, actual right Dobrushin Green L1 resolvent R, finite-sum exchange and vanishing random-scan Gibbs remainder, proving `sum_i |Cov(F_i,O)|<=B*R`. Physical specialization uses certified AMI B=12 and R=8/(1-rho0). No independent free-Haar law or assumed covariance bound. Final exact source `7afe4a94d897b48bd6947d588018c65117d5dec0`, [PR CI #43842195242](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43842195242) **completed/SUCCESS**, pinned Lean **11,513/11,513**, both new axiom audits only `propext`, `Classical.choice`, `Quot.sound`, no sorryAx, direct AMJ warnings/errors 0/0, independent exact-source receipt SUCCESS. Source/test-merge/canonical tree `545a52f83a1b286365c47bee6a042a911e458745`. Initial `5f91398...` source CI failed when `change` incorrectly equated proof-relevant finite-support profile fields with independently elaborated `if` expressions; corrected via typed on/off-support lemmas and `Finset.sum_congr`, preserving theorem strength. [Formal proof and failure provenance](docs/proofs/P4-Q2-PZ37AMJ_verified_20261116.md). The separate canonical event=push [CI #43843337150](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43843337150) was initially in progress; verify exact commit and receipt before marking postmerge certified.
+
+**OPEN:** Actual all-H physical Gauss-law-compatible OS transfer norm gap, Hamiltonian spectral mass gap, weak-coupling scale-varying continuum reconstruction, Euclidean four-coordinate correlation decay and continuous four-dimensional Yang–Mills mass gap. The AMJ static finite-Gibbs susceptibility bound is NOT authority for these conclusions.
+
+
+#### PZ37AMJ independently certified original Formal event=push — 2026-11-16 JST
+
+The actual original beta0 SU2 Gibbs all-plaquette covariance theorem was merged as exact canonical Formal theorem HEAD `eac442f17d84c6856a3efa1ec8c475aaf1d3b207`. Independent [event=push CI #43843337150](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43843337150) **workflow completed/SUCCESS**, Lean job `133217215316`, required `Run changed Lean fast check` step completed/SUCCESS, actual pinned build **11,513/11,513**, AMJ 2/2 `#print axioms` only standard `propext`, `Classical.choice`, `Quot.sound`, no `sorryAx`, changed file warning/error **0/0**; distinct exact-HEAD receipt job `133220693947` completed/SUCCESS and emitted:
+
+```text
+[mcp-receipt] event=push exact_sha=eac442f17d84c6856a3efa1ec8c475aaf1d3b207 source_result=success run=43843337150 attempt=1
+```
+
+The exact merged Git tree `545a52f83a1b286365c47bee6a042a911e458745` equals the source and synthetic test-merge trees. Actual original fixed beta0 full interacting finite Gibbs `sum_q |Cov(chi_q,chi_p)|<=96/(1-rho0)` is certified; Gauss-law physical OS transfer gap, Hamiltonian gap, varying-beta continuum reconstruction, Euclidean 4D continuum Yang–Mills mass gap remain OPEN.
