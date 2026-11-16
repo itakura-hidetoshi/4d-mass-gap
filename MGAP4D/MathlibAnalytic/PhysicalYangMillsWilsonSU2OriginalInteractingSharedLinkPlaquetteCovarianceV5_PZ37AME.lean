@@ -33,7 +33,8 @@ local notation "chiK" => p4Q2PZ35C_originalOneLinkCharacter
 
 local instance ameSideLengthNonzero (H : ℕ) :
     NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
-  simp [PeriodicHypercubicEvenSideLength]⟩
+  change 2 * (H + 1) ≠ 0
+  omega⟩
 local instance ameSU2Topological : IsTopologicalGroup GK :=
   specialUnitaryGroupIsTopologicalGroup 2
 local instance ameSU2Compact : CompactSpace GK :=
@@ -70,7 +71,7 @@ theorem p4Q2PZ37AME_originalPrimarySharedLinkNeighbor_adjacent
       (periodicHypercubicEvenPrimarySpatialPlaquette H)
       (p4Q2PZ37AME_originalPrimarySharedLinkNeighbor H) := by
   have hn : 2 ≤ PeriodicHypercubicEvenSideLength H := by
-    simp [PeriodicHypercubicEvenSideLength]
+    change 2 ≤ 2 * (H + 1)
     omega
   simpa only [p4Q2PZ37AME_originalPrimarySharedLinkNeighbor] using
     (periodicHypercubicPlaquetteAdjacent_shift_first
@@ -121,7 +122,7 @@ theorem p4Q2PZ37AME_actualWilsonGibbsIntegral_eq_fullHaarDensity
   unfold ContinuousCompactOrientedGaugeWilsonSystem.gibbsMeasure
   unfold CompactOrientedGaugeWilsonSystem.gibbsMeasure
   rw [integral_tilted]
-  simp only [smul_eq_mul]
+  simp only [smul_eq_mul, CompactOrientedGaugeWilsonSystem.partitionFunction]
 
 /-- The exact two-observable connected correlation identity is under the
 full interacting Wilson law, and retains the common Gibbs weight in ALL
