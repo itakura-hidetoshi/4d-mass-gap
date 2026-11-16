@@ -70,3 +70,24 @@ The unresolved identification demands **new**, typed proofs, not an assumed brid
 4. Show equality against all required \`z\` and only then establish \`CompletedBoundaryTransferOneSlabPairWeakIntertwiningAt\`. Do not treat conditional re-expression of the target as a proof.
 
 In particular, \`C.translate\` is defined abstractly as an algebra endomorphism semigroup with OS contraction; existing Q's finite Gibbs pullback alone does not automatically identify it with the physical normalized one-slab Wilson transfer. Neither a static Gibbs covariance estimate nor AMN deterministic periodic shift can fill the gap. No continuum four-dimensional Yang–Mills mass gap is certified by AMQ.
+
+## 2026-11-17 JST append-only certification: independent canonical push completed
+
+The above earlier **in_progress** checkpoint was correct when observed. A later independent GitHub MCP reobservation now establishes completion; no prior evidence or historical state is overwritten.
+
+- Authoritative branch: `formal/real-hilbert-uniform-coercive-strong-limit`.
+- Canonical theorem integration commit (exact): `0198fa8571bd519b7f9102f8b2940e6ce57517c1`.
+- [Independent canonical **push** workflow #43927499955](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43927499955): `event=push`, `head_sha=0198fa8571bd519b7f9102f8b2940e6ce57517c1`, `run_attempt=1`; **workflow completed/SUCCESS**.
+- Required Lean job `133510746876` **completed/SUCCESS**; required `Run changed Lean fast check` step **completed/SUCCESS**. The fetched full decoded job log ends with `Build completed successfully (11493 jobs).`, including the two actual AMQ changed Lean files at **[11492/11493]** and **[11493/11493]**. Direct AMQ error count **0**.
+- In the merged-source log all **three AMQ declarations** print only the standard axioms `propext`, `Classical.choice`, `Quot.sound`; none uses `sorryAx`. AMQ proof-source warning/error **0/0**.
+- Independently completed status-receipt job `133650822086` **completed/SUCCESS** and its log says exactly:
+
+  ```text
+  [mcp-receipt] event=push exact_sha=0198fa8571bd519b7f9102f8b2940e6ce57517c1 source_result=success run=43927499955 attempt=1
+  ```
+
+- GitHub combined commit-status context `chatgpt-ci-receipt/PR Lean Fast Check` reports `state=success` pointing to run `43927499955`.
+- Formal integration tree remains `b8d516795d4c342b1c0b27a6716d42892b91261a`, identical to the source-certified tree and actual test-merge tree. This is a code-tree equality check, **not** evidence of the missing OS–physical operator identification.
+- Certification state within the three AMQ theorem statements is now **FORMAL_INTEGRATED_INDEPENDENT_PUSH_CERTIFIED**. The positive-time semigroup `C`, Q and hInvariant are parameters to the theorems: they have not become a derived one-slab physical Wilson model. The four-Haar/OS weak intertwining remains **UNPROVEN**.
+
+This is a docs-only append; it must not request or be represented as a fresh Strict Lean compilation.
