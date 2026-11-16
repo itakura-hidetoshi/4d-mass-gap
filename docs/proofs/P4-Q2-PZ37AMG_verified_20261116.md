@@ -67,3 +67,16 @@ Namespace `MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint`, all prefixed `p4Q2
 Make actual selected p,q separation quantitative in physical Euclidean coordinates and prove shell-count summability of this finite-volume fixed-beta0 bound. Then investigate whether the same beta0 region can be reconciled with physical continuum coupling sequences (which may not remain small). Independently construct the Gauss-law compatible OS one-slab transfer / Hilbert carrier comparison needed before any all-H physical transfer gap and Hamiltonian spectral promotion.
 
 The AME adjacent shared-link case, H=0 degenerate case, independent physical continuum Yang–Mills reconstruction, and all-H beta0 transfer/Hamiltonian/4D continuum mass gap are still **OPEN/NO_DATA**, notwithstanding AMG's verified finite-volume connected Gibbs plaquette clustering conditional on actual support separation.
+
+
+## Independent canonical postmerge push authentication — 2026-11-16 JST
+
+The preceding historical `in_progress` observation for the actual theorem-merge [push CI #43795226737](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43795226737) is preserved rather than retroactively rewritten. GitHub MCP independently reobserved `event=push` on the **actual exact integrated Formal theorem HEAD `6b48eabefc06aeeb7e508745167d598693ab0135`**, and workflow **completed/SUCCESS**. Main changed-Lean job `133062412337`, required `Run changed Lean fast check` step, and independent receipt job `133064594630` all **completed/SUCCESS**. The genuine pinned dependency closure was **11,510/11,510**; the exact AMG source's 12/12 `#print axioms` commands used only `propext` / `Classical.choice` / `Quot.sound`, **no sorryAx**, AMG warning/error **0/0**. Actual canonical tree remains `a91ceb217a4028324c01efbc1d49ee49764f66d1`, identical to the source and test-merge trees.
+
+Independently emitted exact-HEAD receipt:
+
+```text
+event=push exact_sha=6b48eabefc06aeeb7e508745167d598693ab0135 source_result=success run=43795226737 attempt=1
+```
+
+This is a formal validation of **finite-volume fixed-beta0 interacting SU2 Gibbs covariance geometric decay conditional on real physical-link separation**, not a theorem of all-H physical OS transfer, Hamiltonian spectral, or continuum four-dimensional Yang-Mills mass gap.
