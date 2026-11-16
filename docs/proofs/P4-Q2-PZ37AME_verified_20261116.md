@@ -60,3 +60,14 @@ CodeAI/standalone Lean MCP execution receipt: **NO_DATA** in this session. The m
 Use true adjacent shared-link Wilson Gibbs pair to derive a **nontrivial, explicit bound** on the full Gibbs connected correlation that is uniform in physical volume, without assuming plaquette independence. If a cluster expansion / conditional-link influence certificate is needed, derive it from the original SU(2) Haar/Wilson action and local interaction incidence, do not insert a free-standing hypothesis and report it as a proof. Next verify summability in lattice separation, compatibility with the physical Gauss-law Hilbert carrier, and a valid link to original one-slab transfer bounds/cross-H uniformity.
 
 **OPEN/NO_DATA:** physical fixed-beta0 all-volume transfer gap, Hamiltonian mass gap, continuum four-dimensional Yang–Mills mass gap. Neither AMD's positive single-plaquette Haar covariance nor this AME exact two-plaquette Gibbs identity establishes them.
+
+
+## Independently certified canonical postmerge push — new observation (2026-11-16 JST)
+
+The prior observation of `in_progress` for [canonical push CI #43780128247](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43780128247) is preserved historically above. An **independent GitHub MCP reobservation** verified the actual authoritative two-parent merge HEAD `021deafa6aada17ab0cc43fcb360fcba5de2b710`, `event=push`, workflow **completed/SUCCESS**. Main changed-Lean job `133015193039`, required `Run changed Lean fast check` step and independent exact-head receipt job `133017203933` all separately **completed/SUCCESS**. Pinned Lean full closure **11,466/11,466 SUCCESS**, new 7/7 declarations only `propext` / `Classical.choice` / `Quot.sound`, **no `sorryAx`**, changed AME warning/error 0/0. Canonical merge tree `a1f8192db3ca8c0313e45620358f6daf293087e9` is identical to the repaired source and synthetic test-merge trees. Exact independently emitted receipt:
+
+```text
+event=push exact_sha=021deafa6aada17ab0cc43fcb360fcba5de2b710 source_result=success run=43780128247 attempt=1
+```
+
+The same full interaction and cluster-obstruction scope applies. This does **not** assert any nontrivial covariance decay or all-volume physical mass gap.
