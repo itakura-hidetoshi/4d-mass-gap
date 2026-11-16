@@ -5107,3 +5107,15 @@ The source `7db514b...`, GitHub PR test-merge `3d15cd6...` and canonical merged 
 Final exact source `c790585f058014b6a1f6402c1af0373865eaef5a`, [CI #43825859327](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43825859327) **completed/SUCCESS**, pinned Lean **11,512/11,512**, AMI six/six standard-three-only axiom prints, no sorryAx, direct warning/error 0/0, independent exact-head receipt success. Actual source/test-merge/canonical Git tree `a5ea3dad73c570aead556492f1fc60202eff1888` exact match. Two earlier FAILED source candidates were repaired by fixing post-simp redundant tactic, the n>=3 side-length arithmetic and implicit compact system/link parameter inference; all theorem strengths retained. Canonical integrated [event=push CI #43826552529](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43826552529) was pending at this observation and needs separate verification. [Full AMI proof/evidence](docs/proofs/P4-Q2-PZ37AMI_verified_20261116.md).
 
 **OPEN next:** Sum the *actual interacting Gibbs connected plaquette covariances* by a finite-family random-scan covariance telescope plus finite-sum limit; the prospective `96/(1-rho0)` bound is **not yet a proven AMI theorem**. No all-H Gauss-law OS transfer gap, Hamiltonian gap, continuum scaling, or 4D Yang–Mills mass gap is obtained. 
+
+
+#### PZ37AMI independently authenticated canonical event=push — 2026-11-16 JST
+
+
+After preserving the earlier `in_progress` observation, GitHub MCP independently reobserved the actual two-parent canonical Formal theorem merge `8194a5d107cbb4e2477457c9b6115da851c49374`. The [event=push CI #43826552529](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43826552529) is **workflow completed/SUCCESS**, main changed-Lean job `133161661401` and required `Run changed Lean fast check` step completed/SUCCESS. The actual pinned dependency-aware build is **11,512/11,512**, AMI six/six axiom outputs only `propext`, `Classical.choice`, `Quot.sound`, no `sorryAx`, direct AMI warning/error `0/0`. The distinct independent completion receipt job `133163626375` completed/SUCCESS and emitted:
+
+```text
+[mcp-receipt] event=push exact_sha=8194a5d107cbb4e2477457c9b6115da851c49374 source_result=success run=43826552529 attempt=1
+```
+
+Actual canonical Git tree `a5ea3dad73c570aead556492f1fc60202eff1888` matches source/test-merge exactly. This authenticates the *finite physical plaquette incidence and fixed-beta0 finite Green L1 resolvent* declarations only; the finite-family Gibbs covariance sum `96/(1-rho0)` remains a separate unverified target.
