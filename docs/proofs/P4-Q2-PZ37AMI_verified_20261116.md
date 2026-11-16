@@ -65,3 +65,14 @@ The next theorem must combine the already established true compact Gibbs finite 
 Do not confuse this linkwise resolvent with OS temporal transfer or Hamiltonian spectrum. The old exponential `24^D` shell bound cannot yield sum convergence at beta0 because `24*rho0>1`. Full four-coordinate Euclidean physical distance with polynomial shell counting, an all-H physical Gauss-law-compatible OS transfer, continuum scaling `beta(H)`, Hamiltonian spectral gap and four-dimensional continuum Yang–Mills mass gap remain OPEN/NO_DATA. H=0 remains outside the strict n>=3 Gibbs uniqueness route.
 
 Independent KuuOS CodeAI/standalone Lean MCP execution receipt: **NO_DATA**. Exact-source and canonical proofs here are checked by pinned GitHub Actions Lean; no execution authority is assigned to an unobserved CodeAI run.
+
+
+## Independent canonical postmerge push — later exact-HEAD reobservation
+
+After preserving the earlier `in_progress` observation, GitHub MCP independently reobserved the actual two-parent canonical Formal theorem merge `8194a5d107cbb4e2477457c9b6115da851c49374`. The [event=push CI #43826552529](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43826552529) is **workflow completed/SUCCESS**, main changed-Lean job `133161661401` and required `Run changed Lean fast check` step completed/SUCCESS. The actual pinned dependency-aware build is **11,512/11,512**, AMI six/six axiom outputs only `propext`, `Classical.choice`, `Quot.sound`, no `sorryAx`, direct AMI warning/error `0/0`. The distinct independent completion receipt job `133163626375` completed/SUCCESS and emitted:
+
+```text
+[mcp-receipt] event=push exact_sha=8194a5d107cbb4e2477457c9b6115da851c49374 source_result=success run=43826552529 attempt=1
+```
+
+Actual canonical Git tree `a5ea3dad73c570aead556492f1fc60202eff1888` matches source/test-merge exactly. This authenticates the *finite physical plaquette incidence and fixed-beta0 finite Green L1 resolvent* declarations only; the finite-family Gibbs covariance sum `96/(1-rho0)` remains a separate unverified target.
