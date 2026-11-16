@@ -68,3 +68,17 @@ This is a quantitative usable bound, but it cannot force the right-hand side to 
 Finite Wilson physical-time one-slab pair-Haar operator and one-sided sector estimates already exist. AMM does **not** prove `CommonSemigroupOneStepCoherentAt`, `RealizableOneStepPhysicalTopRawKernelLimitAtFor`, the precise cross-H physical Hilbert compatibility, or a scale-uniform top-eigenspace ratio strictly below one. It also does **not** identify random-scan update count with OS time or establish the Hamiltonian or four-dimensional continuum Yang–Mills mass gap.
 
 AMM supplies a concrete, auditable residual identity and sharp quantitative norm budget for the **actual** finite Wilson kernel under the stated canonical realization/semigroup interfaces. The first next task is to prove a non-assumed finite Wilson temporal Markov/Fubini identity that constrains `uC-uR` for a certified class of positive-time observables, then extend with an independently justified closure/density/descent argument. Neither KuuOS CodeAI execution nor standalone Lean-MCP proof execution is asserted without a corresponding receipt.
+
+## Independent postmerge canonical push proof — later exact-HEAD reobservation
+
+The historical in-progress observation for run #43858181657 is retained above; it is not overwritten. GitHub MCP subsequently reobserved the **actual two-parent canonical Formal theorem merge** `7aed955a6533cdc106b40bf8808dd829402fed8a` with [event=push CI #43858181657](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43858181657) **workflow completed/SUCCESS**. Main changed-Lean job `133267781251` and required `Run changed Lean fast check` step **completed/SUCCESS**, pinned build **8,710/8,710**, all three `#print axioms` outputs only `propext`, `Classical.choice`, `Quot.sound`, no `sorryAx`, direct AMM warnings/errors **0/0**. These values were independently rechecked in the exact-HEAD uploaded Lean log artifact rather than copied from source CI.
+
+Distinct independent exact-HEAD receipt job `133270748581` completed/SUCCESS, actual emitted line:
+
+```text
+[mcp-receipt] event=push exact_sha=7aed955a6533cdc106b40bf8808dd829402fed8a source_result=success run=43858181657 attempt=1
+```
+
+Exact source HEAD `da7df6ff450cdfe3759d71c9a667929b842a4a24`, synthetic test-merge `1310d7aee6651961504bc48314d9b72c85468f5d` and actual integrated Formal theorem merge `7aed955a6533cdc106b40bf8808dd829402fed8a` all have Git tree `5643adbeca3fab65c82668b3f83266b4ff14e18e` exactly.
+
+**Only the finite one-step raw-Wilson/OS discrepancy identity and its quantitative bound are certified.** No assertion that the discrepancy is zero, no new spectral gap, and no four-dimensional continuum Yang–Mills mass-gap claim is licensed by these receipts.
