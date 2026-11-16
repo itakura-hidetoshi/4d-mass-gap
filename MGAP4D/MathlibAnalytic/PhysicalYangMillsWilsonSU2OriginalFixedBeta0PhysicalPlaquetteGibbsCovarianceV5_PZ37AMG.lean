@@ -41,7 +41,7 @@ set_option maxHeartbeats 2500000
 
 local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
 local notation "beta0" => GroundStatePosteriorJoint.p4Q2PZ37ADC_fixedCoupling
-local notation "chi" => GroundStatePosteriorJoint.p4Q2PZ35C_originalOneLinkCharacter
+local notation "chi" => p4Q2PZ35C_originalOneLinkCharacter
 
 local instance p4Q2PZ37AMG_nonzero (H : ℕ) :
     NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
