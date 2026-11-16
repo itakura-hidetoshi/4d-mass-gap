@@ -98,7 +98,7 @@ theorem p4Q2PZ37AMI_originalPlaquettesContainingLink_eq_touching
   simp only [Finset.mem_filter, Finset.mem_univ, true_and,
     p4Q2PZ37AMI_originalPlaquetteEdgeSupport_mem_iff_touches]
   exact (periodicHypercubic_mem_touchingPlaquettes_iff
-    (PeriodicHypercubicEvenSideLength H) p e).symm
+    (PeriodicHypercubicEvenSideLength H) e p).symm
 
 /-- Exactly the original four-dimensional periodic SU2 plaquette carrier:
 each positive physical link meets at most six plaquettes, independent of H. -/
