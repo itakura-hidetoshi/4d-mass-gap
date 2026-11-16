@@ -55,3 +55,15 @@ Append-only [PR #6803](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/680
 AML is a **finite-volume static Gibbs covariance Gram positivity** statement. This does NOT identify the Gibbs plaquette covariance Hilbert carrier with the gauge-invariant OS reflection-positive boundary Hilbert space, nor does it assert an actual OS one-slab transfer, physical Hamiltonian or continuum four-dimensional Yang–Mills mass gap.
 
 The existing true finite one-slab pair Wilson Haar kernel is already constructed in `PeriodicHypercubicEvenSpecialUnitaryOneSlabPairHaarL2Transfer.lean`. The distinct **model-facing gluing conditions** remain explicitly exposed by `PhysicalYangMillsGaugeInvariantOSCommonRealizableOneStepCoherence.lean` (`CommonSemigroupOneStepCoherentAt`, identifying common semigroup translation with actual realizable integer lattice step) and `PhysicalYangMillsWilsonSU2CompletedBoundaryTransferRealizableOneStepRawKernelLimit.lean` (`RealizableOneStepPhysicalTopRawKernelLimitAtFor`, actual translated Wilson synthesis scalar-limit matching normalized one-slab kernel on arbitrary pair-Haar tests). Neither is discharged by AML's Gram identity; no unobserved CodeAI/Lean MCP receipt is claimed.
+
+## Independent canonical postmerge push — later exact-HEAD reobservation
+
+The original "in_progress" observation for canonical push run #43852665286 above remains a historical observation, not overwritten. GitHub MCP subsequently observed the **actual canonical Formal theorem merge** `62d9cb29f5f3dcc35ee314b2c07427a2aaccc764`: [event=push CI #43852665286](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43852665286) **workflow completed/SUCCESS**. Changed-Lean job `133248922004` and required `Run changed Lean fast check` step **completed/SUCCESS**, exact pinned build **11,515/11,515**, all **six AML `#print axioms` outputs** only `propext`, `Classical.choice`, `Quot.sound`, no `sorryAx`, direct AML warning/error **0/0**. This was independently rechecked against the downloadable exact-HEAD Lean log artifact rather than assuming source CI transfers to the merged HEAD.
+
+The distinct independent exact-HEAD completion receipt job `133251970501` completed/SUCCESS and actually printed:
+
+```text
+[mcp-receipt] event=push exact_sha=62d9cb29f5f3dcc35ee314b2c07427a2aaccc764 source_result=success run=43852665286 attempt=1
+```
+
+The exact source head `3e5e763a94f290bb6495618024320b45d6748135`, synthetic test-merge `7450c096e2a8ecd2ac93fe3dd915f58990ff0277` and canonical Formal theorem merge `62d9cb29f5f3dcc35ee314b2c07427a2aaccc764` have the same verified Git tree `2210c4ff8b9fe0190ca15341b9c762cec83cd590`. This authenticates original fixed-beta0 **finite-volume full interacting Gibbs plaquette covariance Gram PSD only**. The OS boundary/time-one intertwining, physical Hamiltonian and continuum Yang–Mills mass gap remain open.
