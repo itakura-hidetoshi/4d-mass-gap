@@ -223,12 +223,38 @@ theorem p4Q2PZ37AMJ_originalFixedBeta0PhysicalPlaquetteGibbsCovariance_l1_le
   have hFamily (e : PeriodicHypercubicEvenEdge H) :
       (∑ q : PeriodicHypercubicEvenPlaquette H,
         (PF q).variation e) ≤ 12 := by
-    change
+    classical
+    have hValue (q : PeriodicHypercubicEvenPlaquette H) :
+        (PF q).variation e =
+          (if e ∈ periodicHypercubicEvenPlaquetteEdgeSupport H q
+            then 2 * ‖F q‖ else (0 : ℝ)) := by
+      by_cases he : e ∈ periodicHypercubicEvenPlaquetteEdgeSupport H q
+      · rw [if_pos he]
+        exact continuous_compact_oriented_ofFiniteSupport_variation_eq_two_mul_norm_of_mem
+          (C := C) (e := e) (F q)
+          (periodicHypercubicEvenPlaquetteEdgeSupport H q)
+          (fun A B hAB =>
+            p4Q2PZ37AMG_originalPhysicalPlaquetteCharacterBCF_eq_of_eqOn_edges
+              H q A B hAB) he
+      · rw [if_neg he]
+        exact continuous_compact_oriented_ofFiniteSupport_variation_eq_zero_of_not_mem
+          (C := C) (e := e) (F q)
+          (periodicHypercubicEvenPlaquetteEdgeSupport H q)
+          (fun A B hAB =>
+            p4Q2PZ37AMG_originalPhysicalPlaquetteCharacterBCF_eq_of_eqOn_edges
+              H q A B hAB) he
+    calc
       (∑ q : PeriodicHypercubicEvenPlaquette H,
-        if e ∈ periodicHypercubicEvenPlaquetteEdgeSupport H q
-          then 2 * ‖p4Q2PZ37AMG_originalPhysicalPlaquetteCharacterBCF H q‖
-          else (0 : ℝ)) ≤ 12
-    exact p4Q2PZ37AMI_originalPlaquetteCharacterVariationAtLink_sum_le_twelve H e
+        (PF q).variation e) =
+          ∑ q : PeriodicHypercubicEvenPlaquette H,
+            if e ∈ periodicHypercubicEvenPlaquetteEdgeSupport H q
+              then 2 * ‖F q‖ else (0 : ℝ) := by
+            apply Finset.sum_congr rfl
+            intro q _
+            exact hValue q
+      _ ≤ 12 := by
+        simpa only [F] using
+          p4Q2PZ37AMI_originalPlaquetteCharacterVariationAtLink_sum_le_twelve H e
   have hMass (M : ℕ) :
       continuousCompactOrientedGaugeWilsonTotalVariation
         (continuousCompactOrientedGaugeWilsonDobrushinRandomScanFiniteResolventProfile
