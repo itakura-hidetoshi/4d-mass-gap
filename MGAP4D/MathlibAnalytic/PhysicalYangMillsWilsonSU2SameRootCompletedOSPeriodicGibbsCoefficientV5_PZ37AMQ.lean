@@ -32,7 +32,8 @@ set_option maxHeartbeats 4000000
 
 local instance p4Q2PZ37AMQ_periodicSideLengthNeZero (H : ℕ) :
     NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
-  simp [PeriodicHypercubicEvenSideLength]⟩
+  change 2 * (H + 1) ≠ 0
+  omega⟩
 local instance p4Q2PZ37AMQ_periodicGroup (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
