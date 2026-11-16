@@ -77,11 +77,6 @@ theorem p4Q2PZ37AMI_originalPlaquetteEdgeSupport_mem_iff_touches
     periodicHypercubicPlaquetteTouchesEdge,
     periodicHypercubicPhysicalBoundaryEdge,
     Finset.mem_image, Finset.mem_univ, true_and]
-  constructor
-  · rintro ⟨k, hk⟩
-    exact ⟨k, hk⟩
-  · rintro ⟨k, hk⟩
-    exact ⟨k, hk⟩
 
 /-- The complete set of actual oriented 4D physical plaquettes meeting one
 positive physical link coincides with the canonical six-staple incidence
@@ -171,14 +166,15 @@ theorem p4Q2PZ37AMI_originalPhysicalPlaquetteRandomScanGreenL1_le_eight
     (p : PeriodicHypercubicEvenPlaquette H) :
     let C := p4Q2PZ37AMG_originalFixedBeta0System H
     let O := p4Q2PZ37AMG_originalPhysicalPlaquetteCharacterBCF H p
-    let P := ContinuousCompactOrientedGaugeWilsonCenteredVariationProfile.ofFiniteSupport
+    let P : ContinuousCompactOrientedGaugeWilsonCenteredVariationProfile C O :=
+      ContinuousCompactOrientedGaugeWilsonCenteredVariationProfile.ofFiniteSupport (C := C)
       O (periodicHypercubicEvenPlaquetteEdgeSupport H p)
       (fun A B hAB =>
         p4Q2PZ37AMG_originalPhysicalPlaquetteCharacterBCF_eq_of_eqOn_edges H p A B hAB)
     let Ddata :=
       periodicHypercubicSpecialUnitary_sparseDobrushinMatrixData_of_threshold
         (PeriodicHypercubicEvenSideLength H) 2
-        (by simp [PeriodicHypercubicEvenSideLength]; omega)
+        (by change 3 ≤ 2 * (H + 1); omega)
         (by norm_num) beta0 p4Q2PZ37ADC_fixedCoupling_pos.le
         p4Q2PZ37AMG_originalFixedBeta0ActiveTVMajorant_strict
     continuousCompactOrientedGaugeWilsonTotalVariation
@@ -190,13 +186,13 @@ theorem p4Q2PZ37AMI_originalPhysicalPlaquetteRandomScanGreenL1_le_eight
   let O := p4Q2PZ37AMG_originalPhysicalPlaquetteCharacterBCF H p
   let T := periodicHypercubicEvenPlaquetteEdgeSupport H p
   let P : ContinuousCompactOrientedGaugeWilsonCenteredVariationProfile C O :=
-    ContinuousCompactOrientedGaugeWilsonCenteredVariationProfile.ofFiniteSupport
+    ContinuousCompactOrientedGaugeWilsonCenteredVariationProfile.ofFiniteSupport (C := C)
       O T (fun A B hAB =>
         p4Q2PZ37AMG_originalPhysicalPlaquetteCharacterBCF_eq_of_eqOn_edges H p A B hAB)
   let Ddata :=
     periodicHypercubicSpecialUnitary_sparseDobrushinMatrixData_of_threshold
       (PeriodicHypercubicEvenSideLength H) 2
-      (by simp [PeriodicHypercubicEvenSideLength]; omega)
+      (by change 3 ≤ 2 * (H + 1); omega)
       (by norm_num) beta0 p4Q2PZ37ADC_fixedCoupling_pos.le
       p4Q2PZ37AMG_originalFixedBeta0ActiveTVMajorant_strict
   have hCoeff : Ddata.coefficient < 1 := by
