@@ -189,8 +189,7 @@ theorem p4Q2PZ37ANK_originalTimeOneBoundaryMoment_norm_sq_integrable
         H beta hbeta c0 c1 b‖ ^ 2)
       (periodicHypercubicEvenBoundaryHaarMeasure H 2) :=
     hi.aestronglyMeasurable.norm.pow 2
-  apply MeasureTheory.Integrable.of_bound
-    (μ := periodicHypercubicEvenBoundaryHaarMeasure H 2) hs (C ^ 2)
+  apply MeasureTheory.Integrable.of_bound hs (C ^ 2)
   filter_upwards [] with b
   have hb : ‖p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment
       H beta hbeta c0 c1 b‖ ≤ C :=
