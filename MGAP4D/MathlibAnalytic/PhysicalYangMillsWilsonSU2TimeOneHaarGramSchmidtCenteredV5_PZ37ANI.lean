@@ -50,6 +50,19 @@ local instance p4Q2PZ37ANI_borel :
 private def p4Q2PZ37ANI_haar : Measure (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
   normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin 2) ℂ)
 
+/-- Explicitly expose the unchanged normalized original SU(2) Haar as a
+probability. Definitional unfolding of the named local measure is not
+reliable during later synthesis of finite-measure instances. -/
+local instance p4Q2PZ37ANI_haarProbability :
+    IsProbabilityMeasure p4Q2PZ37ANI_haar := by
+  change IsProbabilityMeasure
+    (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin 2) ℂ))
+  infer_instance
+
+local instance p4Q2PZ37ANI_haarFinite :
+    IsFiniteMeasure p4Q2PZ37ANI_haar := by
+  infer_instance
+
 /-- The power-zero genuine Wilson-energy Haar L2 vector is EXACTLY the
 constant-one normalized-Haar vector, with the original SU(2) measure. -/
 theorem p4Q2PZ37ANI_originalWilsonEnergyPowerZero_eq_constOne :
@@ -68,7 +81,8 @@ theorem p4Q2PZ37ANI_originalWilsonEnergyPowerZero_eq_constOne :
         (by norm_num : 0 < (2 : ℕ)) 0 U =
       specialUnitaryWilsonPlaquetteEnergyPower 2 0 U := hPower
     _ = 1 := by simp [specialUnitaryWilsonPlaquetteEnergyPower]
-    _ = (Lp.const 2 mu (1 : ℝ)) U := hOne.symm
+    _ = (Lp.const 2 mu (1 : ℝ)) U := by
+      simpa only [Function.const_apply] using hOne.symm
 
 /-- Canonical Gram--Schmidt starts from the actual Haar unit constant
 since the degree-zero Wilson energy is identically one. -/
