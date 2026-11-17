@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalGaussHilbertInfiniteExcitationV5_PZ37AMU
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopEigenspaceContraction
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopEigenspaceDecay
 import Mathlib.Tactic
 
 /-!
@@ -56,7 +57,22 @@ theorem p4Q2PZ37AMV_exists_originalPhysical_unit_strict_oneSlab_contraction
   have hwNorm : ‖w‖ = 1 := by
     change ‖u‖ = 1
     exact huNorm
-  have hRBound : ‖R w‖ ≤ ‖R‖ * ‖w‖ := R.le_opNorm w
+  -- The generic certified power-apply bound retains the ambient Hilbert
+  -- NormedSpace instance; direct R.le_opNorm fails to reconstruct the
+  -- bundled submodule NormedSpace on this pinned Mathlib version.
+  have hS :
+      (S : PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H 2 →ₗ[ℝ]
+        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H 2).IsSymmetric := by
+    simpa [S] using
+      periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
+        H 2 hTwo beta hbeta
+  have hRBound : ‖R w‖ ≤ ‖R‖ * ‖w‖ := by
+    have hApply :=
+      realHilbertTopEigenspaceOrthogonalRestriction_pow_apply_norm_le S hS 1 w
+    change
+      ‖realHilbertTopEigenspaceOrthogonalRestriction S hS w‖ ≤
+        ‖realHilbertTopEigenspaceOrthogonalRestriction S hS‖ * ‖w‖
+    simpa only [pow_one] using hApply
   have hRStrict : ‖R‖ < 1 := by
     exact periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_norm_lt_one
       H 2 hTwo beta hbeta
