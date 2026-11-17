@@ -178,19 +178,18 @@ theorem p4Q2PZ37ANK_originalTimeOneBoundaryMoment_norm_sq_integrable
           H beta hbeta c0 c1 b *
         p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment H beta hbeta c0 c1 b)
       (periodicHypercubicEvenBoundaryHaarMeasure H 2) := hm.integrable_mul hm
-  -- Ordered rewriting avoids expanding |M|^2 before sq_abs can apply.
-  have heq :
+  -- Transfer integrability through a.e. equality, avoiding dependent rewriting.
+  have hAE :
+      (fun b : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 =>
+        p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment H beta hbeta c0 c1 b *
+          p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment H beta hbeta c0 c1 b)
+        =ᵐ[periodicHypercubicEvenBoundaryHaarMeasure H 2]
       (fun b : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 =>
         ‖p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment
-          H beta hbeta c0 c1 b‖ ^ 2) =
-        (fun b : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 =>
-          p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment
-            H beta hbeta c0 c1 b *
-          p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment H beta hbeta c0 c1 b) := by
-    funext b
+          H beta hbeta c0 c1 b‖ ^ 2) := by
+    filter_upwards [] with b
     rw [Real.norm_eq_abs, sq_abs, pow_two]
-  rw [heq]
-  exact hmul
+  exact hmul.congr hAE
 
 /-- Exact null-space criterion for the ORIGINAL full-periodic Wilson OS
 form. Both directions use the actual boundary moment with square
