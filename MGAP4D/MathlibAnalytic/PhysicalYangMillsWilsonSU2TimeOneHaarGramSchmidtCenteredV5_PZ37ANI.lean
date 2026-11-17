@@ -98,8 +98,21 @@ theorem p4Q2PZ37ANI_originalWilsonHaarGramSchmidtModeZero_eq_constOne :
         specialUnitaryWilsonPlaquetteEnergyPowerHaarL2
           (by norm_num : 0 < (2 : ℕ)) k) 0 =
       Lp.const 2 mu (1 : ℝ)
-  rw [InnerProductSpace.gramSchmidtNormed, InnerProductSpace.gramSchmidt_bot]
-  rw [p4Q2PZ37ANI_originalWilsonEnergyPowerZero_eq_constOne]
+  rw [InnerProductSpace.gramSchmidtNormed]
+  have hFirst :
+      InnerProductSpace.gramSchmidt ℝ
+          (fun k : ℕ =>
+            specialUnitaryWilsonPlaquetteEnergyPowerHaarL2
+              (by norm_num : 0 < (2 : ℕ)) k) 0 =
+        specialUnitaryWilsonPlaquetteEnergyPowerHaarL2
+          (by norm_num : 0 < (2 : ℕ)) 0 := by
+    simpa only using
+      (InnerProductSpace.gramSchmidt_bot
+        (𝕜 := ℝ)
+        (f := fun k : ℕ =>
+          specialUnitaryWilsonPlaquetteEnergyPowerHaarL2
+            (by norm_num : 0 < (2 : ℕ)) k))
+  rw [hFirst, p4Q2PZ37ANI_originalWilsonEnergyPowerZero_eq_constOne]
   simp [hOneNorm]
 
 /-- The exact SECOND normalized SU(2) Wilson-energy Gram--Schmidt L2
@@ -122,7 +135,11 @@ theorem p4Q2PZ37ANI_originalWilsonHaarModeOne_integral_zero :
         exact (realL2_inner_const_one_eq_integral _).symm
     _ = inner ℝ (specialUnitaryWilsonPlaquetteEnergyTwoHaarGramSchmidtMode 0)
           (specialUnitaryWilsonPlaquetteEnergyTwoHaarGramSchmidtMode 1) := by
-        rw [p4Q2PZ37ANI_originalWilsonHaarGramSchmidtModeZero_eq_constOne]
+        simpa only [mu] using
+          (congrArg
+            (fun v : SpecialUnitaryNormalizedHaarL2 2 =>
+              inner ℝ v (specialUnitaryWilsonPlaquetteEnergyTwoHaarGramSchmidtMode 1))
+            (p4Q2PZ37ANI_originalWilsonHaarGramSchmidtModeZero_eq_constOne).symm)
     _ = 0 := hOrtho
 
 /-- The chosen continuous original Wilson mode is centered pointwise under
