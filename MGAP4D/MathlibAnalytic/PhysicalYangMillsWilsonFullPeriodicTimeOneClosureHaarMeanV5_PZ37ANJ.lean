@@ -233,6 +233,12 @@ theorem p4Q2PZ37ANJ_originalBetaZeroBoundaryGramMoment_boundaryHaarMean
   let f := p4Q2PZ37ANF_originalTimeOneBoundaryPositiveObservable H c0 c1
   let mu := periodicHypercubicEvenBoundaryHaarMeasure H 2
   let nu := periodicHypercubicEvenOpenHalfHaarMeasure H 2
+  -- Pinned integral_prod needs SFinite on BOTH factors. Explicitly expose
+  -- the same original finite Haar measure on the named boundary wrapper.
+  letI : IsFiniteMeasure mu := by
+    dsimp [mu, periodicHypercubicEvenBoundaryHaarMeasure,
+      FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure]
+    infer_instance
   -- The named open-half Haar wrapper does not export an SFinite instance by
   -- mere local alias unfolding in the pinned integral_prod elaborator.
   -- Give Lean the finite-measure instance of this SAME original product Haar.
