@@ -41,3 +41,17 @@ Proof source: `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2TwoModeFiniteCyl
 This is a physically original finite-cylinder representation in **time-zero spatial Haar L²**, not yet an element of an arbitrary `D.positiveTimeSubalgebra` with a proven compatible `Q.positiveHalfPullback` and boundary synthesis. Existing OS readout packages impose explicit observable and synthesis realization requirements that AMW's true spatial-cylinder representative does not automatically discharge. No same-mode completed-OS boundary moment, physical one-slab vs `C.translate` identification, or 4D continuum Yang–Mills mass gap is claimed.
 
 Docs-only record: no Strict Lean required.
+
+## 2026-11-17 JST append-only independent canonical push completion
+
+The earlier `in_progress` checkpoint remains a distinct true observation at its observation time. Later GitHub MCP inspection of the exact merged source establishes the following independent completion:
+
+- [Canonical Formal push CI #44018904237](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44018904237): event `push`, exact `head_sha=0c79f9c31ed6f1580bd7f53cb2df371c94cf14a4`, attempt 1, workflow **completed/SUCCESS**.
+- Required `Changed Lean fast check` job `133823412701` and mandatory `Run changed Lean fast check` step **completed/SUCCESS**. Exact decoded Lake output: `Build completed successfully (8832 jobs).`
+- All three AMW `#print axioms` declarations contain exactly standard `propext`, `Classical.choice`, `Quot.sound`; no `sorryAx`. Changed AMW Lean source warning/error `0/0`.
+- Independent receipt job `133824910615` completed/SUCCESS, actual emitted receipt: `[mcp-receipt] event=push exact_sha=0c79f9c31ed6f1580bd7f53cb2df371c94cf14a4 source_result=success run=44018904237 attempt=1`.
+- Full source, PR test-merge, canonical theorem-merged Formal Git tree `f6d79ca9aacd84d58c438bdac58fbe471bc40ae1`.
+
+**Certification:** FORMAL_INTEGRATED_INDEPENDENT_PUSH_CERTIFIED for AMW's exact three theorem statements. The original physical two-mode excitation and Haar-a.e. time-zero cylinder representative are verified, but actual positive-time OS carrier lifting, Wilson/OS one-slab intertwining, volume-uniform/continuum gap remain unproved.
+
+This is a documentation-only append and must not trigger Strict Lean.
