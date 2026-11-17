@@ -170,13 +170,11 @@ theorem p4Q2PZ37ANK_originalTimeOneBoundaryMoment_norm_sq_integrable
       (fun b => ‖p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment
         H beta hbeta c0 c1 b‖ ^ 2)
       (periodicHypercubicEvenBoundaryHaarMeasure H 2) := by
-  -- Keep the exact original boundary Haar finite and s-finite instances
-  -- local to this proof as well as at file scope.
+  -- The direct bound needs finite original boundary Haar only.
+  -- Do not request an unused SFinite witness in this proof.
   letI : IsFiniteMeasure (periodicHypercubicEvenBoundaryHaarMeasure H 2) := by
     dsimp [periodicHypercubicEvenBoundaryHaarMeasure,
       FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure]
-    infer_instance
-  letI : SFinite (periodicHypercubicEvenBoundaryHaarMeasure H 2) := by
     infer_instance
   -- Derive square integrability directly from the original uniform bound.
   -- No Holder product, function equality rewrite, or integrability transport.
