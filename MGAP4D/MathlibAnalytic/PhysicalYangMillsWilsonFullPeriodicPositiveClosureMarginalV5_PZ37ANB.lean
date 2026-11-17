@@ -187,6 +187,7 @@ theorem p4Q2PZ37ANB_fullPeriodicGibbs_positiveClosure_marginal
         (fun A => (P.boundaryRestriction A, P.positiveRestriction A)) C.gibbsMeasure =
         Measure.map (proj ∘ P.boundaryFiberedCoordinates Gauge) C.gibbsMeasure := by
       rw [hcomp]
+      rfl
     _ = Measure.map proj
           (Measure.map (P.boundaryFiberedCoordinates Gauge) C.gibbsMeasure) := by
       exact (Measure.map_map hproj
