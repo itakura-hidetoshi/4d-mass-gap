@@ -32,7 +32,7 @@ local instance p4Q2PZ37AMW_spatialLinkFintype (H : ℕ) :
 /-- An explicit TWO-mode linear combination in any real inner-product space
 that is nonzero and orthogonal to a prescribed vector. No dimension,
 surjectivity, or orthogonal-complement existence assumption is used. -/
-private theorem p4Q2PZ37AMW_twoMode_linearCombination
+theorem p4Q2PZ37AMW_twoMode_linearCombination
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     (Ω v0 v1 : E)
     (hv0 : ‖v0‖ = 1)
