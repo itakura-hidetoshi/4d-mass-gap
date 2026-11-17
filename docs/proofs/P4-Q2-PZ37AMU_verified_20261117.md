@@ -46,3 +46,17 @@ These are four explicit `#print axioms` theorem audits plus one compiled definit
 AMU establishes finite-volume nonzero original normalized Wilson top-orthogonal physical states, not compatibility with the abstract OS positive-time operator, nor representation of these states by genuine positive-time OS observables. The physical one-slab's nonidentity under strict contraction will be studied separately in AMV. No `C.translate=normalized Wilson one-slab`, no OS–Wilson gluing, no volume-uniform coercivity/continuum mass gap from this finite result.
 
 This is **documentation only**; do not run Strict Lean.
+
+## 2026-11-17 JST append-only independent canonical push completion
+
+The previous 'in_progress' entry remains a correct historical observation at its observation time. The following separate GitHub MCP reobservation establishes **SUCCESS** on the exact later completed workflow, not by retroactively rewriting that entry.
+
+- [Independent canonical **push** CI #44014823430](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44014823430), event `push`, exact `head_sha=6c4cd670a4502dd54c0e54f1377e3e3ddd72b416`, run attempt `1`: workflow **completed/SUCCESS**.
+- Required `Changed Lean fast check` job `133810105508`, including mandatory `Run changed Lean fast check` step, **completed/SUCCESS**.
+- Actual decoded Lean log ends with `Build completed successfully (8830 jobs).`. Four printed AMU theorem axioms are precisely the standard `propext`, `Classical.choice`, `Quot.sound`; `sorryAx` absent. AMU changed-file warning/error `0/0`.
+- Independent receipt job `133812738769` completed/SUCCESS. Actual emitted receipt: `[mcp-receipt] event=push exact_sha=6c4cd670a4502dd54c0e54f1377e3e3ddd72b416 source_result=success run=44014823430 attempt=1`.
+- Exact source HEAD `5724f7fbac942194fd6091b7d51bee6f4f78427c`, PR test-merge and actual canonical merged HEAD share Git tree `2de58c60ffdc97d69ef353e307a5bb0ec0d7344b`.
+
+Certification state: **FORMAL_INTEGRATED_INDEPENDENT_PUSH_CERTIFIED** for the scoped four AMU theorem statements. No OS–Wilson one-slab correspondence or continuum Yang–Mills mass gap is asserted.
+
+This is a docs-only append and does not request Strict Lean.
