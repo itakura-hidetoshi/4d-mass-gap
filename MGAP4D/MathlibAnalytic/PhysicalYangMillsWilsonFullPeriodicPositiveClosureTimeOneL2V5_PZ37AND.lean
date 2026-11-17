@@ -76,14 +76,18 @@ theorem p4Q2PZ37AND_originalPeriodicPositiveClosure_isProbabilityMeasure
           Matrix.specialUnitaryGroup (Fin 2) ℂ =>
         (periodicHypercubicEvenEdgeOrbitPartition H).positiveRestriction A) := by
     exact measurable_pi_lambda _ fun e => measurable_pi_apply e.1
-  letI : IsProbabilityMeasure
+  have hSource :
       (periodicHypercubicSpecialUnitaryWilsonSystem
-        (PeriodicHypercubicEvenSideLength H) 2 (by norm_num) beta hbeta).gibbsMeasure :=
-    continuous_compact_oriented_gibbsMeasure_isProbabilityMeasure
+        (PeriodicHypercubicEvenSideLength H) 2 (by norm_num) beta hbeta).gibbsMeasure
+        Set.univ = 1 :=
+    (continuous_compact_oriented_gibbsMeasure_isProbabilityMeasure
       (periodicHypercubicSpecialUnitaryWilsonSystem
-        (PeriodicHypercubicEvenSideLength H) 2 (by norm_num) beta hbeta)
+        (PeriodicHypercubicEvenSideLength H) 2 (by norm_num) beta hbeta)).measure_univ
+  constructor
   unfold p4Q2PZ37AND_originalPeriodicPositiveClosureMeasure
-  exact Measure.isProbabilityMeasure_map (hBoundary.prodMk hPositive).aemeasurable
+  rw [Measure.map_apply_of_aemeasurable (hBoundary.prodMk hPositive).aemeasurable
+    MeasurableSet.univ, Set.preimage_univ]
+  exact hSource
 
 /-- The same pointwise two-mode bound holds after the actual closure
 coordinate extraction. No comparison of interacting L2 norms is used. -/
