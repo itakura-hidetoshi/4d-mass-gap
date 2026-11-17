@@ -170,26 +170,33 @@ theorem p4Q2PZ37ANK_originalTimeOneBoundaryMoment_norm_sq_integrable
       (fun b => ‖p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment
         H beta hbeta c0 c1 b‖ ^ 2)
       (periodicHypercubicEvenBoundaryHaarMeasure H 2) := by
-  have hm := p4Q2PZ37ANK_originalTimeOneBoundaryMoment_memLp_two
+  -- Derive square integrability directly from the original uniform bound.
+  -- No Holder product, function equality rewrite, or integrability transport.
+  let C := p4Q2PZ37ANK_originalTimeOneGramBound H beta hbeta c0 c1 *
+    (periodicHypercubicEvenOpenHalfHaarMeasure H 2).real Set.univ
+  have hi := p4Q2PZ37ANK_originalTimeOneBoundaryMoment_integrable
     H beta hbeta c0 c1
-  -- Fix both factors to the original real moment before simplifying its norm.
-  have hmul : Integrable
-      (fun b => p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment
-          H beta hbeta c0 c1 b *
-        p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment H beta hbeta c0 c1 b)
-      (periodicHypercubicEvenBoundaryHaarMeasure H 2) := hm.integrable_mul hm
-  -- Transfer integrability through a.e. equality, avoiding dependent rewriting.
-  have hAE :
-      (fun b : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 =>
-        p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment H beta hbeta c0 c1 b *
-          p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment H beta hbeta c0 c1 b)
-        =ᵐ[periodicHypercubicEvenBoundaryHaarMeasure H 2]
-      (fun b : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 =>
-        ‖p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment
-          H beta hbeta c0 c1 b‖ ^ 2) := by
-    filter_upwards [] with b
-    rw [Real.norm_eq_abs, sq_abs, pow_two]
-  exact hmul.congr hAE
+  have hs : AEStronglyMeasurable
+      (fun b => ‖p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment
+        H beta hbeta c0 c1 b‖ ^ 2)
+      (periodicHypercubicEvenBoundaryHaarMeasure H 2) :=
+    hi.aestronglyMeasurable.norm.pow 2
+  apply Integrable.of_bound hs (C ^ 2)
+  filter_upwards [] with b
+  have hb : ‖p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment
+      H beta hbeta c0 c1 b‖ ≤ C :=
+    p4Q2PZ37ANK_originalTimeOneBoundaryMoment_norm_le H beta hbeta c0 c1 b
+  have hn : 0 ≤ ‖p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment
+      H beta hbeta c0 c1 b‖ := norm_nonneg _
+  have hC : 0 ≤ C := le_trans hn hb
+  have hprod : 0 ≤
+      (C - ‖p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment
+        H beta hbeta c0 c1 b‖) *
+      (C + ‖p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment
+        H beta hbeta c0 c1 b‖) :=
+    mul_nonneg (sub_nonneg.mpr hb) (add_nonneg hC hn)
+  rw [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg _)]
+  nlinarith
 
 /-- Exact null-space criterion for the ORIGINAL full-periodic Wilson OS
 form. Both directions use the actual boundary moment with square
