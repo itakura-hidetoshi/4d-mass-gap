@@ -5813,3 +5813,9 @@ The actual original beta0 SU2 Gibbs all-plaquette covariance theorem was merged 
 ```
 
 The exact merged Git tree `545a52f83a1b286365c47bee6a042a911e458745` equals the source and synthetic test-merge trees. Actual original fixed beta0 full interacting finite Gibbs `sum_q |Cov(chi_q,chi_p)|<=96/(1-rho0)` is certified; Gauss-law physical OS transfer gap, Hamiltonian gap, varying-beta continuum reconstruction, Euclidean 4D continuum Yang–Mills mass gap remain OPEN.
+
+#### PZ37ANB — exact original full-periodic Wilson positive-half fiber (2026-11-17 JST)
+
+[Formal proof and independent receipts](docs/proofs/P4-Q2-PZ37ANB_verified_20261117.md): [PR #6843](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6843) **MERGED**, source `d6d0552c5cb7`, Formal theorem HEAD `b302fc29610c`, source/test-merge/merged Git tree `d9d13cb1d393fa0055c3bfa4d1415420bd373742` identical. Exact-source [CI #44044663034](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44044663034) and separate Formal [push #44045273155](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44045273155) both completed/SUCCESS, required Lean jobs/steps successful (8,550/8,550), two theorem axiom audits standard three only, no `sorryAx`, changed source warning/error 0/0, both independent exact-head receipts successful.
+
+Scope: in original finite even-periodic SU(N) Wilson Gibbs law, integrating the **normalized full-periodic** density over the negative open half gives the exact original boundary vacuum moment times the positive completed Gram feature, with a strict positive fiber. This is **not** an identification with ANA's normalized temporal-gauge half-path measure. Positive-closure pushforward, terminal-gauge boundary compatibility, physical OS carrier/one-slab intertwining, volume-uniform spectral gap and continuum four-dimensional Yang–Mills mass gap remain unproved.
