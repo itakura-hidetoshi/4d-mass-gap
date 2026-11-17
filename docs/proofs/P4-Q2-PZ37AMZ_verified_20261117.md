@@ -43,3 +43,15 @@ These are proofs about actual original finite temporal-gauge half-path path meas
 Even this normalized genuine temporal-gauge positive-half law remains a finite half-path model, not an automatically identified periodic Gibbs marginal nor a compatible positive-time OS state for a given coherent `Q`. An actual Gibbs spatial-temporal restriction identity (with gauge fixing/reflection/orientation/wraparound) and a typed OS boundary carrier are separately needed, followed by one-slab operator comparison and continuum scaling. Nothing here proves a 4D continuum Yang–Mills mass gap.
 
 Docs-only: no Strict Lean run requested.
+
+## 2026-11-17 JST append-only canonical push SUCCESS reobservation
+
+The earlier `in_progress` checkpoint above remains a correct historical observation; this later independent GitHub MCP reobservation establishes completion **on the exact integrated AMZ Formal HEAD**.
+
+- [Independent canonical push workflow #44027602975](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44027602975): `event=push`, exact `head_sha=7822a401f3d43ba45dbcb4706a15739a43789093`, attempt 1, workflow **completed/SUCCESS**.
+- Mandatory Lean job `133851581569` and `Run changed Lean fast check` step completed/SUCCESS. Decoded log ends `Build completed successfully (8841 jobs).`.
+- All eight AMZ theorem `#print axioms` outputs contain exactly `propext`, `Classical.choice`, `Quot.sound`; no `sorryAx`, changed-source warning/error `0/0`.
+- Independent receipt job `133852561466` completed/SUCCESS, actual log: `[mcp-receipt] event=push exact_sha=7822a401f3d43ba45dbcb4706a15739a43789093 source_result=success run=44027602975 attempt=1`.
+- The AMZ theorem source is now **FORMAL_INTEGRATED_INDEPENDENT_PUSH_CERTIFIED** in precisely its original finite temporal-gauge normalized half-path scope. The original fully periodic Gibbs/OS one-slab identification and continuum 4D mass gap remain open.
+
+This is docs-only; no Strict Lean rerun is required.
