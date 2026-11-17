@@ -172,7 +172,13 @@ theorem p4Q2PZ37ANK_originalTimeOneBoundaryMoment_norm_sq_integrable
       (periodicHypercubicEvenBoundaryHaarMeasure H 2) := by
   have hm := p4Q2PZ37ANK_originalTimeOneBoundaryMoment_memLp_two
     H beta hbeta c0 c1
-  simpa only [Real.norm_eq_abs, sq_abs, pow_two] using hm.integrable_mul hm
+  -- Fix both factors to the original real moment before simplifying its norm.
+  have hmul : Integrable
+      (fun b => p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment
+          H beta hbeta c0 c1 b *
+        p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment H beta hbeta c0 c1 b)
+      (periodicHypercubicEvenBoundaryHaarMeasure H 2) := hm.integrable_mul hm
+  simpa only [Real.norm_eq_abs, sq_abs, pow_two] using hmul
 
 /-- Exact null-space criterion for the ORIGINAL full-periodic Wilson OS
 form. Both directions use the actual boundary moment with square
