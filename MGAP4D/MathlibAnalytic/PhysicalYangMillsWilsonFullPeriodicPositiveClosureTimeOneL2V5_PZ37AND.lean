@@ -76,6 +76,12 @@ theorem p4Q2PZ37AND_originalPeriodicPositiveClosure_isProbabilityMeasure
           Matrix.specialUnitaryGroup (Fin 2) ℂ =>
         (periodicHypercubicEvenEdgeOrbitPartition H).positiveRestriction A) := by
     exact measurable_pi_lambda _ fun e => measurable_pi_apply e.1
+  letI : IsProbabilityMeasure
+      (periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength H) 2 (by norm_num) beta hbeta).gibbsMeasure :=
+    continuous_compact_oriented_gibbsMeasure_isProbabilityMeasure
+      (periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength H) 2 (by norm_num) beta hbeta)
   unfold p4Q2PZ37AND_originalPeriodicPositiveClosureMeasure
   exact Measure.isProbabilityMeasure_map (hBoundary.prodMk hPositive).aemeasurable
 
