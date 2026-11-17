@@ -30,6 +30,24 @@ local instance p4Q2PZ37AMX_spatialLinkFintype (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
+-- Exact typeclass context of the existing pinned original SU(2) Haar modules.
+-- Imports of other files' local instances do not export those instances.
+local instance p4Q2PZ37AMX_group :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37AMX_compact :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37AMX_countable :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37AMX_measurable :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37AMX_borel :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+  specialUnitaryGroupBorelSpace 2
+
 /-- Strict positive time 1 is inside the genuine original half-cylinder path
 of H+2 spatial slices, including H=0. -/
 def p4Q2PZ37AMX_positiveTimeOne
