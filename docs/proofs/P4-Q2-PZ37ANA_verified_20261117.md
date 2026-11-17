@@ -46,3 +46,17 @@ One additive Lean file `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2Normali
 ANA proves only a **finite original, precisely normalized positive-half temporal-gauge Wilson path** real L² state. This path law is not proven equal to the **full-periodic Wilson Gibbs probability** on original finite even-periodic SU(2) configurations; it is not automatically a `D.positiveTimeSubalgebra` state for arbitrary given coherent OS data `Q`, nor the range of `Q.physicalHilbertBoundaryMomentLinearIsometry`. No mathematical equality between genuine normalized physical Wilson one-slab and abstract `C.translate`, and no 4D continuum Yang–Mills mass gap, is asserted.
 
 This record is Markdown-only; Strict Lean must not run.
+
+## 2026-11-17 JST independent canonical push SUCCESS
+
+The earlier observed push `in_progress` checkpoint remains historically valid. The later independent GitHub MCP observation establishes **completion on the exact merged ANA Formal source**:
+
+- [Canonical push CI #44029571978](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44029571978): event `push`, exact `head_sha=b6454679748b8074e6ff9fa2d41ed8e3a017cc88`, attempt 1, workflow **completed/SUCCESS**.
+- Required Lean job `133857962074` and mandatory `Run changed Lean fast check` step both completed/SUCCESS; full decoded log ends `Build completed successfully (8842 jobs).`.
+- All five ANA `#print axioms` use only `propext`, `Classical.choice`, `Quot.sound`; no `sorryAx`; direct ANA warning/error `0/0`.
+- Independent receipt job `133859097654` completed/SUCCESS. Exact emitted receipt: `[mcp-receipt] event=push exact_sha=b6454679748b8074e6ff9fa2d41ed8e3a017cc88 source_result=success run=44029571978 attempt=1`.
+- Certified source `3954ba41fb7cc3963285d0ac85da3b3e50f00703`, test-merge and actual merged Formal Git trees all equal `a7187e806fb2feccccd4311acbbeed9cd6442f1c`.
+
+Result state: **FORMAL_INTEGRATED_INDEPENDENT_PUSH_CERTIFIED** within ANA's original normalized finite interacting Wilson positive-time half-path `Lp ℝ 2` scope. Not a certification of arbitrary abstract OS-positive-time carrier realization, full-periodic Gibbs law identity, OS–Wilson one-slab equivalence, or continuum 4D YM mass gap.
+
+This is documentation only; no Strict Lean is run.
