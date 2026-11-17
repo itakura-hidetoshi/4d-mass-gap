@@ -60,7 +60,9 @@ theorem p4Q2PZ37AMW_twoMode_linearCombination
       ring
     have hwne : b • v0 + (-a) • v1 ≠ 0 := by
       intro hw
-      rw [hw, inner_zero] at hval
+      rw [hw] at hval
+      have hz : (0 : ℝ) = -a := by
+        simpa using hval
       exact ha (by linarith)
     have horth : inner ℝ Ω (b • v0 + (-a) • v1) = 0 := by
       rw [inner_add_right, real_inner_smul_right, real_inner_smul_right]
@@ -163,8 +165,11 @@ theorem p4Q2PZ37AMW_twoMode_ae_originalSpatialWilsonObservable
         c1 * specialUnitaryWilsonPlaquetteEnergyTwoContinuousGramSchmidtMode 1
             (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 A))
   filter_upwards [hadd, hs0, hs1, h0, h1] with A ha hs0a hs1a h0a h1a
-  rw [ha, hs0a, hs1a, h0a, h1a]
-  simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
+  rw [ha]
+  simp only [Pi.add_apply]
+  rw [hs0a, hs1a]
+  simp only [Pi.smul_apply, smul_eq_mul]
+  rw [h0a, h1a]
 
 end
 end MGAP4D.MathlibAnalytic
