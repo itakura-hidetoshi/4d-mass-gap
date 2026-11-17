@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2PrimarySpatialSliceGaussLawClassModeV5_PZ37AMT
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryConcreteFiniteTransferWord
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopEigenspaceSimplicity
 import MGAP4D.MathlibAnalytic.InfiniteLinearIndependentCompletionNotFiniteDimensional
 import MGAP4D.MathlibAnalytic.InfiniteDimensionalHilbertVacuumOrthogonalSequence
@@ -125,9 +126,10 @@ theorem p4Q2PZ37AMU_exists_originalPhysical_nonzeroTopOrthogonalExcitation
     p4Q2PZ37AMU_exists_originalPhysical_unitTopOrthogonalExcitation H beta hbeta
   refine ⟨v, ?_, hvOrth⟩
   intro hvZero
-  have hNormZero : ‖v‖ = 0 := by simp [hvZero]
-  linarith
+  rw [hvZero, norm_zero] at hvUnit
+  norm_num at hvUnit
 
+end
 end MGAP4D.MathlibAnalytic
 
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AMU_actualPhysicalGaussMode_orthonormal
