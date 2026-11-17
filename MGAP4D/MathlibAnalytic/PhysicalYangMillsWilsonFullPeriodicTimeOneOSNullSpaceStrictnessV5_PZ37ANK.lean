@@ -180,9 +180,11 @@ theorem p4Q2PZ37ANK_originalTimeOneBoundaryMoment_norm_sq_integrable
       (periodicHypercubicEvenBoundaryHaarMeasure H 2) := hm.integrable_mul hm
   -- Ordered rewriting avoids expanding |M|^2 before sq_abs can apply.
   have heq :
-      (fun b => ‖p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment
+      (fun b : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 =>
+        ‖p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment
           H beta hbeta c0 c1 b‖ ^ 2) =
-        (fun b => p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment
+        (fun b : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 =>
+          p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment
             H beta hbeta c0 c1 b *
           p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment H beta hbeta c0 c1 b) := by
     funext b
