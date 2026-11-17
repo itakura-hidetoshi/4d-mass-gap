@@ -74,3 +74,15 @@ For genuine OS–Wilson four-Haar gluing one must independently prove:
 4. Physical one-step time calibration; `C.translate 1 = R.positiveTranslation n 1` is currently an unproved optional seam, not the answer.
 
 The existing proven full finite Wilson path identity `periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalGaugePathKernel_integral_eq_pairTransferOperator_inner` has a **specific inward Wilson message**, not arbitrary AMP endpoints. No continuum four-dimensional Yang–Mills mass gap is claimed.
+
+## 2026-11-17 JST later independent reobservation — AMR cancelled, AMS succeeded
+
+This later observation is appended without overwriting the source-level AMR proof or the earlier pending-status checkpoint.
+
+- [AMR-only independent canonical push CI #43989916990](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43989916990), exactly on AMR Formal merge HEAD `30551be0570d66e63c03b2ac04b4f7552fcf97bb`, event `push`, attempt 1: **workflow completed/CANCELLED**. Its required `Changed Lean fast check` job `133727581880` and `Run changed Lean fast check` step were **CANCELLED**. Therefore this AMR-only HEAD has **no successful independent push-architecture certification**. The original exact-source success #43949005729 remains valid, but cannot be silently promoted to a successful independent push result.
+- A later **distinct** canonical Formal merge HEAD `522c1db41644ec843b4dcbeb706b8f115f985367`, integrating AMS theorem [#6823](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6823) atop the AMR source, has an independently successful **push** [CI #43999959747](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43999959747): event `push`, exact SHA `522c1db41644ec843b4dcbeb706b8f115f985367`, attempt 1, workflow completed/SUCCESS, required Lean job `133761399798` and required `Run changed Lean fast check` step both completed/SUCCESS, receipt job `133771333946` completed/SUCCESS.
+- The independent receipt emitted `[mcp-receipt] event=push exact_sha=522c1db41644ec843b4dcbeb706b8f115f985367 source_result=success run=43999959747 attempt=1`. The full decoded Lean log ends in `Build completed successfully (8789 jobs).`; the AMS newly changed Lean source has **0 direct errors and 0 direct warnings**, five printed theorem axioms constrained to `propext`, `Classical.choice`, `Quot.sound`, no `sorryAx`. Unchanged older dependencies have some independent warnings; they are not AMS-direct warnings.
+- The AMR theorem source is an ancestor of this later independently push-certified AMS Formal tree. This is valid certification **only for the later merged source state**; the historical AMR-only push result remains CANCELLED.
+- Still no derivation of nonzero physical Gauss-law top-complement excitation, no actual normalized physical one-slab/abstract OS-semigroup identification, and no continuum four-dimensional mass-gap theorem.
+
+This documentation-only update adds no Lean source and does not request Strict Lean recompilation.
