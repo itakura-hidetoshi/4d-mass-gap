@@ -52,6 +52,13 @@ local instance p4Q2PZ37AMS_measurable (N : ℕ) :
 local instance p4Q2PZ37AMS_borel (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
+-- A Finite proof does not supply the explicit coordinate enumeration
+-- required by Measure.pi and the finite-product Haar transport API.
+-- Import-local instances in the one-slab and Gauss-action modules do
+-- not export to this declaration's elaboration context.
+local instance p4Q2PZ37AMS_spatialLinkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
 local instance p4Q2PZ37AMS_haarLeftInvariant (N : ℕ) :
     MeasureTheory.Measure.IsMulLeftInvariant
       (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)) := by
