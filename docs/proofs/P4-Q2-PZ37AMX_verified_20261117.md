@@ -42,3 +42,17 @@ One additive source `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2PositiveTi
 4. No continuum 4D Yang–Mills mass gap is established by this finite positive-time cylinder.
 
 Docs-only; **no Strict Lean**.
+
+## 2026-11-17 JST append-only independently certified canonical push
+
+A subsequent distinct GitHub MCP reobservation establishes the completed canonical integrated source result; earlier `in_progress` observation above remains valid as a historical checkpoint and is not overwritten.
+
+- [Canonical push CI #44020541396](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44020541396), event `push`, exact `head_sha=c5a9b78e74df562b143e33c7faa22c29f0e66b91`, run attempt 1, workflow **completed/SUCCESS**.
+- Required `Changed Lean fast check` job `133828706138` and mandatory `Run changed Lean fast check` step completed/SUCCESS.
+- Complete decoded Lean log: `Build completed successfully (8833 jobs).`. AMX two explicit theorem `#print axioms` show only `propext`, `Classical.choice`, `Quot.sound`; no `sorryAx`; changed direct warning/error `0/0`.
+- Independent receipt job `133829809768` completed/SUCCESS, actual emitted exact receipt: `[mcp-receipt] event=push exact_sha=c5a9b78e74df562b143e33c7faa22c29f0e66b91 source_result=success run=44020541396 attempt=1`.
+- Source, PR test-merge, canonical theorem Formal merge share Git tree `aa4b58102b3855c2f452f517d97176511951a3ec`.
+
+**Certification:** FORMAL_INTEGRATED_INDEPENDENT_PUSH_CERTIFIED only for the scoped finite positive-half original spatial-product-Haar time-one cylinder statements. Original interacting Gibbs path pullback and arbitrary abstract OS boundary carrier realizability are not derived. OS–Wilson one-slab and continuum 4D mass gap remain unproved.
+
+Docs-only update; no Strict Lean.
