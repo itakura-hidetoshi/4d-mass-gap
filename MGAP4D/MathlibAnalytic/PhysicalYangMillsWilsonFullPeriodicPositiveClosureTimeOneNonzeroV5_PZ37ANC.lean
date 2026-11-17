@@ -32,7 +32,8 @@ set_option maxHeartbeats 4000000
 
 local instance p4Q2PZ37ANC_sideLength (H : ℕ) :
     NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
-  simp [PeriodicHypercubicEvenSideLength]⟩
+  simp [PeriodicHypercubicEvenSideLength,
+    periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
 local instance p4Q2PZ37ANC_group :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup 2
@@ -129,15 +130,15 @@ theorem p4Q2PZ37ANC_exists_nonzero_positiveClosureHaar_timeOneCylinder
       hνac.ae_eq hgRho
     exact hWeightedNonzero (by
       simpa [g, ν, p4Q2PZ37ANA_timeOneTwoModeWilsonObservable] using hgNu)
-  let λ := (periodicHypercubicEvenBoundaryHaarMeasure H 2).prod
+  let haarClosure := (periodicHypercubicEvenBoundaryHaarMeasure H 2).prod
     (periodicHypercubicEvenOpenHalfHaarMeasure H 2)
   let t : PeriodicHypercubicEvenPositiveHalfClosureConfiguration H
       (Matrix.specialUnitaryGroup (Fin 2) ℂ) →
       PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H 2 :=
     fun z => (periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
       H 2 z).1
-  have ht : MeasurePreserving t λ ρ := by
-    simpa [t, λ, ρ] using
+  have ht : MeasurePreserving t haarClosure ρ := by
+    simpa [t, haarClosure, ρ] using
       p4Q2PZ37ANC_positiveClosureSpatialPath_measurePreserving H
   have hGMeas : Measurable g := by
     exact p4Q2PZ37ANA_timeOneTwoModeWilsonObservable_measurable H c0 c1
@@ -147,9 +148,9 @@ theorem p4Q2PZ37ANC_exists_nonzero_positiveClosureHaar_timeOneCylinder
     measurableSet_eq_fun hGMeas measurable_const
   refine ⟨c0, c1, hTop, ?_⟩
   intro hZeroLambda
-  have hZeroMapped : ∀ᵐ path ∂Measure.map t λ, g path = (0 : ℝ) := by
+  have hZeroMapped : ∀ᵐ path ∂Measure.map t haarClosure, g path = (0 : ℝ) := by
     rw [MeasureTheory.ae_map_iff ht.measurable.aemeasurable hSet]
-    simpa [g, t, λ, p4Q2PZ37ANC_timeOneTwoModePositiveClosureObservable] using
+    simpa [g, t, haarClosure, p4Q2PZ37ANC_timeOneTwoModePositiveClosureObservable] using
       hZeroLambda
   rw [ht.map_eq] at hZeroMapped
   exact hNonzeroRho hZeroMapped
