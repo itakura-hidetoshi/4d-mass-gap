@@ -45,3 +45,17 @@ The AMR abstract identity OS semigroup `C_id.translate t=identity` is one permit
 In particular the arbitrary physical Gauss-law state built by AMU/AMV has not been proven to arise from the same positive-time OS canonical boundary moment with the required reflection, time-calibration, normalization and physical endpoint compatibility. No physical Wilson/OS complete one-slab identification and no continuum 4D Yang–Mills mass gap is certified.
 
 This is a docs-only record; **do not run Strict Lean**.
+
+## 2026-11-17 JST append-only postmerge independent push certification
+
+The earlier `in_progress` checkpoint above is preserved. A subsequent independent GitHub MCP reobservation now establishes canonical-push completion on the exact merged source state:
+
+- [Independent Formal canonical push CI #44016487023](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44016487023): event `push`, exact `head_sha=e6d54aa613c9535f456ad50b3baf3b30be148309`, attempt 1, workflow **completed/SUCCESS**.
+- Mandatory Lean job `133815551202` and `Run changed Lean fast check` step: both completed/SUCCESS.
+- Full decoded Lean job log: `Build completed successfully (8831 jobs).`; AMV three explicit theorem axiom prints use only `propext`, `Classical.choice`, `Quot.sound`. No `sorryAx`. AMV source-direct warning/error `0/0`.
+- Independent completion receipt job `133816447364` completed/SUCCESS, actual emitted receipt: `[mcp-receipt] event=push exact_sha=e6d54aa613c9535f456ad50b3baf3b30be148309 source_result=success run=44016487023 attempt=1`.
+- Source-certified HEAD `5f005bb555132e0c0033fdcc5f80b2a35bb5100c`, test-merge and canonical Formal integrated Git trees all agree at `48b976dfa811003f551dcd5c737fb8403078fe06`.
+
+**Certification state:** FORMAL_INTEGRATED_INDEPENDENT_PUSH_CERTIFIED for the three AMV source-scoped physical Wilson nonidentity declarations. The model-specific OS–Wilson one-slab intertwining, actual compatible OS boundary realization and continuum mass gap remain unproved.
+
+This is a docs-only append. No Strict Lean is requested or required.
