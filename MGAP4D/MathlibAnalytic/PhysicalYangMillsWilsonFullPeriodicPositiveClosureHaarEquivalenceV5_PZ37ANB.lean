@@ -89,10 +89,19 @@ theorem p4Q2PZ37ANB_positiveClosureProductHaar_ac_fullPeriodicGibbs
         periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
           H N hN beta hbeta z.1 z.2)
   have hw : Measurable w := by
-    have hb :=
+    have hb : Measurable
+        (fun z :
+          PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H N ×
+            PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration H N =>
+          periodicHypercubicEvenBoundaryVacuumMoment H N hN beta hbeta z.1) :=
       (periodicHypercubicEvenBoundaryVacuumMoment_measurable
         H N hN beta hbeta).comp measurable_fst
-    have hx :=
+    have hx : Measurable
+        (fun z :
+          PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H N ×
+            PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration H N =>
+          periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+            H N hN beta hbeta z.1 z.2) :=
       periodicHypercubicEvenBoundaryVacuumGramFeature_measurable
         H N hN beta hbeta
     exact ENNReal.measurable_ofReal.comp (hb.mul hx)
