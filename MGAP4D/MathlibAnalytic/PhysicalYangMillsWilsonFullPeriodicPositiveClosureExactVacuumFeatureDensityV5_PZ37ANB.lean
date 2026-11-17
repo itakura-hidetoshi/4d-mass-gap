@@ -85,7 +85,7 @@ theorem p4Q2PZ37ANB_fullPeriodicPositiveHalfFiber_lintegral_eq_ofReal_vacuum_mul
   have hBound : ∀ y, ‖f y‖ ≤ C.base.partitionFunction⁻¹ := by
     intro y
     dsimp [f]
-    rw [Real.norm_eq_abs, abs_of_nonneg ENNReal.toReal_nonneg]
+    rw [abs_of_nonneg ENNReal.toReal_nonneg]
     simpa [ρ, C] using
       periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity_toReal_le_inv_partitionFunction
         H N hN beta hbeta (b, (x, y))
