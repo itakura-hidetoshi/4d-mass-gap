@@ -115,17 +115,17 @@ theorem p4Q2PZ37ANE_timeOneGibbsL2_eq_zero_iff_HaarL2_eq_zero
     p4Q2PZ37AND_truePeriodicTimeOnePositiveClosureL2 H beta hbeta c0 c1 = 0 ↔
       p4Q2PZ37ANE_timeOneOriginalHaarL2 H c0 c1 = 0 := by
   let μ := p4Q2PZ37AND_originalPeriodicPositiveClosureMeasure H beta hbeta
-  let λ := p4Q2PZ37ANE_originalPositiveClosureHaarMeasure H
+  let haar := p4Q2PZ37ANE_originalPositiveClosureHaarMeasure H
   let F := p4Q2PZ37ANC_timeOneTwoModePositiveClosureObservable H c0 c1
   let ψG : Lp ℝ 2 μ :=
     p4Q2PZ37AND_truePeriodicTimeOnePositiveClosureL2 H beta hbeta c0 c1
-  let ψH : Lp ℝ 2 λ := p4Q2PZ37ANE_timeOneOriginalHaarL2 H c0 c1
+  let ψH : Lp ℝ 2 haar := p4Q2PZ37ANE_timeOneOriginalHaarL2 H c0 c1
   have hRepG : ψG =ᵐ[μ] F := by
     simpa [ψG, μ, F] using
       p4Q2PZ37AND_truePeriodicTimeOnePositiveClosureL2_coeFn
         H beta hbeta c0 c1
-  have hRepH : ψH =ᵐ[λ] F := by
-    simpa [ψH, λ, F] using
+  have hRepH : ψH =ᵐ[haar] F := by
+    simpa [ψH, haar, F] using
       p4Q2PZ37ANE_timeOneOriginalHaarL2_coeFn H c0 c1
   have hZeroG : ψG = 0 ↔ F =ᵐ[μ] (fun _ => (0 : ℝ)) := by
     constructor
@@ -141,23 +141,23 @@ theorem p4Q2PZ37ANE_timeOneGibbsL2_eq_zero_iff_HaarL2_eq_zero
       have h0 : (0 : Lp ℝ 2 μ) =ᵐ[μ] (fun _ => (0 : ℝ)) := by
         simpa only [Pi.zero_apply] using (Lp.coeFn_zero ℝ 2 μ)
       exact hψzero.trans h0.symm
-  have hZeroH : ψH = 0 ↔ F =ᵐ[λ] (fun _ => (0 : ℝ)) := by
+  have hZeroH : ψH = 0 ↔ F =ᵐ[haar] (fun _ => (0 : ℝ)) := by
     constructor
     · intro hz
-      have hψzero : ψH =ᵐ[λ] (fun _ => (0 : ℝ)) := by
+      have hψzero : ψH =ᵐ[haar] (fun _ => (0 : ℝ)) := by
         rw [hz]
-        simpa only [Pi.zero_apply] using (Lp.coeFn_zero ℝ 2 λ)
+        simpa only [Pi.zero_apply] using (Lp.coeFn_zero ℝ 2 haar)
       exact hRepH.symm.trans hψzero
     · intro hfz
       apply Lp.ext
-      have hψzero : ψH =ᵐ[λ] (fun _ => (0 : ℝ)) :=
+      have hψzero : ψH =ᵐ[haar] (fun _ => (0 : ℝ)) :=
         hRepH.trans hfz
-      have h0 : (0 : Lp ℝ 2 λ) =ᵐ[λ] (fun _ => (0 : ℝ)) := by
-        simpa only [Pi.zero_apply] using (Lp.coeFn_zero ℝ 2 λ)
+      have h0 : (0 : Lp ℝ 2 haar) =ᵐ[haar] (fun _ => (0 : ℝ)) := by
+        simpa only [Pi.zero_apply] using (Lp.coeFn_zero ℝ 2 haar)
       exact hψzero.trans h0.symm
   have hAEzero : (F =ᵐ[μ] (fun _ => (0 : ℝ))) ↔
-      (F =ᵐ[λ] (fun _ => (0 : ℝ))) := by
-    simpa [μ, λ, p4Q2PZ37AND_originalPeriodicPositiveClosureMeasure,
+      (F =ᵐ[haar] (fun _ => (0 : ℝ))) := by
+    simpa [μ, haar, p4Q2PZ37AND_originalPeriodicPositiveClosureMeasure,
       p4Q2PZ37ANE_originalPositiveClosureHaarMeasure, F] using
       (p4Q2PZ37ANC_fullPeriodicPositiveClosure_ae_zero_iff_productHaar
         H beta hbeta F)
