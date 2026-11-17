@@ -168,7 +168,7 @@ theorem p4Q2PZ37ANA_exists_nonzero_normalizedInteractingWilsonTimeOneL2
     intro hzero
     have hψ0 : ψ =ᵐ[ν] (fun _ => (0 : ℝ)) := by
       rw [hzero]
-      simp
+      simpa only [Pi.zero_apply] using (Lp.coeFn_zero ℝ 2 ν)
     exact hNonzeroG (hRepresentative.symm.trans hψ0)
   refine ⟨c0, c1, hTop, ψ, hψne, ?_⟩
   simpa [ψ, g, ν] using hRepresentative
