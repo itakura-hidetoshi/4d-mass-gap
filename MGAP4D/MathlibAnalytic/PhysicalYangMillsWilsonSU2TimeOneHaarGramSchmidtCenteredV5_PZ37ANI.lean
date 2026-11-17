@@ -113,7 +113,9 @@ theorem p4Q2PZ37ANI_originalWilsonHaarGramSchmidtModeZero_eq_constOne :
           specialUnitaryWilsonPlaquetteEnergyPowerHaarL2
             (by norm_num : 0 < (2 : ℕ)) k))
   rw [hFirst, p4Q2PZ37ANI_originalWilsonEnergyPowerZero_eq_constOne]
-  simp [hOneNorm]
+  change (‖Lp.const 2 mu (1 : ℝ)‖ : ℝ)⁻¹ •
+    Lp.const 2 mu (1 : ℝ) = Lp.const 2 mu (1 : ℝ)
+  simp only [hOneNorm, inv_one, one_smul]
 
 /-- The exact SECOND normalized SU(2) Wilson-energy Gram--Schmidt L2
 mode has zero Haar expectation, because it is orthogonal to the
