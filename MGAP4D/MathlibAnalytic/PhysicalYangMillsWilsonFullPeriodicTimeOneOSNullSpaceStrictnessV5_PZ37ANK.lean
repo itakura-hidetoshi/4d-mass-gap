@@ -224,7 +224,10 @@ theorem p4Q2PZ37ANK_originalTimeOneWilsonOSQuadratic_zero_iff_boundaryMoment_ae_
   · intro hz
     have hs := (integral_eq_zero_iff_of_nonneg_ae hn hi).mp hz
     filter_upwards [hs] with b hb
-    simpa only [sq_eq_zero_iff, norm_eq_zero] using hb
+    -- The a.e. equality has the zero FUNCTION on the right; reduce its value first.
+    change ‖p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment
+      H beta hbeta c0 c1 b‖ ^ 2 = (0 : ℝ) at hb
+    exact norm_eq_zero.mp (sq_eq_zero_iff.mp hb)
   · intro hz
     have hs : (fun b => ‖p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment
         H beta hbeta c0 c1 b‖ ^ 2) =ᵐ[
