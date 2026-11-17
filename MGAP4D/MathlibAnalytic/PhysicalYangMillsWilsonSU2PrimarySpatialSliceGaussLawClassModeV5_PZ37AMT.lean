@@ -60,18 +60,7 @@ theorem p4Q2PZ37AMT_spatialHolonomy_eq_orientedFourEdge
         (p4Q2PZ37AMS_primarySpatialSlicePlaquette H) =
       orientedFourEdgePlaquetteWord
         (fun k => A (p4Q2PZ37AMS_primarySpatialSliceEdgeEmbedding H k)) := by
-  first
-  | rfl
-  | simp [periodicHypercubicEvenSpatialSlicePlaquetteHolonomy,
-      orientedFourEdgePlaquetteWord,
-      p4Q2PZ37AMS_primarySpatialSlicePlaquette,
-      p4Q2PZ37AMS_primarySpatialSliceEdgeEmbedding,
-      p4Q2PZ37AMS_primarySpatialSliceEdge,
-      periodicHypercubicEvenPrimarySpatialPlaquetteEdge_zero,
-      periodicHypercubicEvenPrimarySpatialPlaquetteEdge_one,
-      periodicHypercubicEvenPrimarySpatialPlaquetteEdge_two,
-      periodicHypercubicEvenPrimarySpatialPlaquetteEdge_three,
-      periodicHypercubicEvenSpatialSliceShift]
+  rfl
 
 /-- The actual oriented time-zero spatial plaquette holonomy is a conjugate
 of the cyclic four-Haar word used by the AMS L² isometry. -/
