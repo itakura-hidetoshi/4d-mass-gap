@@ -94,9 +94,54 @@ theorem p4Q2PZ37ANV_originalTimeZeroPrimaryCharacter_haarSecondMoment (H : ℕ) 
     _ = (1 / 4 : ℝ) :=
       GroundStatePosteriorJoint.p4Q2PZ37AKW_originalSingleLinkCharacter_secondMoment
 
+
+/-- True native time-zero spatial primary Wilson ENERGY against its own
+fundamental Haar character.  This is exactly -1/4, not a standalone
+independence premise about other spatial plaquettes.  The original
+Wilson energy E=1-chi and genuine SU(2) Haar variance are unchanged. -/
+theorem p4Q2PZ37ANV_originalTimeZeroPrimaryEnergyCharacter_haarPairing
+    (H : ℕ) :
+    (∫ A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
+      specialUnitaryWilsonPlaquetteEnergy 2
+        (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 A) *
+      Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 A)
+        ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2)) =
+      -(1 / 4 : ℝ) := by
+  have hChiCont : Continuous Chi :=
+    GroundStatePosteriorJoint.p4Q2PZ37AIQ_originalSingleLinkCharacter_continuous
+  have hPairCont : Continuous
+      (fun g : G => specialUnitaryWilsonPlaquetteEnergy 2 g * Chi g) :=
+    (continuous_specialUnitaryWilsonPlaquetteEnergy 2).mul hChiCont
+  have hIntChi : Integrable Chi nu :=
+    hChiCont.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+  have hIntChi2 : Integrable (fun g : G => (Chi g)^2) nu :=
+    (hChiCont.pow 2).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  have hPoint (g : G) :
+      specialUnitaryWilsonPlaquetteEnergy 2 g * Chi g =
+        Chi g - (Chi g)^2 := by
+    dsimp [p4Q2PZ35C_originalOneLinkCharacter]
+    ring
+  calc
+    _ = ∫ g : G, specialUnitaryWilsonPlaquetteEnergy 2 g * Chi g ∂nu :=
+      p4Q2PZ37ANV_originalTimeZeroPrimaryPlaquetteHaar_integralTransport
+        H _ hPairCont.measurable.aestronglyMeasurable
+    _ = ∫ g : G, Chi g - (Chi g)^2 ∂nu := by
+      apply integral_congr_ae
+      filter_upwards [] with g
+      exact hPoint g
+    _ = (∫ g : G, Chi g ∂nu) -
+        (∫ g : G, (Chi g)^2 ∂nu) :=
+      integral_sub hIntChi hIntChi2
+    _ = -(1 / 4 : ℝ) := by
+      rw [GroundStatePosteriorJoint.p4Q2PZ37AIQ_originalSingleLinkCharacter_mean_zero,
+        GroundStatePosteriorJoint.p4Q2PZ37AKW_originalSingleLinkCharacter_secondMoment]
+      ring
+
 end
 end MGAP4D.MathlibAnalytic
 
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalTimeZeroPrimaryPlaquetteHaar_integralTransport
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalTimeZeroPrimaryCharacter_haarMean_zero
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalTimeZeroPrimaryCharacter_haarSecondMoment
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalTimeZeroPrimaryEnergyCharacter_haarPairing
