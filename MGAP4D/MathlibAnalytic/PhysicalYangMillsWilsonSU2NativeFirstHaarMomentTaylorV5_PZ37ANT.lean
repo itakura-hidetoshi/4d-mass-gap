@@ -153,21 +153,24 @@ theorem p4Q2PZ37ANT_originalKernel_pairHaarL2_firstVariation_norm_le
   have hle : ∀ᵐ p ∂μ, ‖Q p‖ ≤ ‖B p‖ := by
     filter_upwards [hQadd, hQsub, hQsmul, hK, hK0, hS, hB] with
       p ha hs hsm hk hk0 hSval hBval
-    simp only [Q, B, Pi.add_apply, Pi.sub_apply, Pi.smul_apply,
-      smul_eq_mul] at *
+    change ‖(K - K0 + beta • S) p‖ ≤ ‖B p‖
     rw [ha, hs, hsm, hk, hk0, hSval, hBval]
+    rw [p4Q2PZ37ANO_originalOneSlabKernel_betaZero H p.1 p.2]
     have hTaylor :=
       p4Q2PZ37ANS_originalOneSlabKernel_quadraticRemainder
         H beta hbeta hsmall p.1 p.2
-    simpa [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg (C * beta)),
-      C, sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using hTaylor
+    simpa only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul,
+      Real.norm_eq_abs, abs_of_nonneg (sq_nonneg (C * beta))] using hTaylor
   have hnorm : ‖Q‖ ≤ ‖B‖ := Lp.norm_le_norm_of_ae_le hle
   have hnormB : ‖B‖ = (C * beta)^2 := by
+    letI : IsProbabilityMeasure μ := by
+      dsimp [μ]
+      infer_instance
     change ‖Lp.const 2 μ ((C * beta)^2)‖ = _
     have h :=
       Lp.norm_const' (μ := μ) (p := (2 : ENNReal))
         (c := ((C * beta)^2)) (by norm_num) (by norm_num)
-    simpa only [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg (C * beta))] using h
+    simpa [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg (C * beta))] using h
   change ‖Q‖ ≤ (C * beta)^2
   exact hnorm.trans_eq hnormB
 
@@ -248,17 +251,27 @@ theorem p4Q2PZ37ANT_originalFixedHaarResponse_firstMoment_quadratic
           (v1 : Lp ℝ 2 μ)
     exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_inner
       H 2 (by norm_num) 0 (by norm_num) (c : Lp ℝ 2 μ) (v1 : Lp ℝ 2 μ)).symm
+  let T := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+    H 2 (by norm_num) beta hbeta
+  let U := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+    H 2 (by norm_num) 0 (by norm_num)
+  have hsubPhysical :
+      inner ℝ ((T - U) c) v1 =
+        inner ℝ (T c) v1 - inner ℝ (U c) v1 := by
+    rw [ContinuousLinearMap.sub_apply]
+    exact (inner_sub_left (𝕜 := ℝ) (T c) (U c) v1)
   have hinner :
       inner ℝ Q E =
-        inner ℝ
-          ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-              H 2 (by norm_num) beta hbeta -
-            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-              H 2 (by norm_num) 0 (by norm_num)) c) v1 +
-        beta * inner ℝ S E := by
-    dsimp [Q]
-    rw [inner_add_left, inner_sub_left, real_inner_smul_left, hT, hT0]
-    rw [ContinuousLinearMap.sub_apply, inner_sub_left]
+        inner ℝ ((T - U) c) v1 + beta * inner ℝ S E := by
+    calc
+      inner ℝ Q E = inner ℝ K E - inner ℝ K0 E +
+          beta * inner ℝ S E := by
+        dsimp [Q]
+        rw [inner_add_left, inner_sub_left, real_inner_smul_left]
+      _ = inner ℝ (T c) v1 - inner ℝ (U c) v1 +
+          beta * inner ℝ S E := by rw [hT, hT0]
+      _ = inner ℝ ((T - U) c) v1 + beta * inner ℝ S E := by
+        rw [hsubPhysical]
   have hnorm :
       ‖Q‖ ≤ (C * beta)^2 :=
     p4Q2PZ37ANT_originalKernel_pairHaarL2_firstVariation_norm_le
