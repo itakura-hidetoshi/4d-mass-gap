@@ -154,7 +154,11 @@ theorem p4Q2PZ37ANT_originalKernel_pairHaarL2_firstVariation_norm_le
     filter_upwards [hQadd, hQsub, hQsmul, hK, hK0, hS, hB] with
       p ha hs hsm hk hk0 hSval hBval
     change ‖(K - K0 + beta • S) p‖ ≤ ‖B p‖
-    rw [ha, hs, hsm, hk, hk0, hSval, hBval]
+    rw [ha]
+    simp only [Pi.add_apply]
+    rw [hs, hsm]
+    simp only [Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
+    rw [hk, hk0, hSval, hBval]
     rw [p4Q2PZ37ANO_originalOneSlabKernel_betaZero H p.1 p.2]
     have hTaylor :=
       p4Q2PZ37ANS_originalOneSlabKernel_quadraticRemainder
@@ -170,7 +174,9 @@ theorem p4Q2PZ37ANT_originalKernel_pairHaarL2_firstVariation_norm_le
     have h :=
       Lp.norm_const' (μ := μ) (p := (2 : ENNReal))
         (c := ((C * beta)^2)) (by norm_num) (by norm_num)
-    simpa [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg (C * beta))] using h
+    have hC : 0 ≤ C :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget_nonneg H
+    simpa [Real.norm_eq_abs, abs_of_nonneg hC, abs_of_nonneg hbeta] using h
   change ‖Q‖ ≤ (C * beta)^2
   exact hnorm.trans_eq hnormB
 
