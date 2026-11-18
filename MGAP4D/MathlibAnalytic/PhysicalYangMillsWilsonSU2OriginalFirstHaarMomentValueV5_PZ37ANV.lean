@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2NativeTopFirstSlopeV5_PZ37ANU
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalPrimaryPlaquetteHaarCharacterBridgeV5_PZ37AMB
+import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonHybridTargetTrajectorySpecialUnitaryTwoStapleOscillationSeparationBCF
 import Mathlib.MeasureTheory.Integral.Pi
 import Mathlib.Tactic
 
@@ -301,6 +302,31 @@ theorem p4Q2PZ37ANV_originalCrossingAction_leftHaarMean
       exact p4Q2PZ37ANV_originalCrossingAction_symmetric H A B
     _ = _ := p4Q2PZ37ANV_originalCrossingAction_rightHaarMean H B
 
+
+/-- SU(2)'s original negative identity is central.  This is proved from
+the literal 2x2 complex matrices, rather than postulated as a lattice
+independence axiom. -/
+theorem p4Q2PZ37ANV_negativeIdentity_commutes (g : G) :
+    g * specialUnitaryTwoNegativeIdentity =
+      specialUnitaryTwoNegativeIdentity * g := by
+  apply Subtype.ext
+  change
+    ((g : G) : Matrix (Fin 2) (Fin 2) ℂ) *
+        (-(1 : Matrix (Fin 2) (Fin 2) ℂ)) =
+      (-(1 : Matrix (Fin 2) (Fin 2) ℂ)) *
+        ((g : G) : Matrix (Fin 2) (Fin 2) ℂ)
+  simp
+
+/-- The actual SU(2) fundamental Wilson character is exactly odd under
+multiplication by the real negative-identity central element.
+This is the sign-change needed for the genuine product-Haar
+cross-plaquette cancellation and does not assume plaquette independence. -/
+theorem p4Q2PZ37ANV_originalCharacter_centerFlip (g : G) :
+    Chi (g * specialUnitaryTwoNegativeIdentity) = -Chi g := by
+  dsimp [p4Q2PZ35C_originalOneLinkCharacter]
+  rw [specialUnitaryWilsonPlaquetteEnergy_two_mul_negativeIdentity]
+  ring
+
 end
 end MGAP4D.MathlibAnalytic
 
@@ -312,3 +338,5 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalCrossingAction_rightHaarMean
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalCrossingAction_symmetric
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalCrossingAction_leftHaarMean
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_negativeIdentity_commutes
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalCharacter_centerFlip
