@@ -163,8 +163,9 @@ theorem p4Q2PZ37ANT_originalKernel_pairHaarL2_firstVariation_norm_le
     have hTaylor :=
       p4Q2PZ37ANS_originalOneSlabKernel_quadraticRemainder
         H beta hbeta hsmall p.1 p.2
-    simpa only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul,
-      Real.norm_eq_abs, abs_of_nonneg (sq_nonneg (C * beta))] using hTaylor
+    simpa only [Function.const_apply, Pi.add_apply, Pi.sub_apply,
+      Pi.smul_apply, smul_eq_mul, Real.norm_eq_abs,
+      abs_of_nonneg (sq_nonneg (C * beta))] using hTaylor
   have hnorm : ‖Q‖ ≤ ‖B‖ := Lp.norm_le_norm_of_ae_le hle
   have hnormB : ‖B‖ = (C * beta)^2 := by
     letI : IsProbabilityMeasure μ := by
