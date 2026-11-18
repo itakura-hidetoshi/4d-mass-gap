@@ -162,7 +162,8 @@ theorem p4Q2PZ37ANS_originalFixedHaarResponse_eq_nativeKernelHaarIntegral
   calc
     inner ℝ ((T - U) c) v1 =
         inner ℝ (T c) v1 - inner ℝ (U c) v1 := by
-          rw [ContinuousLinearMap.sub_apply, inner_sub_left]
+          rw [ContinuousLinearMap.sub_apply]
+          exact (inner_sub_left (𝕜 := ℝ) (T c) (U c) v1)
     _ = inner ℝ (T c) v1 := by rw [hUzero, sub_zero]
     _ = _ := hraw
 
@@ -215,7 +216,7 @@ conditional finite-volume original-Wilson criterion; the fixed-Haar
 response must be independently evaluated in the native model. -/
 theorem p4Q2PZ37ANS_originalPhysicalTopModeOne_nonzero_of_explicitSmallBeta_response
     (H : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta)
-    (hsmall :
+    (_hsmall :
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H *
         beta < 1)
     (hresponse :
