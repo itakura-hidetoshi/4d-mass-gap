@@ -127,7 +127,12 @@ theorem p4Q2PZ37ANU_realScalar_topFirstSlope_weighted_error
       _ ≤ (|lambda * (lambda * b - response)| +
           |lambda * (response + beta * moment)|) +
           |(lambda * beta * moment) * (lambda - 1)| :=
-        add_le_add_right (abs_add_le _ _) _
+        by
+          simpa only [add_comm, add_left_comm, add_assoc] using
+            (add_le_add_right
+              (abs_add_le (lambda * (lambda * b - response))
+                (lambda * (response + beta * moment)))
+              |(lambda * beta * moment) * (lambda - 1)|)
   calc
     lambda^2 * |b + beta * moment| =
         |lambda^2 * (b + beta * moment)| := by
@@ -296,6 +301,7 @@ theorem p4Q2PZ37ANU_originalPhysicalTopFirstMode_nonzero_of_momentDominance
   have hz : ‖T‖^2 * |b + beta * m| =
       ‖T‖^2 * beta * |m| := by
     rw [hbzero, zero_add, abs_mul, abs_of_nonneg hbeta]
+    ring
   exact (not_lt_of_ge (hz ▸ hbound)) hdominance
 
 end
