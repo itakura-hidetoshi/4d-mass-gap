@@ -80,7 +80,7 @@ theorem p4Q2PZ37ANM_actualModeZero_eq_physicalConstant
       (Lp.coeFn_const (μ := ν) (p := (2 : ℝ≥0∞)) (c := (1 : ℝ)))
   have hPull :
       ((Lp.const 2 ν (1 : ℝ)) ∘ T) =ᵐ[μ] (fun _ => (1 : ℝ)) := by
-    simpa [Function.comp_def] using hMP.quasiMeasurePreserving.ae_eq hSrc
+    exact hMP.quasiMeasurePreserving.ae_eq hSrc
   have hDest :
       (Lp.const 2 μ (1 : ℝ)) =ᵐ[μ] (fun _ => (1 : ℝ)) := by
     simpa only [Function.const_apply] using
