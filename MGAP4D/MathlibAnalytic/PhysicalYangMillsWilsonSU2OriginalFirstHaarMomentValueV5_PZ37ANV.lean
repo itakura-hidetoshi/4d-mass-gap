@@ -26,7 +26,7 @@ set_option maxHeartbeats 4000000
 local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
 local notation "nu" => normalizedCompactHaar G
 local notation "Chi" =>
-  GroundStatePosteriorJoint.p4Q2PZ35C_originalOneLinkCharacter
+  p4Q2PZ35C_originalOneLinkCharacter
 
 local instance p4Q2PZ37ANV_group : IsTopologicalGroup G :=
   specialUnitaryGroupIsTopologicalGroup 2
