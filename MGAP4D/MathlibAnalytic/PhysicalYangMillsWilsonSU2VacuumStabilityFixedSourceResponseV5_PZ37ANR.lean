@@ -201,6 +201,48 @@ theorem p4Q2PZ37ANR_originalPhysicalVacuum_explicitSmallBeta_distance_bound
       apply (div_le_div_iff₀ htoppos hdenompos).2
       exact mul_le_mul_of_nonneg_left htoplower hnumpos
 
+/-- Algebraic fixed-source replacement error for an arbitrary real Hilbert
+top eigenvector, assuming that the reference operator U has zero matrix
+coefficient on the observed v. It is separate from any concrete Wilson
+coercion and is reusable with the actual Gauss-law Hilbert carrier. -/
+theorem p4Q2PZ37ANR_realHilbert_fixedSourceResponse_error_generic
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    (T U : E →L[ℝ] E) (Ω c v : E)
+    (heigen : T Ω = ‖T‖ • Ω)
+    (hnull : inner ℝ (U Ω) v = 0)
+    (hv : ‖v‖ = 1) :
+    |‖T‖ * inner ℝ Ω v - inner ℝ ((T - U) c) v| ≤
+      ‖T - U‖ * ‖Ω - c‖ := by
+  have hleft : ‖T‖ * inner ℝ Ω v = inner ℝ ((T - U) Ω) v := by
+    calc
+      ‖T‖ * inner ℝ Ω v = inner ℝ (T Ω) v := by
+        rw [heigen]
+        exact (real_inner_smul_left Ω v ‖T‖).symm
+      _ = inner ℝ ((T - U) Ω) v := by
+        rw [ContinuousLinearMap.sub_apply, inner_sub_left, hnull, sub_zero]
+  have hinner :
+      inner ℝ ((T - U) Ω - (T - U) c) v =
+        inner ℝ ((T - U) Ω) v - inner ℝ ((T - U) c) v := by
+    exact inner_sub_left
+  have hdiff :
+      ‖T‖ * inner ℝ Ω v - inner ℝ ((T - U) c) v =
+        inner ℝ ((T - U) (Ω - c)) v := by
+    calc
+      ‖T‖ * inner ℝ Ω v - inner ℝ ((T - U) c) v =
+          inner ℝ ((T - U) Ω) v - inner ℝ ((T - U) c) v := by
+        rw [hleft]
+      _ = inner ℝ ((T - U) Ω - (T - U) c) v := hinner.symm
+      _ = inner ℝ ((T - U) (Ω - c)) v := by
+        rw [map_sub]
+  calc
+    |‖T‖ * inner ℝ Ω v - inner ℝ ((T - U) c) v| =
+        |inner ℝ ((T - U) (Ω - c)) v| := congrArg abs hdiff
+    _ ≤ ‖(T - U) (Ω - c)‖ * ‖v‖ := abs_real_inner_le_norm _ _
+    _ ≤ (‖T - U‖ * ‖Ω - c‖) * ‖v‖ :=
+      mul_le_mul_of_nonneg_right
+        ((T - U).le_opNorm (Ω - c)) (norm_nonneg v)
+    _ = ‖T - U‖ * ‖Ω - c‖ := by rw [hv, mul_one]
+
 /-- Exact perturbative identity for the TRUE top/first-mode coefficient:
 after using the beta-zero rank-one annihilation, its difference from the
 fixed-original-Haar-vacuum response is the (T_beta-T_0) matrix element of
@@ -245,30 +287,8 @@ theorem p4Q2PZ37ANR_originalTopFirstMode_fixedHaarResponse_error_le
     p4Q2PZ37ANP_originalPhysicalBetaZero_allInput_modeOne_inner_zero H Ω
   have hv1 : ‖v1‖ = 1 :=
     (p4Q2PZ37AMU_actualPhysicalGaussMode_orthonormal H).1 1
-  have heq : ‖T‖ * inner ℝ Ω v1 = inner ℝ ((T - U) Ω) v1 := by
-    calc
-      ‖T‖ * inner ℝ Ω v1 = inner ℝ (T Ω) v1 := by
-        rw [heigen]
-        exact (real_inner_smul_left Ω v1 ‖T‖).symm
-      _ = inner ℝ ((T - U) Ω) v1 := by
-        rw [ContinuousLinearMap.sub_apply, inner_sub_left, hUzero, sub_zero]
-  have hdiff :
-      ‖T‖ * inner ℝ Ω v1 - inner ℝ ((T - U) c) v1 =
-        inner ℝ ((T - U) (Ω - c)) v1 := by
-    rw [heq, map_sub, inner_sub_left]
-  have hCS :
-      |inner ℝ ((T - U) (Ω - c)) v1| ≤
-        ‖(T - U) (Ω - c)‖ * ‖v1‖ :=
-    abs_real_inner_le_norm _ _
-  have hop : ‖(T - U) (Ω - c)‖ ≤ ‖T - U‖ * ‖Ω - c‖ :=
-    (T - U).le_opNorm (Ω - c)
-  calc
-    |‖T‖ * inner ℝ Ω v1 - inner ℝ ((T - U) c) v1| =
-        |inner ℝ ((T - U) (Ω - c)) v1| := congrArg abs hdiff
-    _ ≤ ‖(T - U) (Ω - c)‖ * ‖v1‖ := hCS
-    _ ≤ (‖T - U‖ * ‖Ω - c‖) * ‖v1‖ :=
-      mul_le_mul_of_nonneg_right hop (norm_nonneg v1)
-    _ = ‖T - U‖ * ‖Ω - c‖ := by rw [hv1, mul_one]
+  exact p4Q2PZ37ANR_realHilbert_fixedSourceResponse_error_generic
+    T U Ω c v1 heigen hUzero hv1
 
 /-- The genuinely beta-dependent Wilson vacuum can be replaced in the
 first-Wilson-mode RESPONSE by the unchanged physical Haar vacuum with an
@@ -339,5 +359,6 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANR_realHilbert_rankOne_topVacuum_distance_mul_le_twoPerturbation
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANR_originalPhysicalVacuum_distance_weighted_le_twoBudgetBeta
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANR_originalPhysicalVacuum_explicitSmallBeta_distance_bound
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANR_realHilbert_fixedSourceResponse_error_generic
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANR_originalTopFirstMode_fixedHaarResponse_error_le
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANR_originalTopFirstMode_fixedHaarResponse_weightedError_le_quadratic
