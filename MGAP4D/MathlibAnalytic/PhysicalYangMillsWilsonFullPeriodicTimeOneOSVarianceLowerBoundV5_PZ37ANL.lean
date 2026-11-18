@@ -76,8 +76,21 @@ theorem p4Q2PZ37ANL_realIntegralSq_eq_meanSq_add_centeredSq
         filter_upwards [] with x
         ring
       _ = (∫ x, f x ^ 2 ∂μ) - (2 * a) * (∫ x, f x ∂μ) + a ^ 2 := by
-        rw [integral_add (h2.sub hg) hc, integral_sub h2 hg,
-          integral_const_mul]
+        -- On pinned mathlib, integral_add/integral_sub match pointwise
+        -- function operations; explicitly transport those operations to
+        -- binder notation rather than relying on rewrite elaboration.
+        have hsum :
+            (∫ x, f x ^ 2 - (2 * a) * f x + a ^ 2 ∂μ) =
+              (∫ x, f x ^ 2 - (2 * a) * f x ∂μ) +
+                (∫ x, a ^ 2 ∂μ) := by
+          simpa only [Pi.add_apply, Pi.sub_apply] using
+            (integral_add (h2.sub hg) hc)
+        have hdiff :
+            (∫ x, f x ^ 2 - (2 * a) * f x ∂μ) =
+              (∫ x, f x ^ 2 ∂μ) -
+                (∫ x, (2 * a) * f x ∂μ) := by
+          simpa only [Pi.sub_apply] using (integral_sub h2 hg)
+        rw [hsum, hdiff, integral_const_mul]
         simp
   have ha : a = ∫ x, f x ∂μ := rfl
   calc
