@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2NativeTopFirstSlopeV5_PZ37ANU
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalPrimaryPlaquetteHaarCharacterBridgeV5_PZ37AMB
+import Mathlib.MeasureTheory.Integral.Pi
 import Mathlib.Tactic
 
 /-!
@@ -138,6 +139,166 @@ theorem p4Q2PZ37ANV_originalTimeZeroPrimaryEnergyCharacter_haarPairing
         GroundStatePosteriorJoint.p4Q2PZ37AKW_originalSingleLinkCharacter_secondMoment]
       ring
 
+
+/-- Use the ORIGINAL normalized compact Haar of SU(2) for every physical
+single-link relative Wilson factor.  No independent-plaquette
+factorization is involved. -/
+local instance p4Q2PZ37ANV_haarProbability : IsProbabilityMeasure nu :=
+  normalizedCompactHaar_isProbabilityMeasure G
+
+local instance p4Q2PZ37ANV_haarInvariant :
+    Measure.IsHaarMeasure nu := by
+  dsimp [normalizedCompactHaar]
+  infer_instance
+
+/-- At zero coupling, the genuine SU(2) relative-link Wilson ENERGY
+has Haar mean precisely one, independently of its fixed left endpoint.
+This follows from the actual normalized character's Haar mean zero. -/
+theorem p4Q2PZ37ANV_originalRelativeLinkEnergy_haarMean_one (a : G) :
+    (∫ b : G, specialUnitaryWilsonPlaquetteEnergy 2 (a⁻¹ * b) ∂nu) =
+      (1 : ℝ) := by
+  have hChiCont : Continuous Chi :=
+    GroundStatePosteriorJoint.p4Q2PZ37AIQ_originalSingleLinkCharacter_continuous
+  have hChiInt : Integrable Chi nu :=
+    hChiCont.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+  have hEnergyEq (g : G) :
+      specialUnitaryWilsonPlaquetteEnergy 2 g = (1 : ℝ) - Chi g := by
+    dsimp [p4Q2PZ35C_originalOneLinkCharacter]
+    ring
+  have hEnergyMean :
+      (∫ g : G, specialUnitaryWilsonPlaquetteEnergy 2 g ∂nu) = (1 : ℝ) := by
+    calc
+      _ = ∫ g : G, (1 : ℝ) - Chi g ∂nu := by
+        apply integral_congr_ae
+        filter_upwards [] with g
+        exact hEnergyEq g
+      _ = (∫ _g : G, (1 : ℝ) ∂nu) -
+          (∫ g : G, Chi g ∂nu) :=
+        integral_sub (integrable_const _) hChiInt
+      _ = 1 := by
+        rw [GroundStatePosteriorJoint.p4Q2PZ37AIQ_originalSingleLinkCharacter_mean_zero]
+        simp
+  calc
+    _ = ∫ g : G, specialUnitaryWilsonPlaquetteEnergy 2 g ∂nu :=
+      integral_mul_left_eq_self (μ := nu)
+        (specialUnitaryWilsonPlaquetteEnergy 2) a⁻¹
+    _ = 1 := hEnergyMean
+
+/-- The exact ORIGINAL finite-link temporal crossing action has a fixed
+normalized spatial-slice Haar expectation in its RIGHT boundary, for
+every first boundary A. The expectation equals the actual number of
+physical spatial links, not a new abstract normalization. -/
+theorem p4Q2PZ37ANV_originalCrossingAction_rightHaarMean
+    (H : ℕ)
+    (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    (∫ B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2 A B
+        ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2)) =
+      (Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ℝ) := by
+  classical
+  let Link := PeriodicHypercubicEvenSpatialSliceLink H
+  let Cfg := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+  let muH := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
+  let E := specialUnitaryWilsonPlaquetteEnergy 2
+  have hMeasure : muH = Measure.pi (fun _ : Link => nu) := by
+    unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+    exact congrArg
+      (fun i : Fintype Link =>
+        letI : Fintype Link := i
+        Measure.pi (fun _ : Link => nu))
+      (Subsingleton.elim
+        (oneSlabHaarL2SpatialLinkFintype H)
+        (inferInstance : Fintype Link))
+  have hAction (B : Cfg) :
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2 A B =
+        ∑ e : Link, E ((A e)⁻¹ * B e) := by
+    simp only [periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction,
+      periodicHypercubicEvenSpatialSliceLinkList, Finset.sum_map_toList]
+  have hContinuous (e : Link) :
+      Continuous (fun b : G => E ((A e)⁻¹ * b)) :=
+    (continuous_specialUnitaryWilsonPlaquetteEnergy 2).comp
+      (continuous_const.mul continuous_id)
+  have hIntegrable (e : Link) :
+      Integrable (fun b : G => E ((A e)⁻¹ * b)) nu :=
+    (hContinuous e).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  have hPiIntegrable (e : Link) :
+      Integrable (fun B : Cfg => E ((A e)⁻¹ * B e))
+        (Measure.pi (fun _ : Link => nu)) := by
+    exact MeasureTheory.integrable_comp_eval
+      (μ := fun _ : Link => nu) (i := e) (hIntegrable e)
+  have hCoordinateIntegral (e : Link) :
+      (∫ B : Cfg, E ((A e)⁻¹ * B e)
+          ∂(Measure.pi (fun _ : Link => nu))) =
+        (∫ b : G, E ((A e)⁻¹ * b) ∂nu) := by
+    exact MeasureTheory.integral_comp_eval
+      (μ := fun _ : Link => nu) (i := e)
+      (hContinuous e).measurable.aestronglyMeasurable
+  calc
+    (∫ B : Cfg,
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2 A B
+        ∂muH) =
+        (∫ B : Cfg, ∑ e : Link, E ((A e)⁻¹ * B e)
+          ∂(Measure.pi (fun _ : Link => nu))) := by
+      rw [hMeasure]
+      apply integral_congr_ae
+      filter_upwards [] with B
+      exact hAction B
+    _ = ∑ e : Link,
+          ∫ B : Cfg, E ((A e)⁻¹ * B e)
+            ∂(Measure.pi (fun _ : Link => nu)) := by
+      simpa only [Finset.sum_univ] using
+        (MeasureTheory.integral_finset_sum
+          (μ := Measure.pi (fun _ : Link => nu))
+          (s := (Finset.univ : Finset Link))
+          (f := fun (e : Link) (B : Cfg) => E ((A e)⁻¹ * B e))
+          (by intro e _; exact hPiIntegrable e))
+    _ = ∑ e : Link,
+          ∫ b : G, E ((A e)⁻¹ * b) ∂nu := by
+      apply Finset.sum_congr rfl
+      intro e _
+      exact hCoordinateIntegral e
+    _ = ∑ _e : Link, (1 : ℝ) := by
+      apply Finset.sum_congr rfl
+      intro e _
+      exact p4Q2PZ37ANV_originalRelativeLinkEnergy_haarMean_one (A e)
+    _ = (Fintype.card Link : ℝ) := by simp
+
+/-- Exact symmetry of the unchanged true temporal Wilson crossing ACTION,
+not just symmetry of its exponential Boltzmann kernel. -/
+theorem p4Q2PZ37ANV_originalCrossingAction_symmetric
+    (H : ℕ)
+    (A B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2 A B =
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2 B A := by
+  classical
+  simp only [periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction,
+    periodicHypercubicEvenSpatialSliceLinkList, Finset.sum_map_toList]
+  apply Finset.sum_congr rfl
+  intro e _
+  have h :=
+    specialUnitaryWilsonPlaquetteEnergy_inv ((A e)⁻¹ * B e)
+  simpa only [mul_inv_rev, inv_inv] using h.symm
+
+/-- Consequently the exact original crossing action, averaged over its
+LEFT Haar boundary, is constant in the true RIGHT boundary. This is
+the direction required in the ANU first-action Haar moment. -/
+theorem p4Q2PZ37ANV_originalCrossingAction_leftHaarMean
+    (H : ℕ)
+    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    (∫ A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2 A B
+        ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2)) =
+      (Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ℝ) := by
+  calc
+    _ = ∫ A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2 B A
+          ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2) := by
+      apply integral_congr_ae
+      filter_upwards [] with A
+      exact p4Q2PZ37ANV_originalCrossingAction_symmetric H A B
+    _ = _ := p4Q2PZ37ANV_originalCrossingAction_rightHaarMean H B
+
 end
 end MGAP4D.MathlibAnalytic
 
@@ -145,3 +306,7 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalTimeZeroPrimaryCharacter_haarMean_zero
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalTimeZeroPrimaryCharacter_haarSecondMoment
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalTimeZeroPrimaryEnergyCharacter_haarPairing
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalRelativeLinkEnergy_haarMean_one
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalCrossingAction_rightHaarMean
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalCrossingAction_symmetric
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalCrossingAction_leftHaarMean
