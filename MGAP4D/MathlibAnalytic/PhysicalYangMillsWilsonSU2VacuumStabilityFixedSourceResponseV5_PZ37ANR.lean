@@ -223,7 +223,7 @@ theorem p4Q2PZ37ANR_realHilbert_fixedSourceResponse_error_generic
   have hinner :
       inner ℝ ((T - U) Ω - (T - U) c) v =
         inner ℝ ((T - U) Ω) v - inner ℝ ((T - U) c) v := by
-    exact inner_sub_left
+    exact (inner_sub_left (𝕜 := ℝ) ((T - U) Ω) ((T - U) c) v)
   have hdiff :
       ‖T‖ * inner ℝ Ω v - inner ℝ ((T - U) c) v =
         inner ℝ ((T - U) (Ω - c)) v := by
