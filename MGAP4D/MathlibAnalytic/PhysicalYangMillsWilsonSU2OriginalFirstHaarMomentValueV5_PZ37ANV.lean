@@ -201,6 +201,8 @@ theorem p4Q2PZ37ANV_originalCrossingAction_rightHaarMean
   let muH := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
   let E := specialUnitaryWilsonPlaquetteEnergy 2
   have hMeasure : muH = Measure.pi (fun _ : Link => nu) := by
+    change periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2 =
+      Measure.pi (fun _ : Link => nu)
     unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
     exact congrArg
       (fun i : Fintype Link =>
