@@ -101,7 +101,8 @@ theorem p4Q2PZ37ANO_originalTopModeOne_overlap_mul_norm_eq_rawKernel
       H 2 (by norm_num) beta hbeta Ω v1
   calc
     ‖T‖ * inner ℝ Ω v1 = inner ℝ (T Ω) v1 := by
-      rw [heigen, real_inner_smul_left]
+      rw [heigen]
+      exact (real_inner_smul_left Ω v1 ‖T‖).symm
     _ = _ := hraw
 
 /-- At beta zero the ACTUAL product-Haar L² kernel is the external tensor
@@ -138,7 +139,10 @@ theorem p4Q2PZ37ANO_originalOneSlabPairKernel_betaZero_eq_oneTensor
       H 2 (by norm_num) 0 (by norm_num)
   have ht := realL2ExternalTensor_coeFn c c
   filter_upwards [hk, ht, hf, hg] with p hkp htp hcp hgp
-  rw [hkp, htp]
+  change
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+      H 2 0 p.1 p.2 = (realL2ExternalTensor c c) p
+  rw [htp]
   change
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
       H 2 0 p.1 p.2 = c p.1 * c p.2
@@ -205,7 +209,8 @@ theorem p4Q2PZ37ANO_originalPhysicalTopModeOne_overlap_betaZero_eq_zero
   have hmul : ‖T‖ * inner ℝ Ω v1 = 0 := by
     calc
       ‖T‖ * inner ℝ Ω v1 = inner ℝ (T Ω) v1 := by
-        rw [heigen, real_inner_smul_left]
+        rw [heigen]
+      exact (real_inner_smul_left Ω v1 ‖T‖).symm
       _ = 0 := hTzero
   exact (mul_eq_zero.mp hmul).resolve_left (ne_of_gt hpos)
 
