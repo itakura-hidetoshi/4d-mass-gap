@@ -327,6 +327,112 @@ theorem p4Q2PZ37ANV_originalCharacter_centerFlip (g : G) :
   rw [specialUnitaryWilsonPlaquetteEnergy_two_mul_negativeIdentity]
   ring
 
+
+/-- Exact *real Hilbert* degree-one Gram-Schmidt normalization. The
+signed coefficient is fixed by the original order (degree-zero constant,
+then degree-one Wilson energy), never chosen after the fact. -/
+private theorem p4Q2PZ37ANV_gramSchmidt_first_signedCentered
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    (f : ℕ → E)
+    (hUnit : ‖f 0‖ = 1)
+    (hMean : inner ℝ (f 0) (f 1) = 1)
+    (hCenteredNorm : ‖f 1 - f 0‖ = (1 / 2 : ℝ)) :
+    InnerProductSpace.gramSchmidtNormed ℝ f 1 =
+      (2 : ℝ) • (f 1 - f 0) := by
+  have hIio : Finset.Iio (1 : ℕ) = {0} := by
+    ext i
+    simp only [Finset.mem_Iio, Finset.mem_singleton]
+    omega
+  have hZero : InnerProductSpace.gramSchmidt ℝ f 0 = f 0 := by
+    simpa using (InnerProductSpace.gramSchmidt_bot (𝕜 := ℝ) f)
+  have hTri := InnerProductSpace.gramSchmidt_def'' ℝ f 1
+  rw [hIio] at hTri
+  simp only [Finset.sum_singleton] at hTri
+  rw [hZero, hMean, hUnit] at hTri
+  have hTri' :
+      f 1 = InnerProductSpace.gramSchmidt ℝ f 1 + f 0 := by
+    simpa only [one_pow, div_one, one_smul] using hTri
+  have hGS :
+      InnerProductSpace.gramSchmidt ℝ f 1 = f 1 - f 0 := by
+    calc
+      _ = (InnerProductSpace.gramSchmidt ℝ f 1 + f 0) - f 0 := by abel
+      _ = f 1 - f 0 := by rw [← hTri']
+  unfold InnerProductSpace.gramSchmidtNormed
+  rw [hGS, hCenteredNorm]
+  norm_num
+
+/-- ORIGINAL SU(2) Wilson-energy first Gram-Schmidt mode: exact positive
+normalization of the centered degree-one ORIGINAL Haar L² energy. This
+uses original character variance 1/4 and proves the sign from mathlib's
+real Gram-Schmidt algorithm rather than assuming an arbitrary orientation. -/
+theorem p4Q2PZ37ANV_originalWilsonGramSchmidtFirst_signedCentered :
+    specialUnitaryWilsonPlaquetteEnergyTwoHaarGramSchmidtMode 1 =
+      (2 : ℝ) •
+        (specialUnitaryWilsonPlaquetteEnergyPowerHaarL2
+            (by norm_num : 0 < (2 : ℕ)) 1 -
+          Lp.const 2 nu (1 : ℝ)) := by
+  let f : ℕ → SpecialUnitaryNormalizedHaarL2 2 :=
+    fun k => specialUnitaryWilsonPlaquetteEnergyPowerHaarL2
+      (by norm_num : 0 < (2 : ℕ)) k
+  have hZero :
+      f 0 = Lp.const 2 nu (1 : ℝ) :=
+    p4Q2PZ37ANI_originalWilsonEnergyPowerZero_eq_constOne
+  have hOneNorm : ‖Lp.const 2 nu (1 : ℝ)‖ = 1 := by
+    simpa [measureReal_def] using
+      (Lp.norm_const (μ := nu) (p := 2) (c := (1 : ℝ)) (by norm_num))
+  have hUnit : ‖f 0‖ = 1 := by
+    rw [hZero]
+    exact hOneNorm
+  have hRepOne :
+      f 1 =ᵐ[nu] (fun g : G => specialUnitaryWilsonPlaquetteEnergy 2 g) := by
+    simpa [f, specialUnitaryWilsonPlaquetteEnergyPower] using
+      (specialUnitaryWilsonPlaquetteEnergyPowerHaarL2_coeFn
+        (by norm_num : 0 < (2 : ℕ)) 1)
+  have hRepZero : f 0 =ᵐ[nu] (fun _ : G => (1 : ℝ)) := by
+    rw [hZero]
+    simpa only [Function.const_apply] using
+      (Lp.coeFn_const (μ := nu) (p := (2 : ℝ≥0∞)) (c := (1 : ℝ)))
+  have hRepCentered :
+      (f 1 - f 0) =ᵐ[nu] (fun g : G => -Chi g) := by
+    filter_upwards [Lp.coeFn_sub (f 1) (f 0), hRepOne, hRepZero]
+      with g hsub he hzero
+    calc
+      (f 1 - f 0) g = f 1 g - f 0 g := by
+        simpa only [Pi.sub_apply] using hsub
+      _ = -Chi g := by
+        rw [he, hzero]
+        dsimp [p4Q2PZ35C_originalOneLinkCharacter]
+        ring
+  have hMean : inner ℝ (f 0) (f 1) = 1 := by
+    calc
+      _ = ∫ g : G, f 1 g ∂nu := by
+        rw [hZero]
+        exact realL2_inner_const_one_eq_integral (f 1)
+      _ = ∫ g : G, specialUnitaryWilsonPlaquetteEnergy 2 g ∂nu :=
+        integral_congr_ae hRepOne
+      _ = 1 := by
+        have h := p4Q2PZ37ANV_originalRelativeLinkEnergy_haarMean_one (1 : G)
+        simpa only [inv_one, one_mul] using h
+  have hCenteredSquare : ‖f 1 - f 0‖ ^ 2 = (1 / 4 : ℝ) := by
+    calc
+      _ = ∫ g : G, ‖(f 1 - f 0) g‖ ^ 2 ∂nu :=
+        realL2_norm_sq_eq_integral_norm_sq (f 1 - f 0)
+      _ = ∫ g : G, (Chi g) ^ 2 ∂nu := by
+        apply integral_congr_ae
+        filter_upwards [hRepCentered] with g hg
+        rw [hg]
+        simp [Real.norm_eq_abs, sq_abs]
+      _ = (1 / 4 : ℝ) :=
+        GroundStatePosteriorJoint.p4Q2PZ37AKW_originalSingleLinkCharacter_secondMoment
+  have hCenteredNorm : ‖f 1 - f 0‖ = (1 / 2 : ℝ) := by
+    have hNonneg := norm_nonneg (f 1 - f 0)
+    nlinarith
+  change InnerProductSpace.gramSchmidtNormed ℝ f 1 =
+      (2 : ℝ) • (f 1 - Lp.const 2 nu (1 : ℝ))
+  rw [← hZero]
+  exact p4Q2PZ37ANV_gramSchmidt_first_signedCentered
+    f hUnit hMean hCenteredNorm
+
 end
 end MGAP4D.MathlibAnalytic
 
@@ -340,3 +446,4 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalCrossingAction_leftHaarMean
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_negativeIdentity_commutes
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalCharacter_centerFlip
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalWilsonGramSchmidtFirst_signedCentered
