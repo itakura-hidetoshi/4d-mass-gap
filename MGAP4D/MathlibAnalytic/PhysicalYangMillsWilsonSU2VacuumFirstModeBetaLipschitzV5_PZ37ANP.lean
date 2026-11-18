@@ -192,15 +192,33 @@ theorem p4Q2PZ37ANP_originalPhysicalTopModeOne_abs_le_budgetBeta_div_topNorm
   have hpos : 0 < ‖T‖ :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
       H 2 (by norm_num) beta hbeta
-  have hbound :=
+  have hbound :
+      |‖T‖ * inner ℝ Ω v1| ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H *
+          beta :=
     p4Q2PZ37ANP_originalPhysicalTopModeOne_weightedAbs_le_budgetBeta
       H beta hbeta
   have hmul :
       ‖T‖ * |inner ℝ Ω v1| ≤
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H *
           beta := by
-    simpa only [abs_mul, abs_of_nonneg (le_of_lt hpos)] using hbound
-  exact (le_div_iff₀ hpos).2 hmul
+    calc
+      ‖T‖ * |inner ℝ Ω v1| = |‖T‖ * inner ℝ Ω v1| := by
+        rw [abs_mul, abs_of_nonneg (le_of_lt hpos)]
+      _ ≤ _ := hbound
+  have hmul_comm :
+      |inner ℝ Ω v1| * ‖T‖ ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H *
+          beta := by
+    calc
+      |inner ℝ Ω v1| * ‖T‖ =
+          ‖T‖ * |inner ℝ Ω v1| := mul_comm _ _
+      _ ≤ _ := hmul
+  change
+    |inner ℝ Ω v1| ≤
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H *
+        beta) / ‖T‖
+  exact (le_div_iff₀ hpos).2 hmul_comm
 
 end
 end MGAP4D.MathlibAnalytic
