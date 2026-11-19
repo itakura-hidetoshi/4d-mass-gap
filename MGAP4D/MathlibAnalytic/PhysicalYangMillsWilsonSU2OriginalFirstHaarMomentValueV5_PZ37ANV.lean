@@ -21,6 +21,7 @@ Unfinished steps are not presented as certified Lean theorems.
 namespace MGAP4D.MathlibAnalytic
 
 open MeasureTheory
+open scoped ENNReal
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 4000000
@@ -216,7 +217,7 @@ theorem p4Q2PZ37ANV_originalCrossingAction_rightHaarMean
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2 A B =
         ∑ e : Link, E ((A e)⁻¹ * B e) := by
     simp only [periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction,
-      periodicHypercubicEvenSpatialSliceLinkList, Finset.sum_map_toList]
+      periodicHypercubicEvenSpatialSliceLinkList, Finset.sum_map_toList, E]
   have hContinuous (e : Link) :
       Continuous (fun b : G => E ((A e)⁻¹ * b)) :=
     (continuous_specialUnitaryWilsonPlaquetteEnergy 2).comp
@@ -250,7 +251,7 @@ theorem p4Q2PZ37ANV_originalCrossingAction_rightHaarMean
     _ = ∑ e : Link,
           ∫ B : Cfg, E ((A e)⁻¹ * B e)
             ∂(Measure.pi (fun _ : Link => nu)) := by
-      simpa only [Finset.sum_univ] using
+      simpa using
         (MeasureTheory.integral_finset_sum
           (μ := Measure.pi (fun _ : Link => nu))
           (s := (Finset.univ : Finset Link))
@@ -351,7 +352,7 @@ private theorem p4Q2PZ37ANV_gramSchmidt_first_signedCentered
   rw [hZero, hMean, hUnit] at hTri
   have hTri' :
       f 1 = InnerProductSpace.gramSchmidt ℝ f 1 + f 0 := by
-    simpa only [one_pow, div_one, one_smul] using hTri
+    simpa only [Nat.cast_one, one_pow, div_one, one_smul] using hTri
   have hGS :
       InnerProductSpace.gramSchmidt ℝ f 1 = f 1 - f 0 := by
     calc
@@ -385,7 +386,7 @@ theorem p4Q2PZ37ANV_originalWilsonGramSchmidtFirst_signedCentered :
     exact hOneNorm
   have hRepOne :
       f 1 =ᵐ[nu] (fun g : G => specialUnitaryWilsonPlaquetteEnergy 2 g) := by
-    simpa [f, specialUnitaryWilsonPlaquetteEnergyPower] using
+    simpa only [f, specialUnitaryWilsonPlaquetteEnergyPower, pow_one] using
       (specialUnitaryWilsonPlaquetteEnergyPowerHaarL2_coeFn
         (by norm_num : 0 < (2 : ℕ)) 1)
   have hRepZero : f 0 =ᵐ[nu] (fun _ : G => (1 : ℝ)) := by
