@@ -1,6 +1,8 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2NativeTopFirstSlopeV5_PZ37ANU
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalPrimaryPlaquetteHaarCharacterBridgeV5_PZ37AMB
 import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonHybridTargetTrajectorySpecialUnitaryTwoStapleOscillationSeparationBCF
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpatialPlaquetteOverlapBound
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicSharedPlaquetteUniqueness
 import Mathlib.MeasureTheory.Integral.Pi
 import Mathlib.Tactic
 
@@ -449,6 +451,116 @@ theorem p4Q2PZ37ANV_originalWilsonGramSchmidtFirst_signedCentered :
   exact p4Q2PZ37ANV_gramSchmidt_first_signedCentered
     f hUnit hMean hCenteredNorm
 
+
+/-! ## ANV: genuine spatial plaquette incidence, first geometric bridge
+
+These results work on the existing oriented positive-link carrier, never on
+a quotient by unoriented edges. The all-plaquette two-link uniqueness theorem
+is valid at periodic side length >= 3; the length-2 case must be separately
+checked rather than silently included.
+-/
+
+/-- The first origin link of the actual canonical spatial plaquette belongs to
+its intrinsic four-link support. -/
+theorem p4Q2PZ37ANV_primaryOriginOne_mem_support (H : ℕ) :
+    p4Q2PZ37AMS_primarySpatialSliceEdge H 0 ∈
+      pz37zaSpatialPlaquetteSupport H
+        (p4Q2PZ37AMS_primarySpatialSlicePlaquette H) := by
+  classical
+  change p4Q2PZ37AMS_primarySpatialSliceEdge H 0 ∈
+    (Finset.univ : Finset (Fin 4)).image
+      (pz37zaSpatialPlaquetteBoundary H
+        (p4Q2PZ37AMS_primarySpatialSlicePlaquette H))
+  exact Finset.mem_image.mpr ⟨0, Finset.mem_univ _, rfl⟩
+
+/-- The other origin link (direction 2) also belongs to the actual primary
+plaquette's support. It is a different positive link from direction 1. -/
+theorem p4Q2PZ37ANV_primaryOriginTwo_mem_support (H : ℕ) :
+    p4Q2PZ37AMS_primarySpatialSliceEdge H 3 ∈
+      pz37zaSpatialPlaquetteSupport H
+        (p4Q2PZ37AMS_primarySpatialSlicePlaquette H) := by
+  classical
+  change p4Q2PZ37AMS_primarySpatialSliceEdge H 3 ∈
+    (Finset.univ : Finset (Fin 4)).image
+      (pz37zaSpatialPlaquetteBoundary H
+        (p4Q2PZ37AMS_primarySpatialSlicePlaquette H))
+  exact Finset.mem_image.mpr ⟨3, Finset.mem_univ _, rfl⟩
+
+/-- For every even periodic spatial side length at least four, two actual
+positive origin links in distinct directions force a spatial plaquette to be
+the canonical primary plaquette. Uses the previously proved exact physical
+incidence uniqueness, NOT a new plaquette-independence premise.
+
+The genuine side-length-two boundary H=0 is intentionally not included:
+the general physical two-link uniqueness lemma requires side length >= 3. -/
+theorem p4Q2PZ37ANV_primaryOriginTwoLinks_unique_of_H_pos
+    (H : ℕ) (hH : 1 ≤ H)
+    (p : PeriodicHypercubicEvenSpatialSlicePlaquette H)
+    (hOne : p4Q2PZ37AMS_primarySpatialSliceEdge H 0 ∈
+      pz37zaSpatialPlaquetteSupport H p)
+    (hTwo : p4Q2PZ37AMS_primarySpatialSliceEdge H 3 ∈
+      pz37zaSpatialPlaquetteSupport H p) :
+    p = p4Q2PZ37AMS_primarySpatialSlicePlaquette H := by
+  letI : NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+    change 2 * (H + 1) ≠ 0
+    omega⟩
+  let p0 := p4Q2PZ37AMS_primarySpatialSlicePlaquette H
+  let e1 := p4Q2PZ37AMS_primarySpatialSliceEdge H 0
+  let e2 := p4Q2PZ37AMS_primarySpatialSliceEdge H 3
+  have hlen : 3 ≤ PeriodicHypercubicEvenSideLength H := by
+    change 3 ≤ 2 * (H + 1)
+    omega
+  have hdiff : e2 ≠ e1 := by
+    intro h
+    have hi : (3 : Fin 4) = 0 :=
+      (p4Q2PZ37AMS_primarySpatialSliceEdgeEmbedding H).injective h
+    exact (by decide : (3 : Fin 4) ≠ 0) hi
+  have hfullDiff :
+      periodicHypercubicEvenSpatialSliceLinkEmbedding H e2 ≠
+        periodicHypercubicEvenSpatialSliceLinkEmbedding H e1 := by
+    intro h
+    exact hdiff
+      (periodicHypercubicEvenSpatialSliceLinkEmbedding_injective H h)
+  have hp1 : periodicHypercubicEvenSpatialSlicePlaquetteTouchesLink H p e1 :=
+    pz37zaSpatialPlaquetteSupport_mem_touches H p e1 hOne
+  have hp2 : periodicHypercubicEvenSpatialSlicePlaquetteTouchesLink H p e2 :=
+    pz37zaSpatialPlaquetteSupport_mem_touches H p e2 hTwo
+  have hp01 : periodicHypercubicEvenSpatialSlicePlaquetteTouchesLink H p0 e1 :=
+    pz37zaSpatialPlaquetteSupport_mem_touches H p0 e1
+      (p4Q2PZ37ANV_primaryOriginOne_mem_support H)
+  have hp02 : periodicHypercubicEvenSpatialSlicePlaquetteTouchesLink H p0 e2 :=
+    pz37zaSpatialPlaquetteSupport_mem_touches H p0 e2
+      (p4Q2PZ37ANV_primaryOriginTwo_mem_support H)
+  apply periodicHypercubicEvenSpatialSlicePlaquetteEmbedding_injective H
+  exact periodicHypercubicPlaquette_eq_of_touches_two_edges
+    (PeriodicHypercubicEvenSideLength H) hlen
+    (periodicHypercubicEvenSpatialSliceLinkEmbedding H e1)
+    (periodicHypercubicEvenSpatialSliceLinkEmbedding H e2) hfullDiff
+    (periodicHypercubicEvenSpatialSlicePlaquetteEmbedding H p)
+    (periodicHypercubicEvenSpatialSlicePlaquetteEmbedding H p0)
+    hp1 hp2 hp01 hp02
+
+/-- Construct a link in the genuine primary plaquette absent from any
+different spatial plaquette at periodic side length >= 4. -/
+theorem p4Q2PZ37ANV_primaryHasExclusiveLink_of_H_pos
+    (H : ℕ) (hH : 1 ≤ H)
+    (p : PeriodicHypercubicEvenSpatialSlicePlaquette H)
+    (hp : p ≠ p4Q2PZ37AMS_primarySpatialSlicePlaquette H) :
+    ∃ e : PeriodicHypercubicEvenSpatialSliceLink H,
+      e ∈ pz37zaSpatialPlaquetteSupport H
+          (p4Q2PZ37AMS_primarySpatialSlicePlaquette H) ∧
+      e ∉ pz37zaSpatialPlaquetteSupport H p := by
+  by_cases he : p4Q2PZ37AMS_primarySpatialSliceEdge H 0 ∈
+      pz37zaSpatialPlaquetteSupport H p
+  · refine ⟨p4Q2PZ37AMS_primarySpatialSliceEdge H 3,
+      p4Q2PZ37ANV_primaryOriginTwo_mem_support H, ?_⟩
+    intro he2
+    exact hp
+      (p4Q2PZ37ANV_primaryOriginTwoLinks_unique_of_H_pos
+        H hH p he he2)
+  · exact ⟨p4Q2PZ37AMS_primarySpatialSliceEdge H 0,
+      p4Q2PZ37ANV_primaryOriginOne_mem_support H, he⟩
+
 end
 end MGAP4D.MathlibAnalytic
 
@@ -463,3 +575,8 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_negativeIdentity_commutes
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalCharacter_centerFlip
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalWilsonGramSchmidtFirst_signedCentered
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_primaryOriginOne_mem_support
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_primaryOriginTwo_mem_support
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_primaryOriginTwoLinks_unique_of_H_pos
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_primaryHasExclusiveLink_of_H_pos
