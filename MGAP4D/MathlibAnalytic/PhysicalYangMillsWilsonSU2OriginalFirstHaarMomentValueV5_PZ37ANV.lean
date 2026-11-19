@@ -561,6 +561,93 @@ theorem p4Q2PZ37ANV_primaryHasExclusiveLink_of_H_pos
   · exact ⟨p4Q2PZ37AMS_primarySpatialSliceEdge H 0,
       p4Q2PZ37ANV_primaryOriginOne_mem_support H, he⟩
 
+
+/-! ## ANV: length-two exceptional geometry and all-H incidence
+
+H = 0 is the genuine spatial torus of periodic side length 2. The global
+shared-two-edge uniqueness theorem requires side length >= 3, so this leaf
+checks the *particular perpendicular origin links* in the unchanged
+time-zero spatial carrier. No n >= 3 hypothesis is silently dropped.
+-/
+
+/-- The exceptional genuine even torus H=0: of the 24 time-zero
+coordinate plaquettes, only the canonical (1,2)-plaquette can contain
+both distinct positive links at the origin in directions 1 and 2.
+The exact finite carrier is enumerated, not replaced by a proxy. -/
+theorem p4Q2PZ37ANV_primaryOriginTwoLinks_unique_of_H_zero
+    (p : PeriodicHypercubicEvenSpatialSlicePlaquette 0)
+    (hOne : p4Q2PZ37AMS_primarySpatialSliceEdge 0 0 ∈
+      pz37zaSpatialPlaquetteSupport 0 p)
+    (hTwo : p4Q2PZ37AMS_primarySpatialSliceEdge 0 3 ∈
+      pz37zaSpatialPlaquetteSupport 0 p) :
+    p = p4Q2PZ37AMS_primarySpatialSlicePlaquette 0 := by
+  have hFinite :
+      ∀ q : PeriodicHypercubicEvenSpatialSlicePlaquette 0,
+        (∃ i : Fin 4,
+          pz37zaSpatialPlaquetteBoundary 0 q i =
+            p4Q2PZ37AMS_primarySpatialSliceEdge 0 0) →
+        (∃ j : Fin 4,
+          pz37zaSpatialPlaquetteBoundary 0 q j =
+            p4Q2PZ37AMS_primarySpatialSliceEdge 0 3) →
+        q = p4Q2PZ37AMS_primarySpatialSlicePlaquette 0 := by
+    decide
+  classical
+  have hOne' :
+      ∃ i : Fin 4,
+        pz37zaSpatialPlaquetteBoundary 0 p i =
+          p4Q2PZ37AMS_primarySpatialSliceEdge 0 0 := by
+    change p4Q2PZ37AMS_primarySpatialSliceEdge 0 0 ∈
+      (Finset.univ : Finset (Fin 4)).image
+        (pz37zaSpatialPlaquetteBoundary 0 p) at hOne
+    obtain ⟨i, _, hi⟩ := Finset.mem_image.mp hOne
+    exact ⟨i, hi⟩
+  have hTwo' :
+      ∃ j : Fin 4,
+        pz37zaSpatialPlaquetteBoundary 0 p j =
+          p4Q2PZ37AMS_primarySpatialSliceEdge 0 3 := by
+    change p4Q2PZ37AMS_primarySpatialSliceEdge 0 3 ∈
+      (Finset.univ : Finset (Fin 4)).image
+        (pz37zaSpatialPlaquetteBoundary 0 p) at hTwo
+    obtain ⟨j, _, hj⟩ := Finset.mem_image.mp hTwo
+    exact ⟨j, hj⟩
+  exact hFinite p hOne' hTwo'
+
+/-- Both specific canonical origin links determine the same genuine
+spatial plaquette for *all* finite H, including the length-two torus. -/
+theorem p4Q2PZ37ANV_primaryOriginTwoLinks_unique
+    (H : ℕ) (p : PeriodicHypercubicEvenSpatialSlicePlaquette H)
+    (hOne : p4Q2PZ37AMS_primarySpatialSliceEdge H 0 ∈
+      pz37zaSpatialPlaquetteSupport H p)
+    (hTwo : p4Q2PZ37AMS_primarySpatialSliceEdge H 3 ∈
+      pz37zaSpatialPlaquetteSupport H p) :
+    p = p4Q2PZ37AMS_primarySpatialSlicePlaquette H := by
+  cases H with
+  | zero =>
+      exact p4Q2PZ37ANV_primaryOriginTwoLinks_unique_of_H_zero p hOne hTwo
+  | succ H =>
+      exact p4Q2PZ37ANV_primaryOriginTwoLinks_unique_of_H_pos
+        (H + 1) (by omega) p hOne hTwo
+
+/-- For any H and a spatial plaquette different from the primary,
+some actual primary positive link is absent from the other plaquette.
+This is the specific incidence fact required for Wilson character
+cross-Haar orthogonality under a single-link center flip. -/
+theorem p4Q2PZ37ANV_primaryHasExclusiveLink
+    (H : ℕ) (p : PeriodicHypercubicEvenSpatialSlicePlaquette H)
+    (hp : p ≠ p4Q2PZ37AMS_primarySpatialSlicePlaquette H) :
+    ∃ e : PeriodicHypercubicEvenSpatialSliceLink H,
+      e ∈ pz37zaSpatialPlaquetteSupport H
+          (p4Q2PZ37AMS_primarySpatialSlicePlaquette H) ∧
+      e ∉ pz37zaSpatialPlaquetteSupport H p := by
+  by_cases he : p4Q2PZ37AMS_primarySpatialSliceEdge H 0 ∈
+      pz37zaSpatialPlaquetteSupport H p
+  · refine ⟨p4Q2PZ37AMS_primarySpatialSliceEdge H 3,
+      p4Q2PZ37ANV_primaryOriginTwo_mem_support H, ?_⟩
+    intro he2
+    exact hp (p4Q2PZ37ANV_primaryOriginTwoLinks_unique H p he he2)
+  · exact ⟨p4Q2PZ37AMS_primarySpatialSliceEdge H 0,
+      p4Q2PZ37ANV_primaryOriginOne_mem_support H, he⟩
+
 end
 end MGAP4D.MathlibAnalytic
 
@@ -580,3 +667,7 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_primaryOriginTwo_mem_support
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_primaryOriginTwoLinks_unique_of_H_pos
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_primaryHasExclusiveLink_of_H_pos
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_primaryOriginTwoLinks_unique_of_H_zero
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_primaryOriginTwoLinks_unique
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_primaryHasExclusiveLink
