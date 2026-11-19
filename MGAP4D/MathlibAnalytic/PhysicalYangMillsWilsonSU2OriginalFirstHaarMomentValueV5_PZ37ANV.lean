@@ -218,6 +218,13 @@ theorem p4Q2PZ37ANV_originalCrossingAction_rightHaarMean
         ∑ e : Link, E ((A e)⁻¹ * B e) := by
     simp only [periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction,
       periodicHypercubicEvenSpatialSliceLinkList, Finset.sum_map_toList, E]
+    -- The canonical list and this leaf's local finite instance enumerate
+    -- the same type; the Finset.univ terms need extensionality.
+    apply Finset.sum_congr
+    · ext e
+      simp
+    · intro e _
+      rfl
   have hContinuous (e : Link) :
       Continuous (fun b : G => E ((A e)⁻¹ * b)) :=
     (continuous_specialUnitaryWilsonPlaquetteEnergy 2).comp
@@ -352,7 +359,8 @@ private theorem p4Q2PZ37ANV_gramSchmidt_first_signedCentered
   rw [hZero, hMean, hUnit] at hTri
   have hTri' :
       f 1 = InnerProductSpace.gramSchmidt ℝ f 1 + f 0 := by
-    simpa only [Nat.cast_one, one_pow, div_one, one_smul] using hTri
+    -- The scalar coefficient contains a coercion of the real norm.
+    simpa using hTri
   have hGS :
       InnerProductSpace.gramSchmidt ℝ f 1 = f 1 - f 0 := by
     calc
@@ -384,11 +392,18 @@ theorem p4Q2PZ37ANV_originalWilsonGramSchmidtFirst_signedCentered :
   have hUnit : ‖f 0‖ = 1 := by
     rw [hZero]
     exact hOneNorm
+  have hPowerRep :=
+    specialUnitaryWilsonPlaquetteEnergyPowerHaarL2_coeFn
+      (by norm_num : 0 < (2 : ℕ)) 1
+  have hPowerOne (g : G) :
+      specialUnitaryWilsonPlaquetteEnergyPower 2 1 g =
+        specialUnitaryWilsonPlaquetteEnergy 2 g := by
+    simp only [specialUnitaryWilsonPlaquetteEnergyPower, pow_one]
   have hRepOne :
       f 1 =ᵐ[nu] (fun g : G => specialUnitaryWilsonPlaquetteEnergy 2 g) := by
-    simpa only [f, specialUnitaryWilsonPlaquetteEnergyPower, pow_one] using
-      (specialUnitaryWilsonPlaquetteEnergyPowerHaarL2_coeFn
-        (by norm_num : 0 < (2 : ℕ)) 1)
+    -- Transport the original MemLp representative lemma first; simplify
+    -- the scalar power pointwise instead of expanding the L² vector.
+    exact hPowerRep.trans (Filter.Eventually.of_forall hPowerOne)
   have hRepZero : f 0 =ᵐ[nu] (fun _ : G => (1 : ℝ)) := by
     rw [hZero]
     simpa only [Function.const_apply] using
