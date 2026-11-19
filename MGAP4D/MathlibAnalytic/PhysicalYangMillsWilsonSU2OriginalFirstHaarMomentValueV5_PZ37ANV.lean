@@ -590,7 +590,14 @@ theorem p4Q2PZ37ANV_primaryOriginTwoLinks_unique_of_H_zero
           pz37zaSpatialPlaquetteBoundary 0 q j =
             p4Q2PZ37AMS_primarySpatialSliceEdge 0 3) →
         q = p4Q2PZ37AMS_primarySpatialSlicePlaquette 0 := by
-    decide
+    -- At H=0 the true spatial plaquette carrier is constructively finite:
+    -- spatial positions are functions Fin 4 → ZMod 2 and the axis pair is
+    -- a strict ordered subtype. Avoid Fintype.ofFinite / Classical.choice:
+    -- those are noncomputable and cannot support kernel decide.
+    letI : NeZero (PeriodicHypercubicEvenSideLength 0) := ⟨by decide⟩
+    letI : Fintype (PeriodicHypercubicEvenSpatialSlicePlaquette 0) :=
+      inferInstance
+    decide +kernel
   classical
   have hOne' :
       ∃ i : Fin 4,
