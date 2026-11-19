@@ -595,6 +595,16 @@ theorem p4Q2PZ37ANV_primaryOriginTwoLinks_unique_of_H_zero
     -- a strict ordered subtype. Avoid Fintype.ofFinite / Classical.choice:
     -- those are noncomputable and cannot support kernel decide.
     letI : NeZero (PeriodicHypercubicEvenSideLength 0) := ⟨by decide⟩
+    -- The vertex carrier is a finite function type (Fin 4 → ZMod 2).
+    -- Its constructive equality is needed twice: in equality of links
+    -- used by the boundary witnesses and in equality of plaquettes.
+    -- Do not import a classical propDecidable into a kernel computation.
+    letI : DecidableEq (PeriodicHypercubicEvenVertex 0) :=
+      Fintype.decidablePiFintype
+    letI : DecidableEq (PeriodicHypercubicEvenSpatialSliceLink 0) :=
+      inferInstance
+    letI : DecidableEq (PeriodicHypercubicEvenSpatialSlicePlaquette 0) :=
+      inferInstance
     letI : Fintype (PeriodicHypercubicEvenSpatialSlicePlaquette 0) :=
       inferInstance
     decide +kernel
