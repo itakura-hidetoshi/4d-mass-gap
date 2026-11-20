@@ -1207,6 +1207,85 @@ theorem p4Q2PZ37ANV_nonPrimarySpatialEnergy_primaryCharacter_haarOrthogonal
 
 end NativePlaquetteCenterCancellation
 
+
+/-! ## ANV: native complete spatial Wilson action first Haar pairing -/
+
+/-- The ORIGINAL, ALL-PLAQUETTE spatial Wilson action has the exact
+first-character Haar pairing -1/4 at every genuine even-periodic H.
+This uses the full actual spatial-plaquette finite-universe sum; all
+nonprimary plaquettes are individually annihilated by the proven
+one-link center-flip symmetry. Neither independent plaquettes nor
+a synthetic single-character action are assumed. -/
+theorem p4Q2PZ37ANV_originalFullSpatialAction_primaryCharacter_haarPairing
+    (H : ℕ) :
+    (∫ A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
+      periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H 2 A *
+        Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 A)
+      ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2)) =
+      -(1 / 4 : ℝ) := by
+  classical
+  let Cfg := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+  let Plaq := PeriodicHypercubicEvenSpatialSlicePlaquette H
+  let muH := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
+  let p0 := p4Q2PZ37AMS_primarySpatialSlicePlaquette H
+  let F : Plaq → Cfg → ℝ := fun p A =>
+    specialUnitaryWilsonPlaquetteEnergy 2
+      (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy A p) *
+    Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 A)
+  have hCharacterCont :
+      Continuous (fun A : Cfg =>
+        Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 A)) := by
+    have hFun :
+        (fun A : Cfg =>
+          Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 A)) =
+        (fun A : Cfg =>
+          GroundStatePosteriorJoint.p4Q2PV_originalPlaquetteRealCharacter H p0 A) := by
+      funext A
+      exact p4Q2PZ37ANV_cyclicCharacter_eq_nativeCharacter H A
+    rw [hFun]
+    exact GroundStatePosteriorJoint.p4Q2PV_originalPlaquetteRealCharacter_continuous H p0
+  have hIntegrable (p : Plaq) : Integrable (F p) muH := by
+    have hHolCont : Continuous
+        (fun A : Cfg => periodicHypercubicEvenSpatialSlicePlaquetteHolonomy A p) := by
+      unfold periodicHypercubicEvenSpatialSlicePlaquetteHolonomy
+      fun_prop
+    have hFCont : Continuous (F p) :=
+      ((continuous_specialUnitaryWilsonPlaquetteEnergy 2).comp hHolCont).mul
+        hCharacterCont
+    exact hFCont.integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  have hSum :
+      (∑ p : Plaq, ∫ A : Cfg, F p A ∂muH) =
+        ∫ A : Cfg, F p0 A ∂muH := by
+    apply Finset.sum_eq_single p0
+    · intro p _hp hpNe
+      simpa only [F, muH, p0] using
+        (p4Q2PZ37ANV_nonPrimarySpatialEnergy_primaryCharacter_haarOrthogonal
+          H p hpNe)
+    · intro hpAbsent
+      exact False.elim (hpAbsent (Finset.mem_univ p0))
+  calc
+    (∫ A : Cfg,
+      periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H 2 A *
+        Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 A) ∂muH) =
+      ∫ A : Cfg, ∑ p : Plaq, F p A ∂muH := by
+        apply integral_congr_ae
+        filter_upwards [] with A
+        rw [periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_eq_finset_sum
+          H 2 A, Finset.sum_mul]
+        rfl
+    _ = ∑ p : Plaq, ∫ A : Cfg, F p A ∂muH := by
+        simpa using
+          (MeasureTheory.integral_finset_sum
+            (μ := muH)
+            (s := (Finset.univ : Finset Plaq))
+            (f := fun (p : Plaq) (A : Cfg) => F p A)
+            (by intro p _; exact hIntegrable p))
+    _ = ∫ A : Cfg, F p0 A ∂muH := hSum
+    _ = -(1 / 4 : ℝ) := by
+      simpa only [F, p0, muH] using
+        (p4Q2PZ37ANV_originalNativePrimarySpatialEnergyCharacter_haarPairing H)
+
 end
 end MGAP4D.MathlibAnalytic
 
@@ -1247,3 +1326,5 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_primaryCharacter_originCenterFlip_odd
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_singleLinkCenterTwist_eq_existingPU
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_nonPrimarySpatialEnergy_primaryCharacter_haarOrthogonal
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalFullSpatialAction_primaryCharacter_haarPairing
