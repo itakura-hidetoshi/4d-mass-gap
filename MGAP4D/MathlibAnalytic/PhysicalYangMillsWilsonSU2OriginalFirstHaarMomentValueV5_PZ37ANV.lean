@@ -917,6 +917,101 @@ theorem p4Q2PZ37ANV_originalNativePrimarySpatialEnergyCharacter_haarPairing
     _ = -(1 / 4 : ℝ) :=
       p4Q2PZ37ANV_originalTimeZeroPrimaryEnergyCharacter_haarPairing H
 
+
+/-! ## ANV: native one-link center twist, original product Haar -/
+
+/-- Change exactly one original positive time-zero spatial link by the
+genuine SU(2) central negative identity. -/
+noncomputable def p4Q2PZ37ANV_singleLinkCenterTwist
+    (H : ℕ) (target : PeriodicHypercubicEvenSpatialSliceLink H)
+    (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 :=
+  fun e => A e * (if e = target then specialUnitaryTwoNegativeIdentity else 1)
+
+/-- The single genuine native-link center twist preserves the unchanged
+link-indexed product-Haar law, by original coordinate Haar invariance. -/
+theorem p4Q2PZ37ANV_singleLinkCenterTwist_haarMeasurePreserving
+    (H : ℕ) (target : PeriodicHypercubicEvenSpatialSliceLink H) :
+    MeasurePreserving
+      (p4Q2PZ37ANV_singleLinkCenterTwist H target)
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2)
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2) := by
+  classical
+  let Link := PeriodicHypercubicEvenSpatialSliceLink H
+  let f : Link → G → G :=
+    fun e u => u * (if e = target then specialUnitaryTwoNegativeIdentity else 1)
+  have hMP (e : Link) : MeasurePreserving (f e) nu nu := by
+    simpa [f] using
+      (normalizedCompactHaar_measurePreserving_mul_left_right G (1 : G)
+        (if e = target then specialUnitaryTwoNegativeIdentity else 1))
+  refine ⟨?_, ?_⟩
+  · unfold p4Q2PZ37ANV_singleLinkCenterTwist
+    refine measurable_pi_lambda _ ?_
+    intro e
+    exact (hMP e).measurable.comp (measurable_pi_apply e)
+  · unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+    have hf : ∀ e : Link, AEMeasurable (f e) nu :=
+      fun e => (hMP e).measurable.aemeasurable
+    letI : ∀ e : Link, SigmaFinite (Measure.map (f e) nu) :=
+      fun e => by
+        rw [(hMP e).map_eq]
+        infer_instance
+    rw [show p4Q2PZ37ANV_singleLinkCenterTwist H target =
+      (fun A e => f e (A e)) by rfl]
+    rw [Measure.pi_map_pi hf]
+    congr 1
+    funext e
+    exact (hMP e).map_eq
+
+/-- A genuine plaquette omitting the twisted positive link retains
+its literal original oriented four-link SU(2) holonomy. -/
+theorem p4Q2PZ37ANV_singleLinkCenterTwist_holonomy_of_not_mem
+    (H : ℕ) (p : PeriodicHypercubicEvenSpatialSlicePlaquette H)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H)
+    (hnot : target ∉ pz37zaSpatialPlaquetteSupport H p)
+    (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    periodicHypercubicEvenSpatialSlicePlaquetteHolonomy
+      (p4Q2PZ37ANV_singleLinkCenterTwist H target A) p =
+      periodicHypercubicEvenSpatialSlicePlaquetteHolonomy A p := by
+  classical
+  have hnone (k : Fin 4) :
+      pz37zaSpatialPlaquetteBoundary H p k ≠ target := by
+    intro hk
+    apply hnot
+    change target ∈
+      (Finset.univ : Finset (Fin 4)).image
+        (pz37zaSpatialPlaquetteBoundary H p)
+    exact Finset.mem_image.mpr ⟨k, Finset.mem_univ _, hk⟩
+  have h0 : (p.1, p.2.1.1) ≠ target := by
+    simpa [pz37zaSpatialPlaquetteBoundary] using hnone 0
+  have h1 :
+      (periodicHypercubicEvenSpatialSliceShift H p.1 p.2.1.1,
+        p.2.1.2) ≠ target := by
+    simpa [pz37zaSpatialPlaquetteBoundary] using hnone 1
+  have h2 :
+      (periodicHypercubicEvenSpatialSliceShift H p.1 p.2.1.2,
+        p.2.1.1) ≠ target := by
+    simpa [pz37zaSpatialPlaquetteBoundary] using hnone 2
+  have h3 : (p.1, p.2.1.2) ≠ target := by
+    simpa [pz37zaSpatialPlaquetteBoundary] using hnone 3
+  simp [periodicHypercubicEvenSpatialSlicePlaquetteHolonomy,
+    p4Q2PZ37ANV_singleLinkCenterTwist, h0, h1, h2, h3]
+
+/-- Therefore the unchanged original Wilson plaquette energy outside
+the twisted link support is invariant pointwise, even at H = 0. -/
+theorem p4Q2PZ37ANV_singleLinkCenterTwist_energy_of_not_mem
+    (H : ℕ) (p : PeriodicHypercubicEvenSpatialSlicePlaquette H)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H)
+    (hnot : target ∉ pz37zaSpatialPlaquetteSupport H p)
+    (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    specialUnitaryWilsonPlaquetteEnergy 2
+      (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy
+        (p4Q2PZ37ANV_singleLinkCenterTwist H target A) p) =
+      specialUnitaryWilsonPlaquetteEnergy 2
+        (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy A p) := by
+  rw [p4Q2PZ37ANV_singleLinkCenterTwist_holonomy_of_not_mem
+    H p target hnot A]
+
 end
 end MGAP4D.MathlibAnalytic
 
@@ -946,3 +1041,7 @@ end MGAP4D.MathlibAnalytic
 
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalPrimarySpatialEnergy_eq_cyclic
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalNativePrimarySpatialEnergyCharacter_haarPairing
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_singleLinkCenterTwist_haarMeasurePreserving
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_singleLinkCenterTwist_holonomy_of_not_mem
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_singleLinkCenterTwist_energy_of_not_mem
