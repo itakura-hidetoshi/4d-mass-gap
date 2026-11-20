@@ -637,12 +637,29 @@ theorem p4Q2PZ37ANV_primaryOriginTwoLinks_unique_of_H_zero
     · exact Or.inl (h.symm.trans hDir)
     · exact Or.inr (h.symm.trans hDir)
   have hAxisOrder : p.2.1.1.1 < p.2.1.2.1 := p.2.2
-  have hFirstDir : p.2.1.1.1 = (1 : PeriodicHypercubicAxis) := by
-    rcases hHasDir1 with h1 | h1 <;>
-      rcases hHasDir2 with h2 | h2 <;> omega
-  have hSecondDir : p.2.1.2.1 = (2 : PeriodicHypercubicAxis) := by
-    rcases hHasDir1 with h1 | h1 <;>
-      rcases hHasDir2 with h2 | h2 <;> omega
+  -- The axis type is Fin 4.  Use literal finite-order contradictions:
+  -- omega cannot extract arithmetic constraints from the nested subtype
+  -- projections of the original dependent spatial plaquette here.
+  have hDirections :
+      p.2.1.1.1 = (1 : PeriodicHypercubicAxis) ∧
+        p.2.1.2.1 = (2 : PeriodicHypercubicAxis) := by
+    rcases hHasDir1 with h1 | h1
+    · rcases hHasDir2 with h2 | h2
+      · exact False.elim ((by decide : (1 : PeriodicHypercubicAxis) ≠ 2)
+          (h1.symm.trans h2))
+      · exact ⟨h1, h2⟩
+    · rcases hHasDir2 with h2 | h2
+      · have hBad : (2 : PeriodicHypercubicAxis) <
+            (1 : PeriodicHypercubicAxis) := by
+          simpa only [h2, h1] using hAxisOrder
+        exact False.elim ((by decide :
+          ¬ ((2 : PeriodicHypercubicAxis) < (1 : PeriodicHypercubicAxis))) hBad)
+      · exact False.elim ((by decide : (1 : PeriodicHypercubicAxis) ≠ 2)
+          (h1.symm.trans h2))
+  have hFirstDir : p.2.1.1.1 = (1 : PeriodicHypercubicAxis) :=
+    hDirections.1
+  have hSecondDir : p.2.1.2.1 = (2 : PeriodicHypercubicAxis) :=
+    hDirections.2
   have hPair : p.2 = p0.2 := by
     apply Subtype.ext
     apply Prod.ext
