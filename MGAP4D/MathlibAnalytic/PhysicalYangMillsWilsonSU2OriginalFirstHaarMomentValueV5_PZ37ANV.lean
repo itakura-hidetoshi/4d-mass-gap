@@ -636,6 +636,7 @@ theorem p4Q2PZ37ANV_primaryOriginTwoLinks_unique_of_H_zero
     rcases hBoundaryDir j with h | h
     · exact Or.inl (h.symm.trans hDir)
     · exact Or.inr (h.symm.trans hDir)
+  have hAxisOrder : p.2.1.1.1 < p.2.1.2.1 := p.2.2
   have hFirstDir : p.2.1.1.1 = (1 : PeriodicHypercubicAxis) := by
     rcases hHasDir1 with h1 | h1 <;>
       rcases hHasDir2 with h2 | h2 <;> omega
@@ -665,7 +666,8 @@ theorem p4Q2PZ37ANV_primaryOriginTwoLinks_unique_of_H_zero
         (fun e : PeriodicHypercubicEvenSpatialSliceLink 0 => e.2.1) hi).trans he1Dir
       have hbad : p.2.1.2.1 = (1 : PeriodicHypercubicAxis) := by
         simpa [pz37zaSpatialPlaquetteBoundary] using h
-      omega
+      exact (by decide : (2 : PeriodicHypercubicAxis) ≠ 1)
+        (hSecondDir.symm.trans hbad)
     · right
       have h := (congrArg
         (fun e : PeriodicHypercubicEvenSpatialSliceLink 0 => e.1) hi).trans he1Source
@@ -675,7 +677,8 @@ theorem p4Q2PZ37ANV_primaryOriginTwoLinks_unique_of_H_zero
         (fun e : PeriodicHypercubicEvenSpatialSliceLink 0 => e.2.1) hi).trans he1Dir
       have hbad : p.2.1.2.1 = (1 : PeriodicHypercubicAxis) := by
         simpa [pz37zaSpatialPlaquetteBoundary] using h
-      omega
+      exact (by decide : (2 : PeriodicHypercubicAxis) ≠ 1)
+        (hSecondDir.symm.trans hbad)
   have hTwoBase :
       periodicHypercubicEvenSpatialSliceShift 0 p.1 p.2.1.1 = p0.1 ∨
         p.1 = p0.1 := by
@@ -686,7 +689,8 @@ theorem p4Q2PZ37ANV_primaryOriginTwoLinks_unique_of_H_zero
         (fun e : PeriodicHypercubicEvenSpatialSliceLink 0 => e.2.1) hj).trans he2Dir
       have hbad : p.2.1.1.1 = (2 : PeriodicHypercubicAxis) := by
         simpa [pz37zaSpatialPlaquetteBoundary] using h
-      omega
+      exact (by decide : (1 : PeriodicHypercubicAxis) ≠ 2)
+        (hFirstDir.symm.trans hbad)
     · left
       have h := (congrArg
         (fun e : PeriodicHypercubicEvenSpatialSliceLink 0 => e.1) hj).trans he2Source
@@ -696,7 +700,8 @@ theorem p4Q2PZ37ANV_primaryOriginTwoLinks_unique_of_H_zero
         (fun e : PeriodicHypercubicEvenSpatialSliceLink 0 => e.2.1) hj).trans he2Dir
       have hbad : p.2.1.1.1 = (2 : PeriodicHypercubicAxis) := by
         simpa [pz37zaSpatialPlaquetteBoundary] using h
-      omega
+      exact (by decide : (1 : PeriodicHypercubicAxis) ≠ 2)
+        (hFirstDir.symm.trans hbad)
     · right
       have h := (congrArg
         (fun e : PeriodicHypercubicEvenSpatialSliceLink 0 => e.1) hj).trans he2Source
