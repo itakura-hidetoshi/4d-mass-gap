@@ -873,6 +873,50 @@ theorem p4Q2PZ37ANV_originalLeftSpatialAction_primaryCharacter_iteratedHaar_zero
       rw [p4Q2PZ37ANV_originalTimeZeroPrimaryCharacter_haarMean_zero H]
       ring
 
+
+/-- The original *intrinsic* spatial-slice primary Wilson energy agrees
+pointwise with its four-native-link cyclic Haar representative.
+The agreement follows from the already proved native holonomy conjugacy
+and Wilson class-function invariance; no plaquette substitution occurs. -/
+theorem p4Q2PZ37ANV_originalPrimarySpatialEnergy_eq_cyclic
+    (H : ℕ)
+    (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    specialUnitaryWilsonPlaquetteEnergy 2
+      (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy A
+        (p4Q2PZ37AMS_primarySpatialSlicePlaquette H)) =
+      specialUnitaryWilsonPlaquetteEnergy 2
+        (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 A) := by
+  rw [p4Q2PZ37AMT_spatialHolonomy_eq_orientedFourEdge]
+  simpa only [p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy] using
+    (specialUnitaryWilsonPlaquetteEnergy_orientedFourEdge_eq_cyclic
+      (fun k : Fin 4 =>
+        A (p4Q2PZ37AMS_primarySpatialSliceEdgeEmbedding H k)))
+
+/-- Exact *original native spatial plaquette* Haar energy-character
+pairing. The value -1/4 belongs to the unchanged oriented Wilson
+holonomy, transferred through a proved pointwise conjugacy to cyclic
+Haar—not obtained by assuming independent plaquettes. -/
+theorem p4Q2PZ37ANV_originalNativePrimarySpatialEnergyCharacter_haarPairing
+    (H : ℕ) :
+    (∫ A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
+      specialUnitaryWilsonPlaquetteEnergy 2
+        (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy A
+          (p4Q2PZ37AMS_primarySpatialSlicePlaquette H)) *
+      Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 A)
+      ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2)) =
+        -(1 / 4 : ℝ) := by
+  calc
+    _ = ∫ A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
+          specialUnitaryWilsonPlaquetteEnergy 2
+            (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 A) *
+          Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 A)
+          ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2) := by
+            apply integral_congr_ae
+            filter_upwards [] with A
+            rw [p4Q2PZ37ANV_originalPrimarySpatialEnergy_eq_cyclic H A]
+    _ = -(1 / 4 : ℝ) :=
+      p4Q2PZ37ANV_originalTimeZeroPrimaryEnergyCharacter_haarPairing H
+
 end
 end MGAP4D.MathlibAnalytic
 
@@ -899,3 +943,6 @@ end MGAP4D.MathlibAnalytic
 
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalCrossing_primaryCharacter_iteratedHaar_zero
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalLeftSpatialAction_primaryCharacter_iteratedHaar_zero
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalPrimarySpatialEnergy_eq_cyclic
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalNativePrimarySpatialEnergyCharacter_haarPairing
