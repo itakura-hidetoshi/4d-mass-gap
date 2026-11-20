@@ -607,7 +607,10 @@ theorem p4Q2PZ37ANV_primaryOriginTwoLinks_unique_of_H_zero
       inferInstance
     letI : Fintype (PeriodicHypercubicEvenSpatialSlicePlaquette 0) :=
       inferInstance
-    decide +kernel
+    -- Enumerate the finite physical carrier by cases instead of reducing
+    -- Fintype.decidableForallFintype through an Eq.rec-heavy subtype Fintype.
+    intro q
+    fin_cases q <;> decide +kernel
   classical
   have hOne' :
       ∃ i : Fin 4,
