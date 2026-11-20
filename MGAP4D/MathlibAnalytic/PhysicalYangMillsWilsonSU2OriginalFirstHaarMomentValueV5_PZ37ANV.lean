@@ -1,3 +1,4 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalPlaquetteCenterTraceV5_PV
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2NativeTopFirstSlopeV5_PZ37ANU
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalPrimaryPlaquetteHaarCharacterBridgeV5_PZ37AMB
 import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonHybridTargetTrajectorySpecialUnitaryTwoStapleOscillationSeparationBCF
@@ -1012,6 +1013,200 @@ theorem p4Q2PZ37ANV_singleLinkCenterTwist_energy_of_not_mem
   rw [p4Q2PZ37ANV_singleLinkCenterTwist_holonomy_of_not_mem
     H p target hnot A]
 
+
+/-! ## ANV: four-edge SU(2) center oddness and off-diagonal Haar pairing
+
+Reuse the independently certified PU actual one-link Haar center flip,
+PU3 original four-link distinctness, and PV first-three-link oddness.
+The fourth inverse-oriented edge is handled explicitly. Together with
+the ANV all-H exclusive-link theorem, no assumption of independent
+plaquettes or a changed physical Haar space is needed. -/
+
+section NativePlaquetteCenterCancellation
+
+local notation "e0" =>
+  GroundStatePosteriorJoint.p4Q2PU3_originalPlaquetteEdge0
+local notation "e1" =>
+  GroundStatePosteriorJoint.p4Q2PU3_originalPlaquetteEdge1
+local notation "e2" =>
+  GroundStatePosteriorJoint.p4Q2PU3_originalPlaquetteEdge2
+local notation "e3" =>
+  GroundStatePosteriorJoint.p4Q2PU3_originalPlaquetteEdge3
+local notation "Flip" =>
+  GroundStatePosteriorJoint.p4Q2PU_originalSpatialSingleLinkCenterFlip
+local notation "Hol" =>
+  periodicHypercubicEvenSpatialSlicePlaquetteHolonomy
+
+/-- The fourth original inverse-oriented spatial link also flips the
+exact four-link Wilson holonomy by the same genuine SU(2) center.
+The previously certified PV proof had handled the other three links. -/
+theorem p4Q2PZ37ANV_originalPlaquetteHolonomy_flip_fourth
+    (H : ℕ) (p : PeriodicHypercubicEvenSpatialSlicePlaquette H)
+    (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    Hol (Flip H (e3 H p) A) p =
+      Hol A p * specialUnitaryTwoNegativeIdentity := by
+  obtain ⟨h30, h31, h32⟩ :=
+    GroundStatePosteriorJoint.p4Q2PU3_originalPlaquette_last_distinct H p
+  change
+    (Flip H (e3 H p) A (e0 H p)) *
+      (Flip H (e3 H p) A (e1 H p)) *
+      (Flip H (e3 H p) A (e2 H p))⁻¹ *
+      (Flip H (e3 H p) A (e3 H p))⁻¹ =
+    (A (e0 H p) * A (e1 H p) *
+      (A (e2 H p))⁻¹ * (A (e3 H p))⁻¹) *
+        specialUnitaryTwoNegativeIdentity
+  rw [GroundStatePosteriorJoint.p4Q2PU_originalSingleLinkCenterFlip_other
+        H (e3 H p) (e0 H p) h30.symm A,
+      GroundStatePosteriorJoint.p4Q2PU_originalSingleLinkCenterFlip_other
+        H (e3 H p) (e1 H p) h31.symm A,
+      GroundStatePosteriorJoint.p4Q2PU_originalSingleLinkCenterFlip_other
+        H (e3 H p) (e2 H p) h32.symm A,
+      GroundStatePosteriorJoint.p4Q2PU_originalSingleLinkCenterFlip_at
+        H (e3 H p) A]
+  rw [GroundStatePosteriorJoint.p4Q2PV_originalSU2Center_inverse_mul
+    (A (e3 H p))]
+  exact (mul_assoc _ _ _).symm
+
+/-- The literal original spatial Wilson real character is odd even
+under the previously missing fourth inverse-oriented link flip. -/
+theorem p4Q2PZ37ANV_originalPlaquetteCharacter_flip_fourth
+    (H : ℕ) (p : PeriodicHypercubicEvenSpatialSlicePlaquette H)
+    (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    GroundStatePosteriorJoint.p4Q2PV_originalPlaquetteRealCharacter H p
+        (Flip H (e3 H p) A) =
+      -GroundStatePosteriorJoint.p4Q2PV_originalPlaquetteRealCharacter H p A := by
+  unfold GroundStatePosteriorJoint.p4Q2PV_originalPlaquetteRealCharacter
+  rw [p4Q2PZ37ANV_originalPlaquetteHolonomy_flip_fourth H p A,
+    specialUnitaryWilsonPlaquetteEnergy_two_mul_negativeIdentity]
+  ring
+
+/-- Identical first SU(2) character in the native original oriented
+plaquette and the AMT-certified cyclic four-Haar representative. -/
+theorem p4Q2PZ37ANV_cyclicCharacter_eq_nativeCharacter
+    (H : ℕ)
+    (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 A) =
+      GroundStatePosteriorJoint.p4Q2PV_originalPlaquetteRealCharacter H
+        (p4Q2PZ37AMS_primarySpatialSlicePlaquette H) A := by
+  dsimp [p4Q2PZ35C_originalOneLinkCharacter,
+    GroundStatePosteriorJoint.p4Q2PV_originalPlaquetteRealCharacter]
+  rw [p4Q2PZ37ANV_originalPrimarySpatialEnergy_eq_cyclic H A]
+
+/-- For either of two exclusive primary origin links, the real Wilson
+character changes sign under the unchanged original PU center flip.
+H=0 is included by the genuinely native spatial-slice link types. -/
+theorem p4Q2PZ37ANV_primaryCharacter_originCenterFlip_odd
+    (H : ℕ)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H)
+    (hTarget : target = p4Q2PZ37AMS_primarySpatialSliceEdge H 0 ∨
+      target = p4Q2PZ37AMS_primarySpatialSliceEdge H 3)
+    (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2
+      (Flip H target A)) =
+      -Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 A) := by
+  let p0 := p4Q2PZ37AMS_primarySpatialSlicePlaquette H
+  calc
+    _ = GroundStatePosteriorJoint.p4Q2PV_originalPlaquetteRealCharacter H p0
+          (Flip H target A) :=
+      p4Q2PZ37ANV_cyclicCharacter_eq_nativeCharacter H _
+    _ = -GroundStatePosteriorJoint.p4Q2PV_originalPlaquetteRealCharacter H p0 A := by
+      rcases hTarget with h0 | h3
+      · subst target
+        exact GroundStatePosteriorJoint.p4Q2PV_originalPlaquetteRealCharacter_centerOdd
+          H p0 (p4Q2PZ37AMS_primarySpatialSliceEdge H 0)
+          (Or.inl (by rfl)) A
+      · subst target
+        have he3 : p4Q2PZ37AMS_primarySpatialSliceEdge H 3 = e3 H p0 := by
+          rfl
+        simpa only [he3] using
+          (p4Q2PZ37ANV_originalPlaquetteCharacter_flip_fourth H p0 A)
+    _ = _ := by
+      rw [p4Q2PZ37ANV_cyclicCharacter_eq_nativeCharacter H A]
+
+/-- The new ANV coordinate twist equals the already certified PU
+center flip on each genuine SU(2) spatial link, pointwise. -/
+theorem p4Q2PZ37ANV_singleLinkCenterTwist_eq_existingPU
+    (H : ℕ) (target : PeriodicHypercubicEvenSpatialSliceLink H)
+    (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    p4Q2PZ37ANV_singleLinkCenterTwist H target A =
+      Flip H target A := by
+  classical
+  funext e
+  by_cases he : e = target
+  · simp [p4Q2PZ37ANV_singleLinkCenterTwist,
+      GroundStatePosteriorJoint.p4Q2PU_originalSpatialSingleLinkCenterFlip, he]
+  · simp [p4Q2PZ37ANV_singleLinkCenterTwist,
+      GroundStatePosteriorJoint.p4Q2PU_originalSpatialSingleLinkCenterFlip, he]
+
+/-- Under the ORIGINAL native spatial product Haar, any spatial
+plaquette other than the physical primary is orthogonal to its
+normalized SU(2) fundamental character, even on the H=0 period-two
+torus. No artificial independent-plaquette measure is introduced. -/
+theorem p4Q2PZ37ANV_nonPrimarySpatialEnergy_primaryCharacter_haarOrthogonal
+    (H : ℕ) (p : PeriodicHypercubicEvenSpatialSlicePlaquette H)
+    (hp : p ≠ p4Q2PZ37AMS_primarySpatialSlicePlaquette H) :
+    (∫ A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
+      specialUnitaryWilsonPlaquetteEnergy 2
+        (Hol A p) *
+      Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 A)
+      ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2)) = 0 := by
+  classical
+  let Cfg := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+  let Link := PeriodicHypercubicEvenSpatialSliceLink H
+  let p0 := p4Q2PZ37AMS_primarySpatialSlicePlaquette H
+  obtain ⟨target, hChoice, hNot⟩ :
+      ∃ target : Link,
+        (target = p4Q2PZ37AMS_primarySpatialSliceEdge H 0 ∨
+         target = p4Q2PZ37AMS_primarySpatialSliceEdge H 3) ∧
+        target ∉ pz37zaSpatialPlaquetteSupport H p := by
+    by_cases h0 : p4Q2PZ37AMS_primarySpatialSliceEdge H 0 ∈
+        pz37zaSpatialPlaquetteSupport H p
+    · refine ⟨p4Q2PZ37AMS_primarySpatialSliceEdge H 3, Or.inr rfl, ?_⟩
+      intro h3
+      exact hp (p4Q2PZ37ANV_primaryOriginTwoLinks_unique H p h0 h3)
+    · exact ⟨p4Q2PZ37AMS_primarySpatialSliceEdge H 0, Or.inl rfl, h0⟩
+  have hHolCont : Continuous (fun A : Cfg => Hol A p) := by
+    unfold periodicHypercubicEvenSpatialSlicePlaquetteHolonomy
+    fun_prop
+  have hCharacterCont :
+      Continuous (fun A : Cfg =>
+        Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 A)) := by
+    have hFun :
+        (fun A : Cfg =>
+          Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 A)) =
+        (fun A : Cfg =>
+          GroundStatePosteriorJoint.p4Q2PV_originalPlaquetteRealCharacter H p0 A) := by
+      funext A
+      exact p4Q2PZ37ANV_cyclicCharacter_eq_nativeCharacter H A
+    rw [hFun]
+    exact GroundStatePosteriorJoint.p4Q2PV_originalPlaquetteRealCharacter_continuous H p0
+  have hCont : Continuous
+      (fun A : Cfg =>
+        specialUnitaryWilsonPlaquetteEnergy 2 (Hol A p) *
+        Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 A)) :=
+    ((continuous_specialUnitaryWilsonPlaquetteEnergy 2).comp hHolCont).mul hCharacterCont
+  have hEnergyFlip (A : Cfg) :
+      specialUnitaryWilsonPlaquetteEnergy 2 (Hol (Flip H target A) p) =
+        specialUnitaryWilsonPlaquetteEnergy 2 (Hol A p) := by
+    rw [← p4Q2PZ37ANV_singleLinkCenterTwist_eq_existingPU H target A]
+    exact p4Q2PZ37ANV_singleLinkCenterTwist_energy_of_not_mem H p target hNot A
+  have hOdd (A : Cfg) :
+      specialUnitaryWilsonPlaquetteEnergy 2 (Hol (Flip H target A) p) *
+        Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 (Flip H target A)) =
+      -(specialUnitaryWilsonPlaquetteEnergy 2 (Hol A p) *
+        Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 A)) := by
+    rw [hEnergyFlip A,
+      p4Q2PZ37ANV_primaryCharacter_originCenterFlip_odd H target hChoice A]
+    ring
+  exact GroundStatePosteriorJoint.p4Q2PU_originalCenterFlip_Haar_odd_integral_zero
+    H target
+    (fun A : Cfg =>
+      specialUnitaryWilsonPlaquetteEnergy 2 (Hol A p) *
+        Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 A))
+    hCont hOdd
+
+end NativePlaquetteCenterCancellation
+
 end
 end MGAP4D.MathlibAnalytic
 
@@ -1045,3 +1240,10 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_singleLinkCenterTwist_haarMeasurePreserving
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_singleLinkCenterTwist_holonomy_of_not_mem
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_singleLinkCenterTwist_energy_of_not_mem
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalPlaquetteHolonomy_flip_fourth
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalPlaquetteCharacter_flip_fourth
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_cyclicCharacter_eq_nativeCharacter
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_primaryCharacter_originCenterFlip_odd
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_singleLinkCenterTwist_eq_existingPU
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_nonPrimarySpatialEnergy_primaryCharacter_haarOrthogonal
