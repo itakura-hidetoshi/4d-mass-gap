@@ -779,6 +779,100 @@ theorem p4Q2PZ37ANV_primaryHasExclusiveLink
   · exact ⟨p4Q2PZ37AMS_primarySpatialSliceEdge H 0,
       p4Q2PZ37ANV_primaryOriginOne_mem_support H, he⟩
 
+
+/-! ## ANV: cancellation in the genuine two-boundary Haar action
+
+No plaquette-independence hypothesis is introduced.  The temporal crossing
+term is integrated in its first physical boundary using the exact original
+Haar law, and the actual primary spatial character is integrated in its
+second boundary.  In particular this calculation also covers H = 0. -/
+
+/-- The genuine ORIGINAL temporal crossing Wilson action is exactly
+orthogonal to the genuine primary SU(2) Wilson character under iterated
+two-boundary product Haar.  It uses the unchanged actual linkwise crossing
+action, not a proxy single-link kernel. -/
+theorem p4Q2PZ37ANV_originalCrossing_primaryCharacter_iteratedHaar_zero
+    (H : ℕ) :
+    (∫ B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
+      (∫ A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction
+          H 2 A B *
+          Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 B)
+        ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2))
+      ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2)) = 0 := by
+  classical
+  let muH := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
+  let Link := PeriodicHypercubicEvenSpatialSliceLink H
+  let Cfg := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+  have hInner (B : Cfg) :
+      (∫ A : Cfg,
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction
+          H 2 A B *
+          Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 B)
+        ∂muH) =
+        (Fintype.card Link : ℝ) *
+          Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 B) := by
+    rw [integral_mul_const]
+    rw [p4Q2PZ37ANV_originalCrossingAction_leftHaarMean H B]
+  calc
+    _ = ∫ B : Cfg,
+          (Fintype.card Link : ℝ) *
+            Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 B)
+          ∂muH := by
+            apply integral_congr_ae
+            filter_upwards [] with B
+            exact hInner B
+    _ = (Fintype.card Link : ℝ) *
+          (∫ B : Cfg,
+            Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 B)
+            ∂muH) := by rw [integral_const_mul]
+    _ = 0 := by
+      rw [p4Q2PZ37ANV_originalTimeZeroPrimaryCharacter_haarMean_zero H]
+      ring
+
+/-- The ORIGINAL spatial action on the opposite Haar boundary contributes
+no first-character insertion.  The full action remains unchanged; this is
+one exact term of its symmetric one-slab decomposition. -/
+theorem p4Q2PZ37ANV_originalLeftSpatialAction_primaryCharacter_iteratedHaar_zero
+    (H : ℕ) :
+    (∫ B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
+      (∫ A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
+        periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H 2 A *
+          Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 B)
+        ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2))
+      ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2)) = 0 := by
+  let muH := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
+  let Cfg := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+  have hInner (B : Cfg) :
+      (∫ A : Cfg,
+        periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H 2 A *
+          Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 B)
+        ∂muH) =
+        (∫ A : Cfg,
+          periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H 2 A
+          ∂muH) *
+          Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 B) := by
+    rw [integral_mul_const]
+  calc
+    _ = ∫ B : Cfg,
+          (∫ A : Cfg,
+            periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H 2 A
+            ∂muH) *
+            Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 B)
+          ∂muH := by
+            apply integral_congr_ae
+            filter_upwards [] with B
+            exact hInner B
+    _ = (∫ A : Cfg,
+          periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H 2 A
+          ∂muH) *
+          (∫ B : Cfg,
+            Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 B)
+            ∂muH) := by rw [integral_const_mul]
+    _ = 0 := by
+      rw [p4Q2PZ37ANV_originalTimeZeroPrimaryCharacter_haarMean_zero H]
+      ring
+
 end
 end MGAP4D.MathlibAnalytic
 
@@ -802,3 +896,6 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_primaryOriginTwoLinks_unique_of_H_zero
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_primaryOriginTwoLinks_unique
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_primaryHasExclusiveLink
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalCrossing_primaryCharacter_iteratedHaar_zero
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalLeftSpatialAction_primaryCharacter_iteratedHaar_zero
