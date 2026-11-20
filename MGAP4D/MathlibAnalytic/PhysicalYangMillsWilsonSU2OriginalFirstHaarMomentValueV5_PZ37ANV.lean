@@ -581,36 +581,6 @@ theorem p4Q2PZ37ANV_primaryOriginTwoLinks_unique_of_H_zero
     (hTwo : p4Q2PZ37AMS_primarySpatialSliceEdge 0 3 ∈
       pz37zaSpatialPlaquetteSupport 0 p) :
     p = p4Q2PZ37AMS_primarySpatialSlicePlaquette 0 := by
-  have hFinite :
-      ∀ q : PeriodicHypercubicEvenSpatialSlicePlaquette 0,
-        (∃ i : Fin 4,
-          pz37zaSpatialPlaquetteBoundary 0 q i =
-            p4Q2PZ37AMS_primarySpatialSliceEdge 0 0) →
-        (∃ j : Fin 4,
-          pz37zaSpatialPlaquetteBoundary 0 q j =
-            p4Q2PZ37AMS_primarySpatialSliceEdge 0 3) →
-        q = p4Q2PZ37AMS_primarySpatialSlicePlaquette 0 := by
-    -- At H=0 the true spatial plaquette carrier is constructively finite:
-    -- spatial positions are functions Fin 4 → ZMod 2 and the axis pair is
-    -- a strict ordered subtype. Avoid Fintype.ofFinite / Classical.choice:
-    -- those are noncomputable and cannot support kernel decide.
-    letI : NeZero (PeriodicHypercubicEvenSideLength 0) := ⟨by decide⟩
-    -- The vertex carrier is a finite function type (Fin 4 → ZMod 2).
-    -- Its constructive equality is needed twice: in equality of links
-    -- used by the boundary witnesses and in equality of plaquettes.
-    -- Do not import a classical propDecidable into a kernel computation.
-    letI : DecidableEq (PeriodicHypercubicEvenVertex 0) :=
-      Fintype.decidablePiFintype
-    letI : DecidableEq (PeriodicHypercubicEvenSpatialSliceLink 0) :=
-      inferInstance
-    letI : DecidableEq (PeriodicHypercubicEvenSpatialSlicePlaquette 0) :=
-      inferInstance
-    letI : Fintype (PeriodicHypercubicEvenSpatialSlicePlaquette 0) :=
-      inferInstance
-    -- Enumerate the finite physical carrier by cases instead of reducing
-    -- Fintype.decidableForallFintype through an Eq.rec-heavy subtype Fintype.
-    intro q
-    fin_cases q <;> decide +kernel
   classical
   have hOne' :
       ∃ i : Fin 4,
@@ -630,7 +600,126 @@ theorem p4Q2PZ37ANV_primaryOriginTwoLinks_unique_of_H_zero
         (pz37zaSpatialPlaquetteBoundary 0 p) at hTwo
     obtain ⟨j, _, hj⟩ := Finset.mem_image.mp hTwo
     exact ⟨j, hj⟩
-  exact hFinite p hOne' hTwo'
+  let p0 := p4Q2PZ37AMS_primarySpatialSlicePlaquette 0
+  have he1Dir :
+      (p4Q2PZ37AMS_primarySpatialSliceEdge 0 0).2.1 =
+        (1 : PeriodicHypercubicAxis) := by rfl
+  have he2Dir :
+      (p4Q2PZ37AMS_primarySpatialSliceEdge 0 3).2.1 =
+        (2 : PeriodicHypercubicAxis) := by rfl
+  have he1Source :
+      (p4Q2PZ37AMS_primarySpatialSliceEdge 0 0).1 = p0.1 := by rfl
+  have he2Source :
+      (p4Q2PZ37AMS_primarySpatialSliceEdge 0 3).1 = p0.1 := by rfl
+  -- First read both directions of the actual four-link boundary. The
+  -- finite case split is on Fin 4, NOT on the dependent plaquette Fintype:
+  -- fin_cases on the latter failed to eliminate Fintype.elems/Eq.rec.
+  have hBoundaryDir (i : Fin 4) :
+      (pz37zaSpatialPlaquetteBoundary 0 p i).2.1 = p.2.1.1.1 ∨
+      (pz37zaSpatialPlaquetteBoundary 0 p i).2.1 = p.2.1.2.1 := by
+    fin_cases i <;> simp [pz37zaSpatialPlaquetteBoundary]
+  have hHasDir1 :
+      p.2.1.1.1 = (1 : PeriodicHypercubicAxis) ∨
+      p.2.1.2.1 = (1 : PeriodicHypercubicAxis) := by
+    obtain ⟨i, hi⟩ := hOne'
+    have hDir := (congrArg
+      (fun e : PeriodicHypercubicEvenSpatialSliceLink 0 => e.2.1) hi).trans he1Dir
+    rcases hBoundaryDir i with h | h
+    · exact Or.inl (h.symm.trans hDir)
+    · exact Or.inr (h.symm.trans hDir)
+  have hHasDir2 :
+      p.2.1.1.1 = (2 : PeriodicHypercubicAxis) ∨
+      p.2.1.2.1 = (2 : PeriodicHypercubicAxis) := by
+    obtain ⟨j, hj⟩ := hTwo'
+    have hDir := (congrArg
+      (fun e : PeriodicHypercubicEvenSpatialSliceLink 0 => e.2.1) hj).trans he2Dir
+    rcases hBoundaryDir j with h | h
+    · exact Or.inl (h.symm.trans hDir)
+    · exact Or.inr (h.symm.trans hDir)
+  have hFirstDir : p.2.1.1.1 = (1 : PeriodicHypercubicAxis) := by
+    rcases hHasDir1 with h1 | h1 <;>
+      rcases hHasDir2 with h2 | h2 <;> omega
+  have hSecondDir : p.2.1.2.1 = (2 : PeriodicHypercubicAxis) := by
+    rcases hHasDir1 with h1 | h1 <;>
+      rcases hHasDir2 with h2 | h2 <;> omega
+  have hPair : p.2 = p0.2 := by
+    apply Subtype.ext
+    apply Prod.ext
+    · apply Subtype.ext
+      exact hFirstDir
+    · apply Subtype.ext
+      exact hSecondDir
+  -- Among the four original link positions, the first origin direction
+  -- can only occur at the base or at the transverse shifted base.
+  have hOneBase :
+      p.1 = p0.1 ∨
+        periodicHypercubicEvenSpatialSliceShift 0 p.1 p.2.1.2 = p0.1 := by
+    obtain ⟨i, hi⟩ := hOne'
+    fin_cases i
+    · left
+      have h := (congrArg
+        (fun e : PeriodicHypercubicEvenSpatialSliceLink 0 => e.1) hi).trans he1Source
+      simpa [pz37zaSpatialPlaquetteBoundary] using h
+    · exfalso
+      have h := (congrArg
+        (fun e : PeriodicHypercubicEvenSpatialSliceLink 0 => e.2.1) hi).trans he1Dir
+      have hbad : p.2.1.2.1 = (1 : PeriodicHypercubicAxis) := by
+        simpa [pz37zaSpatialPlaquetteBoundary] using h
+      omega
+    · right
+      have h := (congrArg
+        (fun e : PeriodicHypercubicEvenSpatialSliceLink 0 => e.1) hi).trans he1Source
+      simpa [pz37zaSpatialPlaquetteBoundary] using h
+    · exfalso
+      have h := (congrArg
+        (fun e : PeriodicHypercubicEvenSpatialSliceLink 0 => e.2.1) hi).trans he1Dir
+      have hbad : p.2.1.2.1 = (1 : PeriodicHypercubicAxis) := by
+        simpa [pz37zaSpatialPlaquetteBoundary] using h
+      omega
+  have hTwoBase :
+      periodicHypercubicEvenSpatialSliceShift 0 p.1 p.2.1.1 = p0.1 ∨
+        p.1 = p0.1 := by
+    obtain ⟨j, hj⟩ := hTwo'
+    fin_cases j
+    · exfalso
+      have h := (congrArg
+        (fun e : PeriodicHypercubicEvenSpatialSliceLink 0 => e.2.1) hj).trans he2Dir
+      have hbad : p.2.1.1.1 = (2 : PeriodicHypercubicAxis) := by
+        simpa [pz37zaSpatialPlaquetteBoundary] using h
+      omega
+    · left
+      have h := (congrArg
+        (fun e : PeriodicHypercubicEvenSpatialSliceLink 0 => e.1) hj).trans he2Source
+      simpa [pz37zaSpatialPlaquetteBoundary] using h
+    · exfalso
+      have h := (congrArg
+        (fun e : PeriodicHypercubicEvenSpatialSliceLink 0 => e.2.1) hj).trans he2Dir
+      have hbad : p.2.1.1.1 = (2 : PeriodicHypercubicAxis) := by
+        simpa [pz37zaSpatialPlaquetteBoundary] using h
+      omega
+    · right
+      have h := (congrArg
+        (fun e : PeriodicHypercubicEvenSpatialSliceLink 0 => e.1) hj).trans he2Source
+      simpa [pz37zaSpatialPlaquetteBoundary] using h
+  have hOrigin : p.1 = p0.1 := by
+    rcases hOneBase with hbase | hshift2
+    · exact hbase
+    rcases hTwoBase with hshift1 | hbase
+    · exfalso
+      have hShiftEq :
+          periodicHypercubicEvenSpatialSliceShift 0 p.1 p.2.1.2 =
+            periodicHypercubicEvenSpatialSliceShift 0 p.1 p.2.1.1 :=
+        hshift2.trans hshift1.symm
+      have hFullShiftEq :
+          periodicHypercubicShift 2 p.1.1 p.2.1.2.1 =
+            periodicHypercubicShift 2 p.1.1 p.2.1.1.1 := by
+        simpa only [periodicHypercubicEvenSpatialSliceShift_coe] using
+          congrArg Subtype.val hShiftEq
+      have hDirEq : p.2.1.2.1 = p.2.1.1.1 :=
+        periodicHypercubicShift_axis_injective 2 (by norm_num) p.1.1 hFullShiftEq
+      exact (ne_of_gt p.2.2) hDirEq
+    · exact hbase
+  exact Prod.ext hOrigin hPair
 
 /-- Both specific canonical origin links determine the same genuine
 spatial plaquette for *all* finite H, including the length-two torus. -/
