@@ -1385,6 +1385,56 @@ theorem p4Q2PZ37ANV_actualPhysicalConstant_haarRepresentative
   simpa only [Function.const_apply] using
     (Lp.coeFn_const (μ := muH) (p := (2 : ℝ≥0∞)) (c := (1 : ℝ)))
 
+
+/-- The exact tensor appearing in ANU's **original physical** first
+Haar-action moment has representative -2 times the actual canonical
+spatial plaquette character in the second genuine Haar boundary.
+This keeps Gauss-law source types and pair product Haar unchanged. -/
+theorem p4Q2PZ37ANV_actualFirstPhysicalTensor_pairHaarRepresentative
+    (H : ℕ) :
+    (realL2ExternalTensor
+      ((periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2 :
+          PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H 2) :
+          Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2))
+      ((p4Q2PZ37AMU_actualPhysicalGaussMode H 1 :
+          PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H 2) :
+          Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2)))
+      =ᵐ[periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H 2]
+        (fun p => (-2 : ℝ) *
+          Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 p.2)) := by
+  let Cfg := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+  let muH := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
+  let f : Lp ℝ 2 muH :=
+    ((periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2 :
+        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H 2) :
+        Lp ℝ 2 muH)
+  let g : Lp ℝ 2 muH :=
+    ((p4Q2PZ37AMU_actualPhysicalGaussMode H 1 :
+        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H 2) :
+        Lp ℝ 2 muH)
+  have hf : f =ᵐ[muH] (fun _ : Cfg => (1 : ℝ)) :=
+    p4Q2PZ37ANV_actualPhysicalConstant_haarRepresentative H
+  have hg : g =ᵐ[muH]
+      (fun A : Cfg => (-2 : ℝ) *
+        Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 A)) :=
+    p4Q2PZ37ANV_actualPhysicalFirstGaussMode_haarRepresentative H
+  have hfProd :
+      (fun p : Cfg × Cfg => f p.1) =ᵐ[muH.prod muH]
+        (fun _ => (1 : ℝ)) := by
+    simpa only [Function.comp_def] using
+      (Measure.quasiMeasurePreserving_fst (μ := muH) (ν := muH)).ae_eq hf
+  have hgProd :
+      (fun p : Cfg × Cfg => g p.2) =ᵐ[muH.prod muH]
+        (fun p => (-2 : ℝ) *
+          Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 p.2)) := by
+    simpa only [Function.comp_def] using
+      (Measure.quasiMeasurePreserving_snd (μ := muH) (ν := muH)).ae_eq hg
+  change realL2ExternalTensor f g =ᵐ[muH.prod muH] _
+  filter_upwards [realL2ExternalTensor_coeFn f g, hfProd, hgProd]
+    with p hTensor hfp hgp
+  rw [hTensor]
+  simp only [realL2ExternalTensorFunction, hfp, hgp, one_mul]
+
 end
 end MGAP4D.MathlibAnalytic
 
@@ -1431,3 +1481,5 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalFirstGramSchmidt_haarRepresentative
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_actualPhysicalFirstGaussMode_haarRepresentative
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_actualPhysicalConstant_haarRepresentative
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_actualFirstPhysicalTensor_pairHaarRepresentative
