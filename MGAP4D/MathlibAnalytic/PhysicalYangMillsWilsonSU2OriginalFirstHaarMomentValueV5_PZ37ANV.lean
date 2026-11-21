@@ -1292,6 +1292,99 @@ theorem p4Q2PZ37ANV_originalFullSpatialAction_primaryCharacter_haarPairing
       simpa only [F, p0, muH] using
         (p4Q2PZ37ANV_originalNativePrimarySpatialEnergyCharacter_haarPairing H)
 
+
+/-! ## ANV: authentic first Gauss-law mode as an exact signed Haar representative
+
+The original ANU coefficient uses actual typed physical Hilbert vectors,
+not a substitute observable. These lemmas make the exact almost-everywhere
+representatives available to the unchanged pair-Haar L² tensor calculation.
+They do not assert any OS-Wilson identification or continuum mass gap. -/
+
+/-- The mathlib Gram-Schmidt first-degree Haar vector equals -2 times
+the original normalized SU(2) fundamental Wilson character almost
+everywhere, with the sign determined by original energy-power order. -/
+theorem p4Q2PZ37ANV_originalFirstGramSchmidt_haarRepresentative :
+    specialUnitaryWilsonPlaquetteEnergyTwoHaarGramSchmidtMode 1 =ᵐ[nu]
+      (fun g : G => (-2 : ℝ) * Chi g) := by
+  let f1 : SpecialUnitaryNormalizedHaarL2 2 :=
+    specialUnitaryWilsonPlaquetteEnergyPowerHaarL2
+      (by norm_num : 0 < (2 : ℕ)) 1
+  let f0 : SpecialUnitaryNormalizedHaarL2 2 :=
+    Lp.const 2 nu (1 : ℝ)
+  have hMode :
+      specialUnitaryWilsonPlaquetteEnergyTwoHaarGramSchmidtMode 1 =
+        (2 : ℝ) • (f1 - f0) := by
+    simpa only [f1, f0] using
+      p4Q2PZ37ANV_originalWilsonGramSchmidtFirst_signedCentered
+  have hPower : f1 =ᵐ[nu]
+      (fun g : G => specialUnitaryWilsonPlaquetteEnergy 2 g) := by
+    have h := specialUnitaryWilsonPlaquetteEnergyPowerHaarL2_coeFn
+      (by norm_num : 0 < (2 : ℕ)) 1
+    exact h.trans (Filter.Eventually.of_forall (fun g : G => by
+      simp only [specialUnitaryWilsonPlaquetteEnergyPower, pow_one]))
+  have hConst : f0 =ᵐ[nu] (fun _ : G => (1 : ℝ)) := by
+    simpa only [f0, Function.const_apply] using
+      (Lp.coeFn_const (μ := nu) (p := (2 : ℝ≥0∞)) (c := (1 : ℝ)))
+  rw [hMode]
+  filter_upwards
+    [Lp.coeFn_smul (2 : ℝ) (f1 - f0),
+      Lp.coeFn_sub f1 f0, hPower, hConst]
+    with g hsmul hsub hp hc
+  calc
+    ((2 : ℝ) • (f1 - f0)) g =
+        (2 : ℝ) • ((f1 - f0) g) := hsmul
+    _ = (-2 : ℝ) * Chi g := by
+      rw [hsub, hp, hc]
+      simp only [smul_eq_mul]
+      dsimp [p4Q2PZ35C_originalOneLinkCharacter]
+      ring
+
+/-- The genuinely typed PHYSICAL Gauss-law first Wilson mode has the
+unmodified cyclic primary-plaquette first-character representative.
+The measure-preserving transport is AMS; physical typing is AMU. -/
+theorem p4Q2PZ37ANV_actualPhysicalFirstGaussMode_haarRepresentative
+    (H : ℕ) :
+    ((p4Q2PZ37AMU_actualPhysicalGaussMode H 1 :
+        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H 2) :
+      Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2))
+      =ᵐ[periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2]
+        (fun A => (-2 : ℝ) *
+          Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 A)) := by
+  let muH := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
+  let phi := p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2
+  let v := specialUnitaryWilsonPlaquetteEnergyTwoHaarGramSchmidtMode 1
+  have hMP : MeasurePreserving phi muH nu :=
+    p4Q2PZ37AMS_measurePreserving_primarySpatialSliceCyclicHolonomy H 2
+  have hSource : v =ᵐ[nu] (fun g : G => (-2 : ℝ) * Chi g) :=
+    p4Q2PZ37ANV_originalFirstGramSchmidt_haarRepresentative
+  have hComp :
+      (p4Q2PZ37AMS_primarySpatialSliceHolonomyL2Pullback H 2) v
+        =ᵐ[muH] v ∘ phi :=
+    Lp.coeFn_compMeasurePreserving v hMP
+  have hPulled :
+      v ∘ phi =ᵐ[muH]
+        (fun A => (-2 : ℝ) * Chi (phi A)) := by
+    simpa only [Function.comp_def] using
+      hMP.quasiMeasurePreserving.ae_eq hSource
+  change
+    (p4Q2PZ37AMS_primarySpatialSliceHolonomyL2Pullback H 2) v
+      =ᵐ[muH] (fun A => (-2 : ℝ) * Chi (phi A))
+  exact hComp.trans hPulled
+
+/-- The genuine original physical Gauss-law constant unit vector is
+pointwise represented by 1 almost everywhere in the native Haar L². -/
+theorem p4Q2PZ37ANV_actualPhysicalConstant_haarRepresentative
+    (H : ℕ) :
+    ((periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2 :
+        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H 2) :
+      Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2))
+      =ᵐ[periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2]
+        (fun _ => (1 : ℝ)) := by
+  let muH := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
+  change Lp.const 2 muH (1 : ℝ) =ᵐ[muH] (fun _ => (1 : ℝ))
+  simpa only [Function.const_apply] using
+    (Lp.coeFn_const (μ := muH) (p := (2 : ℝ≥0∞)) (c := (1 : ℝ)))
+
 end
 end MGAP4D.MathlibAnalytic
 
@@ -1334,3 +1427,7 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_nonPrimarySpatialEnergy_primaryCharacter_haarOrthogonal
 
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalFullSpatialAction_primaryCharacter_haarPairing
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalFirstGramSchmidt_haarRepresentative
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_actualPhysicalFirstGaussMode_haarRepresentative
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_actualPhysicalConstant_haarRepresentative
