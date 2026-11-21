@@ -43,9 +43,10 @@ env:
   MATHLIB_NO_CACHE_ON_UPDATE: "1"
   CHECK_CHANGED_LEAN_BASE_REF: ${{ github.event_name == 'push' && github.event.before || github.event_name == 'workflow_dispatch' && inputs.base_ref || github.event.pull_request.base.sha }}
   # Dependency artifacts are keyed only by the pinned Lean/Lake/manifest inputs.
-  # Project oleans are restored from the PR base and advanced per PR head.
+  # A stable cache per (PR, exact base HEAD) avoids a 1.1 GB archive per proof edit.
+  # Lake trace/fingerprint checking still rebuilds the changed proof and imports.
   LAKE_BASE_CACHE_REF_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.sha }}
-  LAKE_PROJECT_CACHE_REF: ${{ github.event_name == 'pull_request' && format('pr-{0}-{1}', github.event.pull_request.number, github.event.pull_request.head.sha) || format('base-{0}', github.sha) }}
+  LAKE_PROJECT_CACHE_REF: ${{ github.event_name == 'pull_request' && format('pr-{0}-base-{1}', github.event.pull_request.number, github.event.pull_request.base.sha) || format('base-{0}', github.sha) }}
   # Lake remains the authoritative dependency-aware checker. Disable the
   # duplicate direct `lean` pass in GitHub CI; local runs keep it by default.
   LEAN_FAST_DIRECT_ELAB: "false"
@@ -399,7 +400,8 @@ jobs:
             const pr = context.payload.pull_request.number;
             const sha = context.payload.pull_request.head.sha;
             const ref = 'refs/pull/' + pr + '/merge';
-            const expected = '-pr-' + pr + '-' + sha;
+            const baseSha = context.payload.pull_request.base.sha;
+            const expected = '-pr-' + pr + '-base-' + baseSha;
             const all = [];
             for (let page = 1; page <= 30; page++) {
               const r = await github.rest.actions.getActionsCacheList({
@@ -420,21 +422,21 @@ jobs:
             const bytes = project.reduce((n, c) => n + c.size_in_bytes, 0);
             core.info('[cache-gc] own-pr=' + pr + ' project-archives=' +
               project.length + ' bytes=' + bytes);
-            const newest = project[0];
+            const newest = project.find(c => c.key.endsWith(expected));
             // The cache list may lag the save. Keep every old archive until
-            // a complete newest archive for this exact HEAD is visible.
+            // a complete current-base archive for this PR is visible.
             if (!newest || !newest.key.endsWith(expected)) {
               core.info('[cache-gc] current exact-head archive not visible; no deletion');
               return;
             }
-            for (const stale of project.slice(1)) {
+            for (const stale of project.filter(c => c.id !== newest.id)) {
               core.info('[cache-gc] delete only prior same-PR project id=' +
                 stale.id + ' bytes=' + stale.size_in_bytes);
               await github.rest.actions.deleteActionsCacheById({
                 owner, repo, cache_id: stale.id
               });
             }
-            core.info('[cache-gc] retained new exact-head archive id=' + newest.id);
+            core.info('[cache-gc] retained shared PR/base archive id=' + newest.id + ' base=' + baseSha);
 
   chatgpt-ci-status-receipt:
     name: Publish MCP CI completion receipt
