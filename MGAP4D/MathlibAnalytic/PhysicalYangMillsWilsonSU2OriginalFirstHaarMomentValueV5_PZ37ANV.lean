@@ -1334,7 +1334,7 @@ theorem p4Q2PZ37ANV_originalFirstGramSchmidt_haarRepresentative :
     ((2 : ℝ) • (f1 - f0)) g =
         (2 : ℝ) • ((f1 - f0) g) := hsmul
     _ = (-2 : ℝ) * Chi g := by
-      rw [hsub, hp, hc]
+      rw [hsub, Pi.sub_apply, hp, hc]
       simp only [smul_eq_mul]
       dsimp [p4Q2PZ35C_originalOneLinkCharacter]
       ring
@@ -1474,10 +1474,12 @@ theorem p4Q2PZ37ANV_originalOneSlab_firstCharacter_iteratedHaar
     periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_continuous H 2
   have hWInt : Integrable W muH :=
     hWCont.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+  have hXPair : Continuous (fun z : Cfg × Cfg => X z.1 z.2) :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_continuous H 2
   have hXInt (B : Cfg) : Integrable (fun A : Cfg => X A B) muH := by
-    have hc : Continuous (fun A : Cfg => X A B) :=
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_continuous
-        H 2).comp (continuous_id.prodMk continuous_const)
+    have hAB : Continuous (fun A : Cfg => (A, B)) :=
+      continuous_id.prodMk continuous_const
+    have hc : Continuous (fun A : Cfg => X A B) := hXPair.comp hAB
     exact hc.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   have hCharCont : Continuous vchar := by
     have heq :
@@ -1624,12 +1626,8 @@ theorem p4Q2PZ37ANV_originalFirstHaarActionMoment_eq_oneFourth
       dsimp [raw]
       ring
     _ = (-2 : ℝ) * (∫ p : Cfg × Cfg, raw p ∂pairMu) := by
-      calc
-        _ = ∫ p : Cfg × Cfg, (-2 : ℝ) * raw p ∂pairMu := by
-          apply integral_congr_ae
-          filter_upwards [] with p
-          ring
-        _ = _ := integral_const_mul
+      rw [integral_mul_const]
+      ring
     _ = (-2 : ℝ) *
           (∫ B : Cfg,
             (∫ A : Cfg,
