@@ -1273,7 +1273,13 @@ theorem p4Q2PZ37ANV_originalFullSpatialAction_primaryCharacter_haarPairing
         filter_upwards [] with A
         rw [periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_eq_finset_sum
           H 2 A, Finset.sum_mul]
-        rfl
+        -- Two canonical Fintype instances enumerate the same physical
+        -- plaquette type. Equality is extensional, not definitional.
+        apply Finset.sum_congr
+        · ext p
+          simp
+        · intro p _
+          rfl
     _ = ∑ p : Plaq, ∫ A : Cfg, F p A ∂muH := by
         simpa using
           (MeasureTheory.integral_finset_sum
