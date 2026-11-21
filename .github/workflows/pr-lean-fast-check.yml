@@ -43,9 +43,10 @@ env:
   MATHLIB_NO_CACHE_ON_UPDATE: "1"
   CHECK_CHANGED_LEAN_BASE_REF: ${{ github.event_name == 'push' && github.event.before || github.event_name == 'workflow_dispatch' && inputs.base_ref || github.event.pull_request.base.sha }}
   # Dependency artifacts are keyed only by the pinned Lean/Lake/manifest inputs.
-  # Project oleans are restored from the PR base and advanced per PR head.
+  # A stable cache per (PR, exact base HEAD) avoids a 1.1 GB archive per proof edit.
+  # Lake trace/fingerprint checking still rebuilds the changed proof and imports.
   LAKE_BASE_CACHE_REF_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.sha }}
-  LAKE_PROJECT_CACHE_REF: ${{ github.event_name == 'pull_request' && format('pr-{0}-{1}', github.event.pull_request.number, github.event.pull_request.head.sha) || format('base-{0}', github.sha) }}
+  LAKE_PROJECT_CACHE_REF: ${{ github.event_name == 'pull_request' && format('pr-{0}-base-{1}', github.event.pull_request.number, github.event.pull_request.base.sha) || format('base-{0}', github.sha) }}
   # Lake remains the authoritative dependency-aware checker. Disable the
   # duplicate direct `lean` pass in GitHub CI; local runs keep it by default.
   LEAN_FAST_DIRECT_ELAB: "false"
@@ -230,8 +231,30 @@ jobs:
           retry lake --version
           echo "[fast] lake-deps-cache-hit=${{ steps.lake-deps-cache.outputs.cache-hit }}"
           echo "[fast] lake-project-cache-hit=${{ steps.lake-project-cache.outputs.cache-hit }}"
+          echo "[fast] lake-project-cache-matched-key=${{ steps.lake-project-cache.outputs.cache-matched-key }}"
           echo "[fast] lake-base-cache-ref-sha=${LAKE_BASE_CACHE_REF_SHA}"
           echo "[fast] lake-project-cache-ref=${LAKE_PROJECT_CACHE_REF}"
+
+      # Cache hits do not guarantee the full physical import graph is covered.
+      - name: Report restored project oleans and runner memory
+        if: ${{ steps.lake-mode.outputs.required == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for dir in .lake/build/lib/lean/MGAP4D .lake/packages/mathlib/.lake/build/lib/lean/Mathlib; do
+            if [ -d "$dir" ]; then
+              count="$(find "$dir" -name '*.olean' -type f | wc -l | tr -d '[:space:]')"
+              echo "[cache-audit] $dir: $count oleans"
+            else
+              echo "[cache-audit] $dir: missing"
+            fi
+          done
+          echo "[cache-audit] project-cache-exact-hit=${{ steps.lake-project-cache.outputs.cache-hit }}"
+          echo "[cache-audit] project-cache-matched-key=${{ steps.lake-project-cache.outputs.cache-matched-key }}"
+          echo "[cache-audit] runner-cpus=$(nproc)"
+          free -h
+          df -h .
+          du -sh .lake/build .lake/packages/mathlib/.lake/build 2>/dev/null || true
 
       - name: Warm pinned dependency cache
         if: ${{ steps.lake-mode.outputs.required == 'true' && steps.lake-mode.outputs.cache-warm == 'true' && steps.lake-deps-cache.outputs.cache-hit != 'true' }}
@@ -354,6 +377,66 @@ jobs:
           path: .lake/build
           key: ${{ steps.lake-project-cache.outputs.cache-primary-key }}
 
+
+  # Each complete PR .lake/build archive costs ~1.1 GB. Keep only the latest
+  # exact-head archive for this same PR to reduce GitHub's cache eviction.
+  # No dependency, canonical baseline, or other PR cache is ever deleted.
+  # Limit actions:write to a separate, same-repository-only maintenance job.
+  retain-current-pr-project-cache:
+    name: Retain latest same-PR project oleans
+    needs: pr-lean-fast-check
+    if: ${{ always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository }}
+    permissions:
+      contents: read
+      actions: write
+    runs-on: ubuntu-22.04
+    timeout-minutes: 3
+    steps:
+      - name: Inspect and prune only obsolete MGAP4D project caches of this PR
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const pr = context.payload.pull_request.number;
+            const sha = context.payload.pull_request.head.sha;
+            const ref = 'refs/pull/' + pr + '/merge';
+            const baseSha = context.payload.pull_request.base.sha;
+            const expected = '-pr-' + pr + '-base-' + baseSha;
+            const all = [];
+            for (let page = 1; page <= 30; page++) {
+              const r = await github.rest.actions.getActionsCacheList({
+                owner, repo, ref, page, per_page: 100,
+                sort: 'created_at', direction: 'desc'
+              });
+              const items = r.data.actions_caches || [];
+              all.push(...items);
+              if (items.length < 100) break;
+            }
+            const project = all.filter(c =>
+              c.ref === ref && typeof c.key === 'string' &&
+              c.key.includes('-lean-fast-project-v1-') &&
+              c.key.includes('-pr-' + pr + '-')
+            ).sort((a, b) =>
+              Date.parse(b.created_at) - Date.parse(a.created_at)
+            );
+            const bytes = project.reduce((n, c) => n + c.size_in_bytes, 0);
+            core.info('[cache-gc] own-pr=' + pr + ' project-archives=' +
+              project.length + ' bytes=' + bytes);
+            const newest = project.find(c => c.key.endsWith(expected));
+            // The cache list may lag the save. Keep every old archive until
+            // a complete current-base archive for this PR is visible.
+            if (!newest || !newest.key.endsWith(expected)) {
+              core.info('[cache-gc] current exact-head archive not visible; no deletion');
+              return;
+            }
+            for (const stale of project.filter(c => c.id !== newest.id)) {
+              core.info('[cache-gc] delete only prior same-PR project id=' +
+                stale.id + ' bytes=' + stale.size_in_bytes);
+              await github.rest.actions.deleteActionsCacheById({
+                owner, repo, cache_id: stale.id
+              });
+            }
+            core.info('[cache-gc] retained shared PR/base archive id=' + newest.id + ' base=' + baseSha);
 
   chatgpt-ci-status-receipt:
     name: Publish MCP CI completion receipt
