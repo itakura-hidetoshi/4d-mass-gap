@@ -1435,6 +1435,216 @@ theorem p4Q2PZ37ANV_actualFirstPhysicalTensor_pairHaarRepresentative
   rw [hTensor]
   simp only [realL2ExternalTensorFunction, hfp, hgp, one_mul]
 
+
+/-! ## ANV: the full original Wilson one-slab first Haar action moment
+
+This uses the original pair of independent *link configurations*, not
+independent plaquettes.  Both physical spatial halfweights, the genuine
+temporal crossing action and the original first Gauss-law mode are kept.
+The two-boundary Fubini calculation and the L² pairing are separated. -/
+
+/-- The complete true original one-slab Wilson action has zero-coupling
+Haar character pairing exactly -1/8 against the true primary spatial
+character on its RIGHT boundary. The 1/2 right halfweight is essential:
+the original left halfweight and temporal crossing terms cancel by
+their already proved Haar identities. -/
+theorem p4Q2PZ37ANV_originalOneSlab_firstCharacter_iteratedHaar
+    (H : ℕ) :
+    (∫ B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
+      (∫ A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H 2 A B *
+          Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 B)
+        ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2))
+      ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2)) =
+        -(1 / 8 : ℝ) := by
+  classical
+  let Cfg := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+  let Link := PeriodicHypercubicEvenSpatialSliceLink H
+  let muH := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
+  let W := periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H 2
+  let X := periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2
+  let vchar : Cfg → ℝ := fun B =>
+    Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 B)
+  let wMean : ℝ := ∫ A : Cfg, W A ∂muH
+  let c : ℝ := (1 / 2 : ℝ) * wMean + (Fintype.card Link : ℝ)
+  letI : IsProbabilityMeasure muH := by
+    dsimp [muH, periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure]
+    infer_instance
+  have hWCont : Continuous W :=
+    periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_continuous H 2
+  have hWInt : Integrable W muH :=
+    hWCont.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+  have hXInt (B : Cfg) : Integrable (fun A : Cfg => X A B) muH := by
+    have hc : Continuous (fun A : Cfg => X A B) :=
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_continuous
+        H 2).comp (continuous_id.prodMk continuous_const)
+    exact hc.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+  have hCharCont : Continuous vchar := by
+    have heq :
+        vchar =
+          (fun B : Cfg =>
+            GroundStatePosteriorJoint.p4Q2PV_originalPlaquetteRealCharacter H
+              (p4Q2PZ37AMS_primarySpatialSlicePlaquette H) B) := by
+      funext B
+      exact p4Q2PZ37ANV_cyclicCharacter_eq_nativeCharacter H B
+    rw [heq]
+    exact GroundStatePosteriorJoint.p4Q2PV_originalPlaquetteRealCharacter_continuous
+      H (p4Q2PZ37AMS_primarySpatialSlicePlaquette H)
+  have hCharInt : Integrable vchar muH :=
+    hCharCont.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+  have hWCharInt : Integrable (fun B : Cfg => W B * vchar B) muH :=
+    (hWCont.mul hCharCont).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  have hCharMean : (∫ B : Cfg, vchar B ∂muH) = 0 :=
+    p4Q2PZ37ANV_originalTimeZeroPrimaryCharacter_haarMean_zero H
+  have hWCharMean :
+      (∫ B : Cfg, W B * vchar B ∂muH) = -(1 / 4 : ℝ) :=
+    p4Q2PZ37ANV_originalFullSpatialAction_primaryCharacter_haarPairing H
+  have hActionMean (B : Cfg) :
+      (∫ A : Cfg,
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction
+          H 2 A B ∂muH) =
+        c + (1 / 2 : ℝ) * W B := by
+    have hRight :
+        (∫ _A : Cfg, (1 / 2 : ℝ) * W B ∂muH) =
+          (1 / 2 : ℝ) * W B := by simp
+    calc
+      _ = ∫ A : Cfg,
+          ((1 / 2 : ℝ) * W A + X A B) + (1 / 2 : ℝ) * W B
+          ∂muH := by rfl
+      _ = (∫ A : Cfg, (1 / 2 : ℝ) * W A + X A B ∂muH) +
+          (∫ _A : Cfg, (1 / 2 : ℝ) * W B ∂muH) :=
+            integral_add ((hWInt.const_mul _).add (hXInt B)) (integrable_const _)
+      _ = (1 / 2 : ℝ) * wMean +
+          (∫ A : Cfg, X A B ∂muH) +
+          (1 / 2 : ℝ) * W B := by
+            rw [integral_add (hWInt.const_mul _) (hXInt B),
+              integral_const_mul, hRight]
+      _ = c + (1 / 2 : ℝ) * W B := by
+            rw [p4Q2PZ37ANV_originalCrossingAction_leftHaarMean H B]
+            rfl
+  have hInner (B : Cfg) :
+      (∫ A : Cfg,
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction
+          H 2 A B * vchar B ∂muH) =
+        (c + (1 / 2 : ℝ) * W B) * vchar B := by
+    rw [integral_mul_const, hActionMean B]
+  calc
+    (∫ B : Cfg,
+      (∫ A : Cfg,
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H 2 A B *
+          vchar B ∂muH) ∂muH) =
+      ∫ B : Cfg, (c + (1 / 2 : ℝ) * W B) * vchar B ∂muH := by
+        apply integral_congr_ae
+        filter_upwards [] with B
+        exact hInner B
+    _ = ∫ B : Cfg,
+          c * vchar B + (1 / 2 : ℝ) * (W B * vchar B) ∂muH := by
+        apply integral_congr_ae
+        filter_upwards [] with B
+        ring
+    _ = c * (∫ B : Cfg, vchar B ∂muH) +
+        (1 / 2 : ℝ) * (∫ B : Cfg, W B * vchar B ∂muH) := by
+        rw [integral_add (hCharInt.const_mul _) (hWCharInt.const_mul _)]
+        rw [integral_const_mul, integral_const_mul]
+    _ = -(1 / 8 : ℝ) := by
+        rw [hCharMean, hWCharMean]
+        ring
+
+/-- The ANU **original physical Gauss-law** pair-Haar action moment,
+defined by the actual full one-slab action and the true first physical
+Gram-Schmidt vector, is exactly 1/4 for every original finite even H,
+including the length-two torus. This does not identify the completed OS
+boundary operator or establish the continuum Yang-Mills mass gap. -/
+theorem p4Q2PZ37ANV_originalFirstHaarActionMoment_eq_oneFourth
+    (H : ℕ) :
+    p4Q2PZ37ANU_originalFirstHaarActionMoment H = (1 / 4 : ℝ) := by
+  let Cfg := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+  let muH := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
+  let pairMu := periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H 2
+  let S : Lp ℝ 2 pairMu := p4Q2PZ37ANT_originalSlabAction_pairHaarL2 H
+  let f : Lp ℝ 2 muH :=
+    ((periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2 :
+        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H 2) :
+        Lp ℝ 2 muH)
+  let g : Lp ℝ 2 muH :=
+    ((p4Q2PZ37AMU_actualPhysicalGaussMode H 1 :
+        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H 2) :
+        Lp ℝ 2 muH)
+  let T : Lp ℝ 2 pairMu := realL2ExternalTensor f g
+  let raw : Cfg × Cfg → ℝ := fun p =>
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H 2 p.1 p.2 *
+      Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 p.2)
+  have hS : S =ᵐ[pairMu]
+      (fun p : Cfg × Cfg =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction
+          H 2 p.1 p.2) :=
+    p4Q2PZ37ANT_originalSlabAction_pairHaarL2_coeFn H
+  have hT : T =ᵐ[pairMu]
+      (fun p : Cfg × Cfg => (-2 : ℝ) *
+        Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 p.2)) :=
+    p4Q2PZ37ANV_actualFirstPhysicalTensor_pairHaarRepresentative H
+  have hWCont :=
+    periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_continuous H 2
+  have hXCont :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_continuous H 2
+  have hSCont : Continuous
+      (fun p : Cfg × Cfg =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction
+          H 2 p.1 p.2) := by
+    dsimp [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction]
+    exact
+      ((continuous_const.mul (hWCont.comp continuous_fst)).add hXCont).add
+        (continuous_const.mul (hWCont.comp continuous_snd))
+  have hCharCont :
+      Continuous (fun B : Cfg =>
+        Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 B)) := by
+    have heq :
+        (fun B : Cfg =>
+          Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 B)) =
+        (fun B : Cfg =>
+          GroundStatePosteriorJoint.p4Q2PV_originalPlaquetteRealCharacter H
+            (p4Q2PZ37AMS_primarySpatialSlicePlaquette H) B) := by
+      funext B
+      exact p4Q2PZ37ANV_cyclicCharacter_eq_nativeCharacter H B
+    rw [heq]
+    exact GroundStatePosteriorJoint.p4Q2PV_originalPlaquetteRealCharacter_continuous
+      H (p4Q2PZ37AMS_primarySpatialSlicePlaquette H)
+  have hRawInt : Integrable raw (muH.prod muH) := by
+    have hRawCont : Continuous raw := hSCont.mul (hCharCont.comp continuous_snd)
+    exact hRawCont.integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  change inner ℝ S T = (1 / 4 : ℝ)
+  calc
+    inner ℝ S T = ∫ p : Cfg × Cfg, raw p * (-2 : ℝ) ∂pairMu := by
+      rw [MeasureTheory.L2.inner_def]
+      apply integral_congr_ae
+      filter_upwards [hS, hT] with p hs ht
+      rw [hs, ht, periodicHypercubicEven_real_inner_eq_mul]
+      dsimp [raw]
+      ring
+    _ = (-2 : ℝ) * (∫ p : Cfg × Cfg, raw p ∂pairMu) := by
+      calc
+        _ = ∫ p : Cfg × Cfg, (-2 : ℝ) * raw p ∂pairMu := by
+          apply integral_congr_ae
+          filter_upwards [] with p
+          ring
+        _ = _ := integral_const_mul
+    _ = (-2 : ℝ) *
+          (∫ B : Cfg,
+            (∫ A : Cfg,
+              periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction
+                H 2 A B *
+                Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 B)
+              ∂muH) ∂muH) := by
+        congr 1
+        change (∫ p : Cfg × Cfg, raw p ∂(muH.prod muH)) = _
+        simpa only [raw] using
+          (MeasureTheory.integral_prod_symm raw hRawInt)
+    _ = (1 / 4 : ℝ) := by
+      rw [p4Q2PZ37ANV_originalOneSlab_firstCharacter_iteratedHaar H]
+      ring
+
 end
 end MGAP4D.MathlibAnalytic
 
@@ -1483,3 +1693,6 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_actualPhysicalConstant_haarRepresentative
 
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_actualFirstPhysicalTensor_pairHaarRepresentative
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalOneSlab_firstCharacter_iteratedHaar
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ANV_originalFirstHaarActionMoment_eq_oneFourth
