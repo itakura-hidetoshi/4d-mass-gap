@@ -1474,13 +1474,53 @@ theorem p4Q2PZ37ANV_originalOneSlab_firstCharacter_iteratedHaar
     periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_continuous H 2
   have hWInt : Integrable W muH :=
     hWCont.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
-  have hXPair : Continuous (fun z : Cfg × Cfg => X z.1 z.2) :=
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_continuous H 2
+  -- Avoid whnf on the complete configuration-space compactness instance:
+  -- integrate each actual spatial link independently and then sum the
+  -- finitely many original temporal crossing terms. This is the same
+  -- original Haar factorization as the certified leftHaarMean theorem.
   have hXInt (B : Cfg) : Integrable (fun A : Cfg => X A B) muH := by
-    have hAB : Continuous (fun A : Cfg => (A, B)) :=
-      continuous_id.prodMk continuous_const
-    have hc : Continuous (fun A : Cfg => X A B) := hXPair.comp hAB
-    exact hc.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+    let E := specialUnitaryWilsonPlaquetteEnergy 2
+    have hMeasure : muH = Measure.pi (fun _ : Link => nu) := by
+      change periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2 =
+        Measure.pi (fun _ : Link => nu)
+      unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+      exact congrArg
+        (fun i : Fintype Link =>
+          letI : Fintype Link := i
+          Measure.pi (fun _ : Link => nu))
+        (Subsingleton.elim
+          (oneSlabHaarL2SpatialLinkFintype H)
+          (inferInstance : Fintype Link))
+    have hEach (e : Link) :
+        Integrable (fun a : G => E ((B e)⁻¹ * a)) nu := by
+      have hCont : Continuous (fun a : G => E ((B e)⁻¹ * a)) :=
+        (continuous_specialUnitaryWilsonPlaquetteEnergy 2).comp
+          (continuous_const.mul continuous_id)
+      exact hCont.integrable_of_hasCompactSupport
+        (HasCompactSupport.of_compactSpace _)
+    have hCoord (e : Link) :
+        Integrable (fun A : Cfg => E ((B e)⁻¹ * A e))
+          (Measure.pi (fun _ : Link => nu)) := by
+      exact MeasureTheory.integrable_comp_eval
+        (μ := fun _ : Link => nu) (i := e) (hEach e)
+    have hSum : Integrable
+        (fun A : Cfg => ∑ e : Link, E ((B e)⁻¹ * A e))
+        (Measure.pi (fun _ : Link => nu)) := by
+      exact integrable_finset_sum _ (fun e _ => hCoord e)
+    have hAction (A : Cfg) :
+        X A B = ∑ e : Link, E ((B e)⁻¹ * A e) := by
+      rw [p4Q2PZ37ANV_originalCrossingAction_symmetric H A B]
+      simp only [X, periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction,
+        periodicHypercubicEvenSpatialSliceLinkList, Finset.sum_map_toList]
+      apply Finset.sum_congr
+      · ext e
+        simp
+      · intro e _
+        rfl
+    rw [hMeasure]
+    refine hSum.congr ?_
+    filter_upwards [] with A
+    exact (hAction A).symm
   have hCharCont : Continuous vchar := by
     have heq :
         vchar =
