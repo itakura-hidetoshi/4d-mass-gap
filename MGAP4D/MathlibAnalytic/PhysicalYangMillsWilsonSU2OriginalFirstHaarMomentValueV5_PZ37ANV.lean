@@ -1509,8 +1509,10 @@ theorem p4Q2PZ37ANV_originalOneSlab_firstCharacter_iteratedHaar
       exact integrable_finset_sum _ (fun e _ => hCoord e)
     have hAction (A : Cfg) :
         X A B = ∑ e : Link, E ((B e)⁻¹ * A e) := by
+      change periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction
+        H 2 A B = ∑ e : Link, E ((B e)⁻¹ * A e)
       rw [p4Q2PZ37ANV_originalCrossingAction_symmetric H A B]
-      simp only [X, periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction,
+      simp only [periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction,
         periodicHypercubicEvenSpatialSliceLinkList, Finset.sum_map_toList]
       apply Finset.sum_congr
       · ext e
@@ -1549,7 +1551,9 @@ theorem p4Q2PZ37ANV_originalOneSlab_firstCharacter_iteratedHaar
         c + (1 / 2 : ℝ) * W B := by
     have hRight :
         (∫ _A : Cfg, (1 / 2 : ℝ) * W B ∂muH) =
-          (1 / 2 : ℝ) * W B := by simp
+          (1 / 2 : ℝ) * W B := by
+        rw [integral_const, probReal_univ]
+        simp
     calc
       _ = ∫ A : Cfg,
           ((1 / 2 : ℝ) * W A + X A B) + (1 / 2 : ℝ) * W B
@@ -1564,7 +1568,6 @@ theorem p4Q2PZ37ANV_originalOneSlab_firstCharacter_iteratedHaar
               integral_const_mul, hRight]
       _ = c + (1 / 2 : ℝ) * W B := by
             rw [p4Q2PZ37ANV_originalCrossingAction_leftHaarMean H B]
-            rfl
   have hInner (B : Cfg) :
       (∫ A : Cfg,
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction
