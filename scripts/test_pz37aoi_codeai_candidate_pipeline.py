@@ -23,7 +23,8 @@ class AOIGateTests(unittest.TestCase):
         gates.validate_candidate_contracts(pack)
         self.assertEqual(len(pack["declarations"]), 1)
         self.assertNotEqual(pack["strategies"]["A"], pack["strategies"]["B"])
-        self.assertEqual((root / pack["target"]).read_bytes(), pack["strategies"]["A"].encode())
+        self.assertEqual((root / pack["target"]).read_bytes(), pack["strategies"]["B"].encode())
+        self.assertNotEqual((root / pack["target"]).read_bytes(), pack["strategies"]["A"].encode())
         for source in pack["strategies"].values():
             for decl in pack["declarations"]:
                 self.assertIn("#print axioms " + decl, source)

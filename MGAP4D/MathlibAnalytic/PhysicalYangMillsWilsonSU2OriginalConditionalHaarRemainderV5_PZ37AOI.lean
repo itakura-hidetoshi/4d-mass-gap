@@ -133,7 +133,7 @@ theorem p4Q2PZ37AOI_originalConditionalHaarRightTwistTaylorRemainder_abs_le
   have h :=
     norm_integral_le_of_norm_le_const (μ := mu) (f := fun B => residual B * chi B)
       (C := 64 * beta^2) (Eventually.of_forall hpoint)
-  simpa only [Real.norm_eq_abs] using h
+  simpa [Real.norm_eq_abs] using h
 
 end
 end MGAP4D.MathlibAnalytic
