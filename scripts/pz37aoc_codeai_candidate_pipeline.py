@@ -30,6 +30,9 @@ AUXILIARY_GIT_BLOB = "26867ad34c6a9f6e2f7ae25f7b6a388db4606870"
 AUXILIARY_SHA256 = "f804e7cd061a142a953e27657890d78bcbe782eaa1fa87465cb529ec89055d24"
 AUXILIARY_DIGEST_FIELD = "aoc_auxiliary_source_digest"
 PROJECTION_DIGEST_FIELD = "aoc_source_projection_digest"
+REPAIR_DIGEST_FIELD = "aoc_repair_context_digest"
+REPAIR_INTENT_BYTE_LIMIT = 109095
+BASE_INTENT_TEXT = "Add original-model local center-flip Taylor estimates for the signed first Haar response at every nonnegative beta. Preserve the supplied theorem statements and original Haar/Wilson objects. No continuum mass-gap conclusion."
 
 
 def sha256(value: bytes | str) -> str:
@@ -194,11 +197,16 @@ def prepare_native_context(raw_files: dict[str, str], pack: dict) -> tuple[dict,
     return native_files, auxiliary, projection
 
 
-def intent_with_auxiliary_source(intent: str, auxiliary: dict) -> str:
+def intent_with_auxiliary_source(intent: str, auxiliary: dict, repair_context: dict | None = None) -> str:
     """Carry original source as data, without claiming another repository path."""
-    return intent + "\n\nREAD_ONLY_ORIGINAL_SOURCE_ATTACHMENT_JSON\n" + json.dumps(
+    text = intent + "\n\nREAD_ONLY_ORIGINAL_SOURCE_ATTACHMENT_JSON\n" + json.dumps(
         auxiliary, ensure_ascii=False, sort_keys=True, separators=(",", ":")
     )
+    if repair_context is not None:
+        text += "\n\nOBSERVED_FAILED_LEAN_ATTEMPTS_JSON\n" + json.dumps(
+            repair_context, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+        )
+    return text
 
 
 def verify_native_prompt_context(prompt: dict, native_files: dict, intent_text: str) -> None:
@@ -250,6 +258,67 @@ def validate_candidate_contracts(pack: dict) -> None:
                 raise ValueError("candidates disagree on definition or preamble")
 
 
+def prepare_repair_context(pack: dict) -> dict | None:
+    """Validate complete archived failure inputs without granting proof or learning status."""
+    from runtime.kuuos_codeai_candidate_patch_envelope_v0_1 import canonical_digest
+
+    context = pack.get("repair_context")
+    if context is None:
+        return None
+    if not isinstance(context, dict) or context.get(REPAIR_DIGEST_FIELD) != canonical_digest(
+        {k: v for k, v in context.items() if k != REPAIR_DIGEST_FIELD}
+    ):
+        raise ValueError("repair context digest mismatch")
+    if (
+        context.get("schema_version") != "aoc-observed-failed-lean-attempts-v1"
+        or context.get("repository_full_name") != pack["repository"]
+        or context.get("baseline_commit_sha") != pack["baseline_commit"]
+        or context.get("target") != pack["target"]
+        or context.get("external_artifact_reobservation_performed_by_kernel") is not False
+        or context.get("full_failed_sources_and_diagnostics_preserved") is not True
+        or context.get("memory_promotion") != "HOLD"
+    ):
+        raise ValueError("repair context source or authority binding differs")
+    attempts = context.get("observed_failed_attempts")
+    if not isinstance(attempts, list) or not attempts:
+        raise ValueError("repair context has no observed failed attempts")
+    identities = set()
+    for attempt in attempts:
+        if not isinstance(attempt, dict):
+            raise ValueError("repair attempt must be an object")
+        if any(type(attempt.get(key)) is not int or attempt[key] <= 0 for key in ("run_id", "job_id", "artifact_id")):
+            raise ValueError("repair attempt external identity is incomplete")
+        for key, length in (("head_sha", 40), ("artifact_archive_sha256", 64), ("prior_candidate_patch_digest", 64)):
+            if not isinstance(attempt.get(key), str) or re.fullmatch("[0-9a-f]{" + str(length) + "}", attempt[key]) is None:
+                raise ValueError("repair attempt identity digest invalid: " + key)
+        for key in ("proposal_id", "source_artifact_path", "direct_log_artifact_path", "prior_producer_session_id"):
+            if not isinstance(attempt.get(key), str) or not attempt[key]:
+                raise ValueError("repair attempt provenance field missing: " + key)
+        identity = (attempt["run_id"], attempt["job_id"], attempt["proposal_id"])
+        if identity in identities:
+            raise ValueError("duplicate observed failed attempt")
+        identities.add(identity)
+        source = attempt.get("failed_source_utf8")
+        log = attempt.get("full_direct_log_utf8")
+        if not isinstance(source, str) or sha256(source) != attempt.get("failed_source_sha256"):
+            raise ValueError("failed source hash mismatch")
+        if not isinstance(log, str) or not log or sha256(log) != attempt.get("direct_log_sha256"):
+            raise ValueError("direct log hash mismatch")
+        if (
+            type(attempt.get("direct_exit_code")) is not int or attempt["direct_exit_code"] == 0
+            or attempt.get("direct_complete") is not True or attempt.get("failed_status") != "DIRECT_FAILED"
+        ):
+            raise ValueError("repair attempt does not report a complete failed direct Lean check")
+        try:
+            validate_candidate_contracts({
+                "declarations": pack["declarations"],
+                "strategies": {"A": pack["strategies"]["A"], "B": source},
+            })
+        except ValueError as exc:
+            raise ValueError("failed source public contract differs from repaired strategies") from exc
+    return context
+
+
 def synthesize(root: Path, pack: dict, output: Path):
     from runtime import kuuos_codeai_intent_repository_observation_envelope_v0_1 as obs
     from runtime import kuuos_codeai_candidate_patch_envelope_v0_1 as patch
@@ -260,6 +329,7 @@ def synthesize(root: Path, pack: dict, output: Path):
     files = snapshot(root, pack)
     validate_candidate_contracts(pack)
     native_files, auxiliary, projection = prepare_native_context(files, pack)
+    repair_context = prepare_repair_context(pack)
     toolchain_digest = obs.canonical_digest({"lean": files["lean-toolchain"],
                                             "manifest": files["lake-manifest.json"]})
     intent = obs.seal({
@@ -281,7 +351,8 @@ def synthesize(root: Path, pack: dict, output: Path):
         "dependency_lock_digest": sha256(files["lake-manifest.json"]),
         "toolchain_digest": toolchain_digest, "toolchain_supported": True,
         "observed_paths": sorted(native_files), "unavailable_paths": [], "declared_path_count": len(native_files),
-        "baseline_check_digests": [obs.canonical_digest(pack["baseline_ci"]), projection[PROJECTION_DIGEST_FIELD]],
+        "baseline_check_digests": [obs.canonical_digest(pack["baseline_ci"]), projection[PROJECTION_DIGEST_FIELD]] +
+            ([repair_context[REPAIR_DIGEST_FIELD]] if repair_context is not None else []),
         "baseline_checks_complete": True,
         "code_owner_scope_digest": obs.canonical_digest({"repository": pack["repository"],
                                                        "allowed_new_path": pack["target"]}),
@@ -316,17 +387,20 @@ def synthesize(root: Path, pack: dict, output: Path):
         "handover_risk_labels": [], "evaluation_epoch": now, "maximum_candidate_age": 3600,
     }, patch.POLICY_DIGEST_FIELD)
     request = synth.seal({
-        "request_id": "AOC-local-center-flip-taylor-strategies", "request_revision": "r1",
-        "intent_text": intent_with_auxiliary_source("Add original-model local center-flip Taylor estimates for the signed first Haar response at every nonnegative beta. Preserve the supplied theorem statements and original Haar/Wilson objects. No continuum mass-gap conclusion.", auxiliary),
+        "request_id": "AOC-local-center-flip-taylor-strategies",
+        "request_revision": "r2-from-observed-lean-failure" if repair_context is not None else "r1",
+        "intent_text": intent_with_auxiliary_source(BASE_INTENT_TEXT, auxiliary, repair_context),
         "candidate_count": 3, "request_created_epoch": now,
         "requirement_trace_ids": ["ANV:native-Haar-center-flip", "LocalHarnack:one-link-action-oscillation-eight", "AOC:signed-first-mode-Taylor-bound"],
         "test_plan_ids": ["direct-pinned-Lean", "real-Lean-MCP", "independent-exact-source-CI"],
         "risk_labels": ["formal_proof"], "unresolved_candidate_questions": [],
-        "prior_candidate_digests": [], "prior_producer_session_ids": [],
+        "prior_candidate_digests": sorted({a["prior_candidate_patch_digest"] for a in repair_context["observed_failed_attempts"]}) if repair_context is not None else [],
+        "prior_producer_session_ids": sorted({a["prior_producer_session_id"] for a in repair_context["observed_failed_attempts"]}) if repair_context is not None else [],
     }, synth.REQUEST_DIGEST_FIELD)
     policy = synth.seal({
         "allowed_provider_ids": ["authored_strategy"], "maximum_provider_calls": 3,
-        "maximum_raw_output_bytes": 40000, "maximum_intent_bytes": 40000,
+        "maximum_raw_output_bytes": 40000,
+        "maximum_intent_bytes": REPAIR_INTENT_BYTE_LIMIT if repair_context is not None else 40000,
         "maximum_repository_snapshot_bytes": 118369, "maximum_proposals": 3,
         "evaluation_epoch": now, "maximum_response_age": 3600, "maximum_request_age": 3600,
         "allowed_repository_path_prefixes": sorted(native_files),
@@ -369,6 +443,9 @@ def synthesize(root: Path, pack: dict, output: Path):
         "intent": intent, "observation": observation, "policy": observation_policy,
         "result": asdict(source), "baseline_ci": pack["baseline_ci"],
         "source_transport": projection, "auxiliary_source_attachment": auxiliary,
+        "repair_context": repair_context,
+        "intent_transport_utf8_bytes": len(request["intent_text"].encode("utf-8")),
+        "maximum_intent_bytes": policy["maximum_intent_bytes"],
         "synthesis_request_digest": request[synth.REQUEST_DIGEST_FIELD]})
     if result.status != "ready" or len(result.candidates) != 2:
         raise ValueError("CodeAI synthesis blocked: " + repr(result.issues))

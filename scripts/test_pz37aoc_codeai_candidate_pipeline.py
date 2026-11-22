@@ -102,6 +102,68 @@ class EvidenceGateTests(unittest.TestCase):
                                   "MGAP4D.MathlibAnalytic.result"],
                 "strategies": {"A": source, "B": source.replace("  rfl", "  exact rfl")}}
 
+    def repair_fixture(self):
+        from runtime.kuuos_codeai_candidate_patch_envelope_v0_1 import seal
+        pack = self.strategy_fixture()
+        pack.update(repository="fixture/repo", baseline_commit="0" * 40, target="MGAP4D/New.lean")
+        source = pack["strategies"]["A"]
+        log = "Candidate.lean:1:0: error: fixture only; no Lean was executed\n"
+        attempt = {"proposal_id": "AOC-A", "run_id": 1, "head_sha": "1" * 40,
+                   "job_id": 2, "artifact_id": 3, "artifact_archive_sha256": "2" * 64,
+                   "source_artifact_path": "aoc-codeai/AOC-A.lean",
+                   "failed_source_utf8": source, "failed_source_sha256": gates.sha256(source),
+                   "direct_log_artifact_path": "aoc-codeai/AOC-A-direct.log",
+                   "full_direct_log_utf8": log, "direct_log_sha256": gates.sha256(log),
+                   "direct_exit_code": 1, "direct_complete": True, "failed_status": "DIRECT_FAILED",
+                   "prior_candidate_patch_digest": "3" * 64, "prior_producer_session_id": "fixture-old-session"}
+        context = {"schema_version": "aoc-observed-failed-lean-attempts-v1",
+                   "repository_full_name": pack["repository"], "baseline_commit_sha": pack["baseline_commit"],
+                   "target": pack["target"], "observed_failed_attempts": [attempt],
+                   "external_artifact_reobservation_performed_by_kernel": False,
+                   "full_failed_sources_and_diagnostics_preserved": True, "memory_promotion": "HOLD"}
+        pack["repair_context"] = seal(context, "aoc_repair_context_digest")
+        return pack
+
+    def prepare_repair(self, pack):
+        self.assertTrue(hasattr(gates, "prepare_repair_context"),
+                        "repair requests must validate and carry complete failed source and diagnostics")
+        return gates.prepare_repair_context(pack)
+
+    def reseal_repair(self, pack):
+        from runtime.kuuos_codeai_candidate_patch_envelope_v0_1 import seal
+        pack["repair_context"] = seal(pack["repair_context"], "aoc_repair_context_digest")
+
+    def test_repair_context_preserves_complete_failed_source_and_log(self):
+        pack = self.repair_fixture()
+        context = self.prepare_repair(pack)
+        self.assertEqual(context, pack["repair_context"])
+        text = gates.intent_with_auxiliary_source("repair request", {"fixture": True}, context)
+        encoded = text.split("OBSERVED_FAILED_LEAN_ATTEMPTS_JSON\n", 1)[1]
+        self.assertEqual(json.loads(encoded), context)
+
+    def test_repair_context_rejects_changed_failed_source(self):
+        pack = self.repair_fixture()
+        pack["repair_context"]["observed_failed_attempts"][0]["failed_source_utf8"] += "\n"
+        self.reseal_repair(pack)
+        with self.assertRaisesRegex(ValueError, "failed source hash"):
+            self.prepare_repair(pack)
+
+    def test_repair_context_rejects_changed_full_diagnostics(self):
+        pack = self.repair_fixture()
+        pack["repair_context"]["observed_failed_attempts"][0]["full_direct_log_utf8"] += "tampered\n"
+        self.reseal_repair(pack)
+        with self.assertRaisesRegex(ValueError, "direct log hash"):
+            self.prepare_repair(pack)
+
+    def test_repair_context_rejects_changed_failed_public_contract(self):
+        pack = self.repair_fixture()
+        attempt = pack["repair_context"]["observed_failed_attempts"][0]
+        attempt["failed_source_utf8"] = attempt["failed_source_utf8"].replace("n = n", "True")
+        attempt["failed_source_sha256"] = gates.sha256(attempt["failed_source_utf8"])
+        self.reseal_repair(pack)
+        with self.assertRaisesRegex(ValueError, "failed source public contract"):
+            self.prepare_repair(pack)
+
     def validate_fixture(self, pack):
         self.assertTrue(hasattr(gates, "validate_candidate_contracts"),
                         "public definitions require an explicit immutable candidate contract")
