@@ -1,0 +1,372 @@
+#!/usr/bin/env python3
+"""Evidence gates must reject false greens and changed candidate bytes."""
+import tempfile
+import unittest
+import pz37aog_codeai_candidate_pipeline as gates
+from pathlib import Path
+from copy import deepcopy
+import hashlib
+import json
+
+from pz37aog_codeai_candidate_pipeline import audit_lean_output, require_exact_source, verify_original_lean_tree, run_captured
+from pz37aog_codeai_learning_handoff import build_aog_learning_handoff
+
+DECLS = ["MGAP4D.MathlibAnalytic.testA", "MGAP4D.MathlibAnalytic.testB"]
+GOOD = "\n".join("'" + d + "' depends on axioms: [propext, Classical.choice, Quot.sound]" for d in DECLS)
+DIRECT_AUDIT = {
+    "audited_declarations": DECLS,
+    "axioms": {name: ["Classical.choice", "Quot.sound", "propext"] for name in DECLS},
+    "warning_count": 0, "error_count": 0, "sorryAx": False,
+}
+
+
+class EvidenceGateTests(unittest.TestCase):
+    def raw_context_fixture(self):
+        root = Path(__file__).resolve().parents[1]
+        pack = json.loads((root / "scripts/pz37aog_candidate_strategies.json").read_text())
+        source_root = root if (root / "MGAP4D").exists() else root / "observed-baseline"
+        return gates.snapshot(source_root, pack), pack
+
+    def prepare_context(self, raw, pack):
+        self.assertTrue(hasattr(gates, "prepare_native_context"),
+                        "raw source needs an explicit non-normalizing native representation")
+        return gates.prepare_native_context(raw, pack)
+
+    def test_raw_dependency_attachments_roundtrip_both_exact_original_sources(self):
+        raw, pack = self.raw_context_fixture()
+        try:
+            native, auxiliary, projection = self.prepare_context(raw, pack)
+        except ValueError as exc:
+            self.fail("both exact no-final-LF dependencies need transport: " + str(exc))
+        recovered = json.loads(json.dumps(auxiliary, ensure_ascii=False, sort_keys=True))
+        sources = {entry["path"]: entry for entry in recovered["sources"]}
+        expected_sizes = {
+            "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumLocalHarnack.lean": 22995,
+            "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumRepresentative.lean": 22402,
+        }
+        self.assertEqual(set(sources), set(expected_sizes))
+        for path, expected_size in expected_sizes.items():
+            original = raw[path].encode("utf-8")
+            entry = sources[path]
+            self.assertEqual(entry["raw_source_utf8"].encode("utf-8"), original)
+            self.assertEqual(len(original), expected_size)
+            self.assertFalse(original.endswith(b"\n"))
+            self.assertEqual(entry["original_source_sha256"], hashlib.sha256(original).hexdigest())
+            self.assertEqual(entry["original_git_blob_sha1"], pack["baseline_blobs"][path])
+            self.assertNotIn(path, native)
+            self.assertFalse(entry["source_normalization_performed"])
+        self.assertFalse(projection["source_normalization_performed"])
+
+    def test_native_projection_binds_eight_paths_and_all_ten_observed_sources(self):
+        from runtime.kuuos_codeai_candidate_patch_envelope_v0_1 import canonical_digest
+        from runtime.kuuos_codeai_autonomous_structured_edit_types_v0_1 import validate_repository
+        raw, pack = self.raw_context_fixture()
+        native, auxiliary, projection = self.prepare_context(raw, pack)
+        self.assertEqual(len(raw), 10)
+        self.assertEqual(len(native), 8)
+        self.assertEqual(validate_repository(native)[1], [])
+        self.assertEqual(projection["raw_source_snapshot_digest"], canonical_digest(raw))
+        self.assertEqual(projection["native_repository_snapshot_digest"], canonical_digest(native))
+        self.assertEqual(projection["raw_observed_paths"], sorted(raw))
+        self.assertEqual(projection["native_observed_paths"], sorted(native))
+        self.assertEqual(projection["auxiliary_paths"], sorted(set(raw) - set(native)))
+        self.assertEqual(projection["auxiliary_source_digest"], auxiliary[gates.AUXILIARY_DIGEST_FIELD])
+        self.assertEqual(projection[gates.PROJECTION_DIGEST_FIELD], canonical_digest(
+            {k: v for k, v in projection.items() if k != gates.PROJECTION_DIGEST_FIELD}))
+
+    def test_projection_rejects_third_noncanonical_dependency(self):
+        raw, pack = self.raw_context_fixture()
+        raw["lean-toolchain"] = raw["lean-toolchain"].rstrip("\n")
+        modified = raw["lean-toolchain"].encode()
+        pack = deepcopy(pack)
+        pack["baseline_blobs"]["lean-toolchain"] = hashlib.sha1(
+            b"blob " + str(len(modified)).encode() + b"\0" + modified).hexdigest()
+        with self.assertRaisesRegex(ValueError, "unexpected noncanonical"):
+            self.prepare_context(raw, pack)
+
+    def test_projection_rejects_normalizing_either_original_dependency(self):
+        raw_original, original_pack = self.raw_context_fixture()
+        for path in original_pack["auxiliary_source_paths"]:
+            with self.subTest(path=path):
+                raw, pack = deepcopy(raw_original), deepcopy(original_pack)
+                raw[path] += "\n"
+                modified = raw[path].encode()
+                pack["baseline_blobs"][path] = hashlib.sha1(
+                    b"blob " + str(len(modified)).encode() + b"\0" + modified).hexdigest()
+                with self.assertRaisesRegex(ValueError, "exact auxiliary source"):
+                    self.prepare_context(raw, pack)
+
+    def test_provider_prompt_rejects_changed_auxiliary_representation(self):
+        from runtime.kuuos_codeai_candidate_patch_envelope_v0_1 import canonical_digest
+        raw, pack = self.raw_context_fixture()
+        native, auxiliary, _ = self.prepare_context(raw, pack)
+        text = gates.intent_with_auxiliary_source("candidate-only request", auxiliary)
+        prompt = {"repository_files": native,
+                  "repository_snapshot_digest": canonical_digest(native), "intent_text": text}
+        gates.verify_native_prompt_context(prompt, native, text)
+        prompt["intent_text"] = text + "\n"
+        with self.assertRaisesRegex(ValueError, "auxiliary source transport"):
+            gates.verify_native_prompt_context(prompt, native, text)
+
+    def test_absent_aog_failure_history_remains_absent(self):
+        pack = self.strategy_fixture()
+        pack["repair_context"] = None
+        self.assertIsNone(self.prepare_repair(pack))
+
+    def strategy_fixture(self):
+        source = ("import Mathlib\nnamespace MGAP4D.MathlibAnalytic\n"
+                  "noncomputable def coupling : Nat := 1\n"
+                  "theorem result (n : Nat) : n = n := by\n  rfl\n"
+                  "end MGAP4D.MathlibAnalytic\n")
+        return {"declarations": ["MGAP4D.MathlibAnalytic.coupling",
+                                  "MGAP4D.MathlibAnalytic.result"],
+                "strategies": {"A": source, "B": source.replace("  rfl", "  exact rfl")}}
+
+    def repair_fixture(self):
+        from runtime.kuuos_codeai_candidate_patch_envelope_v0_1 import seal
+        pack = self.strategy_fixture()
+        pack.update(repository="fixture/repo", baseline_commit="0" * 40, target="MGAP4D/New.lean")
+        source = pack["strategies"]["A"]
+        log = "Candidate.lean:1:0: error: fixture only; no Lean was executed\n"
+        attempt = {"proposal_id": "AOG-A", "run_id": 1, "head_sha": "1" * 40,
+                   "job_id": 2, "artifact_id": 3, "artifact_archive_sha256": "2" * 64,
+                   "source_artifact_path": "aog-codeai/AOG-A.lean",
+                   "failed_source_utf8": source, "failed_source_sha256": gates.sha256(source),
+                   "direct_log_artifact_path": "aog-codeai/AOG-A-direct.log",
+                   "full_direct_log_utf8": log, "direct_log_sha256": gates.sha256(log),
+                   "direct_exit_code": 1, "direct_complete": True, "failed_status": "DIRECT_FAILED",
+                   "prior_candidate_patch_digest": "3" * 64, "prior_producer_session_id": "fixture-old-session"}
+        context = {"schema_version": "aog-observed-failed-lean-attempts-v1",
+                   "repository_full_name": pack["repository"], "baseline_commit_sha": pack["baseline_commit"],
+                   "target": pack["target"], "observed_failed_attempts": [attempt],
+                   "external_artifact_reobservation_performed_by_kernel": False,
+                   "full_failed_sources_and_diagnostics_preserved": True, "memory_promotion": "HOLD"}
+        pack["repair_context"] = seal(context, "aog_repair_context_digest")
+        return pack
+
+    def prepare_repair(self, pack):
+        self.assertTrue(hasattr(gates, "prepare_repair_context"),
+                        "repair requests must validate and carry complete failed source and diagnostics")
+        return gates.prepare_repair_context(pack)
+
+    def reseal_repair(self, pack):
+        from runtime.kuuos_codeai_candidate_patch_envelope_v0_1 import seal
+        pack["repair_context"] = seal(pack["repair_context"], "aog_repair_context_digest")
+
+    def test_repair_context_preserves_complete_failed_source_and_log(self):
+        pack = self.repair_fixture()
+        context = self.prepare_repair(pack)
+        self.assertEqual(context, pack["repair_context"])
+        text = gates.intent_with_auxiliary_source("repair request", {"fixture": True}, context)
+        encoded = text.split("OBSERVED_FAILED_LEAN_ATTEMPTS_JSON\n", 1)[1]
+        self.assertEqual(json.loads(encoded), context)
+
+    def test_repair_context_rejects_changed_failed_source(self):
+        pack = self.repair_fixture()
+        pack["repair_context"]["observed_failed_attempts"][0]["failed_source_utf8"] += "\n"
+        self.reseal_repair(pack)
+        with self.assertRaisesRegex(ValueError, "failed source hash"):
+            self.prepare_repair(pack)
+
+    def test_repair_context_rejects_changed_full_diagnostics(self):
+        pack = self.repair_fixture()
+        pack["repair_context"]["observed_failed_attempts"][0]["full_direct_log_utf8"] += "tampered\n"
+        self.reseal_repair(pack)
+        with self.assertRaisesRegex(ValueError, "direct log hash"):
+            self.prepare_repair(pack)
+
+    def test_repair_context_rejects_changed_failed_public_contract(self):
+        pack = self.repair_fixture()
+        attempt = pack["repair_context"]["observed_failed_attempts"][0]
+        attempt["failed_source_utf8"] = attempt["failed_source_utf8"].replace("n = n", "True")
+        attempt["failed_source_sha256"] = gates.sha256(attempt["failed_source_utf8"])
+        self.reseal_repair(pack)
+        with self.assertRaisesRegex(ValueError, "failed source public contract"):
+            self.prepare_repair(pack)
+
+    def validate_fixture(self, pack):
+        self.assertTrue(hasattr(gates, "validate_candidate_contracts"),
+                        "public definitions require an explicit immutable candidate contract")
+        gates.validate_candidate_contracts(pack)
+
+    def test_accepts_identical_definition_and_statements_with_different_proofs(self):
+        self.validate_fixture(self.strategy_fixture())
+
+    def test_rejects_unresolved_draft_binding_slots(self):
+        pack = self.strategy_fixture()
+        pack["unresolved_binding_slots"] = ["strategies.B"]
+        with self.assertRaisesRegex(ValueError, "unresolved binding"):
+            self.validate_fixture(pack)
+
+    def test_rejects_absent_second_complete_strategy(self):
+        pack = self.strategy_fixture()
+        pack["strategies"]["B"] = None
+        with self.assertRaisesRegex(ValueError, "two complete"):
+            self.validate_fixture(pack)
+
+    def test_rejects_changed_coupling_definition_between_candidates(self):
+        pack = self.strategy_fixture()
+        pack["strategies"]["B"] = pack["strategies"]["B"].replace("coupling : Nat := 1", "coupling : Nat := 2")
+        with self.assertRaisesRegex(ValueError, "definition|preamble"):
+            self.validate_fixture(pack)
+
+    def test_rejects_weakened_statement_between_candidates(self):
+        pack = self.strategy_fixture()
+        pack["strategies"]["B"] = pack["strategies"]["B"].replace("n = n", "True")
+        with self.assertRaisesRegex(ValueError, "statement"):
+            self.validate_fixture(pack)
+
+    def test_rejects_unaudited_public_definition(self):
+        pack = self.strategy_fixture()
+        pack["declarations"] = pack["declarations"][1:]
+        with self.assertRaisesRegex(ValueError, "declaration"):
+            self.validate_fixture(pack)
+
+    def test_accepts_complete_standard_axiom_prints(self):
+        self.assertEqual(audit_lean_output(GOOD, 0, DECLS)["audited_declarations"], DECLS)
+
+    def test_rejects_failed_exit_even_with_axiom_prints(self):
+        with self.assertRaisesRegex(ValueError, "exit"):
+            audit_lean_output(GOOD, 1, DECLS)
+
+    def test_rejects_missing_print(self):
+        with self.assertRaisesRegex(ValueError, "missing"):
+            audit_lean_output(GOOD.splitlines()[0], 0, DECLS)
+
+    def test_rejects_sorry_axiom(self):
+        with self.assertRaisesRegex(ValueError, "axiom"):
+            audit_lean_output(GOOD.replace("Quot.sound", "sorryAx"), 0, DECLS)
+
+    def test_rejects_nonstandard_axiom(self):
+        with self.assertRaisesRegex(ValueError, "axiom"):
+            audit_lean_output(GOOD.replace("Quot.sound", "unexpectedAssumption"), 0, DECLS)
+
+    def test_rejects_warning_anywhere_in_full_log(self):
+        with self.assertRaisesRegex(ValueError, "diagnostic"):
+            audit_lean_output("Candidate.lean:1:0: warning: incomplete audit\n" + "x" * 10000 + "\n" + GOOD, 0, DECLS)
+
+    def test_rejects_same_filename_with_changed_source(self):
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "Candidate.lean"
+            path.write_text("original\n")
+            import hashlib
+            digest = hashlib.sha256(path.read_bytes()).hexdigest()
+            self.assertEqual(require_exact_source(path, digest), b"original\n")
+            path.write_text("different\n")
+            with self.assertRaisesRegex(ValueError, "source"):
+                require_exact_source(path, digest)
+
+    def handoff_fixture(self, direct=None, mcp=None):
+        import hashlib
+        source = "fixture only; no Lean execution"
+        digest = hashlib.sha256(source.encode()).hexdigest()
+        return build_aog_learning_handoff(
+            source_binding={"repository_full_name": "fixture/repo",
+                            "source_commit_sha": "0" * 40, "source_tree_sha": "0" * 40,
+                            "source_actor_id": None, "runner_id": None},
+            candidate_patch=None, candidate_source=source, context_files={},
+            direct_lean_receipt=None if direct is None else dict(direct, candidate_source_sha256=digest),
+            lean_mcp_receipt=None if mcp is None else dict(mcp, candidate_source_sha256=digest),
+            toolchain_receipt=None, environment_receipt=None, observed_epoch=1)
+
+    def test_learning_does_not_count_exit_zero_without_axiom_audit(self):
+        result = self.handoff_fixture(direct={"exit_code": 0})
+        self.assertFalse(result["observed_checks"]["direct_lean_passed"])
+
+    def test_completed_mcp_gate_and_learning_reject_missing_or_conflicting_evidence(self):
+        complete = {"success": True, "partial": False, "timed_out": False,
+                    "still_elaborating_lines": None, "failed_dependencies": [],
+                    "items": [{"severity": "info", "message": line, "line": index + 1,
+                               "column": 1, "lean_tags": None}
+                              for index, line in enumerate(GOOD.splitlines())]}
+        direct = {"exit_code": 0, "complete": True, "audit": deepcopy(DIRECT_AUDIT)}
+        cases = {}
+        for key in ("timed_out", "still_elaborating_lines"):
+            body = deepcopy(complete)
+            del body[key]
+            cases["missing_" + key] = body
+        cases["timed_out"] = dict(deepcopy(complete), timed_out=True)
+        cases["pending_elaboration"] = dict(deepcopy(complete), still_elaborating_lines=[99])
+        body = deepcopy(complete)
+        body["items"].append({"severity": "warning", "message": "fixture only",
+                              "line": 3, "column": 1, "lean_tags": None})
+        cases["warning"] = body
+        body = deepcopy(complete)
+        body["items"] = body["items"][:1]
+        cases["missing_axiom_print"] = body
+        body = deepcopy(complete)
+        body["items"][0]["message"] = "'" + DECLS[0] + "' depends on axioms: [propext]"
+        cases["mismatched_axiom_print"] = body
+        for name, body in cases.items():
+            with self.subTest(case=name):
+                result = self.handoff_fixture(direct=direct, mcp=body)
+                self.assertFalse(result["observed_checks"]["real_lean_mcp_passed"])
+                self.assertEqual(result["disposition"], "HOLD")
+        self.assertTrue(hasattr(gates, "audit_complete_mcp_output"),
+                        "MCP success requires explicit terminal flags and matching public audits")
+        self.assertEqual(gates.audit_complete_mcp_output(complete, DECLS, DIRECT_AUDIT), DIRECT_AUDIT)
+        result = self.handoff_fixture(direct=direct, mcp=complete)
+        self.assertTrue(result["observed_checks"]["real_lean_mcp_passed"])
+        self.assertEqual(result["disposition"], "HOLD")
+        for name, body in cases.items():
+            with self.subTest(adapter_case=name):
+                with self.assertRaises(ValueError):
+                    gates.audit_complete_mcp_output(body, DECLS, DIRECT_AUDIT)
+
+    def test_learning_rejects_exact_transport_bound_to_another_repository_version(self):
+        raw, pack = self.raw_context_fixture()
+        _, _, projection = self.prepare_context(raw, pack)
+        binding = {"repository_full_name": pack["repository"],
+                   "source_commit_sha": pack["baseline_commit"],
+                   "source_tree_sha": pack["baseline_tree"],
+                   "source_actor_id": None, "runner_id": None}
+        kwargs = {"candidate_patch": None, "candidate_source": None,
+                  "context_files": raw, "direct_lean_receipt": None,
+                  "lean_mcp_receipt": None, "toolchain_receipt": None,
+                  "environment_receipt": None, "observed_epoch": 1,
+                  "source_transport": projection}
+        valid = build_aog_learning_handoff(source_binding=binding, **kwargs)
+        self.assertEqual(valid["disposition"], "HOLD")
+        self.assertEqual(valid["native_ensemble"]["result"]["status"], "blocked")
+        for field, wrong in (("repository_full_name", "foreign/repository"),
+                             ("source_commit_sha", "0" * 40),
+                             ("source_tree_sha", "0" * 40)):
+            with self.subTest(field=field):
+                with self.assertRaisesRegex(ValueError, "source transport version binding"):
+                    build_aog_learning_handoff(source_binding=dict(binding, **{field: wrong}), **kwargs)
+
+    def test_rejects_changed_transitive_physical_source(self):
+        import hashlib
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            path = root / "MGAP4D/Original.lean"
+            path.parent.mkdir()
+            raw = b"original physical definition\n"
+            path.write_bytes(raw)
+            blob = hashlib.sha1(b"blob " + str(len(raw)).encode() + b"\0" + raw).digest()
+            entry = b"100644 Original.lean\0" + blob
+            expected = hashlib.sha1(b"tree " + str(len(entry)).encode() + b"\0" + entry).hexdigest()
+            self.assertEqual(verify_original_lean_tree(root, expected, "MGAP4D/New.lean"), 1)
+            path.write_bytes(b"changed physical definition\n")
+            with self.assertRaisesRegex(ValueError, "baseline"):
+                verify_original_lean_tree(root, expected, "MGAP4D/New.lean")
+
+    def test_rejects_unaccounted_new_lean_file(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "MGAP4D").mkdir()
+            (root / "MGAP4D/Unrelated.lean").write_text("unexpected\n")
+            with self.assertRaisesRegex(ValueError, "baseline"):
+                verify_original_lean_tree(root, "4b825dc642cb6eb9a060e54bf8d69288fbee4904", "MGAP4D/New.lean")
+
+    def test_timeout_preserves_partial_output_and_is_not_complete(self):
+        import sys
+        result = run_captured([sys.executable, "-c",
+            "import time; print('partial diagnostic', flush=True); time.sleep(2)"], Path.cwd(), 0.3)
+        self.assertIsNone(result["exit_code"])
+        self.assertFalse(result["complete"])
+        self.assertIn("partial diagnostic", result["stdout"])
+
+
+if __name__ == "__main__":
+    unittest.main()
