@@ -31,7 +31,7 @@ AUXILIARY_SHA256 = "f804e7cd061a142a953e27657890d78bcbe782eaa1fa87465cb529ec8905
 AUXILIARY_DIGEST_FIELD = "aoc_auxiliary_source_digest"
 PROJECTION_DIGEST_FIELD = "aoc_source_projection_digest"
 REPAIR_DIGEST_FIELD = "aoc_repair_context_digest"
-REPAIR_INTENT_BYTE_LIMIT = 109095
+REPAIR_INTENT_BYTE_LIMIT = 179322
 BASE_INTENT_TEXT = "Add original-model local center-flip Taylor estimates for the signed first Haar response at every nonnegative beta. Preserve the supplied theorem statements and original Haar/Wilson objects. No continuum mass-gap conclusion."
 
 
