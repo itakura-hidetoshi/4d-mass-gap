@@ -1,0 +1,121 @@
+name: PZ37AOH KuuOS CodeAI direct Lean and real MCP
+
+on:
+  pull_request:
+    paths:
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalUniformFirstModeMagnitudeV5_PZ37AOH.lean"
+      - "scripts/pz37aoh_*.py"
+      - "scripts/pz37aoh_candidate_strategies.json"
+      - "scripts/test_pz37aoh_codeai_candidate_pipeline.py"
+      - ".github/workflows/pz37aoh-kuuos-native-codeai.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pz37aoh-codeai-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  MATHLIB_NO_CACHE_ON_UPDATE: "1"
+
+jobs:
+  candidates-direct-mcp:
+    name: Source-bound CodeAI candidates then direct Lean then real Lean MCP
+    runs-on: ubuntu-22.04
+    timeout-minutes: 60
+    steps:
+      - name: Checkout exact AOH research HEAD
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          show-progress: false
+
+      - name: Checkout immutable KuuOS runtime and MCP helpers
+        uses: actions/checkout@v6
+        with:
+          repository: itakura-hidetoshi/KuuOS
+          ref: 3c3d4a9127256fff732749fdfddd3118b30e86ab
+          path: _codeai_pinned
+          sparse-checkout: |
+            runtime
+            scripts
+            tests
+          persist-credentials: false
+          show-progress: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Test pinned bounded-repair and simpa locator regressions
+        run: python3 _codeai_pinned/tests/test_kuuos_lean_mcp_repair_loop_v1.py
+
+      - name: Test evidence gates against false greens
+        env:
+          PYTHONPATH: "${{ github.workspace }}/_codeai_pinned"
+        run: python3 scripts/test_pz37aoh_codeai_candidate_pipeline.py
+
+      - name: Restore exact Lean toolchain
+        uses: actions/cache/restore@v5
+        with:
+          path: ~/.elan
+          key: ${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
+
+      - name: Restore pinned dependency artifacts
+        uses: actions/cache/restore@v5
+        with:
+          path: .lake/packages
+          key: ${{ runner.os }}-lean-fast-deps-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
+
+      - name: Restore certified AOF project artifacts
+        uses: actions/cache/restore@v5
+        with:
+          path: .lake/build
+          key: ${{ runner.os }}-lean-fast-project-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-base-d3d4b4d51a4ea26a4ee8d09f2343ebaab6864009
+
+      - name: Inspect fixed environment and install MCP launcher
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lean --version
+          lake --version
+          python3 -m pip install --disable-pip-version-check uv
+          uv --version
+
+      - name: Execute pinned native CodeAI synthesis before testing
+        env:
+          KUUOS_CODEAI_PINNED_ROOT: "${{ github.workspace }}/_codeai_pinned"
+          AOH_HEAD: "${{ github.event.pull_request.head.sha || github.sha }}"
+        run: |
+          python3 scripts/pz37aoh_codeai_candidate_pipeline.py --synthesize-only --verify-source-tree --output-dir "$RUNNER_TEMP/aoh-codeai-preflight"
+
+      - name: Validate exact imported dependencies with Lake
+        shell: bash
+        run: |
+          set -euo pipefail
+          lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalUniformFirstModeMagnitudeV5_PZ37AOG MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalLocalCenterFlipTaylorV5_PZ37AOC Mathlib.Tactic 2>&1 | tee "$RUNNER_TEMP/aoh-import-build.log"
+
+      - name: Generate candidates then directly compile then verify successful bytes through actual Lean MCP
+        env:
+          KUUOS_CODEAI_PINNED_ROOT: "${{ github.workspace }}/_codeai_pinned"
+          AOH_HEAD: "${{ github.event.pull_request.head.sha || github.sha }}"
+        run: |
+          python3 scripts/pz37aoh_codeai_candidate_pipeline.py --output-dir "$RUNNER_TEMP/aoh-codeai"
+
+      - name: Archive candidate sources full logs MCP receipts and native learning holds
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: PZ37AOH-kuuos-codeai-direct-mcp-evidence
+          path: |
+            ${{ runner.temp }}/aoh-codeai/
+            ${{ runner.temp }}/aoh-codeai-preflight/
+            ${{ runner.temp }}/aoh-import-build.log
+          if-no-files-found: error
+          retention-days: 30
