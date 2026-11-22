@@ -33,7 +33,7 @@ class AOIGateTests(unittest.TestCase):
     def test_reject_changed_public_theorem(self):
         _, pack = self.pack()
         pack["strategies"]["B"] = pack["strategies"]["B"].replace(
-            "64 * beta^2 *", "65 * beta^2 *", 1)
+            "64 * beta^2 := by", "65 * beta^2 := by", 1)
         with self.assertRaisesRegex(ValueError, "statements"):
             gates.validate_candidate_contracts(pack)
 
