@@ -56,7 +56,7 @@ def main():
     source.update(
         repository_full_name=REPOSITORY, source_commit_sha=FAILED_HEAD,
         resulting_commit_sha=FAILED_HEAD, tree_digest=FAILED_TREE,
-        source_branch="research/p4-q2-pz37-anz-native-top-first-signed-small-coupling-20261122",
+        source_branch="research/p4-q2-pz37-anz-original-physical-top-first-quantitative-slope-20261122",
         intent_id="PZ37ANZ-CODEAI-TYPED-ERROR", intent_revision="r1",
         intent_packet_digest=canonical_digest({"intent": "repair ANZ no goals to be solved (post-field_simp redundant ring) error"}),
         repository_observation_digest=canonical_digest({
@@ -78,8 +78,8 @@ def main():
     )
     patch_policy = seal(patch_policy, PATCH_POLICY_DIGEST_FIELD)
     req = seal({
-        "request_id": "PZ37ANZ-exact-typeclass-error-replay", "request_revision": "r1",
-        "intent_text": "Repair the diagnosed ANZ Lean MulRightStrictMono class error; preserve all theorem statements.",
+        "request_id": "PZ37ANZ-exact-extra-tactic-error-replay", "request_revision": "r1",
+        "intent_text": "Repair the diagnosed ANZ Lean line 137 no-goals-to-be-solved extra ring after field_simp; preserve all theorem statements.",
         "candidate_count": 3, "request_created_epoch": now,
         "requirement_trace_ids": ["ANZ:line137", "CI:44973419462"],
         "test_plan_ids": ["Lean:4.30.0-rc2", "mathlib:5450b53e5ddc75d46418fabb605edbf36bd0beb6", "independent-CI"],
