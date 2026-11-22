@@ -1,0 +1,125 @@
+name: PZ37AOK independent timeboxed native Lean diagnostic
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/pz37aok-timeboxed-native-lean-diagnostic.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pz37aok-timeboxed-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  MATHLIB_NO_CACHE_ON_UPDATE: "1"
+
+jobs:
+  exact-source-direct:
+    name: Exact original AOK source and pinned direct Lean timebox
+    runs-on: ubuntu-22.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout exact diagnostic HEAD without changing AOK
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          show-progress: false
+
+      - name: Load immutable KuuOS-native CodeAI diagnostics
+        uses: actions/checkout@v6
+        with:
+          repository: itakura-hidetoshi/KuuOS
+          ref: 3c3d4a9127256fff732749fdfddd3118b30e86ab
+          path: _codeai_pinned
+          sparse-checkout: |
+            runtime
+            scripts
+            tests
+          persist-credentials: false
+          show-progress: false
+
+      - name: Check exact AOK and AOJ original Git blobs (no source normalization)
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib
+          from pathlib import Path
+          cases = {
+            "MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFixedLeftFullSlabCharacterV5_PZ37AOK.lean": "5e79db9bfbdbca63fb1053145d939bc261421047",
+            "MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFixedLeftCrossingCharacterV5_PZ37AOJ.lean": "75424239812567b2c522e679efedfc221d935795",
+          }
+          for path, expected in cases.items():
+              raw = Path(path).read_bytes()
+              digest = hashlib.sha1(b"blob " + str(len(raw)).encode() + b"\x00" + raw).hexdigest()
+              assert digest == expected, (path, expected, digest)
+              assert raw.endswith(b"\n"), path
+              print("exact-Git-blob-success", path, digest, len(raw), flush=True)
+          PY
+
+      - name: Test pinned KuuOS-native bounded repair and locator fixtures
+        run: python3 _codeai_pinned/tests/test_kuuos_lean_mcp_repair_loop_v1.py
+
+      - name: Restore pinned Lean toolchain
+        uses: actions/cache/restore@v5
+        with:
+          path: ~/.elan
+          key: ${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
+
+      - name: Restore pinned mathlib dependency cache
+        uses: actions/cache/restore@v5
+        with:
+          path: .lake/packages
+          key: ${{ runner.os }}-lean-fast-deps-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
+
+      - name: Restore pinned project oleans without overwriting source
+        uses: actions/cache/restore@v5
+        with:
+          path: .lake/build
+          key: ${{ runner.os }}-lean-fast-project-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-base-68c05d8ee2d5a6a834a8e0f29b06279ef5f5a212
+          restore-keys: |
+            ${{ runner.os }}-lean-fast-project-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
+
+      - name: Verify pinned toolchain and original dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          if ! command -v lake >/dev/null 2>&1; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y
+          fi
+          lean --version
+          lake --version
+          lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalFixedLeftCrossingCharacterV5_PZ37AOJ Mathlib.Tactic 2>&1 | tee "$RUNNER_TEMP/aok-baseline-deps.log"
+
+      - name: Compile original AOK under 150 second Lean elaboration timebox
+        shell: bash
+        run: |
+          set -uo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          target="MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFixedLeftFullSlabCharacterV5_PZ37AOK.lean"
+          echo "[AOK-timeboxed] begin direct real Lean compiler" | tee "$RUNNER_TEMP/aok-direct-lean.log"
+          timeout --signal=INT --kill-after=15s 150s lake env lean -DautoImplicit=false "$target" >> "$RUNNER_TEMP/aok-direct-lean.log" 2>&1
+          code=$?
+          cat "$RUNNER_TEMP/aok-direct-lean.log"
+          echo "[AOK-timeboxed] exact source direct Lean exit code=$code"
+          if [ "$code" -ne 0 ]; then
+            echo "[AOK-timeboxed] HOLD: reject source promotion, preserve diagnostics"
+            exit "$code"
+          fi
+          echo "[AOK-timeboxed] source candidate passed direct Lean; still require independent full PR CI and real MCP"
+
+      - name: Archive exact original AOK direct diagnostics (even failure or timeout)
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: PZ37AOK-exact-timeboxed-native-lean-diagnostics
+          path: |
+            ${{ runner.temp }}/aok-baseline-deps.log
+            ${{ runner.temp }}/aok-direct-lean.log
+          if-no-files-found: warn
+          retention-days: 30
