@@ -1,0 +1,58 @@
+name: PZ37ANW pinned KuuOS-native CodeAI replay
+
+on:
+  pull_request:
+    paths:
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFirstHaarSlopeSignV5_PZ37ANW.lean"
+      - "scripts/pz37anw_codeai_native_candidate_replay.py"
+      - ".github/workflows/pz37anw-kuuos-native-codeai.yml"
+  push:
+    branches:
+      - research/p4-q2-pz37-anw-native-top-first-signed-small-coupling-20261122
+    paths:
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFirstHaarSlopeSignV5_PZ37ANW.lean"
+      - "scripts/pz37anw_codeai_native_candidate_replay.py"
+      - ".github/workflows/pz37anw-kuuos-native-codeai.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  codeai-native-candidate-replay:
+    name: Native CodeAI source-bound proposal and governance audit
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout current ANW research source
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Checkout immutable KuuOS-native CodeAI source
+        uses: actions/checkout@v6
+        with:
+          repository: itakura-hidetoshi/KuuOS
+          ref: b0201811d176bf25fb50146d380def6fa2e90fa7
+          path: _codeai_pinned
+          sparse-checkout: |
+            runtime
+            examples
+          persist-credentials: false
+
+      - name: Execute native deterministic CodeAI candidate synthesis
+        env:
+          KUUOS_CODEAI_PINNED_ROOT: "${{ github.workspace }}/_codeai_pinned"
+          PYTHONPATH: "${{ github.workspace }}/_codeai_pinned"
+          ANW_HEAD: "${{ github.event.pull_request.head.sha || github.sha }}"
+        run: |
+          python3 scripts/pz37anw_codeai_native_candidate_replay.py
+
+      - name: Publish readonly candidate receipts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: PZ37ANW-kuuos-native-codeai-candidate-receipts
+          path: "${{ runner.temp }}/anw-codeai-native.json"
+          if-no-files-found: warn
+          retention-days: 14
