@@ -134,7 +134,6 @@ theorem p4Q2PZ37ANZ_originalPhysicalTopFirst_normalizedSlopeError_le
       b / beta + (1 / 4 : ℝ) =
         (b + beta * (1 / 4 : ℝ)) / beta := by
     field_simp [ne_of_gt hbeta]
-    ring
   change |b / beta + (1 / 4 : ℝ)| ≤ (16 * C^2 + 2 * C) * beta
   rw [heq, abs_div, abs_of_pos hbeta]
   apply (div_le_iff₀ hbeta).2
