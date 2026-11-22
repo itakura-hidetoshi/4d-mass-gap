@@ -326,10 +326,10 @@ def synthesize(root: Path, pack: dict, output: Path):
     toolchain_digest = obs.canonical_digest({"lean": files["lean-toolchain"],
                                             "manifest": files["lake-manifest.json"]})
     intent = obs.seal({
-        "intent_id": "PZ37AOH-uniform-first-mode-magnitude", "source_actor_id": "itakura-hidetoshi",
+        "intent_id": "PZ37AOH-original-local-relative-Taylor", "source_actor_id": "itakura-hidetoshi",
         "source_channel": "ChatGPT user continuation 2026-11-22", "intent_revision": "r1",
-        "requirements": ["Prove the Haar amplitude integral of the canonical continuous representative of the actual original top state lies between zero and one for every finite H and beta>=0", "Prove the actual absolute first-mode overlap is at most (exp(8*beta)-1) times the Haar mean, hence at most exp(8*beta)-1 uniformly in H", "Prove absolute and signed first-mode overlap tend to zero for arbitrary moving finite volumes when the NNReal coupling tends to zero"],
-        "assumptions": ["H may vary arbitrarily through the original finite volumes", "Pointwise estimates use the unchanged original physical top state and first Gauss-law mode with beta>=0, including beta=0", "Scalar limits use an arbitrary filter and NNReal coupling tending to zero; no total-action-budget smallness or eventual strict positivity is assumed", "All ten original context blobs are verified; the native patch snapshot contains eight canonical files and the exact no-final-LF LocalHarnack and Representative dependencies are attached as sealed read-only JSON in request intent"],
+        "requirements": ["Prove exact original Wilson-kernel relative factorization under native primary center twist", "Prove pointwise 0<=R<=64*beta^2*K_flipped for beta>=0 and 8*beta<=1, uniformly over original finite H and boundaries", "Keep original Wilson/Haar/Hilbert and pinned Lean/mathlib; no conditional row first-moment, uniform normalized slope or mass-gap claims"],
+        "assumptions": ["H, A and B are arbitrary original finite-volume Wilson objects", "The explicit beta window 0<=beta and 8*beta<=1 bounds the local relative remainder; no global action budget is assumed", "All eight exact GitHub source blobs are included as canonical LF-terminal paths; no auxiliary files or source normalization", "Six public theorem contracts coincide across distinct A/B proofs; their proof status requires direct Lean, actual MCP and independent CI"],
         "unresolved_questions": [],
         "preserved_invariants": ["original physical Wilson/Haar/Hilbert definitions", "fixed Lean/mathlib"],
         "forbidden_changes": ["weaken theorem statements", "replace model", "introduce trust bypass"],
@@ -380,7 +380,7 @@ def synthesize(root: Path, pack: dict, output: Path):
         "handover_risk_labels": [], "evaluation_epoch": now, "maximum_candidate_age": 3600,
     }, patch.POLICY_DIGEST_FIELD)
     request = synth.seal({
-        "request_id": "AOH-uniform-first-mode-magnitude-strategies",
+        "request_id": "AOH-original-local-relative-Taylor-strategies",
         "request_revision": "r2-from-observed-lean-failure" if repair_context is not None else "r1",
         "intent_text": intent_with_auxiliary_source(BASE_INTENT_TEXT, auxiliary, repair_context),
         "candidate_count": 3, "request_created_epoch": now,
