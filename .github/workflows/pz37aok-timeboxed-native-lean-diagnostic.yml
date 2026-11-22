@@ -1,6 +1,11 @@
-name: PZ37AOK independent timeboxed native Lean diagnostic
+name: PZ37AOK isolated bounded direct Lean repair diagnostics
 
 on:
+  push:
+    branches:
+      - "diagnostic/pz37aok-exact-lean-timebox-20261123"
+    paths:
+      - ".github/workflows/pz37aok-timeboxed-native-lean-diagnostic.yml"
   pull_request:
     paths:
       - ".github/workflows/pz37aok-timeboxed-native-lean-diagnostic.yml"
@@ -18,14 +23,18 @@ env:
 
 jobs:
   exact-source-direct:
-    name: Exact original AOK source and pinned direct Lean timebox
+    name: AOK direct original source / ${{ matrix.variant }}
+    strategy:
+      fail-fast: false
+      matrix:
+        variant: [heartbeat_only, explicit_continuity]
     runs-on: ubuntu-22.04
-    timeout-minutes: 35
+    timeout-minutes: 45
     steps:
       - name: Checkout exact diagnostic HEAD without changing AOK
         uses: actions/checkout@v6
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ef2f770ab795df2187805c1fa2de4d4c1caccb3f
           persist-credentials: false
           show-progress: false
 
@@ -96,14 +105,46 @@ jobs:
           lake --version
           lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalFixedLeftCrossingCharacterV5_PZ37AOJ Mathlib.Tactic 2>&1 | tee "$RUNNER_TEMP/aok-baseline-deps.log"
 
-      - name: Compile original AOK under 150 second Lean elaboration timebox
+      - name: Generate ephemeral AOK proof-level resource and type-directed variants
+        shell: bash
+        env:
+          VARIANT: ${{ matrix.variant }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os, pathlib, hashlib, json
+          file=pathlib.Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFixedLeftFullSlabCharacterV5_PZ37AOK.lean")
+          source=file.read_text()
+          assert source.count("set_option maxHeartbeats 4000000")==1
+          candidate=source.replace("set_option maxHeartbeats 4000000","set_option maxHeartbeats 12000000",1)
+          variant=os.environ["VARIANT"]
+          if variant == "explicit_continuity":
+              old="  have hXCont : Continuous (fun B : Cfg => X A B) := by\n    exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_continuous\n      H 2).comp (continuous_const.prodMk continuous_id)\n"
+              new="  have hXCont : Continuous (fun B : Cfg => X A B) := by\n    change Continuous (fun B : Cfg =>\n      periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2 A B)\n    exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_continuous\n      H 2).comp (continuous_const.prodMk continuous_id)\n"
+              assert candidate.count(old)==1, "target proof span not unique"
+              candidate=candidate.replace(old,new,1)
+          else:
+              assert variant=="heartbeat_only",variant
+          anchors=lambda x: [line for line in x.splitlines() if line.startswith(("import ","theorem ","def ","namespace ","end "))]
+          assert anchors(source)==anchors(candidate)
+          assert candidate.count("sorry")==source.count("sorry")
+          assert candidate.count("admit")==source.count("admit")
+          assert candidate.count("axiom ")==source.count("axiom ")
+          assert candidate.endswith("\n")
+          file.write_text(candidate)
+          receipt=dict(variant=variant,original_Git_blob="5e79db9bfbdbca63fb1053145d939bc261421047",original_sha256=hashlib.sha256(source.encode()).hexdigest(),ephemeral_candidate_sha256=hashlib.sha256(candidate.encode()).hexdigest(),source_pr_unchanged=True,independent_ci_certified=False)
+          pathlib.Path(os.environ["RUNNER_TEMP"],"aok-ephemeral-candidate.json").write_text(json.dumps(receipt,indent=2))
+          print(json.dumps(receipt,sort_keys=True))
+          PY
+
+      - name: Compile ephemeral AOK under 600 second genuine Lean elaboration timebox
         shell: bash
         run: |
           set -uo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
           target="MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFixedLeftFullSlabCharacterV5_PZ37AOK.lean"
           echo "[AOK-timeboxed] begin direct real Lean compiler" | tee "$RUNNER_TEMP/aok-direct-lean.log"
-          timeout --signal=INT --kill-after=15s 150s lake env lean -DautoImplicit=false "$target" >> "$RUNNER_TEMP/aok-direct-lean.log" 2>&1
+          timeout --signal=INT --kill-after=15s 600s lake env lean -DautoImplicit=false "$target" >> "$RUNNER_TEMP/aok-direct-lean.log" 2>&1
           code=$?
           cat "$RUNNER_TEMP/aok-direct-lean.log"
           echo "[AOK-timeboxed] exact source direct Lean exit code=$code"
@@ -111,15 +152,25 @@ jobs:
             echo "[AOK-timeboxed] HOLD: reject source promotion, preserve diagnostics"
             exit "$code"
           fi
-          echo "[AOK-timeboxed] source candidate passed direct Lean; still require independent full PR CI and real MCP"
+          if grep -E "error:|warning:|sorryAx|does not depend on any axioms" "$RUNNER_TEMP/aok-direct-lean.log"; then
+            echo "[AOK-timeboxed] HOLD: invalid axiom or warning/error output"
+            exit 1
+          fi
+          count=$(grep -c "depends on axioms:" "$RUNNER_TEMP/aok-direct-lean.log" || true)
+          if [ "$count" -ne 2 ]; then
+            echo "[AOK-timeboxed] HOLD: expected two theorem #print axioms outputs; got $count"
+            exit 1
+          fi
+          echo "[AOK-timeboxed] LOCAL DIRECT LEAN CANDIDATE ONLY: independent exact-source CI and real MCP still required"
 
       - name: Archive exact original AOK direct diagnostics (even failure or timeout)
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: PZ37AOK-exact-timeboxed-native-lean-diagnostics
+          name: PZ37AOK-${{ matrix.variant }}-direct-lean-diagnostics
           path: |
             ${{ runner.temp }}/aok-baseline-deps.log
             ${{ runner.temp }}/aok-direct-lean.log
+            ${{ runner.temp }}/aok-ephemeral-candidate.json
           if-no-files-found: warn
           retention-days: 30
