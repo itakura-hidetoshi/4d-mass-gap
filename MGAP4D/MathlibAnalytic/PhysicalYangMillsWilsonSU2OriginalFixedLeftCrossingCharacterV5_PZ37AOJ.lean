@@ -77,7 +77,7 @@ theorem p4Q2PZ37AOJ_originalSingleCrossingEnergy_fixedLeft_primaryCharacter_zero
   have hNot : e ≠ target := by
     by_cases he : e = e0
     · simpa [target, he] using h03
-    · simpa [target, he] using he
+    · simp [target, he]
   have hChoice : target = e0 ∨ target = e3 := by
     by_cases he : e = e0
     · right
@@ -110,6 +110,7 @@ theorem p4Q2PZ37AOJ_originalSingleCrossingEnergy_fixedLeft_primaryCharacter_zero
             (Flip H target B)) =
         -(specialUnitaryWilsonPlaquetteEnergy 2 ((A e)⁻¹ * B e) *
           Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 B)) := by
+    dsimp only [Flip]
     rw [GroundStatePosteriorJoint.p4Q2PU_originalSingleLinkCenterFlip_other
         H target e hNot B,
       p4Q2PZ37ANV_primaryCharacter_originCenterFlip_odd H target hChoice B]
