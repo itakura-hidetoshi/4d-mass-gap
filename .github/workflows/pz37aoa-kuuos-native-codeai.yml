@@ -106,7 +106,7 @@ jobs:
           import Mathlib.Topology.Instances.NNReal.Lemmas
           import Mathlib.Topology.Order.DenselyOrdered
           open Filter
-          open scoped Topology
+          open scoped Topology NNReal
           #synth NeBot (𝓝[>] (0 : ℝ≥0))
           #check NNReal.map_coe_nhdsGT
           LEAN
