@@ -3,7 +3,7 @@ name: PZ37AOH KuuOS CodeAI direct Lean and real MCP
 on:
   pull_request:
     paths:
-      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalUniformFirstModeMagnitudeV5_PZ37AOH.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalLocalRelativeTaylorV5_PZ37AOH.lean"
       - "scripts/pz37aoh_*.py"
       - "scripts/pz37aoh_candidate_strategies.json"
       - "scripts/test_pz37aoh_codeai_candidate_pipeline.py"
@@ -71,7 +71,7 @@ jobs:
           path: .lake/packages
           key: ${{ runner.os }}-lean-fast-deps-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
 
-      - name: Restore certified AOF project artifacts
+      - name: Restore certified AOG project artifacts
         uses: actions/cache/restore@v5
         with:
           path: .lake/build
