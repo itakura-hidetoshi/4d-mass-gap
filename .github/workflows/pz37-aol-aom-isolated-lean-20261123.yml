@@ -1,6 +1,11 @@
 name: PZ37 AOL AOM isolated direct Lean source diagnostics
 
 on:
+  push:
+    branches:
+      - "diagnostic/pz37-aol-aom-isolated-lean-20261123"
+    paths:
+      - ".github/workflows/pz37-aol-aom-isolated-lean-20261123.yml"
   pull_request:
     paths:
       - ".github/workflows/pz37-aol-aom-isolated-lean-20261123.yml"
@@ -111,7 +116,7 @@ jobs:
           }
           tail -8 "$RUNNER_TEMP/pz37-dependencies.log"
 
-      - name: Generate bounded temporary CodeAI candidate from exact compiler findings
+      - name: Generate bounded temporary proof candidate from exact compiler findings
         shell: bash
         run: |
           set -euo pipefail
