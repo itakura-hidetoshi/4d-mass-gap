@@ -1,0 +1,187 @@
+name: PZ37 AOL AOM isolated direct Lean source diagnostics
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/pz37-aol-aom-isolated-lean-20261123.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pz37-aol-aom-direct-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  exact-source-sandbox:
+    name: Direct pinned Lean / ${{ matrix.case.label }}
+    runs-on: ubuntu-22.04
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        case:
+          - label: AOL
+            ref: 88889cf38ed2067941579349f238aa555901ea60
+            blob: 5ba037107450f3da504143028ce4cd2db7f02d8b
+            path: MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalRelativeConditionalHaarRowV5_PZ37AOL.lean
+          - label: AOM
+            ref: 25dfed0a20f26f9c7f8e0cf3b6517d87ff0e9d78
+            blob: 4451b1dd7bbdab119e3a372eabd06e528b86f7ca
+            path: MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalRowLocalLinearResponseV5_PZ37AOM.lean
+    env:
+      MATHLIB_NO_CACHE_ON_UPDATE: "1"
+      TARGET: ${{ matrix.case.path }}
+      LABEL: ${{ matrix.case.label }}
+      SOURCE_HEAD: ${{ matrix.case.ref }}
+      SOURCE_BLOB: ${{ matrix.case.blob }}
+      BASE_HEAD: 68c05d8ee2d5a6a834a8e0f29b06279ef5f5a212
+    steps:
+      - name: Checkout exact original research HEAD (not candidate branch)
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ matrix.case.ref }}
+          persist-credentials: false
+          show-progress: false
+
+      - name: Checkout fixed KuuOS CodeAI verifier fixtures
+        uses: actions/checkout@v6
+        with:
+          repository: itakura-hidetoshi/KuuOS
+          ref: 3c3d4a9127256fff732749fdfddd3118b30e86ab
+          path: _codeai_pinned
+          sparse-checkout: |
+            runtime
+            scripts
+            tests
+          persist-credentials: false
+          show-progress: false
+
+      - name: Validate exact source blob, pinned versions and immutable native CodeAI fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os, pathlib, hashlib, json
+          path=pathlib.Path(os.environ['TARGET'])
+          raw=path.read_bytes()
+          blob=hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest()
+          assert blob == os.environ['SOURCE_BLOB'], (blob,os.environ['SOURCE_BLOB'])
+          assert pathlib.Path('lean-toolchain').read_text().strip() == 'leanprover/lean4:v4.30.0-rc2'
+          manifest=pathlib.Path('lake-manifest.json').read_text()
+          assert '5450b53e5ddc75d46418fabb605edbf36bd0beb6' in manifest
+          assert raw.endswith(b'\n')
+          print(json.dumps(dict(label=os.environ['LABEL'],head=os.environ['SOURCE_HEAD'],blob=blob,length=len(raw),original_sha256=hashlib.sha256(raw).hexdigest()),sort_keys=True))
+          PY
+          python3 _codeai_pinned/tests/test_kuuos_lean_mcp_repair_loop_v1.py
+
+      - name: Restore pinned Lean toolchain
+        uses: actions/cache/restore@v5
+        with:
+          path: ~/.elan
+          key: ${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
+      - name: Restore pinned mathlib dependency cache
+        uses: actions/cache/restore@v5
+        with:
+          path: .lake/packages
+          key: ${{ runner.os }}-lean-fast-deps-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
+      - name: Restore original Formal project oleans
+        uses: actions/cache/restore@v5
+        with:
+          path: .lake/build
+          key: ${{ runner.os }}-lean-fast-project-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-base-68c05d8ee2d5a6a834a8e0f29b06279ef5f5a212
+          restore-keys: |
+            ${{ runner.os }}-lean-fast-project-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
+
+      - name: Pinned toolchain and original dependency baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          if ! command -v lake >/dev/null 2>&1; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y
+          fi
+          lean --version
+          lake --version
+          lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalConditionalHaarRemainderV5_PZ37AOI Mathlib.Tactic > "$RUNNER_TEMP/pz37-dependencies.log" 2>&1 || {
+            tail -120 "$RUNNER_TEMP/pz37-dependencies.log"
+            exit 1
+          }
+          tail -8 "$RUNNER_TEMP/pz37-dependencies.log"
+
+      - name: Generate bounded temporary CodeAI candidate from exact compiler findings
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os, pathlib, hashlib, json
+          target=pathlib.Path(os.environ['TARGET'])
+          original=target.read_text()
+          if os.environ['LABEL'] == 'AOL':
+              old="""  have hTauCont : Continuous tau := by
+    dsimp [tau, p4Q2PZ37ANV_singleLinkCenterTwist]
+    fun_prop
+"""
+              new="""  have hTauCont : Continuous tau := by
+    dsimp only [tau]
+    unfold p4Q2PZ37ANV_singleLinkCenterTwist
+    apply continuous_pi
+    intro e
+    exact (continuous_apply e).mul continuous_const
+"""
+              assert original.count(old)==1
+              candidate=original.replace(old,new,1)
+          else:
+              old="set_option maxHeartbeats 4000000\n"
+              assert original.count(old)==1
+              candidate=original.replace(old,"set_option maxHeartbeats 12000000\n",1)
+          for forbidden in ("sorry", "admit", "native_decide", "unsafe"):
+              assert candidate.count(forbidden)==original.count(forbidden), forbidden
+          anchors=lambda s: [l for l in s.splitlines() if l.startswith(('import ','theorem ','def ','namespace ','end '))]
+          assert anchors(candidate)==anchors(original)
+          target.write_text(candidate)
+          result=dict(label=os.environ['LABEL'],source_head=os.environ['SOURCE_HEAD'],
+            original_blob=os.environ['SOURCE_BLOB'],original_sha256=hashlib.sha256(original.encode()).hexdigest(),
+            test_candidate_sha256=hashlib.sha256(candidate.encode()).hexdigest(),
+            scope='ephemeral runner only; original theorem declarations unchanged; NOT source PR',certified=False)
+          print(json.dumps(result,sort_keys=True))
+          pathlib.Path(os.environ['RUNNER_TEMP'],'pz37-candidate.json').write_text(json.dumps(result,indent=2))
+          PY
+
+      - name: Direct actual Lean elaboration and axiom outputs of ephemeral candidate
+        shell: bash
+        run: |
+          set -uo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          echo "[direct] $LABEL exact original $SOURCE_HEAD with ephemeral bounded test candidate"
+          timeout --signal=INT --kill-after=15s 420s lake env lean -DautoImplicit=false "$TARGET" > "$RUNNER_TEMP/pz37-direct-lean.log" 2>&1
+          code=$?
+          tail -160 "$RUNNER_TEMP/pz37-direct-lean.log"
+          echo "[direct] exit_code=$code"
+          if [ "$code" -ne 0 ]; then
+            echo "[direct] HOLD - no source promotion"
+            exit "$code"
+          fi
+          if grep -E 'error:|warning:|sorryAx|does not depend on any axioms' "$RUNNER_TEMP/pz37-direct-lean.log"; then
+            echo "[direct] HOLD - unexpected Lean diagnostic or missing theorem proof"
+            exit 1
+          fi
+          grep 'depends on axioms:' "$RUNNER_TEMP/pz37-direct-lean.log" || {
+            echo "[direct] HOLD - missing #print axioms evidence"
+            exit 1
+          }
+          echo "[direct] candidate passed raw Lean, still NOT independent CI certified"
+
+      - name: Archive original and candidate evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: pz37-${{ matrix.case.label }}-isolated-lean-source-diagnostics
+          path: |
+            ${{ runner.temp }}/pz37-dependencies.log
+            ${{ runner.temp }}/pz37-direct-lean.log
+            ${{ runner.temp }}/pz37-candidate.json
+          if-no-files-found: warn
+          retention-days: 30
