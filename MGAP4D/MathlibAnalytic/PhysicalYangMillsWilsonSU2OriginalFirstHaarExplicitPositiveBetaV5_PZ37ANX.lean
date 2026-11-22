@@ -140,10 +140,10 @@ for each fixed finite H. This window scales with the actual action budget
 C_H and is not asserted to be uniform as H tends to infinity. -/
 theorem p4Q2PZ37ANX_originalPhysicalTopFirstOverlap_exists_negative
     (H : ℕ) :
-    ∃ beta : ℝ, 0 < beta ∧
+    ∃ (beta : ℝ) (hbeta : 0 ≤ beta), 0 < beta ∧
       inner ℝ
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
-          H 2 (by norm_num) beta (le_of_lt ‹0 < beta›))
+          H 2 (by norm_num) beta hbeta)
         (p4Q2PZ37AMU_actualPhysicalGaussMode H 1) < 0 := by
   let C : ℝ :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H
@@ -169,7 +169,7 @@ theorem p4Q2PZ37ANX_originalPhysicalTopFirstOverlap_exists_negative
     have hdiv : C^2 / (1024 * d^2) ≤ (1 / 256 : ℝ) :=
       (div_le_iff₀ hdenom).2 (by nlinarith [hC2d, sq_nonneg d])
     simpa only [beta, div_eq_mul_inv, one_mul] using hdiv
-  exact ⟨beta, hbeta,
+  exact ⟨beta, hbeta.le, hbeta,
     p4Q2PZ37ANX_originalPhysicalTopFirstOverlap_neg_of_explicit_bounds
       H beta hbeta hlinear hquadratic⟩
 
