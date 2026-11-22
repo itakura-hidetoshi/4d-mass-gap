@@ -113,8 +113,18 @@ theorem p4Q2PZ37ANW_originalPhysicalTopFirstOverlap_neg_of_quarterDominance
     calc
       _ < lambda^2 * beta * (1 / 4 : ℝ) := lt_of_le_of_lt hbound hdom
       _ = lambda^2 * (beta * (1 / 4 : ℝ)) := by ring
-  have habs : |b + beta * (1 / 4 : ℝ)| < beta * (1 / 4 : ℝ) :=
-    (mul_lt_mul_left (sq_pos_of_pos hlambda)).mp hstrict
+  -- CodeAI typed repair: `mul_lt_mul_left` incorrectly requests a
+  -- global MulRightStrictMono ℝ instance, which does not hold for ℝ.
+  -- Use an explicit nonnegative multiplier and contradiction instead.
+  have habs : |b + beta * (1 / 4 : ℝ)| < beta * (1 / 4 : ℝ) := by
+    by_contra hnot
+    have hle : beta * (1 / 4 : ℝ) ≤ |b + beta * (1 / 4 : ℝ)| :=
+      le_of_not_gt hnot
+    have hscaled :
+        lambda^2 * (beta * (1 / 4 : ℝ)) ≤
+          lambda^2 * |b + beta * (1 / 4 : ℝ)| :=
+      mul_le_mul_of_nonneg_left hle (sq_nonneg lambda)
+    exact (not_le_of_gt hstrict) hscaled
   have hb : b + beta * (1 / 4 : ℝ) < beta * (1 / 4 : ℝ) :=
     (abs_lt.mp habs).2
   have hbneg : b < 0 := by linarith
