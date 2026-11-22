@@ -59,17 +59,17 @@ class AOHGateTests(unittest.TestCase):
         root, pack = self.pack()
         raw = gates.snapshot(root, pack)
         path = next(iter(raw))
-        raw[path] += "-- changed\\n"
+        raw[path] += "-- changed\n"
         with self.assertRaisesRegex(ValueError, "source byte identity"):
             gates.prepare_native_context(raw, pack)
 
     def test_source_sha_gate(self):
         with tempfile.TemporaryDirectory() as temp:
             path = Path(temp) / "source.lean"
-            path.write_bytes(b"theorem a : True := by trivial\\n")
+            path.write_bytes(b"theorem a : True := by trivial\n")
             digest = hashlib.sha256(path.read_bytes()).hexdigest()
             self.assertEqual(gates.require_exact_source(path, digest), path.read_bytes())
-            path.write_bytes(path.read_bytes() + b"\\n")
+            path.write_bytes(path.read_bytes() + b"\n")
             with self.assertRaisesRegex(ValueError, "source changed"):
                 gates.require_exact_source(path, digest)
 
@@ -77,7 +77,7 @@ class AOHGateTests(unittest.TestCase):
         decls = ["MGAP4D.MathlibAnalytic.a"]
         ok = "'MGAP4D.MathlibAnalytic.a' depends on axioms: [propext, Classical.choice, Quot.sound]"
         self.assertEqual(gates.audit_lean_output(ok, 0, decls)["warning_count"], 0)
-        for bad in [ok + "\\nCandidate.lean:1:0: warning: uncertain",
+        for bad in [ok + "\nCandidate.lean:1:0: warning: uncertain",
                     "'MGAP4D.MathlibAnalytic.a' depends on axioms: [sorryAx]"]:
             with self.assertRaises(ValueError):
                 gates.audit_lean_output(bad, 0, decls)
