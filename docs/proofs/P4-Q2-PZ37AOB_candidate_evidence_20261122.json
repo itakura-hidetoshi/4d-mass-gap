@@ -1,0 +1,1638 @@
+{
+  "adoption_source_sha256": "32ae9e3c53dbc77c14dc07909575d910c82b0fff06aeeb2d1f8020ca11a25f95",
+  "artifact_id": 14736822649,
+  "artifact_sha256": "92dc4165512cc9f3ce71b0c2a5971ba15021aef1dcb1a94df768008ae29eb105",
+  "candidate_job_id": 137076243239,
+  "candidate_run_conclusion": "success",
+  "candidate_run_head": "902edfea5b0cde2c234b5444c4d77d9d13c15fc7",
+  "candidate_run_id": 44979359387,
+  "candidates": {
+    "AOB-A": {
+      "direct_log": "'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_le' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_tendsto_zero' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlope_tendsto_neg_quarter' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n",
+      "learning_handoff": {
+        "candidate_digest": "c8551a5e83db29177996fe65873efe8cd4fc987f6e1012a0282d8205ca7a29c3",
+        "candidate_digest_binding_valid": true,
+        "candidate_selected_by_learning_handoff": false,
+        "candidate_source_sha256": "32ae9e3c53dbc77c14dc07909575d910c82b0fff06aeeb2d1f8020ca11a25f95",
+        "context_pack": {
+          "files": [
+            {
+              "path": "MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFirstHaarQuantitativeTopSlopeV5_PZ37ANZ.lean",
+              "sha256": "abb6df171cd7aba62be4addd4e5831e3af745566d83dc2fa487722884c8863c6"
+            },
+            {
+              "path": "MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFirstHaarRightSlopeLimitV5_PZ37AOA.lean",
+              "sha256": "dced1abbcbcf77fd2d991d00a43517b8fc97375beafe5571a6003c0a8065820f"
+            },
+            {
+              "path": "lake-manifest.json",
+              "sha256": "0307eb51c94ae619f83cddfed5a25320a1920959ef80f16ca536ce9b96b4ba45"
+            },
+            {
+              "path": "lakefile.lean",
+              "sha256": "629b13c73ef37ff6af9cd25fa415fa09fbb1029f590163cb09f11a5e22d9762b"
+            },
+            {
+              "path": "lean-toolchain",
+              "sha256": "ce4c4e3d87434b9663f46de25ce34b48a0cf0d392e0a320a0787b4674a2d7b61"
+            }
+          ],
+          "kind": "observed_source_context",
+          "repository_full_name": "itakura-hidetoshi/4d-mass-gap",
+          "source_commit_sha": "a9de90908d06791a9e2610de7aa6305a5cc676f6"
+        },
+        "context_pack_digest": "2c2450a9a390d92c367c53012fb6c62b75c6f69d0661f26ec2719499afe6a34b",
+        "context_path_count": 5,
+        "disposition": "HOLD",
+        "execution_authority_granted": false,
+        "git_authority_granted": false,
+        "hold_reasons": [
+          "direct_lean_and_mcp_are_not_independent_ensemble_evidence",
+          "independent_verifier_ensemble_absent",
+          "temporal_holdout_corpus_absent",
+          "version_bound_memory_corpus_absent"
+        ],
+        "memory_read_only": true,
+        "native_ensemble": {
+          "evidence_packets": [],
+          "policy": {
+            "allow_candidate_selection_authority": false,
+            "allow_execution_authority": false,
+            "allow_git_authority": false,
+            "allow_network_access": false,
+            "allow_repository_mutation": false,
+            "allow_secret_access": false,
+            "allowed_reviewer_ids": [
+              "itakura-hidetoshi"
+            ],
+            "allowed_runner_ids": [
+              "GitHub Actions 1000430118"
+            ],
+            "allowed_verifier_ids": [
+              "direct-lean",
+              "lean-lsp-mcp"
+            ],
+            "codeai_independent_verifier_ensemble_policy_digest": "2484eb5cbe73c78f0a8a56e57a0233db4776c84cce08a2dc682d09eeb1eeb5ca",
+            "conflict_requires_hold": true,
+            "critical_failure_overrides_quorum": true,
+            "evaluation_epoch": 1795317277,
+            "expected_candidate_digest": "c8551a5e83db29177996fe65873efe8cd4fc987f6e1012a0282d8205ca7a29c3",
+            "expected_context_pack_digest": "2c2450a9a390d92c367c53012fb6c62b75c6f69d0661f26ec2719499afe6a34b",
+            "expected_repository_full_name": "itakura-hidetoshi/4d-mass-gap",
+            "expected_source_commit_sha": "a9de90908d06791a9e2610de7aa6305a5cc676f6",
+            "maximum_evidence_age": 3600,
+            "maximum_skipped_checks": 0,
+            "maximum_verification_duration": 1800,
+            "minimum_fail_quorum": 2,
+            "minimum_method_count": 4,
+            "minimum_organization_count": 4,
+            "minimum_pass_quorum": 3,
+            "minimum_verifier_count": 4,
+            "require_distinct_organizations": true,
+            "require_distinct_sessions": true,
+            "require_distinct_verifiers": true,
+            "require_memory_independence": true,
+            "require_peer_independence": true,
+            "require_producer_independence": true,
+            "require_prompt_independence": true,
+            "require_test_generation_independence": true,
+            "required_check_families": [
+              "adversarial_and_falsification",
+              "behavioral_and_regression",
+              "maintainability_and_static",
+              "type_and_formal"
+            ]
+          },
+          "request": {
+            "candidate_digest": "c8551a5e83db29177996fe65873efe8cd4fc987f6e1012a0282d8205ca7a29c3",
+            "codeai_independent_verifier_ensemble_request_digest": "4f19f64878659a8365c0cfff103fc67324c08053fc826c8b3a47342af0440d17",
+            "context_pack_digest": "2c2450a9a390d92c367c53012fb6c62b75c6f69d0661f26ec2719499afe6a34b",
+            "repository_full_name": "itakura-hidetoshi/4d-mass-gap",
+            "request_created_epoch": 1795317277,
+            "request_id": "aob-observed-lean-learning-handoff",
+            "request_revision": "r1",
+            "required_check_families": [
+              "adversarial_and_falsification",
+              "behavioral_and_regression",
+              "maintainability_and_static",
+              "type_and_formal"
+            ],
+            "source_commit_sha": "a9de90908d06791a9e2610de7aa6305a5cc676f6"
+          },
+          "result": {
+            "ensemble": null,
+            "issues": [
+              "verifier_evidence_packets_invalid"
+            ],
+            "receipt": null,
+            "status": "blocked"
+          }
+        },
+        "native_subtask_memory": {
+          "corpus": {
+            "codeai_subtask_level_version_bound_memory_corpus_digest": "be62fc7198ed0603e629cc2a64946a88b20c5bb8d563c6a70ece40e6c1b97593",
+            "context_pack_digest": "2c2450a9a390d92c367c53012fb6c62b75c6f69d0661f26ec2719499afe6a34b",
+            "corpus_id": "aob-empty-observed-memory-corpus",
+            "corpus_revision": "r1",
+            "entries": [],
+            "profile_version": "CodeAI Subtask-Level Version-Bound Memory v0.1",
+            "repository_full_name": "itakura-hidetoshi/4d-mass-gap",
+            "schema_version": "v0.1",
+            "temporal_corpus_digest": null,
+            "verifier_ensemble_digest": null
+          },
+          "matched_entry_count": null,
+          "policy": {
+            "allow_candidate_selection": false,
+            "allow_execution_authority": false,
+            "allow_git_authority": false,
+            "allow_memory_hint": true,
+            "allow_repair_execution": false,
+            "allow_repository_mutation": false,
+            "allowed_outcomes": [
+              "verified_useful"
+            ],
+            "codeai_subtask_level_version_bound_memory_policy_digest": "af874612f7d9a0b5f753551f2b872f2642a9eb1296738f42517a70dc3a6867d9",
+            "evaluation_epoch": 1795317277,
+            "expected_context_pack_digest": "2c2450a9a390d92c367c53012fb6c62b75c6f69d0661f26ec2719499afe6a34b",
+            "expected_dependency_slice_digest": "019f17744125526ebdfbd8815ef60c27d5e3ec9b835ce894696c43fbe116cee6",
+            "expected_environment_digest": "d479d31319c1dca603750bfc75fd71988d5e1a65ac4adcd12d75c559d26ed287",
+            "expected_memory_policy_digest": "e554d0e0e3f073ee1c690741af251a1ff47bfec7478e859f6f715ad901982f06",
+            "expected_predecessor_output_digest": "c8551a5e83db29177996fe65873efe8cd4fc987f6e1012a0282d8205ca7a29c3",
+            "expected_repository_full_name": "itakura-hidetoshi/4d-mass-gap",
+            "expected_source_commit_sha": "a9de90908d06791a9e2610de7aa6305a5cc676f6",
+            "expected_source_tree_digest": "fec70cdd2067bb1ac96492db6f0b1021f04dc58b98dd7f5f1d4087c23aff1237",
+            "expected_subtask_contract_digest": "bdf02fdb7915199cbe6b36614e831b1b8a89f7c25365cce7496af8e88a05644b",
+            "expected_subtask_kind": "verify",
+            "expected_temporal_corpus_digest": null,
+            "expected_toolchain_digest": "3dc8013d5ab0e73be5e0fd0894f6973298c2ca2ad6ad111326a3c553f26b4169",
+            "expected_verifier_ensemble_digest": null,
+            "maximum_corpus_entries": 16,
+            "maximum_entry_age": 86400,
+            "maximum_matched_entries": 4,
+            "maximum_request_age": 3600,
+            "profile_version": "CodeAI Subtask-Level Version-Bound Memory v0.1",
+            "require_dependency_alignment": true,
+            "require_exact_version_binding": true,
+            "require_holdout_protection": true,
+            "require_not_superseded": true,
+            "require_subtask_alignment": true,
+            "require_verifier_grounding": true,
+            "required_subtask_kinds": [
+              "localize",
+              "diagnose",
+              "edit",
+              "verify"
+            ],
+            "schema_version": "v0.1"
+          },
+          "query_disposition": "BLOCKED_MISSING_PREREQUISITES",
+          "request": {
+            "claims_execution_authority": false,
+            "claims_git_authority": false,
+            "claims_repair_authority": false,
+            "claims_selection_authority": false,
+            "codeai_subtask_level_version_bound_memory_request_digest": "e7efff968d7dd6ce6e90015a6946e0ba75804ce99638d803a2397689f22cc568",
+            "context_pack_digest": "2c2450a9a390d92c367c53012fb6c62b75c6f69d0661f26ec2719499afe6a34b",
+            "dependency_slice_digest": "019f17744125526ebdfbd8815ef60c27d5e3ec9b835ce894696c43fbe116cee6",
+            "environment_digest": "d479d31319c1dca603750bfc75fd71988d5e1a65ac4adcd12d75c559d26ed287",
+            "memory_policy_digest": "e554d0e0e3f073ee1c690741af251a1ff47bfec7478e859f6f715ad901982f06",
+            "predecessor_output_digest": "c8551a5e83db29177996fe65873efe8cd4fc987f6e1012a0282d8205ca7a29c3",
+            "profile_version": "CodeAI Subtask-Level Version-Bound Memory v0.1",
+            "repository_full_name": "itakura-hidetoshi/4d-mass-gap",
+            "request_created_epoch": 1795317277,
+            "request_id": "aob-subtask-memory-readonly-query",
+            "request_revision": "r1",
+            "schema_version": "v0.1",
+            "source_commit_sha": "a9de90908d06791a9e2610de7aa6305a5cc676f6",
+            "source_tree_digest": "fec70cdd2067bb1ac96492db6f0b1021f04dc58b98dd7f5f1d4087c23aff1237",
+            "subtask_contract_digest": "bdf02fdb7915199cbe6b36614e831b1b8a89f7c25365cce7496af8e88a05644b",
+            "subtask_kind": "verify",
+            "temporal_corpus_digest": null,
+            "toolchain_digest": "3dc8013d5ab0e73be5e0fd0894f6973298c2ca2ad6ad111326a3c553f26b4169",
+            "unresolved_questions": [
+              "independent_verifier_ensemble_absent",
+              "temporal_holdout_corpus_absent",
+              "version_bound_memory_corpus_absent"
+            ],
+            "verifier_ensemble_digest": null
+          },
+          "result": {
+            "issues": [
+              "corpus_digest_invalid:temporal_corpus_digest",
+              "corpus_digest_invalid:verifier_ensemble_digest",
+              "corpus_subtask_coverage_incomplete",
+              "policy_binding_digest_invalid:temporal_corpus_digest",
+              "policy_binding_digest_invalid:verifier_ensemble_digest",
+              "request_binding_digest_invalid:temporal_corpus_digest",
+              "request_binding_digest_invalid:verifier_ensemble_digest"
+            ],
+            "memory_pack": null,
+            "receipt": null,
+            "status": "blocked"
+          },
+          "verified_useful_entries_in_submitted_corpus": 0
+        },
+        "observed_checks": {
+          "direct_lean": {
+            "audit": {
+              "audited_declarations": [
+                "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta",
+                "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_le",
+                "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_tendsto_zero",
+                "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlope_tendsto_neg_quarter"
+              ],
+              "axioms": {
+                "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta": [
+                  "Classical.choice",
+                  "Quot.sound",
+                  "propext"
+                ],
+                "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_le": [
+                  "Classical.choice",
+                  "Quot.sound",
+                  "propext"
+                ],
+                "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_tendsto_zero": [
+                  "Classical.choice",
+                  "Quot.sound",
+                  "propext"
+                ],
+                "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlope_tendsto_neg_quarter": [
+                  "Classical.choice",
+                  "Quot.sound",
+                  "propext"
+                ]
+              },
+              "error_count": 0,
+              "sorryAx": false,
+              "warning_count": 0
+            },
+            "candidate_source_sha256": "32ae9e3c53dbc77c14dc07909575d910c82b0fff06aeeb2d1f8020ca11a25f95",
+            "command": [
+              "lake",
+              "env",
+              "lean",
+              "-DwarningAsError=true",
+              "-o",
+              "/home/runner/work/_temp/aob-codeai/AOB-A.olean",
+              "codeai_candidates/PZ37AOB/AOB-A/Candidate.lean"
+            ],
+            "complete": true,
+            "exit_code": 0,
+            "log_sha256": "6f66d21f37a9cdd2ed3f5bf3b245c69e3a404af96d29f79b08e33e1df468220e"
+          },
+          "direct_lean_passed": true,
+          "direct_source_binding_valid": true,
+          "independent_evidence_count": 0,
+          "lean_mcp": {
+            "candidate_source_sha256": "32ae9e3c53dbc77c14dc07909575d910c82b0fff06aeeb2d1f8020ca11a25f95",
+            "failed_dependencies": [],
+            "items": [
+              {
+                "column": 1,
+                "lean_tags": null,
+                "line": 158,
+                "message": "'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+                "severity": "info"
+              },
+              {
+                "column": 1,
+                "lean_tags": null,
+                "line": 159,
+                "message": "'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_le' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+                "severity": "info"
+              },
+              {
+                "column": 1,
+                "lean_tags": null,
+                "line": 160,
+                "message": "'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_tendsto_zero' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+                "severity": "info"
+              },
+              {
+                "column": 1,
+                "lean_tags": null,
+                "line": 161,
+                "message": "'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlope_tendsto_neg_quarter' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+                "severity": "info"
+              }
+            ],
+            "partial": false,
+            "still_elaborating_lines": null,
+            "success": true,
+            "timed_out": false
+          },
+          "mcp_source_binding_valid": true,
+          "missing_independent_families": [
+            "adversarial_and_falsification",
+            "behavioral_and_regression",
+            "maintainability_and_static",
+            "type_and_formal"
+          ],
+          "observed_method_count": 2,
+          "qualified_independent_families": [],
+          "real_lean_mcp_passed": true,
+          "successful_observed_check_count": 2
+        },
+        "repository_mutation_performed": false,
+        "schema_version": "aob-learning-handoff-v1",
+        "source_binding": {
+          "repository_full_name": "itakura-hidetoshi/4d-mass-gap",
+          "runner_id": "GitHub Actions 1000430118",
+          "source_actor_id": "itakura-hidetoshi",
+          "source_commit_sha": "a9de90908d06791a9e2610de7aa6305a5cc676f6",
+          "source_tree_sha": "487ab26bf2731e42f780484c897d91c7a33c37cf"
+        },
+        "upstream_codeai_pin": "0dca3cc8a69ef523946a9ad4e07d0cc8f7394925",
+        "verified_useful_promotion_performed": false
+      },
+      "mcp_raw": {
+        "diagnostics": {
+          "id": 3,
+          "jsonrpc": "2.0",
+          "result": {
+            "content": [
+              {
+                "text": "{\n  \"partial\": false,\n  \"still_elaborating_lines\": null,\n  \"success\": true,\n  \"timed_out\": false,\n  \"items\": [\n    {\n      \"severity\": \"info\",\n      \"message\": \"'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta' depends on axioms: [propext,\\n Classical.choice,\\n Quot.sound]\",\n      \"line\": 158,\n      \"column\": 1,\n      \"lean_tags\": null\n    },\n    {\n      \"severity\": \"info\",\n      \"message\": \"'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_le' depends on axioms: [propext,\\n Classical.choice,\\n Quot.sound]\",\n      \"line\": 159,\n      \"column\": 1,\n      \"lean_tags\": null\n    },\n    {\n      \"severity\": \"info\",\n      \"message\": \"'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_tendsto_zero' depends on axioms: [propext,\\n Classical.choice,\\n Quot.sound]\",\n      \"line\": 160,\n      \"column\": 1,\n      \"lean_tags\": null\n    },\n    {\n      \"severity\": \"info\",\n      \"message\": \"'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlope_tendsto_neg_quarter' depends on axioms: [propext,\\n Classical.choice,\\n Quot.sound]\",\n      \"line\": 161,\n      \"column\": 1,\n      \"lean_tags\": null\n    }\n  ],\n  \"failed_dependencies\": []\n}",
+                "type": "text"
+              }
+            ],
+            "isError": false,
+            "structuredContent": {
+              "result": {
+                "failed_dependencies": [],
+                "items": [
+                  {
+                    "column": 1,
+                    "lean_tags": null,
+                    "line": 158,
+                    "message": "'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+                    "severity": "info"
+                  },
+                  {
+                    "column": 1,
+                    "lean_tags": null,
+                    "line": 159,
+                    "message": "'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_le' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+                    "severity": "info"
+                  },
+                  {
+                    "column": 1,
+                    "lean_tags": null,
+                    "line": 160,
+                    "message": "'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_tendsto_zero' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+                    "severity": "info"
+                  },
+                  {
+                    "column": 1,
+                    "lean_tags": null,
+                    "line": 161,
+                    "message": "'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlope_tendsto_neg_quarter' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+                    "severity": "info"
+                  }
+                ],
+                "partial": false,
+                "still_elaborating_lines": null,
+                "success": true,
+                "timed_out": false
+              }
+            }
+          }
+        },
+        "initialize": {
+          "id": 1,
+          "jsonrpc": "2.0",
+          "result": {
+            "capabilities": {
+              "experimental": {},
+              "prompts": {
+                "listChanged": false
+              },
+              "resources": {
+                "listChanged": false,
+                "subscribe": false
+              },
+              "tools": {
+                "listChanged": false
+              }
+            },
+            "instructions": "## General Rules\n- All line and column numbers are 1-indexed. Columns count characters (codepoints).\n- This MCP does NOT edit files. Use other tools for editing.\n\n## Key Tools\n- **lean_goal**: Proof state at position. Omit `column` for before/after. `status` field: 'goals', 'complete' (proof done here), or 'no_goal_at_position' (not inside a proof).\n- **lean_diagnostic_messages**: Compiler errors/warnings. \"no goals to be solved\" = remove tactics.\n- **lean_term_goal**: Expected type at a position.\n- **lean_hover_info**: Type signature + docs. Column at START of identifier.\n- **lean_completions**: IDE autocomplete on incomplete code.\n- **lean_local_search**: Fast local declaration search. Use BEFORE trying a lemma name.\n- **lean_file_outline**: Token-efficient file skeleton (slow-ish).\n- **lean_multi_attempt**: Test tactics without editing at a proof position. Use `column` for an exact source position; omit it for fast line-based attempts: `[\"simp\", \"ring\", \"omega\"]`\n- **lean_code_actions**: Quick fixes and `TryThis` suggestions (simp?, exact?) with resolved edits.\n- **lean_declaration_file**: Declaration source slice with context; `full_file=true` for the whole file (large).\n- **lean_references**: All usages of a symbol (capped by `max_results`, `total` reports the full count).\n- **lean_run_code**: Run standalone snippet. Must include imports.\n- **lean_verify**: Axiom check + source scan. Use fully qualified name (e.g. `Ns.thm`).\n- **lean_minimal_hypotheses**: Which explicit hypotheses of a theorem are actually needed.\n- **lean_build**: Run `lake build` + restart LSP. Only if needed (new imports). Use `fetch_cache=true` only for missing dependency caches. SLOW!\n- **lean_profile_proof**: Profile a theorem for performance. Shows tactic hotspots. SLOW!\n\n## Search Tools (rate limited)\n- **lean_leansearch** (90/30s): Natural language -> mathlib\n- **lean_loogle** (3/30s): Type pattern -> mathlib\n- **lean_leanfinder** (10/30s): Semantic/conceptual search\n- **lean_state_search** (6/30s): Goal -> closing lemmas\n- **lean_hammer_premise** (6/30s): Goal -> premises for simp/aesop\n\n## Search Decision Tree\n1. \"Does X exist locally?\" -> lean_local_search\n2. \"I need a lemma that says X\" -> lean_leansearch\n3. \"Find lemma with type pattern\" -> lean_loogle\n4. \"What's the Lean name for concept X?\" -> lean_leanfinder\n5. \"What closes this goal?\" -> lean_state_search\n6. \"What to feed simp?\" -> lean_hammer_premise\n\nAfter finding a name: lean_local_search to verify, lean_hover_info for signature.\n\n## Return Formats\nList-returning tools return an object with an `items` array. Empty = `{\"items\": []}`.\n\n## Slow Files\nOn large files, pass `timeout_s` to lean_diagnostic_messages / lean_goal. A\nresponse with `partial: true` + `still_elaborating_lines` (or goal `status:\n'still_elaborating'`) means Lean is still working - poll again; it is NOT an\nerror or a dead server.\n\n## Error Handling\nCheck `isError` in responses: `true` means failure (timeout/LSP error/rate limit), while an empty `items` with `isError: false` means no results found.\n",
+            "protocolVersion": "2025-11-25",
+            "serverInfo": {
+              "name": "Lean LSP",
+              "version": "0.30.0"
+            }
+          }
+        }
+      },
+      "source_sha256": "32ae9e3c53dbc77c14dc07909575d910c82b0fff06aeeb2d1f8020ca11a25f95"
+    },
+    "AOB-B": {
+      "direct_log": "'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_le' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_tendsto_zero' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlope_tendsto_neg_quarter' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n",
+      "learning_handoff": {
+        "candidate_digest": "97ec753709753620284c993ee7bf0f8eb08fd401670af01595f4be6b74a6f1f7",
+        "candidate_digest_binding_valid": true,
+        "candidate_selected_by_learning_handoff": false,
+        "candidate_source_sha256": "ae82c74fda0efcc69a37168f07621f0705ec9a6936d8b2e597e272b15f0ca131",
+        "context_pack": {
+          "files": [
+            {
+              "path": "MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFirstHaarQuantitativeTopSlopeV5_PZ37ANZ.lean",
+              "sha256": "abb6df171cd7aba62be4addd4e5831e3af745566d83dc2fa487722884c8863c6"
+            },
+            {
+              "path": "MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFirstHaarRightSlopeLimitV5_PZ37AOA.lean",
+              "sha256": "dced1abbcbcf77fd2d991d00a43517b8fc97375beafe5571a6003c0a8065820f"
+            },
+            {
+              "path": "lake-manifest.json",
+              "sha256": "0307eb51c94ae619f83cddfed5a25320a1920959ef80f16ca536ce9b96b4ba45"
+            },
+            {
+              "path": "lakefile.lean",
+              "sha256": "629b13c73ef37ff6af9cd25fa415fa09fbb1029f590163cb09f11a5e22d9762b"
+            },
+            {
+              "path": "lean-toolchain",
+              "sha256": "ce4c4e3d87434b9663f46de25ce34b48a0cf0d392e0a320a0787b4674a2d7b61"
+            }
+          ],
+          "kind": "observed_source_context",
+          "repository_full_name": "itakura-hidetoshi/4d-mass-gap",
+          "source_commit_sha": "a9de90908d06791a9e2610de7aa6305a5cc676f6"
+        },
+        "context_pack_digest": "2c2450a9a390d92c367c53012fb6c62b75c6f69d0661f26ec2719499afe6a34b",
+        "context_path_count": 5,
+        "disposition": "HOLD",
+        "execution_authority_granted": false,
+        "git_authority_granted": false,
+        "hold_reasons": [
+          "direct_lean_and_mcp_are_not_independent_ensemble_evidence",
+          "independent_verifier_ensemble_absent",
+          "temporal_holdout_corpus_absent",
+          "version_bound_memory_corpus_absent"
+        ],
+        "memory_read_only": true,
+        "native_ensemble": {
+          "evidence_packets": [],
+          "policy": {
+            "allow_candidate_selection_authority": false,
+            "allow_execution_authority": false,
+            "allow_git_authority": false,
+            "allow_network_access": false,
+            "allow_repository_mutation": false,
+            "allow_secret_access": false,
+            "allowed_reviewer_ids": [
+              "itakura-hidetoshi"
+            ],
+            "allowed_runner_ids": [
+              "GitHub Actions 1000430118"
+            ],
+            "allowed_verifier_ids": [
+              "direct-lean",
+              "lean-lsp-mcp"
+            ],
+            "codeai_independent_verifier_ensemble_policy_digest": "9bf99eefd93565c2dd023320b14cd5b22575814deeee13f69983e4e1824708ff",
+            "conflict_requires_hold": true,
+            "critical_failure_overrides_quorum": true,
+            "evaluation_epoch": 1795317301,
+            "expected_candidate_digest": "97ec753709753620284c993ee7bf0f8eb08fd401670af01595f4be6b74a6f1f7",
+            "expected_context_pack_digest": "2c2450a9a390d92c367c53012fb6c62b75c6f69d0661f26ec2719499afe6a34b",
+            "expected_repository_full_name": "itakura-hidetoshi/4d-mass-gap",
+            "expected_source_commit_sha": "a9de90908d06791a9e2610de7aa6305a5cc676f6",
+            "maximum_evidence_age": 3600,
+            "maximum_skipped_checks": 0,
+            "maximum_verification_duration": 1800,
+            "minimum_fail_quorum": 2,
+            "minimum_method_count": 4,
+            "minimum_organization_count": 4,
+            "minimum_pass_quorum": 3,
+            "minimum_verifier_count": 4,
+            "require_distinct_organizations": true,
+            "require_distinct_sessions": true,
+            "require_distinct_verifiers": true,
+            "require_memory_independence": true,
+            "require_peer_independence": true,
+            "require_producer_independence": true,
+            "require_prompt_independence": true,
+            "require_test_generation_independence": true,
+            "required_check_families": [
+              "adversarial_and_falsification",
+              "behavioral_and_regression",
+              "maintainability_and_static",
+              "type_and_formal"
+            ]
+          },
+          "request": {
+            "candidate_digest": "97ec753709753620284c993ee7bf0f8eb08fd401670af01595f4be6b74a6f1f7",
+            "codeai_independent_verifier_ensemble_request_digest": "a3b5c6051f7b5f52a70d58f00b761a32ff7e071b8047053cde86a901ca3d6f7d",
+            "context_pack_digest": "2c2450a9a390d92c367c53012fb6c62b75c6f69d0661f26ec2719499afe6a34b",
+            "repository_full_name": "itakura-hidetoshi/4d-mass-gap",
+            "request_created_epoch": 1795317301,
+            "request_id": "aob-observed-lean-learning-handoff",
+            "request_revision": "r1",
+            "required_check_families": [
+              "adversarial_and_falsification",
+              "behavioral_and_regression",
+              "maintainability_and_static",
+              "type_and_formal"
+            ],
+            "source_commit_sha": "a9de90908d06791a9e2610de7aa6305a5cc676f6"
+          },
+          "result": {
+            "ensemble": null,
+            "issues": [
+              "verifier_evidence_packets_invalid"
+            ],
+            "receipt": null,
+            "status": "blocked"
+          }
+        },
+        "native_subtask_memory": {
+          "corpus": {
+            "codeai_subtask_level_version_bound_memory_corpus_digest": "be62fc7198ed0603e629cc2a64946a88b20c5bb8d563c6a70ece40e6c1b97593",
+            "context_pack_digest": "2c2450a9a390d92c367c53012fb6c62b75c6f69d0661f26ec2719499afe6a34b",
+            "corpus_id": "aob-empty-observed-memory-corpus",
+            "corpus_revision": "r1",
+            "entries": [],
+            "profile_version": "CodeAI Subtask-Level Version-Bound Memory v0.1",
+            "repository_full_name": "itakura-hidetoshi/4d-mass-gap",
+            "schema_version": "v0.1",
+            "temporal_corpus_digest": null,
+            "verifier_ensemble_digest": null
+          },
+          "matched_entry_count": null,
+          "policy": {
+            "allow_candidate_selection": false,
+            "allow_execution_authority": false,
+            "allow_git_authority": false,
+            "allow_memory_hint": true,
+            "allow_repair_execution": false,
+            "allow_repository_mutation": false,
+            "allowed_outcomes": [
+              "verified_useful"
+            ],
+            "codeai_subtask_level_version_bound_memory_policy_digest": "5ee6b74e39e9123741dd6b8a5a136c7e0a85fb12e8b57fbbc1c3a69cc42298d4",
+            "evaluation_epoch": 1795317301,
+            "expected_context_pack_digest": "2c2450a9a390d92c367c53012fb6c62b75c6f69d0661f26ec2719499afe6a34b",
+            "expected_dependency_slice_digest": "019f17744125526ebdfbd8815ef60c27d5e3ec9b835ce894696c43fbe116cee6",
+            "expected_environment_digest": "d479d31319c1dca603750bfc75fd71988d5e1a65ac4adcd12d75c559d26ed287",
+            "expected_memory_policy_digest": "e554d0e0e3f073ee1c690741af251a1ff47bfec7478e859f6f715ad901982f06",
+            "expected_predecessor_output_digest": "97ec753709753620284c993ee7bf0f8eb08fd401670af01595f4be6b74a6f1f7",
+            "expected_repository_full_name": "itakura-hidetoshi/4d-mass-gap",
+            "expected_source_commit_sha": "a9de90908d06791a9e2610de7aa6305a5cc676f6",
+            "expected_source_tree_digest": "fec70cdd2067bb1ac96492db6f0b1021f04dc58b98dd7f5f1d4087c23aff1237",
+            "expected_subtask_contract_digest": "bdf02fdb7915199cbe6b36614e831b1b8a89f7c25365cce7496af8e88a05644b",
+            "expected_subtask_kind": "verify",
+            "expected_temporal_corpus_digest": null,
+            "expected_toolchain_digest": "3dc8013d5ab0e73be5e0fd0894f6973298c2ca2ad6ad111326a3c553f26b4169",
+            "expected_verifier_ensemble_digest": null,
+            "maximum_corpus_entries": 16,
+            "maximum_entry_age": 86400,
+            "maximum_matched_entries": 4,
+            "maximum_request_age": 3600,
+            "profile_version": "CodeAI Subtask-Level Version-Bound Memory v0.1",
+            "require_dependency_alignment": true,
+            "require_exact_version_binding": true,
+            "require_holdout_protection": true,
+            "require_not_superseded": true,
+            "require_subtask_alignment": true,
+            "require_verifier_grounding": true,
+            "required_subtask_kinds": [
+              "localize",
+              "diagnose",
+              "edit",
+              "verify"
+            ],
+            "schema_version": "v0.1"
+          },
+          "query_disposition": "BLOCKED_MISSING_PREREQUISITES",
+          "request": {
+            "claims_execution_authority": false,
+            "claims_git_authority": false,
+            "claims_repair_authority": false,
+            "claims_selection_authority": false,
+            "codeai_subtask_level_version_bound_memory_request_digest": "a40ce59559acaa4a62aca1d8778c099ea27927edc784d46be094c706a12c38db",
+            "context_pack_digest": "2c2450a9a390d92c367c53012fb6c62b75c6f69d0661f26ec2719499afe6a34b",
+            "dependency_slice_digest": "019f17744125526ebdfbd8815ef60c27d5e3ec9b835ce894696c43fbe116cee6",
+            "environment_digest": "d479d31319c1dca603750bfc75fd71988d5e1a65ac4adcd12d75c559d26ed287",
+            "memory_policy_digest": "e554d0e0e3f073ee1c690741af251a1ff47bfec7478e859f6f715ad901982f06",
+            "predecessor_output_digest": "97ec753709753620284c993ee7bf0f8eb08fd401670af01595f4be6b74a6f1f7",
+            "profile_version": "CodeAI Subtask-Level Version-Bound Memory v0.1",
+            "repository_full_name": "itakura-hidetoshi/4d-mass-gap",
+            "request_created_epoch": 1795317301,
+            "request_id": "aob-subtask-memory-readonly-query",
+            "request_revision": "r1",
+            "schema_version": "v0.1",
+            "source_commit_sha": "a9de90908d06791a9e2610de7aa6305a5cc676f6",
+            "source_tree_digest": "fec70cdd2067bb1ac96492db6f0b1021f04dc58b98dd7f5f1d4087c23aff1237",
+            "subtask_contract_digest": "bdf02fdb7915199cbe6b36614e831b1b8a89f7c25365cce7496af8e88a05644b",
+            "subtask_kind": "verify",
+            "temporal_corpus_digest": null,
+            "toolchain_digest": "3dc8013d5ab0e73be5e0fd0894f6973298c2ca2ad6ad111326a3c553f26b4169",
+            "unresolved_questions": [
+              "independent_verifier_ensemble_absent",
+              "temporal_holdout_corpus_absent",
+              "version_bound_memory_corpus_absent"
+            ],
+            "verifier_ensemble_digest": null
+          },
+          "result": {
+            "issues": [
+              "corpus_digest_invalid:temporal_corpus_digest",
+              "corpus_digest_invalid:verifier_ensemble_digest",
+              "corpus_subtask_coverage_incomplete",
+              "policy_binding_digest_invalid:temporal_corpus_digest",
+              "policy_binding_digest_invalid:verifier_ensemble_digest",
+              "request_binding_digest_invalid:temporal_corpus_digest",
+              "request_binding_digest_invalid:verifier_ensemble_digest"
+            ],
+            "memory_pack": null,
+            "receipt": null,
+            "status": "blocked"
+          },
+          "verified_useful_entries_in_submitted_corpus": 0
+        },
+        "observed_checks": {
+          "direct_lean": {
+            "audit": {
+              "audited_declarations": [
+                "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta",
+                "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_le",
+                "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_tendsto_zero",
+                "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlope_tendsto_neg_quarter"
+              ],
+              "axioms": {
+                "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta": [
+                  "Classical.choice",
+                  "Quot.sound",
+                  "propext"
+                ],
+                "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_le": [
+                  "Classical.choice",
+                  "Quot.sound",
+                  "propext"
+                ],
+                "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_tendsto_zero": [
+                  "Classical.choice",
+                  "Quot.sound",
+                  "propext"
+                ],
+                "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlope_tendsto_neg_quarter": [
+                  "Classical.choice",
+                  "Quot.sound",
+                  "propext"
+                ]
+              },
+              "error_count": 0,
+              "sorryAx": false,
+              "warning_count": 0
+            },
+            "candidate_source_sha256": "ae82c74fda0efcc69a37168f07621f0705ec9a6936d8b2e597e272b15f0ca131",
+            "command": [
+              "lake",
+              "env",
+              "lean",
+              "-DwarningAsError=true",
+              "-o",
+              "/home/runner/work/_temp/aob-codeai/AOB-B.olean",
+              "codeai_candidates/PZ37AOB/AOB-B/Candidate.lean"
+            ],
+            "complete": true,
+            "exit_code": 0,
+            "log_sha256": "6f66d21f37a9cdd2ed3f5bf3b245c69e3a404af96d29f79b08e33e1df468220e"
+          },
+          "direct_lean_passed": true,
+          "direct_source_binding_valid": true,
+          "independent_evidence_count": 0,
+          "lean_mcp": {
+            "candidate_source_sha256": "ae82c74fda0efcc69a37168f07621f0705ec9a6936d8b2e597e272b15f0ca131",
+            "failed_dependencies": [],
+            "items": [
+              {
+                "column": 1,
+                "lean_tags": null,
+                "line": 168,
+                "message": "'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+                "severity": "info"
+              },
+              {
+                "column": 1,
+                "lean_tags": null,
+                "line": 169,
+                "message": "'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_le' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+                "severity": "info"
+              },
+              {
+                "column": 1,
+                "lean_tags": null,
+                "line": 170,
+                "message": "'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_tendsto_zero' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+                "severity": "info"
+              },
+              {
+                "column": 1,
+                "lean_tags": null,
+                "line": 171,
+                "message": "'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlope_tendsto_neg_quarter' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+                "severity": "info"
+              }
+            ],
+            "partial": false,
+            "still_elaborating_lines": null,
+            "success": true,
+            "timed_out": false
+          },
+          "mcp_source_binding_valid": true,
+          "missing_independent_families": [
+            "adversarial_and_falsification",
+            "behavioral_and_regression",
+            "maintainability_and_static",
+            "type_and_formal"
+          ],
+          "observed_method_count": 2,
+          "qualified_independent_families": [],
+          "real_lean_mcp_passed": true,
+          "successful_observed_check_count": 2
+        },
+        "repository_mutation_performed": false,
+        "schema_version": "aob-learning-handoff-v1",
+        "source_binding": {
+          "repository_full_name": "itakura-hidetoshi/4d-mass-gap",
+          "runner_id": "GitHub Actions 1000430118",
+          "source_actor_id": "itakura-hidetoshi",
+          "source_commit_sha": "a9de90908d06791a9e2610de7aa6305a5cc676f6",
+          "source_tree_sha": "487ab26bf2731e42f780484c897d91c7a33c37cf"
+        },
+        "upstream_codeai_pin": "0dca3cc8a69ef523946a9ad4e07d0cc8f7394925",
+        "verified_useful_promotion_performed": false
+      },
+      "mcp_raw": {
+        "diagnostics": {
+          "id": 3,
+          "jsonrpc": "2.0",
+          "result": {
+            "content": [
+              {
+                "text": "{\n  \"partial\": false,\n  \"still_elaborating_lines\": null,\n  \"success\": true,\n  \"timed_out\": false,\n  \"items\": [\n    {\n      \"severity\": \"info\",\n      \"message\": \"'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta' depends on axioms: [propext,\\n Classical.choice,\\n Quot.sound]\",\n      \"line\": 168,\n      \"column\": 1,\n      \"lean_tags\": null\n    },\n    {\n      \"severity\": \"info\",\n      \"message\": \"'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_le' depends on axioms: [propext,\\n Classical.choice,\\n Quot.sound]\",\n      \"line\": 169,\n      \"column\": 1,\n      \"lean_tags\": null\n    },\n    {\n      \"severity\": \"info\",\n      \"message\": \"'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_tendsto_zero' depends on axioms: [propext,\\n Classical.choice,\\n Quot.sound]\",\n      \"line\": 170,\n      \"column\": 1,\n      \"lean_tags\": null\n    },\n    {\n      \"severity\": \"info\",\n      \"message\": \"'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlope_tendsto_neg_quarter' depends on axioms: [propext,\\n Classical.choice,\\n Quot.sound]\",\n      \"line\": 171,\n      \"column\": 1,\n      \"lean_tags\": null\n    }\n  ],\n  \"failed_dependencies\": []\n}",
+                "type": "text"
+              }
+            ],
+            "isError": false,
+            "structuredContent": {
+              "result": {
+                "failed_dependencies": [],
+                "items": [
+                  {
+                    "column": 1,
+                    "lean_tags": null,
+                    "line": 168,
+                    "message": "'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+                    "severity": "info"
+                  },
+                  {
+                    "column": 1,
+                    "lean_tags": null,
+                    "line": 169,
+                    "message": "'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_le' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+                    "severity": "info"
+                  },
+                  {
+                    "column": 1,
+                    "lean_tags": null,
+                    "line": 170,
+                    "message": "'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_tendsto_zero' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+                    "severity": "info"
+                  },
+                  {
+                    "column": 1,
+                    "lean_tags": null,
+                    "line": 171,
+                    "message": "'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlope_tendsto_neg_quarter' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+                    "severity": "info"
+                  }
+                ],
+                "partial": false,
+                "still_elaborating_lines": null,
+                "success": true,
+                "timed_out": false
+              }
+            }
+          }
+        },
+        "initialize": {
+          "id": 1,
+          "jsonrpc": "2.0",
+          "result": {
+            "capabilities": {
+              "experimental": {},
+              "prompts": {
+                "listChanged": false
+              },
+              "resources": {
+                "listChanged": false,
+                "subscribe": false
+              },
+              "tools": {
+                "listChanged": false
+              }
+            },
+            "instructions": "## General Rules\n- All line and column numbers are 1-indexed. Columns count characters (codepoints).\n- This MCP does NOT edit files. Use other tools for editing.\n\n## Key Tools\n- **lean_goal**: Proof state at position. Omit `column` for before/after. `status` field: 'goals', 'complete' (proof done here), or 'no_goal_at_position' (not inside a proof).\n- **lean_diagnostic_messages**: Compiler errors/warnings. \"no goals to be solved\" = remove tactics.\n- **lean_term_goal**: Expected type at a position.\n- **lean_hover_info**: Type signature + docs. Column at START of identifier.\n- **lean_completions**: IDE autocomplete on incomplete code.\n- **lean_local_search**: Fast local declaration search. Use BEFORE trying a lemma name.\n- **lean_file_outline**: Token-efficient file skeleton (slow-ish).\n- **lean_multi_attempt**: Test tactics without editing at a proof position. Use `column` for an exact source position; omit it for fast line-based attempts: `[\"simp\", \"ring\", \"omega\"]`\n- **lean_code_actions**: Quick fixes and `TryThis` suggestions (simp?, exact?) with resolved edits.\n- **lean_declaration_file**: Declaration source slice with context; `full_file=true` for the whole file (large).\n- **lean_references**: All usages of a symbol (capped by `max_results`, `total` reports the full count).\n- **lean_run_code**: Run standalone snippet. Must include imports.\n- **lean_verify**: Axiom check + source scan. Use fully qualified name (e.g. `Ns.thm`).\n- **lean_minimal_hypotheses**: Which explicit hypotheses of a theorem are actually needed.\n- **lean_build**: Run `lake build` + restart LSP. Only if needed (new imports). Use `fetch_cache=true` only for missing dependency caches. SLOW!\n- **lean_profile_proof**: Profile a theorem for performance. Shows tactic hotspots. SLOW!\n\n## Search Tools (rate limited)\n- **lean_leansearch** (90/30s): Natural language -> mathlib\n- **lean_loogle** (3/30s): Type pattern -> mathlib\n- **lean_leanfinder** (10/30s): Semantic/conceptual search\n- **lean_state_search** (6/30s): Goal -> closing lemmas\n- **lean_hammer_premise** (6/30s): Goal -> premises for simp/aesop\n\n## Search Decision Tree\n1. \"Does X exist locally?\" -> lean_local_search\n2. \"I need a lemma that says X\" -> lean_leansearch\n3. \"Find lemma with type pattern\" -> lean_loogle\n4. \"What's the Lean name for concept X?\" -> lean_leanfinder\n5. \"What closes this goal?\" -> lean_state_search\n6. \"What to feed simp?\" -> lean_hammer_premise\n\nAfter finding a name: lean_local_search to verify, lean_hover_info for signature.\n\n## Return Formats\nList-returning tools return an object with an `items` array. Empty = `{\"items\": []}`.\n\n## Slow Files\nOn large files, pass `timeout_s` to lean_diagnostic_messages / lean_goal. A\nresponse with `partial: true` + `still_elaborating_lines` (or goal `status:\n'still_elaborating'`) means Lean is still working - poll again; it is NOT an\nerror or a dead server.\n\n## Error Handling\nCheck `isError` in responses: `true` means failure (timeout/LSP error/rate limit), while an empty `items` with `isError: false` means no results found.\n",
+            "protocolVersion": "2025-11-25",
+            "serverInfo": {
+              "name": "Lean LSP",
+              "version": "0.30.0"
+            }
+          }
+        }
+      },
+      "source_sha256": "ae82c74fda0efcc69a37168f07621f0705ec9a6936d8b2e597e272b15f0ca131"
+    }
+  },
+  "codeai_pin": "0dca3cc8a69ef523946a9ad4e07d0cc8f7394925",
+  "generation": "authored deterministic strategies through actual native CodeAI; no live external model inference",
+  "local_independent_native_replay": {
+    "ensemble_and_subtask_results_equal_archived_json": true,
+    "performed_no_promotion": true
+  },
+  "native_synthesis": {
+    "attempts": [
+      {
+        "adapter_id": "aob-A",
+        "boundary_status": "CANDIDATE",
+        "model_id": "source-bound-authored-A",
+        "producer_session_id": "aob-9d1fe03bdf2f48b880501289e3aecd96-A",
+        "prompt_digest": "24f60f2e65901e1c5d99e1df85cbe10dd1c2e3e6b8f5fab5408f888f140a65c6",
+        "provider_id": "authored_strategy",
+        "provider_response_id": "aob-response-A",
+        "raw_output_accepted": true,
+        "raw_output_size_bytes": 8123,
+        "response_digest": "ce4134a8d39bfaebdc984b7b0882ccdc8c987e6a83cd8d5be008f49718a208f0",
+        "route_reason": "structured_proposal_parsed",
+        "structured_proposal_id": "AOB-A",
+        "structured_proposal_produced": true
+      },
+      {
+        "adapter_id": "aob-B",
+        "boundary_status": "CANDIDATE",
+        "model_id": "source-bound-authored-B",
+        "producer_session_id": "aob-9d1fe03bdf2f48b880501289e3aecd96-B",
+        "prompt_digest": "3c212ba4384f9dc183a17656780265cff4edd58398d62c61b8d7e26319553180",
+        "provider_id": "authored_strategy",
+        "provider_response_id": "aob-response-B",
+        "raw_output_accepted": true,
+        "raw_output_size_bytes": 8431,
+        "response_digest": "8cfd6a85df4211f7bd712e6343c138ebdb4f69914cd33520630e2aa6d267ea34",
+        "route_reason": "structured_proposal_parsed",
+        "structured_proposal_id": "AOB-B",
+        "structured_proposal_produced": true
+      },
+      {
+        "adapter_id": "aob-C",
+        "boundary_status": "REJECT",
+        "model_id": "source-bound-authored-C",
+        "producer_session_id": "aob-9d1fe03bdf2f48b880501289e3aecd96-C",
+        "prompt_digest": "d464176ccd6feed9b8a77e73b7f47825fa5b082156c33290b2fc0348b0737364",
+        "provider_id": "authored_strategy",
+        "provider_response_id": "aob-response-C",
+        "raw_output_accepted": false,
+        "raw_output_size_bytes": 8123,
+        "response_digest": "38474bee3ee1a819df4322a408ba147633638062431f47a19a345658b53f5e42",
+        "route_reason": "claims_authority",
+        "structured_proposal_id": "",
+        "structured_proposal_produced": false
+      }
+    ],
+    "candidates": [
+      {
+        "candidate_receipt": {
+          "abstained": false,
+          "active_now": false,
+          "added_path_count": 1,
+          "branch_created": false,
+          "candidate_generated_by_kernel": false,
+          "candidate_id": "AOB-A",
+          "candidate_patch_artifact_parsed": true,
+          "candidate_patch_digest": "c8551a5e83db29177996fe65873efe8cd4fc987f6e1012a0282d8205ca7a29c3",
+          "candidate_patch_ready": true,
+          "candidate_patch_recorded": true,
+          "candidate_policy_digest": "f2285961019b0f2a50c56dbf8410fdfd86d661119ad8c1ea86aa8b05c451e1fe",
+          "candidate_revision": "r1",
+          "candidate_selected": false,
+          "candidate_treated_as_correct": false,
+          "changed_path_count": 1,
+          "clarification_required": false,
+          "codeai_candidate_patch_receipt_digest": "babe06e329cf21ac8b16451e0f767b249365cc401cb938826bd1632c5617350f",
+          "codeai_disposition": "candidate_patch_supported",
+          "commit_created": false,
+          "declared_change_count": 1,
+          "deleted_path_count": 0,
+          "deployment_authority_granted": false,
+          "deployment_performed": false,
+          "evidence_degraded": false,
+          "execution_authority_granted": false,
+          "execution_lease_issued": false,
+          "future_only": true,
+          "git_ref_changed": false,
+          "handover_required": false,
+          "history_read_only": true,
+          "intent_packet_digest": "f546b75127be25c73b47c9bd98193d7390ae067610dcaf82ad1feb133f2fa520",
+          "merge_authority_granted": false,
+          "merge_performed": false,
+          "modified_path_count": 0,
+          "operating_mode": "proposal_only",
+          "patch_artifact_digest": "08956898f408359921ac776125c03d4dad4962a87b9ef241febf5af2970fc518",
+          "patch_candidate_only": true,
+          "patch_format": "unified_diff",
+          "patch_size_bytes": 8225,
+          "producer_id": "authored_strategy:source-bound-authored-A",
+          "profile_version": "CodeAI Candidate Patch v0.1",
+          "pull_request_created": false,
+          "push_performed": false,
+          "renamed_path_count": 0,
+          "repository_full_name": "itakura-hidetoshi/4d-mass-gap",
+          "repository_mutation_performed": false,
+          "resulting_commit_sha": "a9de90908d06791a9e2610de7aa6305a5cc676f6",
+          "route_receipt_recorded": true,
+          "schema_version": "v0.1",
+          "secret_access_authority_granted": false,
+          "secret_access_performed": false,
+          "selection_authority_granted": false,
+          "source_commit_sha": "a9de90908d06791a9e2610de7aa6305a5cc676f6",
+          "source_observation_receipt_digest": "a54ec69f7f4f15c18560dcb6b6c4f13c94081d9a67d382697f2e47d18217cb77",
+          "source_receipt_treated_as_successor_authority": false,
+          "validation_treated_as_correctness_proof": false,
+          "verification_authority_granted": false,
+          "verification_lease_issued": false
+        },
+        "patch_artifact": "diff --git a/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFirstHaarVolumeScaledDiagonalLimitV5_PZ37AOB.lean b/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFirstHaarVolumeScaledDiagonalLimitV5_PZ37AOB.lean\nnew file mode 100644\n--- /dev/null\n+++ b/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFirstHaarVolumeScaledDiagonalLimitV5_PZ37AOB.lean\n@@ -0,0 +1,161 @@\n+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalFirstHaarRightSlopeLimitV5_PZ37AOA\n+import Mathlib.Analysis.Normed.Group.Continuity\n+import Mathlib.Topology.Instances.NNReal.Lemmas\n+import Mathlib.Tactic\n+\n+/-!\n+# P4-Q2-PZ37AOB — volume-dependent rescaling of the genuine first-mode slope\n+\n+For the original action budget C_H, evaluate the original physical Wilson\n+top/first Gauss-law overlap at beta_H(t) = t / (1 + C_H)^2.\n+The original ANZ remainder gives an error at most 16*t for every finite H\n+and every 0 < t <= 1/16.  The constant and the t-window are independent of H.\n+\n+The physical coupling beta_H(t) still depends on H.  No fixed positive\n+physical-coupling window uniform in volume is obtained.  No identification\n+of Hilbert spaces at different volumes, infinite-volume state, completed\n+OS reconstruction, or four-dimensional continuum mass gap is asserted.\n+-/\n+\n+namespace MGAP4D.MathlibAnalytic\n+\n+open Filter\n+open scoped Topology NNReal InnerProductSpace InnerProduct\n+noncomputable section\n+set_option autoImplicit false\n+set_option maxHeartbeats 4000000\n+\n+/-- An explicitly volume-dependent coupling in the original nonnegative\n+physical parameter domain.  This only chooses an input to the original model. -/\n+noncomputable def p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta\n+    (H : ℕ) (t : ℝ≥0) : ℝ≥0 :=\n+  ⟨(t : ℝ) /\n+      (1 + periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H)^2,\n+    div_nonneg t.property (sq_nonneg _)⟩\n+\n+/-- After the explicit volume-dependent coupling substitution, the genuine\n+normalized overlap has a quantitative error bound independent of H. -/\n+theorem p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_le\n+    (H : ℕ) (t : ℝ≥0) (htpos : 0 < t)\n+    (htsmall : (t : ℝ) ≤ (1 / 16 : ℝ)) :\n+    |(inner ℝ\n+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector\n+          H 2 (by norm_num)\n+          (p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta H t : ℝ)\n+          (p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta H t).property)\n+        (p4Q2PZ37AMU_actualPhysicalGaussMode H 1)) /\n+      (p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta H t : ℝ) +\n+      (1 / 4 : ℝ)| ≤ 16 * (t : ℝ) := by\n+  let C : ℝ :=\n+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H\n+  let d : ℝ := 1 + C\n+  let beta : ℝ≥0 := p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta H t\n+  have hC : 0 ≤ C := by\n+    dsimp [C, periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget]\n+    positivity\n+  have hd : 0 < d := by\n+    dsimp [d]\n+    linarith\n+  have hdsq : 0 < d^2 := by positivity\n+  have htReal : (0 : ℝ) < (t : ℝ) := by exact_mod_cast htpos\n+  have hbetaReal : (0 : ℝ) < (beta : ℝ) := by\n+    change 0 < (t : ℝ) / d^2\n+    exact div_pos htReal hdsq\n+  have hCfour : 4 * C ≤ d^2 := by\n+    dsimp [d]\n+    nlinarith [sq_nonneg (C - 1)]\n+  have hK : 16 * C^2 + 2 * C ≤ 16 * d^2 := by\n+    dsimp [d]\n+    nlinarith\n+  have hlinear : C * (beta : ℝ) ≤ (1 / 64 : ℝ) := by\n+    have hratio : C * (beta : ℝ) ≤ (t : ℝ) / 4 := by\n+      change C * ((t : ℝ) / d^2) ≤ (t : ℝ) / 4\n+      calc\n+        C * ((t : ℝ) / d^2) = (C * (t : ℝ)) / d^2 := by ring\n+        _ ≤ (t : ℝ) / 4 := by\n+          apply (div_le_iff₀ hdsq).2\n+          have hscaled := mul_le_mul_of_nonneg_right hCfour t.property\n+          nlinarith\n+    linarith\n+  have hupper : (16 * C^2 + 2 * C) * (beta : ℝ) ≤ 16 * (t : ℝ) := by\n+    change (16 * C^2 + 2 * C) * ((t : ℝ) / d^2) ≤ 16 * (t : ℝ)\n+    calc\n+      (16 * C^2 + 2 * C) * ((t : ℝ) / d^2) =\n+          ((16 * C^2 + 2 * C) * (t : ℝ)) / d^2 := by ring\n+      _ ≤ 16 * (t : ℝ) := by\n+        apply (div_le_iff₀ hdsq).2\n+        have hscaled := mul_le_mul_of_nonneg_right hK t.property\n+        nlinarith\n+  have hbound := p4Q2PZ37ANZ_originalPhysicalTopFirst_normalizedSlopeError_le\n+    H (beta : ℝ) hbetaReal hlinear\n+  exact hbound.trans hupper\n+\n+/-- Along every nontrivial filter, arbitrary changes of finite volume are\n+allowed when the rescaled coupling tends to zero and is eventually positive. -/\n+theorem p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_tendsto_zero\n+    {ι : Type*} (l : Filter ι) [NeBot l]\n+    (H : ι → ℕ) (t : ι → ℝ≥0)\n+    (ht : Tendsto t l (𝓝 (0 : ℝ≥0)))\n+    (hpos : ∀ᶠ i in l, 0 < t i) :\n+    Tendsto\n+      (fun i =>\n+        |(inner ℝ\n+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector\n+              (H i) 2 (by norm_num)\n+              (p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta (H i) (t i) : ℝ)\n+              (p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta (H i) (t i)).property)\n+            (p4Q2PZ37AMU_actualPhysicalGaussMode (H i) 1)) /\n+          (p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta (H i) (t i) : ℝ) +\n+          (1 / 4 : ℝ)|)\n+      l (𝓝 (0 : ℝ)) := by\n+  have hcoe : Tendsto (fun i => (t i : ℝ)) l (𝓝 (0 : ℝ)) := by\n+    simpa only [NNReal.coe_zero] using\n+      (NNReal.tendsto_coe (m := t) (x := (0 : ℝ≥0))).2 ht\n+  have hscaled : Tendsto (fun i => 16 * (t i : ℝ)) l (𝓝 (0 : ℝ)) := by\n+    simpa only [mul_zero] using hcoe.const_mul (16 : ℝ)\n+  have hsmall : ∀ᶠ i in l, (t i : ℝ) < (1 / 16 : ℝ) :=\n+    hcoe.eventually (eventually_lt_nhds (by norm_num : (0 : ℝ) < 1 / 16))\n+  have hbound : ∀ᶠ i in l,\n+      |(inner ℝ\n+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector\n+            (H i) 2 (by norm_num)\n+            (p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta (H i) (t i) : ℝ)\n+            (p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta (H i) (t i)).property)\n+          (p4Q2PZ37AMU_actualPhysicalGaussMode (H i) 1)) /\n+        (p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta (H i) (t i) : ℝ) +\n+        (1 / 4 : ℝ)| ≤ 16 * (t i : ℝ) := by\n+    filter_upwards [hpos, hsmall] with i hi hsmalli\n+    exact p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_le\n+      (H i) (t i) hi hsmalli.le\n+  exact tendsto_of_tendsto_of_tendsto_of_le_of_le'\n+    tendsto_const_nhds hscaled\n+    (Eventually.of_forall fun i => abs_nonneg _) hbound\n+\n+/-- The actual normalized overlap tends to -1/4 even along arbitrary moving\n+finite volumes, under the explicit volume-dependent coupling substitution. -/\n+theorem p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlope_tendsto_neg_quarter\n+    {ι : Type*} (l : Filter ι) [NeBot l]\n+    (H : ι → ℕ) (t : ι → ℝ≥0)\n+    (ht : Tendsto t l (𝓝 (0 : ℝ≥0)))\n+    (hpos : ∀ᶠ i in l, 0 < t i) :\n+    Tendsto\n+      (fun i =>\n+        (inner ℝ\n+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector\n+              (H i) 2 (by norm_num)\n+              (p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta (H i) (t i) : ℝ)\n+              (p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta (H i) (t i)).property)\n+            (p4Q2PZ37AMU_actualPhysicalGaussMode (H i) 1)) /\n+          (p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta (H i) (t i) : ℝ))\n+      l (𝓝 (-(1 / 4 : ℝ))) := by\n+  apply tendsto_iff_norm_sub_tendsto_zero.mpr\n+  simpa only [Real.norm_eq_abs, sub_neg_eq_add] using\n+    p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_tendsto_zero l H t ht hpos\n+\n+end\n+end MGAP4D.MathlibAnalytic\n+\n+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta\n+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_le\n+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_tendsto_zero\n+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlope_tendsto_neg_quarter\n",
+        "patch_candidate": {
+          "added_paths": [
+            "MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFirstHaarVolumeScaledDiagonalLimitV5_PZ37AOB.lean"
+          ],
+          "binary_patch_present": false,
+          "branch_created_by_kernel": false,
+          "candidate_created_epoch": 1795317224,
+          "candidate_generated_by_kernel": false,
+          "candidate_id": "AOB-A",
+          "candidate_provenance_confirmed": true,
+          "candidate_revision": "r1",
+          "changed_paths": [
+            "MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFirstHaarVolumeScaledDiagonalLimitV5_PZ37AOB.lean"
+          ],
+          "codeai_candidate_patch_digest": "c8551a5e83db29177996fe65873efe8cd4fc987f6e1012a0282d8205ca7a29c3",
+          "commit_created_by_kernel": false,
+          "declared_change_count": 1,
+          "deleted_paths": [],
+          "deployment_authority_claimed": false,
+          "execution_authority_claimed": false,
+          "external_side_effect_performed_by_kernel": false,
+          "git_ref_changed_by_kernel": false,
+          "intent_packet_digest": "f546b75127be25c73b47c9bd98193d7390ae067610dcaf82ad1feb133f2fa520",
+          "merge_authority_claimed": false,
+          "mode_change_present": false,
+          "modified_paths": [],
+          "patch_applied_by_kernel": false,
+          "patch_artifact_digest": "08956898f408359921ac776125c03d4dad4962a87b9ef241febf5af2970fc518",
+          "patch_format": "unified_diff",
+          "patch_size_bytes": 8225,
+          "prior_candidate_digests": [],
+          "prior_producer_session_ids": [],
+          "producer_id": "authored_strategy:source-bound-authored-A",
+          "producer_session_id": "aob-9d1fe03bdf2f48b880501289e3aecd96-A",
+          "pull_request_created_by_kernel": false,
+          "push_performed_by_kernel": false,
+          "renamed_from_paths": [],
+          "renamed_to_paths": [],
+          "repository_files_changed_by_kernel": false,
+          "repository_full_name": "itakura-hidetoshi/4d-mass-gap",
+          "requirement_trace_ids": [
+            "ANZ:normalizedSlopeError_le",
+            "AOB:volume-scaled-diagonal-limit"
+          ],
+          "risk_labels": [
+            "formal_proof"
+          ],
+          "secret_access_authority_claimed": false,
+          "selection_authority_claimed": false,
+          "source_commit_sha": "a9de90908d06791a9e2610de7aa6305a5cc676f6",
+          "source_observation_receipt_digest": "a54ec69f7f4f15c18560dcb6b6c4f13c94081d9a67d382697f2e47d18217cb77",
+          "submodule_patch_present": false,
+          "test_plan_ids": [
+            "direct-pinned-Lean",
+            "real-Lean-MCP",
+            "independent-exact-source-CI"
+          ],
+          "unresolved_candidate_questions": []
+        },
+        "proposal_id": "AOB-A",
+        "rank": 1
+      },
+      {
+        "candidate_receipt": {
+          "abstained": false,
+          "active_now": false,
+          "added_path_count": 1,
+          "branch_created": false,
+          "candidate_generated_by_kernel": false,
+          "candidate_id": "AOB-B",
+          "candidate_patch_artifact_parsed": true,
+          "candidate_patch_digest": "97ec753709753620284c993ee7bf0f8eb08fd401670af01595f4be6b74a6f1f7",
+          "candidate_patch_ready": true,
+          "candidate_patch_recorded": true,
+          "candidate_policy_digest": "f2285961019b0f2a50c56dbf8410fdfd86d661119ad8c1ea86aa8b05c451e1fe",
+          "candidate_revision": "r1",
+          "candidate_selected": false,
+          "candidate_treated_as_correct": false,
+          "changed_path_count": 1,
+          "clarification_required": false,
+          "codeai_candidate_patch_receipt_digest": "379e70a594e7a3d01520e63fea3d6616f64ec7c7e3203dbf5eac1926f6640bf3",
+          "codeai_disposition": "candidate_patch_supported",
+          "commit_created": false,
+          "declared_change_count": 1,
+          "deleted_path_count": 0,
+          "deployment_authority_granted": false,
+          "deployment_performed": false,
+          "evidence_degraded": false,
+          "execution_authority_granted": false,
+          "execution_lease_issued": false,
+          "future_only": true,
+          "git_ref_changed": false,
+          "handover_required": false,
+          "history_read_only": true,
+          "intent_packet_digest": "f546b75127be25c73b47c9bd98193d7390ae067610dcaf82ad1feb133f2fa520",
+          "merge_authority_granted": false,
+          "merge_performed": false,
+          "modified_path_count": 0,
+          "operating_mode": "proposal_only",
+          "patch_artifact_digest": "06b385f84adaa1ed23cab6d2387294dd4b482634b9def04f7032f6dc3fe01ffb",
+          "patch_candidate_only": true,
+          "patch_format": "unified_diff",
+          "patch_size_bytes": 8533,
+          "producer_id": "authored_strategy:source-bound-authored-B",
+          "profile_version": "CodeAI Candidate Patch v0.1",
+          "pull_request_created": false,
+          "push_performed": false,
+          "renamed_path_count": 0,
+          "repository_full_name": "itakura-hidetoshi/4d-mass-gap",
+          "repository_mutation_performed": false,
+          "resulting_commit_sha": "a9de90908d06791a9e2610de7aa6305a5cc676f6",
+          "route_receipt_recorded": true,
+          "schema_version": "v0.1",
+          "secret_access_authority_granted": false,
+          "secret_access_performed": false,
+          "selection_authority_granted": false,
+          "source_commit_sha": "a9de90908d06791a9e2610de7aa6305a5cc676f6",
+          "source_observation_receipt_digest": "a54ec69f7f4f15c18560dcb6b6c4f13c94081d9a67d382697f2e47d18217cb77",
+          "source_receipt_treated_as_successor_authority": false,
+          "validation_treated_as_correctness_proof": false,
+          "verification_authority_granted": false,
+          "verification_lease_issued": false
+        },
+        "patch_artifact": "diff --git a/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFirstHaarVolumeScaledDiagonalLimitV5_PZ37AOB.lean b/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFirstHaarVolumeScaledDiagonalLimitV5_PZ37AOB.lean\nnew file mode 100644\n--- /dev/null\n+++ b/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFirstHaarVolumeScaledDiagonalLimitV5_PZ37AOB.lean\n@@ -0,0 +1,171 @@\n+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalFirstHaarRightSlopeLimitV5_PZ37AOA\n+import Mathlib.Analysis.Normed.Group.Continuity\n+import Mathlib.Topology.Instances.NNReal.Lemmas\n+import Mathlib.Tactic\n+\n+/-!\n+# P4-Q2-PZ37AOB — volume-dependent rescaling of the genuine first-mode slope\n+\n+For the original action budget C_H, evaluate the original physical Wilson\n+top/first Gauss-law overlap at beta_H(t) = t / (1 + C_H)^2.\n+The original ANZ remainder gives an error at most 16*t for every finite H\n+and every 0 < t <= 1/16.  The constant and the t-window are independent of H.\n+\n+The physical coupling beta_H(t) still depends on H.  No fixed positive\n+physical-coupling window uniform in volume is obtained.  No identification\n+of Hilbert spaces at different volumes, infinite-volume state, completed\n+OS reconstruction, or four-dimensional continuum mass gap is asserted.\n+-/\n+\n+namespace MGAP4D.MathlibAnalytic\n+\n+open Filter\n+open scoped Topology NNReal InnerProductSpace InnerProduct\n+noncomputable section\n+set_option autoImplicit false\n+set_option maxHeartbeats 4000000\n+\n+/-- An explicitly volume-dependent coupling in the original nonnegative\n+physical parameter domain.  This only chooses an input to the original model. -/\n+noncomputable def p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta\n+    (H : ℕ) (t : ℝ≥0) : ℝ≥0 :=\n+  ⟨(t : ℝ) /\n+      (1 + periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H)^2,\n+    div_nonneg t.property (sq_nonneg _)⟩\n+\n+/-- After the explicit volume-dependent coupling substitution, the genuine\n+normalized overlap has a quantitative error bound independent of H. -/\n+theorem p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_le\n+    (H : ℕ) (t : ℝ≥0) (htpos : 0 < t)\n+    (htsmall : (t : ℝ) ≤ (1 / 16 : ℝ)) :\n+    |(inner ℝ\n+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector\n+          H 2 (by norm_num)\n+          (p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta H t : ℝ)\n+          (p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta H t).property)\n+        (p4Q2PZ37AMU_actualPhysicalGaussMode H 1)) /\n+      (p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta H t : ℝ) +\n+      (1 / 4 : ℝ)| ≤ 16 * (t : ℝ) := by\n+  let C : ℝ :=\n+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H\n+  let d : ℝ := 1 + C\n+  let beta : ℝ≥0 := p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta H t\n+  have hC : 0 ≤ C := by\n+    dsimp [C, periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget]\n+    positivity\n+  have hd : 0 < d := by\n+    dsimp [d]\n+    linarith\n+  have hdsq : 0 < d^2 := by positivity\n+  have htReal : (0 : ℝ) < (t : ℝ) := by exact_mod_cast htpos\n+  have hbetaReal : (0 : ℝ) < (beta : ℝ) := by\n+    change 0 < (t : ℝ) / d^2\n+    exact div_pos htReal hdsq\n+  have hCfour : 4 * C ≤ d^2 := by\n+    dsimp [d]\n+    nlinarith [sq_nonneg (C - 1)]\n+  have hK : 16 * C^2 + 2 * C ≤ 16 * d^2 := by\n+    dsimp [d]\n+    nlinarith\n+  have hCdiv : C / d^2 ≤ (1 / 4 : ℝ) := by\n+    apply (div_le_iff₀ hdsq).2\n+    nlinarith\n+  have hKdiv : (16 * C^2 + 2 * C) / d^2 ≤ 16 :=\n+    (div_le_iff₀ hdsq).2 hK\n+  have hlinear : C * (beta : ℝ) ≤ (1 / 64 : ℝ) := by\n+    have hratio : C * (beta : ℝ) ≤ (t : ℝ) / 4 := by\n+      calc\n+        C * (beta : ℝ) = (C / d^2) * (t : ℝ) := by\n+          change C * ((t : ℝ) / d^2) = (C / d^2) * (t : ℝ)\n+          ring\n+        _ ≤ (1 / 4 : ℝ) * (t : ℝ) :=\n+          mul_le_mul_of_nonneg_right hCdiv t.property\n+        _ = (t : ℝ) / 4 := by ring\n+    linarith\n+  have hupper : (16 * C^2 + 2 * C) * (beta : ℝ) ≤ 16 * (t : ℝ) := by\n+    calc\n+      (16 * C^2 + 2 * C) * (beta : ℝ) =\n+          ((16 * C^2 + 2 * C) / d^2) * (t : ℝ) := by\n+        change (16 * C^2 + 2 * C) * ((t : ℝ) / d^2) =\n+          ((16 * C^2 + 2 * C) / d^2) * (t : ℝ)\n+        ring\n+      _ ≤ 16 * (t : ℝ) := mul_le_mul_of_nonneg_right hKdiv t.property\n+  have hbound := p4Q2PZ37ANZ_originalPhysicalTopFirst_normalizedSlopeError_le\n+    H (beta : ℝ) hbetaReal hlinear\n+  exact hbound.trans hupper\n+\n+/-- Along every nontrivial filter, arbitrary changes of finite volume are\n+allowed when the rescaled coupling tends to zero and is eventually positive. -/\n+theorem p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_tendsto_zero\n+    {ι : Type*} (l : Filter ι) [NeBot l]\n+    (H : ι → ℕ) (t : ι → ℝ≥0)\n+    (ht : Tendsto t l (𝓝 (0 : ℝ≥0)))\n+    (hpos : ∀ᶠ i in l, 0 < t i) :\n+    Tendsto\n+      (fun i =>\n+        |(inner ℝ\n+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector\n+              (H i) 2 (by norm_num)\n+              (p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta (H i) (t i) : ℝ)\n+              (p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta (H i) (t i)).property)\n+            (p4Q2PZ37AMU_actualPhysicalGaussMode (H i) 1)) /\n+          (p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta (H i) (t i) : ℝ) +\n+          (1 / 4 : ℝ)|)\n+      l (𝓝 (0 : ℝ)) := by\n+  have hcoe : Tendsto (fun i => (t i : ℝ)) l (𝓝 (0 : ℝ)) := by\n+    simpa only [NNReal.coe_zero] using\n+      (NNReal.tendsto_coe (m := t) (x := (0 : ℝ≥0))).2 ht\n+  have hscaled : Tendsto (fun i => 16 * (t i : ℝ)) l (𝓝 (0 : ℝ)) := by\n+    simpa only [mul_zero] using hcoe.const_mul (16 : ℝ)\n+  have hsmall : ∀ᶠ i in l, (t i : ℝ) < (1 / 16 : ℝ) :=\n+    hcoe.eventually (eventually_lt_nhds (by norm_num : (0 : ℝ) < 1 / 16))\n+  have hbound : ∀ᶠ i in l,\n+      |(inner ℝ\n+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector\n+            (H i) 2 (by norm_num)\n+            (p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta (H i) (t i) : ℝ)\n+            (p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta (H i) (t i)).property)\n+          (p4Q2PZ37AMU_actualPhysicalGaussMode (H i) 1)) /\n+        (p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta (H i) (t i) : ℝ) +\n+        (1 / 4 : ℝ)| ≤ 16 * (t i : ℝ) := by\n+    filter_upwards [hpos, hsmall] with i hi hsmalli\n+    exact p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_le\n+      (H i) (t i) hi hsmalli.le\n+  apply tendsto_order.mpr\n+  constructor\n+  · intro a ha\n+    exact Eventually.of_forall fun i => ha.trans_le (abs_nonneg _)\n+  · intro a ha\n+    have hlt : ∀ᶠ i in l, 16 * (t i : ℝ) < a :=\n+      hscaled.eventually (eventually_lt_nhds ha)\n+    filter_upwards [hbound, hlt] with i hi hlti\n+    exact hi.trans_lt hlti\n+\n+/-- The actual normalized overlap tends to -1/4 even along arbitrary moving\n+finite volumes, under the explicit volume-dependent coupling substitution. -/\n+theorem p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlope_tendsto_neg_quarter\n+    {ι : Type*} (l : Filter ι) [NeBot l]\n+    (H : ι → ℕ) (t : ι → ℝ≥0)\n+    (ht : Tendsto t l (𝓝 (0 : ℝ≥0)))\n+    (hpos : ∀ᶠ i in l, 0 < t i) :\n+    Tendsto\n+      (fun i =>\n+        (inner ℝ\n+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector\n+              (H i) 2 (by norm_num)\n+              (p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta (H i) (t i) : ℝ)\n+              (p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta (H i) (t i)).property)\n+            (p4Q2PZ37AMU_actualPhysicalGaussMode (H i) 1)) /\n+          (p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta (H i) (t i) : ℝ))\n+      l (𝓝 (-(1 / 4 : ℝ))) := by\n+  apply tendsto_iff_norm_sub_tendsto_zero.mpr\n+  simpa only [Real.norm_eq_abs, sub_neg_eq_add] using\n+    p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_tendsto_zero l H t ht hpos\n+\n+end\n+end MGAP4D.MathlibAnalytic\n+\n+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta\n+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_le\n+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_tendsto_zero\n+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlope_tendsto_neg_quarter\n",
+        "patch_candidate": {
+          "added_paths": [
+            "MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFirstHaarVolumeScaledDiagonalLimitV5_PZ37AOB.lean"
+          ],
+          "binary_patch_present": false,
+          "branch_created_by_kernel": false,
+          "candidate_created_epoch": 1795317224,
+          "candidate_generated_by_kernel": false,
+          "candidate_id": "AOB-B",
+          "candidate_provenance_confirmed": true,
+          "candidate_revision": "r1",
+          "changed_paths": [
+            "MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFirstHaarVolumeScaledDiagonalLimitV5_PZ37AOB.lean"
+          ],
+          "codeai_candidate_patch_digest": "97ec753709753620284c993ee7bf0f8eb08fd401670af01595f4be6b74a6f1f7",
+          "commit_created_by_kernel": false,
+          "declared_change_count": 1,
+          "deleted_paths": [],
+          "deployment_authority_claimed": false,
+          "execution_authority_claimed": false,
+          "external_side_effect_performed_by_kernel": false,
+          "git_ref_changed_by_kernel": false,
+          "intent_packet_digest": "f546b75127be25c73b47c9bd98193d7390ae067610dcaf82ad1feb133f2fa520",
+          "merge_authority_claimed": false,
+          "mode_change_present": false,
+          "modified_paths": [],
+          "patch_applied_by_kernel": false,
+          "patch_artifact_digest": "06b385f84adaa1ed23cab6d2387294dd4b482634b9def04f7032f6dc3fe01ffb",
+          "patch_format": "unified_diff",
+          "patch_size_bytes": 8533,
+          "prior_candidate_digests": [],
+          "prior_producer_session_ids": [],
+          "producer_id": "authored_strategy:source-bound-authored-B",
+          "producer_session_id": "aob-9d1fe03bdf2f48b880501289e3aecd96-B",
+          "pull_request_created_by_kernel": false,
+          "push_performed_by_kernel": false,
+          "renamed_from_paths": [],
+          "renamed_to_paths": [],
+          "repository_files_changed_by_kernel": false,
+          "repository_full_name": "itakura-hidetoshi/4d-mass-gap",
+          "requirement_trace_ids": [
+            "ANZ:normalizedSlopeError_le",
+            "AOB:volume-scaled-diagonal-limit"
+          ],
+          "risk_labels": [
+            "formal_proof"
+          ],
+          "secret_access_authority_claimed": false,
+          "selection_authority_claimed": false,
+          "source_commit_sha": "a9de90908d06791a9e2610de7aa6305a5cc676f6",
+          "source_observation_receipt_digest": "a54ec69f7f4f15c18560dcb6b6c4f13c94081d9a67d382697f2e47d18217cb77",
+          "submodule_patch_present": false,
+          "test_plan_ids": [
+            "direct-pinned-Lean",
+            "real-Lean-MCP",
+            "independent-exact-source-CI"
+          ],
+          "unresolved_candidate_questions": []
+        },
+        "proposal_id": "AOB-B",
+        "rank": 2
+      }
+    ],
+    "issues": [],
+    "receipt": {
+      "active_now": false,
+      "branch_created": false,
+      "candidate_policy_digest": "f2285961019b0f2a50c56dbf8410fdfd86d661119ad8c1ea86aa8b05c451e1fe",
+      "candidate_selected": false,
+      "codeai_autonomous_structured_edit_synthesis_receipt_digest": "46266edd1c9ae22cddb5f9b0a6962e1f1a3e1af864f75859ca82921f9ded77e6",
+      "codeai_disposition": "autonomous_structured_edit_candidates_synthesized",
+      "commit_created": false,
+      "deployment_authority_granted": false,
+      "deployment_performed": false,
+      "downstream_unified_diff_receipt_digest": "75c3e44de4832954f61bd849e46422f2dc99900c3330e629a99dd665be748ad1",
+      "execution_authority_granted": false,
+      "execution_lease_issued": false,
+      "future_only": true,
+      "generated_candidate_count": 2,
+      "generated_candidate_digests": [
+        "c8551a5e83db29177996fe65873efe8cd4fc987f6e1012a0282d8205ca7a29c3",
+        "97ec753709753620284c993ee7bf0f8eb08fd401670af01595f4be6b74a6f1f7"
+      ],
+      "generated_candidate_ids": [
+        "AOB-A",
+        "AOB-B"
+      ],
+      "generated_candidate_treated_as_correct": false,
+      "git_ref_changed": false,
+      "history_read_only": true,
+      "issues": [],
+      "merge_authority_granted": false,
+      "merge_performed": false,
+      "operating_mode": "proposal_only",
+      "patch_applied": false,
+      "profile_version": "CodeAI Autonomous Structured Edit Synthesis v0.1",
+      "provider_adapter_set_digest": "897bfa702724d53ad7a0efd1aad9d8140fa0ff0b1d63a901a3507acc535eab43",
+      "provider_attempt_receipts": [
+        {
+          "adapter_id": "aob-A",
+          "boundary_status": "CANDIDATE",
+          "model_id": "source-bound-authored-A",
+          "producer_session_id": "aob-9d1fe03bdf2f48b880501289e3aecd96-A",
+          "prompt_digest": "24f60f2e65901e1c5d99e1df85cbe10dd1c2e3e6b8f5fab5408f888f140a65c6",
+          "provider_id": "authored_strategy",
+          "provider_response_id": "aob-response-A",
+          "raw_output_accepted": true,
+          "raw_output_size_bytes": 8123,
+          "response_digest": "ce4134a8d39bfaebdc984b7b0882ccdc8c987e6a83cd8d5be008f49718a208f0",
+          "route_reason": "structured_proposal_parsed",
+          "structured_proposal_id": "AOB-A",
+          "structured_proposal_produced": true
+        },
+        {
+          "adapter_id": "aob-B",
+          "boundary_status": "CANDIDATE",
+          "model_id": "source-bound-authored-B",
+          "producer_session_id": "aob-9d1fe03bdf2f48b880501289e3aecd96-B",
+          "prompt_digest": "3c212ba4384f9dc183a17656780265cff4edd58398d62c61b8d7e26319553180",
+          "provider_id": "authored_strategy",
+          "provider_response_id": "aob-response-B",
+          "raw_output_accepted": true,
+          "raw_output_size_bytes": 8431,
+          "response_digest": "8cfd6a85df4211f7bd712e6343c138ebdb4f69914cd33520630e2aa6d267ea34",
+          "route_reason": "structured_proposal_parsed",
+          "structured_proposal_id": "AOB-B",
+          "structured_proposal_produced": true
+        },
+        {
+          "adapter_id": "aob-C",
+          "boundary_status": "REJECT",
+          "model_id": "source-bound-authored-C",
+          "producer_session_id": "aob-9d1fe03bdf2f48b880501289e3aecd96-C",
+          "prompt_digest": "d464176ccd6feed9b8a77e73b7f47825fa5b082156c33290b2fc0348b0737364",
+          "provider_id": "authored_strategy",
+          "provider_response_id": "aob-response-C",
+          "raw_output_accepted": false,
+          "raw_output_size_bytes": 8123,
+          "response_digest": "38474bee3ee1a819df4322a408ba147633638062431f47a19a345658b53f5e42",
+          "route_reason": "claims_authority",
+          "structured_proposal_id": "",
+          "structured_proposal_produced": false
+        }
+      ],
+      "provider_boundary_status_counts": {
+        "CANDIDATE": 2,
+        "HOLD": 0,
+        "QUARANTINE": 0,
+        "REJECT": 1,
+        "REPAIR": 0
+      },
+      "provider_call_count": 3,
+      "provider_calls_performed_by_kernel": true,
+      "provider_name_treated_as_authority": false,
+      "provider_output_boundary_evaluated": true,
+      "provider_output_treated_as_correct": false,
+      "pull_request_created": false,
+      "push_performed": false,
+      "raw_provider_output_treated_as_authority": false,
+      "repository_mutation_performed": false,
+      "repository_snapshot_digest": "fde12d8bd64537af3747aefbb58e48dadc95e53b31d401358f2a68c3577b3575",
+      "repository_snapshot_read_only": true,
+      "route_receipt_recorded": true,
+      "schema_version": "v0.1",
+      "secret_access_authority_granted": false,
+      "secret_access_performed": false,
+      "selection_authority_granted": false,
+      "source_observation_receipt_digest": "a54ec69f7f4f15c18560dcb6b6c4f13c94081d9a67d382697f2e47d18217cb77",
+      "structured_proposal_count": 2,
+      "structured_proposal_ids": [
+        "AOB-A",
+        "AOB-B"
+      ],
+      "structured_proposals_generated_by_kernel": true,
+      "synthesis_policy_digest": "db7fbc14dff24189e187512120655fbd691f02289ffa4314c39007fa11e8e280",
+      "synthesis_request_digest": "f1528f7d24cccebe05ed0508518f1b4f84a3d8b051ee590902949a6fe43ed44e",
+      "unified_diff_candidates_generated": true,
+      "validation_treated_as_correctness_proof": false,
+      "verification_authority_granted": false,
+      "verification_lease_issued": false
+    },
+    "status": "ready"
+  },
+  "original_mgap4d_tree": "4eaa41cde73877efafca557d0c9d480bab444bf4",
+  "original_source_files_checked": 8385,
+  "repository": "itakura-hidetoshi/4d-mass-gap",
+  "scope": "Pre-adoption candidate validation only; independent normal CI and integration are later observations.",
+  "selected_for_adoption": "AOB-A",
+  "source_observation": {
+    "baseline_ci": {
+      "build_jobs": 11506,
+      "conclusion": "success",
+      "head_sha": "a9de90908d06791a9e2610de7aa6305a5cc676f6",
+      "new_axiom_audits": 2,
+      "run_id": 44977131224,
+      "status": "completed",
+      "url": "https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44977131224"
+    },
+    "intent": {
+      "assumptions": [
+        "each volume is finite but may vary along an arbitrary filter",
+        "positive rescaled coupling tends to zero",
+        "physical coupling depends on the original action budget"
+      ],
+      "authority_owner_id": "itakura-hidetoshi",
+      "codeai_intent_packet_digest": "f546b75127be25c73b47c9bd98193d7390ae067610dcaf82ad1feb133f2fa520",
+      "forbidden_changes": [
+        "weaken theorem statements",
+        "replace model",
+        "introduce trust bypass"
+      ],
+      "intent_created_epoch": 1795317224,
+      "intent_id": "PZ37AOB-volume-scaled-diagonal-limit",
+      "intent_provenance_confirmed": true,
+      "intent_revision": "r1",
+      "preserved_invariants": [
+        "original physical Wilson/Haar/Hilbert definitions",
+        "fixed Lean/mathlib"
+      ],
+      "prior_intent_digests": [],
+      "requirements": [
+        "Prove the actual normalized Wilson slope error uniformly after volume-dependent coupling rescaling"
+      ],
+      "source_actor_id": "itakura-hidetoshi",
+      "source_channel": "ChatGPT user continuation 2026-11-22",
+      "success_criteria": [
+        "direct Lean",
+        "real Lean MCP",
+        "separate exact-source CI and axiom audit"
+      ],
+      "unresolved_questions": []
+    },
+    "observation": {
+      "baseline_check_digests": [
+        "0dd07f6fb8b1bdece30f24004ca2cbfaf1bcb1184b9fee8b2945ac6fceaa190b"
+      ],
+      "baseline_checks_complete": true,
+      "branch_created_by_kernel": false,
+      "code_owner_scope_digest": "3dd79bb00d43afdf1ad90312aa72c48d69e0f085a7ea819c6dcd88b17b14ce0f",
+      "codeai_repository_observation_digest": "48bd5f20c0c2222352850826ec8521d292ba4e0bad53408b2fe5acc24103616f",
+      "commit_created_by_kernel": false,
+      "crosses_unowned_boundary": false,
+      "declared_path_count": 5,
+      "dependency_lock_digest": "0307eb51c94ae619f83cddfed5a25320a1920959ef80f16ca536ce9b96b4ba45",
+      "deployment_authority_claimed": false,
+      "execution_authority_claimed": false,
+      "external_side_effect_performed_by_kernel": false,
+      "git_ref_changed_by_kernel": false,
+      "merge_authority_claimed": false,
+      "nonce_digest": "e22c203036af044634446039ad9b2cf67f89dd2ac255569c46a5f30085c7049c",
+      "observation_collected_by_kernel": false,
+      "observation_completed_epoch": 1795317224,
+      "observation_started_epoch": 1795317224,
+      "observed_paths": [
+        "MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFirstHaarQuantitativeTopSlopeV5_PZ37ANZ.lean",
+        "MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFirstHaarRightSlopeLimitV5_PZ37AOA.lean",
+        "lake-manifest.json",
+        "lakefile.lean",
+        "lean-toolchain"
+      ],
+      "prior_nonce_digests": [],
+      "prior_observation_digests": [],
+      "prior_session_ids": [],
+      "pull_request_created_by_kernel": false,
+      "push_performed_by_kernel": false,
+      "repository_files_changed_by_kernel": false,
+      "repository_full_name": "itakura-hidetoshi/4d-mass-gap",
+      "secret_access_authority_claimed": false,
+      "selection_authority_claimed": false,
+      "session_id": "aob-9d1fe03bdf2f48b880501289e3aecd96",
+      "source_branch": "formal/real-hilbert-uniform-coercive-strong-limit",
+      "source_commit_sha": "a9de90908d06791a9e2610de7aa6305a5cc676f6",
+      "toolchain_digest": "8671da659020ab403be4aaea1fade5fa66fddadd03c5ecf8dc7da3234a66a8a9",
+      "toolchain_supported": true,
+      "tree_digest": "487ab26bf2731e42f780484c897d91c7a33c37cf",
+      "unavailable_paths": []
+    },
+    "policy": {
+      "allow_partial_observation": false,
+      "allowed_source_branches": [
+        "formal/real-hilbert-uniform-coercive-strong-limit"
+      ],
+      "codeai_observation_policy_digest": "5b657205586ec02c01255642d220419e0db4e4630ab8193bbc024c5fdee49299",
+      "expected_repository_full_name": "itakura-hidetoshi/4d-mass-gap",
+      "expected_source_commit_sha": "a9de90908d06791a9e2610de7aa6305a5cc676f6",
+      "maximum_observation_duration": 60,
+      "maximum_observed_paths": 8,
+      "require_code_owner_scope": true,
+      "require_complete_baseline": true,
+      "supported_toolchain_digests": [
+        "8671da659020ab403be4aaea1fade5fa66fddadd03c5ecf8dc7da3234a66a8a9"
+      ]
+    },
+    "result": {
+      "issues": [],
+      "receipt": {
+        "abstained": false,
+        "active_now": false,
+        "authority_owner_id": "itakura-hidetoshi",
+        "baseline_checks_complete": true,
+        "branch_created": false,
+        "clarification_required": false,
+        "code_change_candidate_created": false,
+        "codeai_disposition": "intent_repository_observation_supported",
+        "codeai_intent_repository_observation_receipt_digest": "a54ec69f7f4f15c18560dcb6b6c4f13c94081d9a67d382697f2e47d18217cb77",
+        "codeai_profile_ready": true,
+        "commit_created": false,
+        "declared_path_count": 5,
+        "deployment_authority_granted": false,
+        "deployment_performed": false,
+        "execution_authority_granted": false,
+        "execution_lease_issued": false,
+        "future_only": true,
+        "git_ref_changed": false,
+        "handover_required": false,
+        "history_read_only": true,
+        "intent_id": "PZ37AOB-volume-scaled-diagonal-limit",
+        "intent_packet_digest": "f546b75127be25c73b47c9bd98193d7390ae067610dcaf82ad1feb133f2fa520",
+        "intent_revision": "r1",
+        "intent_treated_as_truth": false,
+        "merge_authority_granted": false,
+        "merge_performed": false,
+        "observation_policy_digest": "5b657205586ec02c01255642d220419e0db4e4630ab8193bbc024c5fdee49299",
+        "observed_path_count": 5,
+        "operating_mode": "read_only",
+        "profile_version": "CodeAI v0.1",
+        "pull_request_created": false,
+        "push_performed": false,
+        "reobservation_required": false,
+        "repository_full_name": "itakura-hidetoshi/4d-mass-gap",
+        "repository_mutation_performed": false,
+        "repository_observation_digest": "48bd5f20c0c2222352850826ec8521d292ba4e0bad53408b2fe5acc24103616f",
+        "repository_observation_read_only": true,
+        "repository_observation_treated_as_repository_truth": false,
+        "resulting_commit_sha": "a9de90908d06791a9e2610de7aa6305a5cc676f6",
+        "route_receipt_recorded": true,
+        "schema_version": "v0.1",
+        "secret_access_authority_granted": false,
+        "secret_access_performed": false,
+        "selection_authority_granted": false,
+        "source_actor_id": "itakura-hidetoshi",
+        "source_branch": "formal/real-hilbert-uniform-coercive-strong-limit",
+        "source_commit_sha": "a9de90908d06791a9e2610de7aa6305a5cc676f6",
+        "tree_digest": "487ab26bf2731e42f780484c897d91c7a33c37cf",
+        "unavailable_path_count": 0,
+        "validation_treated_as_correctness_proof": false
+      },
+      "status": "ready"
+    }
+  },
+  "source_review": "Separate read-only source and mathematical review found no critical or important blocker; not a formal certificate.",
+  "validation": {
+    "adopted_source_sha256": null,
+    "baseline_commit": "a9de90908d06791a9e2610de7aa6305a5cc676f6",
+    "candidate_selected": false,
+    "candidates": [
+      {
+        "candidate_source_sha256": "32ae9e3c53dbc77c14dc07909575d910c82b0fff06aeeb2d1f8020ca11a25f95",
+        "direct_lean": {
+          "audit": {
+            "audited_declarations": [
+              "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta",
+              "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_le",
+              "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_tendsto_zero",
+              "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlope_tendsto_neg_quarter"
+            ],
+            "axioms": {
+              "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta": [
+                "Classical.choice",
+                "Quot.sound",
+                "propext"
+              ],
+              "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_le": [
+                "Classical.choice",
+                "Quot.sound",
+                "propext"
+              ],
+              "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_tendsto_zero": [
+                "Classical.choice",
+                "Quot.sound",
+                "propext"
+              ],
+              "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlope_tendsto_neg_quarter": [
+                "Classical.choice",
+                "Quot.sound",
+                "propext"
+              ]
+            },
+            "error_count": 0,
+            "sorryAx": false,
+            "warning_count": 0
+          },
+          "candidate_source_sha256": "32ae9e3c53dbc77c14dc07909575d910c82b0fff06aeeb2d1f8020ca11a25f95",
+          "command": [
+            "lake",
+            "env",
+            "lean",
+            "-DwarningAsError=true",
+            "-o",
+            "/home/runner/work/_temp/aob-codeai/AOB-A.olean",
+            "codeai_candidates/PZ37AOB/AOB-A/Candidate.lean"
+          ],
+          "complete": true,
+          "exit_code": 0,
+          "log_sha256": "6f66d21f37a9cdd2ed3f5bf3b245c69e3a404af96d29f79b08e33e1df468220e"
+        },
+        "lean_mcp": {
+          "candidate_source_sha256": "32ae9e3c53dbc77c14dc07909575d910c82b0fff06aeeb2d1f8020ca11a25f95",
+          "failed_dependencies": [],
+          "items": [
+            {
+              "column": 1,
+              "lean_tags": null,
+              "line": 158,
+              "message": "'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+              "severity": "info"
+            },
+            {
+              "column": 1,
+              "lean_tags": null,
+              "line": 159,
+              "message": "'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_le' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+              "severity": "info"
+            },
+            {
+              "column": 1,
+              "lean_tags": null,
+              "line": 160,
+              "message": "'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_tendsto_zero' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+              "severity": "info"
+            },
+            {
+              "column": 1,
+              "lean_tags": null,
+              "line": 161,
+              "message": "'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlope_tendsto_neg_quarter' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+              "severity": "info"
+            }
+          ],
+          "partial": false,
+          "still_elaborating_lines": null,
+          "success": true,
+          "timed_out": false
+        },
+        "proposal_id": "AOB-A",
+        "status": "DIRECT_AND_REAL_MCP_SUCCESS_CANDIDATE_ONLY"
+      },
+      {
+        "candidate_source_sha256": "ae82c74fda0efcc69a37168f07621f0705ec9a6936d8b2e597e272b15f0ca131",
+        "direct_lean": {
+          "audit": {
+            "audited_declarations": [
+              "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta",
+              "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_le",
+              "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_tendsto_zero",
+              "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlope_tendsto_neg_quarter"
+            ],
+            "axioms": {
+              "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta": [
+                "Classical.choice",
+                "Quot.sound",
+                "propext"
+              ],
+              "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_le": [
+                "Classical.choice",
+                "Quot.sound",
+                "propext"
+              ],
+              "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_tendsto_zero": [
+                "Classical.choice",
+                "Quot.sound",
+                "propext"
+              ],
+              "MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlope_tendsto_neg_quarter": [
+                "Classical.choice",
+                "Quot.sound",
+                "propext"
+              ]
+            },
+            "error_count": 0,
+            "sorryAx": false,
+            "warning_count": 0
+          },
+          "candidate_source_sha256": "ae82c74fda0efcc69a37168f07621f0705ec9a6936d8b2e597e272b15f0ca131",
+          "command": [
+            "lake",
+            "env",
+            "lean",
+            "-DwarningAsError=true",
+            "-o",
+            "/home/runner/work/_temp/aob-codeai/AOB-B.olean",
+            "codeai_candidates/PZ37AOB/AOB-B/Candidate.lean"
+          ],
+          "complete": true,
+          "exit_code": 0,
+          "log_sha256": "6f66d21f37a9cdd2ed3f5bf3b245c69e3a404af96d29f79b08e33e1df468220e"
+        },
+        "lean_mcp": {
+          "candidate_source_sha256": "ae82c74fda0efcc69a37168f07621f0705ec9a6936d8b2e597e272b15f0ca131",
+          "failed_dependencies": [],
+          "items": [
+            {
+              "column": 1,
+              "lean_tags": null,
+              "line": 168,
+              "message": "'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalBudgetRescaledBeta' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+              "severity": "info"
+            },
+            {
+              "column": 1,
+              "lean_tags": null,
+              "line": 169,
+              "message": "'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_le' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+              "severity": "info"
+            },
+            {
+              "column": 1,
+              "lean_tags": null,
+              "line": 170,
+              "message": "'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlopeError_tendsto_zero' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+              "severity": "info"
+            },
+            {
+              "column": 1,
+              "lean_tags": null,
+              "line": 171,
+              "message": "'MGAP4D.MathlibAnalytic.p4Q2PZ37AOB_originalPhysicalTopFirst_rescaledSlope_tendsto_neg_quarter' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+              "severity": "info"
+            }
+          ],
+          "partial": false,
+          "still_elaborating_lines": null,
+          "success": true,
+          "timed_out": false
+        },
+        "proposal_id": "AOB-B",
+        "status": "DIRECT_AND_REAL_MCP_SUCCESS_CANDIDATE_ONLY"
+      }
+    ],
+    "codeai_pin": "0dca3cc8a69ef523946a9ad4e07d0cc8f7394925",
+    "independent_ci_success": false,
+    "memory_promotion": "HOLD",
+    "source_head": "902edfea5b0cde2c234b5444c4d77d9d13c15fc7"
+  }
+}
