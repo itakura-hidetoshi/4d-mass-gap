@@ -120,17 +120,8 @@ jobs:
           target=pathlib.Path(os.environ['TARGET'])
           original=target.read_text()
           if os.environ['LABEL'] == 'AOL':
-              old="""  have hTauCont : Continuous tau := by
-    dsimp [tau, p4Q2PZ37ANV_singleLinkCenterTwist]
-    fun_prop
-"""
-              new="""  have hTauCont : Continuous tau := by
-    dsimp only [tau]
-    unfold p4Q2PZ37ANV_singleLinkCenterTwist
-    apply continuous_pi
-    intro e
-    exact (continuous_apply e).mul continuous_const
-"""
+              old="  have hTauCont : Continuous tau := by\n    dsimp [tau, p4Q2PZ37ANV_singleLinkCenterTwist]\n    fun_prop\n"
+              new="  have hTauCont : Continuous tau := by\n    dsimp only [tau]\n    unfold p4Q2PZ37ANV_singleLinkCenterTwist\n    apply continuous_pi\n    intro e\n    exact (continuous_apply e).mul continuous_const\n"
               assert original.count(old)==1
               candidate=original.replace(old,new,1)
           else:
