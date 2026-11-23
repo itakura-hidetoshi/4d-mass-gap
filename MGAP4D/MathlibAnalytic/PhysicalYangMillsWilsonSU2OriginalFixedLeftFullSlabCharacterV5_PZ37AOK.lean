@@ -107,6 +107,13 @@ theorem p4Q2PZ37AOK_originalCrossingAction_fixedLeft_primaryCharacter_haar_zero
       intro e _
       exact p4Q2PZ37AOJ_originalSingleCrossingEnergy_fixedLeft_primaryCharacter_zero H A e
 
+
+private theorem p4Q2PZ37AOK_fixedLeftCrossing_continuous
+    (H : ℕ) (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    Continuous (fun B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 => periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2 A B) := by
+  exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_continuous H 2).comp
+    (continuous_const.prodMk continuous_id)
+
 /-- The ORIGINAL complete one-slab action has exact first-character right-Haar
 moment -1/8 with the left boundary held fixed. Unlike ANV's pair-Haar
 moment this theorem claims no average over the left boundary. -/
@@ -127,9 +134,8 @@ theorem p4Q2PZ37AOK_originalOneSlabAction_fixedLeft_primaryCharacter_haar_eq_neg
   have hChiCont : Continuous chi := p4Q2PZ37AOK_primaryCharacter_continuous H
   have hWCont : Continuous W :=
     periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_continuous H 2
-  have hXCont : Continuous (fun B : Cfg => X A B) := by
-    exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_continuous
-      H 2).comp (continuous_const.prodMk continuous_id)
+  have hXCont : Continuous (fun B : Cfg => X A B) :=
+    p4Q2PZ37AOK_fixedLeftCrossing_continuous H A
   have hChiInt : Integrable chi mu :=
     hChiCont.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   have hWChiInt : Integrable (fun B : Cfg => W B * chi B) mu :=

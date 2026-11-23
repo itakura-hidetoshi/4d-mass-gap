@@ -142,6 +142,28 @@ theorem p4Q2PZ37AOM_originalHaarPrimaryCharacter_antisymmetrization
   rw [hDifference, hTwisted]
   ring
 
+
+private theorem p4Q2PZ37AOM_fixedLeftKernel_continuous
+    (H : ℕ) (beta : ℝ) (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    Continuous (fun B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 beta A B) := by
+  exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous H 2 beta).comp
+    (continuous_const.prodMk continuous_id)
+
+private theorem p4Q2PZ37AOM_fixedLeftCrossing_continuous
+    (H : ℕ) (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    Continuous (fun B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 => periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2 A B) := by
+  exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_continuous H 2).comp
+    (continuous_const.prodMk continuous_id)
+
+private theorem p4Q2PZ37AOM_fixedLeftAction_continuous
+    (H : ℕ) (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    Continuous (fun B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H 2 A B) := by
+  have hCross : Continuous (fun B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 => periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2 A B) :=
+    p4Q2PZ37AOM_fixedLeftCrossing_continuous H A
+  have hWilson := periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_continuous H 2
+  dsimp [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction]
+  exact (continuous_const.add hCross).add (continuous_const.mul hWilson)
+
 /-- Fixed-left, actual original-kernel unnormalized first-character response
 has an H-independent *quadratic absolute error* relative to the
 beta-weighted, still-interacting, local flipped-action coefficient.
@@ -178,8 +200,7 @@ theorem p4Q2PZ37AOM_originalFixedLeftRowLocalLinearResponse_abs_le
   let residual : Cfg → ℝ := fun B =>
     p4Q2PZ37AOI_originalRightTwistTaylorRemainder H beta A B
   have hKernelCont : Continuous kernel :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H 2 beta).comp (continuous_const.prodMk continuous_id)
+    p4Q2PZ37AOM_fixedLeftKernel_continuous H beta A
   have hTauCont : Continuous tau :=
     p4Q2PZ37AOM_singleLinkCenterTwist_continuous H _
   have hChiCont : Continuous chi :=
@@ -188,15 +209,12 @@ theorem p4Q2PZ37AOM_originalFixedLeftRowLocalLinearResponse_abs_le
     hKernelCont.comp hTauCont
   have hCrossCont : Continuous (fun B : Cfg =>
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2 A B) :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_continuous H 2).comp
-      (continuous_const.prodMk continuous_id)
+    p4Q2PZ37AOM_fixedLeftCrossing_continuous H A
   have hWilsonCont :=
     periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_continuous H 2
   have hActionCont : Continuous (fun B : Cfg =>
-      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H 2 A B) := by
-    dsimp [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction]
-    exact (continuous_const.add hCrossCont).add
-      (continuous_const.mul hWilsonCont)
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H 2 A B) :=
+    p4Q2PZ37AOM_fixedLeftAction_continuous H A
   have hDeltaCont : Continuous delta := by
     change Continuous (fun B : Cfg =>
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H 2 A B -
