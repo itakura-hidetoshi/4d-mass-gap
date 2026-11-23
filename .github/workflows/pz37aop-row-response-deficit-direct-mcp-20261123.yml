@@ -1,0 +1,205 @@
+name: PZ37 AOP original row-response deficit bridge direct Lean and real MCP sandbox
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/pz37aop-row-response-deficit-direct-mcp-20261123.yml"
+      - "diagnostics/pz37aop/PhysicalYangMillsWilsonSU2OriginalRowResponseDeficitBridgeV5_PZ37AOP.lean.txt"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pz37-aoo-sourcebound-mcp-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  MATHLIB_NO_CACHE_ON_UPDATE: "1"
+
+jobs:
+  direct-lean-and-mcp:
+    name: AOP source exact direct Lean then real MCP
+    runs-on: ubuntu-22.04
+    timeout-minutes: 50
+    strategy:
+      fail-fast: false
+      matrix:
+        case:
+          - label: AOP
+            path: MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalRowResponseDeficitBridgeV5_PZ37AOP.lean
+            source: diagnostics/pz37aop/PhysicalYangMillsWilsonSU2OriginalRowResponseDeficitBridgeV5_PZ37AOP.lean.txt
+            blob: 967d92cc522f6e4c7e7f88f11939feed3bb27fc6
+            import: MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalRowLocalLinearResponseV5_PZ37AOM MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalRowResponseDeficitBridgeV5_PZ37AOP
+            declarations: p4Q2PZ37AOP_originalRowResponse_abs_error_le_rowMassDeficit
+    env:
+      TARGET: ${{ matrix.case.path }}
+      SOURCE_PATH: ${{ matrix.case.source }}
+      ORIGINAL_CANDIDATE_BLOB: ${{ matrix.case.blob }}
+      BASE_IMPORTS: ${{ matrix.case.import }}
+      NEW_DECLS: ${{ matrix.case.declarations }}
+      LABEL: ${{ matrix.case.label }}
+      EXACT_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Checkout same diagnostic candidate HEAD without overwriting original research source
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          show-progress: false
+
+      - name: Checkout immutable native KuuOS CodeAI and MCP evidence validators
+        uses: actions/checkout@v6
+        with:
+          repository: itakura-hidetoshi/KuuOS
+          ref: 3c3d4a9127256fff732749fdfddd3118b30e86ab
+          path: _codeai_pinned
+          sparse-checkout: |
+            runtime
+            scripts
+            tests
+          persist-credentials: false
+          show-progress: false
+
+      - name: Audit candidate blob and pinned environment before running any Lean
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib, re
+          source = pathlib.Path(os.environ["SOURCE_PATH"]).read_bytes()
+          blob = hashlib.sha1(b"blob "+str(len(source)).encode()+b"\0"+source).hexdigest()
+          assert blob == os.environ["ORIGINAL_CANDIDATE_BLOB"], (blob, os.environ["ORIGINAL_CANDIDATE_BLOB"])
+          assert pathlib.Path("lean-toolchain").read_text().strip() == "leanprover/lean4:v4.30.0-rc2"
+          assert "5450b53e5ddc75d46418fabb605edbf36bd0beb6" in pathlib.Path("lake-manifest.json").read_text()
+          assert not re.search(r"(?m)^\s*(sorry|admit|axiom|unsafe|native_decide)\b",source.decode())
+          pathlib.Path(os.environ["RUNNER_TEMP"],"source-digest.json").write_text(json.dumps({"head":os.environ["EXACT_HEAD"],"blob":blob,"sha256":hashlib.sha256(source).hexdigest(),"label":os.environ["LABEL"]},sort_keys=True))
+          target = pathlib.Path(os.environ["TARGET"])
+          assert not target.exists(), "AOP candidate must not exist in source tree before isolated runner staging"
+          target.parent.mkdir(parents=True,exist_ok=True)
+          target.write_bytes(source)
+          assert target.read_bytes() == source
+          print("source-blob-verified",blob,"candidate-staged-only-in-runner",str(target))
+          PY
+          python3 _codeai_pinned/tests/test_kuuos_lean_mcp_repair_loop_v1.py
+
+      - name: Restore exact Lean toolchain
+        uses: actions/cache/restore@v5
+        with:
+          path: ~/.elan
+          key: ${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
+      - name: Restore exact mathlib dependency cache
+        uses: actions/cache/restore@v5
+        with:
+          path: .lake/packages
+          key: ${{ runner.os }}-lean-fast-deps-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
+      - name: Restore formal certified project oleans
+        uses: actions/cache/restore@v5
+        with:
+          path: .lake/build
+          key: ${{ runner.os }}-lean-fast-project-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-base-ca55e43e925bedb92628d440252ae4554d6e2b19
+          restore-keys: |
+            ${{ runner.os }}-lean-fast-project-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
+
+      - name: Verify cached baseline imports with pinned direct Lake
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          if ! command -v lake >/dev/null 2>&1; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y
+          fi
+          lean --version
+          lake --version
+          lake build $BASE_IMPORTS Mathlib.Tactic > "$RUNNER_TEMP/imports.log" 2>&1 || {
+            tail -100 "$RUNNER_TEMP/imports.log"
+            exit 1
+          }
+          tail -8 "$RUNNER_TEMP/imports.log"
+
+      - name: Direct Lean compile candidate and audit public axioms
+        shell: bash
+        run: |
+          set -uo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          timeout --signal=INT --kill-after=15s 420s lake env lean -DautoImplicit=false -DwarningAsError=true -o "$RUNNER_TEMP/pz37-candidate.olean" "$TARGET" > "$RUNNER_TEMP/direct.log" 2>&1
+          code=$?
+          tail -100 "$RUNNER_TEMP/direct.log"
+          echo "[direct] label=$LABEL exact_head=$EXACT_HEAD result=$code"
+          if [ "$code" -ne 0 ]; then exit "$code"; fi
+          python3 - <<'PY'
+          import json, os, pathlib, re
+          from scripts.pz37aoi_codeai_candidate_pipeline import audit_lean_output
+          log = pathlib.Path(os.environ["RUNNER_TEMP"],"direct.log").read_text()
+          names = ["MGAP4D.MathlibAnalytic."+s for s in os.environ["NEW_DECLS"].split(";")]
+          receipt = audit_lean_output(log,0,names)
+          pathlib.Path(os.environ["RUNNER_TEMP"],"direct-axioms.json").write_text(json.dumps(receipt,indent=2))
+          print(json.dumps({"direct_lean":"PASS_CANDIDATE_ONLY","declared_axioms":receipt["axioms"],"independent_ci_success":False},sort_keys=True))
+          PY
+
+      - name: Real lean-lsp-mcp 0.30.0 verify same unchanged candidate bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check uv
+          export PATH="$HOME/.elan/bin:$PATH"
+          python3 - <<'PY'
+          import hashlib,json,os,pathlib,sys
+          from scripts.pz37aoi_codeai_candidate_pipeline import audit_lean_output
+          root = pathlib.Path.cwd()
+          sys.path.insert(0,str(root/"_codeai_pinned"))
+          from scripts.check_kuuos_lean_lsp_mcp_compatibility_v7_17 import MCPClient,PROTOCOL_VERSION,call_tool,tool_map
+          from scripts.check_kuuos_lean_mcp_parent_pr3522_v155_v1 import structured
+          from scripts.kuuos_lean_mcp_repair_loop_v1 import DISABLED_MCP_TOOLS,require_semantics
+          path = root/os.environ["TARGET"]
+          raw = path.read_bytes()
+          digest = hashlib.sha256(raw).hexdigest()
+          receipt = json.loads((pathlib.Path(os.environ["RUNNER_TEMP"])/"source-digest.json").read_text())
+          assert digest == receipt["sha256"]
+          client = MCPClient(["uvx","--from","lean-lsp-mcp==0.30.0","lean-lsp-mcp","--transport","stdio"],
+            cwd=root,env={"LEAN_PROJECT_PATH":str(root),"LEAN_LOG_LEVEL":"NONE",
+                          "LEAN_MCP_DISABLED_TOOLS":DISABLED_MCP_TOOLS,"LEAN_MCP_SCRATCH_SLOTS":"1"},
+            timeout_seconds=240)
+          try:
+            client.request("initialize",{"protocolVersion":PROTOCOL_VERSION,"capabilities":{},
+              "clientInfo":{"name":"pz37-direct-then-mcp-candidate-audit","version":"1"}})
+            client.notify("notifications/initialized")
+            tools = tool_map(client.request("tools/list"))
+            assert {"lean_diagnostic_messages","lean_goal","lean_multi_attempt"}.issubset(tools)
+            assert "lean_build" not in tools and "lean_run_code" not in tools
+            raw_result = call_tool(client,"lean_diagnostic_messages",{"file_path":os.environ["TARGET"],"timeout_s":120})
+            body = structured(raw_result)
+            observation = require_semantics(body,raw)
+            assert observation.success and not observation.partial and not observation.errors
+            assert body.get("timed_out") is False and body.get("failed_dependencies") == []
+            assert body.get("still_elaborating_lines") in (None,[])
+            assert not any(d.get("severity")=="warning" for d in observation.diagnostics)
+            names = ["MGAP4D.MathlibAnalytic."+s for s in os.environ["NEW_DECLS"].split(";")]
+            mcp_axioms = audit_lean_output("\n".join(d.get("message","") for d in observation.diagnostics),0,names)
+            direct_axioms = json.loads((pathlib.Path(os.environ["RUNNER_TEMP"])/"direct-axioms.json").read_text())
+            assert mcp_axioms == direct_axioms
+            assert hashlib.sha256(path.read_bytes()).hexdigest() == digest
+            proof = {"status":"DIRECT_AND_REAL_MCP_SUCCESS_CANDIDATE_ONLY",
+              "head":os.environ["EXACT_HEAD"],"blob":receipt["blob"],"sha256":digest,
+              "axioms":mcp_axioms["axioms"],"independent_ci_success":False,
+              "source_promoted":False,"memory_promoted":False}
+            (pathlib.Path(os.environ["RUNNER_TEMP"])/"mcp-receipt.json").write_text(json.dumps(proof,indent=2))
+            print(json.dumps(proof,sort_keys=True))
+          finally:
+            client.close()
+          PY
+
+      - name: Archive all candidate diagnostics and source binding even on failure
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: pz37-${{ matrix.case.label }}-lean-mcp-sourcebound-diagnostics
+          path: |
+            ${{ runner.temp }}/source-digest.json
+            ${{ runner.temp }}/imports.log
+            ${{ runner.temp }}/direct.log
+            ${{ runner.temp }}/direct-axioms.json
+            ${{ runner.temp }}/mcp-receipt.json
+          if-no-files-found: warn
+          retention-days: 30
