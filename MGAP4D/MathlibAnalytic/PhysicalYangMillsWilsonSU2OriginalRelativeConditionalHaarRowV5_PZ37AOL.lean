@@ -46,7 +46,7 @@ private theorem p4Q2PZ37AOL_fixedLeftKernel_continuous
     (H : ℕ) (beta : ℝ) (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
     Continuous (fun B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 beta A B) := by
   let Cfg := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
-  have hPair : Continuous (fun B : Cfg => (A, B) : Cfg × Cfg) :=
+  have hPair : Continuous (fun B : Cfg => (A, B)) :=
     (continuous_const : Continuous (fun _ : Cfg => A)).prodMk
       (continuous_id : Continuous (fun B : Cfg => B))
   change Continuous
@@ -58,7 +58,7 @@ private theorem p4Q2PZ37AOL_fixedLeftCrossing_continuous
     (H : ℕ) (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
     Continuous (fun B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 => periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2 A B) := by
   let Cfg := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
-  have hPair : Continuous (fun B : Cfg => (A, B) : Cfg × Cfg) :=
+  have hPair : Continuous (fun B : Cfg => (A, B)) :=
     (continuous_const : Continuous (fun _ : Cfg => A)).prodMk
       (continuous_id : Continuous (fun B : Cfg => B))
   change Continuous
