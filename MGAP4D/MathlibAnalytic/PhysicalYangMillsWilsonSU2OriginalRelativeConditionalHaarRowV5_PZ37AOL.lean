@@ -45,14 +45,26 @@ local instance p4Q2PZ37AOL_linkFintype (H : ℕ) :
 private theorem p4Q2PZ37AOL_fixedLeftKernel_continuous
     (H : ℕ) (beta : ℝ) (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
     Continuous (fun B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 beta A B) := by
-  exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous H 2 beta).comp
-    (continuous_const.prodMk continuous_id)
+  let Cfg := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+  have hPair : Continuous (fun B : Cfg => (A, B) : Cfg × Cfg) :=
+    (continuous_const : Continuous (fun _ : Cfg => A)).prodMk
+      (continuous_id : Continuous (fun B : Cfg => B))
+  change Continuous
+    ((fun p : Cfg × Cfg => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 beta p.1 p.2) ∘
+      (fun B : Cfg => (A, B)))
+  exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous H 2 beta).comp hPair
 
 private theorem p4Q2PZ37AOL_fixedLeftCrossing_continuous
     (H : ℕ) (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
     Continuous (fun B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 => periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2 A B) := by
-  exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_continuous H 2).comp
-    (continuous_const.prodMk continuous_id)
+  let Cfg := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+  have hPair : Continuous (fun B : Cfg => (A, B) : Cfg × Cfg) :=
+    (continuous_const : Continuous (fun _ : Cfg => A)).prodMk
+      (continuous_id : Continuous (fun B : Cfg => B))
+  change Continuous
+    ((fun p : Cfg × Cfg => periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2 p.1 p.2) ∘
+      (fun B : Cfg => (A, B)))
+  exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_continuous H 2).comp hPair
 
 private theorem p4Q2PZ37AOL_fixedLeftAction_continuous
     (H : ℕ) (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
@@ -188,7 +200,13 @@ theorem p4Q2PZ37AOL_originalConditionalHaarRelativeTaylorResidual_abs_le_rowMass
       (p4Q2PZ37AMS_primarySpatialSliceEdge H 0)
   have hRow : (∫ B, kFlip B ∂mu) = ∫ B, kernel B ∂mu := by
     change (∫ B, kernel (tau B) ∂mu) = ∫ B, kernel B ∂mu
-    exact hHaar.integral_comp hKernelCont.aestronglyMeasurable kernel
+    have hMapped :
+        (∫ B, kernel B ∂Measure.map tau mu) =
+          ∫ B, kernel (tau B) ∂mu :=
+      integral_map hHaar.measurable.aemeasurable
+        hKernelCont.measurable.aestronglyMeasurable
+    rw [hHaar.map_eq] at hMapped
+    exact hMapped.symm
   change |∫ B, residual B * chi B ∂mu| ≤ C * ∫ B, kernel B ∂mu
   have hNorm :
       ‖∫ B, residual B * chi B ∂mu‖ ≤ C * ∫ B, kernel B ∂mu := by
