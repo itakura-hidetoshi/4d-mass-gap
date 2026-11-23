@@ -23,7 +23,7 @@ open scoped ENNReal Topology InnerProductSpace InnerProduct
 
 noncomputable section
 set_option autoImplicit false
-set_option maxHeartbeats 4000000
+set_option maxHeartbeats 12000000
 
 local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
 local notation "Chi" => p4Q2PZ35C_originalOneLinkCharacter
@@ -107,6 +107,19 @@ theorem p4Q2PZ37AOK_originalCrossingAction_fixedLeft_primaryCharacter_haar_zero
       intro e _
       exact p4Q2PZ37AOJ_originalSingleCrossingEnergy_fixedLeft_primaryCharacter_zero H A e
 
+
+private theorem p4Q2PZ37AOK_fixedLeftCrossing_continuous
+    (H : ℕ) (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    Continuous (fun B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 => periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2 A B) := by
+  let Cfg := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+  have hPair : Continuous (fun B : Cfg => (A, B)) :=
+    (continuous_const : Continuous (fun _ : Cfg => A)).prodMk
+      (continuous_id : Continuous (fun B : Cfg => B))
+  change Continuous
+    ((fun p : Cfg × Cfg => periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2 p.1 p.2) ∘
+      (fun B : Cfg => (A, B)))
+  exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_continuous H 2).comp hPair
+
 /-- The ORIGINAL complete one-slab action has exact first-character right-Haar
 moment -1/8 with the left boundary held fixed. Unlike ANV's pair-Haar
 moment this theorem claims no average over the left boundary. -/
@@ -127,9 +140,8 @@ theorem p4Q2PZ37AOK_originalOneSlabAction_fixedLeft_primaryCharacter_haar_eq_neg
   have hChiCont : Continuous chi := p4Q2PZ37AOK_primaryCharacter_continuous H
   have hWCont : Continuous W :=
     periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_continuous H 2
-  have hXCont : Continuous (fun B : Cfg => X A B) := by
-    exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_continuous
-      H 2).comp (continuous_const.prodMk continuous_id)
+  have hXCont : Continuous (fun B : Cfg => X A B) :=
+    p4Q2PZ37AOK_fixedLeftCrossing_continuous H A
   have hChiInt : Integrable chi mu :=
     hChiCont.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   have hWChiInt : Integrable (fun B : Cfg => W B * chi B) mu :=
@@ -163,10 +175,15 @@ theorem p4Q2PZ37AOK_originalOneSlabAction_fixedLeft_primaryCharacter_haar_eq_neg
     _ = ((1 / 2 : ℝ) * W A) * (∫ B : Cfg, chi B ∂mu) +
         (∫ B : Cfg, X A B * chi B ∂mu) +
         (1 / 2 : ℝ) * (∫ B : Cfg, W B * chi B ∂mu) := by
-      rw [integral_add ((hChiInt.const_mul _).add hXChiInt)
-        (hWChiInt.const_mul _),
-        integral_add (hChiInt.const_mul _) hXChiInt,
-        integral_const_mul, integral_const_mul]
+      calc
+        _ = (∫ B : Cfg,
+              ((1 / 2 : ℝ) * W A) * chi B + X A B * chi B ∂mu) +
+              (∫ B : Cfg, (1 / 2 : ℝ) * (W B * chi B) ∂mu) :=
+          integral_add ((hChiInt.const_mul _).add hXChiInt)
+            (hWChiInt.const_mul _)
+        _ = _ := by
+          rw [integral_add (hChiInt.const_mul _) hXChiInt]
+          rw [integral_const_mul, integral_const_mul]
     _ = -(1 / 8 : ℝ) := by
       rw [hZero, hXZero, hWMean]
       ring
