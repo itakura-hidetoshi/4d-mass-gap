@@ -26,7 +26,7 @@ open scoped ENNReal Topology InnerProductSpace InnerProduct
 
 noncomputable section
 set_option autoImplicit false
-set_option maxHeartbeats 4000000
+set_option maxHeartbeats 12000000
 
 local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
 local notation "Chi" => p4Q2PZ35C_originalOneLinkCharacter
@@ -142,6 +142,40 @@ theorem p4Q2PZ37AOM_originalHaarPrimaryCharacter_antisymmetrization
   rw [hDifference, hTwisted]
   ring
 
+
+private theorem p4Q2PZ37AOM_fixedLeftKernel_continuous
+    (H : ℕ) (beta : ℝ) (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    Continuous (fun B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 beta A B) := by
+  let Cfg := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+  have hPair : Continuous (fun B : Cfg => (A, B)) :=
+    (continuous_const : Continuous (fun _ : Cfg => A)).prodMk
+      (continuous_id : Continuous (fun B : Cfg => B))
+  change Continuous
+    ((fun p : Cfg × Cfg => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 beta p.1 p.2) ∘
+      (fun B : Cfg => (A, B)))
+  exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous H 2 beta).comp hPair
+
+private theorem p4Q2PZ37AOM_fixedLeftCrossing_continuous
+    (H : ℕ) (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    Continuous (fun B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 => periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2 A B) := by
+  let Cfg := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+  have hPair : Continuous (fun B : Cfg => (A, B)) :=
+    (continuous_const : Continuous (fun _ : Cfg => A)).prodMk
+      (continuous_id : Continuous (fun B : Cfg => B))
+  change Continuous
+    ((fun p : Cfg × Cfg => periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2 p.1 p.2) ∘
+      (fun B : Cfg => (A, B)))
+  exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_continuous H 2).comp hPair
+
+private theorem p4Q2PZ37AOM_fixedLeftAction_continuous
+    (H : ℕ) (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    Continuous (fun B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H 2 A B) := by
+  have hCross : Continuous (fun B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 => periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2 A B) :=
+    p4Q2PZ37AOM_fixedLeftCrossing_continuous H A
+  have hWilson := periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_continuous H 2
+  dsimp [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction]
+  exact (continuous_const.add hCross).add (continuous_const.mul hWilson)
+
 /-- Fixed-left, actual original-kernel unnormalized first-character response
 has an H-independent *quadratic absolute error* relative to the
 beta-weighted, still-interacting, local flipped-action coefficient.
@@ -178,8 +212,7 @@ theorem p4Q2PZ37AOM_originalFixedLeftRowLocalLinearResponse_abs_le
   let residual : Cfg → ℝ := fun B =>
     p4Q2PZ37AOI_originalRightTwistTaylorRemainder H beta A B
   have hKernelCont : Continuous kernel :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H 2 beta).comp (continuous_const.prodMk continuous_id)
+    p4Q2PZ37AOM_fixedLeftKernel_continuous H beta A
   have hTauCont : Continuous tau :=
     p4Q2PZ37AOM_singleLinkCenterTwist_continuous H _
   have hChiCont : Continuous chi :=
@@ -188,15 +221,12 @@ theorem p4Q2PZ37AOM_originalFixedLeftRowLocalLinearResponse_abs_le
     hKernelCont.comp hTauCont
   have hCrossCont : Continuous (fun B : Cfg =>
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2 A B) :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_continuous H 2).comp
-      (continuous_const.prodMk continuous_id)
+    p4Q2PZ37AOM_fixedLeftCrossing_continuous H A
   have hWilsonCont :=
     periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_continuous H 2
   have hActionCont : Continuous (fun B : Cfg =>
-      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H 2 A B) := by
-    dsimp [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction]
-    exact (continuous_const.add hCrossCont).add
-      (continuous_const.mul hWilsonCont)
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H 2 A B) :=
+    p4Q2PZ37AOM_fixedLeftAction_continuous H A
   have hDeltaCont : Continuous delta := by
     change Continuous (fun B : Cfg =>
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H 2 A B -
@@ -206,10 +236,13 @@ theorem p4Q2PZ37AOM_originalFixedLeftRowLocalLinearResponse_abs_le
       (kernel B - kernel (tau B)) * chi B) mu :=
     ((hKernelCont.sub hKtwistCont).mul hChiCont).integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
+  have hBetaCont : Continuous (fun _ : Cfg => beta) := continuous_const
+  have hLinCont : Continuous (fun B : Cfg =>
+      (beta * delta B * kernel (tau B)) * chi B) :=
+    (((hBetaCont.mul hDeltaCont).mul hKtwistCont).mul hChiCont)
   have hLinInt : Integrable (fun B : Cfg =>
       (beta * delta B * kernel (tau B)) * chi B) mu :=
-    (((continuous_const.mul hDeltaCont).mul hKtwistCont).mul hChiCont)
-      .integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+    hLinCont.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   have hAnti :
       (-2 : ℝ) * (∫ B, kernel B * chi B ∂mu) =
       -(∫ B, (kernel B - kernel (tau B)) * chi B ∂mu) :=
@@ -229,7 +262,8 @@ theorem p4Q2PZ37AOM_originalFixedLeftRowLocalLinearResponse_abs_le
     rw [← integral_add hSubInt hLinInt]
     apply integral_congr_ae
     filter_upwards [] with B
-    dsimp [residual, kernel, delta, tau]
+    dsimp [residual, p4Q2PZ37AOI_originalRightTwistTaylorRemainder,
+      kernel, delta, tau]
     ring
   have hBridge :
       (-2 : ℝ) * (∫ B, kernel B * chi B ∂mu) -
