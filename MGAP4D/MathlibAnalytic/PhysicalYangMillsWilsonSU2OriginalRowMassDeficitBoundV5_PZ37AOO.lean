@@ -1,0 +1,266 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalZeroCouplingHaarGapV5_PZ37AON
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalRelativeConditionalHaarRowV5_PZ37AOL
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37AOO — genuine Wilson row-mass deficit controls the raw coefficient
+
+Candidate only. Uses the ORIGINAL finite-volume SU(2) Wilson one-slab kernel,
+the original normalized spatial Haar and the genuine primary-link center twist.
+AON proves the exact -1/4 coefficient at beta=0. This candidate bounds the
+positive-beta coefficient deviation by the ACTUAL unnormalized Wilson row-mass
+deficit. No replacement by a volume-uniform o(beta) rate is asserted.
+
+Independent PR CI, Formal merge, physical spectral gap and continuum 4D
+Yang--Mills mass gap remain unproved in this isolated candidate.
+-/
+
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory
+open scoped ENNReal Topology InnerProductSpace InnerProduct
+
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 4000000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "Chi" => p4Q2PZ35C_originalOneLinkCharacter
+
+local instance p4Q2PZ37AOO_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37AOO_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37AOO_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37AOO_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37AOO_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37AOO_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
+private theorem p4Q2PZ37AOO_primaryCharacter_continuous (H : ℕ) :
+    Continuous (fun B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 =>
+      Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 B)) := by
+  have heq :
+      (fun B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 =>
+        Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 B)) =
+      (fun B => GroundStatePosteriorJoint.p4Q2PV_originalPlaquetteRealCharacter H
+        (p4Q2PZ37AMS_primarySpatialSlicePlaquette H) B) := by
+    funext B
+    exact p4Q2PZ37ANV_cyclicCharacter_eq_nativeCharacter H B
+  rw [heq]
+  exact GroundStatePosteriorJoint.p4Q2PV_originalPlaquetteRealCharacter_continuous
+    H (p4Q2PZ37AMS_primarySpatialSlicePlaquette H)
+
+private theorem p4Q2PZ37AOO_singleLinkCenterTwist_continuous
+    (H : ℕ) (target : PeriodicHypercubicEvenSpatialSliceLink H) :
+    Continuous (p4Q2PZ37ANV_singleLinkCenterTwist H target) := by
+  classical
+  unfold p4Q2PZ37ANV_singleLinkCenterTwist
+  apply continuous_pi
+  intro e
+  exact (continuous_apply e).mul continuous_const
+
+private theorem p4Q2PZ37AOO_fixedLeftAction_continuous
+    (H : ℕ) (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    Continuous (fun B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 =>
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H 2 A B) := by
+  let Cfg := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+  have hPair : Continuous (fun B : Cfg => (A, B)) :=
+    (continuous_const : Continuous (fun _ : Cfg => A)).prodMk
+      (continuous_id : Continuous (fun B : Cfg => B))
+  have hCross : Continuous (fun B : Cfg =>
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2 A B) := by
+    change Continuous
+      ((fun p : Cfg × Cfg =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2 p.1 p.2) ∘
+        (fun B : Cfg => (A, B)))
+    exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_continuous
+      H 2).comp hPair
+  have hWilson :
+      Continuous (periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H 2) :=
+    periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_continuous H 2
+  dsimp [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction]
+  exact (continuous_const.add hCross).add (continuous_const.mul hWilson)
+
+private theorem p4Q2PZ37AOO_fixedLeftKernel_continuous
+    (H : ℕ) (beta : ℝ)
+    (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    Continuous (fun B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 =>
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 beta A B) := by
+  let Cfg := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+  have hPair : Continuous (fun B : Cfg => (A, B)) :=
+    (continuous_const : Continuous (fun _ : Cfg => A)).prodMk
+      (continuous_id : Continuous (fun B : Cfg => B))
+  change Continuous
+    ((fun p : Cfg × Cfg =>
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+        H 2 beta p.1 p.2) ∘ (fun B : Cfg => (A, B)))
+  exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+    H 2 beta).comp hPair
+
+/-- The true original Wilson row mass, not a surrogate Haar or plaquette
+normalization, controls the *unnormalized* linear center-twist coefficient
+relative to its precisely certified beta=0 value. No volume-uniform
+small-beta rate is inferred from the right side. -/
+theorem p4Q2PZ37AOO_originalWilsonCoefficient_sub_zero_abs_le_rowMassDeficit
+    (H : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    |(∫ B,
+      p4Q2PZ37AOH_originalRightCenterTwistActionGap H A B *
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 beta A
+        (p4Q2PZ37ANV_singleLinkCenterTwist H
+          (p4Q2PZ37AMS_primarySpatialSliceEdge H 0) B) *
+      Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 B)
+      ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2)) +
+        (1 / 4 : ℝ)| ≤
+      8 * (1 - (∫ B,
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H 2 beta A B
+        ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2))) := by
+  classical
+  let Cfg := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+  let mu := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
+  let tau := p4Q2PZ37ANV_singleLinkCenterTwist H
+    (p4Q2PZ37AMS_primarySpatialSliceEdge H 0)
+  let chi : Cfg → ℝ := fun B =>
+    Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 B)
+  let delta : Cfg → ℝ := fun B =>
+    p4Q2PZ37AOH_originalRightCenterTwistActionGap H A B
+  let kernel : Cfg → ℝ := fun B =>
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 beta A B
+  haveI : IsProbabilityMeasure mu := by dsimp [mu]; infer_instance
+  have hChiCont : Continuous chi := p4Q2PZ37AOO_primaryCharacter_continuous H
+  have hTauCont : Continuous tau :=
+    p4Q2PZ37AOO_singleLinkCenterTwist_continuous H _
+  have hActionCont : Continuous (fun B : Cfg =>
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H 2 A B) :=
+    p4Q2PZ37AOO_fixedLeftAction_continuous H A
+  have hDeltaCont : Continuous delta := by
+    change Continuous (fun B : Cfg =>
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H 2 A B -
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H 2 A (tau B))
+    exact hActionCont.sub (hActionCont.comp hTauCont)
+  have hKernelCont : Continuous kernel :=
+    p4Q2PZ37AOO_fixedLeftKernel_continuous H beta A
+  have hKFlipCont : Continuous (fun B : Cfg => kernel (tau B)) :=
+    hKernelCont.comp hTauCont
+  have hDeltaChiInt : Integrable (fun B : Cfg => delta B * chi B) mu :=
+    (hDeltaCont.mul hChiCont).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  have hKernelChiInt :
+      Integrable (fun B : Cfg => delta B * kernel (tau B) * chi B) mu :=
+    ((hDeltaCont.mul hKFlipCont).mul hChiCont).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  have hKFlipInt : Integrable (fun B : Cfg => kernel (tau B)) mu :=
+    hKFlipCont.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+  have hOneMinusCont : Continuous (fun B : Cfg => 1 - kernel (tau B)) :=
+    (continuous_const : Continuous (fun _ : Cfg => (1 : ℝ))).sub hKFlipCont
+  have hOneMinusInt : Integrable (fun B : Cfg => 1 - kernel (tau B)) mu :=
+    hOneMinusCont.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+  have hWeightedInt :
+      Integrable (fun B : Cfg => (delta B * chi B) * (1 - kernel (tau B))) mu :=
+    ((hDeltaCont.mul hChiCont).mul hOneMinusCont).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  have hPoint (B : Cfg) :
+      ‖(delta B * chi B) * (1 - kernel (tau B))‖ ≤
+        8 * (1 - kernel (tau B)) := by
+    have hGap : |delta B| ≤ 8 :=
+      p4Q2PZ37AOH_originalRightCenterTwistActionGap_abs_le_eight H A B
+    have hChi : |chi B| ≤ 1 := by
+      dsimp [chi]
+      rw [p4Q2PZ37ANV_cyclicCharacter_eq_nativeCharacter]
+      unfold GroundStatePosteriorJoint.p4Q2PV_originalPlaquetteRealCharacter
+      have hlow := specialUnitaryWilsonPlaquetteEnergy_nonneg
+        (by norm_num : 0 < (2 : ℕ))
+        (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy B
+          (p4Q2PZ37AMS_primarySpatialSlicePlaquette H))
+      have hup := specialUnitaryWilsonPlaquetteEnergy_le_two
+        (by norm_num : 0 < (2 : ℕ))
+        (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy B
+          (p4Q2PZ37AMS_primarySpatialSlicePlaquette H))
+      rw [abs_le]
+      constructor <;> linarith only [hlow, hup]
+    have hOneNonneg : 0 ≤ 1 - kernel (tau B) :=
+      sub_nonneg.mpr
+        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_le_one
+          H 2 (by norm_num) beta hbeta A (tau B))
+    have hProduct : |delta B * chi B| ≤ 8 := by
+      rw [abs_mul]
+      calc
+        |delta B| * |chi B| ≤ 8 * |chi B| :=
+          mul_le_mul_of_nonneg_right hGap (abs_nonneg _)
+        _ ≤ 8 * 1 := mul_le_mul_of_nonneg_left hChi (by norm_num)
+        _ = 8 := by ring
+    rw [Real.norm_eq_abs, abs_mul, abs_of_nonneg hOneNonneg]
+    exact mul_le_mul_of_nonneg_right hProduct hOneNonneg
+  have hNormBound :
+      |∫ B : Cfg, (delta B * chi B) * (1 - kernel (tau B)) ∂mu| ≤
+        8 * (∫ B : Cfg, 1 - kernel (tau B) ∂mu) := by
+    have hBound :
+        ‖∫ B : Cfg, (delta B * chi B) * (1 - kernel (tau B)) ∂mu‖ ≤
+          8 * (∫ B : Cfg, 1 - kernel (tau B) ∂mu) := by
+      calc
+        ‖∫ B : Cfg, (delta B * chi B) * (1 - kernel (tau B)) ∂mu‖ ≤
+          ∫ B : Cfg, ‖(delta B * chi B) * (1 - kernel (tau B))‖ ∂mu :=
+          norm_integral_le_integral_norm _
+        _ ≤ ∫ B : Cfg, 8 * (1 - kernel (tau B)) ∂mu := by
+          apply integral_mono_ae hWeightedInt.norm (hOneMinusInt.const_mul 8)
+          filter_upwards [] with B
+          exact hPoint B
+        _ = 8 * (∫ B : Cfg, 1 - kernel (tau B) ∂mu) :=
+          integral_const_mul _ _
+    simpa only [Real.norm_eq_abs] using hBound
+  have hZero :
+      (∫ B : Cfg, delta B * chi B ∂mu) = -(1 / 4 : ℝ) :=
+    p4Q2PZ37AON_originalFixedLeftCenterTwistGap_primaryHaar_eq_neg_quarter H A
+  have hDifference :
+      (∫ B : Cfg, delta B * kernel (tau B) * chi B ∂mu) -
+        (∫ B : Cfg, delta B * chi B ∂mu) =
+          -(∫ B : Cfg, (delta B * chi B) * (1 - kernel (tau B)) ∂mu) := by
+    rw [← integral_sub hKernelChiInt hDeltaChiInt]
+    calc
+      (∫ B : Cfg,
+          delta B * kernel (tau B) * chi B - delta B * chi B ∂mu) =
+        ∫ B : Cfg, -((delta B * chi B) * (1 - kernel (tau B))) ∂mu := by
+          apply integral_congr_ae
+          filter_upwards [] with B
+          ring
+      _ = - (∫ B : Cfg,
+          (delta B * chi B) * (1 - kernel (tau B)) ∂mu) := integral_neg _
+  have hRow :
+      (∫ B : Cfg, kernel (tau B) ∂mu) =
+        (∫ B : Cfg, kernel B ∂mu) := by
+    have hMP : MeasurePreserving tau mu mu :=
+      p4Q2PZ37ANV_singleLinkCenterTwist_haarMeasurePreserving H _
+    have hMapped :
+        (∫ B : Cfg, kernel B ∂Measure.map tau mu) =
+          ∫ B : Cfg, kernel (tau B) ∂mu :=
+        integral_map hMP.measurable.aemeasurable
+          hKernelCont.measurable.aestronglyMeasurable
+    rw [hMP.map_eq] at hMapped
+    exact hMapped.symm
+  have hOne : (∫ B : Cfg, (1 : ℝ) ∂mu) = 1 := by
+    exact integral_eq_const (Filter.Eventually.of_forall fun _ => rfl)
+  change |(∫ B : Cfg, delta B * kernel (tau B) * chi B ∂mu) + (1 / 4 : ℝ)| ≤
+    8 * (1 - (∫ B : Cfg, kernel B ∂mu))
+  calc
+    |(∫ B : Cfg, delta B * kernel (tau B) * chi B ∂mu) + (1 / 4 : ℝ)| =
+      |(∫ B : Cfg, delta B * kernel (tau B) * chi B ∂mu) -
+        (∫ B : Cfg, delta B * chi B ∂mu)| := by
+          rw [hZero]
+          ring
+    _ = |∫ B : Cfg, (delta B * chi B) * (1 - kernel (tau B)) ∂mu| := by
+      rw [hDifference, abs_neg]
+    _ ≤ 8 * (∫ B : Cfg, 1 - kernel (tau B) ∂mu) := hNormBound
+    _ = 8 * (1 - (∫ B : Cfg, kernel B ∂mu)) := by
+      rw [integral_sub (integrable_const (1 : ℝ)) hKFlipInt]
+      rw [hOne, hRow]
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AOO_originalWilsonCoefficient_sub_zero_abs_le_rowMassDeficit
