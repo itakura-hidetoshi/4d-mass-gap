@@ -22,7 +22,7 @@ open scoped ENNReal Topology InnerProductSpace InnerProduct
 
 noncomputable section
 set_option autoImplicit false
-set_option maxHeartbeats 4000000
+set_option maxHeartbeats 12000000
 
 local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
 local notation "Chi" => p4Q2PZ35C_originalOneLinkCharacter
@@ -40,6 +40,40 @@ local instance p4Q2PZ37AOL_borel : BorelSpace G :=
 local instance p4Q2PZ37AOL_linkFintype (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
+
+
+private theorem p4Q2PZ37AOL_fixedLeftKernel_continuous
+    (H : ℕ) (beta : ℝ) (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    Continuous (fun B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 beta A B) := by
+  let Cfg := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+  have hPair : Continuous (fun B : Cfg => (A, B)) :=
+    (continuous_const : Continuous (fun _ : Cfg => A)).prodMk
+      (continuous_id : Continuous (fun B : Cfg => B))
+  change Continuous
+    ((fun p : Cfg × Cfg => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 beta p.1 p.2) ∘
+      (fun B : Cfg => (A, B)))
+  exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous H 2 beta).comp hPair
+
+private theorem p4Q2PZ37AOL_fixedLeftCrossing_continuous
+    (H : ℕ) (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    Continuous (fun B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 => periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2 A B) := by
+  let Cfg := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+  have hPair : Continuous (fun B : Cfg => (A, B)) :=
+    (continuous_const : Continuous (fun _ : Cfg => A)).prodMk
+      (continuous_id : Continuous (fun B : Cfg => B))
+  change Continuous
+    ((fun p : Cfg × Cfg => periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2 p.1 p.2) ∘
+      (fun B : Cfg => (A, B)))
+  exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_continuous H 2).comp hPair
+
+private theorem p4Q2PZ37AOL_fixedLeftAction_continuous
+    (H : ℕ) (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    Continuous (fun B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H 2 A B) := by
+  have hCross : Continuous (fun B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 => periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2 A B) :=
+    p4Q2PZ37AOL_fixedLeftCrossing_continuous H A
+  have hWilson := periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_continuous H 2
+  dsimp [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction]
+  exact (continuous_const.add hCross).add (continuous_const.mul hWilson)
 
 /-- Stronger than AOI's absolute bound: the H-independent quadratic
 Taylor error is controlled *relative to the actual Wilson row mass*.
@@ -73,11 +107,13 @@ theorem p4Q2PZ37AOL_originalConditionalHaarRelativeTaylorResidual_abs_le_rowMass
     dsimp [mu]
     infer_instance
   have hTauCont : Continuous tau := by
-    dsimp [tau, p4Q2PZ37ANV_singleLinkCenterTwist]
-    fun_prop
-  have hKernelCont : Continuous kernel := by
-    exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H 2 beta).comp (continuous_const.prodMk continuous_id)
+    dsimp only [tau]
+    unfold p4Q2PZ37ANV_singleLinkCenterTwist
+    apply continuous_pi
+    intro e
+    exact (continuous_apply e).mul continuous_const
+  have hKernelCont : Continuous kernel :=
+    p4Q2PZ37AOL_fixedLeftKernel_continuous H beta A
   have hKFlipCont : Continuous kFlip := hKernelCont.comp hTauCont
   have hChiCont : Continuous chi := by
     have hfun :
@@ -91,15 +127,12 @@ theorem p4Q2PZ37AOL_originalConditionalHaarRelativeTaylorResidual_abs_le_rowMass
       H (p4Q2PZ37AMS_primarySpatialSlicePlaquette H)
   have hCrossCont : Continuous (fun B : Cfg =>
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2 A B) :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_continuous
-      H 2).comp (continuous_const.prodMk continuous_id)
+    p4Q2PZ37AOL_fixedLeftCrossing_continuous H A
   have hWilsonCont :=
     periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_continuous H 2
   have hActionCont : Continuous (fun B : Cfg =>
-      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H 2 A B) := by
-    dsimp [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction]
-    exact (continuous_const.add hCrossCont).add
-      (continuous_const.mul hWilsonCont)
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H 2 A B) :=
+    p4Q2PZ37AOL_fixedLeftAction_continuous H A
   have hActionFlipCont : Continuous (fun B : Cfg =>
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H 2 A (tau B)) :=
     hActionCont.comp hTauCont
@@ -167,7 +200,13 @@ theorem p4Q2PZ37AOL_originalConditionalHaarRelativeTaylorResidual_abs_le_rowMass
       (p4Q2PZ37AMS_primarySpatialSliceEdge H 0)
   have hRow : (∫ B, kFlip B ∂mu) = ∫ B, kernel B ∂mu := by
     change (∫ B, kernel (tau B) ∂mu) = ∫ B, kernel B ∂mu
-    exact hHaar.integral_comp hKernelCont.aestronglyMeasurable kernel
+    have hMapped :
+        (∫ B, kernel B ∂Measure.map tau mu) =
+          ∫ B, kernel (tau B) ∂mu :=
+      integral_map hHaar.measurable.aemeasurable
+        hKernelCont.measurable.aestronglyMeasurable
+    rw [hHaar.map_eq] at hMapped
+    exact hMapped.symm
   change |∫ B, residual B * chi B ∂mu| ≤ C * ∫ B, kernel B ∂mu
   have hNorm :
       ‖∫ B, residual B * chi B ∂mu‖ ≤ C * ∫ B, kernel B ∂mu := by
