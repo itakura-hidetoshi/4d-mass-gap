@@ -243,7 +243,8 @@ theorem p4Q2PZ37AOO_originalWilsonCoefficient_sub_zero_abs_le_rowMassDeficit
           hKernelCont.measurable.aestronglyMeasurable
     rw [hMP.map_eq] at hMapped
     exact hMapped.symm
-  have hOne : (∫ B : Cfg, (1 : ℝ) ∂mu) = 1 := by simp
+  have hOne : (∫ B : Cfg, (1 : ℝ) ∂mu) = 1 := by
+    exact integral_eq_const (Filter.Eventually.of_forall fun _ => rfl)
   change |(∫ B : Cfg, delta B * kernel (tau B) * chi B ∂mu) + (1 / 4 : ℝ)| ≤
     8 * (1 - (∫ B : Cfg, kernel B ∂mu))
   calc
