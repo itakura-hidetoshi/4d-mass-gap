@@ -29,7 +29,7 @@ jobs:
           - label: AOU
             path: MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFirstRowRightSlopeLimitV5_PZ37AOU.lean
             source: diagnostics/pz37aou/PhysicalYangMillsWilsonSU2OriginalFirstRowRightSlopeLimitV5_PZ37AOU.lean.txt
-            blob: c830fdf387b1a52e03d4f66c90c45d34b0b2de94
+            blob: 344f71f1ac684940074dec3458f7f5f56078921c
             import: MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalFirstRowSlopeV5_PZ37AOT
             declarations: p4Q2PZ37AOU_originalFirstRowHaarMoment_quotient_tendsto_eighth
     env:

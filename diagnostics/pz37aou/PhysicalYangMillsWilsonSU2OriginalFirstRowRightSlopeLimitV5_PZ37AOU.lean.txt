@@ -20,6 +20,8 @@ Hamiltonian spectral gap, or continuum 4D Yang--Mills mass gap.
 namespace MGAP4D.MathlibAnalytic
 
 open MeasureTheory
+open Filter
+open scoped Topology
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 4000000
