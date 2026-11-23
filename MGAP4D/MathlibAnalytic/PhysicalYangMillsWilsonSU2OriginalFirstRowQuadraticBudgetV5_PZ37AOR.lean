@@ -1,0 +1,81 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalRowResponseDeficitBridgeV5_PZ37AOP
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalRowMassBudgetV5_PZ37AOQ
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37AOR — original Wilson fixed-left first-Haar-row quadratic budget
+
+DIAGNOSTIC CANDIDATE / NOT INDEPENDENTLY CERTIFIED. This candidate uses AOP's
+authentic interacting row-response bound and AOQ's global-budget bound for
+the genuine unnormalized spatial-Haar row mass. Its base includes AOQ research
+source, both now integrated in canonical Formal. It does not import any
+synthetic Haar measure, replace the Wilson action or Gauss-law Hilbert space,
+or promote candidate evidence into canonical authority.
+
+The new coefficient 64 + 8*C_H is extensive in H in general. It does not
+establish an H-uniform small-beta rate for arbitrary moving volumes,
+nor a fixed-positive-coupling spectral or continuum 4D mass gap.
+-/
+
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 4000000
+
+local notation "Chi" => p4Q2PZ35C_originalOneLinkCharacter
+
+/-- For the genuine SU(2) one-slab Wilson row, the first-character Haar
+moment has a quadratic remainder bounded by the original global action
+budget. The coefficient still depends on the finite volume. -/
+theorem p4Q2PZ37AOR_originalFirstRowResponse_quadraticGlobalBudget
+    (H : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta) (hsmall : 8 * beta ≤ 1)
+    (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    |(-2 : ℝ) *
+      (∫ B,
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H 2 beta A B *
+          Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 B)
+        ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2)) +
+      beta / 4| ≤
+      (64 + 8 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H) *
+        beta^2 := by
+  let I : ℝ :=
+    ∫ B,
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 beta A B *
+      Chi (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 B)
+      ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2)
+  let Z : ℝ :=
+    ∫ B,
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 beta A B
+      ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2)
+  let C : ℝ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H
+  have hAOP :
+      |(-2 : ℝ) * I + beta / 4| ≤
+        64 * beta^2 + 8 * beta * (1 - Z) := by
+    dsimp [I, Z]
+    exact p4Q2PZ37AOP_originalRowResponse_abs_error_le_rowMassDeficit
+      H beta hbeta hsmall A
+  have hAOQ : 1 - Z ≤ beta * C := by
+    dsimp [Z, C]
+    exact p4Q2PZ37AOQ_originalWilsonRowMassDeficit_le_globalBudgetBeta
+      H beta hbeta A
+  have h8beta : 0 ≤ (8 : ℝ) * beta := mul_nonneg (by norm_num) hbeta
+  have hScale : 8 * beta * (1 - Z) ≤ 8 * beta * (beta * C) :=
+    mul_le_mul_of_nonneg_left hAOQ h8beta
+  have hBound :
+      |(-2 : ℝ) * I + beta / 4| ≤ (64 + 8 * C) * beta^2 := by
+    calc
+      _ ≤ 64 * beta^2 + 8 * beta * (1 - Z) := hAOP
+      _ ≤ 64 * beta^2 + 8 * beta * (beta * C) :=
+        add_le_add_right hScale _
+      _ = (64 + 8 * C) * beta^2 := by ring
+  change |(-2 : ℝ) * I + beta / 4| ≤ (64 + 8 * C) * beta^2
+  exact hBound
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AOR_originalFirstRowResponse_quadraticGlobalBudget
