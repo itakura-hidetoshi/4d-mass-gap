@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: pz37-aoo-sourcebound-mcp-${{ github.event.pull_request.number || github.ref }}
+  group: pz37-aop-sourcebound-mcp-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 env:
@@ -30,7 +30,7 @@ jobs:
             path: MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalRowResponseDeficitBridgeV5_PZ37AOP.lean
             source: diagnostics/pz37aop/PhysicalYangMillsWilsonSU2OriginalRowResponseDeficitBridgeV5_PZ37AOP.lean.txt
             blob: 967d92cc522f6e4c7e7f88f11939feed3bb27fc6
-            import: MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalRowLocalLinearResponseV5_PZ37AOM MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalRowResponseDeficitBridgeV5_PZ37AOP
+            import: MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalRowLocalLinearResponseV5_PZ37AOM MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalRowMassDeficitBoundV5_PZ37AOO
             declarations: p4Q2PZ37AOP_originalRowResponse_abs_error_le_rowMassDeficit
     env:
       TARGET: ${{ matrix.case.path }}
