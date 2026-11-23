@@ -8,7 +8,7 @@ import Mathlib.Tactic
 DIAGNOSTIC CANDIDATE / NOT INDEPENDENTLY CERTIFIED. This candidate uses AOP's
 authentic interacting row-response bound and AOQ's global-budget bound for
 the genuine unnormalized spatial-Haar row mass. Its base includes AOQ research
-source, which is independently under verification. It does not import any
+source, both now integrated in canonical Formal. It does not import any
 synthetic Haar measure, replace the Wilson action or Gauss-law Hilbert space,
 or promote candidate evidence into canonical authority.
 
@@ -70,7 +70,7 @@ theorem p4Q2PZ37AOR_originalFirstRowResponse_quadraticGlobalBudget
     calc
       _ ≤ 64 * beta^2 + 8 * beta * (1 - Z) := hAOP
       _ ≤ 64 * beta^2 + 8 * beta * (beta * C) :=
-        add_le_add_left hScale _
+        add_le_add_right hScale _
       _ = (64 + 8 * C) * beta^2 := by ring
   change |(-2 : ℝ) * I + beta / 4| ≤ (64 + 8 * C) * beta^2
   exact hBound

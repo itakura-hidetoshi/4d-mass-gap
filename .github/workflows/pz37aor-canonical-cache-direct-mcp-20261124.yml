@@ -29,7 +29,7 @@ jobs:
           - label: AOR
             path: MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFirstRowQuadraticBudgetV5_PZ37AOR.lean
             source: diagnostics/pz37aor/PhysicalYangMillsWilsonSU2OriginalFirstRowQuadraticBudgetV5_PZ37AOR.lean.txt
-            blob: 50a35025a852da07559689b1a1e116a3e0bc3582
+            blob: 667f55df2ca309268de7ddfba4a9b98203feea72
             import: MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalRowResponseDeficitBridgeV5_PZ37AOP MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalRowMassBudgetV5_PZ37AOQ
             declarations: p4Q2PZ37AOR_originalFirstRowResponse_quadraticGlobalBudget
     env:
@@ -142,8 +142,8 @@ jobs:
         run: |
           set -uo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          timeout --signal=INT --kill-after=15s 420s lake env lean -DautoImplicit=false -DwarningAsError=true -o "$RUNNER_TEMP/pz37-candidate.olean" "$TARGET" > "$RUNNER_TEMP/direct.log" 2>&1
-          code=$?
+          code=0
+          timeout --signal=INT --kill-after=15s 420s lake env lean -DautoImplicit=false -DwarningAsError=true -o "$RUNNER_TEMP/pz37-candidate.olean" "$TARGET" > "$RUNNER_TEMP/direct.log" 2>&1 || code=$?
           tail -100 "$RUNNER_TEMP/direct.log"
           echo "[direct] label=$LABEL exact_head=$EXACT_HEAD result=$code"
           if [ "$code" -ne 0 ]; then exit "$code"; fi
