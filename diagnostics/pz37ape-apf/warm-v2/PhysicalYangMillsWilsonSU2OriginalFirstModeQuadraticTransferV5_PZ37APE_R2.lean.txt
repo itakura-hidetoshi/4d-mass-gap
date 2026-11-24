@@ -1,0 +1,136 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalPhysicalVacuumRelativeFirstSlopeV5_PZ37APD
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferStrictlyPositiveTopEigenvector
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37APE — original first-mode quadratic transfer cancellation
+
+STAGED ONLY: depends on APD, which must first pass its own strict sandbox,
+independent CI and Formal push certification. The corrected original first
+Gauss-law mode v1 + beta/4 c has a quadratic relative image bound. Unlike
+the earlier AOD absolute O(beta) estimate, this retains the exact operator
+norm factor and does not divide by an extensive action-budget lower bound.
+This is a single-direction estimate, not full top-orthogonal coercivity
+(already addressed on a small-beta interval by AKL), nor a continuum claim.
+-/
+
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory
+open scoped ENNReal Topology InnerProductSpace InnerProduct
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 12000000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "Cfg" => PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "P" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "Rep" => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIntegralRepresentative
+local notation "Tr" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+local notation "C" => periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector
+local notation "V" => p4Q2PZ37AMU_actualPhysicalGaussMode
+
+local instance p4Q2PZ37APE_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37APE_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37APE_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37APE_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37APE_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37APE_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
+/-- Transport a pointwise relative bound to the actual L2 norm. No
+probability normalization or finite-dimensional hypothesis is needed. -/
+private theorem p4Q2PZ37APE_relativeError_L2
+    {α : Type*} [MeasurableSpace α] {mu : Measure α}
+    (f g : Lp ℝ 2 mu) (a b : ℝ) (hb : 0 ≤ b)
+    (h : ∀ᵐ x ∂mu, |f x + a * g x| ≤ b * g x) :
+    ‖f + a • g‖ ≤ b * ‖g‖ := by
+  have hAdd := Lp.coeFn_add f (a • g)
+  have hA := Lp.coeFn_smul a g
+  have hB := Lp.coeFn_smul b g
+  have hle : ∀ᵐ x ∂mu, ‖(f + a • g) x‖ ≤ ‖(b • g) x‖ := by
+    filter_upwards [hAdd, hA, hB, h] with x hx hax hbx hErr
+    change (f + a • g) x = f x + (a • g) x at hx
+    change (a • g) x = a * g x at hax
+    change (b • g) x = b * g x at hbx
+    calc
+      ‖(f + a • g) x‖ = |f x + a * g x| := by
+        rw [hx, hax, Real.norm_eq_abs]
+      _ ≤ b * g x := hErr
+      _ ≤ b * |g x| := mul_le_mul_of_nonneg_left (le_abs_self (g x)) hb
+      _ = ‖(b • g) x‖ := by
+        rw [hbx, Real.norm_eq_abs, abs_mul, abs_of_nonneg hb]
+  calc
+    _ ≤ ‖b • g‖ := Lp.norm_le_norm_of_ae_le hle
+    _ = b * ‖g‖ := by rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg hb]
+
+private theorem p4Q2PZ37APE_transfer_ae
+    (H : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta) (u : P H 2) :
+    ((Tr H 2 (by norm_num) beta hbeta u : P H 2) : Lp ℝ 2 (Mu H 2)) =ᵐ[Mu H 2]
+      Rep H 2 beta (u : Lp ℝ 2 (Mu H 2)) := by
+  rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_coe]
+  exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_coeFn
+    H 2 (by norm_num) beta hbeta (u : Lp ℝ 2 (Mu H 2))
+
+/-- The APD first-order cancellation holds in the original physical Hilbert
+norm relative to the exact image of its constant unit vector. -/
+theorem p4Q2PZ37APE_originalFirstMode_correctedTransfer_norm_le_constantImage
+    (H : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta) (hsmall : 16 * beta ≤ 1) :
+    ‖Tr H 2 (by norm_num) beta hbeta (V H 1 + (beta / 4) • C H 2)‖ ≤
+      195 * beta^2 * ‖Tr H 2 (by norm_num) beta hbeta (C H 2)‖ := by
+  let mu := Mu H 2
+  let t := Tr H 2 (by norm_num) beta hbeta
+  let v : P H 2 := V H 1
+  let c : P H 2 := C H 2
+  let f : Lp ℝ 2 mu := ((t v : P H 2) : Lp ℝ 2 mu)
+  let g : Lp ℝ 2 mu := ((t c : P H 2) : Lp ℝ 2 mu)
+  have hf : f =ᵐ[mu] Rep H 2 beta (v : Lp ℝ 2 mu) :=
+    p4Q2PZ37APE_transfer_ae H beta hbeta v
+  have hg : g =ᵐ[mu] Rep H 2 beta (c : Lp ℝ 2 mu) :=
+    p4Q2PZ37APE_transfer_ae H beta hbeta c
+  have hErr : ∀ᵐ A ∂mu, |f A + beta / 4 * g A| ≤ 195 * beta^2 * g A := by
+    filter_upwards [hf, hg] with A hA hB
+    rw [hA, hB]
+    exact p4Q2PZ37APD_originalPhysicalFirstMode_relativeTransferError_le H beta hbeta hsmall A
+  have h := p4Q2PZ37APE_relativeError_L2 f g (beta / 4) (195 * beta^2)
+    (by positivity) hErr
+  change ‖t (v + (beta / 4) • c)‖ ≤ 195 * beta^2 * ‖t c‖
+  rw [map_add, map_smul]
+  exact h
+
+/-- The quadratic cancellation survives true operator-norm normalization,
+uniformly in H, with no lower bound on the raw operator norm assumed. -/
+theorem p4Q2PZ37APE_originalFirstMode_correctedTransfer_relativeNorm_le
+    (H : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta) (hsmall : 16 * beta ≤ 1) :
+    ‖Tr H 2 (by norm_num) beta hbeta (V H 1 + (beta / 4) • C H 2)‖ /
+      ‖Tr H 2 (by norm_num) beta hbeta‖ ≤ 195 * beta^2 := by
+  let t := Tr H 2 (by norm_num) beta hbeta
+  let c : P H 2 := C H 2
+  let v : P H 2 := V H 1
+  have hPos : 0 < ‖t‖ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
+      H 2 (by norm_num) beta hbeta
+  have hc : ‖c‖ = 1 := periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector_norm H 2
+  have htc : ‖t c‖ ≤ ‖t‖ := by
+    calc
+      _ ≤ ‖t‖ * ‖c‖ := t.le_opNorm c
+      _ = ‖t‖ := by rw [hc, mul_one]
+  change ‖t (v + (beta / 4) • c)‖ / ‖t‖ ≤ 195 * beta^2
+  apply (div_le_iff₀ hPos).2
+  calc
+    _ ≤ 195 * beta^2 * ‖t c‖ :=
+      p4Q2PZ37APE_originalFirstMode_correctedTransfer_norm_le_constantImage H beta hbeta hsmall
+    _ ≤ 195 * beta^2 * ‖t‖ := mul_le_mul_of_nonneg_left htc (by positivity)
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APE_originalFirstMode_correctedTransfer_norm_le_constantImage
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APE_originalFirstMode_correctedTransfer_relativeNorm_le
