@@ -1,0 +1,162 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalFirstModeQuadraticTransferV5_PZ37APE
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalFixedCouplingSignedVacuumOverlapV5_PZ37API
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceOrthogonalDecomposition
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37APJ — exact two-mode full-top orthogonal direction at fixed coupling
+
+STAGED ONLY; requires independently certified API. Unlike AMW's existence
+and ANM's necessary/sufficient nonzero-coefficient criterion, choose the
+actual ratio of vacuum overlaps as the constant-mode coefficient.
+Keep the first-mode coefficient literally one. APD controls the difference
+from beta/4, APE bounds its transfer, and API gives the positive fixed-beta0
+coefficient. No lower bound on the true vacuum's constant amplitude uniform
+in H, and no all-excitation contraction or continuum gap is asserted.
+-/
+
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory
+open scoped ENNReal Topology InnerProductSpace InnerProduct
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 12000000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "P" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "C" => periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector
+local notation "V" => p4Q2PZ37AMU_actualPhysicalGaussMode
+local notation "Tr" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+local notation "NTr" => periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+local notation "Vac" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+local notation "Top" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
+
+local instance p4Q2PZ37APJ_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37APJ_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37APJ_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37APJ_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37APJ_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37APJ_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
+private theorem p4Q2PZ37APJ_norm_ge_one_generic
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    (v c : E) (q : ℝ) (hv : ‖v‖ = 1)
+    (hcv : inner ℝ c v = 0) : 1 ≤ ‖v + q • c‖ := by
+  have hi : inner ℝ v (q • c) = 0 := by
+    calc
+      _ = inner ℝ (q • c) v := real_inner_comm (q • c) v
+      _ = q * inner ℝ c v := real_inner_smul_left c v q
+      _ = 0 := by rw [hcv, mul_zero]
+  have hsq : ‖v + q • c‖ ^ 2 = ‖v‖ ^ 2 + ‖q • c‖ ^ 2 := by
+    simpa only [pow_two] using norm_add_sq_eq_norm_sq_add_norm_sq_real hi
+  rw [hv] at hsq
+  apply le_of_sq_le_sq _ (norm_nonneg _)
+  nlinarith only [hsq, sq_nonneg ‖q • c‖]
+
+/-- Literal coefficient one on the first genuine mode and an exact
+vacuum-ratio constant coefficient. Retain the actual relative error. -/
+theorem p4Q2PZ37APJ_originalExactTwoMode_exists_quadratic_direction
+    (H : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta) (hsmall : 16 * beta ≤ 1) :
+    ∃ q : ℝ,
+      q = -inner ℝ (Vac H 2 (by norm_num) beta hbeta) (V H 1) /
+        inner ℝ (Vac H 2 (by norm_num) beta hbeta) (C H 2) ∧
+      |q - beta / 4| ≤ 195 * beta^2 ∧
+      V H 1 + q • C H 2 ∈ (Top H 2 (by norm_num) beta hbeta)ᗮ ∧
+      1 ≤ ‖V H 1 + q • C H 2‖ ∧
+      ‖Tr H 2 (by norm_num) beta hbeta (V H 1 + q • C H 2)‖ ≤
+        390 * beta^2 * ‖Tr H 2 (by norm_num) beta hbeta (C H 2)‖ := by
+  let t := Tr H 2 (by norm_num) beta hbeta
+  let omega : P H 2 := Vac H 2 (by norm_num) beta hbeta
+  let v : P H 2 := V H 1
+  let c : P H 2 := C H 2
+  let a : ℝ := inner ℝ omega c
+  let b : ℝ := inner ℝ omega v
+  let q : ℝ := -b / a
+  have ha0 := p4Q2PZ37ANM_originalPhysicalTop_inner_modeZero_pos H beta hbeta
+  rw [p4Q2PZ37ANM_actualModeZero_eq_physicalConstant] at ha0
+  have ha : 0 < a := ha0
+  have hqa : q * a = -b := by
+    dsimp only [q]
+    field_simp [ne_of_gt ha]
+  have hErr := p4Q2PZ37APD_originalPhysicalVacuumFirst_relativeSlopeError_le
+    H beta hbeta hsmall
+  change |b + beta / 4 * a| ≤ 195 * beta^2 * a at hErr
+  have hEq : (q - beta / 4) * a = -(b + beta / 4 * a) := by
+    rw [sub_mul, hqa]
+    ring
+  have hqErr : |q - beta / 4| ≤ 195 * beta^2 := by
+    apply (mul_le_mul_iff_of_pos_right ha).mp
+    calc
+      |q - beta / 4| * a = |(q - beta / 4) * a| := by
+        rw [abs_mul, abs_of_pos ha]
+      _ = |b + beta / 4 * a| := by rw [hEq, abs_neg]
+      _ ≤ 195 * beta^2 * a := hErr
+  have hInner : inner ℝ omega (v + q • c) = 0 := by
+    calc
+      _ = inner ℝ omega v + inner ℝ omega (q • c) :=
+        inner_add_right omega v (q • c)
+      _ = b + q * a := by
+        have h := real_inner_smul_right omega c q
+        change inner ℝ omega (q • c) = q * a at h
+        rw [h]
+      _ = 0 := by rw [hqa]; ring
+  have hTop : Top H 2 (by norm_num) beta hbeta = ℝ ∙ omega :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace_eq_span_nonnegativeTopEigenvector
+      H 2 (by norm_num) beta hbeta
+  have hMem : v + q • c ∈ (Top H 2 (by norm_num) beta hbeta)ᗮ := by
+    rw [hTop]
+    exact (Submodule.mem_orthogonal_singleton_iff_inner_right
+      (𝕜 := ℝ) (u := omega) (v := v + q • c)).mpr hInner
+  have hv : ‖v‖ = 1 := (p4Q2PZ37AMU_actualPhysicalGaussMode_orthonormal H).1 1
+  have hc0 : inner ℝ (V H 0) (V H 1) = 0 :=
+    (p4Q2PZ37AMU_actualPhysicalGaussMode_orthonormal H).inner_eq_zero
+      (by decide : (0 : ℕ) ≠ 1)
+  rw [p4Q2PZ37ANM_actualModeZero_eq_physicalConstant] at hc0
+  have hn : 1 ≤ ‖v + q • c‖ := p4Q2PZ37APJ_norm_ge_one_generic v c q hv hc0
+  have hw : v + q • c = (v + (beta / 4) • c) + (q - beta / 4) • c := by
+    have hcoef : beta / 4 + (q - beta / 4) = q := by ring
+    rw [add_assoc, ← add_smul, hcoef]
+  have hAPE : ‖t (v + (beta / 4) • c)‖ ≤ 195 * beta^2 * ‖t c‖ :=
+    p4Q2PZ37APE_originalFirstMode_correctedTransfer_norm_le_constantImage
+      H beta hbeta hsmall
+  have hTransfer : ‖t (v + q • c)‖ ≤ 390 * beta^2 * ‖t c‖ := by
+    calc
+      _ = ‖t (v + (beta / 4) • c) + (q - beta / 4) • t c‖ := by
+        rw [hw, map_add, map_smul]
+      _ ≤ ‖t (v + (beta / 4) • c)‖ + ‖(q - beta / 4) • t c‖ :=
+        norm_add_le _ _
+      _ = ‖t (v + (beta / 4) • c)‖ + |q - beta / 4| * ‖t c‖ := by
+        rw [norm_smul, Real.norm_eq_abs]
+      _ ≤ 195 * beta^2 * ‖t c‖ + 195 * beta^2 * ‖t c‖ :=
+        add_le_add hAPE (mul_le_mul_of_nonneg_right hqErr (norm_nonneg _))
+      _ = _ := by ring
+  exact ⟨q, rfl, hqErr, hMem, hn, hTransfer⟩
+
+/-- The ANM nonzero constant-coefficient obstruction is discharged at
+the unchanged original fixed beta0, after API's actual overlap proof. -/
+theorem p4Q2PZ37APJ_originalFixedCoupling_exists_twoMode_nonzeroConstant
+    (H : ℕ) :
+    ∃ c0 c1 : ℝ,
+      c0 ≠ 0 ∧
+      (c0 • V H 0 + c1 • V H 1) ≠ 0 ∧
+      (c0 • V H 0 + c1 • V H 1) ∈
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H 2 (by norm_num) p4Q2PZ37ADC_fixedCoupling
+            p4Q2PZ37ADC_fixedCoupling_pos.le := by
+  apply (p4Q2PZ37ANM_originalPhysicalTwoMode_c0_ne_zero_iff_vacuumModeOneOverlap
+    H p4Q2PZ37ADC_fixedCoupling p4Q2PZ37ADC_fixedCoupling_pos.le).mpr
+  exact ne_of_lt (p4Q2PZ37API_originalPhysicalVacuumFirst_fixedCoupling_neg H)
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APJ_originalExactTwoMode_exists_quadratic_direction
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APJ_originalFixedCoupling_exists_twoMode_nonzeroConstant
