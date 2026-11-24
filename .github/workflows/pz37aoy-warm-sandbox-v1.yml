@@ -1,0 +1,22 @@
+name: PZ37AOY warm sandbox real repair
+on:
+  pull_request:
+    paths:
+      - "diagnostics/pz37aoy/warm-v1/**"
+      - ".github/workflows/pz37aoy-warm-sandbox-v1.yml"
+      - ".github/workflows/lean-warm-sandbox-reusable-v1.yml"
+      - "scripts/lean_warm_sandbox_v1.py"
+      - "scripts/lean_cache_inventory_v1.py"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pz37aoy-warm-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    uses: ./.github/workflows/lean-warm-sandbox-reusable-v1.yml
+    with:
+      pack: diagnostics/pz37aoy/warm-v1/pack.json
+      source_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      baseline_commit: adafe373260cacd44157ffe7c58ee8bcb34b4724
