@@ -1,0 +1,26 @@
+name: Compact cache v2 provenance gate regression
+on:
+  pull_request:
+    paths:
+      - "scripts/lean_compact_cache_binding_v2.py"
+      - "scripts/test_lean_compact_cache_binding_v2.py"
+      - "scripts/lean_quarantine_setup_v1.py"
+      - ".github/workflows/lean-warm-compact-publish-v2.yml"
+      - ".github/workflows/lean-warm-sandbox-reusable-v2.yml"
+      - ".github/workflows/lean-warm-compact-gates-v2.yml"
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          show-progress: false
+      - name: Verify compact provenance gates
+        run: |
+          python3 scripts/test_lean_compact_cache_binding_v2.py
+          python3 scripts/test_lean_warm_sandbox_v1.py

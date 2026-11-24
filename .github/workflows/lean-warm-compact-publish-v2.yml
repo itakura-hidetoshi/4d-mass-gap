@@ -1,0 +1,90 @@
+name: Publish exact compact Lean project cache v2 from certified Formal push
+on:
+  push:
+    branches:
+      - formal/real-hilbert-uniform-coercive-strong-limit
+    paths:
+      - "MGAP4D/**/*.lean"
+      - "lean-toolchain"
+      - "lakefile.lean"
+      - "lake-manifest.json"
+      - ".github/workflows/lean-warm-compact-publish-v2.yml"
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: warm-compact-publish-${{ github.sha }}
+  cancel-in-progress: false
+env:
+  MATHLIB_NO_CACHE_ON_UPDATE: "1"
+jobs:
+  publish:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/formal/real-hilbert-uniform-coercive-strong-limit'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          show-progress: false
+      - name: Bind to completed exact trusted Lean push and unchanged math tree
+        id: bind
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/lean_compact_cache_binding_v2.py prepare --bootstrap 5ce269760ead123fdd96f12bfbc57a2b6bfb3955 --output "$RUNNER_TEMP/compact-evidence/binding.json"
+      - name: Check whether exact compact cache already exists
+        id: existing
+        uses: actions/cache/restore@v5
+        with:
+          path: .lake/build
+          lookup-only: true
+          key: ${{ runner.os }}-lean-warm-project-nosetup-v2-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-base-${{ steps.bind.outputs.base }}
+      - name: Restore exact Lean
+        if: steps.existing.outputs.cache-hit != 'true'
+        id: elan
+        uses: actions/cache/restore@v5
+        with:
+          path: ~/.elan
+          key: ${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
+      - name: Restore exact mathlib
+        if: steps.existing.outputs.cache-hit != 'true'
+        id: deps
+        uses: actions/cache/restore@v5
+        with:
+          path: .lake/packages
+          key: ${{ runner.os }}-lean-fast-deps-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
+      - name: Restore exact full project cache from certified push
+        if: steps.existing.outputs.cache-hit != 'true'
+        id: full
+        uses: actions/cache/restore@v5
+        with:
+          path: .lake/build
+          key: ${{ runner.os }}-lean-fast-project-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-base-${{ steps.bind.outputs.base }}
+      - name: Quarantine generated setup JSON and verify no-build imports
+        if: steps.existing.outputs.cache-hit != 'true'
+        env:
+          ELAN_HIT: ${{ steps.elan.outputs.cache-hit }}
+          DEPS_HIT: ${{ steps.deps.outputs.cache-hit }}
+          FULL_HIT: ${{ steps.full.outputs.cache-hit }}
+        run: |
+          set -euo pipefail
+          [[ "$ELAN_HIT" == true && "$DEPS_HIT" == true && "$FULL_HIT" == true ]]
+          export PATH="$HOME/.elan/bin:$PATH"
+          python3 scripts/lean_quarantine_setup_v1.py "$RUNNER_TEMP/compact-evidence/quarantine.json"
+          python3 scripts/lean_compact_cache_binding_v2.py seal --binding "$RUNNER_TEMP/compact-evidence/binding.json"
+          cp .lake/build/warm-nosetup-v2-receipt.json "$RUNNER_TEMP/compact-evidence/"
+      - name: Publish only the new exact compact key, retaining the full cache
+        if: steps.existing.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v5
+        with:
+          path: .lake/build
+          key: ${{ runner.os }}-lean-warm-project-nosetup-v2-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-base-${{ steps.bind.outputs.base }}
+      - name: Archive publication evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: compact-publisher-v2-evidence
+          path: ${{ runner.temp }}/compact-evidence
+          if-no-files-found: warn
+          retention-days: 30
