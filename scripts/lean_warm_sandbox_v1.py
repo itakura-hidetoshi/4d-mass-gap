@@ -49,8 +49,11 @@ def read_candidate(root, candidate, declarations, imports):
     check(source.endswith("\n"), "source must end in newline")
     check(not re.search(r"\b(?:sorry|admit|axiom|unsafe|native_decide)\b|debug\.skipKernelTC", source),
           "forbidden proof construct")
-    check(not re.search(r"(?m)^\s*set_option\s+(?:linter\.|warningAsError|autoImplicit)", source),
-          "candidate must not override strict gates")
+    check(not re.search(r"(?m)^\s*set_option\s+linter\.", source),
+          "candidate must not override linter gates")
+    for option, value in re.findall(r"(?m)^\s*set_option\s+(warningAsError|autoImplicit)\s+(\S+)", source):
+        check((option, value) in {("warningAsError", "true"), ("autoImplicit", "false")},
+              "candidate must not weaken strict gates")
     actual_imports, _, names = source_contract(source)
     check(actual_imports == ["import " + item for item in imports], "unexpected imports")
     check(names == declarations and len(set(names)) == len(names), "axiom audit list mismatch")
