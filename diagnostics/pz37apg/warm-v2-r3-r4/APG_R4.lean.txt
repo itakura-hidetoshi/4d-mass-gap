@@ -1,0 +1,164 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalFirstModeQuadraticTransferV5_PZ37APE
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceOrthogonalDecomposition
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37APG — corrected first mode in the full top-orthogonal sector
+
+STAGED ONLY. Requires certified APE. The original corrected direction
+w = v1 + beta/4 c has norm at least one. Its normalized transfer image
+has norm at most 195 beta^2. Decompose w into the full eigenvalue-one
+space and its orthogonal complement. Symmetry preserves that complement,
+so Pythagoras controls both the top part and the orthogonal image.
+The latter direction has norm at least 1/2 for 32 beta <= 1 and its
+normalized transfer-to-input norm ratio is at most 390 beta^2.
+This is one explicit excited direction, not a bound on all excitations.
+-/
+
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory
+open scoped ENNReal Topology InnerProductSpace InnerProduct
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 12000000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "P" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "C" => periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector
+local notation "V" => p4Q2PZ37AMU_actualPhysicalGaussMode
+local notation "Tr" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+local notation "NTr" => periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+local notation "Top" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
+
+local instance p4Q2PZ37APG_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37APG_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37APG_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37APG_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37APG_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37APG_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
+private theorem p4Q2PZ37APG_corrected_norm_ge_one (H : ℕ) (beta : ℝ) :
+    1 ≤ ‖V H 1 + (beta / 4) • C H 2‖ := by
+  let v : P H 2 := V H 1
+  let c : P H 2 := C H 2
+  have hv : ‖v‖ = 1 := (p4Q2PZ37AMU_actualPhysicalGaussMode_orthonormal H).1 1
+  have hc : inner ℝ (V H 0) (V H 1) = 0 :=
+    (p4Q2PZ37AMU_actualPhysicalGaussMode_orthonormal H).2
+      (by decide : (0 : ℕ) ≠ 1)
+  rw [p4Q2PZ37ANM_actualModeZero_eq_physicalConstant] at hc
+  have hcv : inner ℝ c v = 0 := hc
+  have horth : inner ℝ v ((beta / 4) • c) = 0 := by
+    calc
+      inner ℝ v ((beta / 4) • c) = inner ℝ ((beta / 4) • c) v :=
+        real_inner_comm ((beta / 4) • c) v
+      _ = (beta / 4) * inner ℝ c v :=
+        real_inner_smul_left c v (beta / 4)
+      _ = 0 := by rw [hcv, mul_zero]
+  have hs : ‖v + (beta / 4) • c‖ ^ 2 =
+      ‖v‖ ^ 2 + ‖(beta / 4) • c‖ ^ 2 := by
+    simpa only [pow_two] using
+      (norm_add_sq_eq_norm_sq_add_norm_sq_real horth)
+  rw [hv] at hs
+  change 1 ≤ ‖v + (beta / 4) • c‖
+  apply le_of_sq_le_sq _ (norm_nonneg _)
+  nlinarith only [hs, sq_nonneg ‖(beta / 4) • c‖]
+
+private theorem p4Q2PZ37APG_normalized_corrected_bound
+    (H : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta) (hsmall : 16 * beta ≤ 1) :
+    ‖NTr H 2 (by norm_num) beta hbeta (V H 1 + (beta / 4) • C H 2)‖ ≤
+      195 * beta^2 := by
+  let t := Tr H 2 (by norm_num) beta hbeta
+  let w : P H 2 := V H 1 + (beta / 4) • C H 2
+  have hPos : 0 < ‖t‖ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
+      H 2 (by norm_num) beta hbeta
+  have h := p4Q2PZ37APE_originalFirstMode_correctedTransfer_relativeNorm_le
+    H beta hbeta hsmall
+  change ‖‖t‖⁻¹ • t w‖ ≤ 195 * beta^2
+  rw [norm_smul, Real.norm_eq_abs, abs_of_pos (inv_pos.mpr hPos)]
+  rw [mul_comm, ← div_eq_mul_inv]
+  exact h
+
+/-- A genuine full-top/orthogonal decomposition of the corrected physical
+first mode, with both the top amplitude and the excited image controlled
+by the same quadratic estimate. -/
+theorem p4Q2PZ37APG_originalCorrectedFirst_exists_fullTop_orthogonal_split
+    (H : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta) (hsmall : 16 * beta ≤ 1) :
+    ∃ u f : P H 2,
+      u ∈ Top H 2 (by norm_num) beta hbeta ∧
+      f ∈ (Top H 2 (by norm_num) beta hbeta)ᗮ ∧
+      u + f = V H 1 + (beta / 4) • C H 2 ∧
+      ‖u‖ ≤ 195 * beta^2 ∧
+      1 - 195 * beta^2 ≤ ‖f‖ ∧
+      ‖NTr H 2 (by norm_num) beta hbeta f‖ ≤ 195 * beta^2 := by
+  let s := NTr H 2 (by norm_num) beta hbeta
+  let w : P H 2 := V H 1 + (beta / 4) • C H 2
+  obtain ⟨u, hu, f, hf, hsum⟩ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_exists_top_add_orthogonal
+      H 2 (by norm_num) beta hbeta w
+  have hu' : u ∈ realHilbertTopEigenspace s := hu
+  have hf' : f ∈ (realHilbertTopEigenspace s)ᗮ := hf
+  have hfix : s u = u := (realHilbertTopEigenspace_mem s u).1 hu'
+  have hsymm := periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
+    H 2 (by norm_num) beta hbeta
+  have hsf : s f ∈ (realHilbertTopEigenspace s)ᗮ :=
+    realHilbertTopEigenspace_orthogonal_invariant s hsymm hf'
+  have hi : inner ℝ u (s f) = 0 :=
+    Submodule.inner_right_of_mem_orthogonal hu' hsf
+  have hsum' : u + f = w := hsum
+  have hsq : ‖s w‖ ^ 2 = ‖u‖ ^ 2 + ‖s f‖ ^ 2 := by
+    rw [← hsum', map_add, hfix]
+    simpa only [pow_two] using
+      (norm_add_sq_eq_norm_sq_add_norm_sq_real hi)
+  have hbound : ‖s w‖ ≤ 195 * beta^2 :=
+    p4Q2PZ37APG_normalized_corrected_bound H beta hbeta hsmall
+  have huB : ‖u‖ ≤ 195 * beta^2 := by
+    apply le_trans _ hbound
+    apply le_of_sq_le_sq _ (norm_nonneg _)
+    nlinarith only [hsq, sq_nonneg ‖s f‖]
+  have hfB : ‖s f‖ ≤ 195 * beta^2 := by
+    apply le_trans _ hbound
+    apply le_of_sq_le_sq _ (norm_nonneg _)
+    nlinarith only [hsq, sq_nonneg ‖u‖]
+  have hw : 1 ≤ ‖w‖ := p4Q2PZ37APG_corrected_norm_ge_one H beta
+  have htri : ‖w‖ ≤ ‖u‖ + ‖f‖ := by
+    rw [← hsum']
+    exact norm_add_le u f
+  have hfL : 1 - 195 * beta^2 ≤ ‖f‖ := by linarith only [hw, htri, huB]
+  exact ⟨u, f, hu, hf, hsum, huB, hfL, hfB⟩
+
+/-- A uniformly nonzero excited direction of the actual normalized transfer,
+orthogonal to the FULL top space, with a quadratic transfer-to-input bound. -/
+theorem p4Q2PZ37APG_originalFullTopOrthogonal_exists_quadratic_direction
+    (H : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta) (hcut : 32 * beta ≤ 1) :
+    ∃ f : P H 2,
+      f ∈ (Top H 2 (by norm_num) beta hbeta)ᗮ ∧
+      (1 / 2 : ℝ) ≤ ‖f‖ ∧
+      ‖NTr H 2 (by norm_num) beta hbeta f‖ ≤ 390 * beta^2 * ‖f‖ := by
+  have hsmall : 16 * beta ≤ 1 := by linarith only [hcut, hbeta]
+  obtain ⟨u, f, hu, hf, hsum, huB, hfL, hfB⟩ :=
+    p4Q2PZ37APG_originalCorrectedFirst_exists_fullTop_orthogonal_split
+      H beta hbeta hsmall
+  have hquad := mul_nonneg hbeta (sub_nonneg.mpr hcut)
+  have hErr : 195 * beta^2 ≤ (1 / 2 : ℝ) := by
+    nlinarith only [hquad, hcut]
+  have hfHalf : (1 / 2 : ℝ) ≤ ‖f‖ := by linarith only [hErr, hfL]
+  refine ⟨f, hf, hfHalf, ?_⟩
+  calc
+    _ ≤ 195 * beta^2 := hfB
+    _ = (390 * beta^2) * (1 / 2 : ℝ) := by ring
+    _ ≤ _ := mul_le_mul_of_nonneg_left hfHalf (by positivity)
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APG_originalCorrectedFirst_exists_fullTop_orthogonal_split
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APG_originalFullTopOrthogonal_exists_quadratic_direction
