@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "baseline_commit": "2c2b6a7c6cee7d49164b60a7476901d3ba69daca",
+  "baseline_mgap4d_tree": "0bcc1e5fbb1c3b6e634933ecd8a9c92a34f435ae",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalPhysicalVacuumRelativeFirstSlopeV5_PZ37APD",
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalSignedMixedKernelRowLowerV5_PZ37APH",
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalFixedCouplingCertificateV5_PZ37ADC",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "API",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37API_originalPhysicalFirstMode_signedRelativeTransfer_le",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37API_originalPhysicalFirstMode_signedRelativeTransfer_ae",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37API_originalPhysicalVacuumFirst_signedRelativeOverlap_le",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37API_originalPhysicalVacuumFirst_fixedCoupling_neg"
+      ],
+      "candidates": [
+        {
+          "id": "R2",
+          "path": "diagnostics/pz37api/warm-v2-r2-r3/API_R2.lean.txt",
+          "blob": "b8b318448c3e95691f8a6982a32acf3c03c9ea49"
+        },
+        {
+          "id": "R3",
+          "path": "diagnostics/pz37api/warm-v2-r2-r3/API_R3.lean.txt",
+          "blob": "59a687a19574e067ab30f7a40c700dd693ebf76d"
+        }
+      ]
+    }
+  ]
+}
