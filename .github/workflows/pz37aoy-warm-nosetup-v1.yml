@@ -1,0 +1,21 @@
+name: PZ37AOY warm no-setup cache experiment
+on:
+  pull_request:
+    paths:
+      - "diagnostics/pz37aoy/warm-nosetup-v1/**"
+      - ".github/workflows/pz37aoy-warm-nosetup-v1.yml"
+      - ".github/workflows/lean-warm-sandbox-nosetup-experiment-v1.yml"
+      - "scripts/lean_quarantine_setup_v1.py"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pz37aoy-warm-nosetup-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    uses: ./.github/workflows/lean-warm-sandbox-nosetup-experiment-v1.yml
+    with:
+      pack: diagnostics/pz37aoy/warm-nosetup-v1/pack.json
+      source_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      baseline_commit: adafe373260cacd44157ffe7c58ee8bcb34b4724
