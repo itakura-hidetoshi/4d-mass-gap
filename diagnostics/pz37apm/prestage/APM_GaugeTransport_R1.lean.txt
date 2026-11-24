@@ -1,0 +1,140 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPositiveHalfTransferSliceObservableInsertion
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPositiveHalfHaarTemporalGaugeReduction
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37APM precursor — original inserted half-path temporal gauge transport
+
+Unverified candidate. Extend the existing endpoint-only Haar change of
+variables to an actual bounded gauge-invariant observable at any native
+positive-half spatial index. Keep the primary endpoint fixed and transport
+the terminal Gauss-law representative only almost everywhere. Do not
+identify the OS carrier with the one-slab Hilbert space.
+-/
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory Filter
+open scoped ENNReal Topology InnerProductSpace InnerProduct
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 12000000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "Slab" => periodicHypercubicEvenPositiveHalfCylinderSlabCount
+local notation "Path" => PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath
+local notation "Field" => PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalLinkField
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "PathMu" => periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure
+local notation "FieldMu" => periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalFieldHaarMeasure
+local notation "Gauge" => periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugeSpatialPath
+local notation "UK" => periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel
+local notation "TK" => periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
+
+local instance p4Q2PZ37APM_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37APM_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37APM_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37APM_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37APM_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37APM_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37APM_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
+/-- Insert the same original bounded gauge-invariant observable at an
+arbitrary spatial index, before or after the exact fixed-field gauge change. -/
+theorem p4Q2PZ37APM_originalGaussSliceUnfixedIntegral_eq_temporalGauge
+    (H : ℕ) (beta : ℝ) (j : Fin (Slab H + 1))
+    (a : PeriodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservable H 2)
+    (ha : periodicHypercubicEvenSpecialUnitarySpatialSliceObservableGaugeInvariant H 2 a)
+    (f g : Lp ℝ 2 (Mu H 2))
+    (hg : g ∈ periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2)
+    (U : Field H 2) :
+    (∫ path : Path H 2,
+      f (path 0) * UK H 2 beta path U * a (path j) *
+        g (path (Fin.last (Slab H))) ∂(PathMu H 2)) =
+    ∫ path : Path H 2,
+      f (path 0) * TK H 2 beta path * a (path j) *
+        g (path (Fin.last (Slab H))) ∂(PathMu H 2) := by
+  let e := periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalGaugeSpatialPathMeasurableEquiv
+    H 2 U
+  let F : Path H 2 → ℝ := fun path =>
+    f (path 0) * TK H 2 beta path * a (path j) *
+      g (path (Fin.last (Slab H)))
+  have hTerminal :=
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfTerminalGaugeInvariant_ae H 2 g hg U
+  calc
+    _ = ∫ path : Path H 2, F (e path) ∂(PathMu H 2) := by
+      apply integral_congr_ae
+      filter_upwards [hTerminal] with path ht
+      have he : e path = Gauge H 2 U path := rfl
+      have hZero : (e path) 0 = path 0 := by
+        rw [he]
+        have h0 : (0 : Fin (Slab H + 1)) = ⟨0, Nat.zero_lt_succ _⟩ := by
+          apply Fin.ext
+          rfl
+        rw [h0]
+        exact periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugeSpatialPath_zero
+          H 2 U path
+      have hObs : a ((e path) j) = a (path j) := by
+        rw [he]
+        exact ha
+          (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderCumulativeGauge H 2 U j)
+          (path j)
+      have hLast : g ((e path) (Fin.last (Slab H))) =
+          g (path (Fin.last (Slab H))) := by
+        rw [he]
+        exact ht
+      have hK : UK H 2 beta path U = TK H 2 beta (e path) := by
+        rw [he]
+        exact periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel_eq_temporalGauge
+          H 2 beta path U
+      calc
+        _ = f ((e path) 0) * TK H 2 beta (e path) *
+            a ((e path) j) * g ((e path) (Fin.last (Slab H))) := by
+          rw [hZero, hObs, hLast, ← hK]
+        _ = F (e path) := rfl
+    _ = _ := by
+      have hPres := periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalGaugeSpatialPath_measurePreserving
+        H 2 U
+      exact hPres.integral_comp' F
+
+/-- The normalized original temporal-link Haar average preserves the inserted
+path integral exactly; no replacement of the spatial Haar law is made. -/
+theorem p4Q2PZ37APM_originalGaussSliceIteratedHaarIntegral_eq_temporalGauge
+    (H : ℕ) (beta : ℝ) (j : Fin (Slab H + 1))
+    (a : PeriodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservable H 2)
+    (ha : periodicHypercubicEvenSpecialUnitarySpatialSliceObservableGaugeInvariant H 2 a)
+    (f g : Lp ℝ 2 (Mu H 2))
+    (hg : g ∈ periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2) :
+    (∫ U : Field H 2,
+      (∫ path : Path H 2,
+        f (path 0) * UK H 2 beta path U * a (path j) *
+          g (path (Fin.last (Slab H))) ∂(PathMu H 2))
+      ∂(FieldMu H 2)) =
+    ∫ path : Path H 2,
+      f (path 0) * TK H 2 beta path * a (path j) *
+        g (path (Fin.last (Slab H))) ∂(PathMu H 2) := by
+  calc
+    _ = ∫ _U : Field H 2,
+        (∫ path : Path H 2,
+          f (path 0) * TK H 2 beta path * a (path j) *
+            g (path (Fin.last (Slab H))) ∂(PathMu H 2))
+        ∂(FieldMu H 2) := by
+      apply integral_congr_ae
+      filter_upwards with U
+      exact p4Q2PZ37APM_originalGaussSliceUnfixedIntegral_eq_temporalGauge
+        H beta j a ha f g hg U
+    _ = _ := by simp
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APM_originalGaussSliceUnfixedIntegral_eq_temporalGauge
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APM_originalGaussSliceIteratedHaarIntegral_eq_temporalGauge
