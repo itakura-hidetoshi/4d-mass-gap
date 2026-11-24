@@ -1,0 +1,216 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalUniformNormalizedFirstRowSlopeV5_PZ37APC
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalFirstModeTransferBoundV5_PZ37AOD
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37APD — original physical vacuum relative first-mode response
+
+STAGED ONLY. APC is not yet certified. This proof is to be tested only
+after the exact APC source is independently certified and its Formal push
+is certified. No new model, no division by a volume-dependent bound.
+The nonnegative physical top eigenvector tests the original relative
+row estimate; symmetry and the exact eigenvalue cancel the operator
+norm. The resulting error is relative to the actual constant-mode
+amplitude, not the norm-square ground-state density. No spectral-gap
+or continuum claim.
+-/
+
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory
+open scoped ENNReal Topology InnerProductSpace InnerProduct
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 12000000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "Cfg" => PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "P" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "K" => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+local notation "Rep" => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIntegralRepresentative
+local notation "Tr" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+local notation "C" => periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector
+local notation "V" => p4Q2PZ37AMU_actualPhysicalGaussMode
+local notation "Vac" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+local notation "Chi" => p4Q2PZ35C_originalOneLinkCharacter
+local notation "Hol" => p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy
+
+local instance p4Q2PZ37APD_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37APD_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37APD_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37APD_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37APD_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37APD_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
+private theorem p4Q2PZ37APD_firstRep
+    (H : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta) (A : Cfg H 2) :
+    Rep H 2 beta ((V H 1 : P H 2) : Lp ℝ 2 (Mu H 2)) A =
+      (-2 : ℝ) * (∫ B, K H 2 beta A B * Chi (Hol H 2 B) ∂(Mu H 2)) := by
+  let mu := Mu H 2
+  let v : Lp ℝ 2 mu := ((V H 1 : P H 2) : Lp ℝ 2 mu)
+  have hMode : v =ᵐ[mu] (fun B => (-2 : ℝ) * Chi (Hol H 2 B)) :=
+    p4Q2PZ37ANV_actualPhysicalFirstGaussMode_haarRepresentative H
+  change (∫ B : Cfg H 2, v B * K H 2 beta B A ∂mu) = _
+  calc
+    _ = ∫ B : Cfg H 2, (-2 : ℝ) *
+        (K H 2 beta A B * Chi (Hol H 2 B)) ∂mu := by
+      apply integral_congr_ae
+      filter_upwards [hMode] with B hB
+      calc
+        _ = ((-2 : ℝ) * Chi (Hol H 2 B)) * K H 2 beta A B :=
+          congrArg₂ (fun a b : ℝ => a * b) hB
+            (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_symmetric
+              H 2 (by norm_num) beta hbeta B A)
+        _ = _ := by ring
+    _ = _ := integral_const_mul (-2 : ℝ) _
+
+private theorem p4Q2PZ37APD_constantRep
+    (H : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta) (A : Cfg H 2) :
+    Rep H 2 beta ((C H 2 : P H 2) : Lp ℝ 2 (Mu H 2)) A =
+      (∫ B, K H 2 beta A B ∂(Mu H 2)) := by
+  let mu := Mu H 2
+  let c : Lp ℝ 2 mu := ((C H 2 : P H 2) : Lp ℝ 2 mu)
+  have hConst : c =ᵐ[mu] (fun _ : Cfg H 2 => (1 : ℝ)) := by
+    change (Lp.const 2 mu (1 : ℝ)) =ᵐ[mu] _
+    simpa only [Function.const_apply] using
+      (Lp.coeFn_const (μ := mu) (p := (2 : ENNReal)) (c := (1 : ℝ)))
+  change (∫ B : Cfg H 2, c B * K H 2 beta B A ∂mu) = _
+  apply integral_congr_ae
+  filter_upwards [hConst] with B hB
+  rw [hB, one_mul]
+  exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_symmetric
+    H 2 (by norm_num) beta hbeta B A
+
+/-- Original integral representatives: the leading first-mode response
+is proportional to the actual image of the physical constant vector. -/
+theorem p4Q2PZ37APD_originalPhysicalFirstMode_relativeTransferError_le
+    (H : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta) (hsmall : 16 * beta ≤ 1)
+    (A : Cfg H 2) :
+    |Rep H 2 beta ((V H 1 : P H 2) : Lp ℝ 2 (Mu H 2)) A +
+      (beta / 4) * Rep H 2 beta ((C H 2 : P H 2) : Lp ℝ 2 (Mu H 2)) A| ≤
+      195 * beta^2 * Rep H 2 beta ((C H 2 : P H 2) : Lp ℝ 2 (Mu H 2)) A := by
+  rw [p4Q2PZ37APD_firstRep H beta hbeta A, p4Q2PZ37APD_constantRep H beta hbeta A]
+  let i : ℝ := ∫ B, K H 2 beta A B * Chi (Hol H 2 B) ∂(Mu H 2)
+  let z : ℝ := ∫ B, K H 2 beta A B ∂(Mu H 2)
+  have h : |i - beta * z / 8| ≤ (195 / 2 : ℝ) * beta^2 * z :=
+    p4Q2PZ37APC_originalFirstRow_linearError_le_rowMass H beta hbeta hsmall A
+  change |(-2 : ℝ) * i + beta / 4 * z| ≤ 195 * beta^2 * z
+  calc
+    _ = |(-2 : ℝ) * (i - beta * z / 8)| := congrArg abs (by ring)
+    _ = 2 * |i - beta * z / 8| := by rw [abs_mul]; norm_num
+    _ ≤ 2 * ((195 / 2 : ℝ) * beta^2 * z) :=
+      mul_le_mul_of_nonneg_left h (by norm_num)
+    _ = _ := by ring
+
+/-- An a.e. relative error survives testing against any nonnegative
+real L2 vector. This is a genuine L2 inner product, not point sampling. -/
+private theorem p4Q2PZ37APD_relativeError_inner
+    {α : Type*} [MeasurableSpace α] {mu : Measure α}
+    (w f g : Lp ℝ 2 mu) (a b : ℝ)
+    (hw : ∀ᵐ x ∂mu, 0 ≤ w x)
+    (h : ∀ᵐ x ∂mu, |f x + a * g x| ≤ b * g x) :
+    |inner ℝ w f + a * inner ℝ w g| ≤ b * inner ℝ w g := by
+  have hf : Integrable (fun x => w x * f x) mu := by
+    simpa only [periodicHypercubicEven_real_inner_eq_mul] using
+      (MeasureTheory.L2.integrable_inner (𝕜 := ℝ) w f)
+  have hg : Integrable (fun x => w x * g x) mu := by
+    simpa only [periodicHypercubicEven_real_inner_eq_mul] using
+      (MeasureTheory.L2.integrable_inner (𝕜 := ℝ) w g)
+  have hLo : ∀ᵐ x ∂mu, -(b * (w x * g x)) ≤
+      w x * f x + a * (w x * g x) := by
+    filter_upwards [hw, h] with x hx hErr
+    have hh := mul_le_mul_of_nonneg_left (abs_le.mp hErr).1 hx
+    nlinarith only [hh]
+  have hHi : ∀ᵐ x ∂mu, w x * f x + a * (w x * g x) ≤
+      b * (w x * g x) := by
+    filter_upwards [hw, h] with x hx hErr
+    have hh := mul_le_mul_of_nonneg_left (abs_le.mp hErr).2 hx
+    nlinarith only [hh]
+  have hLoInt := integral_mono_ae ((hg.const_mul b).neg)
+    (hf.add (hg.const_mul a)) hLo
+  have hHiInt := integral_mono_ae (hf.add (hg.const_mul a))
+    (hg.const_mul b) hHi
+  rw [integral_neg', integral_add' hf (hg.const_mul a),
+    integral_const_mul, integral_const_mul] at hLoInt
+  rw [integral_add' hf (hg.const_mul a),
+    integral_const_mul, integral_const_mul] at hHiInt
+  simp only [MeasureTheory.L2.inner_def, periodicHypercubicEven_real_inner_eq_mul]
+  exact abs_le.mpr ⟨hLoInt, hHiInt⟩
+
+
+private theorem p4Q2PZ37APD_transfer_ae
+    (H : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta) (u : P H 2) :
+    ((Tr H 2 (by norm_num) beta hbeta u : P H 2) : Lp ℝ 2 (Mu H 2)) =ᵐ[Mu H 2]
+      Rep H 2 beta (u : Lp ℝ 2 (Mu H 2)) := by
+  rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_coe]
+  exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_coeFn
+    H 2 (by norm_num) beta hbeta (u : Lp ℝ 2 (Mu H 2))
+
+/-- Relative first response of the actual normalized physical vacuum.
+The positive eigenvalue cancels exactly; no uniform lower bound on it
+or smallness condition on the extensive action budget is required. -/
+theorem p4Q2PZ37APD_originalPhysicalVacuumFirst_relativeSlopeError_le
+    (H : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta) (hsmall : 16 * beta ≤ 1) :
+    |inner ℝ (Vac H 2 (by norm_num) beta hbeta) (V H 1) +
+      (beta / 4) * inner ℝ (Vac H 2 (by norm_num) beta hbeta) (C H 2)| ≤
+      195 * beta^2 * inner ℝ (Vac H 2 (by norm_num) beta hbeta) (C H 2) := by
+  let mu := Mu H 2
+  let t := Tr H 2 (by norm_num) beta hbeta
+  let omega : P H 2 := Vac H 2 (by norm_num) beta hbeta
+  let v : P H 2 := V H 1
+  let c : P H 2 := C H 2
+  let w : Lp ℝ 2 mu := (omega : Lp ℝ 2 mu)
+  let f : Lp ℝ 2 mu := ((t v : P H 2) : Lp ℝ 2 mu)
+  let g : Lp ℝ 2 mu := ((t c : P H 2) : Lp ℝ 2 mu)
+  have hw : ∀ᵐ A ∂mu, 0 ≤ w A :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_ae_nonnegative
+      H 2 (by norm_num) beta hbeta
+  have hf : f =ᵐ[mu] Rep H 2 beta (v : Lp ℝ 2 mu) :=
+    p4Q2PZ37APD_transfer_ae H beta hbeta v
+  have hg : g =ᵐ[mu] Rep H 2 beta (c : Lp ℝ 2 mu) :=
+    p4Q2PZ37APD_transfer_ae H beta hbeta c
+  have hErr : ∀ᵐ A ∂mu, |f A + beta / 4 * g A| ≤ 195 * beta^2 * g A := by
+    filter_upwards [hf, hg] with A hA hB
+    rw [hA, hB]
+    exact p4Q2PZ37APD_originalPhysicalFirstMode_relativeTransferError_le H beta hbeta hsmall A
+  have h := p4Q2PZ37APD_relativeError_inner w f g (beta / 4) (195 * beta^2) hw hErr
+  change |inner ℝ omega (t v) + beta / 4 * inner ℝ omega (t c)| ≤
+    195 * beta^2 * inner ℝ omega (t c) at h
+  have hEigen : t omega = ‖t‖ • omega :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_eigen
+      H 2 (by norm_num) beta hbeta
+  have hMove (u : P H 2) : inner ℝ omega (t u) = ‖t‖ * inner ℝ omega u := by
+    calc
+      _ = inner ℝ (t omega) u :=
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_isSymmetric
+          H 2 (by norm_num) beta hbeta omega u).symm
+      _ = _ := by
+        rw [hEigen]
+        exact real_inner_smul_left omega u ‖t‖
+  rw [hMove v, hMove c] at h
+  have hPos : 0 < ‖t‖ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
+      H 2 (by norm_num) beta hbeta
+  have hEq : ‖t‖ * inner ℝ omega v + beta / 4 * (‖t‖ * inner ℝ omega c) =
+      ‖t‖ * (inner ℝ omega v + beta / 4 * inner ℝ omega c) := by ring
+  rw [hEq, abs_mul, abs_of_pos hPos] at h
+  change |inner ℝ omega v + beta / 4 * inner ℝ omega c| ≤
+    195 * beta^2 * inner ℝ omega c
+  apply (mul_le_mul_iff_of_pos_left hPos).mp
+  calc
+    _ ≤ 195 * beta^2 * (‖t‖ * inner ℝ omega c) := h
+    _ = _ := by ring
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APD_originalPhysicalFirstMode_relativeTransferError_le
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APD_originalPhysicalVacuumFirst_relativeSlopeError_le
