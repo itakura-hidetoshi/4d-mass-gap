@@ -1,0 +1,19 @@
+name: PZ37APD warm sandbox v2 repair R2-R4
+on:
+  pull_request:
+    paths:
+      - "diagnostics/pz37apd/warm-v2-r2/**"
+      - ".github/workflows/pz37apd-warm-v2-r2.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pz37apd-warm-v2-r2-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    uses: ./.github/workflows/lean-warm-sandbox-reusable-v2.yml
+    with:
+      pack: diagnostics/pz37apd/warm-v2-r2/pack.json
+      source_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      baseline_commit: 472599cadca0f019bcbdbef3e6087d249166ff0e
