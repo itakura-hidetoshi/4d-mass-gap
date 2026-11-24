@@ -1,0 +1,30 @@
+name: Compact project cache v1 independent cold restore
+on:
+  pull_request:
+    paths:
+      - "diagnostics/warm-compact-cache-v1/**"
+      - ".github/workflows/lean-warm-compact-trial-reusable-v1.yml"
+      - ".github/workflows/lean-warm-compact-cold-trial-v1.yml"
+      - "scripts/lean_quarantine_setup_v1.py"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: warm-compact-cold-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  seed:
+    uses: ./.github/workflows/lean-warm-compact-trial-reusable-v1.yml
+    with:
+      pack: diagnostics/warm-compact-cache-v1/pack.json
+      source_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      baseline_commit: 0a518448287454eaa2aa44ff09addb126cc72e42
+      mode: seed
+  cold:
+    needs: seed
+    uses: ./.github/workflows/lean-warm-compact-trial-reusable-v1.yml
+    with:
+      pack: diagnostics/warm-compact-cache-v1/pack.json
+      source_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      baseline_commit: 0a518448287454eaa2aa44ff09addb126cc72e42
+      mode: cold

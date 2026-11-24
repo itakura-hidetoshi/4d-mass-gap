@@ -1,0 +1,167 @@
+name: Experimental compact project cache seed and independent cold restore v1
+on:
+  workflow_call:
+    inputs:
+      pack:
+        type: string
+        required: true
+      source_head:
+        type: string
+        required: true
+      baseline_commit:
+        type: string
+        required: true
+      mode:
+        type: string
+        required: true
+permissions:
+  contents: read
+env:
+  MATHLIB_NO_CACHE_ON_UPDATE: "1"
+  EXACT_HEAD: ${{ inputs.source_head }}
+  PACK: ${{ inputs.pack }}
+  BASELINE_COMMIT: ${{ inputs.baseline_commit }}
+  CACHE_MODE: ${{ inputs.mode }}
+jobs:
+  validate:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.source_head }}
+          persist-credentials: false
+          show-progress: false
+      - uses: actions/checkout@v6
+        with:
+          repository: itakura-hidetoshi/KuuOS
+          ref: 3c3d4a9127256fff732749fdfddd3118b30e86ab
+          path: _codeai_pinned
+          sparse-checkout: |
+            runtime
+            scripts
+            tests
+          persist-credentials: false
+          show-progress: false
+      - name: Bind exact source and certified cache lineage
+        id: meta
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          root = Path.cwd().resolve()
+          path = (root / os.environ["PACK"]).resolve()
+          assert path.is_relative_to(root / "diagnostics")
+          p = json.loads(path.read_text())
+          base = p["baseline_commit"]
+          assert re.fullmatch(r"[0-9a-f]{40}", base)
+          assert base == os.environ["BASELINE_COMMIT"]
+          assert re.fullmatch(r"[0-9a-f]{40}", os.environ["EXACT_HEAD"])
+          assert os.environ["CACHE_MODE"] in {"seed", "cold"}
+          assert p["imports"] and all(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_.]*", x) for x in p["imports"])
+          with open(os.environ["GITHUB_OUTPUT"], "a") as out:
+              out.write("base=" + base + "\n")
+          PY
+          python3 scripts/lean_warm_sandbox_v1.py --pack "$PACK" --output "$RUNNER_TEMP/warm-evidence" --preflight
+          python3 _codeai_pinned/tests/test_kuuos_lean_mcp_repair_loop_v1.py
+      - name: Restore Lean once
+        id: elan
+        uses: actions/cache/restore@v5
+        with:
+          path: ~/.elan
+          key: ${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
+      - name: Restore mathlib once
+        id: deps
+        uses: actions/cache/restore@v5
+        with:
+          path: .lake/packages
+          key: ${{ runner.os }}-lean-fast-deps-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
+      - name: Seed only - restore full certified project
+        if: inputs.mode == 'seed'
+        id: full
+        uses: actions/cache/restore@v5
+        with:
+          path: .lake/build
+          key: ${{ runner.os }}-lean-fast-project-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-base-${{ steps.meta.outputs.base }}
+      - name: Cold only - restore exact new compact key
+        if: inputs.mode == 'cold'
+        id: compact
+        uses: actions/cache/restore@v5
+        with:
+          path: .lake/build
+          key: ${{ runner.os }}-lean-warm-project-nosetup-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-base-${{ steps.meta.outputs.base }}-trial-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Fail closed unless the exact intended caches hit
+        shell: bash
+        env:
+          ELAN_HIT: ${{ steps.elan.outputs.cache-hit }}
+          DEPS_HIT: ${{ steps.deps.outputs.cache-hit }}
+          FULL_HIT: ${{ steps.full.outputs.cache-hit }}
+          COMPACT_HIT: ${{ steps.compact.outputs.cache-hit }}
+        run: |
+          set -euo pipefail
+          [[ "$ELAN_HIT" == true && "$DEPS_HIT" == true ]]
+          if [[ "$CACHE_MODE" == seed ]]; then
+            [[ "$FULL_HIT" == true ]]
+          else
+            [[ "$COMPACT_HIT" == true && "$FULL_HIT" != true ]]
+          fi
+          mkdir -p "$RUNNER_TEMP/warm-evidence"
+          echo "COMPACT_MODE=$CACHE_MODE FULL_HIT=$FULL_HIT COMPACT_HIT=$COMPACT_HIT"
+      - name: Seed only - quarantine generated setup JSON
+        if: inputs.mode == 'seed'
+        run: python3 scripts/lean_quarantine_setup_v1.py "$RUNNER_TEMP/warm-evidence/setup-quarantine.json"
+      - name: Prove no setup JSON present and no dependency rebuild needed
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -d .lake/build/ir
+          test -z "$(find .lake/build/ir -name '*.setup.json' -print -quit)"
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lean --version
+          lake --version
+          python3 - <<'PY'
+          import json, os, subprocess, time
+          from pathlib import Path
+          imports = json.loads(Path(os.environ["PACK"]).read_text())["imports"]
+          imports += [
+              "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalNormalizedRowRelativeSlopeV5_PZ37AOW",
+              "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalTwoOriginHaarLocalityV5_PZ37AOX",
+          ]
+          start = time.monotonic()
+          log = Path(os.environ["RUNNER_TEMP"]) / "warm-evidence/imports.log"
+          with log.open("w") as out:
+              subprocess.run(["lake", "build", "--no-build", *imports],
+                             stdout=out, stderr=subprocess.STDOUT, check=True, timeout=300)
+          print("COMPACT_IMPORT_SECONDS", round(time.monotonic() - start, 3))
+          print("\n".join(log.read_text().splitlines()[-8:]))
+          PY
+      - name: Strict same-source direct Lean and actual MCP
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check uv
+          python3 scripts/lean_warm_sandbox_v1.py --pack "$PACK" --output "$RUNNER_TEMP/warm-evidence"
+          test -z "$(find .lake/build/ir -name '*.setup.json' -print -quit)"
+      - name: Seed only - save newly validated compact project under isolated trial key
+        if: inputs.mode == 'seed'
+        uses: actions/cache/save@v5
+        with:
+          path: .lake/build
+          key: ${{ runner.os }}-lean-warm-project-nosetup-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-base-${{ steps.meta.outputs.base }}-trial-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Preserve terminal compact inventory
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/warm-evidence"
+          python3 scripts/lean_cache_inventory_v1.py "$RUNNER_TEMP/warm-evidence/cache-inventory.json"
+      - name: Archive all evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: compact-cache-v1-${{ inputs.mode }}-evidence
+          path: ${{ runner.temp }}/warm-evidence
+          if-no-files-found: warn
+          retention-days: 30
