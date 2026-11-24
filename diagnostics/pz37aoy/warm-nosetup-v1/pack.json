@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "baseline_commit": "adafe373260cacd44157ffe7c58ee8bcb34b4724",
+  "baseline_mgap4d_tree": "68db0e54aead393088d5e77751de6390d3ed5a96",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalMovingFirstRowSlopeV5_PZ37AOV",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "AOY",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AOY_originalSpatialAction_twoOriginMixedDifference",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AOY_originalCrossingAction_twoOriginMixedDifference_zero",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AOY_originalOneSlabAction_twoOriginMixedDifference"
+      ],
+      "candidates": [
+        {
+          "id": "R4",
+          "path": "diagnostics/pz37aoy/warm-nosetup-v1/R4.lean.txt",
+          "blob": "d373425a0720af8b3ff7de1ce520a3c4ce6dcf90"
+        }
+      ]
+    }
+  ]
+}
