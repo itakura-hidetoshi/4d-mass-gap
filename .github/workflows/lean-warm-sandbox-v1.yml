@@ -1,0 +1,95 @@
+name: Warm Lean sandbox v1 - shared restored runner
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/lean-warm-sandbox-v1.yml"
+      - "scripts/lean_warm_sandbox_v1.py"
+      - "diagnostics/warm-sandbox-v1/**"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: warm-lean-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+env:
+  MATHLIB_NO_CACHE_ON_UPDATE: "1"
+  EXACT_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+  PACK: diagnostics/warm-sandbox-v1/pack.json
+jobs:
+  warm-sandbox:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          show-progress: false
+      - uses: actions/checkout@v6
+        with:
+          repository: itakura-hidetoshi/KuuOS
+          ref: 3c3d4a9127256fff732749fdfddd3118b30e86ab
+          path: _codeai_pinned
+          sparse-checkout: |
+            runtime
+            scripts
+            tests
+          persist-credentials: false
+          show-progress: false
+      - name: Verify source bindings and native repair guard
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/lean_warm_sandbox_v1.py --pack "$PACK" --output "$RUNNER_TEMP/warm-evidence" --preflight
+          python3 _codeai_pinned/tests/test_kuuos_lean_mcp_repair_loop_v1.py
+      - name: Restore Lean once
+        id: elan
+        uses: actions/cache/restore@v5
+        with:
+          path: ~/.elan
+          key: ${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
+      - name: Restore mathlib once
+        id: deps
+        uses: actions/cache/restore@v5
+        with:
+          path: .lake/packages
+          key: ${{ runner.os }}-lean-fast-deps-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
+      - name: Restore certified project oleans once
+        id: project
+        uses: actions/cache/restore@v5
+        with:
+          path: .lake/build
+          key: ${{ runner.os }}-lean-fast-project-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-base-adafe373260cacd44157ffe7c58ee8bcb34b4724
+      - name: Require exact warm caches and check dependencies once
+        shell: bash
+        env:
+          ELAN_HIT: ${{ steps.elan.outputs.cache-hit }}
+          DEPS_HIT: ${{ steps.deps.outputs.cache-hit }}
+          PROJECT_HIT: ${{ steps.project.outputs.cache-hit }}
+        run: |
+          set -euo pipefail
+          if [[ "$ELAN_HIT" != true || "$DEPS_HIT" != true || "$PROJECT_HIT" != true ]]; then
+            echo "::error::Infrastructure HOLD: exact certified caches unavailable; no proof result."
+            exit 2
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          mkdir -p "$RUNNER_TEMP/warm-evidence"
+          lean --version
+          lake --version
+          time lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalMovingFirstRowSlopeV5_PZ37AOV Mathlib.Tactic > "$RUNNER_TEMP/warm-evidence/imports.log" 2>&1
+          tail -8 "$RUNNER_TEMP/warm-evidence/imports.log"
+      - name: Single runner candidate repair and audit loop
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check uv
+          python3 scripts/lean_warm_sandbox_v1.py --pack "$PACK" --output "$RUNNER_TEMP/warm-evidence"
+      - name: Preserve candidate sources diagnostics and receipts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: warm-sandbox-v1-evidence
+          path: ${{ runner.temp }}/warm-evidence
+          if-no-files-found: warn
+          retention-days: 30
