@@ -1,0 +1,187 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalExactTwoModeQuadraticTransferV5_PZ37APJ
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicTwoModeOSGramKernelV5_PZ37ANG
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicTimeOneOSVarianceLowerBoundV5_PZ37ANL
+import Mathlib.Tactic
+/-!
+# P4-Q2-PZ37APK — exact physical vacuum ratio and original OS boundary determinant
+
+STAGED ONLY. Connect APJ's actual coefficients to the unchanged ANF/ANG
+full-periodic Wilson OS observable. Retain the physical vacuum overlap
+factor explicitly, without assuming a uniform lower bound on it.
+Strict positivity is equivalent to noncancellation of the actual boundary
+determinant, not inferred from a nonzero physical Hilbert vector.
+-/
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory Filter
+open scoped ENNReal Topology InnerProductSpace InnerProduct
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 12000000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "P" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "C" => periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector
+local notation "V" => p4Q2PZ37AMU_actualPhysicalGaussMode
+local notation "Tr" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+local notation "Vac" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+local notation "Top" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
+local notation "M" => p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment
+local notation "Q" => p4Q2PZ37ANF_originalTimeOneWilsonOSQuadratic
+local notation "Mu" => periodicHypercubicEvenBoundaryHaarMeasure
+local notation "B0" => GroundStatePosteriorJoint.p4Q2PZ37ADC_fixedCoupling
+
+local instance p4Q2PZ37APK_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength,
+    periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37APK_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37APK_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37APK_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37APK_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37APK_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37APK_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
+/-- Clear the strictly positive physical vacuum denominator in the original
+OS boundary moment of exactly the APJ ratio coefficients. -/
+theorem p4Q2PZ37APK_originalVacuumRatio_scaledBoundaryMoment
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hbeta : 0 ≤ beta)
+    (z : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2) :
+    let a := inner ℝ (Vac H 2 (by norm_num) beta hbeta) (C H 2)
+    let d := inner ℝ (Vac H 2 (by norm_num) beta hbeta) (V H 1)
+    a * M H beta hbeta (-d / a) 1 z =
+      a * M H beta hbeta 0 1 z - d * M H beta hbeta 1 0 z := by
+  let a : ℝ := inner ℝ (Vac H 2 (by norm_num) beta hbeta) (C H 2)
+  let d : ℝ := inner ℝ (Vac H 2 (by norm_num) beta hbeta) (V H 1)
+  change a * M H beta hbeta (-d / a) 1 z =
+    a * M H beta hbeta 0 1 z - d * M H beta hbeta 1 0 z
+  have ha := p4Q2PZ37ANM_originalPhysicalTop_inner_modeZero_pos H beta hbeta
+  rw [p4Q2PZ37ANM_actualModeZero_eq_physicalConstant] at ha
+  change 0 < a at ha
+  have hqa : (-d / a) * a = -d := by
+    exact div_mul_cancel₀ _ (ne_of_gt ha)
+  rw [p4Q2PZ37ANG_originalTimeOneBoundaryGramMoment_twoMode_linear]
+  calc
+    _ = ((-d / a) * a) * M H beta hbeta 1 0 z +
+      a * M H beta hbeta 0 1 z := by ring
+    _ = _ := by rw [hqa]; ring
+
+/-- Exact determinant-square identity, with the actual positive physical
+vacuum denominator retained on the original OS quadratic side. -/
+theorem p4Q2PZ37APK_originalVacuumRatio_scaledOSQuadratic_eq_determinantSq
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hbeta : 0 ≤ beta) :
+    let a := inner ℝ (Vac H 2 (by norm_num) beta hbeta) (C H 2)
+    let d := inner ℝ (Vac H 2 (by norm_num) beta hbeta) (V H 1)
+    a ^ 2 * Q H beta hbeta (-d / a) 1 =
+      ∫ z, (a * M H beta hbeta 0 1 z - d * M H beta hbeta 1 0 z) ^ 2
+        ∂(Mu H 2) := by
+  let a : ℝ := inner ℝ (Vac H 2 (by norm_num) beta hbeta) (C H 2)
+  let d : ℝ := inner ℝ (Vac H 2 (by norm_num) beta hbeta) (V H 1)
+  change a ^ 2 * Q H beta hbeta (-d / a) 1 =
+    ∫ z, (a * M H beta hbeta 0 1 z - d * M H beta hbeta 1 0 z) ^ 2
+      ∂(Mu H 2)
+  rw [p4Q2PZ37ANF_originalTimeOneWilsonOSQuadratic_eq_boundaryGramMoment_sq,
+    ← integral_const_mul]
+  apply integral_congr_ae
+  filter_upwards [] with z
+  have h := p4Q2PZ37APK_originalVacuumRatio_scaledBoundaryMoment H beta hbeta z
+  change a * M H beta hbeta (-d / a) 1 z =
+    a * M H beta hbeta 0 1 z - d * M H beta hbeta 1 0 z at h
+  rw [← h, Real.norm_eq_abs, sq_abs]
+  ring
+
+/-- The remaining strictness obligation is exactly the nonzero determinant
+of original boundary moments and physical vacuum overlaps. -/
+theorem p4Q2PZ37APK_originalVacuumRatio_OSQuadratic_pos_iff_determinant_not_ae_zero
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hbeta : 0 ≤ beta) :
+    let a := inner ℝ (Vac H 2 (by norm_num) beta hbeta) (C H 2)
+    let d := inner ℝ (Vac H 2 (by norm_num) beta hbeta) (V H 1)
+    0 < Q H beta hbeta (-d / a) 1 ↔
+      ¬ ((fun z => a * M H beta hbeta 0 1 z - d * M H beta hbeta 1 0 z)
+        =ᵐ[Mu H 2] (fun _ => (0 : ℝ))) := by
+  let a : ℝ := inner ℝ (Vac H 2 (by norm_num) beta hbeta) (C H 2)
+  let d : ℝ := inner ℝ (Vac H 2 (by norm_num) beta hbeta) (V H 1)
+  change 0 < Q H beta hbeta (-d / a) 1 ↔
+    ¬ ((fun z => a * M H beta hbeta 0 1 z - d * M H beta hbeta 1 0 z)
+      =ᵐ[Mu H 2] (fun _ => (0 : ℝ)))
+  have ha := p4Q2PZ37ANM_originalPhysicalTop_inner_modeZero_pos H beta hbeta
+  rw [p4Q2PZ37ANM_actualModeZero_eq_physicalConstant] at ha
+  change 0 < a at ha
+  rw [p4Q2PZ37ANK_originalTimeOneWilsonOSQuadratic_pos_iff_boundaryMoment_not_ae_zero]
+  constructor
+  · intro hn hz
+    apply hn
+    filter_upwards [hz] with z hzero
+    change a * M H beta hbeta 0 1 z - d * M H beta hbeta 1 0 z = 0 at hzero
+    have h := p4Q2PZ37APK_originalVacuumRatio_scaledBoundaryMoment H beta hbeta z
+    change a * M H beta hbeta (-d / a) 1 z =
+      a * M H beta hbeta 0 1 z - d * M H beta hbeta 1 0 z at h
+    exact (mul_eq_zero.mp (h.trans hzero)).resolve_left (ne_of_gt ha)
+  · intro hn hz
+    apply hn
+    filter_upwards [hz] with z hzero
+    change M H beta hbeta (-d / a) 1 z = 0 at hzero
+    have h := p4Q2PZ37APK_originalVacuumRatio_scaledBoundaryMoment H beta hbeta z
+    change a * M H beta hbeta (-d / a) 1 z =
+      a * M H beta hbeta 0 1 z - d * M H beta hbeta 1 0 z at h
+    calc
+      _ = a * M H beta hbeta (-d / a) 1 z := h.symm
+      _ = 0 := by rw [hzero, mul_zero]
+
+/-- At the original fixed positive coupling, the SAME coefficient-one
+APJ vector has a uniformly positive constant coefficient, not merely
+some nonzero two-mode combination. No OS strictness is asserted. -/
+theorem p4Q2PZ37APK_originalFixedCoupling_exactRatio_positive_quadratic_direction
+    (H : ℕ) :
+    let hbeta := GroundStatePosteriorJoint.p4Q2PZ37ADC_fixedCoupling_pos.le
+    ∃ q : ℝ,
+      q = -inner ℝ (Vac H 2 (by norm_num) B0 hbeta) (V H 1) /
+        inner ℝ (Vac H 2 (by norm_num) B0 hbeta) (C H 2) ∧
+      B0 / 64 ≤ q ∧ 0 < q ∧
+      |q - B0 / 4| ≤ 195 * B0 ^ 2 ∧
+      V H 1 + q • C H 2 ∈ (Top H 2 (by norm_num) B0 hbeta)ᗮ ∧
+      1 ≤ ‖V H 1 + q • C H 2‖ ∧
+      ‖Tr H 2 (by norm_num) B0 hbeta (V H 1 + q • C H 2)‖ ≤
+        390 * B0 ^ 2 * ‖Tr H 2 (by norm_num) B0 hbeta (C H 2)‖ := by
+  have hb : 0 < B0 := GroundStatePosteriorJoint.p4Q2PZ37ADC_fixedCoupling_pos
+  have he := Real.add_one_le_exp (64 * B0)
+  rw [GroundStatePosteriorJoint.p4Q2PZ37ADC_fixedCoupling_exp_eq] at he
+  have hs128 : 128 * B0 ≤ 1 := by linarith only [he]
+  have hs16 : 16 * B0 ≤ 1 := by linarith only [hb, hs128]
+  obtain ⟨q, hq, herr, hmem, hn, ht⟩ :=
+    p4Q2PZ37APJ_originalExactTwoMode_exists_quadratic_direction H B0 hb.le hs16
+  let a : ℝ := inner ℝ (Vac H 2 (by norm_num) B0 hb.le) (C H 2)
+  let d : ℝ := inner ℝ (Vac H 2 (by norm_num) B0 hb.le) (V H 1)
+  change q = -d / a at hq
+  have ha := p4Q2PZ37ANM_originalPhysicalTop_inner_modeZero_pos H B0 hb.le
+  rw [p4Q2PZ37ANM_actualModeZero_eq_physicalConstant] at ha
+  change 0 < a at ha
+  have hd := p4Q2PZ37API_originalPhysicalVacuumFirst_signedRelativeOverlap_le
+    H B0 hb.le hs128
+  change d ≤ -(B0 / 64) * a at hd
+  have hqa : q * a = -d := by
+    rw [hq]
+    exact div_mul_cancel₀ _ (ne_of_gt ha)
+  have hqge : B0 / 64 ≤ q := by
+    apply (mul_le_mul_iff_of_pos_right ha).mp
+    rw [hqa]
+    calc
+      (B0 / 64) * a = - (-(B0 / 64) * a) := by ring
+      _ ≤ -d := neg_le_neg hd
+  exact ⟨q, hq, hqge, lt_of_lt_of_le (div_pos hb (by norm_num)) hqge,
+    herr, hmem, hn, ht⟩
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APK_originalVacuumRatio_scaledBoundaryMoment
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APK_originalVacuumRatio_scaledOSQuadratic_eq_determinantSq
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APK_originalVacuumRatio_OSQuadratic_pos_iff_determinant_not_ae_zero
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APK_originalFixedCoupling_exactRatio_positive_quadratic_direction

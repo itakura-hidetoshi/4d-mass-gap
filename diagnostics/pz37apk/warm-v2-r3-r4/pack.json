@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "baseline_commit": "ff78e740988ea77fccfc6bdd0a8bbf451806e19c",
+  "baseline_mgap4d_tree": "1da42b6c5edfa43938a45b6cd784a5f5103c2878",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalExactTwoModeQuadraticTransferV5_PZ37APJ",
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicTwoModeOSGramKernelV5_PZ37ANG",
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicTimeOneOSVarianceLowerBoundV5_PZ37ANL",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "APK",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APK_originalVacuumRatio_scaledBoundaryMoment",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APK_originalVacuumRatio_scaledOSQuadratic_eq_determinantSq",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APK_originalVacuumRatio_OSQuadratic_pos_iff_determinant_not_ae_zero",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APK_originalFixedCoupling_exactRatio_positive_quadratic_direction"
+      ],
+      "candidates": [
+        {
+          "id": "R3",
+          "path": "diagnostics/pz37apk/warm-v2-r3-r4/APK_R3.lean.txt",
+          "blob": "73b4f08807965cb23c231f6b2502e5d92f3da3f0"
+        },
+        {
+          "id": "R4",
+          "path": "diagnostics/pz37apk/warm-v2-r3-r4/APK_R4.lean.txt",
+          "blob": "153a724369055648804bbff8ae35c9122a282f72"
+        }
+      ]
+    }
+  ]
+}
