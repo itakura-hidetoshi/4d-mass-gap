@@ -1,0 +1,24 @@
+name: Warm Lean sandbox evidence gate regression
+on:
+  pull_request:
+    paths:
+      - "scripts/lean_warm_sandbox_v1.py"
+      - "scripts/test_lean_warm_sandbox_v1.py"
+      - "scripts/lean_cache_inventory_v1.py"
+      - ".github/workflows/lean-warm-sandbox-reusable-v1.yml"
+      - ".github/workflows/lean-warm-sandbox-gates-v1.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          show-progress: false
+      - name: Warm sandbox fail-closed regression
+        run: python3 scripts/test_lean_warm_sandbox_v1.py
