@@ -1,0 +1,7 @@
+# Compact project cache independent cold restore experiment v1
+
+The prior experiment #6933 run 45330914533 quarantined 3,215 generated Lake setup JSON files (16,588,098,252 logical bytes) and strictly certified AOY R4 on the AOV baseline. A separately compressed project archive was 372,757,447 bytes versus 1,111,953,891 bytes for the old full GitHub project cache. This was not a cold restore.
+
+This experiment uses the postmerge-certified AOW/AOX mathematical baseline 0a518448287454eaa2aa44ff09addb126cc72e42, MGAP4D tree 4a66e9635211ae8256616f2373b91c3bd1ef0032. Current infrastructure HEAD 99f0ec41674d3c08559809743504283e5f3e5bd7 has the identical MGAP4D tree and pinned environment. On a seed runner restore exact full caches; quarantine setup JSON only; require no-build imports and original source tree plus actual strict Lean/MCP; save a new run-scoped project-cache key only if green. In a distinct GitHub-hosted runner restore that exact new key with no full-project fallback. Recheck imports including AOW/AOX and the same AOY R4 bytes, standard axioms and exact original tree. Measure both restore logs and actual cache size. Keep the certified full cache untouched.
+
+This is a diagnostic pilot, not a change to the production warm workflow or automatic promotion. Failed cache hit, incomplete import check, direct Lean, MCP or cache save blocks the relevant lane. Never merge this diagnostic PR. A cold success would certify only this fixed source/pin/cache format and tested dependency closure.
