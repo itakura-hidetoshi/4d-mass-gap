@@ -1,0 +1,119 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalExactTwoModeQuadraticTransferV5_PZ37APJ
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicTimeOneClosureHaarMeanV5_PZ37ANJ
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicTimeOneOSNullSpaceStrictnessV5_PZ37ANK
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicTwoModeOSGramKernelV5_PZ37ANG
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37APK — exact fixed-coupling two-mode coefficient and OS null obstruction
+
+STAGED ONLY, requires certified APJ on Formal. Select the actual physical
+vacuum-ratio coefficient q with first-mode coefficient one. API gives
+q >= beta0/64 > 0, and ANJ then evaluates the same literal time-one
+cylinder's original product-Haar mean to q. This is not an interacting
+Gibbs or OS Gram mean. Using ANG and ANK, isolate exactly the remaining
+OS cancellation condition on the true positive-coupling boundary moments.
+No new original model, coupling, observable, sector or assumption.
+No unconditional positive OS seminorm or continuum conclusion.
+-/
+
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory
+open scoped ENNReal Topology InnerProductSpace InnerProduct
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 12000000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "P" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "C" => periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector
+local notation "V" => p4Q2PZ37AMU_actualPhysicalGaussMode
+local notation "Tr" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+local notation "NTr" => periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+local notation "Vac" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+local notation "Top" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
+
+local instance p4Q2PZ37APK_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37APK_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37APK_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37APK_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37APK_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37APK_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
+local notation "B0" => GroundStatePosteriorJoint.p4Q2PZ37ADC_fixedCoupling
+local notation "HB0" => GroundStatePosteriorJoint.p4Q2PZ37ADC_fixedCoupling_pos.le
+local notation "F" => p4Q2PZ37ANF_originalTimeOneBoundaryPositiveObservable
+local notation "M" => p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment
+local notation "Q" => p4Q2PZ37ANF_originalTimeOneWilsonOSQuadratic
+
+/-- The exact two-mode physical excitation has a uniformly positive constant
+coefficient and the same positive original closure-product-Haar mean.
+The OS boundary null obstruction is an exact a.e. proportionality
+of the genuine interacting mode moments, with this SAME coefficient. -/
+theorem p4Q2PZ37APK_originalFixedTwoMode_haarMean_and_exactOSObstruction
+    (H : ℕ) [Nontrivial G] :
+    ∃ q : ℝ,
+      q = -inner ℝ (Vac H 2 (by norm_num) B0 HB0) (V H 1) /
+        inner ℝ (Vac H 2 (by norm_num) B0 HB0) (C H 2) ∧
+      B0 / 64 ≤ q ∧
+      0 < q ∧
+      V H 1 + q • C H 2 ∈ (Top H 2 (by norm_num) B0 HB0)ᗮ ∧
+      (∫ z, F H q 1 z
+        ∂((periodicHypercubicEvenBoundaryHaarMeasure H 2).prod
+          (periodicHypercubicEvenOpenHalfHaarMeasure H 2))) = q ∧
+      (0 < Q H B0 HB0 q 1 ↔
+        ¬ (∀ᵐ b ∂(periodicHypercubicEvenBoundaryHaarMeasure H 2),
+          M H B0 HB0 0 1 b = -(q * M H B0 HB0 1 0 b))) := by
+  have hb : 0 < B0 := GroundStatePosteriorJoint.p4Q2PZ37ADC_fixedCoupling_pos
+  have h128 : 128 * B0 ≤ 1 := by
+    have he := Real.add_one_le_exp (64 * B0)
+    rw [GroundStatePosteriorJoint.p4Q2PZ37ADC_fixedCoupling_exp_eq] at he
+    linarith only [he]
+  have h16 : 16 * B0 ≤ 1 := by linarith only [h128, hb]
+  obtain ⟨q, hq, hErr, hMem, hNorm, hTransfer⟩ :=
+    p4Q2PZ37APJ_originalExactTwoMode_exists_quadratic_direction H B0 HB0 h16
+  have ha := p4Q2PZ37ANM_originalPhysicalTop_inner_modeZero_pos H B0 HB0
+  rw [p4Q2PZ37ANM_actualModeZero_eq_physicalConstant] at ha
+  have hSigned :=
+    p4Q2PZ37API_originalPhysicalVacuumFirst_signedRelativeOverlap_le H B0 HB0 h128
+  have hqBound : B0 / 64 ≤ q := by
+    rw [hq]
+    apply (le_div_iff₀ ha).2
+    linarith only [hSigned]
+  have hqPos : 0 < q :=
+    (div_pos hb (by norm_num : (0 : ℝ) < 64)).trans_le hqBound
+  have hMean :
+      (∫ z, F H q 1 z
+        ∂((periodicHypercubicEvenBoundaryHaarMeasure H 2).prod
+          (periodicHypercubicEvenOpenHalfHaarMeasure H 2))) = q :=
+    p4Q2PZ37ANJ_originalTimeOneTwoMode_closureHaarMean_eq_c0 H q 1
+  refine ⟨q, hq, hqBound, hqPos, hMem, hMean, ?_⟩
+  rw [p4Q2PZ37ANK_originalTimeOneWilsonOSQuadratic_pos_iff_boundaryMoment_not_ae_zero]
+  constructor
+  · intro hNot hCancel
+    apply hNot
+    filter_upwards [hCancel] with b hc
+    change M H B0 HB0 q 1 b = 0
+    rw [p4Q2PZ37ANG_originalTimeOneBoundaryGramMoment_twoMode_linear
+      H B0 HB0 q 1 b, one_mul, hc]
+    ring
+  · intro hNot hz
+    apply hNot
+    filter_upwards [hz] with b hzero
+    change M H B0 HB0 q 1 b = 0 at hzero
+    rw [p4Q2PZ37ANG_originalTimeOneBoundaryGramMoment_twoMode_linear
+      H B0 HB0 q 1 b, one_mul] at hzero
+    linarith only [hzero]
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APK_originalFixedTwoMode_haarMean_and_exactOSObstruction
