@@ -1,0 +1,19 @@
+name: PZ37APV full-cache sandbox v1 R1/R2 canonical vacuum and centered realization
+on:
+  pull_request:
+    paths:
+      - "diagnostics/pz37apv/full-v1-r1-r2/**"
+      - ".github/workflows/pz37apv-full-v1-r1-r2.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pz37apv-full-v1-r1-r2-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    uses: ./.github/workflows/lean-warm-sandbox-reusable-diagnostic-full-v1.yml
+    with:
+      pack: diagnostics/pz37apv/full-v1-r1-r2/pack.json
+      source_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      baseline_commit: 841cb7534d26218160a29a5ea247d3e76e762f6d
