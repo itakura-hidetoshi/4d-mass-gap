@@ -1,0 +1,10 @@
+{
+  "source_run": 45568802940,
+  "source_job": 139050087077,
+  "source_head": "028f5d5648fe948ba9a630c76476d2a51edf1378",
+  "source_blob": "435bbd6e91eb6d028c363764062ba3671b94b530",
+  "source_sha256": "4717f672481ccb2605187e4c3d39e169f844fddd7fcb865f9ab68fc55aeb4b22",
+  "diagnostic": "line 180: change M H beta hb.le (-r) 1 b = 0 tactic does nothing",
+  "structural_reason": "filter_upwards has already reduced the a.e. equality pointwise to the exact requested scalar goal. Strict unusedTactic linter rejects a redundant change. R2 had six axiom outputs standard-three-only; direct exit 1 prevents certification. R3 deletes only this line without disabling linter or altering statements. R1 audit includes sorryAx in mode-zero proof, so discarded.",
+  "state": "TEST_REQUIRED"
+}
