@@ -1,0 +1,10 @@
+{
+  "source_run": 45528803008,
+  "source_job": 138918676256,
+  "source_head": "2f2b0f95fb8e7be2b799b39a71eb9bd915651294",
+  "source_blob": "d9922278b0e9870b2107e089dcfedc6d1e4a5a86",
+  "source_sha256": "0286c1c30427608b4536ba01e35b12ed70f5e97c87114ae48c5c6e4191129c48",
+  "diagnostic": "invalid ▸ notation, expected result type of cast",
+  "structural_reason": "Goal retains outer let bindings and actual positive-time index, whereas hBridge is an equality of the scalar expressions with local abbreviations. Explicit change aligns the goal definitionally; rw or lt_of_lt_of_eq transports strict positivity. First three theorem bodies and all four public propositions unchanged.",
+  "state": "TEST_REQUIRED"
+}

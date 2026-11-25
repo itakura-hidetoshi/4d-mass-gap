@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "baseline_commit": "c8b881fede350a14e05ccac7f9103a1856c44e30",
+  "baseline_mgap4d_tree": "9779335cd0f1c44ecd78a6881dd503aec0da74a2",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPositiveHalfTransferSliceObservableInsertion",
+    "MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPositiveHalfHaarTemporalGaugeReduction",
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalVacuumWeightedTimeOneInsertionStrictPositivityV5_PZ37APL",
+    "MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryPositiveHalfClosureEndpointPhysicalTransfer",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "APM",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APM_originalGaussSliceUnfixedIntegral_eq_temporalGauge",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APM_originalGaussSliceIteratedHaarIntegral_eq_temporalGauge",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APM_originalClosureInsertedIntegral_eq_nativeAmplitude",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APM_originalTimeOneClosurePairing_pos"
+      ],
+      "candidates": [
+        {
+          "id": "R3",
+          "path": "diagnostics/pz37apm/warm-v2-r3-r4/APM_R3.lean.txt",
+          "blob": "61a041646abc28348af9222ec14e93d89f7076e4"
+        },
+        {
+          "id": "R4",
+          "path": "diagnostics/pz37apm/warm-v2-r3-r4/APM_R4.lean.txt",
+          "blob": "648d8340959eb789a8fcbfc5229a49ee225e890d"
+        }
+      ]
+    }
+  ]
+}
