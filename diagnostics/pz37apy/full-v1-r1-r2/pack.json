@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "baseline_commit": "71a0685b122302d6b21315044b287e1406b21e23",
+  "baseline_mgap4d_tree": "49d92457b027c426fd6a563ac37521e565a913ce",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalPositiveTimeHalfTurnObstructionV5_PZ37APX",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "APY",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APY_rawPhysicalState_boundary_eq_smul_vacuum",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APY_completedBoundary_eq_vacuumProjection",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APY_completedBoundary_range_eq_vacuumLine",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APY_completedState_eq_smul_vacuum",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APY_no_centeredRealization_of_allPositiveTranslations",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APY_no_modeOneBoundaryClosure_of_allPositiveTranslations"
+      ],
+      "candidates": [
+        {
+          "id": "R1",
+          "path": "diagnostics/pz37apy/full-v1-r1-r2/APY_R1.lean.txt",
+          "blob": "31664b3f9405ba871a0daf62d3adcc7dfe9d2c1e"
+        },
+        {
+          "id": "R2",
+          "path": "diagnostics/pz37apy/full-v1-r1-r2/APY_R2.lean.txt",
+          "blob": "641f4901c9f2b6e2674ed68ddbf15ba4d1668ff7"
+        }
+      ]
+    }
+  ]
+}
