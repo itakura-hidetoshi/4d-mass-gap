@@ -1,0 +1,300 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPositiveHalfTransferSliceObservableInsertion
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPositiveHalfHaarTemporalGaugeReduction
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalVacuumWeightedTimeOneInsertionStrictPositivityV5_PZ37APL
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryPositiveHalfClosureEndpointPhysicalTransfer
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37APM precursor — original inserted half-path temporal gauge transport
+
+Unverified candidate. Extend the existing endpoint-only Haar change of
+variables to an actual bounded gauge-invariant observable at any native
+positive-half spatial index. Keep the primary endpoint fixed and transport
+the terminal Gauss-law representative only almost everywhere. Do not
+identify the OS carrier with the one-slab Hilbert space.
+-/
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory Filter
+open scoped ENNReal Topology InnerProductSpace InnerProduct
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 12000000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "Slab" => periodicHypercubicEvenPositiveHalfCylinderSlabCount
+local notation "Path" => PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath
+local notation "Field" => PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalLinkField
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "PathMu" => periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure
+local notation "FieldMu" => periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalFieldHaarMeasure
+local notation "Gauge" => periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugeSpatialPath
+local notation "UK" => periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel
+local notation "TK" => periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
+
+local instance p4Q2PZ37APM_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37APM_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37APM_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37APM_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37APM_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37APM_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37APM_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
+/-- Insert the same original bounded gauge-invariant observable at an
+arbitrary spatial index, before or after the exact fixed-field gauge change. -/
+theorem p4Q2PZ37APM_originalGaussSliceUnfixedIntegral_eq_temporalGauge
+    (H : ℕ) (beta : ℝ) (j : Fin (Slab H + 1))
+    (a : PeriodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservable H 2)
+    (ha : periodicHypercubicEvenSpecialUnitarySpatialSliceObservableGaugeInvariant H 2 a)
+    (f g : Lp ℝ 2 (Mu H 2))
+    (hg : g ∈ periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2)
+    (U : Field H 2) :
+    (∫ path : Path H 2,
+      f (path 0) * UK H 2 beta path U * a (path j) *
+        g (path (Fin.last (Slab H))) ∂(PathMu H 2)) =
+    ∫ path : Path H 2,
+      f (path 0) * TK H 2 beta path * a (path j) *
+        g (path (Fin.last (Slab H))) ∂(PathMu H 2) := by
+  let e := periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalGaugeSpatialPathMeasurableEquiv
+    H 2 U
+  let F : Path H 2 → ℝ := fun path =>
+    f (path 0) * TK H 2 beta path * a (path j) *
+      g (path (Fin.last (Slab H)))
+  have hTerminal :=
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfTerminalGaugeInvariant_ae H 2 g hg U
+  calc
+    _ = ∫ path : Path H 2, F (e path) ∂(PathMu H 2) := by
+      apply integral_congr_ae
+      filter_upwards [hTerminal] with path ht
+      have he : e path = Gauge H 2 U path := rfl
+      have hZero : (e path) 0 = path 0 := by
+        rw [he]
+        have h0 : (0 : Fin (Slab H + 1)) = ⟨0, Nat.zero_lt_succ _⟩ := by
+          apply Fin.ext
+          rfl
+        rw [h0]
+        exact periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugeSpatialPath_zero
+          H 2 U path
+      have hObs : a ((e path) j) = a (path j) := by
+        rw [he]
+        exact ha
+          (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderCumulativeGauge H 2 U j)
+          (path j)
+      have hLast : g ((e path) (Fin.last (Slab H))) =
+          g (path (Fin.last (Slab H))) := by
+        rw [he]
+        exact ht
+      have hK : UK H 2 beta path U = TK H 2 beta (e path) := by
+        rw [he]
+        exact periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel_eq_temporalGauge
+          H 2 beta path U
+      calc
+        _ = f ((e path) 0) * TK H 2 beta (e path) *
+            a ((e path) j) * g ((e path) (Fin.last (Slab H))) := by
+          rw [hZero, hObs, hLast, ← hK]
+        _ = F (e path) := rfl
+    _ = _ := by
+      have hPres := periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalGaugeSpatialPath_measurePreserving
+        H 2 U
+      exact hPres.integral_comp' F
+
+/-- The normalized original temporal-link Haar average preserves the inserted
+path integral exactly; no replacement of the spatial Haar law is made. -/
+theorem p4Q2PZ37APM_originalGaussSliceIteratedHaarIntegral_eq_temporalGauge
+    (H : ℕ) (beta : ℝ) (j : Fin (Slab H + 1))
+    (a : PeriodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservable H 2)
+    (ha : periodicHypercubicEvenSpecialUnitarySpatialSliceObservableGaugeInvariant H 2 a)
+    (f g : Lp ℝ 2 (Mu H 2))
+    (hg : g ∈ periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2) :
+    (∫ U : Field H 2,
+      (∫ path : Path H 2,
+        f (path 0) * UK H 2 beta path U * a (path j) *
+          g (path (Fin.last (Slab H))) ∂(PathMu H 2))
+      ∂(FieldMu H 2)) =
+    ∫ path : Path H 2,
+      f (path 0) * TK H 2 beta path * a (path j) *
+        g (path (Fin.last (Slab H))) ∂(PathMu H 2) := by
+  calc
+    _ = ∫ _U : Field H 2,
+        (∫ path : Path H 2,
+          f (path 0) * TK H 2 beta path * a (path j) *
+            g (path (Fin.last (Slab H))) ∂(PathMu H 2))
+        ∂(FieldMu H 2) := by
+      apply integral_congr_ae
+      filter_upwards with U
+      exact p4Q2PZ37APM_originalGaussSliceUnfixedIntegral_eq_temporalGauge
+        H beta j a ha f g hg U
+    _ = _ := by simp
+
+local notation "Phys" => periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
+local notation "Closure" => PeriodicHypercubicEvenPositiveHalfClosureConfiguration
+local notation "ClosureMu" => periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureHaarMeasure
+local notation "NestedMu" => periodicHypercubicEvenSpecialUnitaryPositiveHalfExplicitNestedHaarMeasure
+local notation "E" => periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
+local notation "Gram" => periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+local notation "NormZ" => periodicHypercubicEvenBoundaryPositiveHalfPartitionSqrtNormalization
+local notation "Aobs" => PeriodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservable
+local notation "NativeAmp" => periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeSliceObservableAmplitude
+local notation "Amp" => periodicHypercubicEvenSpecialUnitaryTransferSliceObservableAmplitude
+
+local instance p4Q2PZ37APM_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+
+/-- Transport a normalized, endpoint-tested completed OS feature with one
+literal bounded gauge-invariant slice insertion to the actual temporal-gauge
+path amplitude. Integrability is inherited from the exact endpoint theorem,
+then multiplied by the bounded inserted observable. -/
+theorem p4Q2PZ37APM_originalClosureInsertedIntegral_eq_nativeAmplitude
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 ≤ beta)
+    (j : Fin (Slab H + 1)) (a : Aobs H 2)
+    (ha : periodicHypercubicEvenSpecialUnitarySpatialSliceObservableGaugeInvariant H 2 a)
+    (f g : Phys H 2) :
+    (∫ z : Closure H G,
+      Gram H 2 (by norm_num) beta hb z.1 z.2 *
+        (f : Lp ℝ 2 (Mu H 2)) ((E H 2 z).1 0) *
+        (g : Lp ℝ 2 (Mu H 2)) ((E H 2 z).1 (Fin.last (Slab H))) *
+        a ((E H 2 z).1 j) ∂(ClosureMu H 2)) =
+    NormZ H 2 (by norm_num) beta hb *
+      NativeAmp H 2 beta (Slab H) j a
+        (f : Lp ℝ 2 (Mu H 2)) (g : Lp ℝ 2 (Mu H 2)) := by
+  let e := E H 2
+  let c := NormZ H 2 (by norm_num) beta hb
+  let fl : Lp ℝ 2 (Mu H 2) := f
+  let gl : Lp ℝ 2 (Mu H 2) := g
+  let F0 : Path H 2 × Field H 2 → ℝ := fun p =>
+    c * (fl (p.1 0) * UK H 2 beta p.1 p.2 *
+      gl (p.1 (Fin.last (Slab H))))
+  let F : Path H 2 × Field H 2 → ℝ := fun p => F0 p * a (p.1 j)
+  have hF0 : Integrable F0 (NestedMu H 2) :=
+    periodicHypercubicEvenSpecialUnitaryPositiveHalf_normalizedGaussEndpointKernel_integrable
+      H 2 (by norm_num) beta hb f g
+  have hMeas : Measurable (fun p : Path H 2 × Field H 2 => a (p.1 j)) :=
+    a.continuous.measurable.comp ((measurable_pi_apply j).comp measurable_fst)
+  have hBound : ∀ᵐ p : Path H 2 × Field H 2 ∂(NestedMu H 2),
+      ‖a (p.1 j)‖ ≤ ‖a‖ :=
+    Filter.Eventually.of_forall (fun p => a.norm_coe_le_norm (p.1 j))
+  have hF : Integrable F (NestedMu H 2) :=
+    hF0.mul_bdd hMeas.aestronglyMeasurable hBound
+  have hMP : MeasurePreserving e (ClosureMu H 2) (NestedMu H 2) :=
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv_measurePreserving_explicitHaar
+      H 2
+  calc
+    _ = ∫ z : Closure H G, F (e z) ∂(ClosureMu H 2) := by
+      apply integral_congr_ae
+      filter_upwards with z
+      dsimp [F, F0, c, e, fl, gl]
+      rw [periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_eq_normalizedUnfixedPathKernel
+        H 2 (by norm_num) beta hb z.1 z.2]
+      ring
+    _ = ∫ p, F p ∂(NestedMu H 2) := by
+      exact hMP.integral_comp' F
+    _ = ∫ U : Field H 2, (∫ path : Path H 2, F (path, U) ∂(PathMu H 2))
+        ∂(FieldMu H 2) := by
+      simpa only [periodicHypercubicEvenSpecialUnitaryPositiveHalfExplicitNestedHaarMeasure] using
+        (MeasureTheory.integral_prod_symm F hF)
+    _ = c * (∫ U : Field H 2,
+        (∫ path : Path H 2,
+          fl (path 0) * UK H 2 beta path U * a (path j) *
+            gl (path (Fin.last (Slab H))) ∂(PathMu H 2))
+        ∂(FieldMu H 2)) := by
+      rw [← integral_const_mul]
+      apply integral_congr_ae
+      filter_upwards with U
+      rw [← integral_const_mul]
+      apply integral_congr_ae
+      filter_upwards with path
+      dsimp [F, F0]
+      ring
+    _ = c * (∫ path : Path H 2,
+        fl (path 0) * TK H 2 beta path * a (path j) *
+          gl (path (Fin.last (Slab H))) ∂(PathMu H 2)) := by
+      exact congrArg (fun y : ℝ => c * y)
+        (p4Q2PZ37APM_originalGaussSliceIteratedHaarIntegral_eq_temporalGauge
+          H beta j a ha fl gl g.property)
+    _ = _ := rfl
+
+private theorem p4Q2PZ37APM_nativeAmplitude_cast
+    (H : ℕ) (beta : ℝ) {n m : ℕ} (h : n = m)
+    (j : Fin (n + 1)) (a : Aobs H 2) (f g : Lp ℝ 2 (Mu H 2)) :
+    NativeAmp H 2 beta n j a f g =
+      NativeAmp H 2 beta m (Fin.cast (congrArg (fun k : ℕ => k + 1) h) j) a f g := by
+  subst m
+  rfl
+
+/-- The actual positive closure endpoint-tested insertion of the APL
+coefficient-one observable is strictly positive, with no lower bound on
+the finite partition normalization assumed. This still precedes the
+boundary-only Fubini/noncancellation theorem. -/
+theorem p4Q2PZ37APM_originalTimeOneClosurePairing_pos
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 < beta) (q : ℝ) :
+    let a := p4Q2PZ37APL_originalTwoModeObservable H q
+    let w := p4Q2PZ37APL_originalVacuumWeightedTwoMode H beta hb.le q
+    let omega := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+      H 2 (by norm_num) beta hb.le
+    0 < (∫ z : Closure H G,
+      Gram H 2 (by norm_num) beta hb.le z.1 z.2 *
+        (w : Lp ℝ 2 (Mu H 2)) ((E H 2 z).1 0) *
+        (omega : Lp ℝ 2 (Mu H 2)) ((E H 2 z).1 (Fin.last (Slab H))) *
+        a ((E H 2 z).1 (p4Q2PZ37AMX_positiveTimeOne H)) ∂(ClosureMu H 2)) := by
+  let a := p4Q2PZ37APL_originalTwoModeObservable H q
+  let w := p4Q2PZ37APL_originalVacuumWeightedTwoMode H beta hb.le q
+  let omega := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+    H 2 (by norm_num) beta hb.le
+  let j := p4Q2PZ37AMX_positiveTimeOne H
+  let c := NormZ H 2 (by norm_num) beta hb.le
+  have hTotal : Slab H = 1 + H := by
+    simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount, Nat.add_comm]
+  have hIndex : Fin.cast (congrArg (fun k : ℕ => k + 1) hTotal) j =
+      periodicHypercubicEvenSpecialUnitaryTransferSliceIndex 1 H := by
+    apply Fin.ext
+    rfl
+  have hEq : NativeAmp H 2 beta (Slab H) j a
+      (w : Lp ℝ 2 (Mu H 2)) (omega : Lp ℝ 2 (Mu H 2)) =
+      Amp H 2 beta 1 H a (w : Lp ℝ 2 (Mu H 2)) (omega : Lp ℝ 2 (Mu H 2)) := by
+    calc
+      _ = NativeAmp H 2 beta (1 + H)
+          (Fin.cast (congrArg (fun k : ℕ => k + 1) hTotal) j) a
+          (w : Lp ℝ 2 (Mu H 2)) (omega : Lp ℝ 2 (Mu H 2)) :=
+        p4Q2PZ37APM_nativeAmplitude_cast H beta hTotal j a _ _
+      _ = _ := congrArg (fun k => NativeAmp H 2 beta (1 + H) k a
+          (w : Lp ℝ 2 (Mu H 2)) (omega : Lp ℝ 2 (Mu H 2))) hIndex
+  have hAmp : 0 < Amp H 2 beta 1 H a
+      (w : Lp ℝ 2 (Mu H 2)) (omega : Lp ℝ 2 (Mu H 2)) :=
+    (p4Q2PZ37APL_originalTimeOneInsertion_vacuumWeighted_pos H beta hb q).2
+  have hNative : 0 < NativeAmp H 2 beta (Slab H) j a
+      (w : Lp ℝ 2 (Mu H 2)) (omega : Lp ℝ 2 (Mu H 2)) :=
+    hEq.symm ▸ hAmp
+  have hc : 0 < c := by
+    unfold c periodicHypercubicEvenBoundaryPositiveHalfPartitionSqrtNormalization
+    apply Real.sqrt_pos.2
+    apply div_pos (by norm_num)
+    exact compact_oriented_partitionFunction_pos
+      (periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength H) 2 (by norm_num) beta hb.le).base
+      (continuous_compact_oriented_boltzmannIntegrable
+        (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength H) 2 (by norm_num) beta hb.le))
+  have hBridge :=
+    p4Q2PZ37APM_originalClosureInsertedIntegral_eq_nativeAmplitude
+      H beta hb.le j a (p4Q2PZ37APL_originalTwoModeObservable_gaugeInvariant H q) w omega
+  have hPos := mul_pos hc hNative
+  exact hBridge.symm ▸ hPos
+
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APM_originalGaussSliceUnfixedIntegral_eq_temporalGauge
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APM_originalGaussSliceIteratedHaarIntegral_eq_temporalGauge
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APM_originalClosureInsertedIntegral_eq_nativeAmplitude
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APM_originalTimeOneClosurePairing_pos

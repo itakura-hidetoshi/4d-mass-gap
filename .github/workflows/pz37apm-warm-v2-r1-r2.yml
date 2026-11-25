@@ -1,0 +1,19 @@
+name: PZ37APM warm sandbox v2 inserted closure transport
+on:
+  pull_request:
+    paths:
+      - "diagnostics/pz37apm/warm-v2-r1-r2/**"
+      - ".github/workflows/pz37apm-warm-v2-r1-r2.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pz37apm-warm-v2-r1-r2-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    uses: ./.github/workflows/lean-warm-sandbox-reusable-v2.yml
+    with:
+      pack: diagnostics/pz37apm/warm-v2-r1-r2/pack.json
+      source_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      baseline_commit: c8b881fede350a14e05ccac7f9103a1856c44e30
