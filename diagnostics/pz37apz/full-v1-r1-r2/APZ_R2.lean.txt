@@ -1,0 +1,219 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalCompletedOSVacuumLineObstructionV5_PZ37APY
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37APZ — support-budget transport on the original periodic lattice
+The APX/APY obstruction remains unchanged. Here a single actual finite
+observable is transported only for a displacement whose translated support
+remains in the positive edge sector. This gives exact factorization through
+the original canonical positive-half section, and applies to APW's literal
+time-one observable for 1+k ≤ H. No common continuum lift, all-step
+invariance, or OS transfer identity is assumed or claimed.
+-/
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory Filter Set
+open scoped ENNReal Topology InnerProductSpace InnerProduct
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 12000000
+set_option synthInstance.maxHeartbeats 100000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "O" => PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
+local notation "P" => periodicHypercubicEvenEdgeOrbitPartition
+local notation "L" => PeriodicHypercubicEvenSideLength
+local notation "Tau" => periodicHypercubicIntegerTemporalConfigurationTranslation
+local notation "Section" => periodicHypercubicEvenSpecialUnitaryPositiveHalfSection
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "W" => p4Q2PZ37APW_openTimeOneObservable
+local notation "Slice" => p4Q2PZ37APW_openTimeOneSlice
+local notation "Hol" => p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy
+local notation "Mode" => specialUnitaryWilsonPlaquetteEnergyTwoContinuousGramSchmidtMode
+
+local instance p4Q2PZ37APZ_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37APZ_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37APZ_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37APZ_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37APZ_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37APZ_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37APZ_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37APZ_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37APZ_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+
+
+local instance p4Q2PZ37APZ_openHalfProbability (H : ℕ) :
+    IsProbabilityMeasure (periodicHypercubicEvenOpenHalfHaarMeasure H 2) := by
+  dsimp [periodicHypercubicEvenOpenHalfHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
+  infer_instance
+
+
+def p4Q2PZ37APZ_edgeShift (H : ℕ) (k : ℤ) :
+    PeriodicHypercubicEvenEdge H ≃ PeriodicHypercubicEvenEdge H :=
+  periodicHypercubicEdgeTranslationEquiv (L H)
+    (periodicHypercubicIntegerTemporalDisplacement (L H) k)
+
+local notation "Shift" => p4Q2PZ37APZ_edgeShift
+
+/-- Agreement on a specified set of actual lattice links determines the value. -/
+def p4Q2PZ37APZ_DependsOn (H : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (f : (PeriodicHypercubicEvenEdge H → G) → ℝ) : Prop :=
+  ∀ A B, (∀ e ∈ s, A e = B e) → f A = f B
+
+local notation "Supported" => p4Q2PZ37APZ_DependsOn
+
+theorem p4Q2PZ37APZ_edgeShift_positive_of_budget
+    (H k : ℕ) (e : PeriodicHypercubicEvenEdge H)
+    (hp : periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hk : (e.1 0).val + k ≤ H) :
+    periodicHypercubicEvenEdgeSide H (Shift H (k : ℤ) e) =
+      ReflectionEdgeSide.positive := by
+  let e' := Shift H (k : ℤ) e
+  have hadd : (e.1 0).val + k < L H := by
+    simp only [PeriodicHypercubicEvenSideLength]
+    omega
+  have hval : (e'.1 0).val = (e.1 0).val + k :=
+    periodicHypercubicEvenIntegerTemporalEdgeTranslation_sourceTime_val_of_add_lt
+      H k e hadd
+  change periodicHypercubicEvenEdgeSide H e' = _
+  by_cases hd : e.2 = 0
+  · have hd' : e'.2 = 0 := by
+      simpa [e', p4Q2PZ37APZ_edgeShift, periodicHypercubicEdgeTranslationEquiv] using hd
+    have he' : e' = (e'.1, 0) := Prod.ext rfl hd'
+    have hh : (e'.1 0).val ≤ H := by omega
+    rw [he']
+    exact periodicHypercubicEvenEdgeSide_time_eq_positive_of_val_le H e'.1 hh
+  · have hp0 : 0 < (e.1 0).val := by
+      by_contra! h
+      exact (periodicHypercubicEvenEdgeSide_spatial_ne_positive_of_zero_or_half_le_val
+        H e hd (Or.inl (by omega))) hp
+    have hd' : e'.2 ≠ 0 := by
+      simpa [e', p4Q2PZ37APZ_edgeShift, periodicHypercubicEdgeTranslationEquiv] using hd
+    exact periodicHypercubicEvenEdgeSide_spatial_eq_positive_of_val H e' hd'
+      (by omega) (by omega)
+
+/-- Precomposition with the inverse configuration displacement transports
+support by the forward displacement of its actual edge set. -/
+theorem p4Q2PZ37APZ_dependsOn_shift
+    (H : ℕ) (k : ℤ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (f : (PeriodicHypercubicEvenEdge H → G) → ℝ)
+    (hf : Supported H s f) :
+    Supported H (Shift H k '' s) (fun A => f (Tau (L H) (-k) A)) := by
+  intro A B hAB
+  apply hf
+  intro e he
+  have ha : A (Shift H k e) = Tau (L H) (-k) A e := by
+    have h := periodicHypercubicIntegerTemporalConfigurationTranslation_apply_translatedEdge
+      (L H) k (Tau (L H) (-k) A) e
+    rw [periodicHypercubicIntegerTemporalConfigurationTranslation_apply_neg] at h
+    exact h
+  have hb : B (Shift H k e) = Tau (L H) (-k) B e := by
+    have h := periodicHypercubicIntegerTemporalConfigurationTranslation_apply_translatedEdge
+      (L H) k (Tau (L H) (-k) B) e
+    rw [periodicHypercubicIntegerTemporalConfigurationTranslation_apply_neg] at h
+    exact h
+  exact ha.symm.trans ((hAB _ ⟨e, he, rfl⟩).trans hb)
+
+/-- Any observable supported on positive edges factors through the same
+canonical half-section as in the existing common OS construction. -/
+theorem p4Q2PZ37APZ_dependsOn_positive_factor
+    (H : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (f : (PeriodicHypercubicEvenEdge H → G) → ℝ)
+    (hf : Supported H s f)
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (A : PeriodicHypercubicEvenEdge H → G) :
+    f A = f (Section H 2 ((P H).positiveRestriction A)) := by
+  apply hf
+  intro e he
+  let ep : (P H).PositiveEdge := ⟨e, hp e he⟩
+  change A ep.1 = Section H 2 ((P H).positiveRestriction A) ep.1
+  change A ep.1 = (P H).positiveRestriction (Section H 2 ((P H).positiveRestriction A)) ep
+  rw [periodicHypercubicEvenSpecialUnitaryPositiveRestriction_positiveHalfSection]
+  rfl
+
+/-- The time budget is local to the original support, not a global preservation
+axiom for the entire positive-time algebra. -/
+theorem p4Q2PZ37APZ_dependsOn_shift_factor_of_budget
+    (H k : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (f : (PeriodicHypercubicEvenEdge H → G) → ℝ)
+    (hf : Supported H s f)
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hk : ∀ e ∈ s, (e.1 0).val + k ≤ H)
+    (A : PeriodicHypercubicEvenEdge H → G) :
+    f (Tau (L H) (-((k : ℕ) : ℤ)) A) =
+      f (Tau (L H) (-((k : ℕ) : ℤ)) (Section H 2 ((P H).positiveRestriction A))) := by
+  refine p4Q2PZ37APZ_dependsOn_positive_factor H (Shift H (k : ℤ) '' s)
+    (fun Z => f (Tau (L H) (-(k : ℤ)) Z))
+    (p4Q2PZ37APZ_dependsOn_shift H (k : ℤ) s f hf) ?_ A
+  rintro e ⟨a, ha, rfl⟩
+  exact p4Q2PZ37APZ_edgeShift_positive_of_budget H k a (hp a ha) (hk a ha)
+
+def p4Q2PZ37APZ_timeOneEdgeSupport (H : ℕ) (hH : 0 < H) :
+    Set (PeriodicHypercubicEvenEdge H) :=
+  Set.range (fun e : PeriodicHypercubicEvenSpatialSliceLink H =>
+    (periodicHypercubicEvenPositiveHalfOpenIndexToPositiveEdge H
+      (Sum.inl (⟨0, hH⟩, e))).1)
+
+/-- The actual APW observable, evaluated on the full lattice, is determined
+by its literal time-one spatial slice. -/
+theorem p4Q2PZ37APZ_timeOneFullObservable_dependsOn
+    (H : ℕ) (hH : 0 < H) (c0 c1 : ℝ) :
+    Supported H (p4Q2PZ37APZ_timeOneEdgeSupport H hH)
+      (fun A => W H hH c0 c1 ((P H).positiveRestriction A)) := by
+  intro A B hAB
+  have hs : Slice H hH ((P H).positiveRestriction A) =
+      Slice H hH ((P H).positiveRestriction B) := by
+    funext e
+    exact hAB _ ⟨e, rfl⟩
+  change c0 * Mode 0 (Hol H 2 (Slice H hH ((P H).positiveRestriction A))) +
+      c1 * Mode 1 (Hol H 2 (Slice H hH ((P H).positiveRestriction A))) =
+    c0 * Mode 0 (Hol H 2 (Slice H hH ((P H).positiveRestriction B))) +
+      c1 * Mode 1 (Hol H 2 (Slice H hH ((P H).positiveRestriction B)))
+  rw [hs]
+
+/-- Non-wrapping future displacements of the literal time-one observable
+remain half-supported up to the strict spatial end of the half lattice. -/
+theorem p4Q2PZ37APZ_timeOneFullObservable_shift_factor
+    (H k : ℕ) (hH : 0 < H) (hk : 1 + k ≤ H)
+    (c0 c1 : ℝ) (A : PeriodicHypercubicEvenEdge H → G) :
+    W H hH c0 c1 ((P H).positiveRestriction (Tau (L H) (-(k : ℤ)) A)) =
+      W H hH c0 c1 ((P H).positiveRestriction
+        (Tau (L H) (-(k : ℤ)) (Section H 2 ((P H).positiveRestriction A)))) := by
+  refine p4Q2PZ37APZ_dependsOn_shift_factor_of_budget H k
+    (p4Q2PZ37APZ_timeOneEdgeSupport H hH)
+    (fun Z => W H hH c0 c1 ((P H).positiveRestriction Z))
+    (p4Q2PZ37APZ_timeOneFullObservable_dependsOn H hH c0 c1) ?_ ?_ A
+  · rintro e ⟨a, rfl⟩
+    exact periodicHypercubicEvenPositiveHalfInteriorSpatialEdge_positive H (⟨0, hH⟩, a)
+  · rintro e ⟨a, rfl⟩
+    change ((periodicHypercubicEvenPositiveHalfInteriorSpatialEdge H
+      (⟨0, hH⟩, a)).1 0).val + k ≤ H
+    rw [periodicHypercubicEvenPositiveHalfInteriorSpatialEdge_time_val]
+    exact hk
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APZ_edgeShift
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APZ_DependsOn
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APZ_edgeShift_positive_of_budget
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APZ_dependsOn_shift
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APZ_dependsOn_positive_factor
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APZ_dependsOn_shift_factor_of_budget
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APZ_timeOneEdgeSupport
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APZ_timeOneFullObservable_dependsOn
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APZ_timeOneFullObservable_shift_factor
