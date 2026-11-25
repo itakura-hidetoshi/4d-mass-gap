@@ -1,0 +1,19 @@
+name: PZ37APO warm sandbox v2 two-mode positive definiteness
+on:
+  pull_request:
+    paths:
+      - "diagnostics/pz37apo/warm-v2-r1-r2/**"
+      - ".github/workflows/pz37apo-warm-v2-r1-r2.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pz37apo-warm-v2-r1-r2-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    uses: ./.github/workflows/lean-warm-sandbox-reusable-v2.yml
+    with:
+      pack: diagnostics/pz37apo/warm-v2-r1-r2/pack.json
+      source_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      baseline_commit: e9cf88c34b42ce2dcb81dbad81e03485c5ff34eb
