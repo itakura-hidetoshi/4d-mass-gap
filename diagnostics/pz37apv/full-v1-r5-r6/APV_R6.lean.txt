@@ -1,0 +1,235 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalOSCenteredKernelCompletedRealizationV5_PZ37APU
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuum
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37APV — canonical vacuum and the remaining centered realization condition
+The existing canonical completed OS map sends its actual constant-one
+vacuum to the literal original Wilson boundary vacuum. Centering therefore
+does not impose a second realization condition: realizing the mode-one
+moment, even by boundary-norm approximation, suffices. No claim of that
+approximation, genuine time translation, or a volume-uniform gap.
+-/
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory Filter Set
+open scoped ENNReal Topology InnerProductSpace InnerProduct
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 12000000
+set_option synthInstance.maxHeartbeats 100000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "L" => PeriodicHypercubicEvenSpecialUnitaryBoundaryHaarL2
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "X" => p4Q2PZ37APP_originalTimeOneBoundaryMomentL2
+local notation "U" => p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2
+local notation "Vac" => periodicHypercubicEvenBoundaryVacuumL2
+
+local instance p4Q2PZ37APV_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37APV_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37APV_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37APV_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37APV_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37APV_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37APV_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37APV_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37APV_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+
+
+variable {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
+    {halfExtent : ℕ → ℕ} {hN : 0 < (2 : ℕ)}
+    [Nontrivial G] {beta : ℕ → ℝ} {hbeta : ∀ n, 0 ≤ beta n}
+    (R : PhysicalYangMillsEvenPeriodicWilsonOSCanonicalFiberReflection
+      S halfExtent 2 hN beta hbeta)
+
+theorem p4Q2PZ37APV_canonicalVacuum_boundaryMoment
+    (n : ℕ) :
+    R.toCompletedBoundaryMomentLinearIsometryAutomatic n (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+        R.approximatingReflectionInvariantFamily n).vacuum =
+      Vac (halfExtent n) 2 hN (beta n) (hbeta n) := by
+  let B := R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+  let Pn := (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+        R.approximatingReflectionInvariantFamily n)
+  change R.toCompletedBoundaryMomentLinearIsometryAutomatic n (Pn.physicalState Pn.vacuumObservable) = _
+  rw [R.toCompletedBoundaryMomentLinearIsometryAutomatic_physicalState]
+  have hf (x : PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration (halfExtent n) 2) :
+      physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservable
+        S R.reflectionData halfExtent 2 hN beta hbeta B
+        R.approximatingReflectionInvariantFamily n Pn.vacuumObservable x = 1 := by
+    change (1 : BoundedContinuousFunction S.Configuration ℝ)
+      (R.interpolate n (periodicHypercubicEvenSpecialUnitaryPositiveHalfSection
+        (halfExtent n) 2 x)) = 1
+    rfl
+  let M := physicalYangMillsEvenPeriodicWilsonOSBoundaryMoment
+    S R.reflectionData halfExtent 2 hN beta hbeta B
+    R.approximatingReflectionInvariantFamily n Pn.vacuumObservable
+  have hm : MemLp M 2 (periodicHypercubicEvenBoundaryHaarMeasure (halfExtent n) 2) :=
+    physicalYangMillsEvenPeriodicWilsonOSBoundaryMoment_memLp_two
+      S R.reflectionData halfExtent 2 hN beta hbeta B
+      R.approximatingReflectionInvariantFamily n Pn.vacuumObservable
+  change hm.toLp M = Vac (halfExtent n) 2 hN (beta n) (hbeta n)
+  apply Lp.ext
+  filter_upwards [hm.coeFn_toLp,
+    periodicHypercubicEvenBoundaryVacuumL2_coeFn (halfExtent n) 2 hN
+      (beta n) (hbeta n)] with b hb hv
+  rw [hb, hv]
+  unfold M physicalYangMillsEvenPeriodicWilsonOSBoundaryMoment
+    periodicHypercubicEvenBoundaryObservableMoment
+    periodicHypercubicEvenBoundaryObservableGramFeature
+    periodicHypercubicEvenBoundaryVacuumMoment
+  apply integral_congr_ae
+  exact Filter.Eventually.of_forall fun x => by
+    change periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+      (halfExtent n) 2 hN (beta n) (hbeta n) b x *
+      physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservable
+        S R.reflectionData halfExtent 2 hN beta hbeta B
+        R.approximatingReflectionInvariantFamily n Pn.vacuumObservable x =
+      periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+        (halfExtent n) 2 hN (beta n) (hbeta n) b x
+    rw [hf x, mul_one]
+
+theorem p4Q2PZ37APV_canonicalVacuum_norm
+    (n : ℕ) :
+    ‖(physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+        R.approximatingReflectionInvariantFamily n).vacuum‖ = 1 := by
+  calc
+    _ = ‖R.toCompletedBoundaryMomentLinearIsometryAutomatic n (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+        R.approximatingReflectionInvariantFamily n).vacuum‖ :=
+      ((R.toCompletedBoundaryMomentLinearIsometryAutomatic n).norm_map _).symm
+    _ = 1 := by
+      rw [p4Q2PZ37APV_canonicalVacuum_boundaryMoment R n]
+      exact p4Q2PZ37APP_originalBoundaryVacuum_norm (halfExtent n) (beta n) (hbeta n)
+
+theorem p4Q2PZ37APV_centeredRealization_iff_modeOneRealization
+    (n : ℕ) :
+    (∃ x : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+        R.approximatingReflectionInvariantFamily n).PhysicalHilbert, R.toCompletedBoundaryMomentLinearIsometryAutomatic n x = U (halfExtent n) (beta n) (hbeta n)) ↔
+    (∃ x : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+        R.approximatingReflectionInvariantFamily n).PhysicalHilbert, R.toCompletedBoundaryMomentLinearIsometryAutomatic n x = X (halfExtent n) (beta n) (hbeta n) 0 1) := by
+  let a := inner ℝ (Vac (halfExtent n) 2 hN (beta n) (hbeta n)) (X (halfExtent n) (beta n) (hbeta n) 0 1)
+  have hu : U (halfExtent n) (beta n) (hbeta n) = X (halfExtent n) (beta n) (hbeta n) 0 1 - a • (Vac (halfExtent n) 2 hN (beta n) (hbeta n)) :=
+    p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2_eq_sub
+      (halfExtent n) (beta n) (hbeta n)
+  constructor
+  · rintro ⟨x, hx⟩
+    refine ⟨x + a • (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+        R.approximatingReflectionInvariantFamily n).vacuum, ?_⟩
+    rw [map_add, map_smul, hx, p4Q2PZ37APV_canonicalVacuum_boundaryMoment R n, hu, sub_add_cancel]
+  · rintro ⟨x, hx⟩
+    refine ⟨x - a • (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+        R.approximatingReflectionInvariantFamily n).vacuum, ?_⟩
+    rw [map_sub, map_smul, hx, p4Q2PZ37APV_canonicalVacuum_boundaryMoment R n, hu]
+
+theorem p4Q2PZ37APV_centeredRealization_orthogonal_nonzero
+    (n : ℕ) (hb : 0 < beta n) (x : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+        R.approximatingReflectionInvariantFamily n).PhysicalHilbert)
+    (hx : R.toCompletedBoundaryMomentLinearIsometryAutomatic n x = U (halfExtent n) (beta n) (hbeta n)) :
+    inner ℝ (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+        R.approximatingReflectionInvariantFamily n).vacuum x = 0 ∧ x ≠ 0 := by
+  constructor
+  · exact p4Q2PZ37APU_completedRealization_orthogonal_of_vacuumRealization
+      R n x (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+        R.approximatingReflectionInvariantFamily n).vacuum hx (p4Q2PZ37APV_canonicalVacuum_boundaryMoment R n)
+  · intro hz
+    have hp := p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2_norm_sq_pos
+      (halfExtent n) (beta n) hb
+    rw [← hx, hz, map_zero, norm_zero] at hp
+    norm_num at hp
+
+theorem p4Q2PZ37APV_modeOneRealization_of_mem_closure
+    (n : ℕ)
+    (hx : X (halfExtent n) (beta n) (hbeta n) 0 1 ∈ closure (Set.range (fun F : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+        R.approximatingReflectionInvariantFamily n).Carrier => physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2
+          S R.reflectionData halfExtent 2 hN beta hbeta
+          R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+          R.approximatingReflectionInvariantFamily n F))) :
+    ∃ x : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+        R.approximatingReflectionInvariantFamily n).PhysicalHilbert, R.toCompletedBoundaryMomentLinearIsometryAutomatic n x = X (halfExtent n) (beta n) (hbeta n) 0 1 := by
+  have hsub : (Set.range (fun F : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+        R.approximatingReflectionInvariantFamily n).Carrier => physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2
+          S R.reflectionData halfExtent 2 hN beta hbeta
+          R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+          R.approximatingReflectionInvariantFamily n F)) ⊆
+      Set.range (R.toCompletedBoundaryMomentLinearIsometryAutomatic n) := by
+    rintro y ⟨F, rfl⟩
+    exact ⟨(physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+        R.approximatingReflectionInvariantFamily n).physicalState F,
+      R.toCompletedBoundaryMomentLinearIsometryAutomatic_physicalState n F⟩
+  exact (closure_minimal hsub (R.isClosed_range_toCompletedBoundaryMomentLinearIsometryAutomatic n)) hx
+
+theorem p4Q2PZ37APV_centeredRealization_unique_of_mem_closure
+    (n : ℕ) (hb : 0 < beta n)
+    (hx : X (halfExtent n) (beta n) (hbeta n) 0 1 ∈ closure (Set.range (fun F : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+        R.approximatingReflectionInvariantFamily n).Carrier => physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2
+          S R.reflectionData halfExtent 2 hN beta hbeta
+          R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+          R.approximatingReflectionInvariantFamily n F))) :
+    ∃! x : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+        R.approximatingReflectionInvariantFamily n).PhysicalHilbert,
+      R.toCompletedBoundaryMomentLinearIsometryAutomatic n x = U (halfExtent n) (beta n) (hbeta n) ∧ inner ℝ (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+        R.approximatingReflectionInvariantFamily n).vacuum x = 0 ∧ x ≠ 0 := by
+  obtain ⟨x, hx'⟩ := (p4Q2PZ37APV_centeredRealization_iff_modeOneRealization R n).2
+    (p4Q2PZ37APV_modeOneRealization_of_mem_closure R n hx)
+  refine ⟨x, ⟨hx', p4Q2PZ37APV_centeredRealization_orthogonal_nonzero R n hb x hx'⟩, ?_⟩
+  intro y hy
+  exact (R.toCompletedBoundaryMomentLinearIsometryAutomatic n).injective (hy.1.trans hx'.symm)
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APV_canonicalVacuum_boundaryMoment
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APV_canonicalVacuum_norm
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APV_centeredRealization_iff_modeOneRealization
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APV_centeredRealization_orthogonal_nonzero
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APV_modeOneRealization_of_mem_closure
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APV_centeredRealization_unique_of_mem_closure
