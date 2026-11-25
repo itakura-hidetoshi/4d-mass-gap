@@ -1,14 +1,6 @@
 name: Publish exact compact Lean project cache v2 from certified Formal push
 on:
-  push:
-    branches:
-      - formal/real-hilbert-uniform-coercive-strong-limit
-    paths:
-      - "MGAP4D/**/*.lean"
-      - "lean-toolchain"
-      - "lakefile.lean"
-      - "lake-manifest.json"
-      - ".github/workflows/lean-warm-compact-publish-v2.yml"
+  workflow_dispatch:
 permissions:
   contents: read
   actions: read
@@ -19,7 +11,7 @@ env:
   MATHLIB_NO_CACHE_ON_UPDATE: "1"
 jobs:
   publish:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/formal/real-hilbert-uniform-coercive-strong-limit'
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/formal/real-hilbert-uniform-coercive-strong-limit'
     runs-on: ubuntu-22.04
     timeout-minutes: 30
     steps:
