@@ -1,0 +1,10 @@
+{
+  "source_run": 45541135818,
+  "source_job": 138959649549,
+  "source_head": "174e9ab84448885d4c21a97a27ed523f94ae057d",
+  "source_blob": "1f7be47c71d567ea153f6dd1d2fde13b5075d796",
+  "source_sha256": "3fb98349462f2513666f8655865a18947bacfe3bdb4d111ad417c9297a7a13b5",
+  "diagnostic": "rewrite failed: Did not find an occurrence of the pattern p4Q2PZ37ANF_originalTimeOneBoundaryPositiveObservable H q 1 (b,x)",
+  "structural_reason": "Unfolding Gram observable feature exposes a beta-redex (fun x => observable (b,x)) x; the rfl equality is known, but rw did not find the syntactic occurrence. R3 uses definitional change to same local a expression then ring. R4 explicitly beta-reduces via change and then rewrites. All four public propositions, existing imports and physics preserved.",
+  "state": "TEST_REQUIRED"
+}

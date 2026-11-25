@@ -1,0 +1,210 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalInsertedClosurePositivityV5_PZ37APM
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicTimeOneOSNullSpaceStrictnessV5_PZ37ANK
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenOSPositiveHalfClosureHaarPathTransport
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37APN — original finite-volume OS strictness via tested boundary moment
+
+Staged after APL and before APM certification. The proposed proof does not
+assume an identification of the reconstructed OS Hilbert space with the
+Gauss-law Hilbert space. Use actual boundary-only endpoint functions,
+the original Haar product Fubini identity, and APM's positive endpoint-tested
+closure integral. The remaining continuum construction is separate.
+-/
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory Filter
+open scoped ENNReal Topology InnerProductSpace InnerProduct
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 12000000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "Slab" => periodicHypercubicEvenPositiveHalfCylinderSlabCount
+local notation "Cfg" => PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration
+local notation "P" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "B" => PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration
+local notation "O" => PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
+local notation "Closure" => PeriodicHypercubicEvenPositiveHalfClosureConfiguration
+local notation "BM" => periodicHypercubicEvenBoundaryHaarMeasure
+local notation "OM" => periodicHypercubicEvenOpenHalfHaarMeasure
+local notation "CM" => periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureHaarMeasure
+local notation "E" => periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
+local notation "Gram" => periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+local notation "M" => p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment
+local notation "Q" => p4Q2PZ37ANF_originalTimeOneWilsonOSQuadratic
+local notation "Obs" => p4Q2PZ37APL_originalTwoModeObservable
+local notation "W" => p4Q2PZ37APL_originalVacuumWeightedTwoMode
+local notation "Vac" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+local notation "C" => periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector
+local notation "V" => p4Q2PZ37AMU_actualPhysicalGaussMode
+
+local instance p4Q2PZ37APN_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37APN_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37APN_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37APN_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37APN_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37APN_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37APN_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37APN_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+
+private def p4Q2PZ37APN_leftBoundary (H : ℕ) (b : B H 2) : Cfg H 2 :=
+  fun e => b (periodicHypercubicEvenPrimarySpatialSliceLinkToFixedEdge H e)
+
+private def p4Q2PZ37APN_rightBoundary (H : ℕ) (b : B H 2) : Cfg H 2 :=
+  fun e => b (periodicHypercubicEvenAntipodalSpatialSliceLinkToFixedEdge H
+    (periodicHypercubicEvenPrimaryAntipodalSpatialSliceLinkEquiv H e))
+
+private theorem p4Q2PZ37APN_leftEndpoint_eq_boundary
+    (H : ℕ) (b : B H 2) (x : O H 2) :
+    (E H 2 (b, x)).1 0 = p4Q2PZ37APN_leftBoundary H b := by
+  funext e
+  exact periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransfer_primary_apply
+    H 2 b x e
+
+private theorem p4Q2PZ37APN_rightEndpoint_eq_boundary
+    (H : ℕ) (b : B H 2) (x : O H 2) :
+    (E H 2 (b, x)).1 (Fin.last (Slab H)) =
+      p4Q2PZ37APN_rightBoundary H b := by
+  have hi : Fin.last (Slab H) = (Fin.last H).succ := by
+    apply Fin.ext
+    rfl
+  rw [hi]
+  funext e
+  exact periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransfer_antipodal_apply
+    H 2 b x e
+
+/-- Exact original boundary-moment pairing against endpoint states. The
+integrability of the closure expression is obtained before Fubini. -/
+theorem p4Q2PZ37APN_originalTimeOneClosure_eq_testedBoundaryMoment
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 ≤ beta) (q : ℝ)
+    (f g : P H 2) :
+    (∫ z : Closure H G,
+      Gram H 2 (by norm_num) beta hb z.1 z.2 *
+        (f : Lp ℝ 2 (Mu H 2)) ((E H 2 z).1 0) *
+        (g : Lp ℝ 2 (Mu H 2)) ((E H 2 z).1 (Fin.last (Slab H))) *
+        Obs H q ((E H 2 z).1 (p4Q2PZ37AMX_positiveTimeOne H))
+        ∂(CM H 2)) =
+    ∫ b : B H 2,
+      ((f : Lp ℝ 2 (Mu H 2)) (p4Q2PZ37APN_leftBoundary H b) *
+        (g : Lp ℝ 2 (Mu H 2)) (p4Q2PZ37APN_rightBoundary H b)) *
+        M H beta hb q 1 b ∂(BM H 2) := by
+  let a := Obs H q
+  let j := p4Q2PZ37AMX_positiveTimeOne H
+  let fl : Lp ℝ 2 (Mu H 2) := f
+  let gl : Lp ℝ 2 (Mu H 2) := g
+  let F0 : Closure H G → ℝ := fun z =>
+    Gram H 2 (by norm_num) beta hb z.1 z.2 *
+      fl ((E H 2 z).1 0) *
+      gl ((E H 2 z).1 (Fin.last (Slab H)))
+  let F : Closure H G → ℝ := fun z => F0 z * a ((E H 2 z).1 j)
+  have hF0 : Integrable F0 (CM H 2) :=
+    periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_gaussEndpoints_integrable
+      H 2 (by norm_num) beta hb f g
+  have hMeas : Measurable (fun z : Closure H G => a ((E H 2 z).1 j)) :=
+    a.continuous.measurable.comp
+      ((measurable_pi_apply j).comp (measurable_fst.comp (E H 2).measurable))
+  have hBound : ∀ᵐ z : Closure H G ∂(CM H 2), ‖a ((E H 2 z).1 j)‖ ≤ ‖a‖ :=
+    Filter.Eventually.of_forall (fun z => a.norm_coe_le_norm ((E H 2 z).1 j))
+  have hF : Integrable F (CM H 2) :=
+    hF0.mul_bdd hMeas.aestronglyMeasurable hBound
+  calc
+    _ = ∫ b : B H 2, (∫ x : O H 2, F (b, x) ∂(OM H 2)) ∂(BM H 2) := by
+      exact MeasureTheory.integral_prod F hF
+    _ = _ := by
+      apply integral_congr_ae
+      filter_upwards with b
+      let k := fl (p4Q2PZ37APN_leftBoundary H b) *
+        gl (p4Q2PZ37APN_rightBoundary H b)
+      calc
+        _ = ∫ x : O H 2,
+            k * (periodicHypercubicEvenBoundaryObservableGramFeature
+              H 2 (by norm_num) beta hb
+              (fun x => p4Q2PZ37ANF_originalTimeOneBoundaryPositiveObservable H q 1 (b,x))
+              b x) ∂(OM H 2) := by
+          apply integral_congr_ae
+          filter_upwards with x
+          dsimp [F, F0, k]
+          rw [p4Q2PZ37APN_leftEndpoint_eq_boundary H b x,
+            p4Q2PZ37APN_rightEndpoint_eq_boundary H b x]
+          unfold periodicHypercubicEvenBoundaryObservableGramFeature
+          have hObs : a ((E H 2 (b, x)).1 j) =
+              p4Q2PZ37ANF_originalTimeOneBoundaryPositiveObservable H q 1 (b,x) := rfl
+          change
+            Gram H 2 (by norm_num) beta hb b x *
+                fl (p4Q2PZ37APN_leftBoundary H b) *
+                gl (p4Q2PZ37APN_rightBoundary H b) * a ((E H 2 (b, x)).1 j) =
+              fl (p4Q2PZ37APN_leftBoundary H b) *
+                gl (p4Q2PZ37APN_rightBoundary H b) *
+                (Gram H 2 (by norm_num) beta hb b x *
+                  p4Q2PZ37ANF_originalTimeOneBoundaryPositiveObservable H q 1 (b,x))
+          rw [← hObs]
+          ring
+        _ = k * M H beta hb q 1 b := by
+          rw [integral_const_mul]
+          rfl
+
+/-- The actual time-one boundary moment cannot vanish almost everywhere:
+the tested closure integral is strictly positive by APM. -/
+theorem p4Q2PZ37APN_originalTimeOneBoundaryMoment_not_ae_zero
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 < beta) (q : ℝ) :
+    ¬ (M H beta hb.le q 1 =ᵐ[BM H 2] (fun _ => (0 : ℝ))) := by
+  let w := W H beta hb.le q
+  let omega := Vac H 2 (by norm_num) beta hb.le
+  have hPos := p4Q2PZ37APM_originalTimeOneClosurePairing_pos H beta hb q
+  have hEq := p4Q2PZ37APN_originalTimeOneClosure_eq_testedBoundaryMoment
+    H beta hb.le q w omega
+  have hTest : 0 < (∫ b : B H 2,
+      ((w : Lp ℝ 2 (Mu H 2)) (p4Q2PZ37APN_leftBoundary H b) *
+        (omega : Lp ℝ 2 (Mu H 2)) (p4Q2PZ37APN_rightBoundary H b)) *
+        M H beta hb.le q 1 b ∂(BM H 2)) := by
+    exact lt_of_lt_of_eq hPos hEq
+  intro hz
+  have hZero : (∫ b : B H 2,
+      ((w : Lp ℝ 2 (Mu H 2)) (p4Q2PZ37APN_leftBoundary H b) *
+        (omega : Lp ℝ 2 (Mu H 2)) (p4Q2PZ37APN_rightBoundary H b)) *
+        M H beta hb.le q 1 b ∂(BM H 2)) = 0 := by
+    calc
+      _ = ∫ _b : B H 2, (0 : ℝ) ∂(BM H 2) := by
+        apply integral_congr_ae
+        filter_upwards [hz] with b h
+        rw [h, mul_zero]
+      _ = 0 := integral_zero _ _ 
+  exact (ne_of_gt hTest) hZero
+
+theorem p4Q2PZ37APN_originalTimeOneOSQuadratic_pos
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 < beta) (q : ℝ) :
+    0 < Q H beta hb.le q 1 :=
+  (p4Q2PZ37ANK_originalTimeOneWilsonOSQuadratic_pos_iff_boundaryMoment_not_ae_zero
+    H beta hb.le q 1).2
+    (p4Q2PZ37APN_originalTimeOneBoundaryMoment_not_ae_zero H beta hb q)
+
+/-- Specialize to exactly the original APJ/APK physical vacuum ratio,
+not a new independently chosen coefficient. -/
+theorem p4Q2PZ37APN_originalVacuumRatio_OSQuadratic_pos
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 < beta) :
+    let a := inner ℝ (Vac H 2 (by norm_num) beta hb.le) (C H 2)
+    let d := inner ℝ (Vac H 2 (by norm_num) beta hb.le) (V H 1)
+    0 < Q H beta hb.le (-d / a) 1 :=
+  p4Q2PZ37APN_originalTimeOneOSQuadratic_pos H beta hb _
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APN_originalTimeOneClosure_eq_testedBoundaryMoment
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APN_originalTimeOneBoundaryMoment_not_ae_zero
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APN_originalTimeOneOSQuadratic_pos
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APN_originalVacuumRatio_OSQuadratic_pos

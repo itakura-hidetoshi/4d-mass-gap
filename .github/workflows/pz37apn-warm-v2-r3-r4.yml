@@ -1,0 +1,19 @@
+name: PZ37APN warm sandbox v2 tested boundary noncancellation
+on:
+  pull_request:
+    paths:
+      - "diagnostics/pz37apn/warm-v2-r3-r4/**"
+      - ".github/workflows/pz37apn-warm-v2-r3-r4.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pz37apn-warm-v2-r3-r4-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    uses: ./.github/workflows/lean-warm-sandbox-reusable-v2.yml
+    with:
+      pack: diagnostics/pz37apn/warm-v2-r3-r4/pack.json
+      source_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      baseline_commit: 0b14f1bd9575f79a7fde0ffb7ba0742a5483b258

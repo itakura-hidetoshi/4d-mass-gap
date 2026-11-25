@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "baseline_commit": "0b14f1bd9575f79a7fde0ffb7ba0742a5483b258",
+  "baseline_mgap4d_tree": "0edf83c4637919bf8c4c413a9e297c14c5a0da1c",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalInsertedClosurePositivityV5_PZ37APM",
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicTimeOneOSNullSpaceStrictnessV5_PZ37ANK",
+    "MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenOSPositiveHalfClosureHaarPathTransport",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "APN",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APN_originalTimeOneClosure_eq_testedBoundaryMoment",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APN_originalTimeOneBoundaryMoment_not_ae_zero",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APN_originalTimeOneOSQuadratic_pos",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APN_originalVacuumRatio_OSQuadratic_pos"
+      ],
+      "candidates": [
+        {
+          "id": "R3",
+          "path": "diagnostics/pz37apn/warm-v2-r3-r4/APN_R3.lean.txt",
+          "blob": "197f1cfaa19ee6001224a28af5162367d636cfe2"
+        },
+        {
+          "id": "R4",
+          "path": "diagnostics/pz37apn/warm-v2-r3-r4/APN_R4.lean.txt",
+          "blob": "f6ab61bb2e79782cda824d530a86506782298e0f"
+        }
+      ]
+    }
+  ]
+}
