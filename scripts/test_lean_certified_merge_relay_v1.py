@@ -110,5 +110,17 @@ class Tests(unittest.TestCase):
         job["steps"][0]["conclusion"]="success"
         self.assertFalse(r.exact_push_cache_job({**run,"conclusion":"failure"},[job],B))
 
+    def test_infrastructure_alias_only_exact_math_binding(self):
+        b={"tree":T,"math_tree":"a"*40,"root_lean":"b"*40,
+           "cache_version":"c"*40,"pins":{"lean-toolchain":"d"*40}}
+        self.assertTrue(r.alias_compatible(b,{**b,"tree":"e"*40},
+            ["scripts/lean_certified_merge_relay_v1.py"]))
+        self.assertFalse(r.alias_compatible(b,{**b,"root_lean":"f"*40},[]))
+        self.assertFalse(r.alias_compatible(b,{**b,"math_tree":"f"*40},[]))
+        self.assertFalse(r.alias_compatible(b,{**b,"cache_version":"f"*40},[]))
+        self.assertFalse(r.alias_compatible(b,b,["MGAP4D.lean"]))
+        self.assertFalse(r.alias_compatible(b,b,["scripts/check_changed_lean.sh"]))
+        self.assertFalse(r.alias_compatible(b,{**b,"pins":{}},[]))
+
 if __name__=="__main__":
     unittest.main()

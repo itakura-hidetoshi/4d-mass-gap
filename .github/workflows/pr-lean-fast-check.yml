@@ -125,12 +125,9 @@ jobs:
           path: .lake/build
           lookup-only: true
           key: ${{ runner.os }}-lean-fast-project-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-base-${{ github.sha }}
-      - name: Publish exact merge reuse outcome
-        if: steps.bind.outputs.eligible == 'true' && steps.verify.outcome == 'success' && steps.save.outcome == 'success' && steps.visible.outputs.cache-hit == 'true'
-        id: done
-        run: echo "reused=true" >> "$GITHUB_OUTPUT"
       - name: Archive relay receipt
         if: always()
+        id: archive
         uses: actions/upload-artifact@v6
         with:
           name: lean-certified-merge-relay-v1-receipt
@@ -139,6 +136,11 @@ jobs:
             ${{ runner.temp }}/leaf-relay-v1/published-receipt.json
           if-no-files-found: ignore
           retention-days: 30
+      - name: Publish exact merge reuse outcome
+        if: steps.bind.outputs.eligible == 'true' && steps.verify.outcome == 'success' && steps.save.outcome == 'success' && steps.visible.outputs.cache-hit == 'true' && steps.archive.outcome == 'success'
+        id: done
+        run: echo "reused=true" >> "$GITHUB_OUTPUT"
+
 
   pr-lean-fast-check:
     name: Changed Lean fast check

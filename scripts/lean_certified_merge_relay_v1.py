@@ -38,6 +38,8 @@ def git(*args):
 def binding(ref):
     return {"tree": sha(git("rev-parse", ref + "^{tree}")),
             "math_tree": sha(git("rev-parse", ref + ":MGAP4D")),
+            "root_lean": sha(git("rev-parse", ref + ":MGAP4D.lean")),
+            "cache_version": sha(git("rev-parse", ref + ":.github/lean-cache-version")),
             "pins": {p: sha(git("rev-parse", ref + ":" + p)) for p in PIN_PATHS}}
 
 def leaf_modules(diff):
@@ -278,14 +280,44 @@ def exact_push_cache_job(run, jobs, base):
                 return True
     return False
 
-def require_base_provenance(base):
-    runs = api("/actions/workflows/pr-lean-fast-check.yml/runs?" +
-        urllib.parse.urlencode({"head_sha":base,"event":"push","per_page":20}))["workflow_runs"]
-    runs = [r for r in runs if r.get("head_sha") == base and r.get("head_branch") == FORMAL]
-    require(runs, "predecessor has no trusted cache publication run")
-    run = max(runs, key=lambda r: (r["id"],r["run_attempt"]))
-    jobs = api(f'/actions/runs/{run["id"]}/attempts/{run["run_attempt"]}/jobs?per_page=100')["jobs"]
-    require(exact_push_cache_job(run,jobs,base), "predecessor cache provenance unavailable")
+ALIAS_ONLY_PATHS = {
+    "scripts/lean_certified_merge_relay_v1.py",
+    "scripts/test_lean_certified_merge_relay_v1.py",
+    ".github/workflows/pr-lean-fast-check.yml",
+    ".github/workflows/lean-warm-compact-publish-v2.yml",
+    "scripts/lean_compact_cache_binding_v2.py",
+    "docs/LEAN_CERTIFIED_LEAF_RELAY_V1.md",
+}
+
+def math_binding(b):
+    return {k:b[k] for k in ("math_tree", "root_lean", "cache_version", "pins")}
+
+def alias_compatible(base_binding, ancestor_binding, changed_paths):
+    return (math_binding(base_binding) == math_binding(ancestor_binding) and
+            set(changed_paths) <= ALIAS_ONLY_PATHS)
+
+def select_predecessor_cache(base):
+    # A tightly scoped infrastructure-only commit need not rebuild unchanged
+    # mathematics. Bind its cache to the closest earlier certified mathematical
+    # state, never to an arbitrary prefix match.
+    base_binding = binding(base)
+    current = base
+    for _ in range(8):
+        runs = api("/actions/workflows/pr-lean-fast-check.yml/runs?" +
+            urllib.parse.urlencode({"head_sha":current,"event":"push","per_page":20}))["workflow_runs"]
+        runs = [r for r in runs if r.get("head_sha") == current and r.get("head_branch") == FORMAL]
+        if runs:
+            run = max(runs, key=lambda r: (r["id"],r["run_attempt"]))
+            require(completed_success(run), "predecessor latest trusted run is not GREEN")
+            jobs = api(f'/actions/runs/{run["id"]}/attempts/{run["run_attempt"]}/jobs?per_page=100')["jobs"]
+            if exact_push_cache_job(run,jobs,current):
+                return current, run["id"]
+        ancestor = sha(git("rev-parse", current + "^1"))
+        changes = git("diff", "--name-only", ancestor, base).splitlines()
+        require(alias_compatible(base_binding,binding(ancestor),changes),
+                "predecessor cache provenance unavailable; no exact math alias")
+        current = ancestor
+    raise ValueError("predecessor certified cache not found within bounded alias history")
 
 def prepare(args):
     require(os.environ["GITHUB_EVENT_NAME"] == "push" and
@@ -296,7 +328,7 @@ def prepare(args):
     leaves = leaf_modules(git("diff", "--name-status", "--no-renames", base, merged))
     b = binding(merged)
     require(b == binding(head) and b["pins"] == binding(base)["pins"], "source tree or pins differ")
-    require_base_provenance(base)
+    cache_base, cache_proof_run = select_predecessor_cache(base)
     prs = [p for p in api("/commits/" + merged + "/pulls?per_page=100")
            if p.get("merge_commit_sha") == merged and p.get("merged_at") and
            p["base"]["ref"] == FORMAL and p["base"]["sha"] == base and
@@ -327,10 +359,11 @@ def prepare(args):
     validate_receipt(rec, expected, test["tree"]["sha"], [p["sha"] for p in test["parents"]])
     extract_delta(archive, rec, out / "verified-delta")
     rec.update({"merged_commit":merged,"independent_job_id":job_id,
+                "cache_base":cache_base,"cache_proof_run":cache_proof_run,
                 "artifact_id":a["id"],"artifact_digest":a["digest"]})
     write_json(out / "verified-receipt.json", rec)
     print("RELAY_PROVENANCE_MATCH " + json.dumps({k:v for k,v in rec.items() if k != "files"}, sort_keys=True))
-    output("base", base)
+    output("base", cache_base)
     output("eligible", "true")
 
 def apply_delta(args):
@@ -338,6 +371,9 @@ def apply_delta(args):
     rec = json.loads((out / "verified-receipt.json").read_text())
     require(rec["merged_commit"] == git("rev-parse", "HEAD") and rec["binding"] == binding("HEAD"),
             "checkout changed after provenance validation")
+    require(alias_compatible(binding(rec["base"]), binding(rec["cache_base"]),
+                git("diff", "--name-only", rec["cache_base"], rec["base"]).splitlines()),
+            "predecessor mathematical binding changed")
     require(BUILD.is_dir() and not BUILD.is_symlink(), "exact baseline build unavailable")
     for r in rec["files"]:
         rel = str(safe_artifact_path(r["path"], rec["leaves"]))
