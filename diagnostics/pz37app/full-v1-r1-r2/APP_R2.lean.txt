@@ -1,0 +1,206 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalTimeOneOSTwoModePositiveDefiniteV5_PZ37APO
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenCanonicalBoundaryVacuumAdjoint
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37APP — actual OS boundary vacuum-centered time-one excitation
+
+Candidate only until direct Lean, actual Lean MCP and independent CI certify
+the exact source. Work in the original boundary Haar L2. The moment vector
+is ANF's literal Gram image, not a substitute one-slab state. Establish
+unit norm of the existing genuine OS boundary vacuum via its existing
+canonical isometry, then center the actual mode-one moment and prove
+that the centered vector is still the image of the original cylinder,
+orthogonal to the vacuum and strictly nonzero. No full-carrier transfer
+identification, uniform gap or continuum assertion.
+-/
+
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory Filter
+open scoped ENNReal Topology InnerProductSpace InnerProduct
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 12000000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "B" => PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration
+local notation "BM" => periodicHypercubicEvenBoundaryHaarMeasure
+local notation "L" => PeriodicHypercubicEvenBoundaryHaarL2
+local notation "M" => p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment
+local notation "Q" => p4Q2PZ37ANF_originalTimeOneWilsonOSQuadratic
+local notation "VacM" => periodicHypercubicEvenBoundaryVacuumMoment
+local notation "Vac" => periodicHypercubicEvenBoundaryVacuumL2
+
+local instance p4Q2PZ37APP_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37APP_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37APP_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37APP_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37APP_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37APP_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+
+/-- The actual original time-one OS moment as a vector of the existing
+boundary Haar L2, via ANK's exact MemLp theorem. -/
+noncomputable def p4Q2PZ37APP_originalTimeOneBoundaryMomentL2
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 ≤ beta)
+    (c0 c1 : ℝ) : L H 2 :=
+  (p4Q2PZ37ANK_originalTimeOneBoundaryMoment_memLp_two H beta hb c0 c1).toLp
+    (M H beta hb c0 c1)
+
+local notation "X" => p4Q2PZ37APP_originalTimeOneBoundaryMomentL2
+
+theorem p4Q2PZ37APP_originalTimeOneBoundaryMomentL2_coeFn
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 ≤ beta)
+    (c0 c1 : ℝ) :
+    X H beta hb c0 c1 =ᵐ[BM H 2] M H beta hb c0 c1 :=
+  MemLp.coeFn_toLp
+    (p4Q2PZ37ANK_originalTimeOneBoundaryMoment_memLp_two H beta hb c0 c1)
+
+/-- The genuine boundary vacuum is already the unit Gibbs vacuum under
+the existing canonical boundary analysis isometry. -/
+theorem p4Q2PZ37APP_originalBoundaryVacuum_norm
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 ≤ beta) :
+    ‖Vac H 2 (by norm_num) beta hb‖ = 1 := by
+  let A := periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
+    H 2 (by norm_num) beta hb
+  let W := periodicHypercubicSpecialUnitaryWilsonSystem
+    (PeriodicHypercubicEvenSideLength H) 2 (by norm_num) beta hb
+  calc
+    ‖Vac H 2 (by norm_num) beta hb‖ =
+        ‖A (Vac H 2 (by norm_num) beta hb)‖ := (A.norm_map _).symm
+    _ = ‖W.gibbsVacuumL2‖ := congrArg norm
+      (periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry_vacuum
+        H 2 (by norm_num) beta hb)
+    _ = 1 := continuous_compact_oriented_gibbsVacuumL2_norm W
+
+/-- This norm is exactly ANF's full-periodic Gibbs reflection form,
+not a separately imposed norm on a two-dimensional model. -/
+theorem p4Q2PZ37APP_originalTimeOneBoundaryMomentL2_norm_sq
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 ≤ beta)
+    (c0 c1 : ℝ) :
+    ‖X H beta hb c0 c1‖ ^ 2 = Q H beta hb c0 c1 := by
+  let x := X H beta hb c0 c1
+  calc
+    ‖x‖ ^ 2 = inner ℝ x x := (real_inner_self_eq_norm_sq x).symm
+    _ = ∫ b : B H 2, inner ℝ (x b) (x b) ∂(BM H 2) :=
+      MeasureTheory.L2.inner_def x x
+    _ = ∫ b : B H 2, ‖M H beta hb c0 c1 b‖ ^ 2 ∂(BM H 2) := by
+      apply integral_congr_ae
+      filter_upwards
+        [p4Q2PZ37APP_originalTimeOneBoundaryMomentL2_coeFn H beta hb c0 c1]
+        with b h
+      calc
+        inner ℝ (x b) (x b) = ‖x b‖ ^ 2 := real_inner_self_eq_norm_sq _
+        _ = ‖M H beta hb c0 c1 b‖ ^ 2 := congrArg (fun z : ℝ => ‖z‖ ^ 2) h
+    _ = Q H beta hb c0 c1 :=
+      (p4Q2PZ37ANF_originalTimeOneWilsonOSQuadratic_eq_boundaryGramMoment_sq
+        H beta hb c0 c1).symm
+
+/-- Exact linearity inside the original L2 carrier, identifying the
+constant coefficient with the genuine vacuum, not the one-slab top. -/
+theorem p4Q2PZ37APP_originalTimeOneBoundaryMomentL2_linear
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 ≤ beta)
+    (c0 c1 : ℝ) :
+    X H beta hb c0 c1 =
+      c0 • Vac H 2 (by norm_num) beta hb + c1 • X H beta hb 0 1 := by
+  let v := Vac H 2 (by norm_num) beta hb
+  let x := X H beta hb 0 1
+  apply Lp.ext
+  filter_upwards
+    [p4Q2PZ37APP_originalTimeOneBoundaryMomentL2_coeFn H beta hb c0 c1,
+      p4Q2PZ37APP_originalTimeOneBoundaryMomentL2_coeFn H beta hb 0 1,
+      periodicHypercubicEvenBoundaryVacuumL2_coeFn H 2 (by norm_num) beta hb,
+      Lp.coeFn_smul c0 v, Lp.coeFn_smul c1 x,
+      Lp.coeFn_add (c0 • v) (c1 • x)]
+    with b hM hX hV hS0 hS1 hAdd
+  have hOne : M H beta hb 1 0 b = VacM H 2 (by norm_num) beta hb b := by
+    simpa only [one_mul] using
+      p4Q2PZ37APO_originalTimeOneConstantBoundaryMoment H beta hb 1 b
+  calc
+    (X H beta hb c0 c1) b = M H beta hb c0 c1 b := hM
+    _ = c0 * M H beta hb 1 0 b + c1 * M H beta hb 0 1 b :=
+      p4Q2PZ37ANG_originalTimeOneBoundaryGramMoment_twoMode_linear
+        H beta hb c0 c1 b
+    _ = c0 * v b + c1 * x b := by
+      rw [hOne, ← hV, ← hX]
+    _ = (c0 • v) b + (c1 • x) b := by
+      rw [show (c0 • v) b = c0 * v b from hS0,
+        show (c1 • x) b = c1 * x b from hS1]
+    _ = (c0 • v + c1 • x) b := hAdd.symm
+
+/-- Center with the ACTUAL unit boundary vacuum and retain the original
+time-one coefficient-one cylinder as an exact Gram image. -/
+noncomputable def p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 ≤ beta) : L H 2 :=
+  X H beta hb (-inner ℝ (Vac H 2 (by norm_num) beta hb) (X H beta hb 0 1)) 1
+
+local notation "U" => p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2
+
+theorem p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2_eq_sub
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 ≤ beta) :
+    U H beta hb = X H beta hb 0 1 -
+      inner ℝ (Vac H 2 (by norm_num) beta hb) (X H beta hb 0 1) •
+        Vac H 2 (by norm_num) beta hb := by
+  unfold p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2
+  rw [p4Q2PZ37APP_originalTimeOneBoundaryMomentL2_linear, one_smul, neg_smul,
+    sub_eq_add_neg]
+  exact add_comm _ _
+
+theorem p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2_orthogonal
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 ≤ beta) :
+    inner ℝ (Vac H 2 (by norm_num) beta hb) (U H beta hb) = 0 := by
+  let v := Vac H 2 (by norm_num) beta hb
+  let x := X H beta hb 0 1
+  have hv : ‖v‖ = 1 := p4Q2PZ37APP_originalBoundaryVacuum_norm H beta hb
+  rw [p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2_eq_sub]
+  rw [show inner ℝ v (x - inner ℝ v x • v) =
+    inner ℝ v x - inner ℝ v (inner ℝ v x • v) from inner_sub_right _ _ _,
+    real_inner_smul_right, real_inner_self_eq_norm_sq, hv]
+  ring
+
+/-- Strict nonzero centered excitation for every finite H and beta > 0.
+This proof uses APN, not merely nonzero ordinary Gibbs L2. -/
+theorem p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2_norm_sq_pos
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 < beta) :
+    0 < ‖U H beta hb.le‖ ^ 2 := by
+  unfold p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2
+  rw [p4Q2PZ37APP_originalTimeOneBoundaryMomentL2_norm_sq]
+  exact p4Q2PZ37APN_originalTimeOneOSQuadratic_pos H beta hb _
+
+/-- The vacuum-subtracted Gram determinant is strictly positive.
+It is finite-volume only; no uniform coercivity follows from it alone. -/
+theorem p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2_norm_sq_eq
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 ≤ beta) :
+    ‖U H beta hb‖ ^ 2 =
+      Q H beta hb 0 1 -
+        (inner ℝ (Vac H 2 (by norm_num) beta hb) (X H beta hb 0 1)) ^ 2 := by
+  let v := Vac H 2 (by norm_num) beta hb
+  let x := X H beta hb 0 1
+  have hv : ‖v‖ = 1 := p4Q2PZ37APP_originalBoundaryVacuum_norm H beta hb
+  have hx : ‖x‖ ^ 2 = Q H beta hb 0 1 :=
+    p4Q2PZ37APP_originalTimeOneBoundaryMomentL2_norm_sq H beta hb 0 1
+  rw [p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2_eq_sub]
+  change ‖x - inner ℝ v x • v‖ ^ 2 = Q H beta hb 0 1 - (inner ℝ v x) ^ 2
+  rw [norm_sub_sq_real, real_inner_smul_right,
+    show inner ℝ x v = inner ℝ v x from real_inner_comm v x,
+    norm_smul, hv, mul_one, hx, Real.norm_eq_abs, sq_abs]
+  ring
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APP_originalTimeOneBoundaryMomentL2_coeFn
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APP_originalBoundaryVacuum_norm
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APP_originalTimeOneBoundaryMomentL2_norm_sq
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APP_originalTimeOneBoundaryMomentL2_linear
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2_eq_sub
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2_orthogonal
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2_norm_sq_pos
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2_norm_sq_eq

@@ -1,0 +1,10 @@
+{
+  "run": 45573367958,
+  "job": 139065187427,
+  "artifact": 15002992011,
+  "baseline": "91359d0037d8214b107d1b5ccca3d8660c52ddc9",
+  "diagnostic": "exact compact hit; lake build --no-build of requested imports returned 3; candidates skipped",
+  "classification": "INFRASTRUCTURE_HOLD not mathematical failure",
+  "recovery": "restore exact certified full project cache, run normal pinned Lake build of requested imports, preserve and print log even on failure; same candidates unchanged; no changes to canonical workflow or math source",
+  "status": "TEST_REQUIRED"
+}
