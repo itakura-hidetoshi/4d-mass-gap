@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "baseline_commit": "ad57a0adfbc7a1ba8d8a2f1f155ad4e8d582288f",
+  "baseline_mgap4d_tree": "bf1dd2c55db34091561ef0c232aca74d9d8492e4",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalTimeOneOSNativeTransferReadoutV5_PZ37APQ",
+    "MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenOSBoundaryL2SpatialSlicePair",
+    "MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryGaussLawProjection",
+    "MGAP4D.MathlibAnalytic.RealL2HilbertSchmidtKernelOperator",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "APR",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APR_originalBoundaryKernelOperator_inner_eq_endpointPairing",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APR_originalCenteredBoundaryKernelOperator_inner_eq_nativeInsertion",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APR_originalCenteredBoundaryKernelOperator_GaussProjection_eq_nativeInsertion",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APR_originalCenteredBoundaryKernelOperator_norm_le",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APR_originalCenteredBoundaryKernelOperator_ne_zero"
+      ],
+      "candidates": [
+        {
+          "id": "R3",
+          "path": "diagnostics/pz37apr/full-v1-r3-r4/APR_R3.lean.txt",
+          "blob": "a3ab5d6e4f11d7f32a54716a9b97eddacfc6702c"
+        },
+        {
+          "id": "R4",
+          "path": "diagnostics/pz37apr/full-v1-r3-r4/APR_R4.lean.txt",
+          "blob": "e8348c6a070aabd94d35753f92b8c999c64d41eb"
+        }
+      ]
+    }
+  ]
+}

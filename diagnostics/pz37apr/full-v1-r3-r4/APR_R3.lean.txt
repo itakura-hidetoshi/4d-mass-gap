@@ -1,0 +1,220 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalTimeOneOSNativeTransferReadoutV5_PZ37APQ
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenOSBoundaryL2SpatialSlicePair
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryGaussLawProjection
+import MGAP4D.MathlibAnalytic.RealL2HilbertSchmidtKernelOperator
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37APR — genuine boundary Gram kernel and physical compression
+
+Use the existing two-slice Haar isometry and existing Hilbert--Schmidt
+kernel operator on the actual one-slice Haar L². Identify its physical
+matrix coefficients by APQ, then its Gauss-law compressed action by
+Hilbert inner-product uniqueness. Do not identify the uncompressed
+kernel with a physical operator or the completed OS time evolution.
+-/
+
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory Filter
+open scoped ENNReal Topology InnerProductSpace InnerProduct
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 12000000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "P" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "BM" => periodicHypercubicEvenBoundaryHaarMeasure
+local notation "L" => PeriodicHypercubicEvenBoundaryHaarL2
+local notation "J" => periodicHypercubicEvenBoundaryHaarL2ToSpatialSlicePairLinearIsometry
+local notation "R" => periodicHypercubicEvenSpatialSlicePairHaarL2ToBoundaryLinearIsometry
+local notation "E" => periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv
+local notation "Pair" => p4Q2PZ37APQ_originalTimeOneBoundaryEndpointPairing
+local notation "X" => p4Q2PZ37APP_originalTimeOneBoundaryMomentL2
+local notation "U" => p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2
+local notation "Vac" => periodicHypercubicEvenBoundaryVacuumL2
+local notation "Obs" => p4Q2PZ37APL_originalTwoModeObservable
+local notation "NormZ" => periodicHypercubicEvenBoundaryPositiveHalfPartitionSqrtNormalization
+local notation "Ins" => periodicHypercubicEvenSpecialUnitaryPhysicalTransferSliceObservableOperator
+local notation "GP" => periodicHypercubicEvenSpecialUnitarySpatialSliceGaussLawProjection
+
+local instance p4Q2PZ37APR_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37APR_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37APR_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37APR_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37APR_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37APR_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37APR_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37APR_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37APR_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+
+/-- The APQ endpoint test is the actual kernel operator matrix coefficient.
+Use the inverse Haar isometry to avoid transporting an arbitrary integral
+without proving integrability, and the existing external-tensor representative. -/
+theorem p4Q2PZ37APR_originalBoundaryKernelOperator_inner_eq_endpointPairing
+    (H : ℕ) (v : L H 2) (f g : P H 2) :
+    inner ℝ
+      (realL2HilbertSchmidtKernelOperator (μ := Mu H 2)
+        (J H 2 v) (f : Lp ℝ 2 (Mu H 2)))
+      (g : Lp ℝ 2 (Mu H 2)) = Pair H v f g := by
+  let fl : Lp ℝ 2 (Mu H 2) := f
+  let gl : Lp ℝ 2 (Mu H 2) := g
+  let t := realL2ExternalTensor fl gl
+  let e := E H G
+  have hmp := periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_measurePreserving_specialUnitaryHaar H 2
+  have ht := hmp.quasiMeasurePreserving.ae_eq (realL2ExternalTensor_coeFn fl gl)
+  have hJ : inner ℝ (J H 2 v) t = inner ℝ v (R H 2 t) := by
+    calc
+      _ = inner ℝ (J H 2 v) (J H 2 (R H 2 t)) := by
+        rw [periodicHypercubicEvenBoundaryHaarL2ToSpatialSlicePair_rightInverse]
+      _ = _ := (J H 2).inner_map_map v (R H 2 t)
+  rw [realL2HilbertSchmidtKernelOperator_inner]
+  change inner ℝ (J H 2 v) t = _
+  rw [hJ, MeasureTheory.L2.inner_def]
+  unfold p4Q2PZ37APQ_originalTimeOneBoundaryEndpointPairing
+  apply integral_congr_ae
+  filter_upwards
+    [periodicHypercubicEvenSpatialSlicePairHaarL2ToBoundaryLinearIsometry_coeFn H 2 t,
+      ht] with b hb htb
+  change (R H 2 t) b = t (e b) at hb
+  change t (e b) = fl (e b).1 * gl (e b).2 at htb
+  rw [hb, htb]
+  have hleft : (e b).1 =
+      (fun i => b (periodicHypercubicEvenPrimarySpatialSliceLinkToFixedEdge H i)) := by
+    funext i
+    change (Equiv.piCongrLeft
+      (fun _ : PeriodicHypercubicEvenSpatialSliceLink H ⊕
+        PeriodicHypercubicEvenSpatialSliceLink H => G)
+      (periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices H)) b (Sum.inl i) = _
+    rw [Equiv.piCongrLeft_apply_eq_cast]
+    simp [periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices,
+      periodicHypercubicEvenSpatialSliceSumToFixedEdge]
+  have hright : (e b).2 =
+      (fun i => b (periodicHypercubicEvenAntipodalSpatialSliceLinkToFixedEdge H
+        (periodicHypercubicEvenPrimaryAntipodalSpatialSliceLinkEquiv H i))) := by
+    funext i
+    change (Equiv.piCongrLeft
+      (fun _ : PeriodicHypercubicEvenSpatialSliceLink H ⊕
+        PeriodicHypercubicEvenSpatialSliceLink H => G)
+      (periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices H)) b (Sum.inr i) = _
+    rw [Equiv.piCongrLeft_apply_eq_cast]
+    simp [periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices,
+      periodicHypercubicEvenSpatialSliceSumToFixedEdge]
+  rw [hleft, hright]
+  change inner ℝ (v b)
+      (fl (fun i => b (periodicHypercubicEvenPrimarySpatialSliceLinkToFixedEdge H i)) *
+        gl (fun i => b (periodicHypercubicEvenAntipodalSpatialSliceLinkToFixedEdge H
+          (periodicHypercubicEvenPrimaryAntipodalSpatialSliceLinkEquiv H i)))) =
+    (fl (fun i => b (periodicHypercubicEvenPrimarySpatialSliceLinkToFixedEdge H i)) *
+      gl (fun i => b (periodicHypercubicEvenAntipodalSpatialSliceLinkToFixedEdge H
+        (periodicHypercubicEvenPrimaryAntipodalSpatialSliceLinkEquiv H i)))) * v b
+  rw [RCLike.inner_apply]
+  simp
+
+/-- The actual APP centered boundary vector as a native Haar kernel operator. -/
+noncomputable def p4Q2PZ37APR_originalCenteredBoundaryKernelOperator
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 ≤ beta) :
+    Lp ℝ 2 (Mu H 2) →L[ℝ] Lp ℝ 2 (Mu H 2) :=
+  realL2HilbertSchmidtKernelOperator (μ := Mu H 2) (J H 2 (U H beta hb))
+
+local notation "A" => p4Q2PZ37APR_originalCenteredBoundaryKernelOperator
+
+theorem p4Q2PZ37APR_originalCenteredBoundaryKernelOperator_inner_eq_nativeInsertion
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 ≤ beta) (f g : P H 2) :
+    let q := -inner ℝ (Vac H 2 (by norm_num) beta hb) (X H beta hb 0 1)
+    inner ℝ (A H beta hb (f : Lp ℝ 2 (Mu H 2)))
+        (g : Lp ℝ 2 (Mu H 2)) =
+      NormZ H 2 (by norm_num) beta hb *
+        inner ℝ
+          (Ins H 2 (by norm_num) beta hb 1 H (Obs H q)
+            (p4Q2PZ37APL_originalTwoModeObservable_gaugeInvariant H q) f) g := by
+  change inner ℝ (realL2HilbertSchmidtKernelOperator (μ := Mu H 2)
+    (J H 2 (U H beta hb)) (f : Lp ℝ 2 (Mu H 2)))
+    (g : Lp ℝ 2 (Mu H 2)) = _
+  rw [p4Q2PZ37APR_originalBoundaryKernelOperator_inner_eq_endpointPairing H (U H beta hb) f g]
+  exact p4Q2PZ37APQ_originalTimeOneOSCenteredBoundaryEndpointPairing_eq_physicalInsertion
+    H beta hb f g
+
+/-- Actual physical compression, not an asserted equality on all of Haar L². -/
+theorem p4Q2PZ37APR_originalCenteredBoundaryKernelOperator_GaussProjection_eq_nativeInsertion
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 ≤ beta) (f : P H 2) :
+    let q := -inner ℝ (Vac H 2 (by norm_num) beta hb) (X H beta hb 0 1)
+    GP H 2 (A H beta hb (f : Lp ℝ 2 (Mu H 2))) =
+      ((NormZ H 2 (by norm_num) beta hb •
+        Ins H 2 (by norm_num) beta hb 1 H (Obs H q)
+          (p4Q2PZ37APL_originalTwoModeObservable_gaugeInvariant H q) f : P H 2) :
+        Lp ℝ 2 (Mu H 2)) := by
+  let q := -inner ℝ (Vac H 2 (by norm_num) beta hb) (X H beta hb 0 1)
+  let c := NormZ H 2 (by norm_num) beta hb
+  let z := A H beta hb (f : Lp ℝ 2 (Mu H 2))
+  let y : P H 2 := ⟨GP H 2 z,
+    periodicHypercubicEvenSpecialUnitarySpatialSliceGaussLawProjection_mem H 2 z⟩
+  let w : P H 2 := Ins H 2 (by norm_num) beta hb 1 H (Obs H q)
+    (p4Q2PZ37APL_originalTwoModeObservable_gaugeInvariant H q) f
+  have heq : y = c • w := by
+    apply ext_inner_right ℝ
+    intro g
+    change inner ℝ (GP H 2 z) (g : Lp ℝ 2 (Mu H 2)) =
+      inner ℝ (c • (w : Lp ℝ 2 (Mu H 2))) (g : Lp ℝ 2 (Mu H 2))
+    rw [real_inner_smul_left]
+    have hfix : GP H 2 (g : Lp ℝ 2 (Mu H 2)) = g :=
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceGaussLawProjection_eq_self_iff H 2 _).2 g.property
+    have hAdj :
+        inner ℝ (GP H 2 z) (g : Lp ℝ 2 (Mu H 2)) =
+          inner ℝ z (GP H 2 (g : Lp ℝ 2 (Mu H 2))) := by
+      simpa only [periodicHypercubicEvenSpecialUnitarySpatialSliceGaussLawProjection] using
+        (Submodule.inner_starProjection_left_eq_right
+          (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2ClosedSubmodule H 2).toSubmodule
+          z (g : Lp ℝ 2 (Mu H 2)))
+    rw [hAdj, hfix]
+    exact p4Q2PZ37APR_originalCenteredBoundaryKernelOperator_inner_eq_nativeInsertion H beta hb f g
+  exact congrArg (fun a : P H 2 => (a : Lp ℝ 2 (Mu H 2))) heq
+
+/-- A quantitative upper bound from the original OS norm, not a strict
+contraction estimate for the normalized time evolution. -/
+theorem p4Q2PZ37APR_originalCenteredBoundaryKernelOperator_norm_le
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 ≤ beta) :
+    ‖A H beta hb‖ ≤ ‖U H beta hb‖ := by
+  calc
+    ‖A H beta hb‖ ≤ ‖J H 2 (U H beta hb)‖ :=
+      realL2HilbertSchmidtKernelOperator_norm_le (μ := Mu H 2) _
+    _ = ‖U H beta hb‖ := (J H 2).norm_map _
+
+/-- Nonzero operator witness from the exact native endpoint pairing. -/
+theorem p4Q2PZ37APR_originalCenteredBoundaryKernelOperator_ne_zero
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 < beta) :
+    A H beta hb.le ≠ 0 := by
+  let q := -inner ℝ (Vac H 2 (by norm_num) beta hb.le) (X H beta hb.le 0 1)
+  let f := p4Q2PZ37APL_originalVacuumWeightedTwoMode H beta hb.le q
+  let g := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector H 2 (by norm_num) beta hb.le
+  have hp : 0 < Pair H (U H beta hb.le) f g :=
+    p4Q2PZ37APQ_originalTimeOneOSCenteredBoundaryEndpointPairing_pos H beta hb
+  have he : inner ℝ (A H beta hb.le (f : Lp ℝ 2 (Mu H 2))) (g : Lp ℝ 2 (Mu H 2)) =
+      Pair H (U H beta hb.le) f g :=
+    p4Q2PZ37APR_originalBoundaryKernelOperator_inner_eq_endpointPairing H (U H beta hb.le) f g
+  intro hz
+  rw [hz, ContinuousLinearMap.zero_apply, inner_zero_left] at he
+  linarith
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APR_originalBoundaryKernelOperator_inner_eq_endpointPairing
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APR_originalCenteredBoundaryKernelOperator_inner_eq_nativeInsertion
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APR_originalCenteredBoundaryKernelOperator_GaussProjection_eq_nativeInsertion
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APR_originalCenteredBoundaryKernelOperator_norm_le
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APR_originalCenteredBoundaryKernelOperator_ne_zero
