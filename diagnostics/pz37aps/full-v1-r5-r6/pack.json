@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "baseline_commit": "f10540610a4fc559689546c10f92265bab938849",
+  "baseline_mgap4d_tree": "d1a1ea9362ec3b6a97d1dc26ac2c4b1b06b78a92",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalOSCenteredBoundaryKernelV5_PZ37APR",
+    "MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalPairIndependentGaugeFixedEquality",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "APS",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APS_originalTimeOneClosureSpatialSlice_gaugeCovariant",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APS_originalTimeOneBoundaryPositiveObservable_gaugeInvariant",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APS_originalTimeOneWilsonBoundaryGramMoment_gaugeInvariant",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APS_originalTimeOneBoundaryMomentL2_gaugeFixed",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APS_originalCenteredBoundaryPair_independentGaugeFixed",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APS_originalCenteredBoundaryPair_mem_physicalPairCarrier",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APS_originalCenteredBoundaryKernelOperator_mem_GaussLaw",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APS_originalCenteredBoundaryKernelOperator_eq_nativeInsertion"
+      ],
+      "candidates": [
+        {
+          "id": "R5",
+          "path": "diagnostics/pz37aps/full-v1-r5-r6/APS_R5.lean.txt",
+          "blob": "d1da8df717b56d36061d5c6987540dd4966c0a4a"
+        },
+        {
+          "id": "R6",
+          "path": "diagnostics/pz37aps/full-v1-r5-r6/APS_R6.lean.txt",
+          "blob": "7db395a00780104c8b355dbf1790c6ba2b55171a"
+        }
+      ]
+    }
+  ]
+}
