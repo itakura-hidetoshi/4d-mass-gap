@@ -1,0 +1,337 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicExactVacuumRatioOSBoundaryDeterminantV5_PZ37APK
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalFullOneSlabStrictTransferV5_LJ
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumRepresentative
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPositiveHalfTransferSliceObservableInsertion
+import Mathlib.Tactic
+/-!
+# P4-Q2-PZ37APL — positive genuine Wilson insertion with vacuum-weighted endpoints
+
+Use the exact time-one two-mode observable of ANA and the physical modes of
+AMW. LJ proves strict positivity of the genuine complete one-slab kernel on
+nonzero continuous sources. The actual continuous vacuum representative and
+its almost-everywhere positivity give the nonzero vacuum-weighted source.
+No identification of the physical Hilbert carrier with the OS quotient is
+assumed. The remaining boundary-to-unfixed-time-one-insertion transport is
+a separate obligation, not asserted by this file.
+-/
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory Filter
+open scoped ENNReal Topology InnerProductSpace InnerProduct
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 12000000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "Cfg" => PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration
+local notation "P" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "V" => p4Q2PZ37AMU_actualPhysicalGaussMode
+local notation "Tr" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+local notation "Vac" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+local notation "VacC" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+local notation "Mul" => periodicHypercubicEvenSpecialUnitaryPhysicalSpatialSliceObservableMulOperator
+local notation "K" => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+
+local instance p4Q2PZ37APL_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37APL_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37APL_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37APL_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37APL_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37APL_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
+private theorem p4Q2PZ37APL_holonomy_continuous (H : ℕ) :
+    Continuous (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2) := by
+  have hEq : p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 =
+      (fun A : Cfg H 2 =>
+        (A (p4Q2PZ37AMS_primarySpatialSliceEdgeEmbedding H 2))⁻¹ *
+          ((A (p4Q2PZ37AMS_primarySpatialSliceEdgeEmbedding H 3))⁻¹ *
+            (A (p4Q2PZ37AMS_primarySpatialSliceEdgeEmbedding H 0) *
+              A (p4Q2PZ37AMS_primarySpatialSliceEdgeEmbedding H 1)))) := by
+    funext A
+    simp only [p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy,
+      haarFinFourCyclicPlaquetteWord, haarFinFourCyclicNestedCoordinates_apply,
+      haarCyclicPlaquetteWord]
+  rw [hEq]
+  exact (continuous_apply _).inv.mul
+    ((continuous_apply _).inv.mul ((continuous_apply _).mul (continuous_apply _)))
+
+/-- Literal time-one spatial observable with first-mode coefficient one,
+on the original compact configuration carrier. -/
+noncomputable def p4Q2PZ37APL_originalTwoModeObservable (H : ℕ) (q : ℝ) :
+    PeriodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservable H 2 :=
+  BoundedContinuousFunction.mkOfCompact
+    ⟨fun A =>
+      q * specialUnitaryWilsonPlaquetteEnergyTwoContinuousGramSchmidtMode 0
+        (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 A) +
+      1 * specialUnitaryWilsonPlaquetteEnergyTwoContinuousGramSchmidtMode 1
+        (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 A),
+      (continuous_const.mul
+        ((specialUnitaryWilsonPlaquetteEnergyTwoContinuousGramSchmidtMode 0).continuous.comp
+          (p4Q2PZ37APL_holonomy_continuous H))).add
+      (continuous_const.mul
+        ((specialUnitaryWilsonPlaquetteEnergyTwoContinuousGramSchmidtMode 1).continuous.comp
+          (p4Q2PZ37APL_holonomy_continuous H)))⟩
+
+local notation "Obs" => p4Q2PZ37APL_originalTwoModeObservable
+
+theorem p4Q2PZ37APL_originalTwoModeObservable_gaugeInvariant
+    (H : ℕ) (q : ℝ) :
+    periodicHypercubicEvenSpecialUnitarySpatialSliceObservableGaugeInvariant
+      H 2 (Obs H q) := by
+  intro gamma A
+  change
+    q * specialUnitaryWilsonPlaquetteEnergyTwoContinuousGramSchmidtMode 0
+      (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2
+        (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform H 2 gamma A)) +
+    1 * specialUnitaryWilsonPlaquetteEnergyTwoContinuousGramSchmidtMode 1
+      (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2
+        (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform H 2 gamma A)) =
+    q * specialUnitaryWilsonPlaquetteEnergyTwoContinuousGramSchmidtMode 0
+      (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 A) +
+    1 * specialUnitaryWilsonPlaquetteEnergyTwoContinuousGramSchmidtMode 1
+      (p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy H 2 A)
+  rw [p4Q2PZ37AMT_continuousMode_cyclic_gaugeInvariant,
+    p4Q2PZ37AMT_continuousMode_cyclic_gaugeInvariant]
+
+theorem p4Q2PZ37APL_originalTwoModeObservable_ae_physical
+    (H : ℕ) (q : ℝ) :
+    ((q • V H 0 + 1 • V H 1 : P H 2) : Lp ℝ 2 (Mu H 2))
+      =ᵐ[Mu H 2] (fun A => Obs H q A) := by
+  simpa only [one_smul] using
+    (p4Q2PZ37AMW_twoMode_ae_originalSpatialWilsonObservable H q 1)
+
+/-- LJ's strict positivity in the original physical Hilbert inner product.
+The continuous representative is tied to the genuine spatial Haar class. -/
+theorem p4Q2PZ37APL_originalPhysicalQuadratic_pos_of_continuousRepresentative
+    (H : ℕ) (beta : ℝ) (hb : 0 < beta) (f : P H 2)
+    (psi : C(Cfg H 2, ℝ)) (hpsi : psi ≠ 0)
+    (hRep : (f : Lp ℝ 2 (Mu H 2)) =ᵐ[Mu H 2] psi) :
+    0 < inner ℝ (Tr H 2 (by norm_num) beta hb.le f) f := by
+  let mu := Mu H 2
+  let w : Lp ℝ 2 mu := f
+  have hLJ := GroundStatePosteriorJoint.p4Q2LJ_originalFullWilsonOneSlabHaarQuadratic_pos
+    H psi hpsi beta hb
+  rw [GroundStatePosteriorJoint.p4Q2LI_originalFullSpatialPairHaarMomentCLM_apply] at hLJ
+  have hPos : 0 < (∫ p : Cfg H 2 × Cfg H 2,
+      K H 2 beta p.1 p.2 * (psi p.1 * psi p.2) ∂(mu.prod mu)) := by
+    simpa only [mu, GroundStatePosteriorJoint.p4Q2LJ_originalFullWilsonOneSlabContinuous_apply]
+      using hLJ
+  change 0 < inner ℝ
+    ((Tr H 2 (by norm_num) beta hb.le f : P H 2) : Lp ℝ 2 mu) w
+  rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_coe,
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_inner_eq_integral]
+  have hLeft : (fun p : Cfg H 2 × Cfg H 2 => w p.1)
+      =ᵐ[mu.prod mu] (fun p => psi p.1) := by
+    simpa only [Function.comp_def] using
+      (Measure.quasiMeasurePreserving_fst (μ := mu) (ν := mu)).ae_eq hRep
+  have hRight : (fun p : Cfg H 2 × Cfg H 2 => w p.2)
+      =ᵐ[mu.prod mu] (fun p => psi p.2) := by
+    simpa only [Function.comp_def] using
+      (Measure.quasiMeasurePreserving_snd (μ := mu) (ν := mu)).ae_eq hRep
+  have heq : (∫ p : Cfg H 2 × Cfg H 2,
+      w p.1 * K H 2 beta p.1 p.2 * w p.2 ∂(mu.prod mu)) =
+      ∫ p : Cfg H 2 × Cfg H 2,
+        K H 2 beta p.1 p.2 * (psi p.1 * psi p.2) ∂(mu.prod mu) := by
+    apply integral_congr_ae
+    filter_upwards [hLeft, hRight] with p hL hR
+    rw [hL, hR]
+    ring
+  rw [heq]
+  exact hPos
+
+/-- The actual multiplication operator on the unchanged Gauss-law carrier. -/
+noncomputable def p4Q2PZ37APL_originalVacuumWeightedTwoMode
+    (H : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta) (q : ℝ) : P H 2 :=
+  Mul H 2 (Obs H q) (p4Q2PZ37APL_originalTwoModeObservable_gaugeInvariant H q)
+    (Vac H 2 (by norm_num) beta hbeta)
+
+local notation "W" => p4Q2PZ37APL_originalVacuumWeightedTwoMode
+
+private theorem p4Q2PZ37APL_coefficient_one_ne_zero
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    (v0 v1 : E) (q : ℝ) (h10 : inner ℝ v1 v0 = 0)
+    (h11 : inner ℝ v1 v1 = 1) : q • v0 + v1 ≠ 0 := by
+  have hval : inner ℝ v1 (q • v0 + v1) = 1 := by
+    calc
+      _ = inner ℝ v1 (q • v0) + inner ℝ v1 v1 :=
+        inner_add_right v1 (q • v0) v1
+      _ = q * inner ℝ v1 v0 + inner ℝ v1 v1 :=
+        congrArg (fun z : ℝ => z + inner ℝ v1 v1)
+          (real_inner_smul_right v1 v0 q)
+      _ = 1 := by rw [h10, h11]; ring
+  intro hz
+  rw [hz, inner_zero_right] at hval
+  norm_num at hval
+
+/-- Strict positivity is not inferred from a bare nonzero physical vector.
+The actual two-mode insertion times the actual vacuum has a nonzero
+continuous spatial representative, and LJ applies to it. -/
+theorem p4Q2PZ37APL_originalVacuumWeightedTwoMode_quadratic_pos
+    (H : ℕ) (beta : ℝ) (hb : 0 < beta) (q : ℝ) :
+    0 < inner ℝ (Tr H 2 (by norm_num) beta hb.le (W H beta hb.le q))
+      (W H beta hb.le q) := by
+  let mu := Mu H 2
+  let a := Obs H q
+  let omega : P H 2 := Vac H 2 (by norm_num) beta hb.le
+  let psi : C(Cfg H 2, ℝ) :=
+    ⟨fun A => a A * VacC H 2 (by norm_num) beta hb.le A,
+      a.continuous.mul
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
+          H 2 (by norm_num) beta hb.le)⟩
+  let v : P H 2 := q • V H 0 + 1 • V H 1
+  let w : P H 2 := W H beta hb.le q
+  have hv : v ≠ 0 := by
+    have ho := p4Q2PZ37AMU_actualPhysicalGaussMode_orthonormal H
+    have h10 : inner ℝ (V H 1) (V H 0) = 0 :=
+      ho.inner_eq_zero (by decide : (1 : ℕ) ≠ 0)
+    have h11 : inner ℝ (V H 1) (V H 1) = 1 := by
+      rw [real_inner_self_eq_norm_sq, ho.1 1]
+      norm_num
+    have h := p4Q2PZ37APL_coefficient_one_ne_zero (V H 0) (V H 1) q h10 h11
+    simpa only [v, one_smul] using h
+  have hvRep : (v : Lp ℝ 2 mu) =ᵐ[mu] (fun A => a A) :=
+    p4Q2PZ37APL_originalTwoModeObservable_ae_physical H q
+  have hVacRep :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_ae_eq_existing
+      H 2 (by norm_num) beta hb.le
+  have hVacPos :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_ae_pos
+      H 2 (by norm_num) beta hb.le
+  have hpsi : psi ≠ 0 := by
+    intro hz
+    apply hv
+    apply Subtype.ext
+    change (v : Lp ℝ 2 mu) = 0
+    apply Lp.ext
+    filter_upwards [hvRep, hVacRep, hVacPos, Lp.coeFn_zero ℝ 2 mu]
+      with A hV hO hOP hZ
+    have hprod : a A * VacC H 2 (by norm_num) beta hb.le A = 0 := by
+      simpa only [psi, ContinuousMap.zero_apply] using
+        congrArg (fun g : C(Cfg H 2, ℝ) => g A) hz
+    have hOmega : 0 < VacC H 2 (by norm_num) beta hb.le A := by
+      rw [hO]
+      exact hOP
+    have ha0 : a A = 0 := (mul_eq_zero.mp hprod).resolve_right (ne_of_gt hOmega)
+    calc
+      _ = a A := hV
+      _ = 0 := ha0
+      _ = _ := by simpa only [Pi.zero_apply] using hZ.symm
+  have hwRep : (w : Lp ℝ 2 mu) =ᵐ[mu] psi := by
+    change ((Mul H 2 a (p4Q2PZ37APL_originalTwoModeObservable_gaugeInvariant H q)
+      omega : P H 2) : Lp ℝ 2 mu) =ᵐ[mu] psi
+    rw [periodicHypercubicEvenSpecialUnitaryPhysicalSpatialSliceObservableMulOperator_coe,
+      periodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservableMulOperator_apply]
+    have hM := periodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservableMulL2_coeFn
+      H 2 a (omega : Lp ℝ 2 mu)
+    filter_upwards [hM, hVacRep] with A hMul hO
+    calc
+      _ = a A * (omega : Lp ℝ 2 mu) A := hMul
+      _ = psi A := by
+        change a A * (omega : Lp ℝ 2 mu) A =
+          a A * VacC H 2 (by norm_num) beta hb.le A
+        exact congrArg (fun y : ℝ => a A * y) hO.symm
+  exact p4Q2PZ37APL_originalPhysicalQuadratic_pos_of_continuousRepresentative
+    H beta hb w psi hpsi hwRep
+
+private theorem p4Q2PZ37APL_inner_pow_eigen
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    (t : E →L[ℝ] E) (hs : (t : E →ₗ[ℝ] E).IsSymmetric)
+    (omega x : E) (l : ℝ) (he : t omega = l • omega) (n : ℕ) :
+    inner ℝ ((t ^ n) x) omega = l ^ n * inner ℝ x omega := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+      calc
+        _ = inner ℝ (t ((t ^ n) x)) omega := by
+          rw [pow_succ', ContinuousLinearMap.mul_def, ContinuousLinearMap.comp_apply]
+        _ = inner ℝ ((t ^ n) x) (t omega) := hs _ _
+        _ = l * inner ℝ ((t ^ n) x) omega := by rw [he, real_inner_smul_right]
+        _ = _ := by rw [ih, pow_succ]; ring
+
+private theorem p4Q2PZ37APL_mul_symmetric
+    (H : ℕ) (a : PeriodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservable H 2)
+    (ha : periodicHypercubicEvenSpecialUnitarySpatialSliceObservableGaugeInvariant H 2 a)
+    (x y : P H 2) :
+    inner ℝ (Mul H 2 a ha x) y = inner ℝ x (Mul H 2 a ha y) := by
+  let mu := Mu H 2
+  change inner ℝ ((Mul H 2 a ha x : P H 2) : Lp ℝ 2 mu) (y : Lp ℝ 2 mu) =
+    inner ℝ (x : Lp ℝ 2 mu) ((Mul H 2 a ha y : P H 2) : Lp ℝ 2 mu)
+  rw [periodicHypercubicEvenSpecialUnitaryPhysicalSpatialSliceObservableMulOperator_coe,
+    periodicHypercubicEvenSpecialUnitaryPhysicalSpatialSliceObservableMulOperator_coe,
+    periodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservableMulOperator_apply,
+    periodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservableMulOperator_apply,
+    MeasureTheory.L2.inner_def, MeasureTheory.L2.inner_def]
+  have hx := periodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservableMulL2_coeFn
+    H 2 a (x : Lp ℝ 2 mu)
+  have hy := periodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservableMulL2_coeFn
+    H 2 a (y : Lp ℝ 2 mu)
+  apply integral_congr_ae
+  filter_upwards [hx, hy] with A hX hY
+  rw [realL2Scalar_inner_eq_mul, realL2Scalar_inner_eq_mul, hX, hY]
+  ring
+
+/-- At time one, the exact existing temporal-gauge path insertion with
+vacuum-weighted primary endpoint and actual vacuum terminal endpoint is
+strictly positive at every positive coupling. In particular this applies
+to the exact coefficient selected by APJ/APK, without any extra assumption. -/
+theorem p4Q2PZ37APL_originalTimeOneInsertion_vacuumWeighted_pos
+    (H : ℕ) (beta : ℝ) (hb : 0 < beta) (q : ℝ) :
+    let t := Tr H 2 (by norm_num) beta hb.le
+    let w := W H beta hb.le q
+    let omega := Vac H 2 (by norm_num) beta hb.le
+    let A := periodicHypercubicEvenSpecialUnitaryTransferSliceObservableAmplitude
+      H 2 beta 1 H (Obs H q)
+        (w : Lp ℝ 2 (Mu H 2)) (omega : Lp ℝ 2 (Mu H 2))
+    A = ‖t‖ ^ H * inner ℝ (t w) w ∧ 0 < A := by
+  let t := Tr H 2 (by norm_num) beta hb.le
+  let w := W H beta hb.le q
+  let omega := Vac H 2 (by norm_num) beta hb.le
+  let a := Obs H q
+  let ha := p4Q2PZ37APL_originalTwoModeObservable_gaugeInvariant H q
+  let A := periodicHypercubicEvenSpecialUnitaryTransferSliceObservableAmplitude
+    H 2 beta 1 H a (w : Lp ℝ 2 (Mu H 2)) (omega : Lp ℝ 2 (Mu H 2))
+  have hSym : (t : P H 2 →ₗ[ℝ] P H 2).IsSymmetric :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_isSymmetric
+      H 2 (by norm_num) beta hb.le
+  have hEigen : t omega = ‖t‖ • omega :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_eigen
+      H 2 (by norm_num) beta hb.le
+  have hNorm : 0 < ‖t‖ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos_from_uniform_kernel_floor
+      H 2 (by norm_num) beta hb.le
+  have hQuad : 0 < inner ℝ (t w) w :=
+    p4Q2PZ37APL_originalVacuumWeightedTwoMode_quadratic_pos H beta hb q
+  have hA : A = ‖t‖ ^ H * inner ℝ (t w) w := by
+    calc
+      A = inner ℝ
+          (periodicHypercubicEvenSpecialUnitaryPhysicalTransferSliceObservableOperator
+            H 2 (by norm_num) beta hb.le 1 H a ha w) omega :=
+        (periodicHypercubicEvenSpecialUnitaryPhysicalTransferSliceObservableOperator_inner_eq_amplitude
+          H 2 (by norm_num) beta hb.le 1 H a ha w omega).symm
+      _ = inner ℝ ((t ^ H) (Mul H 2 a ha (t w))) omega := by
+        simp only [periodicHypercubicEvenSpecialUnitaryPhysicalTransferSliceObservableOperator,
+          ContinuousLinearMap.comp_apply, pow_one, t]
+      _ = ‖t‖ ^ H * inner ℝ (Mul H 2 a ha (t w)) omega :=
+        p4Q2PZ37APL_inner_pow_eigen t hSym omega _ ‖t‖ hEigen H
+      _ = ‖t‖ ^ H * inner ℝ (t w) w := by
+        exact congrArg (fun z : ℝ => ‖t‖ ^ H * z)
+          (p4Q2PZ37APL_mul_symmetric H a ha (t w) omega)
+  have hPos : 0 < A := hA.symm ▸ mul_pos (pow_pos hNorm H) hQuad
+  exact ⟨hA, hPos⟩
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APL_originalTwoModeObservable_gaugeInvariant
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APL_originalTwoModeObservable_ae_physical
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APL_originalPhysicalQuadratic_pos_of_continuousRepresentative
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APL_originalVacuumWeightedTwoMode_quadratic_pos
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APL_originalTimeOneInsertion_vacuumWeighted_pos
