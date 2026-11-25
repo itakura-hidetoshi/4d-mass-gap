@@ -1,0 +1,19 @@
+name: PZ37APT full-cache sandbox v1 R1/R2 original kernel physical zero extension
+on:
+  pull_request:
+    paths:
+      - "diagnostics/pz37apt/full-v1-r1-r2/**"
+      - ".github/workflows/pz37apt-full-v1-r1-r2.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pz37apt-full-v1-r1-r2-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    uses: ./.github/workflows/lean-warm-sandbox-reusable-diagnostic-full-v1.yml
+    with:
+      pack: diagnostics/pz37apt/full-v1-r1-r2/pack.json
+      source_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      baseline_commit: a1bab6b5d9bea337740c19af791644100a837972

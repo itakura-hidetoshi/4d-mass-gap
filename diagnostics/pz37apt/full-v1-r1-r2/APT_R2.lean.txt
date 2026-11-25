@@ -1,0 +1,167 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalOSCenteredBoundaryKernelGaussDescentV5_PZ37APS
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37APT — exact full Haar physical factorization of the original kernel
+
+Use APS's actual independent endpoint gauge fixedness to descend the input
+as well as the output. The full original centered kernel is the zero extension
+of the normalized physical inserted transfer, with equal operator norm.
+No identification with completed OS time evolution or volume-uniform gap.
+-/
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory
+open scoped ENNReal Topology InnerProductSpace InnerProduct
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 12000000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "P" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "X" => p4Q2PZ37APP_originalTimeOneBoundaryMomentL2
+local notation "U" => p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2
+local notation "Vac" => periodicHypercubicEvenBoundaryVacuumL2
+local notation "J" => periodicHypercubicEvenBoundaryHaarL2ToSpatialSlicePairLinearIsometry
+local notation "A" => p4Q2PZ37APR_originalCenteredBoundaryKernelOperator
+local notation "GP" => periodicHypercubicEvenSpecialUnitarySpatialSliceGaussLawProjection
+local notation "Obs" => p4Q2PZ37APL_originalTwoModeObservable
+local notation "Ins" => periodicHypercubicEvenSpecialUnitaryPhysicalTransferSliceObservableOperator
+local notation "NormZ" => periodicHypercubicEvenBoundaryPositiveHalfPartitionSqrtNormalization
+
+local instance p4Q2PZ37APT_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37APT_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37APT_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37APT_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37APT_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37APT_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37APT_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37APT_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37APT_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+
+/-- The same actual centered insertion, with the exact original OS normalization. -/
+noncomputable def p4Q2PZ37APT_originalCenteredPhysicalInsertion
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 ≤ beta) :
+    P H 2 →L[ℝ] P H 2 :=
+  let q := -inner ℝ (Vac H 2 (by norm_num) beta hb) (X H beta hb 0 1)
+  NormZ H 2 (by norm_num) beta hb •
+    Ins H 2 (by norm_num) beta hb 1 H (Obs H q)
+      (p4Q2PZ37APL_originalTwoModeObservable_gaugeInvariant H q)
+
+local notation "C" => p4Q2PZ37APT_originalCenteredPhysicalInsertion
+
+theorem p4Q2PZ37APT_originalCenteredBoundaryKernelOperator_inputProjection
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 ≤ beta)
+    (f : Lp ℝ 2 (Mu H 2)) :
+    A H beta hb (GP H 2 f) = A H beta hb f := by
+  apply ext_inner_right ℝ
+  intro g
+  unfold p4Q2PZ37APR_originalCenteredBoundaryKernelOperator
+  rw [realL2HilbertSchmidtKernelOperator_inner, realL2HilbertSchmidtKernelOperator_inner]
+  exact periodicHypercubicEvenSpecialUnitaryIndependentGaugeFixed_kernelPairing_GaussProjection_left
+    H 2 (J H 2 (U H beta hb))
+    (p4Q2PZ37APS_originalCenteredBoundaryPair_independentGaugeFixed H beta hb) f g
+
+theorem p4Q2PZ37APT_originalCenteredBoundaryKernelOperator_twoSidedProjection
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 ≤ beta) :
+    (GP H 2).comp (A H beta hb) = A H beta hb ∧
+    (A H beta hb).comp (GP H 2) = A H beta hb := by
+  constructor
+  · apply ContinuousLinearMap.ext
+    intro f
+    change GP H 2 (A H beta hb f) = A H beta hb f
+    exact (periodicHypercubicEvenSpecialUnitarySpatialSliceGaussLawProjection_eq_self_iff
+      H 2 _).2 (p4Q2PZ37APS_originalCenteredBoundaryKernelOperator_mem_GaussLaw H beta hb f)
+  · apply ContinuousLinearMap.ext
+    intro f
+    exact p4Q2PZ37APT_originalCenteredBoundaryKernelOperator_inputProjection H beta hb f
+
+theorem p4Q2PZ37APT_originalCenteredBoundaryKernelOperator_physical_eq
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 ≤ beta) (f : P H 2) :
+    A H beta hb (f : Lp ℝ 2 (Mu H 2)) =
+      (C H beta hb f : Lp ℝ 2 (Mu H 2)) :=
+  p4Q2PZ37APS_originalCenteredBoundaryKernelOperator_eq_nativeInsertion H beta hb f
+
+/-- Exact extension to every input on the unchanged full Haar Hilbert space. -/
+theorem p4Q2PZ37APT_originalCenteredBoundaryKernelOperator_eq_projectedPhysicalInsertion
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 ≤ beta)
+    (f : Lp ℝ 2 (Mu H 2)) :
+    A H beta hb f =
+      (C H beta hb ⟨GP H 2 f,
+        periodicHypercubicEvenSpecialUnitarySpatialSliceGaussLawProjection_mem H 2 f⟩ :
+          Lp ℝ 2 (Mu H 2)) := by
+  calc
+    A H beta hb f = A H beta hb (GP H 2 f) :=
+      (p4Q2PZ37APT_originalCenteredBoundaryKernelOperator_inputProjection H beta hb f).symm
+    _ = _ := p4Q2PZ37APT_originalCenteredBoundaryKernelOperator_physical_eq H beta hb
+      ⟨GP H 2 f, periodicHypercubicEvenSpecialUnitarySpatialSliceGaussLawProjection_mem H 2 f⟩
+
+theorem p4Q2PZ37APT_originalCenteredBoundaryKernelOperator_annihilates_removed
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 ≤ beta)
+    (f : Lp ℝ 2 (Mu H 2)) :
+    A H beta hb (f - GP H 2 f) = 0 := by
+  rw [map_sub, p4Q2PZ37APT_originalCenteredBoundaryKernelOperator_inputProjection, sub_self]
+
+/-- Orthogonal extension by zero does not change the exact operator norm. -/
+theorem p4Q2PZ37APT_originalCenteredBoundaryKernelOperator_norm_eq_physical
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 ≤ beta) :
+    ‖A H beta hb‖ = ‖C H beta hb‖ := by
+  apply le_antisymm
+  · apply ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg _)
+    intro f
+    let p : P H 2 := ⟨GP H 2 f,
+      periodicHypercubicEvenSpecialUnitarySpatialSliceGaussLawProjection_mem H 2 f⟩
+    have hp : ‖p‖ ≤ ‖f‖ := by
+      change ‖GP H 2 f‖ ≤ ‖f‖
+      unfold periodicHypercubicEvenSpecialUnitarySpatialSliceGaussLawProjection
+      exact Submodule.norm_starProjection_apply_le
+        (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2ClosedSubmodule
+          H 2).toSubmodule f
+    calc
+      ‖A H beta hb f‖ = ‖C H beta hb p‖ :=
+        congrArg (fun x : Lp ℝ 2 (Mu H 2) => ‖x‖)
+          (p4Q2PZ37APT_originalCenteredBoundaryKernelOperator_eq_projectedPhysicalInsertion
+            H beta hb f)
+      _ ≤ ‖C H beta hb‖ * ‖p‖ := (C H beta hb).le_opNorm p
+      _ ≤ ‖C H beta hb‖ * ‖f‖ := mul_le_mul_of_nonneg_left hp (norm_nonneg _)
+  · apply ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg _)
+    intro p
+    change ‖(C H beta hb p : Lp ℝ 2 (Mu H 2))‖ ≤
+      ‖A H beta hb‖ * ‖(p : Lp ℝ 2 (Mu H 2))‖
+    rw [← p4Q2PZ37APT_originalCenteredBoundaryKernelOperator_physical_eq H beta hb p]
+    exact (A H beta hb).le_opNorm _
+
+theorem p4Q2PZ37APT_originalCenteredPhysicalInsertion_ne_zero
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 < beta) :
+    C H beta hb.le ≠ 0 := by
+  intro hz
+  have hn : ‖A H beta hb.le‖ = 0 := by
+    rw [p4Q2PZ37APT_originalCenteredBoundaryKernelOperator_norm_eq_physical, hz, norm_zero]
+  exact p4Q2PZ37APR_originalCenteredBoundaryKernelOperator_ne_zero H beta hb
+    (norm_eq_zero.mp hn)
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APT_originalCenteredPhysicalInsertion
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APT_originalCenteredBoundaryKernelOperator_inputProjection
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APT_originalCenteredBoundaryKernelOperator_twoSidedProjection
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APT_originalCenteredBoundaryKernelOperator_physical_eq
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APT_originalCenteredBoundaryKernelOperator_eq_projectedPhysicalInsertion
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APT_originalCenteredBoundaryKernelOperator_annihilates_removed
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APT_originalCenteredBoundaryKernelOperator_norm_eq_physical
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APT_originalCenteredPhysicalInsertion_ne_zero
