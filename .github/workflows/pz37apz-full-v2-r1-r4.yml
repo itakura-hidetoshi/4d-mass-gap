@@ -1,0 +1,19 @@
+name: PZ37APZ full-cache sandbox v1 R1–R4 local support-budget transport
+on:
+  pull_request:
+    paths:
+      - "diagnostics/pz37apz/full-v2-r1-r4/**"
+      - ".github/workflows/pz37apz-full-v2-r1-r4.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pz37apz-full-v2-r1-r4-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    uses: ./.github/workflows/lean-warm-sandbox-reusable-diagnostic-full-v1.yml
+    with:
+      pack: diagnostics/pz37apz/full-v2-r1-r4/pack.json
+      source_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      baseline_commit: 57a4e6db618361c44b72f807b97614b05a38e390
