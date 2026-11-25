@@ -1,0 +1,264 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalPositiveTimeHalfTurnObstructionV5_PZ37APX
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37APY — completed OS vacuum-line obstruction
+APX proves constancy of all canonical finite positive-half pullbacks under
+the already existing all-nonnegative-integer translation covariance package.
+Use the actual linear Wilson synthesis and APV's normalized vacuum to extend
+this to the entire completed boundary image, without any density premise
+about the ambient Haar carrier. The original nonzero centered mode cannot
+be realized, even through boundary-moment closure, under that package.
+This is a conditional obstruction to that particular finite periodic
+interface, not an impossibility theorem for continuum Yang–Mills.
+-/
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory Filter Set
+open scoped ENNReal Topology InnerProductSpace InnerProduct
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 12000000
+set_option synthInstance.maxHeartbeats 100000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "O" => PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
+local notation "L" => PeriodicHypercubicEvenSpecialUnitaryBoundaryHaarL2
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "X" => p4Q2PZ37APP_originalTimeOneBoundaryMomentL2
+local notation "U" => p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2
+local notation "Vac" => periodicHypercubicEvenBoundaryVacuumL2
+
+local instance p4Q2PZ37APY_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37APY_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37APY_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37APY_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37APY_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37APY_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37APY_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37APY_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37APY_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+
+
+local instance p4Q2PZ37APY_openHalfProbability (H : ℕ) :
+    IsProbabilityMeasure (periodicHypercubicEvenOpenHalfHaarMeasure H 2) := by
+  dsimp [periodicHypercubicEvenOpenHalfHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
+  infer_instance
+
+variable {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
+    {halfExtent : ℕ → ℕ} {hN : 0 < (2 : ℕ)}
+    [Nontrivial G] {beta : ℕ → ℝ} {hbeta : ∀ n, 0 ≤ beta n}
+    (R : PhysicalYangMillsEvenPeriodicWilsonOSCanonicalFiberReflection
+      S halfExtent 2 hN beta hbeta)
+    {E : PhysicalFourDimensionalYangMillsContinuumEuclideanTimeTranslation S}
+
+/-- Every actual raw physical state has a boundary moment proportional to
+the literal normalized original Wilson vacuum. -/
+theorem p4Q2PZ37APY_rawPhysicalState_boundary_eq_smul_vacuum
+    (T : PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveTemporalCovariance
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toCanonicalCoherentPositiveTimePullback E)
+    (n : ℕ) (F : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+        R.approximatingReflectionInvariantFamily n).Carrier) :
+    ∃ c : ℝ, R.toCompletedBoundaryMomentLinearIsometryAutomatic n
+      ((physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+        R.approximatingReflectionInvariantFamily n).physicalState F) =
+      c • Vac (halfExtent n) 2 hN (beta n) (hbeta n) := by
+  let Pn := (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+        R.approximatingReflectionInvariantFamily n)
+  let C := R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback
+  let Q := C.toFinitePositiveHalfObservableLinearCoherence
+    R.approximatingReflectionInvariantFamily
+  let A := Q.boundedContinuousLinearMap n
+  let c : ℝ := A F (fun _ => 1)
+  have hA : A F = A (c • Pn.vacuumObservable) := by
+    ext x
+    rw [show A (c • Pn.vacuumObservable) = c • A Pn.vacuumObservable from
+      A.map_smul c Pn.vacuumObservable, BoundedContinuousFunction.smul_apply, smul_eq_mul]
+    have hv : A Pn.vacuumObservable x = 1 := by
+      change (1 : BoundedContinuousFunction S.Configuration ℝ)
+        (R.interpolate n (periodicHypercubicEvenSpecialUnitaryPositiveHalfSection
+          (halfExtent n) 2 x)) = 1
+      rfl
+    rw [hv, mul_one]
+    change R.toCanonicalCoherentPositiveTimePullback.positiveHalfPullback n
+      (Pn.toPositiveTime F) x =
+      R.toCanonicalCoherentPositiveTimePullback.positiveHalfPullback n
+      (Pn.toPositiveTime F) (fun _ => 1)
+    exact p4Q2PZ37APX_canonicalPullback_constant_of_allPositiveTranslations
+      R T n (Pn.positiveTimeElement F) x (fun _ => 1)
+  have hB : Q.boundaryMomentLinearMap n F =
+      Q.boundaryMomentLinearMap n (c • Pn.vacuumObservable) := by
+    change physicalYangMillsEvenPeriodicWilsonOSActualBoundarySynthesisOperator
+      halfExtent 2 hN beta hbeta n
+        (BoundedContinuousFunction.toLp (E := ℝ) 2
+          (periodicHypercubicEvenOpenHalfHaarMeasure (halfExtent n) 2) ℝ (A F)) =
+      physicalYangMillsEvenPeriodicWilsonOSActualBoundarySynthesisOperator
+      halfExtent 2 hN beta hbeta n
+        (BoundedContinuousFunction.toLp (E := ℝ) 2
+          (periodicHypercubicEvenOpenHalfHaarMeasure (halfExtent n) 2) ℝ
+          (A (c • Pn.vacuumObservable)))
+    rw [hA]
+  refine ⟨c, ?_⟩
+  calc
+    _ = Q.boundaryMomentLinearMap n F := by
+      rw [R.toCompletedBoundaryMomentLinearIsometryAutomatic_physicalState,
+        Q.boundaryMomentLinearMap_apply]
+    _ = Q.boundaryMomentLinearMap n (c • Pn.vacuumObservable) := hB
+    _ = c • Q.boundaryMomentLinearMap n Pn.vacuumObservable :=
+      (Q.boundaryMomentLinearMap n).map_smul c Pn.vacuumObservable
+    _ = c • R.toCompletedBoundaryMomentLinearIsometryAutomatic n Pn.vacuum := by
+      change c • Q.boundaryMomentLinearMap n Pn.vacuumObservable =
+        c • R.toCompletedBoundaryMomentLinearIsometryAutomatic n
+          (Pn.physicalState Pn.vacuumObservable)
+      rw [Q.boundaryMomentLinearMap_apply,
+        R.toCompletedBoundaryMomentLinearIsometryAutomatic_physicalState]
+    _ = _ := by rw [p4Q2PZ37APV_canonicalVacuum_boundaryMoment R n]
+
+/-- The closed projection-fixed locus contains the whole completed OS image,
+not only its dense raw representatives. -/
+theorem p4Q2PZ37APY_completedBoundary_eq_vacuumProjection
+    (T : PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveTemporalCovariance
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toCanonicalCoherentPositiveTimePullback E)
+    (n : ℕ) (x : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+        R.approximatingReflectionInvariantFamily n).PhysicalHilbert) :
+    R.toCompletedBoundaryMomentLinearIsometryAutomatic n x =
+      inner ℝ (Vac (halfExtent n) 2 hN (beta n) (hbeta n))
+        (R.toCompletedBoundaryMomentLinearIsometryAutomatic n x) •
+        Vac (halfExtent n) 2 hN (beta n) (hbeta n) := by
+  let Pn := (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+        R.approximatingReflectionInvariantFamily n)
+  let J := R.toCompletedBoundaryMomentLinearIsometryAutomatic n
+  let v := Vac (halfExtent n) 2 hN (beta n) (hbeta n)
+  have hv : ‖v‖ = 1 :=
+    p4Q2PZ37APP_originalBoundaryVacuum_norm (halfExtent n) (beta n) (hbeta n)
+  change UniformSpace.Completion Pn.Separated at x
+  change J x = inner ℝ v (J x) • v
+  refine UniformSpace.Completion.induction_on x ?_ ?_
+  · exact isClosed_eq J.continuous ((continuous_const.inner J.continuous).smul continuous_const)
+  · intro y
+    rcases SeparationQuotient.surjective_mk y with ⟨F, rfl⟩
+    change J (Pn.physicalState F) = inner ℝ v (J (Pn.physicalState F)) • v
+    obtain ⟨c, hc⟩ := p4Q2PZ37APY_rawPhysicalState_boundary_eq_smul_vacuum R T n F
+    change J (Pn.physicalState F) = c • v at hc
+    rw [hc, real_inner_smul_right, real_inner_self_eq_norm_sq, hv]
+    simp
+
+/-- Exact equality of the completed boundary image with the real vacuum line. -/
+theorem p4Q2PZ37APY_completedBoundary_range_eq_vacuumLine
+    (T : PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveTemporalCovariance
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toCanonicalCoherentPositiveTimePullback E)
+    (n : ℕ) :
+    Set.range (R.toCompletedBoundaryMomentLinearIsometryAutomatic n) =
+      Set.range (fun c : ℝ => c • Vac (halfExtent n) 2 hN (beta n) (hbeta n)) := by
+  ext y
+  constructor
+  · rintro ⟨x, rfl⟩
+    exact ⟨_, (p4Q2PZ37APY_completedBoundary_eq_vacuumProjection R T n x).symm⟩
+  · rintro ⟨c, rfl⟩
+    refine ⟨c • (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+        R.approximatingReflectionInvariantFamily n).vacuum, ?_⟩
+    rw [map_smul, p4Q2PZ37APV_canonicalVacuum_boundaryMoment R n]
+
+/-- The physical completed Hilbert carrier itself consists only of real
+multiples of its normalized vacuum under this same covariance package. -/
+theorem p4Q2PZ37APY_completedState_eq_smul_vacuum
+    (T : PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveTemporalCovariance
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toCanonicalCoherentPositiveTimePullback E)
+    (n : ℕ) (x : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+        R.approximatingReflectionInvariantFamily n).PhysicalHilbert) :
+    ∃ c : ℝ, x = c • (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+        R.approximatingReflectionInvariantFamily n).vacuum := by
+  let J := R.toCompletedBoundaryMomentLinearIsometryAutomatic n
+  have h := p4Q2PZ37APY_completedBoundary_eq_vacuumProjection R T n x
+  refine ⟨inner ℝ (Vac (halfExtent n) 2 hN (beta n) (hbeta n)) (J x), ?_⟩
+  apply J.injective
+  rw [map_smul, p4Q2PZ37APV_canonicalVacuum_boundaryMoment R n]
+  exact h
+
+/-- Genuine nonzero vacuum-orthogonal time-one excitation cannot be realized
+in the collapsed completed OS space at positive beta. -/
+theorem p4Q2PZ37APY_no_centeredRealization_of_allPositiveTranslations
+    (T : PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveTemporalCovariance
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toCanonicalCoherentPositiveTimePullback E)
+    (n : ℕ) (hb : 0 < beta n) :
+    ¬ ∃ x : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+        R.approximatingReflectionInvariantFamily n).PhysicalHilbert,
+      R.toCompletedBoundaryMomentLinearIsometryAutomatic n x =
+        U (halfExtent n) (beta n) (hbeta n) := by
+  rintro ⟨x, hx⟩
+  have h := p4Q2PZ37APY_completedBoundary_eq_vacuumProjection R T n x
+  rw [hx, p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2_orthogonal,
+    zero_smul] at h
+  have hp := p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2_norm_sq_pos
+    (halfExtent n) (beta n) hb
+  rw [h, norm_zero] at hp
+  norm_num at hp
+
+/-- Even boundary-norm approximation by actual canonical moments, the weaker
+APV realization condition, is impossible under the full periodic covariance
+package at positive beta. -/
+theorem p4Q2PZ37APY_no_modeOneBoundaryClosure_of_allPositiveTranslations
+    (T : PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveTemporalCovariance
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toCanonicalCoherentPositiveTimePullback E)
+    (n : ℕ) (hb : 0 < beta n) :
+    X (halfExtent n) (beta n) (hbeta n) 0 1 ∉
+      closure (Set.range (fun F : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+        R.approximatingReflectionInvariantFamily n).Carrier =>
+        physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2
+        S R.reflectionData halfExtent 2 hN beta hbeta
+        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+        R.approximatingReflectionInvariantFamily n F)) := by
+  intro h
+  exact p4Q2PZ37APY_no_centeredRealization_of_allPositiveTranslations R T n hb
+    ((p4Q2PZ37APV_centeredRealization_iff_modeOneRealization R n).2
+      (p4Q2PZ37APV_modeOneRealization_of_mem_closure R n h))
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APY_rawPhysicalState_boundary_eq_smul_vacuum
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APY_completedBoundary_eq_vacuumProjection
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APY_completedBoundary_range_eq_vacuumLine
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APY_completedState_eq_smul_vacuum
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APY_no_centeredRealization_of_allPositiveTranslations
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APY_no_modeOneBoundaryClosure_of_allPositiveTranslations
