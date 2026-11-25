@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "baseline_commit": "5364c87094828e8a6aef95c7ed49fdd63ac156b6",
+  "baseline_mgap4d_tree": "1fb8bc9b8c30d60ecf710888c4913e7f85dfbd01",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalOSCenteredKernelPhysicalFactorizationV5_PZ37APT",
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSActualCanonicalCompletedBoundarySpatialSlicePairL2",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "APU",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APU_boundaryPairCoordinateIsometries_apply",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APU_completedSpatialPair_eq_boundaryTransport",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APU_centeredRealization_iff",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APU_centeredKernel_eq_of_completedRealization",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APU_physicalInsertion_norm_le_of_completedRealization",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37APU_completedRealization_orthogonal_of_vacuumRealization"
+      ],
+      "candidates": [
+        {
+          "id": "R1",
+          "path": "diagnostics/pz37apu/full-v1-r1-r2/APU_R1.lean.txt",
+          "blob": "8cd345680102db42a6ed5950dd60f8489b6fd7b1"
+        },
+        {
+          "id": "R2",
+          "path": "diagnostics/pz37apu/full-v1-r1-r2/APU_R2.lean.txt",
+          "blob": "2bdc3b236b93a3eaa72365647aa26ad529ab4451"
+        }
+      ]
+    }
+  ]
+}
