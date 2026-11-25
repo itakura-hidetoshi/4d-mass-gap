@@ -1,0 +1,235 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalOSCenteredBoundaryKernelV5_PZ37APR
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalPairIndependentGaugeFixedEquality
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37APS — original OS centered kernel: actual endpoint Gauss descent
+
+Prove covariance of the actual positive-closure time-one slice, including H=0
+where it lies on the antipodal boundary. Use the certified Wilson Gram feature
+gauge invariance and open-half Haar transport. Independent endpoint gauge
+fixedness then gives the completed physical pair carrier and removes APR's
+output Gauss projection for physical inputs. No identification with the
+completed OS time-translation operator or volume-uniform gap is asserted.
+-/
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory Filter
+open scoped ENNReal Topology InnerProductSpace InnerProduct
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 12000000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "B" => PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration
+local notation "O" => PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
+local notation "P" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "BM" => periodicHypercubicEvenBoundaryHaarMeasure
+local notation "OM" => periodicHypercubicEvenOpenHalfHaarMeasure
+local notation "E" => periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
+local notation "j1" => p4Q2PZ37AMX_positiveTimeOne
+local notation "BG" => periodicHypercubicEvenBoundaryGaugeTransform
+local notation "OG" => periodicHypercubicEvenPositiveOpenHalfGaugeTransform
+local notation "SG" => periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform
+local notation "F" => p4Q2PZ37ANF_originalTimeOneBoundaryPositiveObservable
+local notation "Gram" => periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+local notation "M" => p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment
+local notation "X" => p4Q2PZ37APP_originalTimeOneBoundaryMomentL2
+local notation "U" => p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2
+local notation "Vac" => periodicHypercubicEvenBoundaryVacuumL2
+local notation "J" => periodicHypercubicEvenBoundaryHaarL2ToSpatialSlicePairLinearIsometry
+local notation "BP" => periodicHypercubicEvenBoundaryGaugePullbackLinearIsometry
+local notation "PP" => periodicHypercubicEvenSpecialUnitarySpatialSlicePairIndependentGaugePullbackLinearIsometry
+local notation "GE" => periodicHypercubicEvenIndependentEndpointGaugeExtension
+local notation "A" => p4Q2PZ37APR_originalCenteredBoundaryKernelOperator
+local notation "GP" => periodicHypercubicEvenSpecialUnitarySpatialSliceGaussLawProjection
+local notation "Obs" => p4Q2PZ37APL_originalTwoModeObservable
+local notation "Ins" => periodicHypercubicEvenSpecialUnitaryPhysicalTransferSliceObservableOperator
+local notation "NormZ" => periodicHypercubicEvenBoundaryPositiveHalfPartitionSqrtNormalization
+local notation "GT" => PeriodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransformation
+local notation "At" => periodicHypercubicEvenSpatialSliceVertexAtTime
+
+local instance p4Q2PZ37APS_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37APS_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37APS_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37APS_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37APS_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37APS_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37APS_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37APS_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37APS_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+
+/-- The literal time-one slice transforms by the restriction of the same
+four-dimensional gauge field, with no new boundary identification. -/
+theorem p4Q2PZ37APS_originalTimeOneClosureSpatialSlice_gaugeCovariant
+    (H : ℕ) (gamma : PeriodicHypercubicEvenVertex H → G)
+    (b : B H 2) (x : O H 2) :
+    (E H 2 (BG H 2 gamma b, OG H 2 gamma x)).1 (j1 H) =
+      SG H 2 (fun v => gamma (At H 1 v)) ((E H 2 (b, x)).1 (j1 H)) := by
+  funext e
+  change (E H 2 (BG H 2 gamma b, OG H 2 gamma x)).1 (j1 H) e =
+    gamma (At H 1 e.1) * (E H 2 (b, x)).1 (j1 H) e *
+      (gamma (At H 1 (periodicHypercubicEvenSpatialSliceShift H e.1 e.2)))⁻¹
+  rw [periodicHypercubicEvenSpatialSliceVertexAtTime_shift]
+  let edge := periodicHypercubicEvenSpatialSliceLinkAtTime H 1 e
+  change _ = gamma (periodicHypercubicEdgeSource (PeriodicHypercubicEvenSideLength H) edge) *
+    (E H 2 (b, x)).1 (j1 H) e *
+      (gamma (periodicHypercubicEdgeTarget (PeriodicHypercubicEvenSideLength H) edge))⁻¹
+  by_cases hH : H = 0
+  · let ef := (periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices H).symm (Sum.inr e)
+    have hj : j1 H = (Fin.last H).succ := by
+      apply Fin.ext
+      simp [p4Q2PZ37AMX_positiveTimeOne, hH]
+    have hedge : edge = ef.1 := by
+      dsimp [edge, ef, periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices,
+        periodicHypercubicEvenSpatialSliceSumToFixedEdge,
+        periodicHypercubicEvenAntipodalSpatialSliceLinkToFixedEdge,
+        periodicHypercubicEvenPrimaryAntipodalSpatialSliceLinkEquiv,
+        periodicHypercubicEvenPrimaryAntipodalSpatialSliceVertexEquiv,
+        periodicHypercubicEvenPrimaryToAntipodalSpatialSliceVertex]
+      unfold periodicHypercubicEvenSpatialSliceLinkAtTime
+      have ht : (1 : ZMod (PeriodicHypercubicEvenSideLength H)) =
+          (((H + 1 : ℕ) : ZMod (PeriodicHypercubicEvenSideLength H))) := by simp [hH]
+      rw [ht, periodicHypercubicEvenSpatialSliceVertexAtTime_halfPeriod_eq]
+    simp only [hj, periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransfer_antipodal_apply, hedge] <;> rfl
+  · let k : Fin H := ⟨0, Nat.pos_of_ne_zero hH⟩
+    let ep := (periodicHypercubicEvenPositiveEdgeEquivPositiveHalfOpenIndex H).symm (Sum.inl (k, e))
+    have hj : j1 H = k.succ.castSucc := by
+      apply Fin.ext
+      rfl
+    have hedge : edge = ep.1 := by
+      change periodicHypercubicEvenPositiveHalfInteriorSpatialEdge H (k, e) = ep.1
+      dsimp [ep]
+      simp [periodicHypercubicEvenPositiveEdgeEquivPositiveHalfOpenIndex,
+        periodicHypercubicEvenPositiveHalfOpenIndexToPositiveEdge]
+    simp only [hj, periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransfer_interior_apply, hedge] <;> rfl
+
+theorem p4Q2PZ37APS_originalTimeOneBoundaryPositiveObservable_gaugeInvariant
+    (H : ℕ) (c0 c1 : ℝ) (gamma : PeriodicHypercubicEvenVertex H → G)
+    (b : B H 2) (x : O H 2) :
+    F H c0 c1 (BG H 2 gamma b, OG H 2 gamma x) = F H c0 c1 (b, x) := by
+  unfold p4Q2PZ37ANF_originalTimeOneBoundaryPositiveObservable
+    p4Q2PZ37ANC_timeOneTwoModePositiveClosureObservable
+    p4Q2PZ37ANA_timeOneTwoModeWilsonObservable
+  rw [p4Q2PZ37APS_originalTimeOneClosureSpatialSlice_gaugeCovariant]
+  rw [p4Q2PZ37AMT_continuousMode_cyclic_gaugeInvariant,
+    p4Q2PZ37AMT_continuousMode_cyclic_gaugeInvariant]
+
+/-- Exact boundary gauge invariance of the original inserted Gram moment.
+The integration is over the unchanged open-half Haar law. -/
+theorem p4Q2PZ37APS_originalTimeOneWilsonBoundaryGramMoment_gaugeInvariant
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 ≤ beta) (c0 c1 : ℝ)
+    (gamma : PeriodicHypercubicEvenVertex H → G) (b : B H 2) :
+    M H beta hb c0 c1 (BG H 2 gamma b) = M H beta hb c0 c1 b := by
+  let T := OG H 2 gamma
+  let mu := OM H 2
+  let f : O H 2 → ℝ := fun x =>
+    Gram H 2 (by norm_num) beta hb (BG H 2 gamma b) x *
+      F H c0 c1 (BG H 2 gamma b, x)
+  have hmp : MeasurePreserving T mu mu :=
+    periodicHypercubicEvenPositiveOpenHalfGaugeTransform_measurePreserving H 2 gamma
+  have hme : MeasurableEmbedding T :=
+    (periodicHypercubicEvenPositiveOpenHalfGaugeMeasurableEquiv H 2 gamma).measurableEmbedding
+  unfold p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment
+    periodicHypercubicEvenBoundaryObservableGramFeature
+  change (∫ x, f x ∂mu) = ∫ x,
+    Gram H 2 (by norm_num) beta hb b x * F H c0 c1 (b, x) ∂mu
+  calc
+    _ = ∫ x, f (T x) ∂mu := (hmp.integral_comp hme f).symm
+    _ = _ := by
+      apply integral_congr_ae
+      filter_upwards [] with x
+      dsimp [f, T]
+      rw [periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_gaugeInvariant,
+        p4Q2PZ37APS_originalTimeOneBoundaryPositiveObservable_gaugeInvariant]
+
+theorem p4Q2PZ37APS_originalTimeOneBoundaryMomentL2_gaugeFixed
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 ≤ beta) (c0 c1 : ℝ)
+    (gamma : PeriodicHypercubicEvenVertex H → G) :
+    BP H 2 gamma (X H beta hb c0 c1) = X H beta hb c0 c1 := by
+  apply Lp.ext
+  let v := X H beta hb c0 c1
+  let T := BG H 2 gamma
+  have hp := periodicHypercubicEvenBoundaryGaugePullbackLinearIsometry_coeFn H 2 gamma v
+  have hv := p4Q2PZ37APP_originalTimeOneBoundaryMomentL2_coeFn H beta hb c0 c1
+  have ht := (periodicHypercubicEvenBoundaryGaugeTransform_measurePreserving
+    H 2 gamma).quasiMeasurePreserving.ae_eq hv
+  filter_upwards [hp, ht, hv] with b hpB htB hvB
+  rw [hpB]
+  change v (T b) = v b
+  calc
+    _ = M H beta hb c0 c1 (T b) := by simpa [T, Function.comp_def] using htB
+    _ = M H beta hb c0 c1 b :=
+      p4Q2PZ37APS_originalTimeOneWilsonBoundaryGramMoment_gaugeInvariant H beta hb c0 c1 gamma b
+    _ = _ := hvB.symm
+
+theorem p4Q2PZ37APS_originalCenteredBoundaryPair_independentGaugeFixed
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 ≤ beta)
+    (g0 g1 : GT H 2) :
+    PP H 2 g0 g1 (J H 2 (U H beta hb)) = J H 2 (U H beta hb) := by
+  rw [← periodicHypercubicEvenBoundaryGaugePullback_to_pair]
+  have h : BP H 2 (GE H 2 g0 g1) (U H beta hb) = U H beta hb := by
+    unfold p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2
+    exact p4Q2PZ37APS_originalTimeOneBoundaryMomentL2_gaugeFixed H beta hb _ 1 _
+  rw [h]
+
+theorem p4Q2PZ37APS_originalCenteredBoundaryPair_mem_physicalPairCarrier
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 ≤ beta) :
+    J H 2 (U H beta hb) ∈ periodicHypercubicEvenSpecialUnitaryPhysicalPairCarrier H 2 := by
+  apply (periodicHypercubicEvenSpecialUnitary_mem_physicalPairCarrier_iff_independentGaugeFixed H 2 _).2
+  exact p4Q2PZ37APS_originalCenteredBoundaryPair_independentGaugeFixed H beta hb
+
+theorem p4Q2PZ37APS_originalCenteredBoundaryKernelOperator_mem_GaussLaw
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 ≤ beta)
+    (f : Lp ℝ 2 (Mu H 2)) :
+    A H beta hb f ∈ periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2 := by
+  unfold p4Q2PZ37APR_originalCenteredBoundaryKernelOperator
+  rw [realL2HilbertSchmidtKernelOperator_apply]
+  exact periodicHypercubicEvenSpecialUnitaryIndependentGaugeFixed_rightRiesz_mem_GaussLaw
+    H 2 (J H 2 (U H beta hb))
+    (p4Q2PZ37APS_originalCenteredBoundaryPair_independentGaugeFixed H beta hb) f
+
+/-- APR's output projection is now removable on the actual physical input
+carrier; no completed OS time evolution identification is assumed. -/
+theorem p4Q2PZ37APS_originalCenteredBoundaryKernelOperator_eq_nativeInsertion
+    (H : ℕ) [Nontrivial G] (beta : ℝ) (hb : 0 ≤ beta) (f : P H 2) :
+    let q := -inner ℝ (Vac H 2 (by norm_num) beta hb) (X H beta hb 0 1)
+    A H beta hb (f : Lp ℝ 2 (Mu H 2)) =
+      ((NormZ H 2 (by norm_num) beta hb •
+        Ins H 2 (by norm_num) beta hb 1 H (Obs H q)
+          (p4Q2PZ37APL_originalTwoModeObservable_gaugeInvariant H q) f : P H 2) :
+        Lp ℝ 2 (Mu H 2)) := by
+  have h := p4Q2PZ37APR_originalCenteredBoundaryKernelOperator_GaussProjection_eq_nativeInsertion
+    H beta hb f
+  have hfix := (periodicHypercubicEvenSpecialUnitarySpatialSliceGaussLawProjection_eq_self_iff
+    H 2 (A H beta hb (f : Lp ℝ 2 (Mu H 2)))).2
+      (p4Q2PZ37APS_originalCenteredBoundaryKernelOperator_mem_GaussLaw H beta hb _)
+  dsimp only at h ⊢
+  rw [hfix] at h
+  exact h
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APS_originalTimeOneClosureSpatialSlice_gaugeCovariant
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APS_originalTimeOneBoundaryPositiveObservable_gaugeInvariant
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APS_originalTimeOneWilsonBoundaryGramMoment_gaugeInvariant
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APS_originalTimeOneBoundaryMomentL2_gaugeFixed
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APS_originalCenteredBoundaryPair_independentGaugeFixed
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APS_originalCenteredBoundaryPair_mem_physicalPairCarrier
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APS_originalCenteredBoundaryKernelOperator_mem_GaussLaw
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37APS_originalCenteredBoundaryKernelOperator_eq_nativeInsertion
