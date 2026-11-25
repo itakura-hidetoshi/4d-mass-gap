@@ -52,8 +52,98 @@ env:
   LEAN_FAST_DIRECT_ELAB: "false"
 
 jobs:
+  certified-leaf-relay:
+    name: Relay independently certified Lean leaf outputs
+    if: github.event_name == 'push' && github.ref == 'refs/heads/formal/real-hilbert-uniform-coercive-strong-limit'
+    # Any failed/missing relay evidence invokes the unchanged build on a
+    # separate clean runner. This job never elevates a cache to proof authority.
+    continue-on-error: true
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      reused: ${{ steps.done.outputs.reused }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          show-progress: false
+      - name: Bind exact successful independent PR and verified leaf delta
+        id: bind
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/lean_certified_merge_relay_v1.py prepare --output "$RUNNER_TEMP/leaf-relay-v1"
+      - name: Restore exact Lean
+        if: steps.bind.outputs.eligible == 'true'
+        id: elan
+        uses: actions/cache/restore@v5
+        with:
+          path: ~/.elan
+          key: ${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
+      - name: Restore exact mathlib
+        if: steps.bind.outputs.eligible == 'true'
+        id: deps
+        uses: actions/cache/restore@v5
+        with:
+          path: .lake/packages
+          key: ${{ runner.os }}-lean-fast-deps-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
+      - name: Restore exact predecessor full cache
+        if: steps.bind.outputs.eligible == 'true'
+        id: base
+        uses: actions/cache/restore@v5
+        with:
+          path: .lake/build
+          key: ${{ runner.os }}-lean-fast-project-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-base-${{ steps.bind.outputs.base }}
+      - name: Verify delta and no-build imports without re-elaboration
+        if: steps.bind.outputs.eligible == 'true'
+        id: verify
+        env:
+          ELAN: ${{ steps.elan.outputs.cache-hit }}
+          DEPS: ${{ steps.deps.outputs.cache-hit }}
+          BASE: ${{ steps.base.outputs.cache-hit }}
+        run: |
+          set -euo pipefail
+          [[ "$ELAN" == true && "$DEPS" == true && "$BASE" == true ]]
+          export PATH="$HOME/.elan/bin:$PATH"
+          lean --version
+          python3 scripts/lean_certified_merge_relay_v1.py apply --output "$RUNNER_TEMP/leaf-relay-v1"
+      - name: Publish exact merged full cache without a second Lean build
+        if: steps.bind.outputs.eligible == 'true' && steps.verify.outcome == 'success'
+        id: save
+        uses: actions/cache/save@v5
+        with:
+          path: .lake/build
+          key: ${{ runner.os }}-lean-fast-project-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-base-${{ github.sha }}
+      - name: Confirm exact merged cache is visible
+        if: steps.bind.outputs.eligible == 'true' && steps.verify.outcome == 'success' && steps.save.outcome == 'success'
+        id: visible
+        uses: actions/cache/restore@v5
+        with:
+          path: .lake/build
+          lookup-only: true
+          key: ${{ runner.os }}-lean-fast-project-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-base-${{ github.sha }}
+      - name: Publish exact merge reuse outcome
+        if: steps.bind.outputs.eligible == 'true' && steps.verify.outcome == 'success' && steps.save.outcome == 'success' && steps.visible.outputs.cache-hit == 'true'
+        id: done
+        run: echo "reused=true" >> "$GITHUB_OUTPUT"
+      - name: Archive relay receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: lean-certified-merge-relay-v1-receipt
+          path: |
+            ${{ runner.temp }}/leaf-relay-v1/verified-receipt.json
+            ${{ runner.temp }}/leaf-relay-v1/published-receipt.json
+          if-no-files-found: ignore
+          retention-days: 30
+
   pr-lean-fast-check:
     name: Changed Lean fast check
+    needs: certified-leaf-relay
+    if: ${{ always() && !cancelled() && needs.certified-leaf-relay.outputs.reused != 'true' }}
     runs-on: ubuntu-22.04
     # Foundational incidence lemmas invalidate thousands of dependent oleans.
     # Exact-head PZ37O runs exceeded 60 minutes with no Lean errors, so allow
@@ -78,6 +168,7 @@ jobs:
         run: |
           python3 scripts/test_changed_lean_dependency_check.py
           python3 scripts/test_lean_direct_diagnostic_routing.py
+          python3 scripts/test_lean_certified_merge_relay_v1.py
 
       - name: Detect whether Lake is required
         id: lake-mode
@@ -337,6 +428,22 @@ jobs:
           path: ${{ runner.temp }}/lean-fast.log
           if-no-files-found: warn
 
+      - name: Prepare independently checked added-leaf delta
+        if: ${{ success() && steps.lake-mode.outputs.required == 'true' && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.base.ref == 'formal/real-hilbert-uniform-coercive-strong-limit' }}
+        id: leaf-delta
+        continue-on-error: true
+        run: python3 scripts/lean_certified_merge_relay_v1.py produce --log "$RUNNER_TEMP/lean-fast.log" --output "$RUNNER_TEMP/leaf-delta-v1"
+
+      - name: Publish certified added-leaf delta
+        if: steps.leaf-delta.outputs.eligible == 'true'
+        uses: actions/upload-artifact@v6
+        continue-on-error: true
+        with:
+          name: lean-certified-leaf-delta-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/leaf-delta-v1
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Check Lake cache is saveable
         if: ${{ always() && !cancelled() && steps.lake-mode.outputs.required == 'true' }}
         id: lake-cache-ready
@@ -440,7 +547,7 @@ jobs:
 
   chatgpt-ci-status-receipt:
     name: Publish MCP CI completion receipt
-    needs: pr-lean-fast-check
+    needs: [pr-lean-fast-check, certified-leaf-relay]
     # PR-head and trusted push merge-commit receipts both need exact-SHA statuses.
     # MCP's workflow-run lookup only returns pull_request-triggered executions.
     if: ${{ always() && ((github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) || (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/formal/real-hilbert-uniform-coercive-strong-limit'))) }}
@@ -455,7 +562,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           REPOSITORY: ${{ github.repository }}
           HEAD_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
-          SOURCE_RESULT: ${{ needs.pr-lean-fast-check.result }}
+          SOURCE_RESULT: ${{ needs.certified-leaf-relay.outputs.reused == 'true' && 'success' || needs.pr-lean-fast-check.result }}
+          SOURCE_KIND: ${{ needs.certified-leaf-relay.outputs.reused == 'true' && 'certified-pr-relay-no-rebuild' || 'legacy-check-job' }}
           SOURCE_EVENT: ${{ github.event_name }}
           RUN_ID: ${{ github.run_id }}
           RUN_ATTEMPT: ${{ github.run_attempt }}
@@ -463,7 +571,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          echo "[mcp-receipt] event=${SOURCE_EVENT} exact_sha=${HEAD_SHA} source_result=${SOURCE_RESULT} run=${RUN_ID} attempt=${RUN_ATTEMPT}"
+          echo "[mcp-receipt] event=${SOURCE_EVENT} exact_sha=${HEAD_SHA} source_result=${SOURCE_RESULT} source_kind=${SOURCE_KIND} run=${RUN_ID} attempt=${RUN_ATTEMPT}"
           if [[ ! "${HEAD_SHA}" =~ ^[[:xdigit:]]{40}$ ]]; then
             echo "[mcp-receipt] invalid exact commit SHA" >&2
             exit 1
@@ -494,7 +602,7 @@ jobs:
               "description": (
                   "wake-up receipt only; "
                   f"run {os.environ['RUN_ID']} attempt {os.environ['RUN_ATTEMPT']}: "
-                  f"{os.environ['SOURCE_RESULT']}"
+                  f"{os.environ['SOURCE_RESULT']} {os.environ['SOURCE_KIND']}"
               )[:140],
               "context": "chatgpt-ci-receipt/PR Lean Fast Check",
           }

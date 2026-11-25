@@ -90,8 +90,8 @@ def binding_for(commit):
     return source_binding(api("/git/trees/" + exact_sha(c["tree"]["sha"])))
 
 def prepare(args):
-    require(os.environ.get("GITHUB_EVENT_NAME") == "push" and
-            os.environ.get("GITHUB_REF") == FORMAL_REF, "publisher requires trusted Formal push")
+    require(os.environ.get("GITHUB_EVENT_NAME") in {"push", "workflow_dispatch"} and
+            os.environ.get("GITHUB_REF") == FORMAL_REF, "publisher requires trusted Formal ref")
     head = exact_sha(os.environ["GITHUB_SHA"])
     bootstrap = exact_sha(args.bootstrap)
     current = binding_for(head)
