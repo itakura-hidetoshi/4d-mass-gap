@@ -1,0 +1,19 @@
+name: PZ37AQI full-cache sandbox v1 finite connected Hankel correlation
+on:
+  pull_request:
+    paths:
+      - "diagnostics/pz37aqi/full-v1-r1-r2/**"
+      - ".github/workflows/pz37aqi-full-v1-r1-r2.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pz37aqi-full-v1-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    uses: ./.github/workflows/lean-warm-sandbox-reusable-aqi-full-v1.yml
+    with:
+      pack: diagnostics/pz37aqi/full-v1-r1-r2/pack.json
+      source_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      baseline_commit: e154286a729c5864bbf00cb6fa5ec057bffbaf99
