@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "baseline_commit": "d401555b432add745150c1c28d3e54a0fae59e64",
+  "baseline_mgap4d_tree": "24ab4dda20d4cbf08e3d7aa2b4367ca46b133339",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSQuantitativeEndpointTensorV5_PZ37AQO",
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalKernelPlaquetteUniformVarianceV5_NB",
+    "MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumGroundStateOneLinkWeightHarnack",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "AQP",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQP_twoModeHaar_sq",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQP_oneLinkHaar_sq",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQP_vacuumSq_oneLink_lower",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQP_vacuumSq_integral",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQP_weightedNormSq_eq_integral",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQP_weightedNormSq_lower",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQP_weightedNormSq_floor"
+      ],
+      "candidates": [
+        {
+          "id": "R2",
+          "path": "diagnostics/pz37aqp/full-v2-r2-r3/AQP_R2.lean.txt",
+          "blob": "102b72eb41f18f03789d9e40796725d1dbe5563e"
+        },
+        {
+          "id": "R3",
+          "path": "diagnostics/pz37aqp/full-v2-r2-r3/AQP_R3.lean.txt",
+          "blob": "1039638240fc4c1763593038861b16e4eebb0acb"
+        }
+      ]
+    }
+  ]
+}

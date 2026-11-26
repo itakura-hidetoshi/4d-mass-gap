@@ -1,0 +1,292 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSQuantitativeEndpointTensorV5_PZ37AQO
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalKernelPlaquetteUniformVarianceV5_NB
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumGroundStateOneLinkWeightHarnack
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37AQP — uniform norm floor of the actual vacuum-weighted probe
+Use AMS's literal four-edge cyclic holonomy, the original normalized Haar
+one-coordinate refresh of NB, and the existing continuous physical vacuum
+one-link Harnack estimate. The genuine APL weighted vector has a volume
+independent squared norm floor. No bound on the normalized transfer
+quadratic or partition factor, no uniform OS denominator or gap is asserted.
+-/
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory Filter
+open scoped ENNReal Topology InnerProductSpace InnerProduct BigOperators
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 12000000
+set_option synthInstance.maxHeartbeats 200000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "Cfg" => PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration
+local notation "P" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "nu" => normalizedCompactHaar G
+local notation "V" => p4Q2PZ37AMU_actualPhysicalGaussMode
+local notation "Obs" => p4Q2PZ37APL_originalTwoModeObservable
+local notation "W" => p4Q2PZ37APL_originalVacuumWeightedTwoMode
+local notation "Vac" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+local notation "VacC" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+local notation "Mul" => periodicHypercubicEvenSpecialUnitaryPhysicalSpatialSliceObservableMulOperator
+local notation "E" => p4Q2PZ37AMS_primarySpatialSliceEdgeEmbedding
+local notation "Hol" => p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy
+local notation "Mode" => specialUnitaryWilsonPlaquetteEnergyTwoContinuousGramSchmidtMode
+
+local instance p4Q2PZ37AQP_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37AQP_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37AQP_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37AQP_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37AQP_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37AQP_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) := Fintype.ofFinite _
+local instance p4Q2PZ37AQP_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37AQP_probability (H : ℕ) : IsProbabilityMeasure (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+
+private theorem p4Q2PZ37AQP_lp_normSq_of_ae {α : Type*}
+    [MeasurableSpace α] (μ : Measure α) (v : Lp ℝ 2 μ)
+    (f : α → ℝ) (hf : v =ᵐ[μ] f) :
+    ‖v‖ ^ 2 = ∫ x, (f x) ^ 2 ∂μ := by
+  rw [← real_inner_self_eq_norm_sq, MeasureTheory.L2.inner_def]
+  apply integral_congr_ae
+  filter_upwards [hf] with x hx
+  rw [realL2Scalar_inner_eq_mul, hx, pow_two]
+
+/-- Haar second moment of the exact two-mode class function. -/
+theorem p4Q2PZ37AQP_twoModeHaar_sq (H : ℕ) (q : ℝ) :
+    (∫ g : G, (q * Mode 0 g + 1 * Mode 1 g) ^ 2 ∂nu) = 1 + q ^ 2 := by
+  let v : P H 2 := q • V H 0 + 1 • V H 1
+  have ho := p4Q2PZ37AMU_actualPhysicalGaussMode_orthonormal H
+  have h01 : inner ℝ (V H 0) (V H 1) = 0 :=
+    ho.inner_eq_zero (by decide : (0 : ℕ) ≠ 1)
+  have hv : ‖v‖ ^ 2 = 1 + q ^ 2 := by
+    change ‖q • V H 0 + 1 • V H 1‖ ^ 2 = 1 + q ^ 2
+    calc
+      _ = ‖q • V H 0‖ ^ 2 + 2 * inner ℝ (q • V H 0) (1 • V H 1) +
+          ‖1 • V H 1‖ ^ 2 := norm_add_sq_real _ _
+      _ = _ := by
+        rw [one_smul, real_inner_smul_left, h01, norm_smul,
+          ho.1 0, ho.1 1, Real.norm_eq_abs, mul_one, sq_abs]
+        ring
+  have hvRep : (v : Lp ℝ 2 (Mu H 2)) =ᵐ[Mu H 2] (fun A => Obs H q A) :=
+    p4Q2PZ37APL_originalTwoModeObservable_ae_physical H q
+  have hs : (∫ A : Cfg H 2, (Obs H q A)^2 ∂(Mu H 2)) = 1 + q^2 := by
+    calc
+      _ = ‖(v : Lp ℝ 2 (Mu H 2))‖ ^ 2 :=
+        (p4Q2PZ37AQP_lp_normSq_of_ae _ _ _ hvRep).symm
+      _ = ‖v‖ ^ 2 := rfl
+      _ = _ := hv
+  let f : G → ℝ := fun g => (q * Mode 0 g + 1 * Mode 1 g)^2
+  have hf : StronglyMeasurable f :=
+    (((continuous_const.mul (Mode 0).continuous).add
+      (continuous_const.mul (Mode 1).continuous)).pow 2).stronglyMeasurable
+  have hm := p4Q2PZ37AMS_measurePreserving_primarySpatialSliceCyclicHolonomy H 2
+  have ht := integral_map_of_stronglyMeasurable
+    (μ := Mu H 2) (φ := Hol H 2) hm.measurable hf
+  rw [hm.map_eq] at ht
+  exact ht.trans hs
+
+/-- Refresh the first actual AMS edge, keeping the other three distinct
+edges fixed. The cyclic word is a left/right Haar translate of g. -/
+theorem p4Q2PZ37AQP_oneLinkHaar_sq (H : ℕ) (q : ℝ) (A : Cfg H 2) :
+    (∫ g : G, (Obs H q (Function.update A (E H 0) g)) ^ 2 ∂nu) = 1 + q^2 := by
+  classical
+  let e := E H
+  let l : G := (A (e 2))⁻¹ * (A (e 3))⁻¹
+  let r : G := A (e 1)
+  have h1 : e 1 ≠ e 0 := fun h => (by decide : (1 : Fin 4) ≠ 0) (e.injective h)
+  have h2 : e 2 ≠ e 0 := fun h => (by decide : (2 : Fin 4) ≠ 0) (e.injective h)
+  have h3 : e 3 ≠ e 0 := fun h => (by decide : (3 : Fin 4) ≠ 0) (e.injective h)
+  have hHol (g : G) : Hol H 2 (Function.update A (e 0) g) = l * g * r := by
+    simp only [p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy,
+      haarFinFourCyclicPlaquetteWord, haarFinFourCyclicNestedCoordinates_apply,
+      haarCyclicPlaquetteWord]
+    change ((Function.update A (e 0) g) (e 2))⁻¹ *
+      (((Function.update A (e 0) g) (e 3))⁻¹ *
+        ((Function.update A (e 0) g) (e 0) * (Function.update A (e 0) g) (e 1))) =
+      l * g * r
+    rw [Function.update_of_ne h2, Function.update_of_ne h3,
+      Function.update_self, Function.update_of_ne h1]
+    simp only [l, r, mul_assoc]
+  let f : G → ℝ := fun g => (q * Mode 0 g + 1 * Mode 1 g)^2
+  have hf : StronglyMeasurable f :=
+    (((continuous_const.mul (Mode 0).continuous).add
+      (continuous_const.mul (Mode 1).continuous)).pow 2).stronglyMeasurable
+  have hm : MeasurePreserving (fun g : G => l * g * r) nu nu :=
+    normalizedCompactHaar_measurePreserving_mul_left_right G l r
+  have ht := integral_map_of_stronglyMeasurable
+    (μ := nu) (φ := fun g : G => l * g * r) hm.measurable hf
+  rw [hm.map_eq] at ht
+  calc
+    _ = ∫ g : G, f (l*g*r) ∂nu := by
+      apply integral_congr_ae
+      filter_upwards with g
+      change f (Hol H 2 (Function.update A (e 0) g)) = f (l*g*r)
+      rw [hHol]
+    _ = ∫ g : G, f g ∂nu := ht.symm
+    _ = _ := p4Q2PZ37AQP_twoModeHaar_sq H q
+
+/-- Square the existing one-link Harnack comparison, without using a global
+positive density floor. -/
+theorem p4Q2PZ37AQP_vacuumSq_oneLink_lower
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (A : Cfg H 2)
+    (e : PeriodicHypercubicEvenSpatialSliceLink H) (g : G) :
+    Real.exp (-16*beta) * (VacC H 2 (by norm_num) beta hb A)^2 ≤
+      (VacC H 2 (by norm_num) beta hb (Function.update A e g))^2 := by
+  let o := VacC H 2 (by norm_num) beta hb
+  have h : o A ≤ Real.exp (8*beta) * o (Function.update A e g) := by
+    simpa only [o, Function.update_eq_self] using
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_update_right_le_exp_eight_mul_update_right
+        H 2 (by norm_num) beta hb A e (A e) g)
+  have hp : 0 ≤ o A :=
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_pos
+      H 2 (by norm_num) beta hb A).le
+  have he : Real.exp (-8*beta) * Real.exp (8*beta) = 1 := by
+    rw [← Real.exp_add, show -8*beta + 8*beta = 0 by ring, Real.exp_zero]
+  have hs : Real.exp (-8*beta) * o A ≤ o (Function.update A e g) := by
+    calc
+      _ ≤ Real.exp (-8*beta) * (Real.exp (8*beta) * o (Function.update A e g)) :=
+        mul_le_mul_of_nonneg_left h (Real.exp_pos _).le
+      _ = _ := by rw [← mul_assoc, he, one_mul]
+  have hsq := pow_le_pow_left₀ (mul_nonneg (Real.exp_pos (-8*beta)).le hp) hs 2
+  have hexp : (Real.exp (-8*beta))^2 = Real.exp (-16*beta) := by
+    rw [pow_two, ← Real.exp_add]
+    congr 1
+    ring
+  simpa only [mul_pow, hexp, o] using hsq
+
+theorem p4Q2PZ37AQP_vacuumSq_integral (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) :
+    (∫ A : Cfg H 2, (VacC H 2 (by norm_num) beta hb A)^2 ∂(Mu H 2)) = 1 := by
+  let o := Vac H 2 (by norm_num) beta hb
+  have hr := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_ae_eq_existing
+    H 2 (by norm_num) beta hb
+  have h := p4Q2PZ37AQP_lp_normSq_of_ae (Mu H 2) (o : Lp ℝ 2 (Mu H 2))
+    (VacC H 2 (by norm_num) beta hb) hr.symm
+  change ‖o‖^2 = _ at h
+  rw [show ‖o‖ = 1 from
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_norm
+      H 2 (by norm_num) beta hb, one_pow] at h
+  exact h.symm
+
+theorem p4Q2PZ37AQP_weightedNormSq_eq_integral
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (q : ℝ) :
+    ‖W H beta hb q‖^2 =
+      ∫ A : Cfg H 2, (Obs H q A * VacC H 2 (by norm_num) beta hb A)^2 ∂(Mu H 2) := by
+  let mu := Mu H 2
+  let a := Obs H q
+  let omega : P H 2 := Vac H 2 (by norm_num) beta hb
+  let w : P H 2 := W H beta hb q
+  have hVacRep :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_ae_eq_existing
+      H 2 (by norm_num) beta hb
+  have hwRep : (w : Lp ℝ 2 mu) =ᵐ[mu]
+      (fun A => a A * VacC H 2 (by norm_num) beta hb A) := by
+    change ((Mul H 2 a (p4Q2PZ37APL_originalTwoModeObservable_gaugeInvariant H q)
+      omega : P H 2) : Lp ℝ 2 mu) =ᵐ[mu] _
+    rw [periodicHypercubicEvenSpecialUnitaryPhysicalSpatialSliceObservableMulOperator_coe,
+      periodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservableMulOperator_apply]
+    have hM := periodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservableMulL2_coeFn
+      H 2 a (omega : Lp ℝ 2 mu)
+    filter_upwards [hM, hVacRep] with A hMul hO
+    calc
+      _ = a A * (omega : Lp ℝ 2 mu) A := hMul
+      _ = _ := congrArg (fun y : ℝ => a A * y) hO.symm
+  exact p4Q2PZ37AQP_lp_normSq_of_ae mu (w : Lp ℝ 2 mu) _ hwRep
+
+/-- Uniform squared norm of the same genuine APL vector. NB's Haar refresh
+is used for integration of the nonnegative function only; the vacuum is
+never replaced by independent Haar. -/
+theorem p4Q2PZ37AQP_weightedNormSq_lower
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (q : ℝ) :
+    Real.exp (-16*beta) * (1+q^2) ≤ ‖W H beta hb q‖^2 := by
+  classical
+  let mu := Mu H 2
+  let a := Obs H q
+  let o := VacC H 2 (by norm_num) beta hb
+  let e := E H 0
+  have ho : Continuous o :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
+      H 2 (by norm_num) beta hb
+  let F : C(Cfg H 2, ℝ) :=
+    ⟨fun A => (a A * o A)^2, (a.continuous.mul ho).pow 2⟩
+  have hF (A : Cfg H 2) : 0 ≤ F A := sq_nonneg _
+  have hUpdate : Continuous (fun z : Cfg H 2 × G => Function.update z.1 e z.2) := by
+    apply continuous_pi_iff.mpr
+    intro i
+    by_cases hi : i = e
+    · subst i
+      simpa [Function.update] using
+        (continuous_snd : Continuous (fun z : Cfg H 2 × G => z.2))
+    · simpa [Function.update, hi] using
+        ((continuous_apply i).comp
+          (continuous_fst : Continuous (fun z : Cfg H 2 × G => z.1)))
+  have hJoint := F.continuous.comp hUpdate
+  have hJointInt : Integrable (fun z : Cfg H 2 × G => F (Function.update z.1 e z.2))
+      (mu.prod nu) := hJoint.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+  have hOuterInt := hJointInt.integral_prod_left
+  have hFiber (A : Cfg H 2) :
+      (Real.exp (-16*beta) * (o A)^2) * (1+q^2) ≤
+        ∫ g : G, F (Function.update A e g) ∂nu := by
+    have hA : Continuous (fun g : G => (A,g)) := continuous_const.prodMk continuous_id
+    have hInnerInt : Integrable (fun g : G => F (Function.update A e g)) nu :=
+      (hJoint.comp hA).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+    have hAInt : Integrable (fun g : G => (a (Function.update A e g))^2) nu :=
+      ((a.continuous.comp (hUpdate.comp hA)).pow 2).integrable_of_hasCompactSupport
+        (HasCompactSupport.of_compactSpace _)
+    have hMoment : (∫ g : G, (a (Function.update A e g))^2 ∂nu) = 1+q^2 :=
+      p4Q2PZ37AQP_oneLinkHaar_sq H q A
+    rw [← hMoment, ← integral_const_mul]
+    apply integral_mono (hAInt.const_mul _) hInnerInt
+    intro g
+    have hL := p4Q2PZ37AQP_vacuumSq_oneLink_lower H beta hb A e g
+    change Real.exp (-16*beta) * (o A)^2 * (a (Function.update A e g))^2 ≤
+      (a (Function.update A e g) * o (Function.update A e g))^2
+    calc
+      _ ≤ (o (Function.update A e g))^2 * (a (Function.update A e g))^2 :=
+        mul_le_mul_of_nonneg_right hL (sq_nonneg _)
+      _ = _ := by ring
+  have hLowerInt : Integrable
+      (fun A : Cfg H 2 => (Real.exp (-16*beta) * (o A)^2) * (1+q^2)) mu :=
+    ((ho.pow 2).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+      |>.const_mul (Real.exp (-16*beta))).mul_const (1+q^2)
+  have hOuter := integral_mono hLowerInt hOuterInt hFiber
+  have hRefresh := GroundStatePosteriorJoint.p4Q2NB_originalSpatialHaar_integral_oneLinkRefresh
+    H e F hF
+  change (∫ A : Cfg H 2, (Real.exp (-16*beta) * (o A)^2) * (1+q^2) ∂mu) ≤
+    ∫ A : Cfg H 2, (∫ g : G, F (Function.update A e g) ∂nu) ∂(Mu H 2) at hOuter
+  rw [hRefresh, integral_mul_const, integral_const_mul,
+    show (∫ A : Cfg H 2, (o A)^2 ∂mu) = 1 from
+      p4Q2PZ37AQP_vacuumSq_integral H beta hb, mul_one] at hOuter
+  rw [p4Q2PZ37AQP_weightedNormSq_eq_integral]
+  exact hOuter
+
+theorem p4Q2PZ37AQP_weightedNormSq_floor
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (q : ℝ) :
+    Real.exp (-16*beta) ≤ ‖W H beta hb q‖^2 := by
+  calc
+    _ = Real.exp (-16*beta) * 1 := by ring
+    _ ≤ Real.exp (-16*beta) * (1+q^2) :=
+      mul_le_mul_of_nonneg_left (by nlinarith [sq_nonneg q]) (Real.exp_pos _).le
+    _ ≤ _ := p4Q2PZ37AQP_weightedNormSq_lower H beta hb q
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQP_twoModeHaar_sq
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQP_oneLinkHaar_sq
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQP_vacuumSq_oneLink_lower
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQP_vacuumSq_integral
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQP_weightedNormSq_eq_integral
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQP_weightedNormSq_lower
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQP_weightedNormSq_floor
