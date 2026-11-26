@@ -1,0 +1,19 @@
+name: PZ37AQB full-cache sandbox v1 local Haar L2 descent
+on:
+  pull_request:
+    paths:
+      - "diagnostics/pz37aqb/full-v1-r1-r3/**"
+      - ".github/workflows/pz37aqb-full-v1-r1-r3.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pz37aqb-full-v1-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    uses: ./.github/workflows/lean-warm-sandbox-reusable-diagnostic-full-v1.yml
+    with:
+      pack: diagnostics/pz37aqb/full-v1-r1-r3/pack.json
+      source_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      baseline_commit: dec4f1b1ab5c4a686f4a53662f014636b9c74a7e
