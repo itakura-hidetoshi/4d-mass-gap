@@ -1,0 +1,3 @@
+# AQD R6/R7 terminal diagnostic
+
+Run 45770877269, job 139742951646, artifact 15093319328, HEAD 2077e4c84040637995c9657765aeb592639be029. R6 36.110 s; R7 8.438 s (second warm candidate, not a controlled speed comparison). Both complete exit 1 only for unnecessarySeqFocus at line 206, column 10. All 13 public axiom prints contain only propext, Classical.choice, Quot.sound; no nonstandard dependency. No actual MCP call. R8 and R9 differ from R7 solely in the private helper proof of rangeDescend_apply, using the recommended sequence or congrArg and reflexivity. Strict warning and lint gates unchanged. Same public signatures, pins and original source. TEST_REQUIRED.
