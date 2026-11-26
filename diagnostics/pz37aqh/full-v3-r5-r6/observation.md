@@ -1,0 +1,2 @@
+# AQH R5/R6 terminal linter repair
+R3/R4 in PR #7034 run 45786206044 job 139793476266 each failed only because `centered_inner_algebra` automatically included unused [Nontrivial G] and `simp only` had unused `hx`. All actual baseline caches and imports succeeded. The private helper is genuinely generic over E; use local `omit [Nontrivial G] in` and remove only unused simp argument; retain hx in derivation of hx'. No public signature, theorem hypothesis, imports or existing file changes. Evidence artifact 15099584496. TEST_REQUIRED. Independent CI only after GREEN.
