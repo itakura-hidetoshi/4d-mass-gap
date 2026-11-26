@@ -1,0 +1,19 @@
+name: PZ37AQK full-cache sandbox v2 finite relative decay horizon
+on:
+  pull_request:
+    paths:
+      - "diagnostics/pz37aqk/full-v2-r3-r4/**"
+      - ".github/workflows/pz37aqk-full-v2-r3-r4.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pz37aqk-full-v2-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    uses: ./.github/workflows/lean-warm-sandbox-reusable-aqk-full-v2.yml
+    with:
+      pack: diagnostics/pz37aqk/full-v2-r3-r4/pack.json
+      source_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      baseline_commit: e3d4d9202dad356b16524f7133280f64c77914aa

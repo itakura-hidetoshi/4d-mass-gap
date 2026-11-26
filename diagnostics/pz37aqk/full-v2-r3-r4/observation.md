@@ -1,0 +1,2 @@
+# AQK R3/R4 repair
+R1/R2 run 45799785920 job 139839693709 artifact 15105464678. Each candidate exactly one warning-as-error: unused variable hH in a nested universal binder in the statement (the proof uses hH after intro). Rename only this binder to _hH; do not disable lint, remove the hypothesis or alter any mathematical statement. All seven axiom outputs only standard three. Preserve exact canonical AQJ HEAD and dependency cache. TEST_REQUIRED; independent CI only after direct Lean and real MCP GREEN.
