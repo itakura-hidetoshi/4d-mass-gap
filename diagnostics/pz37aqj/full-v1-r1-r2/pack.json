@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "baseline_commit": "2c2908f2a8bce27c5773e2573d90682251232a30",
+  "baseline_mgap4d_tree": "db33df59c4ddab24f1b250b6232c6de90daaf25c",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSConnectedHankelV5_PZ37AQI",
+    "MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenFiniteSupportGibbsCovarianceSpatialGeometric",
+    "MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenMidpointPlaquetteLocalDistanceLowerBound",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "AQJ",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_fullLift",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_fullShift",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_fullReflectedShift",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_fullLift_norm_le",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_fullReflectedShift_norm_le",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_reflectedShiftSupport",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_reflectedShiftSupport_card_le",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_fullReflectedShift_depends",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_reflectedShift_cyclicDistance_ge",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_reflectedShift_separated",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_fullReflectedShift_mean",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_connected_eq_covariance",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_connected_abs_le_geometric",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_evenConnected_le_geometric",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_first_of_geometric_terminal"
+      ],
+      "candidates": [
+        {
+          "id": "R1",
+          "path": "diagnostics/pz37aqj/full-v1-r1-r2/AQJ_R1.lean.txt",
+          "blob": "806b99ea4322a0501c6660e1081d2bbdd6006970"
+        },
+        {
+          "id": "R2",
+          "path": "diagnostics/pz37aqj/full-v1-r1-r2/AQJ_R2.lean.txt",
+          "blob": "c812ede6dbda97d71b0918ccb796102dc26bbbbd"
+        }
+      ]
+    }
+  ]
+}

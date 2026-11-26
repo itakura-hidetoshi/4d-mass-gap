@@ -1,0 +1,415 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSConnectedHankelV5_PZ37AQI
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenFiniteSupportGibbsCovarianceSpatialGeometric
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenMidpointPlaquetteLocalDistanceLowerBound
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37AQJ — genuine local reflected Gibbs geometric bound
+Apply the existing finite-support Dobrushin covariance theorem to arbitrary
+positive-half bounded continuous observables from AQH/AQI, not to an
+abstract transfer or heat-bath time evolution. The exact reflected translated
+physical-link support is constructed; its cyclic distance is at least the
+integer shift when BOTH original supports have that remaining half budget.
+The finite connected correlation thus has a genuine absolute geometric bound
+with a cardinality/sup-norm prefactor, under the explicit Dobrushin threshold.
+Use AQI's arbitrary integer endpoint criterion only when the absolute bound
+is small relative to the actual nonzero initial OS correlation.
+No volume-uniform relative rate or continuum mass gap is asserted.
+-/
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory Filter Set
+open scoped ENNReal Topology InnerProductSpace InnerProduct BigOperators
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 6000000
+set_option synthInstance.maxHeartbeats 100000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "O" => PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
+local notation "P" => periodicHypercubicEvenEdgeOrbitPartition
+local notation "L" => PeriodicHypercubicEvenSideLength
+local notation "Tau" => periodicHypercubicIntegerTemporalConfigurationTranslation
+local notation "Theta" => periodicHypercubicEvenConfigurationReflection
+local notation "Gibbs" => periodicHypercubicSpecialUnitaryWilsonSystem
+local notation "Pair" => p4Q2PZ37AQC_reflectedPair
+local notation "Supported" => p4Q2PZ37APZ_DependsOn
+local notation "Local" => p4Q2PZ37AQB_localHalfObservable
+local notation "Read" => p4Q2PZ37AQC_boundaryRead
+local notation "L2" => periodicHypercubicEvenWilsonOpenHalfObservableL2
+local notation "HalfMu" => periodicHypercubicEvenOpenHalfHaarMeasure
+local notation "BoundaryMu" => periodicHypercubicEvenBoundaryHaarMeasure
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "Obs" => (fun H : ℕ => BoundedContinuousFunction (O H 2) ℝ)
+
+local instance p4Q2PZ37AQJ_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37AQJ_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37AQJ_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37AQJ_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37AQJ_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37AQJ_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37AQJ_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37AQJ_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37AQJ_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+local instance p4Q2PZ37AQJ_openHalfProbability (H : ℕ) :
+    IsProbabilityMeasure (periodicHypercubicEvenOpenHalfHaarMeasure H 2) := by
+  dsimp [periodicHypercubicEvenOpenHalfHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
+  infer_instance
+
+
+local instance p4Q2PZ37AQJ_boundaryProbability (H : ℕ) :
+    IsProbabilityMeasure (BoundaryMu H 2) := by
+  dsimp [periodicHypercubicEvenBoundaryHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure]
+  infer_instance
+
+
+
+
+
+local notation "Cfg" => (fun H : ℕ => PeriodicHypercubicEvenEdge H → G)
+local notation "FullObs" => (fun H : ℕ => BoundedContinuousFunction (Cfg H) ℝ)
+local notation "Ref" => periodicHypercubicEvenEdgeReflection
+local notation "Shift" => p4Q2PZ37APZ_edgeShift
+local notation "Corr" => p4Q2PZ37AQG_fullReflectedCorrelation
+local notation "Conn" => p4Q2PZ37AQH_connectedCorrelation
+local notation "Mean" => p4Q2PZ37AQH_fullGibbsMean
+local notation "EvenC" => p4Q2PZ37AQI_evenConnected
+local notation "Rho" => (fun beta : ℝ => 18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta)
+
+private theorem aqj_continuous_shift (H j : ℕ) :
+    Continuous (fun A : Cfg H => Tau (L H) (-(j : ℤ)) A) := by
+  apply continuous_pi
+  intro e
+  simpa only [periodicHypercubicIntegerTemporalConfigurationTranslation_apply,
+    neg_neg, p4Q2PZ37APZ_edgeShift] using
+    (continuous_apply (Shift H (j : ℤ) e) :
+      Continuous (fun A : Cfg H => A (Shift H (j : ℤ) e)))
+
+private theorem aqj_continuous_reflection (H : ℕ) :
+    Continuous (Theta (Gauge := G) H) := by
+  apply continuous_pi
+  intro e
+  by_cases he : e.2 = 0
+  · simpa only [periodicHypercubicEvenConfigurationReflection, if_pos he] using
+      ((continuous_apply (Ref H e) : Continuous (fun A : Cfg H => A (Ref H e))).inv)
+  · simpa only [periodicHypercubicEvenConfigurationReflection, if_neg he] using
+      (continuous_apply (Ref H e) : Continuous (fun A : Cfg H => A (Ref H e)))
+
+/-- The unshifted full-lattice pullback of a positive-half observable. -/
+def p4Q2PZ37AQJ_fullLift (H : ℕ) (u : Obs H) : FullObs H :=
+  BoundedContinuousFunction.mkOfCompact
+    ⟨fun A => u ((P H).positiveRestriction A),
+      u.continuous.comp ((P H).continuous_positiveRestriction G)⟩
+
+local notation "Lift" => p4Q2PZ37AQJ_fullLift
+
+/-- The exact full-lattice time-shifted pullback (no intermediate section). -/
+def p4Q2PZ37AQJ_fullShift (H j : ℕ) (u : Obs H) : FullObs H :=
+  BoundedContinuousFunction.mkOfCompact
+    ⟨fun A => Lift H u (Tau (L H) (-(j : ℤ)) A),
+      (Lift H u).continuous.comp (aqj_continuous_shift H j)⟩
+
+local notation "Move" => p4Q2PZ37AQJ_fullShift
+
+/-- The exact second factor in AQG's original Gibbs reflection integral. -/
+def p4Q2PZ37AQJ_fullReflectedShift (H j : ℕ) (v : Obs H) : FullObs H :=
+  BoundedContinuousFunction.mkOfCompact
+    ⟨fun A => Move H j v (Theta H A),
+      (Move H j v).continuous.comp (aqj_continuous_reflection H)⟩
+
+local notation "MovedRef" => p4Q2PZ37AQJ_fullReflectedShift
+
+theorem p4Q2PZ37AQJ_fullLift_norm_le (H : ℕ) (u : Obs H) :
+    ‖Lift H u‖ ≤ ‖u‖ := by
+  apply (BoundedContinuousFunction.norm_le (norm_nonneg u)).2
+  intro A
+  change ‖u ((P H).positiveRestriction A)‖ ≤ ‖u‖
+  exact u.norm_coe_le_norm _
+
+theorem p4Q2PZ37AQJ_fullReflectedShift_norm_le (H j : ℕ) (v : Obs H) :
+    ‖MovedRef H j v‖ ≤ ‖v‖ := by
+  apply (BoundedContinuousFunction.norm_le (norm_nonneg v)).2
+  intro A
+  change ‖v ((P H).positiveRestriction (Tau (L H) (-(j : ℤ)) (Theta H A)))‖ ≤ ‖v‖
+  exact v.norm_coe_le_norm _
+
+/-- The physical support is translated forward, then reflected, including
+the canonical reversed time-link representative. -/
+def p4Q2PZ37AQJ_reflectedShiftSupport (H j : ℕ)
+    (T : Finset (PeriodicHypercubicEvenEdge H)) : Finset (PeriodicHypercubicEvenEdge H) := by
+  classical
+  exact T.image (fun e => Ref H (Shift H (j : ℤ) e))
+
+local notation "RS" => p4Q2PZ37AQJ_reflectedShiftSupport
+
+theorem p4Q2PZ37AQJ_reflectedShiftSupport_card_le (H j : ℕ)
+    (T : Finset (PeriodicHypercubicEvenEdge H)) :
+    (RS H j T).card ≤ T.card := by
+  classical
+  unfold p4Q2PZ37AQJ_reflectedShiftSupport
+  exact Finset.card_image_le
+
+/-- Agreement on this explicit reflected translated support suffices. -/
+theorem p4Q2PZ37AQJ_fullReflectedShift_depends
+    (H j : ℕ) (T : Finset (PeriodicHypercubicEvenEdge H)) (v : Obs H)
+    (hv : Supported H (↑T : Set (PeriodicHypercubicEvenEdge H))
+      (fun A => v ((P H).positiveRestriction A))) :
+    ∀ A B : Cfg H, (∀ e, e ∈ RS H j T → A e = B e) →
+      MovedRef H j v A = MovedRef H j v B := by
+  classical
+  intro A B hAB
+  change v ((P H).positiveRestriction (Tau (L H) (-(j : ℤ)) (Theta H A))) =
+    v ((P H).positiveRestriction (Tau (L H) (-(j : ℤ)) (Theta H B)))
+  have ht := p4Q2PZ37APZ_dependsOn_shift H (j : ℤ) (↑T)
+    (fun Z => v ((P H).positiveRestriction Z)) hv
+  apply ht (Theta H A) (Theta H B)
+  intro e he
+  rcases he with ⟨f, hf, rfl⟩
+  have hmem : Ref H (Shift H (j : ℤ) f) ∈ RS H j T := by
+    unfold p4Q2PZ37AQJ_reflectedShiftSupport
+    exact Finset.mem_image.mpr ⟨f, hf, rfl⟩
+  have heq := hAB _ hmem
+  unfold periodicHypercubicEvenConfigurationReflection
+  rw [heq]
+
+private theorem aqj_reflection_rank_bounds (H : ℕ) (f : PeriodicHypercubicEvenEdge H)
+    (hpos : 0 < (f.1 0).val) (hf : (f.1 0).val ≤ H) :
+    L H - ((f.1 0).val + 1) ≤ ((Ref H f).1 0).val ∧
+      ((Ref H f).1 0).val ≤ L H - (f.1 0).val := by
+  rcases f with ⟨v, mu⟩
+  by_cases htime : mu = 0
+  · subst mu
+    change L H - ((v 0).val + 1) ≤ periodicHypercubicEvenEdgeTimeRank H (Ref H (v, 0)) ∧
+      periodicHypercubicEvenEdgeTimeRank H (Ref H (v, 0)) ≤ L H - (v 0).val
+    rw [periodicHypercubicEvenEdgeTimeRank_reflection_time H v]
+    have hn : (v 0).val + 1 < L H := by
+      simp only [PeriodicHypercubicEvenSideLength] at *
+      omega
+    have hnext := periodicHypercubicEven_val_add_one_of_lt H (v 0) hn
+    have hz : v 0 + 1 ≠ 0 := by
+      intro hz
+      have hh := congrArg ZMod.val hz
+      rw [hnext] at hh
+      simp at hh
+    rw [periodicHypercubicEven_neg_val_of_ne_zero H (v 0 + 1) hz, hnext]
+    omega
+  · change L H - ((v 0).val + 1) ≤ periodicHypercubicEvenEdgeTimeRank H (Ref H (v, mu)) ∧
+      periodicHypercubicEvenEdgeTimeRank H (Ref H (v, mu)) ≤ L H - (v 0).val
+    rw [periodicHypercubicEvenEdgeTimeRank_reflection_spatial H (v, mu) htime]
+    have hz : v 0 ≠ 0 := by
+      intro hz
+      have hh : (v 0).val = 0 := by simp [hz]
+      change 0 < (v 0).val at hpos
+      omega
+    rw [periodicHypercubicEven_neg_val_of_ne_zero H (v 0) hz]
+    omega
+
+/-- Both half budgets certify the cyclic distance lower bound. The proof
+keeps the one-link correction for time-oriented edges and both periodic arcs. -/
+theorem p4Q2PZ37AQJ_reflectedShift_cyclicDistance_ge
+    (H j : ℕ) (e f : PeriodicHypercubicEvenEdge H)
+    (he : (e.1 0).val + j ≤ H) (hf : (f.1 0).val + j ≤ H) :
+    j ≤ periodicHypercubicEvenSourceTimeCyclicDistance H e
+      (Ref H (Shift H (j : ℤ) f)) := by
+  by_cases hj : j = 0
+  · rw [hj]
+    exact Nat.zero_le _
+  let g := Shift H (j : ℤ) f
+  have hlt : (f.1 0).val + j < L H := by
+    simp only [PeriodicHypercubicEvenSideLength]
+    omega
+  have hg : (g.1 0).val = (f.1 0).val + j :=
+    periodicHypercubicEvenIntegerTemporalEdgeTranslation_sourceTime_val_of_add_lt H j f hlt
+  have hpos : 0 < (g.1 0).val := by omega
+  have hle : (g.1 0).val ≤ H := by omega
+  have hr := aqj_reflection_rank_bounds H g hpos hle
+  change j ≤ periodicHypercubicEvenSourceTimeCyclicDistance H e (Ref H g)
+  unfold periodicHypercubicEvenSourceTimeCyclicDistance periodicHypercubicEvenTimeCyclicDistance
+  have horder : (e.1 0).val ≤ ((Ref H g).1 0).val := by
+    simp only [PeriodicHypercubicEvenSideLength] at hr
+    omega
+  have hdist := Nat.dist_eq_sub_of_le horder
+  rw [hdist]
+  simp only [PeriodicHypercubicEvenSideLength] at hr ⊢
+  apply le_min
+  · omega
+  · omega
+
+/-- No shorter actual Wilson-plaquette-local path connects these supports. -/
+theorem p4Q2PZ37AQJ_reflectedShift_separated
+    (H j : ℕ) (S T : Finset (PeriodicHypercubicEvenEdge H))
+    (hs : ∀ e ∈ S, (e.1 0).val + j ≤ H)
+    (ht : ∀ f ∈ T, (f.1 0).val + j ≤ H) :
+    periodicHypercubicEvenSupportsPlaquetteLocalSeparatedBy H j S (RS H j T) := by
+  classical
+  intro d hd e he g hg hpath
+  unfold p4Q2PZ37AQJ_reflectedShiftSupport at hg
+  rcases Finset.mem_image.mp hg with ⟨f, hf, rfl⟩
+  have hdist := p4Q2PZ37AQJ_reflectedShift_cyclicDistance_ge H j e f (hs e he) (ht f hf)
+  have hlen := periodicHypercubicEvenPlaquetteLocalPath_sourceTimeCyclicDistance_le_length H d hpath
+  omega
+
+variable [Nontrivial G]
+
+/-- The shifted-reflected factor has exactly the original full Gibbs mean. -/
+theorem p4Q2PZ37AQJ_fullReflectedShift_mean
+    (H j : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (v : Obs H) :
+    (∫ A, MovedRef H j v A ∂(Gibbs (L H) 2 (by norm_num) beta hb).gibbsMeasure) =
+      Mean H beta hb v := by
+  let mu : Measure (Cfg H) := (Gibbs (L H) 2 (by norm_num) beta hb).gibbsMeasure
+  let T := Tau (Gauge := G) (L H) (-(j : ℤ))
+  have hmp := periodicHypercubicSpecialUnitary_gibbs_measurePreserving_integerTemporalTranslation
+    (L H) 2 (by norm_num) beta hb (-(j : ℤ))
+  calc
+    _ = ∫ A, Move H j v A ∂mu :=
+      periodicHypercubicSpecialUnitaryWilsonSystem_gibbs_reflection_bounded_observable_expectation_invariant
+        H 2 (by norm_num) beta hb (Move H j v)
+    _ = ∫ A, Lift H v A ∂mu := hmp.integral_comp T.measurableEmbedding (Lift H v)
+    _ = _ := rfl
+
+/-- AQH's connected reflection correlation is precisely the ordinary static
+covariance of the two exact full-lattice BCFs. -/
+theorem p4Q2PZ37AQJ_connected_eq_covariance
+    (H j : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (u v : Obs H) :
+    Conn H j beta hb u v =
+      (Gibbs (L H) 2 (by norm_num) beta hb).gibbsCovarianceReal
+        (fun A => MovedRef H j v A) (fun A => Lift H u A) := by
+  let mu : Measure (Cfg H) := (Gibbs (L H) 2 (by norm_num) beta hb).gibbsMeasure
+  have hprod : (∫ A, Lift H u A * MovedRef H j v A ∂mu) =
+      ∫ A, MovedRef H j v A * Lift H u A ∂mu := by
+    apply integral_congr_ae
+    filter_upwards [] with A
+    exact mul_comm _ _
+  have hm := p4Q2PZ37AQJ_fullReflectedShift_mean H j beta hb v
+  change (∫ A, Lift H u A * MovedRef H j v A ∂mu) -
+      Mean H beta hb u * Mean H beta hb v =
+    (∫ A, MovedRef H j v A * Lift H u A ∂mu) -
+      (∫ A, MovedRef H j v A ∂mu) * Mean H beta hb u
+  rw [hprod, hm]
+  ring
+
+/-- Under the existing concrete finite Dobrushin threshold, both support
+budgets give an actual geometric absolute covariance bound with no volume
+factor except the displayed observable support cardinalities and sup norms. -/
+theorem p4Q2PZ37AQJ_connected_abs_le_geometric
+    (H j : ℕ) (hH : 0 < H) (S T : Finset (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta) (hThreshold : Rho beta < 1)
+    (u v : Obs H)
+    (hu : Supported H (↑S : Set (PeriodicHypercubicEvenEdge H))
+      (fun A => u ((P H).positiveRestriction A)))
+    (hv : Supported H (↑T : Set (PeriodicHypercubicEvenEdge H))
+      (fun A => v ((P H).positiveRestriction A)))
+    (hs : ∀ e ∈ S, (e.1 0).val + j ≤ H)
+    (ht : ∀ f ∈ T, (f.1 0).val + j ≤ H) :
+    |Conn H j beta hb u v| ≤ (Rho beta ^ j / (1 - Rho beta)) *
+      ((T.card : ℝ) * (2 * ‖v‖)) * ((S.card : ℝ) * (2 * ‖u‖)) := by
+  let F := MovedRef H j v
+  let Fleft := Lift H u
+  have hdepF : ∀ A B : Cfg H, (∀ e, e ∈ RS H j T → A e = B e) → F A = F B :=
+    p4Q2PZ37AQJ_fullReflectedShift_depends H j T v hv
+  have hdepO : ∀ A B : Cfg H, (∀ e, e ∈ S → A e = B e) → Fleft A = Fleft B := by
+    intro A B hAB
+    exact hu A B hAB
+  have hsep := p4Q2PZ37AQJ_reflectedShift_separated H j S T hs ht
+  have hcov := periodicHypercubicEvenSpecialUnitary_gibbsCovarianceReal_abs_le_geometric_of_finiteSupportsSeparatedBy
+    H 2 j hH (by norm_num) beta hb hThreshold S (RS H j T) hsep F Fleft hdepF hdepO
+  have hRho : 0 ≤ Rho beta := mul_nonneg (by norm_num)
+    (periodicHypercubicSpecialUnitaryActiveTVMajorant_nonneg beta hb)
+  have hK : 0 ≤ Rho beta ^ j / (1 - Rho beta) :=
+    div_nonneg (pow_nonneg hRho j) (sub_nonneg.mpr hThreshold.le)
+  have hcard : ((RS H j T).card : ℝ) ≤ (T.card : ℝ) := by
+    exact_mod_cast p4Q2PZ37AQJ_reflectedShiftSupport_card_le H j T
+  have hF : (∑ e ∈ RS H j T, 2 * ‖F‖) ≤ (T.card : ℝ) * (2 * ‖v‖) := by
+    calc
+      _ ≤ ∑ _e ∈ RS H j T, 2 * ‖v‖ := by
+        apply Finset.sum_le_sum
+        intro e he
+        exact mul_le_mul_of_nonneg_left (p4Q2PZ37AQJ_fullReflectedShift_norm_le H j v) (by norm_num)
+      _ = ((RS H j T).card : ℝ) * (2 * ‖v‖) := by simp
+      _ ≤ _ := mul_le_mul_of_nonneg_right hcard (by positivity)
+  have hO : (∑ e ∈ S, 2 * ‖Fleft‖) ≤ (S.card : ℝ) * (2 * ‖u‖) := by
+    calc
+      _ ≤ ∑ _e ∈ S, 2 * ‖u‖ := by
+        apply Finset.sum_le_sum
+        intro e he
+        exact mul_le_mul_of_nonneg_left (p4Q2PZ37AQJ_fullLift_norm_le H u) (by norm_num)
+      _ = _ := by simp
+  rw [p4Q2PZ37AQJ_connected_eq_covariance H j beta hb u v]
+  exact hcov.trans
+    (mul_le_mul (mul_le_mul_of_nonneg_left hF hK) hO (by positivity) (by positivity))
+
+/-- The actual even autocorrelation has this explicit terminal upper bound. -/
+theorem p4Q2PZ37AQJ_evenConnected_le_geometric
+    (H k m : ℕ) (hH : 0 < H) (S : Finset (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta) (hThreshold : Rho beta < 1) (u : Obs H)
+    (hu : Supported H (↑S : Set (PeriodicHypercubicEvenEdge H))
+      (fun A => u ((P H).positiveRestriction A)))
+    (hbudget : ∀ e ∈ S, (e.1 0).val + m * k + m * k ≤ H) :
+    EvenC H k m beta hb u ≤
+      (Rho beta ^ (m * k + m * k) / (1 - Rho beta)) *
+        ((S.card : ℝ) * (2 * ‖u‖)) ^ 2 := by
+  have hs : ∀ e ∈ S, (e.1 0).val + (m * k + m * k) ≤ H := by
+    intro e he
+    have hh := hbudget e he
+    omega
+  have hc := p4Q2PZ37AQJ_connected_abs_le_geometric H (m * k + m * k) hH S S
+    beta hb hThreshold u u hu hu hs hs
+  calc
+    _ ≤ |Conn H (m * k + m * k) beta hb u u| := le_abs_self _
+    _ ≤ _ := by
+      calc
+        _ ≤ (Rho beta ^ (m * k + m * k) / (1 - Rho beta)) *
+            ((S.card : ℝ) * (2 * ‖u‖)) * ((S.card : ℝ) * (2 * ‖u‖)) := hc
+        _ = _ := by ring
+
+/-- Connect the explicit absolute Gibbs bound to AQI's integer terminal test.
+A relative certificate is still required at the actual nonzero base. -/
+theorem p4Q2PZ37AQJ_first_of_geometric_terminal
+    (H k m : ℕ) (hH : 0 < H) (hm : 0 < m)
+    (S : Finset (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta) (hThreshold : Rho beta < 1) (u : Obs H)
+    (hu : Supported H (↑S : Set (PeriodicHypercubicEvenEdge H))
+      (fun A => u ((P H).positiveRestriction A)))
+    (hp : ∀ e ∈ S, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hbudget : ∀ e ∈ S, (e.1 0).val + m * k + m * k ≤ H)
+    (hbase : 0 < EvenC H k 0 beta hb u) (c : ℝ) (hc : 0 ≤ c)
+    (hcert : (Rho beta ^ (m * k + m * k) / (1 - Rho beta)) *
+      ((S.card : ℝ) * (2 * ‖u‖)) ^ 2 ≤ c ^ m * EvenC H k 0 beta hb u) :
+    EvenC H k 1 beta hb u ≤ c * EvenC H k 0 beta hb u := by
+  exact p4Q2PZ37AQI_evenConnected_terminalThreshold H k m hm (↑S) beta hb u hu hp
+    hbudget hbase c hc
+    ((p4Q2PZ37AQJ_evenConnected_le_geometric H k m hH S beta hb hThreshold u hu hbudget).trans hcert)
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_fullLift
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_fullShift
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_fullReflectedShift
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_fullLift_norm_le
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_fullReflectedShift_norm_le
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_reflectedShiftSupport
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_reflectedShiftSupport_card_le
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_fullReflectedShift_depends
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_reflectedShift_cyclicDistance_ge
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_reflectedShift_separated
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_fullReflectedShift_mean
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_connected_eq_covariance
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_connected_abs_le_geometric
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_evenConnected_le_geometric
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQJ_first_of_geometric_terminal
