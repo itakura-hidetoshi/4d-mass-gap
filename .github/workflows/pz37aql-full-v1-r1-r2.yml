@@ -1,0 +1,19 @@
+name: PZ37AQL full-cache sandbox v1 relative amplitude fiber
+on:
+  pull_request:
+    paths:
+      - "diagnostics/pz37aql/full-v1-r1-r2/**"
+      - ".github/workflows/pz37aql-full-v1-r1-r2.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pz37aql-full-v1-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    uses: ./.github/workflows/lean-warm-sandbox-reusable-aql-full-v1.yml
+    with:
+      pack: diagnostics/pz37aql/full-v1-r1-r2/pack.json
+      source_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      baseline_commit: fbd41bc362cd8a3ba3483a1d32c51625eee8bbbb
