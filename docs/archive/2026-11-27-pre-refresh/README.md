@@ -1,0 +1,5547 @@
+## 検証済み定理 — AHE／真正signed-Haar表の中心寄与・質量不確実性分解と有限有理符号check（2026-11-07 JST）
+
+[AHE定理PR #6430](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6430) **MERGED**。元AGP/AGIの真正signed-Haar有理表を、セル質量 `[l_i,u_i]` の中心 `mid_i=(l_i+u_i)/2` と半幅 `err_i=(u_i-l_i)/2` に**厳密分解**し、`originalTable.lower=Σ(a_i^- mid_i)-Σ(|a_i^-|err_i)`、`originalTable.upper=Σ(a_i^+ mid_i)+Σ(|a_i^+|err_i)` をLean4で証明。負係数では質量端点が反転する元AGI signed min/maxを保持した。原表の正下端 iff 下限中心寄与>下限質量誤差、負上端 iff 上限中心寄与+上限質量誤差<0。真正product-Haar質量の既存24中心格子とAGU任意精度格子へBool checkerを接続し、`checker=true` が同一元物理signed transferの厳密符号を与えること、およびAHC/AHDによる固定H条件付き完全性を証明。**元24中心・AGUの実際のstrict signを示す数値証人は未構成**。古典選択表を実行可能な計算完了と同一視しない。
+
+[Exact-source CI #42321226504](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42321226504) **11,366/11,366 SUCCESS**。新規16定理の公理依存は標準 `propext`・`Classical.choice`・`Quot.sound` のみ、sorryAxなし、変更Lean warning/error 0/0、独立completion receipt completed/SUCCESS、source/test-merge/squash Git tree一致 `0c978fd763c57fe7c91d9a995732a3d1ee43732b`。新規Lean1件386行・削除0、固定Lean/mathlib・元Wilson source/kernel/floor/Haar・元AGP・公開root/workflow不変更。
+
+**NEXT/OPEN — AHF:** 元の固定H、真正有理右境界、有限Borelセル、原Wilson作用、centered source、Haar質量有理区間と元AGP signed min/maxを明示的に構成・評価して、実際にchecker=trueとなる正／負符号の有限証人を探索する。得られなければobstructionを明示する。two-sign shell、H一様coercivity、Hamiltonian gap、連続体4D質量ギャップ、非有理境界拡張はOPEN。[AHE正式証明記録](docs/proofs/P4-Q2-PZ37AHE_verified_20261107.md)。定理正本 `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。以下AHD以前の履歴を全文保持。
+
+---
+
+## 検証済み定理 — AHD／真正signed-transfer非零符号と元AGP signed-Haar有理証明書の条件付き完全性（2026-11-07 JST）
+
+[AHD定理PR #6427](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6427) **MERGED**。AHCの固定H・元AGL有理右境界に対する任意精度真正signed-transfer verified intervalに、元AFV包含と有理数稠密性を接続。実際の元transfer `t_H(B)>0` と `∃元AGU正下端証明書`、`t_H(B)<0` と `∃元AGU負上端証明書` のそれぞれの同値、`t_H(B)≠0 iff 正・負いずれかの証明書が存在`をLean4で証明。さらに元AGNのglobal区間 `[-M_H,M_H]` は `M_H≥0` の対称区間なので、最終AGU区間の厳密な正下端／負上端は、同じ元物理の **AGP本来のsigned-Haar有限有理表** の正下端／負上端と同値と証明した。`t_H(B)=0` iff 全元AGU区間が0をまたぐ iff 元AGPの正・負表証明書がともに存在しない。任意に狭い区間が存在しても、その中の真正値が非零であるとは限らないことを幅0の例で明示。元source/kernel/floor/Haar law、mass signed min/max、Borel grid・root/pinsを不変更。実際の正・負表の数値証人は**未構成**であり、元transferの非零符号そのものを証明したとは主張しない。
+
+[Exact-source CI #42318237854](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42318237854)：**11,365/11,365 SUCCESS**、新規14宣言の公理依存は標準 `propext`・`Classical.choice`・`Quot.sound` のみ、sorryAxなし、変更Lean warning/error0/0、workflow/job/Lean step/独立completion receipt completed/SUCCESS。source/test-merge/squash Git tree一致 `c7a7f3c76072b0549fd3571948338ec07eaeee5d`。新規Lean1件388追加行・削除0、固定Lean/mathlib・元物理定義・workflow・公開root不変更。文書専用Strict Lean実行はしない。
+
+**NEXT/OPEN — AHE:** 元AGP真正Haar有理表の正下端または負上端を実際の固定Hで構成・評価・証明する。AHC/AHDの古典選択格子は具体的大体積表の計算完了を意味しない。非有理境界、two-threshold shell、H一様coercivity、Hamiltonian gap、連続体4D Yang–Mills質量ギャップは未証明。[AHD正式証明記録](docs/proofs/P4-Q2-PZ37AHD_verified_20261107.md)。唯一のLean正本 `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。以下AHC以前の履歴を全文保持。
+
+---
+
+## 検証済み定理 — AHC／固定有限体積の元signed-transfer認証区間幅の任意精度（2026-11-07 JST）
+
+[AHC定理PR #6424](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6424) **MERGED**。AGYの真正signed-transfer幅上界を保ち、元AGV slope `L_H(m)≤6+13p_H/2=:Lcap_H` と元AGN半径 `M_H(m,n)≤p_H/4=:Mcap_H` を固定Hで次数非依存に形式証明。`C_H=p_H+2Lcap_H+2Mcap_H+1>0` と有理 `q=eta/(4C_H)>0` を構成し、元AGUの真正Borel半径 `R=q`・元Haar質量誤差 `eps=q` を選択。AHBで既証明の元kernel最大幅・floor幅の一様任意精度により、全元AGL有理座標右境界に共通 `m,n` が存在する。元signed-transferの真正verified intervalについて `width(I_H)≤(C_H−1)q≤eta/4<eta` をLean4で証明した。元signed source、Wilson kernel、global floor、Haar law、signed min/max、選択Borel格子・root・pinsを保持。固定H・有理座標証拠付き境界での区間収束であり、非零transfer符号や連続体gapを主張しない。
+
+[Exact-source CI #42316089429](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42316089429)：**11,364/11,364 SUCCESS**、新規11宣言の公理依存は標準 `propext`・`Classical.choice`・`Quot.sound` のみ、sorryAxなし、変更Lean warning/error0/0、workflow/job/Lean step/独立completion receipt completed/SUCCESS。source/test-merge/squash Git tree一致 `9da2c909a00d06d6876dc11229b30c376fcff777`。新規Leanファイル1件・削除0、元物理定義・公開root・固定Lean/mathlib・workflow不変更。別Strict Lean/Governance workflowを実行したとは主張しない。
+
+**NEXT/OPEN — AHD:** 精度付き区間で元signed-transfer値を任意に狭く囲めても、真の値の非零符号は自動的には得られない。具体的な符号付き中心値／Haar表の有限認証証人を調べ、非有理境界への拡張・two-threshold shell・H一様coercivity・Hamiltonian gap・連続体mass gapを未解決のまま区別する。[AHC正式証明記録](docs/proofs/P4-Q2-PZ37AHC_verified_20261107.md)。唯一の定理正本 `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。以下AHB以前の履歴は全文保持。
+
+---
+
+## 検証済み定理 — AHB／固定有限体積における真正kernel・floor幅の全中心一様任意精度（2026-11-07 JST）
+
+[AHB定理PR #6421](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6421) **MERGED**。AGJ元Taylor階乗残差に `E_n=(n+1)/(n!*n)≤2/n` をLean4形式証明し、元AGK幾何尾 `t_m=(5/768)*(1/25)^m` と一緒に任意精度へ選択可能とした。元one-slab Wilson作用の既証明上界 `0≤S_H(A,B)≤V_H` と元AGN floor組合せ作用の厳密値を再利用し、全中心共通の元AGMスケール上界 `k≤K_H=ceil(V_H)+1` と真正AGJ clipped下端 `0≤b≤1` を証明。固定mathlib `abs_pow_sub_pow_le` により `B(S,m,n)≤K_H*2^K_H*(V_H*t_m+4*E_n)`（括弧内≤1）を構成し、**固定Hの全真正AGU格子・元有理右境界に対して共通m,n** を選んで `DeltaKmax<eta, DeltaF<eta` をLean4で証明した。元kernel・floor・Haar・source・signed min/max・既存root/pin不変更。H一様収束や非零transferの主張ではない。
+
+[Exact-source CI #42313988679](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42313988679)：**11,363/11,363 SUCCESS**、新規14宣言の公理依存は標準 `propext`・`Classical.choice`・`Quot.sound` のみ、sorryAxなし、変更Lean warning/error0/0、workflow/job/Lean step/独立completion receipt completed/SUCCESS。source/test-merge/squash Git tree一致 `89d9e7c8dd21726a7c44d1dd0e30bcfd4b2d1d71`。新規Lean1件502行・削除0、旧物理定義・根・Lean/mathlib pin・workflow変更なし。文書専用Strict Leanは実行しない。
+
+**NEXT/OPEN — AHC:** AGYの元signed-transfer誤差に対して `R, eps` の幾何・Haar予算も一括選択し、固定Hにおける元signed-transfer区間幅の任意精度保証を検討する。真正transferの非零符号、two-threshold shell、H一様coercivity、Hamiltonian gap、連続体mass gapと大体積数値表はOPEN。唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。[AHB正式証明記録](docs/proofs/P4-Q2-PZ37AHB_verified_20261107.md)。以下のAHA以前の本文は全文保持。
+
+---
+
+## 検証済み定理 — AHA／元kernel・floorの指数Taylor出力幅をAGK幾何誤差と階乗誤差へ降下（2026-11-07 JST）
+
+[AHA定理PR #6418](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6418) **MERGED**。元AGJの真正Taylor残差について `E_n=(n+1)/(n!*n)`・`|q|≤1` の有理上界を証明。元Wilson作用の指数引数が非正であることから `x≤y≤0 ⇒ exp(y)-exp(x)≤y-x` をLean4で導き、AGJの `max 0` clipと整数乗を保持して、元AGK結合誤差 `t_m=(5/768)*(1/25)^m`・元AGM自動scale `k`・実際のTaylor下端 `b` を用いた**指数出力幅** `DeltaExp≤(b+S*t_m/k+4*E_n)^k-b^k` を形式証明した。元AGMの真正kernel幅、元AGNの真正global floor幅、同じAGU真正Borel格子の中心最大値にこの有理上界を適用して、`width(I_H)≤(p_H/2)*(Bmax+Bfloor/2)+2L_H(m)R+2M_H(m,n)eps` を証明。元Haar・source・kernel・floor・signed transfer・tighten-only交差・root/pinsを変更していない。
+
+[Exact-source CI #42310738307](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42310738307)：**11,362/11,362 SUCCESS**、新規12宣言の公理依存は標準 `propext`・`Classical.choice`・`Quot.sound` のみ、sorryAxなし、変更Lean warning/error0/0、workflow/job/Lean step/独立completion receipt completed/SUCCESS。source/test-merge/squash Git tree一致 `61663613839f72b5251105bdbf6355e82544ca91`。新規Lean1件・既存Lean改変なし。別workflowのStrict Lean／Governance実行は主張しない。
+
+**NEXT/OPEN — AHB:** AHAの指数出力幅は有限有理式で評価済みだが、`B(S,m,n)` の任意精度収束、元kernel/floor幅の全中心一様収束、非零signed transfer、H一様coercivity、Hamiltonian gap、連続体mass gapは未証明。作用量上界、scale上界、Taylor階乗tailの収束を結合する。[AHA正式証明記録](docs/proofs/P4-Q2-PZ37AHA_verified_20261107.md)。唯一の定理正本 `formal/real-hilbert-uniform-coercive-strong-limit`、mainは文書ミラー。以下のAGZ以前の履歴全文保持。
+
+---
+
+## 検証済み定理 — AGZ／元AGK/AGJ有理Taylor幅を真正kernel・floor誤差へ接続（2026-11-07 JST）
+
+[AGZ定理PR #6415](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6415) **MERGED**。元AGL one-slab作用と元AGN global floor組合作用をそのまま使い、真正固定結合AGKの有理端点差から指数入力幅 `0≤qHi-qLo≤S*(5/768)*(1/25)^m` をLean4で形式証明。元AGM clipped kernel区間幅と元AGN floor区間幅が各raw AGK/AGJ指数Taylor認証区間幅以下となること、同じAGU真正grid上のkernel raw最大値から `width(I_H)≤(p_H/2)*(DeltaK_rawTaylorMax+DeltaF_rawTaylor/2)+2L_H(m)R+2M_H(m,n)eps` を証明。元source・Haar・kernel・floor・signed transfer・tighten-only交差は全て維持。有限有理数幅チェックの条件付き定理も追加。
+
+[Exact-source CI #42304072471](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42304072471)：**11,361/11,361 SUCCESS**、新規11宣言の依存は標準3公理のみ、sorryAxなし、変更Lean warning/error0/0、workflow/job/Lean step/独立completion receipt completed/SUCCESS、source/test-merge/squashの共通Git tree `a8a5c7c2c75e1bd147840ab2ec2e3f31e4ee5df8`。新規Lean1件304追加行・削除0。元物理定義・公開root・Lean/mathlib pins・workflow不変更。別workflowのStrict LeanやGovernance実行を主張しない。
+
+**NEXT/OPEN — AHA:** AGKの指数**入力**幅収束は証明済みだが、AGJ出力Taylor区間幅の一様収束、全中心kernel/floor生Taylor最大幅の任意精度収束は未証明。H一様coercivity、元signed transfer非零符号、two-threshold shell、Hamiltonian gap、連続体4D Yang–Mills mass gap、具体的大体積Haar表はなおOPEN。唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。[AGZ正式証明記録](docs/proofs/P4-Q2-PZ37AGZ_verified_20261107.md)。以下のAGY以前の本文は全文保持。
+
+---
+
+## 検証済み定理 — AGY／真正kernel・floor幅による元signed-transferの定量上界（2026-11-07 JST）
+
+[AGY定理PR #6412](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6412) **MERGED**。AGUの同じ精度付き真正格子の全元有理中心について、元AGMの本物のclipped Wilson kernel認証区間の幅 `DeltaK_i` とその有限最大値 `DeltaKmax=max_i DeltaK_i`、元AGNの本物のglobal floor認証区間幅 `DeltaF` を定義し、非負性を形式証明した。元AGNの厳密centered sourceについて既証明 `|s_H(C)|≤p_H/2` を有理中心へ輸送し、**`etaMax≤(p_H/2)*(DeltaKmax+DeltaF/2)`** を証明。AGXの元signed-transferの最終区間に代入して **`width(I_H)≤(p_H/2)*(DeltaKmax+DeltaF/2)+2L_H(m)R+2M_H(m,n)eps`** をLean4で確認した。元Haar・source・kernel・floor・signed-transfer・tighten-only交差を維持。
+
+[exact-source CI #42300462050](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42300462050)：**11,360/11,360 SUCCESS**、新規9宣言は標準3公理のみ、sorryAxなし、変更Lean warning/error 0/0、workflow/job/Lean step/独立receipt completed/SUCCESS、source/test-merge/squash Git tree一致 `14987534a1dcc35c440380f5607e24e23468d8e8`。新規Lean219追加行・削除0、元物理モデル・root・固定Lean/mathlib・workflow不変更。
+
+**NEXT/OPEN:** 真正kernel幅の有限最大値およびfloor幅の任意精度制御は未証明。AGK結合幅収束とAGJ指数Taylor残差をAGM・AGNの元区間幅へ接続する。非零transfer符号、H一様coercivity、Hamiltonian gap、連続体mass gapと大体積数値表はOPEN。唯一の定理正本 `formal/real-hilbert-uniform-coercive-strong-limit`、mainは文書ミラー。[AGY正式証明記録](docs/proofs/P4-Q2-PZ37AGY_verified_20261107.md)。以下のAGX以前の履歴は全文保持。
+
+---
+
+## 検証済み定理 — AGX／元中心幅の真正有限最大値で外部eta仮定を除去（2026-11-07 JST）
+
+[AGX定理PR #6409](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6409) **MERGED**。AGUで選択した**同じ真正Borel格子**は、その元SU(2)全空間partition証拠から添字集合が非空。AGWの元AGN各中心値幅 `width_i=|s_H(C_i)|*(kernelWidth_i+floorWidth/2)` の**有限最大値**を `etaMax_H,d,B,m,n` として定義し、すべての中心値区間がそれ以下、`etaMax≥0` をLean4で形式証明。任意H・正有理R,eps・有理座標元右境界B・n>0に対し、**外部eta証明入力を使わず** `width(I_H)≤etaMax+2L_H(m)R+2M_H(m,n)eps` を元AGVの真正signed-transfer評価から導いた。有限セル数に比例する余分な誤差係数を導入していない。
+
+[exact-source CI #42297186825](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42297186825)：**11,359/11,359 SUCCESS**、新規6宣言は標準3公理のみ、sorryAxなし、変更Lean warning/error0/0、workflow/job/step/独立receipt completed/SUCCESS、source/test-merge/squash Git tree一致 `635250d72a630d93fd18537f4f12e5fe0d3b8b35`。新規Lean146行・削除0、既存physics・root・pin・workflowは不変更。
+
+**NEXT/OPEN:** `etaMax` は実際の元中心値に依存する有限有理式だが、古典選択格子の数値表を計算したわけではなく、**その値の任意精度収束はまだ未証明**。AGJ/AGK/AGM/AGNの元kernel・floor幅の一様誤差を追う。非零transfer符号、二閾値殻、H一様coercivity、Hamiltonian gap、連続体mass gapは引き続きOPEN。正本 `formal/real-hilbert-uniform-coercive-strong-limit`、mainは文書ミラー。[AGX正式証明記録](docs/proofs/P4-Q2-PZ37AGX_verified_20261107.md)。以下のAGW以前の履歴は全文保持。
+
+---
+
+## 検証済み定理 — AGW／元AGN中心値区間幅の厳密な分解（2026-11-07 JST）
+
+[定理PR #6406](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6406) **MERGED**。元AGN中心値区間を変更せず、真正center source有理値s、元AGMのclipped kernel区間[klo,khi]、元AGN floor区間[flo,fhi]について、**`centerWidth=|s|*((khi-klo)+(fhi-flo)/2)`** をLean4で証明した。sの符号を保持するmin/max代数を含む。元中心値区間幅の非負性も確認。AGVに残っている全中心幅≤etaという条件の内容を、同じ物理kernelとfloorの幅へ正確に分解した成果。
+
+[exact-source CI #42274305910](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42274305910)：**11,358/11,358 SUCCESS**、新規4宣言は標準3公理のみ、sorryAxなし、変更Lean warning/error0/0、workflow/job/step/独立receipt SUCCESS、source/test-merge/squash Git tree一致 `e717d546cbbe8095c0da7b40a565d3f56b48fc37`。新規Lean150行・削除0、既存root・physics・Lean/mathlib pin・workflow不変更。
+
+**NEXT/OPEN:** この恒等式は元kernel幅・floor幅が任意に小さくなることをまだ証明しない。AGK結合幅収束だけでAGN/AGM/AGJ全誤差を処理したとみなさず、元区間幅を一様に精密化してAGVのeta条件を導く。実際の非零符号、H一様coercivity、Hamiltonian gap、連続体gapと大体積表は未解決。正本 formal/real-hilbert-uniform-coercive-strong-limit／main文書ミラー。[AGW正式証明記録](docs/proofs/P4-Q2-PZ37AGW_verified_20261107.md)。以下のAGV以前の本文を全文保持。
+
+---
+
+## 検証済み定理 — AGV／元signed-transfer真正Haar幅の定量評価（2026-11-07 JST）
+
+[AGV定理PR #6403](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6403) **MERGED**。真の元Haarセル質量 p_i≥0・総和1と、元AGI/AGPの符号付きmin/max、AGUの同じ選択真正格子の radius≤R と総有理Haar質量幅≤eps から、**各元AGN中心値区間幅≤eta** の明示的条件のもと、`width(I_H)≤eta+2L_H(m)R+2M_H(m,n)eps` をLean4形式証明。ここで L_H(m)=6+13*AGK_upper(m)*(AGN_countRational H/2)、M_H(m,n)=AGN_transferRadius H m n。Haar有理質量下限を非負と仮定せず、上下端点の総和を確率1に置き換えない。元のsigned transferとtighten-only交差を保持する。
+
+[CI #42271966524](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42271966524)：**11,357/11,357 SUCCESS**、新規10宣言は標準3公理のみ、sorryAxなし、変更Lean warning/error0/0、workflow/job/Lean step/独立receipt completed/SUCCESS、source/test-merge/squash Git tree一致 `379ec0b8adc160388cbeabe234aad9ffe4c60474`。新規Lean450行、削除0。Lean v4.30.0-rc2／mathlib pin、既存の元物理量、workflow、公開root不変更。
+
+**NEXT/OPEN:** 中心値幅etaの任意精度保証は依然未証明。AGKの固定結合幅収束からAGM・AGNの指数Taylor／kernel／floorを結合して検討する。具体的大体積数値表、真正非零transfer符号、二閾値殻、H一様coercivity、Hamiltonian gap、連続体4D mass gapは引き続きOPEN。唯一のLean定理正本は formal/real-hilbert-uniform-coercive-strong-limit、mainは文書ミラー。[AGV正式証明記録](docs/proofs/P4-Q2-PZ37AGV_verified_20261107.md)。以下の履歴全文を保持。
+
+---
+
+## 検証済み定理 — AGU／選択された真正格子への要求精度保存（2026-11-06 JST）
+
+[定理PR #6400](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6400) MERGED。AGTの正しい格子存在定理とAGQの真のHaar質量予算を使い、**選択した同じデータに対する要求半径R・質量総幅epsの保証**を追加した。
+
+新しい `p4Q2PZ37AGU_precisionGridData H R eps` は元AGPデータと、`data.grid.radius≤R`、各セルの認証有理半径 `data.radii.radius i=R`、元Haar質量区間の総幅 `sum_i(upper_i-lower_i)≤eps` を一つのTypeに保持する。任意H・正の有理R,epsについてこの型の存在を証明し、**この添字付きType**を古典選択するため、選択後も三つの条件を射影できる。セルの最小包絡半径がRに等しいという主張ではない。
+
+**AGTからの補強理由も形式証明。** `unindexedChoice_budget_independent` は、予算を型に持たない旧AGTの選択関数が、任意の正の予算ペアで同じデータを返すことを `rfl` で証明。旧区間の包含は有効なまま、要求精度を結論のTypeに残す必要があることを明確にした。AGUの元signed-transfer評価には、予算が保証されたその選択データの `.data` を渡し、以前の証明済み区間とのtighten-only交差を保持する。
+
+[exact-source CI #42210989555](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42210989555)：**11356/11356 SUCCESS**、新規14宣言は標準公理のみ、sorryAxなし、変更Lean warning/error0/0、workflow・Lean job/step・receipt completed/SUCCESS、source/test-merge/squash Git tree一致。新規Lean葉225行のみ。固定Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。定理squash `b45fb266700b6398cbd34e915806f846e5a3ea5d`。
+
+**次の課題:** 選択データの幾何誤差・中心値区間誤差・質量区間誤差を合わせ、最終signed-transfer区間幅の明示評価へ接続する。今回の半径・質量幅の制御だけで、最終区間幅の任意精度収束、具体的数値表、非零符号、H一様coercivity、Hamiltonian gap、連続体質量ギャップを主張しない。
+
+唯一のLean定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、mainは文書ミラー。[AGU正式証明記録](docs/proofs/P4-Q2-PZ37AGU_verified_20261106.md)。以下のAGS・AGT以前の全文を保持し、旧追補の要求精度保持に関するOPEN項目はこのAGUで解決した。
+
+---
+
+## 検証済み定理 — AGS・AGT／真正SU(2)の任意精度有理被覆と空間格子（2026-11-06 JST）
+
+唯一のLean定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。mainは文書ミラー。[AGS #6396](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6396)・[AGT #6397](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6397) はMERGED。AGRの正式記録と両ブランチ文書は既に#6394・#6395で同期済みであり、本追補はその後の進展を記録する。
+
+**CLOSED — 外部有限被覆仮定の除去。** 元の単位3球面の実ステレオ逆写像の連続性・極以外の全射性、有理3変数の稠密性、対蹠写像、元SU(2)との等距離対応、コンパクト性から、任意の実半径 `r>0` に対する真正SU(2)の有限有理中心被覆を構成した。AGTはこれを全真正空間リンクへ直積し、任意H・正の有理Rについて、元AGH Borel格子と全リンクのAGL有理座標証拠を保ち、`grid.radius ≤ R` となる格子の存在を形式証明した。元リンク数Lに対して一リンク半径を `R/(L+1)` と選び、積距離の次元因子Lを保持する。
+
+**証明済みの接続と型の境界。** AGQは選択済みの真正格子について、セル数Nの決定後に `delta=eps/(2*(N+1))` を選び、真のproduct-Haar質量を含む有理区間の総幅 `≤eps` を保証する。AGTはこの構成をAGPへ接続し、有理座標を持つ元右境界Bと `n>0` に対する元signed-transferの証明済み区間を返す。ただしAGTの後段 `exists_fineOriginalGridData` の結論は予算を添字に持たない `Nonempty (AGP_gridData H)` であり、それを `Classical.choice` した `fineOriginalGridData` には、指定R・epsへの適合を取り出す定理がまだない。最初の格子存在定理と区間の包含保証は成立しているが、**選ばれた後段データの要求予算保存をAGTの結論として扱わない**。次段AGUでは半径・各セル半径・質量総幅を保持する添字付きTypeを追加する。
+
+| 検証 | AGS | AGT |
+| --- | --- | --- |
+| exact-source CI | [#42196369171](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42196369171) | [#42208149754](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42208149754) |
+| Changed Lean依存閉包 | 11,354/11,354 SUCCESS | 11,355/11,355 SUCCESS |
+| 新規公理出力 | 10宣言・標準3公理のみ | 5宣言・標準3公理のみ |
+| sorryAx／変更Lean warning・error | なし／0・0 | なし／0・0 |
+| workflow・Lean job/step・receipt | completed/SUCCESS | completed/SUCCESS |
+| source/test-merge/squash Git tree | 三者一致 | 三者一致 |
+
+AGTのBool分岐は各分岐の `simp` で正規化し、Type値の有理座標証拠は `Nonempty` で命題中に保持した。AGTのPR一覧は積み上げ由来のAGS・AGT二件だが、AGS統合後の正本への追加はAGT新規139行のみ。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`、元物理定義・公開root・workflowは不変更。
+
+**OPEN**：後段の選択データにおける要求予算の型付き保存、最終signed区間幅の任意精度評価、具体的大体積Haar質量表の計算、元transferの実際の非零符号、二閾値殻、H一様coercivity、Hamiltonian gap、連続体Yang–Mills質量ギャップ。有限被覆・質量包囲は古典的存在構成であり、数値表の実行ではない。
+
+[AGS正式証明記録](docs/proofs/P4-Q2-PZ37AGS_verified_20261106.md) · [AGT正式証明記録](docs/proofs/P4-Q2-PZ37AGT_verified_20261106.md)。以下のAGR以前の全文を保持し、過去の「未証明・次段階」の更新には本追補を優先する。
+
+---
+
+## 検証済み定理 — AGR／真正SU(2)有理ステレオ中心と条件付き細分Haar証明書（2026-11-06 JST）
+
+[定理PR #6393](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6393) MERGED、[exact-source CI #42190751075](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42190751075) **11,353/11,353 SUCCESS**。新規7宣言は標準公理のみ、sorryAxなし、変更Lean warning/error 0/0、source/test-merge/squash Git tree一致。canonical定理squash `59994f8cf41f3eddf572be118abb53e710185c13`。
+
+**CLOSED**：任意の有理3変数から `((1-s)/(1+s),2a/(1+s),2b/(1+s),2c/(1+s))`（`s=a²+b²+c²`）を元の単位3球面に正確に構成し、既証明ADS逆写像で元の真正SU(2)行列へ移送。AGLの4座標有理証明と元Wilson作用の厳密有理値を得た。さらに**有限真正被覆の証明が入力された場合に限り**、元AGH Borel格子・AGQ真のHaarセル質量の任意総幅予算・AGP元signed-transferのtighten-only区間を構成した。元物理量は不変更。
+
+**OPEN**：有理ステレオ中心の元SU(2)全域稠密性と任意精度有限被覆の無条件形式証明（現モジュールの`hCover`は仮定）、具体的大体積質量表・非零signed transfer符号・二閾値殻・H一様coercivity・Hamiltonian gap・連続体質量ギャップ。Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`、元SU(2)・Haar・source・kernel・公開root・workflow維持。[正式証明記録](docs/proofs/P4-Q2-PZ37AGR_verified_20261106.md)。AGQ以前の本文を全バイト保持する。
+
+---
+
+## 検証済み定理 — AGQ／真のHaar質量の有限格子後置精度予算（2026-11-06 JST）
+
+唯一のLean正本は `formal/real-hilbert-uniform-coercive-strong-limit`。[AGQ定理PR #6390](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6390) MERGED。元のBorel格子Nセルの真のproduct-Haar実質量に対し、正の有理総幅epsを指定し、各セルの有理包囲半幅を `delta=eps/(2*(N+1))` とセル数が決まってから選ぶ。質量端点 `[q_i-delta,q_i+delta]` は元の真の質量を含み、区間幅総和 `N*eps/(N+1)<=eps` を形式証明。AGPの元有理中心・セル半径の証拠を使えば、外部Haar質量区間の入力なしで、元signed transferのverifiedIntervalと以前の区間とのtighten-only交差へ接続できる。
+
+[exact-source CI #42178646756](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42178646756)：11,352/11,352 SUCCESS、新規9宣言は標準公理のみ、sorryAxなし、変更Lean warning/error 0/0、独立receipt SUCCESS、source・test-merge・squashのGit tree一致。squash `1c19b6396248e74cce912204b68a59532e5ed514`。初回CIの有限和binder scopeの`Unknown identifier i`は全4箇所の被加算項を括弧化して解消した。
+
+OPEN：この有理包囲は真のHaar測度に対する古典的存在選択で、具体的質量数表の実行ではない。任意の細分で有理座標中心を確保するLean証明と高精度の有効計算は別課題。元のsigned transfer非零符号・二閾値殻・H一様coercivity・Hamiltonian gap・連続体質量ギャップは未証明。正式記録：`docs/proofs/P4-Q2-PZ37AGQ_verified_20261106.md`。既存のAGP以前の本文は全バイト保持する。
+
+---
+
+## 検証済み定理 — AGP／元の中心依存・セル別signed Haar証明書（2026-11-06 JST）
+
+唯一のLean 4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。[AGP定理PR #6387](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6387) はMERGED。検証済みsource `fc93e5ca42aeef85dce18ed192032c682d2fb235`、定理squash `57be141cd5d21158b5981469bb8f09b073f3ea8f`。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。
+
+### CLOSED — 中心依存の元integrand変動係数とセル別の真正積分
+
+元の連続代表 `g_B(A)=f_H(A)(K_H(A,B)-(1+k_H)/2)` に対し、中心C依存の変動係数 `6(1-k_H)+13 beta0 |f_H(C)|` によって `|g_B(A)-g_B(C)| <= coefficient(C)*D_H(A,C)` をLean 4証明。AGNの厳密中心化から `|f_H(C)|<=p_H/2` となり、旧AGGの一様源振幅項 `13 beta0 p_H` を `13 beta0 p_H/2` に改善する。係数全体が半減するとの主張ではない。
+
+真正AGH格子にセルごとの認証有理半径 `r_i`、元有理座標中心、真正Haar質量区間を保持し、`eps_i = c_i r_i` と実中心値のAGM/AGN有理区間からセル全体の端点 `max(-R_H,a_i-eps_i)`、`min(R_H,b_i+eps_i)` を構成。元のAGI signed min/max評価器を幾何パラメータ0で再利用し、同じ元transferの真正Haar積分を包囲した。旧AGIの証拠構造は変更せず、既存証明済み区間との交差はtighten-onlyである。
+
+### exact-source CI とOPEN境界
+
+新規Lean葉1ファイル、394行追加・既存行削除0、17公理監査。[CI #42175738816](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42175738816) はworkflow、Lean job・step、独立completion receiptすべてcompleted/SUCCESS、11,351/11,351 jobs成功、17宣言は標準公理のみ、sorryAxなし、変更Lean warning/error 0/0。source/test-merge/squash共通Git tree `2324f41dd6fd7b9c0579cac6967caccc278a3350`。
+
+本段は有理座標中心・各セルの真正Haar質量・認証半径を与えた際の健全な評価であり、任意精度の**具体的な計算可能細分格子と質量数表**を完成させたわけではない。元transferの実際の非零符号、二閾値殻、H一様coercivity、物理Hamiltonian gap、連続体4D Yang–Mills質量ギャップはOPEN。次は真のSU(2)細分格子とHaar質量の具体化、または元Haarモーメントの直接評価。正式記録：`docs/proofs/P4-Q2-PZ37AGP_verified_20261106.md`。
+
+以下のAGO以前の本文は全バイト保持する履歴とし、旧「次段階」より本追補を優先する。
+
+---
+
+## 検証済み定理 — AGO／固定24中心signed-transfer幾何障害（2026-11-06 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。[AGO定理PR #6384](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6384) はMERGED。定理squash `c6f0b5b3ed640774f5539813f33c75259224f6ca`、検証済みsource `82dc6a7bae92b40fbff48f23ddc778fb1f552e5d`。元SU(2)・Wilson作用・固定結合・Haar/Perron・中心化source・transfer・公開root・Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` は不変更。
+
+### CLOSED — 真正24中心の幾何誤差がsigned証明書を飽和させる
+
+AGNの元24中心格子について、元空間リンク数と元plaquette数はともに `p_H`。これは元空間頂点数に3空間方向／3方向対を掛けた真正有限型の等式であり、列挙Fintype instanceの選択に依存しない。`m,n`、`0<n` の任意の精密化次数、任意の有理座標右境界Bについて、元transferの独立大域包囲半径
+
+`R_H = p_H*(1-floorLower_H(m,n))/4`, `0<=R_H<=p_H/4`
+
+と元24中心格子の有理幾何誤差
+
+`gamma_H = (6+13*betaUpper(m)*p_H)*(4/5)*p_H >= (24/5)*p_H >= 2*R_H`
+
+をLean4で示した。真正Haarの各セル実質量の合計は1である一方、区間**上端**の合計は1以上であり、これを正しく保持する。
+
+AGIの符号を保持した`min/max`演算に対し、元の中心値の真の有理区間と `|g_B(A)|<=R_H` から、粗い格子のraw区間端点が
+
+`rawLower_H <= -R_H`, `rawUpper_H >= R_H`
+
+を満たす。AGNの独立大域区間との交差は常に**ちょうど `[-R_H,R_H]`**。したがってこの固定24中心・現行幾何誤差の証明書は、真正元右境界で正負どちらの符号判定も成立させられない。これは元transfer `t_H(B)` が0である、実際の符号を持たない、または他の細分方法でも判定不能であるという命題ではない。
+
+### exact-source CI と修正理由
+
+新規Lean葉 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFixed24SignedGeometryObstructionV5_PZ37AGO.lean` **1ファイル377行追加、既存行削除0、12個の公理監査**。[最終CI #42169865632](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42169865632) はworkflow・Changed Lean job `127734898892`・Lean step・独立receipt job `127736380281` がすべてcompleted/SUCCESS。**11,350/11,350成功**、12宣言すべて `propext`・`Classical.choice`・`Quot.sound` の標準公理だけ、`sorryAx` なし、変更Lean warning/error 0/0。source `82dc6a7b...` とtest-merge `9feb90a8673e38e7bfc147ba3f7c1991a2c7c586` とsquash `c6f0b5b3...` のGit treeは `60763de825d87805002e42445325e4b7121bd315` で完全一致。
+
+初期8宣言のLean stepは成功したが、追加した有限型の数え上げで、`simp [Fintype.card_eq_nat_card]` が `Nat.card_eq_fintype_card` と循環し、旧CI #42169137984 はmaximum recursion depthに失敗した。定理・仮定は変えず、`Finset.length_toList`・`Finset.card_univ`・`Fintype.card_eq_nat_card` を指定した `simp only` に修正。heartbeatや再帰深度を増やす回避はしていない。
+
+### OPEN — 次の真正空間計算
+
+固定24中心の球半径 `4/5` と粗いproduct Haar質量区間を維持したまま、結合級数・指数Taylor次数だけを増やしても非零符号は認証できない。次段は真正SU(2)の細分格子、各セルの認証Haar質量、元source・kernelの局所振動の鋭い上界、または直接モーメント／相関積分を接続する。有限体積での符号分離さえ未認証であり、二閾値殻、H一様coercivity、物理Hamiltonian gap、連続体4D Yang–Mills質量ギャップは未証明。
+
+正式記録：[AGO証明記録](docs/proofs/P4-Q2-PZ37AGO_verified_20261106.md)。以下のAGN以前の本文は変更しない履歴であり、旧「次段階」表現より本追補を優先する。
+
+---
+
+## 検証済み定理 — AGN／元Wilson Haar平均の厳密計算とsigned transfer自動証明書（2026-11-06 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。[AGN定理PR #6381](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6381) はMERGED。AGN定理squashは `c648bd88566d1e5bf06324ada997ab37918cb12c`。 元SU(2)・Wilson作用・核・固定結合・source・Haar/Perron/transfer/FF・Lean公開集約root・Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を維持。
+
+### CLOSED — 中心化で差し引く元Wilson作用の平均を厳密化
+
+元の空間plaquetteの4本のリンクが全H（H=0を含む）で異なることを証明し、元product Haarの4リンク制限、既証明cyclic Haar word、元Wilsonエネルギーの共役不変性から各plaquetteの平均を1と導いた。積分の線形性で **`m_H=integral W_H dmu_H=p_H`** が成立する。p_Hは元plaquette listの長さである。異なるplaquette間の独立性を仮定していない。元中心化源 `f_c=(W_H-p_H)/2` の平均は0であり、その連続代表の点wise上界をp_Hから **p_H/2** へ改善した。
+
+AGLの厳密有理作用値から、任意の元有理座標配置で中心化源の幅0の有理区間を構成。未知の中心化定数の近似入力を除いた。
+
+### CLOSED — 真正Haar質量・元指数核からAGI全証明欄を構成
+
+既存AFQ/AGDの24中心product cellsを、実際の中心と半径 `(4/5)*L` を持つAGH格子に接続。真正Haar質量の区間 `[(1/160000)^L,(625/1781)^L]`、真正質量総和1、符号付きセル積分の一般包含を構成した。独立した元Wilson平均の有限区間も保持する。
+
+AGK・AGJ・AGMから元global floorの自動有理区間を構成。厳密な元中心化源、AGMの核区間、floor midpoint、元AGG幾何誤差、真正質量端点を接続して、任意の元有理座標境界のAGI signed tableを証明した。特に真正24中心境界では、追加の数値入力は結合次数m、Taylor次数n、n>0のみ。
+
+厳密平均と元kernel midpoint boundにより **`|t_H(B)| <= p_H*(1-ell)/4 <= p_H/4`** を証明した。ellは元floorの認証有理下端である。従来のp_H/2を少なくとも半分に改善し、AGI有限和の区間と交差して同じ元transferの情報を保持する。
+
+### exact-source検証
+
+[CI #42164476429](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42164476429) はworkflow・Lean job `127717599152`・Lean step17・独立receipt `127719202262` がすべてcompleted / SUCCESS。**11,349 jobs・43宣言（14+12+17）・標準公理のみ・sorryAxなし・変更warning/error 0/0**。新規Lean3ファイル・1,013行追加のみ。
+
+検証済みsource `7ab237c1bfb08c85d6ff9031b208b575b23b30b5`、実checkout test-merge `5f902a43cb2e046d3164779fe87fc2c8b51f1bbd`、定理squash `c648bd88566d1e5bf06324ada997ab37918cb12c` のGit treeはすべて `c6d6dc1d045edb21a42a52a0b8682836dfb6176e`。
+
+[AGN正式記録](docs/proofs/P4-Q2-PZ37AGN_verified_20261106.md) · [厳密平均](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/c648bd88566d1e5bf06324ada997ab37918cb12c/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalExactWilsonHaarMeanV5_PZ37AGN.lean) · [真正質量・平均包囲](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/c648bd88566d1e5bf06324ada997ab37918cb12c/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalHaarMeanEnclosureV5_PZ37AGN.lean) · [自動signed証明書](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/c648bd88566d1e5bf06324ada997ab37918cb12c/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalAutomaticSignedSpatialCertificateV5_PZ37AGN.lean)
+
+### AGK・AGL・AGMの記録追補
+
+[AGK #6376](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6376)・[AGL #6377](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6377)・[AGM #6380](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6380) はMERGED。元結合の任意精度包囲、元行列規約に従う厳密有理作用、整数尺度自動選択を経て、真正24中心核の有理区間を構成した。AGM [CI #42158675778](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42158675778) は11,346 jobs・9宣言・標準公理のみ・sorryAxなし・変更warning/error 0/0・receipt SUCCESS。source/test-merge/squashは共通tree `ff9b5391d4bea5ae8e3b0e38942823ba939fcc1e`。
+
+[AGK・AGL正式記録](docs/proofs/P4-Q2-PZ37AGK-AGL_verified_20261106.md) · [AGM正式記録](docs/proofs/P4-Q2-PZ37AGM_verified_20261106.md)
+
+### OPEN — 実際の符号分離と幾何・質量誤差の精密化
+
+元の有限列挙は非計算的定義を含み、24^L個の大体積数値表を実行した段階ではない。固定24中心の半径4/5と保守的な真正質量区間は粗く、m,nの増大だけで幾何・質量誤差が消えるとは結論しない。定義と不等式の数式確認では、現行の幾何予算は対称大域半径の2倍以上であり、raw signed intervalが大域区間全体を含むため、現在の最終交差は大域区間と同じになる（この精度評価は独立の新規Lean宣言としては数えていない）。次は厳密平均を利用した幾何誤差の改善、元Haar質量の精密化または積分の構造的簡約、具体的境界での認証区間の0からの分離である。
+
+実際の非零signed transfer符号、二閾値殻非空、体積一様coercivity、Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは未証明。
+
+以下の既存本文は全て保存した履歴であり、旧「最新・次段階」よりこの追補を優先する。
+
+---
+
+## 検証済み定理 — AGJ（2026-11-06 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。[AGJ定理PR #6372](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6372) はMERGED。定理squash `f24be7665c82a40051873c7fcc3df65c1fc27b06`、検証済みsource `726c93be12e6f3eeb6cb4ae7b80a3b39330eb83d`。元Wilson作用・核・固定結合・中心化source・真正Haar/Perron/transfer/FF・公開root・Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` は不変更。
+
+### CLOSED — 元Wilson指数核の有限有理Taylor包囲
+
+`P_n(q)=sum_{j<n} q^j/j!`、`R_n(q)=|q|^n(n+1)/(n!*n)` を計算可能な有理式として実装。`|q|<=1`、`n>0` で固定mathlibの `Real.exp_bound` から `|exp(q)-P_n(q)|<=R_n(q)` を証明した。正整数kによる `exp(q/k)^k=exp(q)` で指数の大きさを処理し、下端 `max(0,P_n-R_n)` を非負にしてから累乗する。負の下端を偶数乗して誤った正下界を作らない。
+
+元の実数xが有理区間[lo,hi]に入り、`|lo/k|<=1`、`|hi/k|<=1` が成り立てば、計算可能な `expLower(lo,k,n)` と `expUpper(hi,k,n)` で実際のexp(x)を包囲するAFV証明付き区間を構成した。未知の指数値に対する区間oracleや非計算的な有理選択は必要としない。
+
+### CLOSED — 元固定結合の無条件有理包囲と真正核への接続
+
+五項Taylorの正確な有理計算により `exp(2/5)<3/2<exp(13/32)` を証明。既証明の元結合恒等式 `exp(64 beta0)=3/2` と単調性から **`1/160<beta0<13/2048`** を無条件に導いた。beta0自体は元の `log(3/2)/64` のままであり、小数値を物理的仮定として代入していない。
+
+非負の元one-slab作用 `S_H(A,B)` に対する証拠付き区間[s_lower,s_upper]から、`-beta0*S_H(A,B)` の区間 `[-(13/2048)*s_upper,-(1/160)*s_lower]` を構成し、元Boltzmann恒等式で **真正 `K_H(A,B)=exp(-beta0*S_H(A,B))` の有理区間・AGA有理球**を得る。作用0なら核1、作用64なら核2/3の校正定理は、それぞれ元作用の等式を明示的入力とする。作用64の具体的配置の存在を主張していない。
+
+### exact-source検証とLean4修正
+
+新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalKernelTaylorIntervalV5_PZ37AGJ.lean` 1ファイル279行。既存Lean変更なし。[最終CI #42106035057](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42106035057) はworkflow・Changed Lean job `127520984143`・Lean step・独立receipt `127523984881` がcompleted/SUCCESS。artifact `13452332224` を取得・実検査し、**11,343 jobs成功**、14宣言の公理依存は標準公理のみ、sorryAxなし、変更AGJ warning/error 0/0。SHA-256 `e265fd9a6a4545f0aa9ec95a0081cf7379a42c78375678ebab81bdb23f642273` も一致。
+
+source・test-merge `2aa1e0528d7e33e5d3d9bdce56ea1827c7d549c0`・squashは共通tree `bfdad9a8531b2520962de5e03fd39254b00c5ab5`。初回CI #42104807540 は固定結合証明の区間構造体をhaveで束縛したため展開できず、有理数から実数へのcastも不一致となった。構造体をletで保持し、Rat.cast_ltと明示的cast簡約へ修正。定理文・仮定は不変更。結合の有理不等式・負端点clip・零指数の3回帰例も最終ビルドで検証した。
+
+### OPEN — 具体的原作用・質量・中心化平均
+
+固定結合区間には正の幅があるため、Taylor次数を上げるだけで全核区間の幅がゼロに収束するとは結論しない。元作用の具体的区間、真正Haarセル質量、中心化平均は別途評価が必要。次段は真正中心配置の元Wilson作用を成分別に有理評価し、AGJの核区間とAGIの証明書へ接続する。実際の非零signed transfer符号、二閾値殻非空、体積一様coercivity、Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは未証明。
+
+以下のAGI以前の本文は全バイト保存した履歴であり、旧「最新・次段階」よりこの追補を優先する。
+
+---
+
+## 検証済み定理 — AGI（2026-11-06 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。[AGI定理PR #6370](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6370) はMERGED。squash `0601f8fd80737c6ad4e66e28bd8b1bf9be15e099`、exact-source `16e34e7f25d12bd234d8b71b69f452b565eb895d`。真正Wilson/Haar/Perron/transfer/FF・元中心化source・公開root・Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` は不変更。
+
+### CLOSED — 符号を保持する有限有理区間評価
+
+計算可能な `rationalTable` と、元の中心値・真正Haar質量・元AGG変動係数との整合を要求する `certifiedTable : Prop` を分離した。中心区間[a_i,b_i]、真正質量区間[m_i,M_i]、有理幾何誤差gammaについて、l_i=a_i-gamma、u_i=b_i+gamma とし、`L=sum_i min(l_i*m_i,l_i*M_i)`、`U=sum_i max(u_i*m_i,u_i*M_i)` を正確な有理数演算で計算する。真正下側・上側Haar階段関数を元測度で積分し、AGEの同一性を使って **`L<=t_H(B)<=U`** をLean4証明した。負のセル係数では反対側の質量端点を使うため、符号を失わない。
+
+元量との整合証拠がある表に限り、Boolean有理判定 `0<L` から真正 `0<t_H(B)`、`U<0` から真正 `t_H(B)<0` を導く。同一H・同一Bの異なる分割の証明済み区間を[max L,min U]で交差でき、正しい二証明書が相反する符号を認証しないことも証明した。AFV `verifiedInterval`・AGA `rationalBall` への接続を保持する。
+
+### 検証・修正理由
+
+新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalSignedSpatialIntervalCertificateV5_PZ37AGI.lean` 1ファイル384行、既存Lean変更なし。[exact-source CI #42063129806](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42063129806) はworkflow・Lean job `127369907250`・Lean step・独立receipt `127373820378` がcompleted/SUCCESS。artifact `13433910241` の診断で **11,342 jobs成功**、13公理依存出力は標準公理のみ、sorryAxなし、変更AGI warning/error 0/0。artifact SHA-256 `5272b4267d34dba8ec5851b51e3266e548b0b3922fae0c47e4c6e2a3a7ad72d2` も一致した。
+
+source・test-merge `3b2c63dc00156449ca17fb268444ed68c0a6ae94`・squashの共通Git treeは `1331e3d69c448a4a957a20a859c1c2ad91ccd36e`。初回CIでは有理演算のdecide簡約と共有境界変数の解決が失敗したため、同じ命題をnorm_numで証明し各定義に `{boundary : Cfg}` を明示した。仮定・結論を弱めていない。正・負・幾何誤差による判定不能の3回帰例は合成算術テストであり、実際のWilson/Haarデータとは主張しない。
+
+### OPEN — 元作用からの区間生成
+
+AGIは与えられた証拠付き区間表の健全性であり、実際の非零transfer符号を認証した結果ではない。次段AGJでは固定結合と元Wilson指数核の有理包囲を、有限Taylor演算と剰余評価から構成する。元作用・Haar質量・中心化平均の入力評価を混同しない。二閾値殻非空、体積一様coercivity、Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは未証明。
+
+以下のAGH以前の本文は全バイトを保存した履歴であり、旧「最新・次段階」よりこの追補を優先する。
+
+---
+
+> main文書ミラー：定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。Leanファイルは移送しない。
+
+## 検証済み定理 — AGH（2026-11-06 JST記録）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` は文書ミラー。[AGH定理PR #6367](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6367) は2026-11-05 JSTに **MERGED**。定理squash `71627744b2e7a57b2ff93e60f2fe16ae9e55bea4`、最終exact-source `31ca7e9947a27e50fc2b1656e68218810325ed15`。AGGまでの真正Wilson/Haar/Perron/transfer/FF、元Gauss-law中心化source、公開root、Lean `v4.30.0-rc2` とmathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` は不変更。
+
+### CLOSED — 全右境界に共通の任意精度・真正空間Haar求積
+
+各固定有限体積Hと任意epsilon>0について、元空間配置の真正Borel有限分割・真正中心・有理Haar重みを一度選べば、すべての元右境界Bで `|t_H(B)-sum_i q_i(B) w_i|<epsilon` となる証明書の存在をLean4で証明した。分割・中心・重みはBに依存せず、中心値の有理標本だけがBに依存する。AGCの真正積分評価とAGEのHaar-a.e.等価性から、元のsigned transferそのものへ接続している。
+
+AGGの元空間弦距離斜率 `L_H=6(1-k_H)+13 beta0 p_H`、AGFの真正被積分関数上界 `M_H=(1-k_H)p_H/2`、元リンク数ell_Hを使用する。`tau=epsilon/4`、`r=tau/(L_H ell_H+1)` を選び、ADPの真正SU(2)有限ネットからAFNのfirst-center Borelセルと元リンク積を構成。積距離半径は正しく `ell_H r` であり、次元因子を省略しない。
+
+**セル数が確定してから質量精度を選ぶ。** 実際の積セル数Nを得た後に `delta=tau/(N(M_H+tau)+1)` と定める。すべてのBで `|q_i(B)|<=M_H+tau` なので、幾何誤差 `L_H ell_H r`、中心値有理近似誤差tau、Haar質量誤差の総和 `sum_i |q_i(B)| delta` を各tau以下に抑え、総誤差 `<=3epsilon/4<epsilon` を証明した。細分化だけで質量誤差総和が縮むという推論は使わない。分母の+1は零リンク・零振幅を含む退化場合も扱う。
+
+`p4Q2PZ37AGH_exists_uniformQuadrature`、`p4Q2PZ37AGH_uniformQuadrature_accuracy` と任意の正の有理半径への `p4Q2PZ37AGH_originalTransferRationalBall` を追加。「全右境界Bで共通」は固定Hの一様性であり、Hについての一様性ではない。
+
+### exact-source検証と記録訂正
+
+新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalUniformSpatialHaarQuadratureV5_PZ37AGH.lean` 1ファイル・423追加行、既存Lean変更なし。[最終CI #42033094163](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42033094163) はworkflow・Changed Lean job・Lean step・独立completion receiptがcompleted/SUCCESS。診断artifact `13416763826` の `lean-fast.log` を再検査し、**11,341/11,341 SUCCESS**、新規16宣言は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、変更AGH warning/error **0/0** を確認。
+
+source、test-merge `21ff2dbf30ac7a24b7618bb052a4be755b7459bc`、定理squashの正しい共通Git treeは **`c7cc67bf68af2c64ff60ef7f92fc9920ecb250ce`**。前PRコメントの `dbcb336f...` は転記誤りで、Git-commit APIの三者再取得により訂正した。独立completion receiptの正しいjob IDは `127267191687`。訂正はPRにも追記し、元記録は削除していない。証明修正は積セル所属のリンク型の明示と、加法不等式の両項を `add_le_add`・`le_refl` で対応させたもの。定理文・物理的仮定の弱化なし。
+
+### OPEN — 数値表の評価とAGIへの接続
+
+有限ネット・有理包囲は依然として古典的な非計算的選択を用いる。今回確定したのは任意精度の求積証明書の存在であり、具体的な中心値・Haar質量の有理数表を算出したという意味ではない。次段AGIでは、供給された有理区間と元の真正量との整合証拠を入力とし、有限の区間演算から元transferの上下界・符号へ接続する形式化を進める。実際の正負分離、二閾値殻非空、体積一様coercivity、Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは未証明。
+
+以下のAGG以前の本文は全バイトを保存した履歴。旧「最新・次段階・OPEN」よりこの追補を優先する。
+
+---
+
+## 検証済み定理 — AGG（2026-11-05 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` はREADME・ROADMAPの文書ミラー。AGF定理 #6361・正本文書 #6362・mainミラー #6363 のすべてのMERGEDを継承し、[AGG定理PR #6364](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6364) は **MERGED**。検証済みexact-source HEAD `5e87f9091f9b2bfbdfb9b3ae83d520ac0ffd1946`、AGG定理squash SHA `e987e7cd3481d14e30a74357a7bccccf3497721a`。真正SU(2) Wilson作用・正規化空間Haar・ZW中心化Gauss-law source・元one-slab Perron/transfer/FF、Lean/mathlib pins、公開rootは一切変更しない。
+
+### 真正空間リンク弦距離による無条件Wilson振動係数
+
+- **元の物理幾何に対する有限座標telescoping**：ADKの真正SU(2)弦距離 `d_J` と元空間リンクの有限集合に対し `D_sp,H(A,C)=Σ_e d_J(A_e,C_e)` を定義。AEMで無条件証明済みの空間Wilson作用1リンク斜率24とAEP/AETの有限座標Lipschitz移送から、元AFZの真正連続中心化source `f_c(A)=½(W_c(A)−m_H)` について **`|f_c(A)−f_c(C)|≤12 D_sp,H(A,C)`** をLean4証明。元のHaar平均は差分で厳密に消去し、任意のL²代表元との不正な点wise同一視をしない。
+- **真正one-slab核の第一境界変動を証明**：AEMの右側1リンク核係数 `13β₀` と既証明の元対称Wilson核 `K_H(A,B)=K_H(B,A)` を合わせ、全空間リンクへのtelescopingで **`|K_H(A,B)−K_H(C,B)|≤13β₀ D_sp,H(A,C)`** を証明。代理核・独立Haar・新しい正則性仮定は導入しない。
+- **真のAGE連続被積分関数の積差分評価**：AGBの真正核中点半径 `(1−k_H)/2`、AGFの`|f_c|≤p_H`、上記の真正source/核差分を積の差の恒等式で接続して、**`|g_B(A)−g_B(C)|≤L_H D_sp,H(A,C)`** を無条件形式証明。係数は **`L_H=6(1−k_H)+13β₀p_H≥0`**。ここで`g_B(A)=f_c(A)(K_H(A,B)−(1+k_H)/2)` は元AGEの真正連続代表元そのもの。各有限Hで成立するが`p_H`・`k_H`を含むため体積一様係数とは主張しない。
+- **真正24中心Haar積セルを直接評価**：AGE・AGDの実際のAFQ指定中心 `a_i` と真正空間積セルの既証明半径`d_J(A_e,a_{i,e})≤4/5` から、**`D_sp,H(A,a_i)≤(4/5)|Link_H|`** を証明。これによりAGEの外部仮定不要な幾何学的`originalSpatialOscillation`を`ε_geom=L_H(4/5)|Link_H|`で構成。
+- **tighten-only hybrid証明書を構成**：AGFの元全球上界`ε_global=(1−k_H)p_H`と新幾何上界から **`ε_H=min{ε_global,ε_geom}`** を真正AGE積セルに対して無条件に導出。元AGEの真正signed transfer有理求積に直結し、**`|t_H(B)−Σ_i q_iw_i|≤ε_H+1/64+Σ_i|q_i|δ_i`** を保持する。AGDの固定24中心セルでは`ε_geom`が`ε_global`より小さいとは限らないため、「数値誤差が厳密に減少した」とは主張しない。`q_i`はAGEの非計算的な有理稠密選択で、具体的な評価済み有理表ではない。
+
+### exact-source Lean4・公理監査・source/test-merge一致
+
+- AGGで追加したのは新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalSpatialChordalCellOscillationV5_PZ37AGG.lean` **1ファイル・382追加行**のみ。既存Lean、元物理量、workflow、公開root、Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` は不変更。
+- 初回sourceの絶対値積差の証明で`abs_mul`と三角不等式の順序を確認し、証明本体を明示的`calc`に修正した。元の定理文・既存物理的仮定は変更なし。修正後の最終[exact-source CI #42025445563](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42025445563)は **11,340 / 11,340 SUCCESS**。`#print axioms`新規13件すべて`propext`・`Classical.choice`・`Quot.sound`のみで`sorryAx`なし、変更AGG warning/error **0/0**、独立MCP completion receipt **SUCCESS**。
+- CI検証済みsource `5e87f9091f9b2bfbdfb9b3ae83d520ac0ffd1946` とGitHub test-merge `c9f00398fc0511a9ce1ccd1c7f4ac2503cb39fce` はGit tree `8194ed45d609844a52963e76766a173994e5d698` で完全一致。検証済みHEAD指定で定理をsquashマージした。
+
+### 未解決obstructionと次の研究
+
+幾何学的なゼロ距離連続性と真正積セルの証明書は得られたが、固定24中心の粗いセル半径と高次元のAGD Haar質量区間は保守的。非計算的有理`q_i`の実効的な区間評価、真正transferの非零符号分離、二閾値殻非空、体積一様coercivity、Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは引き続き**未証明**。次段はより小さな真正AFQ/ADPネットセルと、具体的なHaar質量およびWilson被積分関数の区間演算による誤差縮小・符号判定証明書を検討する。
+
+---
+
+## 検証済み定理 — AGF（2026-11-05 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` はREADME・ROADMAP文書ミラー。AGE定理PR #6358、正本文書 #6359、main文書ミラー #6360 のMERGEDを継承し、[AGF定理PR #6361](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6361) も **MERGED**。検証済みexact-source HEAD `933d72ac12cfa5f8182067f22689c078d2cfa1a0`、AGF定理squash SHA `d78801d20f0c38466176c8442d0ea434cf50d1e1`。元の真正SU(2) Wilson/Haar、ZW Gauss-law中心化物理source、元のone-slab Perron/transfer/FF、AFQ指定24中心とAGD積セル、固定Lean/mathlibを変更しない。
+
+### 元の中心化Wilson sourceと真正核からセル内振動上界を無条件導出
+
+- **点wiseに正しい連続代表元だけを評価**：AFZの元空間Wilson連続作用 `W_c(A)`、元の真正Haar平均 `m_H`、実際の空間plaquette列長 `p_H` を使用。証明済み `0≤W_c(A)≤2p_H`、`0≤m_H≤2p_H` から、元の連続中心化source `f_c(A)=(W_c(A)−m_H)/2` に対して、全真正空間配置 `A` で **`|f_c(A)|≤p_H`** をLean4で証明。任意のL²代表元の値を点ごとに同一視せず、AGEのHaar-a.e.等価性と真正積分値を継承する。
+- **真正one-slab核の定数相殺を保持**：AGBで証明済みの元Wilson核範囲 `k_H≤K_H(A,B)≤1` と真正中点 `(1+k_H)/2` を使用。`g_B(A)=f_c(A)(K_H(A,B)−(1+k_H)/2)` について、全ての元境界 `B` と空間配置 `A` で **`|g_B(A)|≤(1-k_H)p_H/2`** を形式証明した。独立の核やsourceを導入しない。
+- **無条件の全域振動証明書**：上記の絶対値上界から、全真正空間配置 `A,C` について `|g_B(A)−g_B(C)|≤(1-k_H)p_H≤p_H` を証明。`k_H>0`、`k_H≤1` は既存のWilson核定理に由来する。これをAGDの真正24中心リンク積セルすべてへ適用し、AGEの `originalSpatialOscillation` を **`epsilon=(1-k_H)p_H`** と、計算しやすい保守的な **`epsilon=p_H`** の2系統で、外部の振動仮定なしに構成した。
+- **AGEの真正signed transfer有理求積へ直接接続**：AGEで構成した真正物理中心値からの非計算的有理標本 `q_i` と、AGDで証明した元Haar積セル質量の有理重み `w_i`・誤差 `δ_i` をそのまま利用し、外部の物理振動入力なしで **`|t_H(B)−∑_i q_iw_i|≤p_H+1/64+∑_i|q_i|δ_i`** をLean4で証明。定理は実際の元signed transfer積分に適用され、代理測度・代理物理量に降格していない。
+- **限界を明示**：振動上界は全球的な値域から導いたため、AGDセルの真正弦距離半径 `4/5` はまだ誤差縮小に使用していない。AGEの `q_i` は非計算的な有理密度選択であり、実際に算出した数値標本ではない。したがって非零transfer符号を確認したとの主張はしない。
+
+### Exact-source Lean4 CI・公理監査・ソース一致
+
+- AGFで変更したのは新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalAutomaticSpatialHaarOscillationV5_PZ37AGF.lean` **1ファイル・207行**だけ（`#print axioms` 8件）。既存Lean、Wilson/Haar/transfer/Perron/FF、固定Lean `v4.30.0-rc2` とmathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`、workflow、公開rootは不変更。
+- 初回CI #42019752887は固定mathlibの三点不等式 `abs_sub_le a b c` を二引数で使用したため不成功。このため後続定理に一時的な`sorryAx`が伝播した。変更AGF全文と依存署名を照合し、中間点 `0` を明示して修正。定理文や既存物理的仮定の弱化はない。
+- 最終[exact-source CI #42020515257](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42020515257) は **11,339/11,339 SUCCESS**。新規8件の公理依存は標準 `propext`・`Classical.choice`・`Quot.sound` のみで`sorryAx`なし、変更AGF warning/error 0/0、独立MCP completion receipt SUCCESS。source/test-merge Git treeは `9217f02c34bb8b6a11154988038653d006af2cf7` で完全一致した。
+
+### 未解決の物理的障害・次段AGG（研究候補）
+
+AGFはAGEのセル内振動入力を元の物理定理だけで解消したが、全球上界 `epsilon=p_H` は保守的で、高次元のAGD Haar質量区間誤差 `δ_i` も大きい。非零の具体的有理標本、真正transfer符号の厳密な正負分離、二閾値殻非空性、体積一様coercivity、Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは**未証明**。次段AGGでは元の空間Wilson作用・one-slab kernelの**各リンク弦距離に比例する変動係数**と、AGEで形式証明したAFQリンク半径`4/5`を接続し、真正セル内誤差を縮小することが課題。
+
+---
+
+## 検証済み定理 — AGE（2026-11-05 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` はREADME・ROADMAPの文書ミラー。AGD定理 #6355、正本文書 #6356、main文書ミラー #6357 のMERGEDを継承し、[AGE定理PR #6358](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6358) も **MERGED**。検証済みexact-source HEAD `384f0238b3a65e7889902717bec9d3be765ec65e`、AGE定理squash SHA `690670e85cae2ee27d2fb1d79e5e39ca1aebfb0b`。真正SU(2) Wilson作用・正規化Haar／全空間積Haar・元ZW Gauss-law中心化L² source・元one-slab transfer・Perron/FF・AFQ真正24中心は変更していない。
+
+### L²代表元から真正連続Wilson被積分関数への厳密な接続
+
+- **元の物理量だけを使用**：AFZの真正連続Wilson中心化source `f_c(A)=½(W_c(A)−m_H)` と、AGBの元の真正one-slab Wilson核 `K_H(A,B)` および実際の下界 `k_H` を組み、`g_B(A)=f_c(A)(K_H(A,B)−(1+k_H)/2)` を構成。元Wilson作用・核から `g_B` の連続性を証明し、元AGCのL²代表元を評価する被積分関数と **Haar-a.e.で一致すること**を証明。L²同値類の値があらゆる点で連続代表元と一致するとは仮定していない。
+- **真正transfer積分の同一性**：AFZのL²等式、`ContinuousMap.coeFn_toLp`、AGCの真正中心化核積分恒等式を接続し、`∫g_B(A)dμ_H(A)=t_H(B)` を形式証明。新規の代理source・代理Haar確率や置換transfer作用素は導入しない。
+
+### 真正AGD積セル上の有理中心と条件付き局所誤差
+
+- **真正24中心の有限リンク積**：AGDの各元空間リンク上の真正AFQ指定中心を並べた有限配置 `a_i` を構成。各AGD積セル内のすべての元空間配置 `A` について、各リンクの真正Wilson弦距離 `d_J(A_e,(a_i)_e)≤4/5` を証明。最初の中心によるBorelセルでは、指定中心自体がそのセルに属するとは仮定しない。
+- **実際の中心値の有理包囲**：`g_B(a_i)` をAFNの有理数稠密性から非計算的に選択した `q_i∈ℚ` で `|g_B(a_i)−q_i|≤1/64` と形式証明。これは真正物理値を数学的に包囲する*存在証明付きの選択*であり、測定・数値積分で得た計算済みの具体的な有理値表ではない。
+- **未解決のセル内振動を独立の証明入力として保持**：全AGDセル上の真正連続物理関数 `g_B` に対して、`|g_B(A)−g_B(a_i)|≤ε` を証明した入力 `epsilon≥0` がある場合に限り、セル内包含 `|g_B(A)−q_i|≤ε+1/64` を証明。これとAGDの真正空間Haar質量 `w_i,δ_i` を使い、**`|t_H(B)−∑_i q_iw_i|≤ε+1/64+∑_i|q_i|δ_i`** をLean4で形式証明する。
+- **既存AGA有理区間・厳密符号判定へ移送**：右辺を包含する証明付き有理半径 `r≥0` があれば元真正signed transferの `rationalBall` を生成。厳密な `r<∑q_iw_i` なら `t_H(B)>0`、`∑q_iw_i<−r` なら `t_H(B)<0`。実際に符号分離する非零中心・誤差半径を認証したとの主張ではない。AGCのL²代表元に対して不正なpointwise一致を要求するのではなく、同じ真の積分値を連続代表元で証明する独立経路とした。
+
+### Exact-source Lean4 CI・公理監査・Git tree
+
+- 追加Leanは `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalContinuousSpatialHaarCellwiseV5_PZ37AGE.lean` のみ（313行、`#print axioms` 10件）。既存Lean・物理量・workflows・公開root・Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` は不変。
+- 初回CI #42003757426は説明コメント中の `+/-` をLeanブロックコメント開始と解釈した字句監査エラーで不成功。次CI #42003973562では連続核の合成型判定タイムアウトと局所`cells.cell`記法の識別子解決エラーが生じた。Lean全文・imports・AFZ/AGB/AGC/AGDの定義とpinned mathlib APIを確認し、型付き連続写像合成と明示的セル参照へ修正。定理文・仮定は弱化していない。
+- 最終[exact-source CI #42005520130](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42005520130) は **11,338/11,338 SUCCESS**。10件の公理依存は標準 `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし、変更AGE warning/error **0/0**、独立completion receipt **SUCCESS**。source/test-merge Git tree は `11b71794d1507a447a7378990f093ab49cff0280` で一致。
+
+### 未解決obstruction・次段AGF（研究候補）
+
+AGEは元の真正transfer積分に対する**連続代表元の型付き有理求積経路**を検証したが、元の連続Wilson被積分関数の具体的なセル内振動幅 `ε`、厳密な実効的有理評価表、数値的に正負を分離する半径は未認証。次段AGFでは真正Wilson空間作用・one-slab核のリンク変動係数とAFQ指定中心の4/5弦距離を組み、セル内振動の上界を新しい物理仮定なしに導出することが課題。真正二閾値符号殻の非空、体積一様coercivity、Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは引き続き**未証明**。
+
+---
+
+## 検証済み定理 — AGD（2026-11-05 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` はREADME・ROADMAPの文書ミラー。AGC定理 #6352、正本文書 #6353、main文書ミラー #6354 のMERGEDを継承。[AGD定理PR #6355](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6355) は **MERGED**。最終検証済みexact-source HEAD `9f64b710f5be2b8194e06505f927fd9a52d3ca7a`、定理squash SHA `a2f7e77f5c956cfdbde3b812daa671db625d5b92`。元のSU(2) Wilson・正規化Haar・ZW Gauss-law中心化source・Perron/transfer/FF・AFQ真正24中心・AFT有理質量境界を変更しない。
+
+### 真正SU(2) 24セルの全空間リンク積とHaar積公式
+
+- **元の空間配置そのものの有限分割**：AFQ真正24中心の最初の中心Borelセル `C_i` は、単一リンクSU(2)上で可測かつ一意分割。元の有限空間リンク型 `Link_H` に対し、積セルindex `j:Link_H→Fin 24` と `C_j={A:Cfg_H | ∀e, A_e∈C_{j(e)}}` を構成。すべての元の空間配置 `A` がただ一つの積セルへ属することと、各積セルが元Haar積σ代数で可測であることをLean4で証明。リンク数を `L_H=Fintype.card Link_H` とすると、indexは24進の有限リンク配列である。
+- **真正空間Haar質量の厳密積**：元の定義 `μ_H=Measure.pi(e↦normalizedCompactHaar(SU(2)))` を直接使用し、`μ_H(C_j)=∏_{e:Link_H} μ_{SU(2)}(C_{j(e)})` を形式証明。実数値 `Measure.real` に移した積公式も証明。代理離散測度や独立性の未証明追加仮定は導入しない。
+- **無条件の有理有限体積質量区間**：既証明AFTの各真正一リンク質量 `1/160000 ≤ μ(C_i) ≤ 625/1781` から、`α_H=(1/160000)^{L_H}∈ℚ`、`β_H=(625/1781)^{L_H}∈ℚ` を定義し、全積セルについて `α_H ≤ Measure.real μ_H(C_j) ≤ β_H` と `α_H≤β_H` をLean4で証明。リンク数0を含む有限Hの形式的境界も保持する。
+- **AGCへ厳密に接続**：真正積セルを `Fintype.equivFin` で有限Fin-indexへ変換。固定有理重み `w_j=(α_H+β_H)/2`、明示的質量半幅 `δ_j=(β_H−α_H)/2≥0` とし、`|Measure.real μ_H(C_j)−w_j|≤δ_j` を証明した `p4Q2PZ37AGC_originalHaarCells H` を外部質量入力なしで構成。未検証の数値質量や新しい測度を持ち込まず、既存AGCの条件付きsigned transfer求積へ降下する。
+
+### Exact-source Lean4検証と構造的修正履歴
+
+- 新規Leanのみ：`MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalSpatial24CellHaarProductV5_PZ37AGD.lean`（245行、`#print axioms` 7件）。既存Lean・公開root・物理定義・workflows・Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` は不変。
+- 初回CI #41998809889 の5件は、Set.piのmembership展開、`Set.mem_univ_pi` の引数、Rat実数cast/冪正規化が原因。修正後CI #41999606512 の残る1件は `(625/1781)^L = 625^L/1781^L` に関する`div_pow`正規化。変更Lean全文・imports・AFQ/AFT/AGC依存型を照合し、仮定や結論の弱化なく解消。
+- 最終[exact-source CI #42000355155](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42000355155) は **11,337/11,337 SUCCESS**。新規7件の`#print axioms` はすべて標準 `propext`・`Classical.choice`・`Quot.sound` のみで `sorryAx` なし。変更AGD warning/error **0/0**、独立MCP completion receipt **SUCCESS**。source／GitHub test-merge Git treeは `b297ccb73fdd1456d8e7c6335249d77d79192cae` で一致。
+
+### 未解決の物理的障害・次段AGE（研究候補）
+
+AGDは真正空間Haar積セルの完全な有限分割と明示的な**質量区間証明書**を構成したが、元のsigned centered Wilson/transfer被積分関数のセルごとの有理標本・局所包含誤差は未取得。AGCの非零有理中心を具体的に認証するには、真正連続Wilson代表元と元L²中心化sourceのa.e.対応、積セルの半径評価、核の変動率、有限個の実際の被積分関数の厳密有理値区間を接続する必要がある。固定質量区間は高次元で保守的であり、非零符号・真正二閾値殻非空・体積一様coercivity・Hamiltonian spectral gap・連続体4D Yang–Mills質量ギャップは**未証明**。
+
+---
+
+## 検証済み定理 — AGC（2026-11-05 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` はREADME・ROADMAP文書ミラー。AGB定理 #6349、正本文書 #6350、main文書ミラー #6351 のMERGEDを継承し、[AGC定理PR #6352](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6352) も **MERGED**。検証済みexact-source HEAD `f240839db18c28006e95c7a2d0ee59dc9d78fd0e`、AGC定理squash SHA `e974870773c167993e2f5ceaaea0d9357e2ec56c`。真正SU(2) Wilson・元ZW中心化Gauss-law source・Perron/transfer/FF・元空間Haar・AFQ 24中心・固定Lean/mathlib pinは不変。
+
+### 元の全空間Haar積分に対する符号付き有理中心・包含誤差
+
+- **元のtransferを直接使用**：AGBの真正Haar平均ゼロと核の定数相殺を継承。`k_H` を元Wilson one-slab核の大域下界とすると、任意の元境界 `B` で `t_H(B)=∫f_H(A)(K_H(A,B)−(1+k_H)/2)dμ_H(A)`。新しい核・代理source・別の確率測度への置換はない。
+- **真正空間Haar有限分割の型付き証明書**：元全空間配置 `Cfg_H` の有限可測分割 `C_i` に対し、厳密な被覆・重複なしの証明、真正正規化空間Haar質量 `μ_H(C_i)` の有理近似 `w_i∈ℚ` と検証誤差 `δ_i≥0`、元の符号付き中心化核積分関数のセル上の有理標本 `q_i∈ℚ` と誤差 `ε≥0` を要求する。この入力は**証明を伴う条件付き証明書**であり、具体的な有限数値表を実測・認証したものではない。
+- **Lean4形式証明された真正signed transfer包含**：有限セル積分計算を元Haar上でそのまま行い、`q=∑_i q_i w_i∈ℚ`、`E=ε+∑_i|q_i|δ_i` に対し `|t_H(B)−q|≤E` を証明。検証済み有理半径 `r∈ℚ_{≥0}` が `E≤r` を満たす場合、`|t_H(B)−q|≤r` のAGA `rationalBall` およびAFV `verifiedInterval` を自動構成。AGBのゼロ中心包囲と異なり、入力表に応じて中心 `q` は**非零でもよい**。
+- **符号条件を曖昧にしない**：証明済みの有理不等式 `r<q` なら元真正transfer `t_H(B)>0`、`q<−r` なら `t_H(B)<0`。実際にその条件を通過する具体的有理表、元FF受信器の二符号点、真正二閾値殻を得たとの主張ではない。既存AGA→AFV区間接口は維持する。
+
+### Lean4 exact-source CI・公理依存・source/tree対応
+
+- AGC追加ファイルは `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalSpatialHaarSignedQuadratureV5_PZ37AGC.lean` のみ（404行・`#print axioms` 14件）。既存Lean・元Wilson/Haar/Perron物理量・CI workflow・公開root・Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` は変更なし。
+- 初回CI #41995905081はLean4構造体の `H` パラメータの二重捕捉、局所核下界記法 `k` と証明中変数の衝突、無名sectionの未閉鎖で不成功。**変更AGC Lean全文とAFJ・AGB・AGAの依存定義を確認し、元定理文を弱めず修正**した。
+- 修正後の[exact-source CI #41996756761](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41996756761) は **11,336/11,336 SUCCESS**。14件の公理監査は全て標準 `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし、変更Leanエラー0、completion receipt SUCCESS。source/test-merge Git tree は `8aa6c88c8a0541cc244ebee403b946e07737b69e` で一致。
+
+### 未解決obstruction・次段AGD（研究候補）
+
+AGCは真正空間Haarに対する**条件付き有限有理積分証明書の一般定理**であり、元空間配置の具体的セル分割の構築、真のHaar質量の精密な有理評価、元L² source代表元の局所包囲、区間半径の実効的縮小と非零符号点の認証はまだ必要。次段ではAFQ真正SU(2) 24中心セルの有限リンク積分割と、元核・中心化sourceに対する局所誤差の結合を研究する。真正二閾値殻の非空、体積一様coercivity、Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは**未証明**。
+
+---
+
+## 検証済み定理 — AGB（2026-11-05 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` はREADME・ROADMAPの文書ミラー。AGA定理 #6346、正本文書 #6347、mainミラー #6348 のMERGEDを継承し、[AGB定理PR #6349](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6349) も **MERGED**。検証済みexact-source HEAD `76dc9fc62f38659f69d6b5bb6bb1260b8bb7a538`、定理squash SHA `526dc6016dcb5fcc25ca8fb0d8b2f504f3c19807`。真正SU(2) Wilson作用・正規化Haar・ZW中心化Gauss-law物理source・Perron/transfer/FF受信器・AFQ真正24中心・AFT固定有理重みは不変更。
+
+### 真正ZW中心化sourceのHaar平均ゼロと元Wilson核の定数相殺
+
+- **真の中心化sourceの期待値は厳密0**：元の空間Wilson連続代表元 `W_c(A)`、真のHaar平均 `m_H=∫W_c dμ_H`、既存ZW Gauss-law中心化sourceのHaar-L²代表元 `f_H(A)=½(W_c(A)−m_H)`（Haar-a.e.）を直接使用し、`∫f_H(A)dμ_H(A)=0` をLean4で証明。代理source・再定義測度や平均ゼロの追加公理は導入しない。
+- **元のsigned transferの厳密な恒等式**：真正one-slab Wilson核 `K_H(A,B)` と元のtransfer `t_H(B)=∫f_H(A)K_H(A,B)dμ_H(A)` について、任意の実定数 `c` に対し `t_H(B)=∫f_H(A)(K_H(A,B)−c)dμ_H(A)` を証明。定数核成分の消去は真のHaar平均ゼロに由来し、物理transfer作用素は変更しない。
+- **真正核の中点で半幅を改善**：既証明の元Wilson核の大域範囲 `k_H≤K_H(A,B)≤1`（`k_H=exp(−β₀·originalOneSlabActionBudget(H))>0`）に対し `c=(1+k_H)/2` を用い、`|K_H(A,B)−c|≤(1−k_H)/2`。AEVの元signed variationと元sourceのHaar-L¹質量 `M_src,H` より `|t_H(B)|≤(1−k_H)M_src,H/2≤p_H/2` を導出。ここで `p_H` は実際の空間plaquette列長。AFZの `|t_H(B)|≤p_H` を無条件に半減する。より鋭い `(1−k_H)M_src,H/2` の実数評価も保持。
+
+### 有理区間証明書と既存の真正物理降下
+
+- **具体的な有理半径**：`q_H=(periodicHypercubicEvenSpatialSlicePlaquetteList H).length/2∈ℚ` と `(q_H:ℝ)=p_H/2` をLeanで証明。元の符号付きtransferについて、全境界 `B` で真の包含 `−q_H≤t_H(B)≤q_H` を満たすAFV `verifiedInterval` を外部数値入力なしで構成。
+- **実際の24中心更新先へ一貫して適用**：元AFG境界サンプルで未更新 `B` と真正AFQ SU(2)中心 `g_i` による更新境界 `B[e:=g_i]` の両方に、同じ証明付き包含を自動供給。AGA transfer-only、AFX厳密四文字、AFV→AFT→AFIの真正係数／分散証明書へ型付き接続。`toOriginalCoefficientVariance` は既存シェル標本 `c` と `0≤lo` を保持する。
+- **符号認証との境界**：改善区間の中心は依然として厳密0で、非零transfer符号やFF受信器の正負を証明したわけではない。AGAの有理符号分離条件が満たされたとの主張はしない。既存の条件付き鋭い証明書を弱化しない。
+
+### exact-source Lean4 CI・公理監査・Git tree
+
+- AGBの追加は `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalCenteredTransferKernelCancellationV5_PZ37AGB.lean` 1ファイル（292行、`#print axioms` 10件）のみ。既存Lean・workflow・公開root・固定Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` は変更なし。
+- [exact-source CI #41991998412](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41991998412) は **11,335/11,335 SUCCESS**。新規10件の公理監査は標準 `propext`・`Classical.choice`・`Quot.sound` のみで `sorryAx` なし。変更AGB warning/error 0/0、独立MCP completion receipt SUCCESS。source／GitHub test-merge Git tree は `6f20b247fcc2faec4a747a1cfc00a1e9e72c7050` で一致。マージ後の定理正本HEADは `526dc6016dcb5fcc25ca8fb0d8b2f504f3c19807`。
+
+### 未解決obstruction・次段AGC（研究候補）
+
+非零中心を持つ、**元の真正signed transfer積分の検証付き有理包含**は未取得。次段AGCでは元のWilson作用とHaar平均の相関から具体的なsigned transfer標本の有理中心 `q≠0` と厳密包含誤差 `ε` を構成し、AGAの `q>ε` または `q<−ε` を通す条件を研究する。証明されない数値サンプルを非零と仮定しない。真正二閾値符号殻の非空証明、体積一様coercivity、Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは引き続き**未証明**。
+
+---
+
+## 検証済み定理 — AGA（2026-11-05 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` はREADME・ROADMAP文書ミラー。AFZ定理 #6343、正本文書 #6344、main文書ミラー #6345 の全件MERGEDを継承し、[AGA定理PR #6346](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6346) も **MERGED**。最終exact-source HEAD `88fa8310169d44e21288bb73da223cb73bb1d2c8`、定理squash SHA `9e2dc0526493d0fcc96784ceb590254969ebfc16`。真正Wilson SU(2)・正規化Haar／境界pair-Haar・元Gauss-law中心化物理source・Perron/transfer/符号付きFF受信器・AFQ真正24中心・AFT固定有理重みは変更していない。
+
+### 真正FF物理受信器の符号付き有理区間・積誤差
+
+- **元の真正物理恒等式**：AFZが証明済みの `F_e(z,g)=a(u-rv)` をそのまま使用。ここで `a=‖T_H‖⁻¹>0`、`u=t_H(B)`、`r=ρ_H(z)/ρ_H(z_g)`、`v=t_H(B_g)` はすべて既存の真正Perron/transfer/FF物理量。新規AGAの `rationalBall` は `sample∈ℚ`、`radius∈ℚ`、`radius≥0`、`|x−sample|≤radius` を型付きで持ち、既存AFVの真正有理端点区間から変換できる。
+- **四因子の厳密な誤差合成**：入力を `(q_a,ε_a),(q_u,ε_u),(q_r,ε_r),(q_v,ε_v)` とすると、`q_w=q_u−q_r q_v`、`E_w=ε_u+|q_r| ε_v+|q_v| ε_r+ε_r ε_v`、`q_F=q_a q_w`、`E_F=ε_a(|q_w|+E_w)+|q_a|E_w` はすべて明示的有理数。Leanで `|F_e(z,g)−q_F|≤E_F` を、既存AFV証明書の型を使って証明。積誤差の交差項 `ε_r ε_v` は省略しない。
+- **真正符号判定の十分条件**：証明付き区間の `q_F>E_F` なら `F_e(z,g)>0`、`q_F<−E_F` なら `F_e(z,g)<0` を形式証明。さらに、**`a=‖T_H‖⁻¹>0` のため `F_e=a(u−rv)` の符号は `u−rv` の符号と一致**するので、精密な逆ノルム認証を要求しない独立の正負判定定理を追加。元のtransfer積分の有理区間だけを入力し、AFZの既証明Perron比の `[0,3/2]` を自動投入する `transferOnly_originalBracketBall` が `q_w>E_w` または `q_w<−E_w` を確認できたときのみ、実際の受信器の符号を結論する。
+- **既存物理証明書への型付きdescent**：元の真の4因子区間から受信器の真正有理包含区間を構築し、**AFW→AFX→AFV→AFT→AFI** の既存24中心Fourier係数／分散証明書へ接続。AFZの `‖T_H‖⁻¹∈[0,Q_H]` と `ρ(z)/ρ(z_g)∈[0,3/2]` を使った低精度transfer-only入力も別経路として実装。低精度区間自体は非零符号を保証しない。正負に分かれる実際のtransfer区間が確認されたという主張はしない。
+
+### Lean4 exact-source CI・公理監査・Git tree
+
+- 新規Leanファイルは `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalSignedFactorIntervalsV5_PZ37AGA.lean` のみ（465行・`#print axioms` 21件）。既存Lean・Wilson/Perron/transfer/FF物理量・公開root・CI workflowは変更せず。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` のpinを保持。
+- 最終[exact-source CI #41989125954](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41989125954) は **11,334/11,334 SUCCESS**。全21件の公理依存は `propext`・`Classical.choice`・`Quot.sound` のみで `sorryAx` なし。変更AGAのwarning/error 0/0。独立MCP completion receipt `chatgpt-ci-receipt/PR Lean Fast Check` はSUCCESS。source HEAD・PR test-mergeのGit treeは `7d67f73aa8babb10490fc603a3de25c50c17a456` で一致。
+- 初回AGA HEADのCI不成功は独立に扱い、最終成功したHEADのみをマージ対象にした。元の符号判定を曖昧にする不正確な数値サンプルや仮想Perron法則は作らない。
+
+### 未解決の物理的障害・次段候補 AGB
+
+元の真の符号付きtransfer積分 `t_H(B)` と `t_H(B_g)` に対して、非自明な有理中点・誤差を持つ**実際に検証済みの包含証明**が必要。Perron密度比の粗い `[0,3/2]` を絞るか、比による差の相殺を定量化して、上記符号検査を通すことが次の課題。二閾値殻の非空認証、体積一様coercivity、Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは**未証明**。
+
+---
+
+## 検証済み定理 — AFZ（2026-11-05 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` はREADME・ROADMAPの文書ミラー。AFY定理 #6340、正本文書 #6341、mainミラー #6342 のMERGEDを継承し、[AFZ定理PR #6343](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6343) は **MERGED**。最終exact-source HEAD `17703818947cfee5f7d0cb5bf1e227fba3d561c6`、定理squash SHA `92e590996451eef2e7850372ddb3bca3d3be2eb4`。真正SU(2) Wilson作用・元の正規化Haar／境界pair-Haar・Gauss-law中心化物理source・Perron/transfer/符号付きFF受信器・AFQ真正24中心・AFT有理重みは不変更。
+
+### 元の真正物理受信器に対する外部区間入力なしの有理包囲
+
+- **明示的有限体積有理数**：元の空間plaquette列の長さを `p_H`、元のone-slab組合せ体積（plaquette列長＋link列長）を `v_H` とし、`n_H=(v_H+31)/32`（自然数除算）、`Q_H=(3/2)^n_H∈ℚ`、`R_H=(5/2)p_H Q_H∈ℚ` を定義。固定結合 `β₀=log(3/2)/64` の既証明恒等式 `exp(64β₀)=3/2` と元物理transferノルム下界より `‖T_H‖⁻¹≤Q_H` をLean4で導出した。
+- **本物の中心化Gauss-law sourceからの評価**：元のWilson空間作用の `0≤W_H≤2p_H` と真のHaar平均の同範囲包含を使い、元ZW中心化sourceの真のHaar-L²代表元が `|(f_H:A↦ℝ)|≤p_H` をHaar-a.e.で満たすことを証明。元の符号付きsourceに対するHaar-L¹量 `M_src,H≤p_H`、真正Wilson核 `0<K_H≤1` から、元のsigned transfer積分 `|t_H(B)|≤p_H` を導出。仮想source・正値sourceへの置換はない。
+- **Perron比と真正FFの有理区間**：既証明AELの元joint sqrt-densityの1リンクHarnackと `exp(8β₀)≤3/2` から、元右境界を1リンク更新した密度比 `0≤ρ_H(z)/ρ_H(z_g)≤3/2` を証明。元ABZ/AFMの真正FF恒等式 `F_e(z,g)=‖T_H‖⁻¹[t_H(B)−ρ_H(z)t_H(B[e:=g])/ρ_H(z_g)]` を用い、**全ての有限H・元境界z・真のSU(2) gに対して `|F_e(z,g)|≤R_H`** と形式証明。`[-R_H,R_H]` は元AFVの `verifiedInterval` の証明付き真正包囲となり、AFWの受信器区間の外部入力をこの保守的包囲で満たせる。
+- **元物理証明書への直結と限界**：元 `F_e(z,z.2(e))=0` の厳密恒等式、上記区間の有理中点 `0` と誤差 `R_H` をLean4で証明。元AFX→AFV→AFT→AFI係数・分散証明書へ型付き接続。さらに、この選択による真正24中心AFTの係数sampleは **厳密0** と証明した。これは非零係数・正負符号・真正非空二閾値殻の数値認証ではなく、精密なsigned receiver intervalの課題は残る。既存のより鋭い条件付き区間証明書は保持する。
+
+### exact-source Lean4 CI・公理監査・Git tree
+
+- 新規Leanは `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalRationalReceiverEnvelopeV5_PZ37AFZ.lean` のみ（416行、19件 `#print axioms`）。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`、既存Lean・物理モデル・公開root・workflowsは変更なし。
+- 初回CI #41932350756はnotation projectionのquotation失敗とL²内積のelaboration失敗から不成功。Lean4の記法・real inner product・作用素ノルム型・不等式向き・定義展開を修正。最終[exact-source CI #41957129057](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41957129057)は **11,333/11,333 SUCCESS**。AFZ19宣言の公理依存は全て標準 `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし、変更AFZ warning/error 0/0。独立MCP completion receipt `chatgpt-ci-receipt/PR Lean Fast Check` はSUCCESS。
+- 最終source HEADとsquash SHAのGit treeは `a28fd9dc5d5361ea09e3daff6419d9801d149c5f` で一致。従来のAFY以前のソース、形式証明記録は保持。
+
+### 未解決obstruction・次段AGA（仮称）
+
+AFZは本来のFF受信器について保守的な有理包含を無条件に構成したが、区間中心は0で非零符号を判別できない。次は真正Perron/transfer/FFの有理値を中心に持つ**非自明かつ証明付きの区間認証**と、局所変動誤差・二閾値殻条件の接続が必要。体積一様coercivity、物理Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは引き続き**未証明**。
+
+---
+
+## 検証済み定理 — AFY（2026-11-05 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` はREADME・ROADMAP文書ミラー。AFX定理 #6337、正本文書 #6338、mainミラー #6339 の全件MERGEDを継承し、[AFY定理PR #6340](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6340) を **MERGED**。最終exact-source HEAD `8f9c9451e560ccca72d174ce77ca56fc75a07201`、定理squash SHA `0851bb926b0a8b138ba6df4d780a0766866b5607`。真正SU(2) Wilson/正規化Haar・AFQ24先着中心Borelセル・AFT固定有理重み・元のPerron/transfer/FF物理受信器を不変とし、代理量や新しい物理仮定は導入しない。
+
+### 真正24中心の文字誤差ゼロ・元の物理受信器積評価
+
+- **実際の中心積の鋭い有理証明書**：AFXが元Wilson四文字に対して証明した真の有理値 `qφ(j,i)=φ_j(g_i)` を使い、元FF受信器 `F_e(a,g_i)` のAFV認証有理中点 `qF(a,i)` と認証半幅 `εF(a,i)` から、各元境界サンプル `a∈c.s`、四モードj、真正SU(2)24中心iに対して `|F_e(a,g_i) φ_j(g_i) − qF(a,i) qφ(j,i)| ≤ |qφ(j,i)| εF(a,i)` をLean4で形式証明した。文字側の誤差は厳密0であり、元の受信器区間包含のみが外部証明書入力となる。
+- **既存AFV乗算との型付き厳密一致**：元の `AFV_ballMul` が作る積の有理sampleは `qF*qφ`、errorは **厳密に** `|qφ| εF` に等しいことを定理化。AFVの一般誤差項から未検証のcharacter誤差を単に捨てたのではなく、AFX singletonによるzero errorを用いて具体的に評価した。
+- **元AFT 24中心係数誤差への直接接続**：元AFT証明書の `coefficientSample` と `coefficientSampleError` に対する等式 `E_{a,j}=∑_{i=0}^{23}|qφ(j,i)|εF(a,i)≤∑_{i=0}^{23}εF(a,i)` をLean4で証明。後半の不等式は元ACK四文字の無条件 `|φ_j(g)|≤1` に由来する。元AFUの中心化Haar誤差評価・AFJ係数・AFI係数分散証明書への既存経路を保持した。
+
+### exact-source Lean4 CI・公理監査・source対応
+
+- AFY新規Leanファイル `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalExact24CenterProductErrorV5_PZ37AFY.lean` のみ（326行・14件の `#print axioms`）。既存Leanやworkflow、root、物理測度を変更しない。固定Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を維持。
+- [最新exact-source CI #41928091102](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41928091102) は **11,332 / 11,332 SUCCESS**。Lean診断アーティファクトを独立取得し、新規AFY14宣言すべての公理依存が標準 `propext`・`Classical.choice`・`Quot.sound` のみであること、`sorry`・`admit`・追加`axiom`・`constant` 0、変更AFY warning/error 0/0を確認。独立MCP completion receiptは `chatgpt-ci-receipt/PR Lean Fast Check` = SUCCESS。旧Leanファイルに存在する既存警告は新規AFYのものではない。
+- PR source HEAD・GitHub test-merge `75a00168b21d8348c70a4e436325f0d0dc16cdec`・squash SHAで新規AFYファイルのGit blob SHA `ad49cbe6c929e7efd95e6c78607bc25083de836b` は完全一致。source→test-mergeはファイル差分なし。正本のAFX基点からの追加差分は新規AFY Leanファイル1件のみ。
+
+### 残存obstruction・次段AFZ
+
+AFYは真正24中心での文字側の有限誤差を完全に除去したが、元Perron/transfer/FF受信器の**具体的な数値的有理区間包含証明**は依然未取得。AFG真正二閾値の非空符号殻も未証明。次段AFZでは、真正受信器について有限有理区間の検査可能な生成・包含条件、局所振動幅とAFU中心化Haar誤差への接続を研究する。体積一様coercivity、物理Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは引き続き**未証明**。
+
+---
+
+## 検証済み定理 — AFX（2026-11-05 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` はREADME・ROADMAP文書ミラー。AFW定理 #6334、正本文書 #6335、mainミラー #6336までの全件MERGEDを継承し、[AFX定理PR #6337](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6337) は **MERGED**。定理squash SHAは`a0f626cd2e5e4a0ac46f9b33de185df28419b3e5`。真正SU(2) Wilson・元の正規化compact Haar／境界pair-Haar・Perron/transfer・符号付きFF受信器・AFQ真正24先着中心Borelセル・AFT固定有理重みを保持し、代理群・代理測度・追加の物理仮定を導入しない。
+
+### 真正24中心の四成分Wilson文字に対する厳密有理値
+
+- **元の実4座標との直接対応**：PZ35Bの真正SU(2)Quaternion元とPZ35D2の真正複素行列trace・ADRの元2×2行列再構成を使い、元ACKの四成分Wilson文字 `φ_j(g)` は、元の実4座標 `(x₀,x₁,x₂,x₃)` に対し**`(φ₀,φ₁,φ₂,φ₃)=(x₀,-x₂,-x₁,-x₃)`**とLean4で証明。符号とindexの対応を元のPauli行列の定義から直接導出し、任意の抽象同型や未証明の座標選択に依存しない。
+- **真正24中心の固定有理テーブル**：AFQの元24中心は、ADSで構成した元のSU(2)への真正逆写像を使った座標軸8点＋半対角16点である。各中心の各文字は、軸では `-1,0,1`、半対角では `-1/2,1/2` の固定有理値となる。具体的な `Fin 4×Fin 24→ℚ` テーブル `p4Q2PZ37AFX_exactRationalCharacter` と全indexでの真正値との等式をLean4で形式証明した。数値積分、元Haar質量計算、FF受信器測定に置き換えたものではない。
+- **文字区間の誤差ゼロ**：元AFVの型付き `verifiedInterval` で上下端点を同一の真の有理文字値に置き、`intervalToBall` の文字誤差が**厳密0**となることを証明した。AFWの全球的で保守的な `[-1,1]` 区間の幅1から、元24中心に限った有理singletonへ真正の意味で厳密化した。
+- **物理証明書への型付き接続**：外部入力は依然として、AFG境界サンプルの各点と真正SU(2)24中心における元FF/Perron/transfer受信器の有理区間包含証明だけ。文字側の入力をAFX固定表から作り、元のAFV `originalFiniteIntervalInput` に接続し、AFT受信器積分証明書・AFI係数／分散証明書へ移送。AFUのHaar質量保存・中心化誤差評価も既存の型付き経路のまま使用できる。FF受信器の具体的有理数値自体を認証したとの主張ではない。
+
+### exact-source Lean4 CI・公理監査・Git tree
+
+- 新規Leanは `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalExact24CenterFourModeV5_PZ37AFX.lean` のみ（281行、11件の `#print axioms`）。既存Lean・公開root・CI workflows・元物理測度・pinは変更なし。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を保持。
+- 初回[CI #41922258657](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41922258657)は失敗。その後の修正で[CI #41923287180](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41923287180)がSUCCESSとなり、さらに未実行戦術の削除後に最終exact-source HEAD `1fbd329a8aeca4daf1bfbf922d6fa60c484630f7` で[CI #41924187506](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41924187506)が **11,331/11,331 SUCCESS**。公理依存11件はすべて標準 `propext`・`Classical.choice`・`Quot.sound` のみ、`sorry`・`admit`・追加`axiom`・`constant` 0、変更Lean warning/error **0/0**、独立MCP completion receipt **SUCCESS**。
+- 最終source HEAD、test-merge `5453fa897fd6d11d850d37def919be0a78ea185e`、squash `a0f626cd2e5e4a0ac46f9b33de185df28419b3e5` のGit treeは `e312a4cfb168859127fcbb2c4938d5561c13eb14` で完全一致。
+
+### 残存obstruction・次段AFY
+
+真の24中心でのQuaternion四文字は有理値として厳密確定したが、元FF受信器の具体的な有理区間包含、独立したPerron/transfer数値認証、真正二閾値の非空符号殻は未確定。次段AFYでは、真正物理FF受信器の数値区間認証を検査可能な有限入力に落とし、中心での実際の数値評価と局所振動誤差の接続を進める。体積一様coercivity、物理Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは引き続き**未証明**。
+
+---
+
+## 検証済み定理 — AFW（2026-11-05 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラー。AFVの定理PR #6331、正本文書 #6332、mainミラー #6333 は全件MERGED。[AFW定理PR #6334](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6334) も **MERGED**。定理squash SHA `1922810011e6940a52bd6566da4b0bbbce90da4b`。真正SU(2) Wilson/Haar・元のAFQ 24先着中心Borelセル・AFT固定有理重み・Perron/transfer/符号付きFF受信器・AFM→AFJ→AFI型付き接続を不変更で継承する。
+
+### 元の真正Wilson四成分文字の無条件有理区間
+
+- **既証明ACKの平方和から導く真の境界**：真正SU(2)上の元Quaternion変換Wilson四文字 `φ_j(g)` について、既証明の等式 `∑_{j:Fin 4} φ_j(g)^2=1` と各平方の非負性から、任意の `g∈SU(2)`・`j∈Fin 4` で `φ_j(g)^2≤1`、`-1≤φ_j(g)≤1`、`|φ_j(g)|≤1` をLean4で無条件に形式証明。元Wilson文字そのものを使い、代理分布や追加物理仮定を導入しない。
+- **文字の外部区間入力を消去**：具体的な有理端点 `-1,1∈ℚ` と、上の真正値包含証明からAFVの `verifiedInterval` を各元24中心 `c_i` に自動構成。AFVの有理区間中心は厳密に `0`、半幅誤差は厳密に `1`。これは全域的で保守的な包囲であり、真の24中心における四文字の具体値を数値評価したものではない。
+- **真のFF受信器だけを外部証明書入力として残す**：元AFG有限境界サンプル `c.s` の各点と元24個のSU(2)中心における `F_e(a,c_i)` の有理区間包含だけを要求する新構造を追加。文字側はACKから導出し、AFVの元 `originalFiniteIntervalInput` へ型付き移送する。AFVの区間平方・積演算を使ってAFTの真正受信器標本、元AFM→AFJ→AFI係数・分散証明書に接続する。
+- **AFU中心化誤差への条件付き直結**：元の四成分係数・Haar平均・二次Haarモーメントについて、AFUの中心化Haar質量誤差評価を、新しい「受信器区間のみ」入力に直接移送。定数モード誤差消去は元Haarの確定した24セル質量保存則に由来する。四文字の区間幅1は保守的であり、実効的係数精度の改善や新しい非零物理標本を主張しない。
+
+### exact-source Lean4 CI・公理監査・Git tree
+
+- 新規Leanは `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalAutoFourModeIntervalsV5_PZ37AFW.lean` のみ（239行）。既存Lean、root、元物理、CI workflowsは不変更。固定Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を維持。
+- 初回CI [#41912670809](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41912670809) は、有理端点 `-1,1:ℚ` から実数型へのキャスト簡約と有理中央値 `0` の `rfl` に失敗。新規Lean全文・ACK四成分平方和・AFV有理区間構造・AFUの係数/平均/二次モーメント依存型を照合し、`simpa` と `norm_num` で修正。定理文や外部仮定の弱化なし。
+- 最終exact-source HEAD `cf4bdff83fcc2637e252513408457a5a7bb7b7df` の[CI #41913764357](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41913764357) は **11,330/11,330 SUCCESS**。新規13件 `#print axioms` はすべて `propext`・`Classical.choice`・`Quot.sound` のみ、`sorry`・`admit`・追加 `axiom`・`constant` 0、変更Lean warning/error **0/0**、独立MCP completion receipt **SUCCESS**。
+- source HEAD、test-merge `53b38623d95b945131762caa2bc495cede162c5e`、定理squash `1922810011e6940a52bd6566da4b0bbbce90da4b` のGit treeは `7c5734209c32198b34334398615e3743f6a2ce99` で完全一致。
+
+### 残存obstruction・次段AFX
+
+AFWの文字区間 `[-1,1]` は無条件だが粗く、四成分積の標本はゼロ中心で物理的な数値閾値を構成していない。次段AFXでは真正24中心の四文字の具体有理値とその型付き証明書を元のSU(2)↔S³座標から導出し、AFVの積区間を実効的に縮小する。元FF/Perron/transfer受信器の具体数値包囲、真正二閾値の非空符号殻、体積一様coercivity、物理Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは引き続き未証明。
+
+---
+
+## 検証済み定理 — AFV（2026-11-05 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` はREADME・ROADMAP文書ミラー。AFU定理 #6328・正本文書 #6329・main文書 #6330 の全件MERGEDを継承し、[AFV定理PR #6331](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6331) は **MERGED**。定理squash SHA `e62fc7cc6a451cc84d4f4a82e8678c6a64036c2b`。元の真正SU(2) Wilson/Haar・24個の先着中心Borelセル・固定重み1/24・Perron/transfer/FF受信器・元AFM→AFJ→AFI型付き接続は不変更。
+
+### 原FF受信器の証明付き有理区間演算
+
+- **真正値の有理区間入力**：実数 `x` と有理端点 `l,u∈ℚ` に対し、実際の包含証明 `(l:ℝ)≤x≤(u:ℝ)` を要求する構造を導入。証明を伴う場合だけ、具体的有理中心 `q=(l+u)/2` と実誤差 `ε=(u−l)/2≥0` を作り、`|x−q|≤ε` をLean4で証明。端点の順序も包含証明から導く。上下端点は有理計算できるが、真正元FF数値に対する包含証明を自動生成したという意味ではない。
+- **元物理量の二乗・積を区間演算で保証**：`|x−q_x|≤ε_x` なら `|x²−q_x²|≤ε_x(2|q_x|+ε_x)`。また `|y−q_y|≤ε_y` なら `|xy−q_xq_y|≤ε_x(|q_y|+ε_y)+|q_x|ε_y` をLean4で証明。数値解析上の単純な未検証浮動小数点操作ではなく、実数の不等式として確定。
+- **有限・真正24中心への型付き適用**：元のAFG有限境界サンプル集合 `c.s` の各点 `a` と元のAFQ真正24中心 `c_i` で、実際の元FF受信器 `F_e(a,c_i)` の包含を要求。Wilson四成分文字 `φ_j(c_i)` は境界に依存しない別の区間証明書として一度だけ要求する。平方標本 `F²` と四成分積 `Fφ_j` は上の区間代数から構成し、独立の平方値・積値の数値観測を新たに仮定しない。
+- **AFT/AFUへの接続**：実際の区間データから `p4Q2PZ37AFT_original24CellVerifiedSamples` を作り、元の `p4Q2PZ37AFT_toOriginalReceiverQuadrature`・`toOriginalCoefficientVarianceCertificate` に接続。したがって既証明AFUのHaar質量保存・任意定数モード中心化誤差評価にも型付きで利用可能。元の物理受信器が定めた実数値・元Haar・物理閾値条件を置換しない。
+- **真正符号の条件付き判定**：端点の有理不等式 `0<l` または `u<0` と真正値包含が証明されれば、元のSU(2)中心における物理FF受信器値がそれぞれ厳密正または負であることをLean4で証明。具体的な二符号点の存在・元殻の非空性は主張しない。
+
+### exact-source Lean4 CI・公理監査・Git tree
+
+- 新規Leanのみ：`MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalVerifiedRationalIntervalReceiverV5_PZ37AFV.lean`（388行）。既存Lean・root・CI workflows・元物理測度は変更なし。固定Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 不変。
+- exact-source HEAD `c804f53d97c503d3b26ad961bba7231dd32175c7` の[CI #41906037567](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41906037567) は **Lean 11,329/11,329 SUCCESS**。新規11件 `#print axioms` は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorry`・`admit`・追加`axiom`・`constant` 0、変更Lean warning/error **0/0**、独立MCP completion receipt **SUCCESS**。
+- source HEAD、test-merge `31d3c02986e10d48f474049f9c2f8d21e6c26332`、定理squash `e62fc7cc6a451cc84d4f4a82e8678c6a64036c2b` のGit treeは `4544ff0338e9bdb55c558d95b0ec3cf038eeacf4` で完全一致。
+
+### 残存obstruction・次段AFW
+
+AFVは**与えられた真正区間包含証明を検査して伝播する**定理であり、元FF受信器の具体的有理上下限の区間演算器を実行・認証したという主張ではない。次段AFWでは真正24中心の四文字の実効的な有理値検証、元Perron/transfer/FF受信器の実際の数値区間包囲、独立の有限証明書入力の充足を優先する。二閾値非空殻、体積一様coercivity、物理Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは引き続き未証明。
+
+---
+
+## 検証済み定理 — AFU（2026-11-05 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main` はREADME・ROADMAPの文書ミラー。AFTまでの真正SU(2) Wilson・Perron/transfer・符号付きFF受信器・元の24個の先着中心Borelセル・正規化compact Haar・固定重み `1/24` を保持し、[AFU定理PR #6328](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6328) を **MERGED**。定理squash SHAは `d141c233c8aa969c95f5a4d97d5fd07db2374a8b`。既存Leanソース・外部仮定・Haar測度・toolchain pinsは不変更。
+
+### 真正24セルHaar質量保存と中心化求積
+
+- **元の真正24セル質量の厳密保存**：AFQ/AFJのBorelセル分割と元の正規化SU(2) Haar測度から、全24セル質量の総和 `∑ᵢ μ(Cᵢ)=1` をLean4で証明。AFR/AFTの文字通りの固定有理重み `wᵢ=1/24` も `∑ᵢ wᵢ=1`。従って `∑ᵢ(μ(Cᵢ)−wᵢ)=0`。測度・有限群・中心を代理に置換していない。
+- **任意の有理定数モードに対する誤差消去**：AFTの証明済み個別誤差 `δ=13219/42744` を継承し、任意の有理標本表 `qᵢ` と任意の有理シフト `s` について `|∑ᵢ(μ(Cᵢ)−wᵢ)qᵢ| ≤ δ ∑ᵢ|qᵢ−s|` をLean4で証明。定数表 `qᵢ=s` に関してHaar質量重み誤差は**厳密に0**。従来のAFJ誤差と中心化誤差の最小値による、AFTより弱くならない区間も形式化。
+- **真正FF受信器への型付き接続**：元のAFM→AFJ→AFI物理経路を変更せず、元のFourMode係数、Haar平均、Haar二次モーメントに、24セル中心化誤差と真正セル上の振動誤差から成る評価を接続。原物理標本の有理精度任意小の**存在**をAFNの有理数稠密性から構成するが、Classical.chooseによる非計算的選択であり、数値的区間評価の独立認証ではない。
+- **数学的境界**：符号殻サンプル表 `c`、閾値条件 `0≤lo` 等の元の型付き証明書条件を保持する。具体的な非零FF数値標本、二閾値符号交差の存在、体積一様coercivity、物理Hamiltonianのspectral gap、連続体4D Yang–Mills質量ギャップは証明していない。
+
+### exact-source Lean4検証・公理監査・Git tree一致
+
+- 新規ファイルは `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalCenteredHaarMassErrorV5_PZ37AFU.lean` のみ。固定Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`、公開root・既存Leanファイルは不変更。
+- 初回CI #41878353128は `simp` の後に残った自己同一の有限和の等式が未解決で失敗。修正後CI #41897462557は全Leanビルド成功だが戦術結合子 `<;>` に非致命的warning 1件を検出。変更ファイル全文とAFT/AFJ/AFQの依存定義を確認し、通常の `simp`、続く `rfl` の2段階へ変更。定理文・仮定は弱めていない。
+- 最終exact-source HEAD `dfe639cee4d39e89acce409f7db9c12e695fe323` の[CI #41898383151](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41898383151)は **Lean 11,328/11,328 SUCCESS**、新規13定理の `#print axioms` は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorry`・`admit`・追加 `axiom`・`constant` 0、変更Lean warning/error **0/0**。独立MCP completion receipt **SUCCESS**。
+- exact-sourceとtest-merge `f477ffcec91404e1bb748d0093040ee4712e5ef5`、定理squash `d141c233c8aa969c95f5a4d97d5fd07db2374a8b` のGit treeは `962c845fd68211a7027057ebda8e35577a7fc8a7` で完全一致。
+
+### 残存obstruction・次段AFV
+
+中心化により定数モードのHaar重み誤差はゼロとなったが、実際のFF有理標本の独立かつ計算可能な区間認証、真正24セル質量の狭い実効区間、非空二符号閾値殻、体積一様coercivityと物理spectral gapはいずれも未解決。次段では有理標本表の有限認証と、真正S³/SU(2) Haar幾何による実効区間の更なる改善を検討する。
+
+---
+
+## 検証済み定理 — AFT（2026-11-04 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main`はREADME・ROADMAP文書ミラー。[AFT定理PR #6325](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6325)は**MERGED**。AFS #6322〜#6324のMERGEDと厳密な元SU(2) Wilson・Perron/transfer・FF受信器・正規化compact Haar・pair-Haar・元弦距離を継承し、新たな代理測度・物理仮定は導入しない。
+
+### 真正Wilson二次モーメントの最適有理シフトと24セル証明書
+
+- **Markovシフトの最適性**：元Haarで`∫χ dμ=0`、`∫χ² dμ=1/4`、元半径4/5球では`χ>17/25`。任意`c+17/25>0`に対する`(c²+1/4)/(c+17/25)²`の最小値が`625/1781`で、`c=25/68`により達成されることをLean4で証明。整数係数の真正物理文字の平方`Q=(68χ+25)²≥0`の元Haar期待値が`1781`、元球上で`Q≥3171961/625`であることを固定mathlibの実Markov不等式に接続し、**`m(4/5)≤625/1781<1250/3481`**を無条件に形式証明。
+- **真正24セルへ移送**：ADMの同一元SU(2) Haar球の中心不変性、AFQの元24個の先着中心BorelセルとAFRの小球下界を用い、全`i`に対し**`1/160000≤μ(C_i)≤625/1781`**。元24セル、被覆半径`4/5`、測度は変更していない。
+- **固定有理重みの厳密改善**：全セルで`w_i=1/24∈ℚ`を保持し、**`|μ(C_i)-1/24|≤13219/42744`**を証明。AFSの`26519/83544`より小さい。真正AFJの重み誤差汎関数もAFTがAFS以下であることを証明。
+- **真正物理証明書への型付き直結**：元AFQの真の24中心と有理重みを固定し、真正受信器の中心値・二乗・四成分積について**実際に証明された数値有理標本と誤差のみに基づく**`p4Q2PZ37AFT_original24CellVerifiedSamples`を導入。AFMの真正Perron/transfer/FF envelope・弦距離slopeを経由してAFJ積分証明書・AFI係数／分散区間に接続。非零標本を許容するが、非零の数値標本がすでに実測・認証されたと主張しない。ゼロ標本の場合は重み誤差項がゼロなのでHaar区間改善だけでは物理的積分誤差が縮小しないことを明示。
+
+### exact-source Lean4 CI・公理監査・source tree
+
+- 新規Leanは`MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalOptimalMomentHaarV5_PZ37AFT.lean` **358行の1ファイル**のみ。既存Lean、pins、rootは不変更。Lean`v4.30.0-rc2`／mathlib`5450b53e5ddc75d46418fabb605edbf36bd0beb6`固定。
+- CI #41840825958の初回失敗は積分定数倍の簡約と構造体`center`への局所記法の捕獲、CI #41841772703の残余は`center`の旧参照1件。変更Lean全文・AFM/AFI/AFJ/AFQ/AFSの依存型を再照合し、積分の固定mathlib正規化`integral_const_mul`と`gridCenter`に修正。定理・仮定を弱めず解消。
+- exact-source HEAD **`b936d3853e5961ee190c9a56946282138629f8dc`**、[CI #41842798348](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41842798348)は**11,327/11,327 SUCCESS**、新規`#print axioms` **15件**すべて標準`propext`・`Classical.choice`・`Quot.sound`のみ、`sorry`・`admit` 0、変更ファイルにwarning/errorなし、独立MCP CI completion receipt **SUCCESS**。
+- source HEAD、test-merge`03ab2610cbadbd255c8c47a3c9fab95ec03bdee3`、定理squash **`0758c888f7e53a9a7f599742c9be5697562b3371`**のGit treeはすべて **`aba732d0c23bce9c7e69151b7002fdf753f17c8e`**で完全一致。
+
+### 残存obstruction・次段
+
+これは二次モーメントに基づくMarkov型上界の最適化であり、各セルの実際のHaar質量の計算でも、真正FF受信器の有理標本の数値認証でもない。真正二閾値符号交差、体積一様coercivity、物理Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは引き続き**未証明**。次段は元の物理受信器に対する有理標本の独立認証、または元Haar高次モーメント／真正幾何を用いたさらに有効な区間を検討する。
+
+---
+
+## 検証済み定理 — AFS（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、`main`はREADME・ROADMAPの文書ミラー。AFR定理 #6319、正本文書 #6320、main文書 #6321 の全件MERGEDを継承し、[AFS定理PR #6322](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6322) を**MERGED**。定理squash SHAは`ae6a40d78bfdc10d4207aa33c967a916e208563f`。真正SU(2) Wilson相互作用、ZW中心化Gauss-law源、Perron/transfer、符号付きFF受信器、正規化compact Haar、境界pair-Haar、元距離`d_J,D_H`、公開root、固定Lean/mathlibは変更していない。
+
+### 元Wilson Haar二次モーメントとMarkovによる24セル質量区間の厳密改善
+
+- **物理量・測度を置換しないモーメント証明**：既存ACKの真正Quaternion四文字Gramから、元の`χ(g)=1−E(g)`について、元の正規化SU(2) Haar上で`∫χ dμ=0`と`∫χ² dμ=1/4`を継承する。固定多項式`P(g)=(χ(g)+1/2)²≥0`は連続・可積分で、`∫P dμ=1/2`。仮定・代理Haar・新規元群なし。
+- **元半径4/5球での真正不等式**：ADKのWilson校正`d_J(1,g)²=2E(g)`から`g∈B_J(1,4/5) ⇒ χ(g)>17/25`。したがって`P(g)>(59/50)²=3481/2500`。固定mathlibの`mul_meas_ge_le_integral_of_nonneg`（実数版Markov）から**`m(4/5)≤1250/3481<1/2`**をLean4で無条件に証明。
+- **真正24 Borelセルへの移送**：AFQの先着中心セルは元の`B_J(c_i,4/5)`内。ADMの真正Haar球中心不変性とAFRの各セル内部`B_J(c_i,1/5)`の正のHaar下界から、**全24セルについて`1/160000≤Measure.real μ(C_i)≤1250/3481`**を形式証明。実際のセル質量の数値積分値を求めたものではない。
+- **固定有理重みを保った誤差縮小**：AFRの実効的な`w_i=1/24∈ℚ`（全て正、合計1）を変更せず、実際のセルとの誤差上界を**`|μ(C_i)−1/24|≤26519/83544`**と認証。AFRの`11/24`に比べて厳しく、AFQの非計算的`1/64`の小さい形式的近似誤差とは区別する。元のAFJ `originalHaarCells`に改善済みの型付き証明書を格納。実際のFFサンプル値・非空二符号閾値・新しい物理解は主張しない。
+
+### exact-source Lean4 CI・公理監査・Git tree一致
+
+- 新規`MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2Original24CellMomentMarkovHaarV5_PZ37AFS.lean`1ファイルのみ（新規13件`#print axioms`）。既存Leanや元物理模型・workflows・公開rootを変更せず、Lean`v4.30.0-rc2`／mathlib`5450b53e5ddc75d46418fabb605edbf36bd0beb6`固定。
+- 初回[CI #41835136403](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41835136403)は積分の加法性`integral_add`を点ごとの多項式に対して直接`rw`した際、Lean elaboratorの関数和と被積分関数の式の一致に失敗した。変更Lean全文とACK/PZ35Cの元Haar二次モーメント、ADK/AFRの依存型、固定mathlib Bochner積分・Markov補題を再照合し、中間積分加法等式を型付きで明示する形に修正。定理・仮定の弱化なし。
+- 最終exact-source HEAD`25ece6e4494b0a48ff5ae919f78e141350b5c9e6`の[CI #41836184579](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41836184579)は**11,326/11,326 SUCCESS**、13件の公理依存は標準`propext`、`Classical.choice`、`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error **0/0**、独立MCP completion receipt **SUCCESS**。
+- source HEAD`25ece6e4494b0a48ff5ae919f78e141350b5c9e6`、test-merge`9fa606be0d1cbbcb6e6ad7fdd0290387054f3679`、定理squash`ae6a40d78bfdc10d4207aa33c967a916e208563f`のGit treeは**`9d609048dfd57b3485b1ef5713652616052bfd67`**で完全一致。
+
+### 残存obstruction・次段AFT
+
+AFSで真のHaar上の二次モーメントから上界が約0.359へ改善したが、実際の24セル質量の狭い有理区間計算、重み`1/24`に対する精度`1/64`程度の実効的認証、元FF受信器中心値の評価、真正二閾値符号交差、体積一様coercivity、物理Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは**未証明**。次段AFTは同じHaar二次モーメントの最適有理シフトと、元のAFM物理受信器証明書への改善区間移送を検討する。
+
+---
+
+## 検証済み定理 — AFR（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main`は文書ミラー。AFQ定理 #6316 と文書 #6317/#6318 の全件MERGEDを継承し、[AFR定理PR #6319](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6319) を **MERGED**。定理squash SHA `94f3ce7d6583a89a96a2ea358081f1f9733f5d03`。元Wilson SU(2)、中心化Gauss-law物理源、Perron/transfer、符号付きFF受信器、真正正規化SU(2) Haarとboundary pair-Haar、弦距離`d_J`、公開root・Lean/mathlib pinsを変更しない。
+
+### 真正24頂点の整数距離証明・全セルHaar質量の実効的有理上下界
+
+- **座標軸8点＋符号付き半対角16点を整数に正規化**：AFQの真のSU(2)↔S³等距離による24個の元行列中心を使用。4座標を2倍した`ℤ`ベクトル`vertexZ`で、全相異なる頂点の整数内積`Σ vertexZ_i(k)·vertexZ_j(k)≤2`を有限場合分けで形式証明し、元弦距離で`1≤d_J(c_i,c_j)`を導出。代理群・新Haar分布なし。
+- **各セルの真正内部球**：AFNの先着中心24個のBorelセル`C_i`は、その中心の`B_J(c_i,1/5)`を含み、半径`4/5`の元のAFQ球に含まれる。この内包は`1/5+4/5=1`と厳密な開球不等式、元ADK三角不等式、上述の1-分離から証明。各セルが空でなく正のHaar質量を持つことも従う。
+- **真のHaar質量へのリテラル有理区間**：既存ADZ/AECの真正半径`1/5`球質量下界`(1/20)^4=1/160000`、ADNの半径`4/5`球上界`1/2`から全24セルについて **`1/160000≤Measure.real μ(C_i)≤1/2`** を形式証明。セル積分の浮動小数点計算や一様セル質量の仮定ではない。
+- **元Haar球と固定重み**：実際の24中心が元の半径`4/5`有限ネットであることからADPの有限net質量定理により`m(4/5)≥1/24`。固定有理重み`w_i=1/24`は全て正で、和は厳密に1。真の24セルへの誤差`|μ(C_i)−1/24|≤11/24`をLean4で証明し、AFJの元の真正HaarCellsへ格納する。誤差11/24は**AFQの非計算的1/64より数値的に粗い**が、固定され独立に検査可能な有理数である。
+- **元物理のauthority境界**：AFRは既存AFQのAFM→AFI真正FF受信器証明書を改変せず、新たな原物理受信器標本の数値測定や閾値交差を導入しない。セル質量の区間証明は、元物理Hamiltonianのspectral gapや体積一様coercivityを直接証明するものではない。
+
+### CI検証・Lean4記法修正・公理監査
+
+- 新規`MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2Original24CellEffectiveHaarV5_PZ37AFR.lean`1ファイルのみ。既存Lean、project root、workflow、測度、pin不変。Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`固定。
+- 初期CIでは有限Bool/Fin場合分けの重い一括`decide`、`simp`後の不要`split_ifs`、数値仮定の未具体化、`No goals to be solved`、最後に`hij : True ⊢ False`へ無効な矛盾証明を使う問題を発見。**新規Lean全文、import、AFQ/AFN/ADT/ADK/ADP/ADZ/AEC/ADNの依存シグネチャと固定mathlibの`fin_cases`・`norm_num`記法を再確認**し、座標軸同士の整数比較は`norm_num [...] at *`で仮定と目標を同時に正規化。原定理の仮定は弱めていない。
+- 最終exact-source HEAD `b3e98c04bc85b10e61c0a13e268c73d4ca2751a1` の [CI #41831372711](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41831372711) は**11,325/11,325 SUCCESS**、新規14件`#print axioms`監査は標準`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error **0/0**、独立MCP completion receipt **SUCCESS**。
+- source HEAD `b3e98c04bc85b10e61c0a13e268c73d4ca2751a1`、test-merge `a585c36690193c9264c88ab6c318b283f29fc8ee`、squash `94f3ce7d6583a89a96a2ea358081f1f9733f5d03` のGit treeは**`959802c17bc86b044582eeb9011ed61c37b42c10`**で完全一致。
+
+### 残存obstruction・次段AFS
+
+セル毎の実効的な正の有理質量区間と、有限24中心の一様球mass floorは確定した。一方、狭いセル質量の計算可能な区間（例えば1/64精度）、実際の元FF中心値の狭い有理包囲、真正二閾値の非空符号殻、体積一様coercivity、物理Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは**未証明**。次段AFSは、原Haar・球面の対称性を証明済み等長変換に限定して使い、各セルの質量区間の実効的精度向上に進む。
+
+---
+
+## 検証済み定理 — AFQ（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。AFPまでの全PR #6313–#6315 をMERGEDとして継承し、[AFQ定理PR #6316](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6316) も **MERGED**。定理squash SHA `2915464ade5ab17e44a927d5ac6edd2fc2e7d351`。元の真正SU(2)相互作用Wilson、中心化Gauss-law物理源、真正Perron真空・transfer、符号付きFF受信器、正規化compact Haar・元境界pair-Haar、元弦距離 `d_J` と全リンク距離 `D_H`、公開root・固定Lean/mathlib pinは変更しない。
+
+### 真正SU(2)≃S³の明示24中心・開半径4/5被覆
+
+- **実4次元の真正格子**：ADR/ADSで既証明の元SU(2)↔実S³全単射、ADTで既証明の元Wilson弦距離との等長性を採用する。元の`E4=EuclideanSpace ℝ (Fin 4)` の符号付き4本の座標軸8点と、各座標が`±1/2`の半対角16点を、`Sum (Fin 4 × Bool) (Fin 4 → Bool)`により厳密に24個列挙。ADSの逆写像で全てを元の真正SU(2)行列へ移し、代理群・コンパクト性での未指定中心選択は行わない。
+- **新しい無条件定量被覆**：全ての`x∈S³`について、`max_j |x_j|≥7/10`、または`∑_j |x_j|≥7/5`をLean4で証明。対応する軸点／符号付き半対角点との内積は少なくとも`7/10`。元ADTの等距離から、全ての真正`g∈SU(2)`について**`∃i∈Fin 24, d_J(c_i,g)^2≤3/5<(4/5)^2`**、したがって**24個の開球`B_J(c_i,4/5)`が元SU(2)全体を覆う**。AFPの閉半径1、実証明書半径9/8から真に縮小する。
+- **真正Haar Borelセル**：AFNの先着中心規則で24個の可測セルに一意分割し、`C_i⊆B_J(c_i,4/5)`を同じ元正規化Haarで証明。各真のセル質量はAFNの有理数稠密性により誤差`≤1/64`の有理包囲を**非計算的に選択**できる。これは**算定済みセルHaar質量、固定された具体的有理重み、有理重みの総和1、実行可能な区間求積を証明したという意味ではない**。AFPの具体的`1/8±3/8`より形式的な近似誤差は狭いが、数値証明書の実効性として優位とは主張しない。
+- **元FF受信器との厳密接続**：真正`F_z(g)`、`F_z(g)^2`、4個の`F_z(g)φ_j(g)`の有理中心標本を文字どおり`0∈ℚ`とし、同じ元FF BCFノルム`M_FF(H,e)`、その二乗、`M_FF(H,e)`を真の誤差上界として保持。AFGの独立境界shell sample table `c`と`0≤θ_lo`を与える場合、AFM→AFL→AFK→AFJ→AFIの既存係数・分散証明書に型付き接続する。真の厳密二閾値符号交差の実例は構成していない。
+
+### exact-source Lean CI・公理監査・source/test-merge/squash一致
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2Original24CellSphereGridV5_PZ37AFQ.lean` **1ファイル・430追加行**。他のLeanファイル・元物理モデル・workflowは変更なし。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 固定。
+- 初回 [CI #41812088785](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41812088785) はLean 11,324/11,324 SUCCESSだが新規内積補題に`simp`の未使用引数warningが1件。定理全文・既存ADR/ADS/ADT/AFN/AFPソースを照合して不要引数のみを除去。最終source HEAD `5eeab182fad6d3ad2432953617d49ef9352bb4bb` の [exact-source CI #41812851027](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41812851027) は**11,324/11,324 SUCCESS**。直接`#print axioms`監査12件（残り2件の補題は監査済み証明から参照）、依存公理は`propext`、`Classical.choice`、`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error **0/0**、独立MCP completion receipt **SUCCESS**。過去の変更外ファイルの非致命的警告は区別する。
+- source `5eeab182fad6d3ad2432953617d49ef9352bb4bb`、test-merge `6549b9fbcfe9fcbba739151afca668f484bbea2c`、squash `2915464ade5ab17e44a927d5ac6edd2fc2e7d351` の Git tree は**`23d87164474ffc63cbc0b9a80fb0bcb1e221262c`**で完全一致。
+
+### 未解決obstruction・次段AFR
+
+真正SU(2)24中心の開半径4/5被覆はLean4で確定。一方、24セルの**実際の**Haar質量を計算するアルゴリズムと具体的な数値区間、各セルの非空性・正質量、FF中心標本のノルムに比べ狭い数値包囲、具体的二閾値符号交差、H一様coercivity、物理Hamiltonianのspectral gap、連続体4D Yang–Mills質量ギャップは未証明。次段AFRでは24セルの実効的なHaar質量上界・下界と計算可能な有理重みを優先し、非計算的な有理近似を数値認証と混同しない。
+
+---
+
+## 検証済み定理 — AFP（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFOの定理PR #6310・正本文書 #6311・main文書 #6312 の全件MERGEDを継承し、AFP新規定理PR [#6313](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6313) は **MERGED**。定理squash SHA `8f5860a0cfbffd0236e646467a514673cac4f2e5`。元の真正SU(2) Wilson模型、ZW中心化Gauss-law物理源、Perron/transfer、元符号付きFF受信器、正規化compact Haarとboundary pair-Haar、元弦距離`d_J`・全リンク距離`D_H`、FC obstruction・公開root・Lean/mathlib pinを変更しない。
+
+### 元SU(2) Quaternion 8中心の半径1被覆・実際の8セルHaar証明書
+
+- **既存ABVの真正cap被覆とADKの真正Wilson弦距離の合成**：ABVで公理追加なしに証明された、真正Quaternion4元と中心符号2元による**8通りの真正SU(2)左平行移動**の低エネルギーcap被覆を利用。各元`g∈SU(2)`に、`E(a_i g)≤1/2`の元Quaternion変換`a_i`がある。ADKの元物理Wilson校正`d_J(a_i^{-1},g)^2=2E(a_i g)`と距離非負から、厳密に **`∀g, ∃i∈Fin 8, d_J(c_i,g)≤1`** をLean4で証明。中心`c_i=a_i^{-1}`は新規代理群ではなく元のSU(2)行列であり、コンパクト性による未指定ネット選択は不要。8個はインデックス付き中心で、全ての相異性を別個に宣言していない。
+- **任意半径`r>1`で元の8中心開球被覆**：上の定量半径1を使い`∀r>1,∀g,∃i∈Fin 8, g∈B_J(c_i,r)`。AFNの既存「最初の該当中心」ルールから実際の8個のBorelセル`C_i(r)`を構成し、一意所属、全群被覆、`C_i(r)⊆B_J(c_i,r)`を証明。AFOの2中心半径`3/2`から幾何半径を明示的に縮小できる。
+- **真正Haarの保守的・具体的有理重み**：`1<r`かつ`r²≤2`では、各真正セルは元のADN半径`r`のHaar球に含まれ、`0≤μ(C_i(r))≤1/2`を証明。具体的に全8セルの有理重みを`w_i=1/8`、有理重み総和を厳密に1とし、**`|μ(C_i(r))-1/8|≤3/8`** をLean4で証明。セルの質量が実際に互いに等しいという未証明の対称性仮定は一切導入しない。質量誤差`3/8`はAFOの`3/16`より広く、改善は中心を指定した被覆半径の縮小である。
+- **真正元FF受信器の8セル型付き有限有理証明書**：実際の有理半径`r=9/8`で上記8セル・全重み`1/8`をAFJの元HaarCellsへ接続。AFMで同定した真正符号付きWilson/Perron `F_z(g)`、`F_z(g)^2`、四つの真のQuaternion文字による`F_z(g)φ_j(g)`の中心有理標本を`0∈ℚ`に固定し、誤差を元FF BCFの真のノルム`M_{FF}(H,e)`、`M_{FF}(H,e)^2`、`M_{FF}(H,e)`で保証。独立の元AFG境界標本表`c`と`0≤θ_lo`が与えられる場合にのみ、AFM→AFL→AFK→AFJ→AFIの既存係数/分散証明書へ型付き移送する。実際の二閾値符号交差中心は証明していない。
+
+### exact-source CI・公理監査・Git tree一致
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalEightQuaternionChordalCellV5_PZ37AFP.lean` **1ファイル・344追加行、公開11定理・11件の`#print axioms`**。既存Lean・元物理模型・Haar則・workflows・公開rootは不変。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` に固定。
+- 初回exact-source [CI #41808197221](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41808197221)では、真正Haarセルの有理重み `1/8 : ℚ` と実数の等式をLeanが`change`で自動正規化できないエラー1件を検出。ソース全文とABV/ADK/AFN/ADN/AFOの型を確認し、`(p4Q2PZ37AFP_eightRationalWeight i : ℝ)=(1/8 : ℝ)`を明示証明して修正。最終exact-source HEAD `b1f593172faed92d09d61305573048d5be1a5bb0` の [CI #41809074860](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41809074860) は **11,323/11,323 SUCCESS**。11定理公理依存は`propext`、`Classical.choice`、`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。
+- source HEAD `b1f593172faed92d09d61305573048d5be1a5bb0`、test-merge `7e3e6038bb4b1a562c3d67af3e3e8956f6a8f249`、定理squash `8f5860a0cfbffd0236e646467a514673cac4f2e5` のGit treeは **`cd3518cf41b8fdc2688461bb19d55fdd11490181`** で完全一致。
+
+### 未解決obstruction・次段AFQ
+
+AFPは指定された真正Quaternion8中心で半径1被覆を無条件に証明し、実際の有理半径9/8で元Haar・元FFの有限8セル証明書を具体化した。一方、真正セルHaar質量の均等性・精密有理区間、より高密度な真正S³格子による半径`<1`の実効的被覆、元FF中心値の狭い有理評価、具体的二閾値非空符号殻、体積一様coercivity、物理Hamiltonianのspectral gap、連続体4D Yang–Mills質量ギャップは未証明。次段AFQでは、原SU(2)≃S³の実4座標を用いた細分格子と狭い真正Haarセル質量区間を重点的に形式化する。
+
+---
+
+## 検証済み定理 — AFO（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFN定理PR #6307・正本文書 #6308・mainミラー #6309 の全件MERGEDを継承し、AFO定理PR [#6310](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6310) は **MERGED**。定理squash SHA `69694abf4a1bfdef85588f1a20b95f783ac59753`。既存の真正SU(2)相互作用Wilson、中心化Gauss-law物理源、Perron真空・transfer、真正符号付きFF受信器、元正規化Haarと境界pair-Haar `ν_H`、`d_J`・`D_H`、FC obstruction、公開root・固定Lean/mathlibを変更しない。
+
+### 真正SU(2) Haarの明示2セル・真正FF有理ゼロ標本証明書
+
+- **非計算的な有限ネット選択を不要にした2セル**：元SU(2)の単位元 `1` と既存の真正中心反対元 `z=-1` を中心とする、半径 `3/2` の真正ADK弦距離球を用いる。ADNの既証明 `B_J(1,3/2) ∪ B_J(z,3/2)=SU(2)` から、`C₀=B_J(1,3/2)` と `C₁=SU(2)∖C₀` はBorel可測な重複のない完全分割であり、`C_i⊆B_J(g_i,3/2)` をLean4で証明。中心は元のSU(2)行列であり、代理群・有限置換Haarではない。
+- **具体的有理Haar重みを厳密に認証**：ADOの真正元Haar半径評価 `1/2 ≤ μ(C₀) ≤ 7/8` と確定的な補集合恒等式 `μ(C₀)+μ(C₁)=1` を使用し、**`|μ(C₀)-11/16|≤3/16`、`|μ(C₁)-5/16|≤3/16`** を証明。重み `(11/16,5/16)` は固定された文字通りの有理数で、両方厳密に正、和が厳密に1。セル質量誤差も `3/16` に固定。AFNの`Classical.choose`による任意実数の有理近似ではなく、真正Haar幾何から具体的な区間認証済み数値を導く。
+- **真正符号付きFF受信器の明示有理ゼロ標本**：`F_z(g)`、`F_z(g)^2`、`F_z(g)φ_j(g)` の2中心における有理候補をすべて `0` に固定。元FF有界連続関数の真のノルム `M_{FF}(H,e)` とAFLの真正四文字上界 `|φ_j|≤1` により、各中心の真の誤差を順に `M_{FF}(H,e)`、`M_{FF}(H,e)^2`、`M_{FF}(H,e)` で無条件に証明する。誤差係数は具体的数値に評価されておらず、真正物理受信器の体積依存ノルムのまま。
+- **元AFM→AFL→AFK→AFJ→AFI証明書へ接続**：独立に与えられたAFG真正元境界標本表 `c` と `0≤θ_lo` の下で、半径 `3/2`、中心2個、有理Haar重み・誤差、元FF・FF²・FFφ_j有理ゼロ標本と真の物理誤差を備える `originalNumericOnlyCellSamples` を直接構成。さらに元の係数・分散有理区間証明書へ型付きに変換する。`c`やstrict二閾値の通過中心を構成したものではない。
+- **精度の限界を明示**：これは**具体的有理データをもつ粗い認証済み2セル基準例**である。半径3/2、質量誤差3/16、ノルム大のゼロ標本誤差は、狭い厳密殻交差の成立や数値的な優位性を保証しない。半径を任意に縮小する実効的SU(2)≃S³格子、精密なHaar質量有理区間、受信器中心値の狭い数値区間、体積一様coercivity・物理Hamiltonian gap・連続体4D Yang–Mills質量ギャップは未証明。
+
+### Lean4形式検証・公理監査・exact-source Git tree
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalAntipodalTwoCellEffectiveHaarV5_PZ37AFO.lean` **1ファイル・349追加行、公開12定理・12件の `#print axioms`**。既存Lean、物理模型、測度・workflow、公開rootは不変。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を固定。
+- 初回CI [#41803889688](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41803889688) で`Set.mem_union.mp`の補題名誤り、`Fin 2`正規化と`change`の定義同一性不一致、二乗絶対値の簡約証拠の指定を検出。全文とADN・ADO・AFM・固定mathlibの型を照合し修正。最終source HEAD `bf3b955f7d79c1ff8369144a3c5f76b912f98993` の [exact-source CI #41804745964](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41804745964) は **11,322/11,322 SUCCESS**。12定理の公理依存は `propext`、`Classical.choice`、`Quot.sound` のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。
+- source `bf3b955f7d79c1ff8369144a3c5f76b912f98993`、test-merge `ba1dd8330de53984d142b676585fb2618a452de8`、squash `69694abf4a1bfdef85588f1a20b95f783ac59753` のGit treeは **`04287c1a375688df47fa10d01c9ad988a5ad3b7a`** で一致。
+
+### 未解決obstruction・次段AFP
+
+AFOで固定半径3/2の明示的な真正2セル・有理質量重み・真正FF有理ゼロ標本の型付き証明書は完成。次段AFPは、SU(2)≃S³上の**実効的なより細かい有限格子**、小半径Haarセルの具体的上下界、FF物理標本の狭い有理区間によって誤差予算を改善する。体積一様coercivity・物理Hamiltonian spectral gap・連続体4D Yang–Mills質量ギャップは未証明である。
+
+---
+
+## 検証済み定理 — AFN（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFM定理PR #6304・正本文書PR #6305・main文書ミラーPR #6306の全件MERGEDを継承し、AFN定理PR [#6307](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6307) は **MERGED**。定理squash SHA `0d1c0cf21d7ce0205c2b20f211f58ea48b3bfc7c`。既存の真正SU(2) Wilson相互作用、中心化Gauss-law物理源、Perron/transfer、元FF符号付き受信器、正規化SU(2) Haar、元境界pair-Haar `ν_H`、`d_J`・`D_H`、FC obstruction、公開root、固定Lean/mathlibは変更しない。
+
+### 元SU(2)有限Borelセルの存在と真正Haar・FF有理誤差証明書
+
+- **ADPの真正SU(2)有限ネットから厳密セルを構成**：任意の正半径 `r>0` でADPの真正SU(2)有限弦距離ネット `g_i` を使い、各 `g∈SU(2)` を、`d_J(g_i,g)<r` を満たす最初のインデックス `i` に割り当てる。`C_i=B_J(g_i,r) ∖ ⋃_{j<i}B_J(g_j,r)` と定義し、`C_i` のBorel可測性、一意所属、全体被覆、真正弦距離半径 `d_J(g,g_i)≤r` をLean4で証明。セルが空でないことや正質量を全セルで主張するものではない。
+- **元の正規化Haar質量に任意精度の有理包囲が存在**：各真のセル質量 `μ_Haar(C_i)` について、任意の `ε_w>0` で `q_i∈ℚ` が存在し、`|Measure.real μ_Haar(C_i)−q_i|≤ε_w`。AFJの真正`originalHaarCells`構造に、重複のない実セル・可測性・真のHaar質量誤差証明を供給する。重みの選択は`Classical.choose`に依存し、実際の有理値・有理区間計算を実行したわけではない。
+- **同じ真正FF受信器の中心有理近似を型付き証明**：任意の `ε_s>0` と有限中心について、元の `p4Q2PZ37ABZ_originalReceiverSection` による `F_z(g_i)`、`F_z(g_i)^2`、四つの真正Quaternion文字を掛けた `F_z(g_i) φ_j(g_i)` に、それぞれ絶対誤差 `≤ε_s` の有理近似が存在することを実数中の有理数稠密性から証明。中間ABZ transfer quotient `U` をFF受信器に置換せず、元の物理量と測度を保存する。
+- **AFM→AFL→AFK→AFJ→AFI→AFHの元の型付き連鎖へ接続**：有限ネットから `originalNumericOnlyCellSamples` が存在し、そのセル半径が指定された真正 `r` に厳密一致することを示す。任意の既存AFG shell sample table `c` と `0≤θ_lo` を与えれば、元の係数・分散有理区間証明書が`Nonempty`となることを導く。ここで**AFG入力 `c` 自体の構成、二閾値で通過する中心の存在、真の殻正質量は証明していない**。
+- **非計算的existenceと実効的numeric certificationの境界**：ADPの有限ネット存在と、`exists_rat_btwn`・`Classical.choose`による有理近似存在はLeanカーネルで検証した。しかし明示座標の有限ネット、セル質量の実数計算、具体的有理標本、セル数上界、非空二符号殻、有用な誤差余裕は未認証。これらを実測済みデータや実行可能アルゴリズムと誤認しない。
+
+### exact-source CI・公理監査・Git tree
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFiniteBorelHaarCellExistenceV5_PZ37AFN.lean` **1ファイル・307追加行、公開7定理・7件の `#print axioms`**。既存Leanファイル、元物理模型・Haar測度、workflow、公開rootは変更なし。Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 固定。
+- 正しい数学的型で初回からexact-source Lean成功。最終source HEAD `7b4f45cc50b0bc61b20c022f95c6f79cb2fb4dd1` の [CI #41801635520](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41801635520) は **11,321/11,321 SUCCESS**。新規7定理の公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ。`sorryAx`なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。
+- source `7b4f45cc50b0bc61b20c022f95c6f79cb2fb4dd1`、test-merge `b0f7fb8b5a6107c410e171bb83fd1571b33beadc`、squash `0d1c0cf21d7ce0205c2b20f211f58ea48b3bfc7c` のGit treeは **`ca4eeb78d61736bd86b92f2a80b9bad084013735`** で完全一致。
+
+### 未解決obstructionと次段AFO
+
+AFNは正半径に対する真正有限Borelセル・真正Haar質量有理包囲・真正FF中心有理近似の**非計算的存在**を形式証明した。一方、計算可能な元SU(2)格子とセル質量の明示誤差評価、具体的な有理FF標本の検算、AFG物理標本表の構成、strict二閾値符号交差、体積一様coercivity、物理Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは**未証明**。AFOでは真正SU(2)↔S³座標と有理区間演算による**実効的な小セル構成・質量/標本認証**へ進める。
+
+---
+
+## 検証済み定理 — AFM（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFL定理PR #6301・文書 #6302/#6303まで全件MERGEDの正本を継承し、AFM定理PR [#6304](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6304) は **MERGED**。定理squash SHA `9b1b19e45b3770bc464ffbeb1f650cd9b2105158`。既存の元SU(2)相互作用Wilson作用、中心化Gauss-law物理源、真正Perron真空・transfer、正規化SU(2) Haarと境界pair-Haar `ν_H`、真正弦距離 `d_J` と全リンク `D_H`、FC envelope、AEX二球障害、公開root、固定Lean/mathlibは変更しない。
+
+### 真正FF受信器の右リンク更新変動係数を外部仮定なく形式証明
+
+- **元のFFと中間transfer quotientを厳密に区別**：AFLで使う元受信器は `F_z(g)=p4Q2PZ37ABZ_originalReceiverSection` であり、ABZの元transfer section `U_z(g)=t_f(B[e:=g])/ρ_H(A,B[e:=g])` そのものではない。ABZの同じ真のGauss-law物理源から、**`F_z(g)=‖T_H‖⁻¹t_f(B)−P_z U_z(g)`**、`P_z=‖T_H‖⁻¹ρ_H(z)>0` を保持する。元の未更新源項は差で相殺するが、正の真正Perron因子は消去しない。
+- **元transfer quotientの明示包絡と単位弦距離係数**：AEU/GNの真正JQ物理受信器と元ABZ sectionの正確な関係 `F_JQ=a_H U`、`a_H=‖T_H‖⁻²>0` を使用し、**`M_U(H)=‖O_H‖/a_H`**、`|U_z(g)|≤M_U(H)` を導く。AEVの中心化物理源Haar L¹量 `M_src(H)` から `L_T(H)=13β₀M_src(H)`、AEQ/AEKの真正密度変動と下界から `L_ρ(H)=13β₀ exp(13β₀)M_ρ(H)`、`λ_ρ(H)>0` を得る。元AEFの商変動補題で、`d_J(g,h)≤1` のとき `|U_z(g)−U_z(h)|≤[(L_T+M_U L_ρ)/λ_ρ]d_J(g,h)` を証明。
+- **長弦も外部条件不要**：`d_J(g,h)>1` は上記の真正`M_U`包絡で制御し、**`L_U(H)=(L_T+M_U L_ρ)/λ_ρ+2M_U`** について全 `g,h∈SU(2)` で `|U_z(g)−U_z(h)|≤L_U(H)d_J(g,h)` を形式証明。非負性も別定理化。数値上界が体積一様という主張はしない。
+- **真正FF応答の変動・包絡へ型付き移送**：ABZのアフィン恒等式から全弦で **`|F_z(g)−F_z(h)|≤P_z L_U(H)d_J(g,h)`**。絶対値包絡は同じ元FFの有界連続関数ノルム **`M_{FF}(H,e)=‖p4Q2FF_originalWilsonRelativeSignedLinkResponseBCF_e‖`** から無条件に得る。新型 `originalNumericOnlyCellSamples` は受信器側・AFL四文字側の任意Lipschitz/envelope入力を一切要求せず、元の `F_z`・`F_z²`・`F_zφ_j` の実有理標本と真正SU(2) Haarセル証明だけを入力する。
+- **AFK→AFJ→AFI→AFHを元の物理量のまま接続**：元の四係数セル誤差は厳密に **`Δ_coeff,j=(P_z L_U(H)+M_{FF}(H,e))r+ε_coeff,j`**。元の真正Haarセル積分・係数/分散有理区間・二閾値殻の型付き証明書へ変換し、実際に認証された中心に限り元Wilson/Perron残差の二符号を引き継ぐ。架空の具体サンプル・Haarセル・代理測度は導入しない。
+
+### exact-source CI・公理監査・Git tree
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalPhysicalReceiverSectionChordalSlopeV5_PZ37AFM.lean` **1ファイル・460追加行、公開15定理・15件の `#print axioms`**。既存Lean、物理模型、元測度、workflow、公開rootは変更なし。Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 固定。
+- 初回CI [#41795835331](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41795835331) は中間`U`と元FF`F`を取り違えたAFL証明書での依存型不一致5件を検出。元ABZ/AEU/AEV/AEF/AEK/AEQ/AFL/AFKの型とLeanファイル全文を照合し、真正FFアフィン項と`P_z`を保って修正した。最終exact-source HEAD `f16b0d7e7ac781b9679cc7948478000850732e16` の [CI #41797073199](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41797073199) は **11,320 / 11,320 SUCCESS**。15定理の公理は`propext`・`Classical.choice`・`Quot.sound`のみ。`sorryAx`なし、変更Lean warning/error **0/0**、独立MCP completion receipt SUCCESS。
+- source HEAD `f16b0d7e7ac781b9679cc7948478000850732e16`、test-merge `524e26adb4c5d69f4a281bbb485f30feccf6854e`、squash `9b1b19e45b3770bc464ffbeb1f650cd9b2105158` のGit treeは **`04cf231516106a218200fa9893dbbff3980a9573`** で一致。
+
+### 未解決のobstructionと次段AFN
+
+AFMは**固定有限体積での元の物理受信器の外部包絡・Lipschitz証明条件を除去**した。なお真正SU(2)有限可測セルの具体構成、Haar質量の厳密有理区間、元FF受信器の有理中心値誤差、実際に両閾値で符号交差する中心、体積一様coercivity、物理Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップは**未証明**。次段AFNでは真正Haarセル・中心・半径・質量と有限数値標本の構成的認証を強化し、非空の厳密二符号殻の充足可能性を具体的に調べる。
+
+---
+
+## 検証済み定理 — AFL（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFK定理PR #6298・文書 #6299/#6300の全件MERGEDを継承し、AFL定理PR [#6301](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6301) も **MERGED**。定理squash SHA `a23be3f0ce64a6d6a0b0287f0cd4d3ecc322139e`。元の相互作用Wilson SU(2)、中心化Gauss-law物理源、真正Perron真空、元右リンク更新transfer、正規化SU(2) Haar・境界pair-Haar測度 `ν_H`、元全リンク距離 `D_H`、FC envelope、AEX保守的二球FC obstruction、公開root・固定Lean/mathlibを変更しない。
+
+### 真正SU(2)四成分文字の明示係数1弦距離評価
+
+- **実8成分特徴と元文字の厳密同一性**：元のSU(2)正規化実8成分特徴 `J(g)` と元Wilson一リンク文字 `χ(g)=1−E(g)` について、元の相対トレースkernelの真正Hilbert内積から `χ(g)=⟪J(1),J(g)⟫_ℝ` を証明。ADKの `‖J(g)‖²=1` により `‖J(1)‖=1`。Cauchy–Schwarzで **`|χ(g)−χ(h)|≤d_J(g,h)`** を導出。独立の代理文字・新規測度・任意のLipschitz仮定は導入しない。
+- **元SU(2)左平行移動は真正等長**：ADKで検証済みの `d_J(g,h)²=2E(g⁻¹h)` を使用し、任意の真正 `a,g,h∈SU(2)` で **`d_J(ag,ah)=d_J(g,h)`** を証明。これは群作用の元行列・元Wilsonエネルギーだけを使う。
+- **四つの真正Haar文字に外部上界不要**：ACKの元Quaternion要素 `q_j` による `φ_j(g)=χ(q_jg)` に左等長性を適用し、全 `j∈Fin 4,g,h∈SU(2)` で **`|φ_j(g)−φ_j(h)|≤d_J(g,h)`**。別のACK真正恒等式 `Σ_j φ_j(g)²=1` と二乗非負性から **`|φ_j(g)|≤1`** も証明。ここで「係数1」は明示上界であり、最適定数の下限・必要性を別途証明したという意味ではない。
+- **AFKの文字側仮定を型から除去**：真正受信器 `F_z` のenvelope `M_F(z)` と弦距離斜率 `L_F(z)`、元SU(2)有限Haarセル・中心・半径・質量の証明、中心有理サンプル誤差のみを要求する新しい`originalReceiverOnlyCellSamples`を定義。文字側 `M_φ=L_φ=1` は外部入力でなく上記Lean定理から構成し、AFK完全証明書へ型付き移送する。四係数セル誤差は **`Δ_coeff,j=(L_F+M_F)r+ε_coeff,j`** と簡約。
+- **真正Haar・物理ギャップへの条件付き連鎖**：新型からAFK→AFJの真正セル積分→AFIの元係数・分散有理区間→AFHの真の二閾値殻へ接続。検査が通った実中心では元Wilson/Perron残差ギャップの厳密二符号、同一真正境界pair-Haar殻の正質量、AFD真正 `2r` 分離packing `|t|κ_H(r)≤ν_H(Shell)`、非零振幅・閾値分離障害を引き継ぐ。物理的な中心が無条件に存在するとは主張しない。
+
+### exact-source CI・公理監査・Git tree
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFourModeSharpChordalLipschitzV5_PZ37AFL.lean` **1ファイル・377追加行、公開11定理・11件の `#print axioms`**。既存Lean、元物理模型、Haar則、workflow、公開rootは変更なし。Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 固定。
+- 初回CI #41792435952で `Finset.single_le_sum` の被加算関数型推論不足と、独立受信器証拠構造で体積 `H` の重複束縛による依存型不一致を検出。全Leanソース・ACK/ADK・AFK/AFJ・固定mathlibシグネチャを照合し修正。最終exact-source HEAD `823b75ac8e8fecb2d8c9db795eb985a20f92498b` に対する [CI #41793129863](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41793129863) は **11,319/11,319 SUCCESS**。11定理の公理依存は `propext`、`Classical.choice`、`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error **0/0**、独立MCP completion receiptもSUCCESS。
+- source HEAD・test-merge `b32d68219e0f3de69c389a8c5fda6d349054d22e`・squash `a23be3f0ce64a6d6a0b0287f0cd4d3ecc322139e` のGit treeはすべて `e1699fd75182a3871b68d86500ee28b3cd519b99` で一致。
+
+### 未解決obstructionと次のAFM
+
+AFLで文字側のenvelope・弦距離係数は無条件に証明した。一方、**元Wilson/Perron物理受信器 `F_z` のLipschitz係数とenvelope、真正SU(2)有限セル分割とHaarセル質量の有理区間、中心値サンプル、実際の厳密殻交差、H一様coercivity**は依然未証明。物理Hamiltonian spectral gapと連続体4D Yang–Mills質量ギャップも未証明。次段AFMでは受信器の真の右リンク更新transfer・Perron因子・中心化Gauss-law物理源を分解し、実8成分弦距離による数値検証可能な真の受信器変動係数を検討する。
+
+---
+
+## 検証済み定理 — AFK（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAPの文書ミラーのみ。AFJ定理PR #6295と文書PR #6296/#6297をMERGEDとして継承し、AFK定理PR [#6298](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6298) も **MERGED**。定理squash SHA `2c644f98e5769b98472ff04b89f37fb92d7d4ecb`。元の相互作用Wilson SU(2)、中心化Gauss-law物理源、真正Perron真空、元の右リンク更新transfer、正規化SU(2) Haar・境界pair-Haar測度 `ν_H`、真正全リンク距離 `D_H`、FC envelope、AEX保守的二球FC obstruction、公開root・Lean/mathlib固定pinを変更しない。
+
+### 真正SU(2)弦距離の有限セル半径とWilson/Perron積分証明書
+
+- **元の真正d_J・Haar分割を保持**：ADKで証明された元のSU(2)実8成分特徴距離 `d_J(g,h)=‖J(g)−J(h)‖` を使う。AFJの有限可測分割 `C_i` と真正Haar質量の認証済み有理重みをそのまま保持し、各セルに真正SU(2)中心 `g_i`、共通半径 `r≥0`、`g∈C_i⇒d_J(g,g_i)≤r` の型付き証拠を追加する。新たな代替距離・測度・receiverは導入しない。
+- **元の受信器・Haar文字の上界とLipschitzを厳密な別証拠として保持**：同じ元F55/Gauss-law源から得る真正Wilson/Perron受信器 `F_z(g)` の包絡 `|F_z(g)|≤M_F(z)` と弦距離斜率 `|F_z(g)−F_z(h)|≤L_F(z)d_J(g,h)`、四つの真正Haar文字 `φ_j` の `M_φ(j)` と `L_φ(j)` をすべて元関数への型付き条件として保持。これらの正の数値評価や一様性は未証明であり、形式上の入力に限る。
+- **有限セル中心値から全セル誤差へ**：真正中心 `g_i` で `F_z`、`F_z²`、`F_zφ_j` それぞれの有理標本 `q_i` と中心誤差 `ε` を厳密に検証すれば、実際のセル全体で
+  `Δ_mean=L_F r+ε_mean`、
+  `Δ_second=2M_F L_F r+ε_second`、
+  `Δ_coeff,j=(L_F M_φ,j+M_F L_φ,j)r+ε_coeff,j`
+  が成立する。二乗の因数分解および積の加減分解をLean4で直接証明し、有限個の中心誤差からAFJの無限個のcellwise不等式を導出。非負性も別途証明。
+- **AFJ→AFI→AFHの真正型付き連鎖**：半径・中心・真正変動証明書からAFJの元Haar-cell quadrature構造を作り、AFIの元係数4個・真の分散の有理誤差証明書を構成。条件付きの厳密二符号選別から元の残差殻 `Shell(θ_lo,θ_hi)` に真正正Haar質量を導出し、AFDの `2r` 分離packingで `|t|κ_H(r)≤ν_H(Shell)` を保持する。認証中心では元物理振幅平方の正性と厳密に異なる二閾値も保存する。
+
+### exact-source CI・公理監査・Git tree
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalChordalCellRadiusCertificatesV5_PZ37AFK.lean` **1ファイル・520追加行、公開10定理・10件の `#print axioms`**。既存Leanモジュール・元物理模型・Haar則・workflow・公開rootは変更なし。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 固定。
+- 初回CI #41785331369では数式の加法不等式補題の向きと絶対値のLean記法を修正。次のCI #41786122008では11,318/11,318のビルドが成功したが未使用前提のwarning3件を検出し、冗長な補助補題引数のみ整理。最終exact-source HEAD `651ab2071fa7b01170c9874425b41776428ee796` に対する [CI #41786776626](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41786776626) は **11,318/11,318 SUCCESS**。10件の公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、変更Lean warning/error **0/0**、独立MCP completion receiptもSUCCESS。
+- source HEAD・test-merge `f062617d51d517b31cd09d19d2a295a9d8740627`・squash `2c644f98e5769b98472ff04b89f37fb92d7d4ecb` のGit treeはすべて `86d8c6fae28f478db77c87723fdd98075ecb3658` で一致。
+
+### obstructionと次段AFL
+
+AFKは**すでに真正関数上で認証済みのセル半径・受信器と文字の変動率・中心値誤差を入力した場合の数学的な接続定理**。真正Wilson–Perron受信器の具体的Lipschitz定数・SU(2)文字の数値変動定数・具体的Haarセル分割と質量・有理標本認証・非空の厳密殻交差はまだ構成されていない。体積一様coercivity、物理Hamiltonian gap、連続体4D Yang–Mills質量ギャップの証明は主張しない。次のAFLでは、元のSU(2)8次元特徴とWilson積・Perronの正密度変動に基づく**実際の受信器・文字のchordal Lipschitz定数**を評価し、有限セル有理証明書の充足可能性を調べる。
+
+---
+
+## 検証済み定理 — AFJ（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFI定理PR #6292・文書PR #6293/#6294までMERGED済み。AFJ定理PR [#6295](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6295) も **MERGED**、定理squash SHA `80fd246cc3b05a13b4ac20e349a7d1a9108462c4`。元の相互作用Wilson SU(2)、中心化Gauss-law物理源、Perron真空、同じ右リンク更新transfer、真正正規化SU(2) Haar・境界pair-Haar `ν_H`、全リンク距離 `D_H`、FC envelope、AEX保守的FC no-go、公開rootと固定Lean/mathlibを変更しない。
+
+### 真正SU(2) Haar有限セル積分の誤差認証
+
+- **真正可測分割・質量の厳密証明書**：同じSU(2)を有限個の可測セル `C_i` へ分け、各点の一意所属、真正Haar質量 `μ(C_i)` と有理数重み `p_i` の誤差 `|μ(C_i)−p_i|≤δw_i`、`δw_i≥0` を型付きで保持。数値セル・質量を証明抜きで仮定した離散代替測度は使用しない。
+- **有理有限段関数の真正積分**：各セル上の有理候補 `q_i` と実被積分関数 `f(g)` について `|f(g)−q_i|≤ε` をセルごとに真正証明する。有限指示関数の和を元の正規化Haar測度で積分し、厳密に `∫step dμ=Σ_i μ(C_i)q_i` をLean4で証明。したがって **`|∫f dμ−Σ_i q_i p_i|≤ε+Σ_i|q_i|δw_i`**。セル内振動とHaarセル質量の誤差を分離して保持する。
+- **真正物理受信器そのものを積分**：AFGの元全境界有限ネットの各中心で、真正Wilson/Perron中心化受信器 `F_z`、その二乗 `F_z²`、ACK四成分Haar係数を定める `F_z φ_j` それぞれについて同一可測Haar分割に依存する有理セル標本と厳密誤差証拠を型付きで保持。元のWilson source、Perron真空、transferやHaar測度を代理データに置換しない。
+- **平均と二次モーメントから分散を導出**：元の真の分散恒等式 `V_z=∫F_z²dμ−(∫F_zdμ)²` により、有理平均候補 `û`、二次モーメント候補 `ŝ` から **`v̂=ŝ−û²`** と `δV=δSecond+δMean(2|û|+δMean)` を構成し、真正分散の絶対誤差を証明。分散の独立oracleは仮定しない。
+- **AFI→AFH→AEA/AFDへ型付き接続**：四係数と分散の真正有理誤差をAFI証明書へ代入し、両閾値の厳密符号を認証した場合に限り、同じ真正殻で正Haar測度と `2r` 分離packing `|t|κ_H(r)≤ν_H(Shell)` を得る。無条件の候補非空性を宣言しない。
+
+### exact-source CI・独立公理監査・Git tree
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalHaarQuadratureCertificatesV5_PZ37AFJ.lean` **1ファイル・660追加行、公開16定理・16件 `#print axioms`**。既存Lean、元SU(2)物理模型、測度、workflow、公開rootに変更なし。Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 固定。
+- 初回CI #41778604965では固定mathlibに存在しない `Set.indicator_of_not_mem` の参照、積分ノルム評価の型推論、絶対値のLean構文、三角不等式の引数指定を検出。新規ファイル全文と元ACK・ACL・ACM・AFIの定義、固定mathlib APIを照合して修正。最終exact-source HEAD `cba2cb1d4b129bdbe1ed45829f60b0b43b23a8d0` の [CI #41779210616](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41779210616) は **11,317/11,317 SUCCESS**。16定理の公理依存は `propext`、`Classical.choice`、`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error 0/0、MCP CI completion receiptもSUCCESS。
+- source・test-merge `08d6b46d629341005357d5f2a30731c22fd3824b`・squash `80fd246cc3b05a13b4ac20e349a7d1a9108462c4` のGit treeはすべて `66413cf6953493f301ea02aede90c5b00fc7a08d` で一致。
+
+### 未解決境界・次段AFK
+
+AFJが証明したのは、**元の物理受信器のセル内誤差と真正Haar質量誤差を個別に証明した場合**の有限有理積分・分散認証である。実際のSU(2)セル分割と数値的Haar質量区間、真正受信器のセル内振動・有理標本、非空の二閾値符号交差、有益なpacking数、体積一様coercivity、物理Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップの実証ではない。次段AFKでは、元SU(2)の被覆と元の物理受信器の連続性・Lipschitz評価を使い、有限セルの誤差予算を現実に検証する方法と数値certificationの障害を解析する。
+
+---
+
+## 検証済み定理 — AFI（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFHの真正Wilson/Perron区間殻定理（#6289、文書 #6290/#6291、MERGED）を継承し、AFI定理PR [#6292](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6292) を **MERGED** として正式記録する。定理squash SHAは `3c5ee371e9a63a149cea3b705432b3f06a8f440e`。元の相互作用Wilson SU(2)、中心化Gauss-law物理源、Perron真空、右リンク更新transfer、真正境界pair-Haar測度 `ν_H`、元の全リンク距離 `D_H`、FC envelope、AEX保守的FC no-go、公開rootと固定Lean/mathlibを変更しない。
+
+### 真正四成分係数・分散からの計算可能形の区間証明書
+
+- **元物理量への証拠付き入力**：真正ACKのHaar四係数 `m_j(a)` と真正ACLのreceiver分散 `V(a)` について、AFGの同じ有限全境界ネット `s` 上の有理数候補 `q_j(a), v̂(a)` と、`|m_j(a)-q_j(a)|≤δ_j(a)`、`|V(a)-v̂(a)|≤δ_V(a)`、`δ_j,δ_V≥0` の厳密証明を依存型構造に保持。候補数値を認証なしに元Wilson/Perron物理値として扱わない。
+- **真正ACM恒等式から誤差伝播**：`A(a)^2=Σ_{j:Fin 4}m_j(a)^2`、`V(a)=4A(a)^2+W(a)` をそのまま使用。有理係数の二乗和 `â=Σ_j q_j²`、`Δ_A=Σ_j δ_j(2|q_j|+δ_j)`、`ŵ=v̂−4â`、`Δ_W=δ_V+4Δ_A` を構成し、真正元物理量について `â−Δ_A≤A²≤â+Δ_A` および `ŵ−Δ_W≤W≤ŵ+Δ_W` を証明。**Wの誤差を独立の仮想受信器に置換しない**。
+- **区間幅と閾値別の頑健性**：振幅平方の区間幅は `2Δ_A`、高次残差の区間幅は `2Δ_W`。真正ギャップ `G_θ=W−θA²` に必要な誤差予算は `Δ_G(θ)=δ_V+(4+θ)Δ_A`（`θ≥0`）。両閾値 `0≤θ_lo≤θ_hi` に対し、`η_lo<v̂−(4+θ_lo)â−Δ_G(θ_lo)` かつ `v̂−(4+θ_hi)â+Δ_G(θ_hi)<−η_hi` を満たす有限標本は、AFHの真正区間証明書の認証済み殻内中心となる。
+- **真正Haar殻への型付き接続**：厳密符号が成立した中心の元 `D_H` 球は同一真正殻 `Bad_(θ_lo)∖Bad_(θ_hi)` に包含され、AEAの `κ_H(r)>0` により正の元pair-Haar測度が従う。AFH/AFGの元greedy `2r` 分離packingへ接続して `|t|κ_H(r)≤ν_H(Shell)` を継承し、既存のAFE/AFA GI・FC条件を変更しない。
+
+### Lean4検証・公理依存・Git tree
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalCoefficientIntervalBudgetsV5_PZ37AFI.lean` **1ファイル483追加行・公開11定理と11件 `#print axioms`**。既存Leanファイルは変更なし。Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 固定。
+- 初回は説明文中の `+/-` がLeanコメント開始記号として解釈されたソース監査エラー、次に `∑ j` の被加算項を括弧で囲まなかった束縛範囲のelaborationエラーを全文と依存定義から修正。最終exact-source HEAD `6439c7202cdf4275e163f049dd2dde22593b8be2` に対する [CI #41776343744](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41776343744) は **11,316/11,316 SUCCESS**。11件の公理依存は `propext`、`Classical.choice`、`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error **0/0**。独立MCP completion receiptもSUCCESS。
+- source HEAD・test-merge `d09f3a863aeab6bcd35952f51bd9249caaf8ab57`・squash `3c5ee371e9a63a149cea3b705432b3f06a8f440e` のGit treeはすべて `bc26bd9e3feb8154ba58c4ec7fb68646e0509db0` で一致。
+
+### 証明の境界と次のAFJ
+
+AFIは**値と誤差の証拠が供給された場合の区間導出・真正殻判定**を完成したもの。真正Wilson–Perron係数や分散の具体的な数値積分・有理上下界、非空の厳密符号交差、有益なpacking数、体積 `H` 一様coercivity、物理Hamiltonian spectral gapまたは連続体4D Yang–Mills質量ギャップを主張しない。次段AFJでは同一元物理受信器の係数積分・分散について、証明付き有理近似、有限標本誤差、独立に追試可能な数値certificateの構成を検討する。
+
+---
+
+## 検証済み定理 — AFH（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFG（定理PR #6286、文書 #6287/#6288、マージ後CI #41747718991 SUCCESS）を継承し、AFH定理PR [#6289](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6289) は **MERGED**。定理squash SHA `5299db6ecc751766cb1c51188b5505807f70d83c`。元のWilson SU(2)、中心化Gauss-law物理源、Perron真空、元の右リンク更新transfer、同一真正境界pair-Haar測度 `ν_H`、元の全リンク距離 `D_H`、FC envelope、固定Lean/mathlib、公開rootおよびAEXの保守的二球FC no-goを変更しない。
+
+### 真正Wilson/Perron残差の区間上下界証明書
+
+- **真正元物理量を保持**：有限ネット上の元振幅平方 `A_F(a)^2` と元高次残差 `W_F(a)` に対し、各中心で `ampLower(a)≤A_F(a)^2≤ampUpper(a)`、`residualLower(a)≤W_F(a)≤residualUpper(a)` を元物理量との型付き証明として保存。区間数字だけで真正上界と見なすことも、transfer・Perron重み・Haar測度を代理模型へ交換することもしない。
+- **非負閾値での厳密符号検査**：`0≤θ_lo≤θ_hi` のもと、`η_lo<residualLower(a)−θ_lo*ampUpper(a)` かつ `residualUpper(a)−θ_hi*ampLower(a)<−η_hi` を有限集合で検査すると、元の真正残差ギャップ `G_θ=W_F−θ*A_F²` に対して `G_(θ_lo)(a)>η_lo>0`、`G_(θ_hi)(a)<−η_hi<0` が従う。**区間認証済み中心はAFGの真正Robust中心集合の部分集合**であり、偽陽性を生じない。
+- **物理比・厳密閾値障害**：認証中心では `A_F(a)^2>0` と `θ_lo<θ_hi` が必要で、真正物理比 `θ_lo<W_F(a)/A_F(a)^2<θ_hi` が成立する。この比は元のWilson/Perron receiverの同一配置上で定義され、ゼロ振幅の点を隠れた仮定として除外しない。
+- **区間を狭めると認証が維持**：`residualLower` の引上げ、`residualUpper` の引下げ、`ampLower` の引上げ、`ampUpper` の引下げが真正上下界として保持されるなら、認証済み中心集合は単調に拡大する。各標本が少なくとも一方の厳密marginを満たせない場合は当該有限区間表の認証候補が空となるが、**真の殻の空性や、より精密な区間表での不可能性は主張しない**。
+- **exact-value embeddingと条件付き完全性の境界**：元の真正物理量を上下界の両方に採る形式的なexact intervalはAFGの元Robustフィルタと厳密に一致する。これは型付き構造の整合性を示すが、元の真の振幅・残差を数値評価したことではない。
+
+### 区間認証から真正Haar・GI・FCへ
+
+- AFDの有限greedy分離packingを**区間認証済み中心のみ**に適用し、元の全リンク距離 `D_H(a,b)≥2r` のもとで同一の真正Haar殻 `Shell(θ_lo,θ_hi)=Bad_(θ_lo)\\Bad_(θ_hi)` にある球の重複を排除。AEAの元SU(2)球下界 `κ_H(r)>0` から `|t|κ_H(r)≤ν_H(Shell(θ_lo,θ_hi))` を証明。
+- これをAFGの元上界 `U_AFG=min(U_hi,U_lo−|t|κ_H(r))` に移送し、追加の真正Haar測度仮定なしで `ν_H(Bad_(θ_hi))≤U_AFG` を導出。AFHの数値認証と、AFEの独立低・高閾値表の認証はそれぞれ必要。
+- 独立の真正数値条件 `θ_hi*A4_H+B_H²*U_AFG<64*A4_H` なら平均二乗GI証明書 `Budget_H>0` と元の符号付き二posterior応答が非零となる真正正Haar測度の開領域を導出。より強い真のFC条件には独立の未使用分 `Eunused_H≤σ*A4_H` と `(θ_hi+σ)*A4_H+B_H²*U_AFG<64*A4_H` が必要。元GI平均非正にはAFAの必要質量下界を保持する。
+
+### exact-source CI・正式定理記録
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalIntervalShellWitnessesV5_PZ37AFH.lean` **1ファイル560行・19公開定理と19件 `#print axioms`**。既存Lean、元物理模型、Haar測度、workflow、公開rootは一切変更しない。Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を固定。
+- 初回CI #41768798053で固定mathlibに存在しないFinset空集合補題名を検出。全文・依存定義を照合して `Finset.ext` による直接証明に修正。修正後のexact-source HEAD `11494dd6427302aabb4924bbf223b025f8836357` に対する [CI #41769376813](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41769376813) は **11,315/11,315 SUCCESS**。19定理の依存公理は `propext`、`Classical.choice`、`Quot.sound` のみで、`sorryAx` なし、変更Lean warning/error **0/0**。
+- source HEAD、test-merge `87d33105c4acdc401c47d38b534cbdeea86030f9`、squash `5299db6ecc751766cb1c51188b5505807f70d83c` のGit treeが **`0eeec801e920c0b6c5433afe6896c1a2a9759967` で一致**。これは有限体積での真正物理量の区間条件付き形式証明書であり、具体的な数値区間・H一様coercivity・物理Hamiltonian spectral gap・連続体4D Yang–Mills質量ギャップの実証ではない。
+
+### 次の独立課題 — AFI
+
+真正Wilson/Perron振幅・高次残差の有限標本で、元の連続性・上下界から検証可能な誤差予算の構成を検討し、数値的に認証可能な殻内候補と空表障害を分離する。真正SU(2)・Perron・物理Gauss-law sourceとAEXのno-goは維持する。
+
+---
+
+## 検証済み定理 — AFG（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` はREADME・ROADMAPの文書ミラーのみ。AFF（定理PR [#6283](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6283)、文書 #6284/#6285、マージ後CI #41739389697 SUCCESS）を継承したAFG定理PR [#6286](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6286) は **MERGED**。定理squash SHA `8b3bcb6746e1eea0222621e91578c12ef9d1b927`。元の相互作用するWilson SU(2)、中心化Gauss-law物理源、Perron真空、右リンク更新transfer、同一元境界pair-Haar測度 `ν_H`、元全リンク距離 `D_H`、FC envelope、公開rootとLean/mathlib固定pinを変更せず、AEXの保守的二球FC no-goも維持する。
+
+### 真正有限ネット・頑健な殻中心の形式証明
+
+- **真正独立誤差つき有限ネット**：閾値 `θ_lo≤θ_hi`、二つの正の振動許容値 `η_lo,η_hi`、半径 `r>0`、実際の境界pair有限ネット `s` とその `D_H` 被覆証拠、および元の残差ギャップ `G_θ(z)=W_F(z)−θ A_F(z)^2` の両閾値での一様変動証拠を依存型 `originalShellSampleTable` に保持。AFB一様連続性とAEE有限被覆から、任意の正許容値について真正表の存在を証明する。
+- **真正物理値の有限フィルタ**：`Robust(s)={a∈s | η_lo<G_(θ_lo)(a) ∧ G_(θ_hi)(a)<−η_hi}` を定義。各頑健中心 `a` について元の全リンク球 `B_D(a,r)` が真正差分殻 `Bad_(θ_lo)\\Bad_(θ_hi)` に含まれ、AEAの正Haar球下界がそのまま適用される。
+- **分離packing・重複の排除**：AFDの有限greedy構成により `t⊆Robust(s)` を抽出し、異なる中心間の距離 `D_H(a,b)≥2r` を証明。ADLの元の三角不等式により各球の非重複性を得て、**`|t| κ_H(r)≤ν_H(Bad_(θ_lo)\\Bad_(θ_hi))`** をLean4で証明。ここで `κ_H(r)=κ(r/(2|Link_H|+1))^(2|Link_H|)>0` はAEAの真正SU(2)ペアHaar球下界であり、体積 `H` には依存する。
+- **中心検出の条件付き完全性**：元の境界配置 `z` に厳密な二符号 `G_(θ_lo)(z)>0>G_(θ_hi)(z)` が存在すれば、正の振動余裕を選んだ真正有限ネットで頑健中心を検出でき、`|t|κ_H(r)>0` を伴う真正殻質量下界証明書が存在する。一方、そのような元物理点の**無条件存在を証明したのではない**。具体的標本値・有限比較の数値認証や体積一様下界は別課題。
+
+### AFEとの統合・真正GI/FCへの条件付き移送
+
+- 独立に認証したAFEの低・高閾値の有限表上界 `U_lo,U_hi` と、同一真正殻で認証した分離packing `t` から **`ν_H(Bad_(θ_hi))≤U_AFG=min(U_hi,U_lo−|t|κ_H(r))`** を証明。これは二つのHaar上界の引き算から下界を捏造する操作ではない。証明書が有効なら `0≤U_AFG≤1`、かつ両AFE表より悪化しない。
+- **元の平均二乗GI証明書**：`θ_hi≥0` と別途数値認証された `θ_hi*A4_H+B_H²*U_AFG<64*A4_H` の下で、元の `Budget_H>0` と元の符号付き二posterior GI応答が非零となる真正正Haar開領域を導出。**より強い元FC判定** には独立の真の未使用分 `Eunused_H≤σ*A4_H` と `(θ_hi+σ)*A4_H+B_H²*U_AFG<64*A4_H` が必要。元GI平均証明書の非正性にはAFAの必要質量下界を移送する。
+
+### 正本検証・依存公理・未解決境界
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFiniteShellNetPackingV5_PZ37AFG.lean` **1ファイル579行、18公開定理・18公理監査**。既存Leanファイル・workflow・物理模型・Haar測度・公開rootは不変更。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 固定。
+- [exact-source CI #41746954218](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41746954218) は **11,314/11,314 SUCCESS**。18定理の公理依存は `propext`、`Classical.choice`、`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error **0/0**。source HEAD `f10d7905bb93b061c32a485b0bbe0ecda41e8354`、GitHub test-merge `6ab4343eacd257fac962f6ff08f3a8cc4ab73f93`、squash `8b3bcb6746e1eea0222621e91578c12ef9d1b927` のGit tree `6ac57abc8e89915d402d6e08da9bd3875dbf594e` が完全一致。
+- これは**元モデルの有限体積・条件付き真正Haar証明書**であり、元の具体的gap標本の数値下界、`H` 一様coercivity、物理Hamiltonian spectral gap、連続体4D Yang–Mills質量ギャップの証明ではない。AEXの保守的FC二球no-goを保持する。
+
+### 次の独立課題 — AFH
+
+真正有限ネットの厳密符号検出を、元Wilson/Perronの振幅・残差の区間誤差証明書、閾値間の符号交差・空表障害、半径とpackingの検査可能な定量条件へ進める。必要な数値誤差や物理的符号交差を仮定なしに捏造しない。
+
+---
+
+## 検証済み定理 — AFF（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFE（定理PR #6280、文書 #6281/#6282）を継承し、AFF定理PR [#6283](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6283) は **MERGED**。定理squash SHAは `e1b82397187a259892f9b7e09d8a2b70bc3bf9f5`。真正Wilson SU(2)、中心化Gauss-law物理源、Perron真空、元の右リンク更新transfer、同一境界pair-Haar測度 `ν_H`、FC envelope、真正全リンク距離 `D_H`、固定Lean/mathlibと公開rootを変更しない。AEXの保守的二球FC no-goも保持する。
+
+### 真正Haar閾値殻の厳密分割
+
+- 真正残差ギャップ `G_θ(z)=W_F(z)−θ A_F(z)^2` を使い、`Bad_θ={z | G_θ(z)>0}` と証明。任意の `θ_lo≤θ_hi` に対して `Shell(lo,hi)=Bad_(θ_lo)∖Bad_(θ_hi)` は真正pair-Haar可測で、**`ν_H(Bad_(θ_hi))+ν_H(Shell(lo,hi))=ν_H(Bad_(θ_lo))`**。隣接閾値殻は互いに交わらない。
+- **真正殻内球証明書**：同一の元境界配置 `a` と異なる正の許容誤差 `η_lo,η_hi` により `G_lo(a)>η_lo>0`、`G_hi(a)<−η_hi<0`、および元の `D_H` による双方の振動評価を型付きで保持する。元の `D_H` 球 `B_D(a,r)` が殻に包含され、AEAから **`ν_H(Shell(lo,hi))≥κ_H(r)>0`** を証明。ここで `κ_H(r)=κ(r/(2|Link_H|+1))^(2|Link_H|)` はSU(2)元Haar確率の真の、体積依存する球下界。
+- もし実際の中心 `a` に `G_lo(a)>0>G_hi(a)` があるなら、AFBのコンパクト一様連続性により真正殻内球証明書の存在を構成する。しかし **そのような中心の無条件存在、数値的に大きな球、体積一様な下界は宣言しない**。AFEの上界同士の引き算から下界を捏造しない。
+
+### 有限階層の非重複証明書と既存GI・FCへの接続
+
+- 元の隣接閾値を型が固定する有限 `ShellChain` を構成し、殻ごとの真正Haar球下界を重複なく合計する。`L_chain=Σ_i κ_H(r_i)` と、AFEの独立した低閾値・高閾値の表上界を `U_lo,U_hi` とすると、元の同一Haar確率で **`ν_H(Bad_(θ_hi))≤min(U_hi,U_lo−L_chain)`** をLean4で証明。有効な表なら右辺は `[0,1]` に入り、既存AFE上界より悪化しない。
+- `θ_hi≥0` および別途検査した `θ_hi*A4_H+B_H²*U_AFF<64*A4_H` の下で、元の平均二乗GI証明書が正、かつ元の符号付き二posterior GI応答が非零となる開いた正Haar測度領域が存在する。より強い元FC判定には独立の真の未使用分 `Eunused_H≤σ*A4_H` と `(θ_hi+σ)*A4_H+B_H²*U_AFF<64*A4_H` が必要。平均GI非正なら、AFAの逆向き例外質量下界が `U_AFF` へ引き継がれる。
+
+### exact-source CIと変更境界
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalHierarchicalHaarShellCertificateV5_PZ37AFF.lean` **1ファイル・564行のみ追加**、新規公開21定理と21件 `#print axioms`。既存Leanファイル・測度・模型・workflow・公開rootは変更なし。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。
+- 初回の依存型再帰の固定引数の誤渡しを修正し、最終exact-source HEAD `f0e57b26d6a37242138b94caf20cced09147fd65` に対する [CI #41738490132](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41738490132) が **11,313/11,313 SUCCESS**。21定理すべての公理依存は `propext`、`Classical.choice`、`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error **0/0**。
+- source・test-merge `adc5e982fcad8ba18a5ba7c01104e7b69600790a`・squash `e1b82397187a259892f9b7e09d8a2b70bc3bf9f5` のGit treeはすべて `4fba3de386360f7807aad887456fc2cc30fb24f8` で一致。マージ後push CI [#41739389697](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41739389697) も **11,313/11,313 SUCCESS**、21件の公理依存は標準3公理のみ、`sorryAx` なし、変更Lean warning/error **0/0** とGitHub MCPで独立再確認した。これは厳密な元モデルの有限体積・条件付き証明書であり、数値十分性、体積一様coercivity、物理Hamiltonianのspectral gap、連続体4D Yang–Mills質量ギャップの証明ではない。
+
+### 次の独立課題 — AFG
+
+真正殻の厳密な二符号中心を元のWilson/Perron残差ギャップから有限の認証可能な条件として得ること、半径・閾値の最適化と正下界の数値検証が次の焦点である。無条件の中心存在を暗黙に仮定せず、AEXのFC no-goと既存の権威境界を維持する。
+
+---
+
+## 検証済み定理 — AFE（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFE定理PR [#6280](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6280) は **MERGED**、squash SHA `b7367d835dad2d46ed97320e901bb11c25cafd4a`。AFD（#6277）・AFC（#6274）・AFB（#6271）・AFA（#6268）までの真正Wilson SU(2)、中心化Gauss-law物理源、Perron真空、元の右リンク更新transfer、同一元境界pair-Haar確率 `ν_H`、FC envelope、全リンク距離 `D_H`、Lean/mathlib固定pinおよび公開rootを変更しない。AEXの保守的AEW二球FC証明書no-goを保持する。
+
+### 複数閾値・複数半径の真正Haar例外質量上界
+
+- **元例外集合の閾値反単調性**：元の真正物理受信器の四成分振幅 `A_F(z)` と高次残差 `W_F(z)` で `Bad_θ={z | θ*A_F(z)^2<W_F(z)}` とすると、平方非負性から `θ_i≤θ_target → Bad_(θ_target)⊆Bad_(θ_i)`。これは独立の代理Haar lawや異なる物理量の仮定ではなく、元の同一境界・物理源に関する集合包含である。
+- **真正スケール証拠を保持する依存型**：有限体積 `H` と元の物理リンク `e` について、個々の `θ_i,η_i,r_i,s_i,t_i` と真正 `D_H` ネット、元の差分 `G_θ=W_F−θ*A_F²` の変動証拠、良好中心 `t_i⊆Good(s_i)`、`2r_i` 分離証拠を一つの型として保持。数値だけを入力し、証明書なしに本物のHaar質量の上界とみなす構造ではない。
+- **有限表の最小値**：各スケールのAFD真正二重上界 `Dual_i=min(Σ_{a∈Flag(s_i)}ν_H(B_D(a,r_i)),1−card(t_i)*κ_H(r_i))` に対し、有限表 `scales=[i_1,…,i_N]` から **`MultiBudget_H(scales)=min(1,Dual_(i_1),…,Dual_(i_N))`** を構成。`θ_i≤θ_target` が全ての表要素で認証されるなら **`ν_H(Bad_(θ_target))≤MultiBudget_H(scales)`** をLean4で証明する。空表では元の確率上限1を返す。
+- **表の単調改善と確率範囲**：一般の有限リストfoldl-min帰納定理を追加。表中の任意の証明書 `c` について `MultiBudget_H≤Dual(c)`、さらに常に `MultiBudget_H≤1`、有効な表なら `0≤MultiBudget_H` を証明。表の要素間に同じ閾値・同じ半径・同じ有限ネットを要求せず、重複しても安全である。
+- **各スケールの真正存在証明**：任意の元の物理リンク、任意の `θ`、正のguard margin `η>0` について、AFBのコンパクト一様変動、AEEの真正全境界有限ネット、AFDの有限greedy分離packingを合成し、元の物理量に基づくスケール証拠の存在をLean4で証明。ただし半径・良好packing数・Haar球質量・閾値を数値認証しない。
+
+### 真正GI・FCへの条件付き接続と逆向き障害
+
+- **元の真正GI平均証明書**：`θ_target≥0` かつ各 `θ_i≤θ_target`、別途検査された `θ_target*A4_H+B_H²*MultiBudget_H<64*A4_H` なら、元AFAの二乗GI平均証明書 `Budget_H>0` と真正pair-Haar正測度の開領域で元の符号付き二posterior GI応答が非零であることを導出。数値不等式が無条件に成り立つという宣言ではない。
+- **より強い元のFC判定**：独立に真正FC未使用分 `E_H≤σ*A4_H` と `(θ_target+σ)*A4_H+B_H²*MultiBudget_H<64*A4_H` を認証した場合に限り、元の厳密な `B_H²<272*S_H` を証明。GI平均とFCの異なる証明書を保持する。
+- **非正GI証明書のobstruction**：元の `Budget_H≤0` なら、任意の有効な多尺度表について **`((64−θ_target)*A4_H)/B_H²≤MultiBudget_H`** が必要。これは平均証明書の数値限界であり、実GIの消滅やYang–Mills質量ギャップのno-goではない。
+
+### exact-source CI、公理・Git tree監査
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalMultiscaleHaarCertificateV5_PZ37AFE.lean`（396行）**1ファイルのみ追加**。既存Lean、元のSU(2)・物理模型・測度、公開root、workflow不変更。公開14定理・14件 `#print axioms`。Lean `v4.30.0-rc2` / mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 固定。
+- [exact-source CI #41731762702](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41731762702) **11,312/11,312 SUCCESS**。全14定理の依存公理は `propext`、`Classical.choice`、`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error **0/0**、独立MCP completion receipt **SUCCESS**。初回CIからLean elaboration failureなし。
+- exact-source HEAD `9adc511e832f0617336813ed37f1c33a2b2b6f58`、GitHub test-merge、squash `b7367d835dad2d46ed97320e901bb11c25cafd4a` のGit tree `8f0625bfc7fc8d769519751967a95b30e83d4228` が一致。squash後push CIは別途独立確認する。
+
+### 次の独立課題 — AFF
+
+真正多尺度表は厳密な有限次元証明書だが、表の実際の標本・数値的な十分小ささ、元Wilson/Perron残差の定量勾配・良好packing密度、体積H一様な見積り、真正FC未使用分の具体的な上界は未証明。次は複数閾値の階層的差分集合、有限表による局所領域の切り分け、あるいはHaar測度の重複補正を条件付きの形で形式化し、具体的な計算可能証明書へ近づける。AEXの保守的二球FC no-goを維持し、物理Hamiltonianの必要spectral gapおよび連続体4D Yang–Mills質量ギャップは引き続き未証明。
+
+---
+
+## 検証済み定理 — AFD（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFD定理PR [#6277](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6277) は **MERGED**、定理squash SHA `6a67257b9dac6e4417d80cdfa09d5a561077c8bb`。AFC（#6274）、AFB（#6271）、AFA（#6268）までの真正Wilson SU(2)、中心化Gauss-law物理源、Perron真空、元の右リンク更新transfer、元pair-Haar確率 `ν_H`、FC envelope、全リンク弦距離 `D_H`、Lean/mathlib固定pinおよび公開rootを継承し、AEXの保守的二球FC no-goを維持する。
+
+### 新規定理：元の有限良好標本から2r分離packingを構成
+
+- **一般の有限選択定理**：対称かつ自己距離0の関数 `d`、有限集合 `s` と正半径 `r` について、有限帰納法により部分集合 `t⊆s` を構成し、異なる `a,b∈t` では `2r≤d(a,b)`、元の全ての `a∈s` はある `b∈t` に対して `d(a,b)<2r` を満たす。外部のpacking存在仮定や数値cardinalityを挿入せず、これをADLの真正物理境界 `D_H` に適用。
+- **元の真正良好標本の抽出**：AFCの `Good(s)={a∈s | W_F(a)+η≤θ*A_F(a)^2}` を元のWilson/transfer振幅・残差で定義し、良好標本 `Good(s)` から上記 `t` を構成。`t⊆Good(s)` の下で `Good(t)=t`、任意の異なる選択良好中心は `2r` 以上離れること、選択した良好中心が元の良好標本全体を `2r` 以内で覆うことを証明。
+
+### AFB・AFCの相補的な真正Haar上界を一本化
+
+- **二重例外質量予算の定義**：AFBの真正例外候補中心 `Flag(s)` と、AFCの選択良好packing `t` を同一の真正元境界標本 `s` 上で保持し、`Dual_H(s,t,θ,η,r)=min(Σ_{a∈Flag(s)}ν_H(B_D(a,r)), 1−card(t)*κ_H(r))` を定義。ここで `κ_H(r)=κ(r/(2*card(Link_H)+1))^(2*card(Link_H))>0` はAEAの本物のSU(2) pair-Haar球下界。
+- **真正例外集合の最小上界**：元の真正全リンク有限 `D_H` ネット `s`、同じ元物理残差差分 `G_θ(z)=W_F(z)−θ*A_F(z)^2` の検証済み変動条件 `D_H(a,z)<r→|G_θ(z)−G_θ(a)|<η`、および上記の選択良好packingの下で **`ν_H(Bad_θ)≤Dual_H(s,t,θ,η,r)`** をLean4で証明。元測度上の同じ例外集合にAFBとAFC双方の上界が成立することから、有限和と補集合予算の最小値が正当化される。元の `ν_H` は変更されず、`0≤Dual_H` も導出。
+- **選択構成を仮定から取り除く**：任意の真正有限ネットと真正変動証明書が与えられれば、分離した良好部分集合 `t` と上記の二重上界を満たす証明書の存在を証明。さらに任意の真正物理リンク・任意の正のguard margin `η>0` に対し、AFBのコンパクト一様変動半径とAEEの有限真正ネット存在を合成し、`r,s,t` の存在を形式化。ただし数値的に有用な `t.card` や小さいdual予算の存在は主張しない。
+
+### 元のGI・FC境界への正確な移送
+
+- **二乗GI平均証明書**：`θ≥0`、真正数値比較 `θ*A4_H+B_H²*Dual_H<64*A4_H` が独立に成立すれば、元AFAの `Budget_H>0` と真正pair-Haar正測度の開領域での非零符号付き二posterior GI応答を導出。真正GI応答の全配置での非消滅を意味しない。
+- **より強い真正FCテスト**：これとは別に実際のFC未使用分 `E_H≤σ*A4_H` と `(θ+σ)*A4_H+B_H²*Dual_H<64*A4_H` を数値認証する場合に限り、元の真正 `B_H²<272*S_H` と対応する開GI領域を証明。AFAのGI平均判定とFC判定を混同しない。
+- **逆向きobstruction**：元の平均GI証明書が非正 `Budget_H≤0` なら、任意の有効な二重予算は **`((64−θ)*A4_H)/B_H²≤Dual_H`** を満たす。これは物理GIの消失や連続体Yang–Millsギャップのno-goではない。AEXのAEW二球保守的下界に限定されたno-goもそのまま維持。
+
+### exact-source Lean4検証・公理監査・Git tree
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalDualHaarGreedyPackingV5_PZ37AFD.lean`（425行）**1ファイルのみ追加**。既存Lean・元の模型・Haar測度・公開root・workflow不変更。公開14定理／14件 `#print axioms`。Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 固定。
+- [exact-source CI #41728015997](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41728015997) **11,311 / 11,311 SUCCESS**。新規14定理の公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error **0/0**、独立MCP completion receipt **SUCCESS**。初回CIからelaboration errorなし。
+- exact-source HEAD `e8435d26e5e32de044c31dcb5a769fd54ad2ceb0`、test-merge、squash `6a67257b9dac6e4417d80cdfa09d5a561077c8bb` のGit treeは `df4ca0634d14bbe23e7b662fa6c409847174b5b5` で一致。定理squash後push CIは別途確認。
+
+### 次の独立課題 — AFE
+
+AFDで二重Haar上界の選択構成と統合が形式化された一方、`θ,η,r`、真正良好標本数、元の `D_H` 球の実数値測度、FC未使用分 `E_H` の強い数値認証、体積 `H` に一様な下界は残る。次は単一 `r` と単一 `θ` に固定する強い条件から、複数半径・複数閾値の適応型認証や、良好領域重複の補正を含む有限表の改良可能性を検討する。物理Hamiltonianのスペクトルギャップと連続体4D Yang–Mills質量ギャップは未証明。
+
+---
+
+## 検証済み定理 — AFC（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFC定理PR [#6274](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6274) は **MERGED**、squash SHA `15720bb288c8382f5bb7f1afa3f05210ffaa2833`。前段AFB（#6271）・AFA（#6268）・AEZおよびAEXの保守的AEW二球FC証明書no-goを継承する。真正Wilson SU(2)、Gauss-law中心化物理源、Perron真空、元の更新transfer、元の外側pair-Haar、FC envelope、正本root、Lean/mathlib pinは不変。
+
+### 真正良好球のHaar下界から例外集合上界へ
+
+- **真正良好中心の判定**：元物理受信器の四成分 `A_F`、高次Haar残差 `W_F`、真正差分 `G_θ(z)=W_F(z)−θ*A_F(z)^2` を維持。実境界標本 `s` で `Good={a∈s | W_F(a)+η≤θ*A_F(a)^2}` を定義。証明書 `D_H(a,z)<r → |G_θ(z)−G_θ(a)|<η` があれば、`Good` に属する標本中心の真正開球 `B_{D_H}(a,r)` は AFAの元例外集合 `Bad_θ={z|G_θ(z)>0}` と交わらない。
+- **元ADLの三角不等式による厳密な非交差性**：異なる二つの真正良好標本中心に対して `2*r≤D_H(a,b)` が認証されれば、開球 `B_{D_H}(a,r)`、`B_{D_H}(b,r)` は互いに非交差。測度の独立性も幾何の代理量も仮定しない。
+- **真正pair-Haar確率の相補上界**：良好中心を相互に `2r` 以上離した有限集合とし、実測度の有限加法性を使用して、**`ν_H(Bad_θ)≤1−Σ_{a∈Good}ν_H(B_{D_H}(a,r))`** を証明。AFBの「例外候補球の質量を上から足す」経路と相補的な「良好球の質量を下から足す」経路である。
+- **AEAの真正Haar球下界への無条件接続**：全真正境界中心・任意 `r>0` で確定した `κ_H(r)=κ(r/(2*card(Link_H)+1))^(2*card(Link_H))>0`（`κ(x)=toSphereBallBound(4,x)/4`）を適用し、**`ν_H(Bad_θ)≤1−card(Good)*κ_H(r)`** を得る。これは真正SU(2) pair-Haarの有限体積 `H` 依存評価であり、無条件に多数の良好標本が存在すると主張するものではない。
+- **真正GI・FCへの接続**：`θ≥0` と元AFAの数値ゲート `θ*A4_H+B_H²*(1−card(Good)*κ_H(r))<64*A4_H` が別途認証できれば、真正二乗GI平均証明書 `Budget_H>0` および元の符号付き二posterior GI応答が非零となる開・正Haar領域を得る。さらに独立の元FC未使用分 `E_H≤σ*A4_H` と `(θ+σ)*A4_H+B_H²*(1−card(Good)*κ_H(r))<64*A4_H` が必要な場合、より強い真正FC閾値 `B_H²<272*S_H` も導く。
+- **逆向きの実数障害**：`Budget_H≤0` なら、有効な良好packing証明書について **`((64−θ)*A4_H)/B_H²+card(Good)*κ_H(r)≤1`** が必要。真正GIの消滅やYang–Mills質量ギャップの不可能性を意味しない。
+
+### 正式なLean4検証と修正理由
+
+- append-onlyで新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalGoodHaarPackingComplementV5_PZ37AFC.lean`（359行）を追加。既存Lean、物理モデル、Haar law、公開root、CI workflowは変更なし。公開12定理／12件 `#print axioms`。Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を保持。
+- 修正版[exact-source CI #41725365393](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41725365393) は **11,310/11,310 SUCCESS**。全12定理の依存公理は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error **0/0**、独立MCP completion receipt **SUCCESS**。
+- 初回CI #41724465578では、固定mathlibで `PairwiseDisjoint` が `Set` 名前空間にあるのに未修飾で使用したためElaborationが失敗し、後続の有限和・証明式へ型エラーが波及。新規Lean全文・固定mathlibの `measureReal_biUnion_finset`・関連ソースを照合し、2か所を `Set.PairwiseDisjoint` と明示して解決。仮定、定理文、元の測度は弱めず、追加公理はなし。
+- exact-source HEAD `3dc2aae39bac8bc9fcf88c9466ca5047d8a176e0`、test-merge `b6f2d21f19a958b809863f125b30e46cddca3b9d`、squash `15720bb288c8382f5bb7f1afa3f05210ffaa2833` のGit treeは `2fbb9b38e2cf27e832e6c55cf3eb125a90389541` で一致。squash後push CIの独立確認は別途行う。
+
+### 次の独立課題 — AFD
+
+有限体積で証明済みの球Haar下界は `H` 依存で小さくなり得る。良好標本の具体的な認証、互いに離れた良好中心のpacking数、真正 `D_H` 球測度の上界・下界を結ぶ体積一様制御、FC未使用分、連続体へのdescentは引き続き未証明。AFBとAFCの二つの例外質量上界を比較して小さい方を採用する数値証明書、あるいは境界幾何の局所分割による重複補正が次の候補。元AEXの二球FC no-go、4D Yang–Mills質量ギャップ未証明の境界は維持する。
+
+---
+
+## 検証済み定理 — AFB（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAPの文書ミラーのみ。AFB定理PR [#6271](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6271) は **MERGED**、squash SHA `93ce1dec59fc0ccedde96768ea72c61216366895`。前段AFA（#6268）、AEZ、AEXまでの真正Wilson SU(2)、中心化Gauss-law物理源、Perron真空、元の更新transfer、pair-Haar測度、FC envelope、原距離、Lean/mathlib pinは不変更。AEXのAEW保守的二球FC下界のno-goを維持。
+
+### 真正例外集合の有限D_Hネット・Haar質量上界
+
+- **真正残差差分**：元の受信器の真正境界量 `G_θ(z)=W_F(z)−θ*A_F(z)^2` を定義し、AFAの例外集合 `Bad_θ={z|G_θ(z)>0}` と対応させる。元ACRの残差連続性とACNの四成分振幅平方連続性から `G_θ` が真の境界ペア空間上で連続と証明。
+- **有限体積での無条件な局所変動半径とネットの存在**：ADMの真正全境界距離 `D_H` に対するコンパクト一様連続性により、任意の `η>0` で `r>0` が存在し、`D_H(a,z)<r` なら `|G_θ(z)−G_θ(a)|<η`。既存AEEの真正有限 `D_H` ネット存在定理と接続する。半径 `r` の数値値は未計算。
+- **例外候補標本だけの被覆証明**：元の真正境界配置からなる有限ネット `s` に対し、`Flag={a∈s | θ*A_F(a)^2<W_F(a)+η}` と定義。真正変動証明書があれば **`Bad_θ⊆⋃_{a∈Flag}B_{D_H}(a,r)`** をLean4で証明。全境界での残差比一様上界は仮定しない。
+- **真のHaar例外質量の有限和評価**：元の真正pair-Haar確率 `ν_H` に対し、一般の有限被覆と実測度の劣加法性を利用して **`ν_H(Bad_θ)≤Σ_{a∈Flag}ν_H(B_{D_H}(a,r))`** を証明。被覆球の独立性・互いの非交差性・代理Haar分布は一切仮定しない。各球について独立に認証した上界 `cap` があれば、`ν_H(Bad_θ)≤card(Flag)*cap` とする公開定理も構成。
+- **AFA数値条件と真正GI/FCへの接続**：被覆球の有限和が独立に `ε` 以下と認証され、`θ≥0`、`θ*A4_H+B_H²*ε<64*A4_H` なら、元の正の二乗GI平均証明書 `Budget_H>0` と、真正二posterior符号付きGIが非零となる開・正Haar測度領域を得る。さらに別途 `E_H≤σ*A4_H` と `(θ+σ)*A4_H+B_H²*ε<64*A4_H` が証明されれば、元のより強い `B_H²<272*S_H` を得る。
+- **非正証明書の障害を有限和へ移送**：`Budget_H≤0`、`θ≥0` なら、任意の有効な真正有限ネット証明書の例外球質量和は **`((64−θ)*A4_H)/B_H² ≤ Σ_{a∈Flag}ν_H(B_{D_H}(a,r))`** を満たす。これは例外被覆の必要量であって、真正符号付きGI応答の消滅を意味しない。
+
+### exact-source CI・公理監査・Git tree
+
+- 既存Lean・workflow・rootを変更せず、新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalExceptionalHaarFiniteNetCertificateV5_PZ37AFB.lean`（348行）1ファイルのみ追加。公開12定理、12件の `#print axioms`。Lean `v4.30.0-rc2` / mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を維持。
+- 修正版[exact-source CI #41719148881](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41719148881) は **11,309 / 11,309 SUCCESS**。12定理の公理は `propext`、`Classical.choice`、`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error **0/0**、独立MCP completion receipt **SUCCESS**。
+- 初回CI #41717397875の3件のLean elaboration failureは、(1) 集合所属 `hz : z∈{z|...}` が `linarith` の算術仮説へ展開されていないこと、(2) `measureReal_mono` の対象集合の有限測度証拠が自動補完されないこと、(3) ADMの `|G(a)−G(z)|` と目標 `|G(z)−G(a)|` の向きの型不一致。全集約・既存定理・固定mathlibを照合し、`change`、`(measure_lt_top ν _).ne`、`abs_sub_comm` によって修正。仮定・結論を一切弱めていない。
+- 最終exact-source HEAD `166b351f500f8001298866ce857bb79ab61c37fc`、test-merge `58a5d2d4edace0e9a8dea6e08587845fee7f2238`、squash `93ce1dec59fc0ccedde96768ea72c61216366895` のGit treeは `a1edd8d9562ebb9dddafbf0961361cd46a0f67fb` で一致。定理squash後push CIは別途追跡。
+
+### 次の研究境界 — AFC
+
+真正有限ネットと局所変動の**存在**は証明済みだが、`Flag` の具体的な標本数、元の `D_H` 球の真正pair-Haar測度**上界**、非自明な `ε` の小ささ、FC未使用分 `E_H` の数値評価は未証明。有限体積からH一様なコントロール、物理Hamiltonianのスペクトルギャップ、連続体4D Yang--Mills質量ギャップも未証明。AEX二球FC no-goを解除したとの主張ではない。
+
+---
+
+## 検証済み定理 — AFA（2026-11-04 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AFA定理PR [#6268](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6268) はMERGED、squash SHA `0e92ad447852dcdf7505da25c56fa5a9a2dacceb`。AEZまでの元の真正Wilson SU(2)、Gauss-law中心化物理源、Perron真空、元の更新transfer・二posterior、SU(2) Haarと元pair-Haar、FC envelope、原距離、公開root、Lean/mathlib pinは変更しない。AEXのAEW保守的二球下界に関するFC no-goも維持する。
+
+### 真正例外Haar集合による高次transfer残差の全積分制御
+
+- **元の境界空間における正確な例外集合**：任意の`θ≥0`について、元物理受信器の四成分振幅平方`A_F(z)^2`と真正高次残差`W_F(z)`から `Bad_θ(H,e)={z | θ*A_F(z)^2 < W_F(z)}` を定義。元の更新transfer`U_z`とPerron係数`P_z>0`により`A_F(z)^2=P_z²*A_U(z)^2`、`W_F(z)=P_z²*W_U(z)`なので、**`z∈Bad_θ ↔ θ*A_U(z)^2<W_U(z)`** をLean4で厳密に証明。集合は元のpair-Haar位相で開・可測であり、独立Haar分布や代理受信器への置換ではない。
+- **新しい無条件の全積分上界**：元FC envelopeの真正点別上界`W_F(z)≤B_H²`と、非例外側の`W_F(z)≤θ*A_F(z)^2`を組み合わせ、真のpair-Haar確率`ν_H`について **`R4_H(e)≤θ*A4_H(e)+B_H²*ν_H(Bad_θ)`** を証明。ここで`A4_H=4*S_H(e)>0`、`R4_H=W_H(e)`はAEZの実際のPerron重み付きtransferモーメント。一般のコンパクト確率空間における連続関数のindicator分割積分補題も公開証明。AEW二球下界の小さな体積因子は使用しない。
+- **条件付きの真正GI数値判定**：元Haar例外質量`ν_H(Bad_θ)≤ε`が独立に評価され、**`θ*A4_H+B_H²*ε<64*A4_H`** なら、元の二乗GI平均証明書`Budget_H>0`を導き、既存の定理から真正二posterior符号付きGI応答が非零となる開・正Haar測度領域を得る。例外質量`ε`の十分に小さい値が無条件に得られたという主張ではない。
+- **FC envelope経由のより強い判定**：別途AEYの真正FC未使用分`E_H≤σ*A4_H`を検証し、**`(θ+σ)*A4_H+B_H²*ε<64*A4_H`** を満たすなら、元の厳密な`B_H²<272*S_H(e)`に到達する。これはGI平均証明書の条件より強い、独立の数値条件。
+- **非正証明書が要求する真正Haar質量**：`Budget_H≤0`なら任意の`θ≥0`で **`(64−θ)*A4_H/B_H²≤ν_H(Bad_θ)`**。特に`θ<64`なら元例外集合は正測度である。真のFCテスト不成立`272*S_H≤B_H²`と、別途`E_H≤σ*A4_H`の下では、**`(64−θ−σ)*A4_H/B_H²≤ν_H(Bad_θ)`**。 `θ+σ<64`なら例外集合の正測度を証明。このobstructionは**証明書の数値境界**であって真正符号付きGI応答の消滅証明でもYang–Mills質量ギャップのno-goでもない。
+
+### exact-source Lean4検証、公理・source Git tree監査
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalExceptionalHaarTailBudgetV5_PZ37AFA.lean`（403行）だけを追加、**公開13定理／13件`#print axioms`**。既存Lean・定理root・物理モデル・workflow変更なし。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。
+- 最終[exact-source CI #41700621006](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41700621006) は **11,308/11,308 SUCCESS**、新規13定理は`propext`・`Classical.choice`・`Quot.sound`の標準3公理のみ、`sorryAx`なし、変更Lean warning/error **0/0**、独立MCP completion receipt **SUCCESS**。
+- 初回CI #41699423749の唯一のelaboration failureは、正のPerron因子による厳密不等式の左右同値で`mul_lt_mul_left hp`に誤った型クラス`MulRightStrictMono ℝ`の合成要求が生じたこと。変更Lean全文と既存APIを検査し、固定mathlibで型が正確に適合する`mul_lt_mul_iff_of_pos_left hp`へ差替え。仮定・定理文・物理模型は弱めていない。
+- exact-source HEAD `5950a117781df7bae0144c3b0d7d192f349bad2b`、test-merge `04b3d7e10314cacb550a112bc8d5810d9e964e39`、squash `0e92ad447852dcdf7505da25c56fa5a9a2dacceb` のGit treeはすべて `42188f05178f102d69196c9bd0dc430481b2fca1` で一致。定理squash後push CIを別途確認する。
+
+### 次の独立数値課題
+
+AFAでは、真正残差の全境界一様上界を仮定せず、例外境界集合の量的測度だけを用いる条件付き経路を証明。今後は元のWilson kernel・Perron密度・Haar幾何に由来する`ν_H(Bad_θ)`の具体的な上界、FC未使用分`E_H`の量的制御、有限Hから体積一様なcompatibilityへ移る際の障害を分けて研究する。例外質量が必要閾値を無条件に満たすこと、物理Hamiltonianの必要スペクトルギャップ、連続体4D Yang--Mills質量ギャップはいずれも未証明。
+
+---
+
+## 検証済み定理 — AEZ（2026-11-03 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。新規AEZ定理PR [#6265](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6265) はMERGED、定理squash SHA `a1a0a149d5a89c420dce6570654bd913fd5b86a4`。AEYまでの元の真正Wilson SU(2)、中心化Gauss-law源、Perron真空、真正更新transfer section、二posterior、Haar・pair-Haar測度、距離、root、Lean/mathlib pinおよびAEXの二球no-goを一切変更しない。
+
+### 真正transferのPerron重み付きHaar全モーメントとFC残差を分離
+
+- **真正transfer全積分の定義と同定**：固定正結合 `b0=log(3/2)/64` で、元ABZ・ACQの更新transfer section `U_z`、元のPerron prefactor `P_z>0`、4つの真正SU(2) character係数 `m_{U,z,j}`、その直交残差二乗 `tW_z` を用い、`A4_H(e)=∫_outer P_z² Σ_j m_{U,z,j}² dν_H(z)=4*S_H(e)>0`、`R4_H(e)=∫_outer P_z²*tW_z dν_H(z)=W_H(e)≥0` をLean4で再同定。元の更新密度・Perron重み・Gauss-law物理源を落としていない。
+- **FC envelopeの真正transfer表示**：AEYで定義した未使用FC分 `E_H=B_H²−Vbar_H≥0` は、`E_H=B_H²−∫_outer P_z² Var_Haar(U_z)dν_H(z)` と一致。これは元のsource-transfer構造に由来する式であり、新しい独立Haar lawや外部非負仮定ではない。
+- **無次元の厳密閾値**：`r_H=R4_H/A4_H≥0`、`s_H=E_H/A4_H≥0` と定義すると、**`Budget_H>0 ↔ r_H<64`**、**`B_H²<272*S_H ↔ r_H+s_H<64`** を形式化。前者は**元ACOの二乗GI平均証明書**の正値判定であり、真正の符号付きGIの必要十分条件ではない。後者は元FC envelopeを用いた**より強い数値十分条件**。いずれも無条件の厳密閾値到達を主張しない。
+- **全境界のtransfer上界から真正Haar積分へ**：元境界ペアの**全て**の `z` で `tW_z≤θ Σ_j m_{U,z,j}²` が成り立つという**明示的な条件**から、元のpair-Haar上で積分単調性・実物理受信器の連続性を使って `R4_H≤θ*A4_H` をLean4で証明。特に `θ<64` が別途証明できれば `Budget_H>0`、さらに元の二posteriorの符号付きGI応答が非零となる開かつpair-Haar正測度の領域が実際に存在する。
+- **FCの独立slack境界**：上記の全境界transfer条件に加え、真正FC未使用分を `E_H≤σ*A4_H` と**独立に認証**し `θ+σ<64` を満たすなら、**`B_H²<272*S_H`** を得て元の符号付き二posterior GI正領域まで伝播する。`θ`、`σ` は未証明の自由な上界を物理的事実として挿入したものではなく、条件付き定理の明記された入力である。
+- **真正境界のobstruction witness**：元GI平均証明書 `Budget_H≤0` が成立するなら、任意の候補 `θ<64` に対して**真正境界 `z` が存在し** `θ Σ_jm_{U,z,j}² < tW_z`。同様にFC判定が不成立で、別途 `E_H≤σ*A4_H`、`θ+σ<64` の条件を課す場合にも同じ真正boundary violationが存在。GI平均証明書の非正値から実際の符号付きGI応答消滅は推論していない。
+
+### exact-source Lean4検証と構造的エラー監査
+
+- 既存ファイルを変更せず、新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalWeightedTransferResidualFCGateV5_PZ37AEZ.lean`（365行）だけを追加。**公開14定理**、14件の `#print axioms`。Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 固定、定理root・CI workflow不変更。
+- 最終 [exact-source CI #41641344378](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41641344378) は **11,307/11,307 SUCCESS**。新規14定理すべての公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ。 `sorryAx` なし、変更Lean warning/error **0/0**、独立MCP completion receipt **SUCCESS**。初回Leanでエラーなし。
+- exact source HEAD `a1c4b8c1f1d840e645b9eebec4454e2b1765ce13`、GitHub test-merge `32f450da2bddbc5bdcdd9dbe4a7ce6a0a120cda8`、squash `a1a0a149d5a89c420dce6570654bd913fd5b86a4` のGit treeは **`de13683d4d6c3586b0bba5c291e125bcf68c56e9` で完全一致**。マージ後push CIは別途独立検査。
+
+### 残る真の物理的課題
+
+AEXの保守的二球幾何下界 `P_H(a,R)` はFC閾値を超えないというno-goを維持。一方、AEZの全モーメント `S_H` と真正transfer残差 `tW_z` は異なる実物理量であり、`Budget_H>0` も `B_H²<272*S_H` も本定理で無条件達成していない。次段階は、全境界を仮定した強いpointwise上界から離れ、元Wilson核とPerron重みを保つ**分割領域ごとの残差・振幅の積分比較**、有限格子からH一様な数値制御へのcompatibilityを研究する。物理Hamiltonianの必要スペクトルギャップと連続体4D Yang--Mills質量ギャップは未証明。
+
+---
+
+## 検証済み定理 — AEY（2026-11-03 JST）
+
+唯一のLean4定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AEY定理PR [#6262](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6262) はMERGED、squash SHA `753e32f213470ccd4df7355339efa2069569482b`。前段AEXのAEW保守的二球下界に対するFC no-goを弱めず、既存の真正Wilson SU(2)、中心化Gauss-law物理源、元の物理受信器、Perron真空・transfer、元SU(2) Haarと真正pair-Haar測度、距離、定理root、Lean/mathlib pinを保持する。
+
+### 真正全HaarモーメントとFC envelope未使用分の厳密分解
+
+- **真正の分散恒等式**：ACJ・ACK・ADBの元の共分散二乗モーメント `S_H(e)=∫C_e(z)^2 dν_H(z)`、4成分後の真正高次Haar残差 `W_H(e)≥0`、元受信器分散平均 `Vbar_H=16*S_H+W_H`、元FC envelope `B_H^2≥Vbar_H` を同一の物理モデル上で使用する。新たな外部仮定ではなく、**`E_H(e):=B_H^2−Vbar_H≥0`** を定義した。従って **`B_H^2=16*S_H+W_H+E_H`** が無条件に成立する。
+- **真正FC閾値の必要十分条件**：正の固定結合 `b0=log(3/2)/64` において、**`272*S_H−B_H^2=256*S_H−(W_H+E_H)`**。ゆえに **`B_H^2<272*S_H ↔ W_H+E_H<256*S_H`**。これは元の全モーメントに関する**同値**であり、厳密な数値不等式の成立を証明したものではない。
+- **無次元分解**：`u_H=16*S_H/B_H^2`、`ell_H=(W_H+E_H)/B_H^2` とすると、既存の真正 `B_H^2>0` より **`u_H+ell_H=1`**, **`0≤ell_H<1`**, **`B_H^2<272*S_H ↔ ell_H<16/17`**。この `u_H` は元のFC envelopeで割った割合であり、全分散で割る別の分率と混同しない。
+- **本来のGI平均証明書との重要な区別**：ACPの真正高次Haar残差条件とADCの厳密な `(exp(64*b0)−1)^2=1/4` により、**`Budget_H>0 ↔ W_H<256*S_H`**、**`Budget_H≤0 ↔ 256*S_H≤W_H`** を追加形式化。つまり `W_H+E_H<256*S_H` はFC envelopeを通じた**より強い十分条件**であり、FC証明書の不成立からGI平均証明書の不成立は推論できない。GI平均証明書の非正値を実際の符号付き物理GIの消滅と同一視しない。
+- **条件付きの実GI伝播**：真正数値条件 `W_H+E_H≤θ*S_H` と `θ<256` が別途検証されれば、元のFC厳密閾値、正の平均二乗GI証明書、さらに真正pair-Haar正測度の開集合上で元の符号付き二posterior GI応答が非零であることが既存ADE・ACOから従う。非正の平均証明書から `256*S_H≤W_H+E_H` が必要であることも証明。ただし、この相対残差・slack条件を無条件に得たわけではない。
+
+### exact-source CIと公理依存の監査
+
+- 新規ファイル `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFullMomentFCVarianceSlackV5_PZ37AEY.lean`（267行）だけを追加、公開13定理・13件の `#print axioms` を検証。既存Leanファイル、元の物理モデル、測度、距離、公開root、workflowは不変更。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を維持。
+- 最終 [exact-source CI #41634463383](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41634463383) は **11,306/11,306 SUCCESS**。公開13定理の公理依存は **`propext`・`Classical.choice`・`Quot.sound`のみ**、`sorryAx`なし、変更Lean warning/error **0/0**、独立MCP completion receipt **SUCCESS**。
+- 修正版source HEAD `191af9c5f6b51aa7b03f1b0e5d2216bed2d5ffb5`、GitHub test-merge `8e7a9f66ddac567719d0c6ef13781033c4242f04`、squash `753e32f213470ccd4df7355339efa2069569482b` のGit treeは **`c6758b211efa3b083efa3109791668bda4a097e3` で完全一致**。
+- **Lean4修正理由**：初回CI #41633581758で `rw [add_div]` が等式の左辺にある内側の加法分数を先に書き換えて未解決ゴールを残した。変更Lean全文・依存元・elaboration goalを確認し、両辺を一括正規化する `simp only [add_div]` に変更。数学的な仮定・結論は弱めていない。docs-onlyのStrict Lean再実行は不要。
+
+### AEX no-goの保持と未解決の数値境界
+
+AEXが示した無条件の `¬(B_H^2<272*P_H(a,R))` は元のAEW保守的二球モーメント下界 `P_H` に限定され、AEYでもそのまま成立する。一方 `P_H≤S_H` により、真の全モーメントの `B_H^2<272*S_H` は未決着。今後は同じ元Wilson kernel・中心化source・transferに由来する **`W_H/S_H` と `E_H/S_H` の真正定量制御**が課題。各有限体積の無条件恒等式・正値はH一様の数値評価、物理Hamiltonianの必要スペクトルギャップ、連続体4D Yang–Mills質量ギャップを証明しない。
+
+---
+
+## 検証済み定理 — AEX（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AEX定理PR [#6259](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6259) はMERGED、squash SHA `5528fce1650e64b954994fa80fa77942a413b07a`。AEW以前の元の真正Wilson SU(2)、Gauss-law中心化物理源、元JQ受信器、Perron/transfer、SU(2) Haar・二境界pair-Haar、原距離、Lean/mathlib pin・公開rootを維持する。
+
+### 重要な新規結果：AEWの保守的二球下界によるFC閾値認証は不可能
+
+- **数値比較のauthority境界**：AEWが導出した正の半径・共分散半振幅安定性・元の共分散二乗モーメント`S_H`に対する二球下界は有効。ただし、二球**下界** `P_H(a,R)=(C_e(a)/2)^2 * 2*(min(R/(2*n_H+1),2)/4)^(8*n_H)` そのものを、元のFC envelope `B_H` に対する `B_H^2 < 272*P_H(a,R)` と比較する経路には構造的なno-goがある。ここで`n_H=card(Link_H)`、実際の物理リンク`e`が存在するため`n_H≥1`。
+- **無条件の真正SU(2)点wise共分散FC bound**：元ACJの同じ共分散`C_e(a)`と同じFC envelope`B_H`について、`CompactEnergyMismatchMoment.four_covariance_sq_le_variance`と元ACAの真正受信器分散FC上界を組み合わせ、**`4*C_e(a)^2 ≤ B_H^2`** を新規公開Lean定理で再構成。ACJ内のprivate helperを不正に参照せず、既存Mathlib・物理機構から証明。
+- **有限リンク球の幾何学的上限**：任意の`R≥0`、`n_H≥1`について **`(min(R/(2*n_H+1),2)/4)^(8*n_H) ≤1/256`**、従って真の二球Haar係数は高々`1/128`。これは小半径・大半径の区別なく成立する上限であり、`R_H`自体の存在・正値を妨げない。
+- **証明書の定量的no-go**：二つを掛け合わせると、真正物理リンク`e`・任意の二境界`a`・任意の`R≥0`について **`272*P_H(a,R) ≤ (17/128)*B_H^2 ≤ B_H^2`**。従って **`¬(B_H^2 < 272*P_H(a,R))`** をLean4で無条件形式化。AEWが与える`a,M,R_H`の有効な正半径証拠と、このno-goが同時に成立することも公開定理として証明。
+- **意味すること・意味しないこと**：AEWの**特定の保守的二球下界**をそのまま使ったGI正値十分条件は到達不能。しかし真正**全二乗モーメント`S_H`** の数値比較 `B_H^2 < 272*S_H`、本来の物理GI、非零共分散、既存の正領域、有限体積強制性そのものの不可能性は主張しない。なぜなら元の`S_H`は二球下界より大きくなり得るためである。元のHamiltonian spectral gap・体積一様強制性・連続体Yang--Mills質量ギャップは未証明。
+
+### exact-source Lean4検証
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalTwoBallFCNumericalObstructionV5_PZ37AEX.lean` だけを追加。公開6定理、6件`#print axioms`。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`固定。既存Leanファイル・元物理模型・測度・距離・workflow・公開root変更なし。
+- 最終 [exact-source CI #41630657809](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41630657809) は **11,305/11,305 SUCCESS**。新規6定理の依存公理は`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error **0/0**、独立MCP completion receipt **SUCCESS**。source HEAD `1a4516813c6a722739ee0b4868bab72afe085a4e`、test-merge `2ce0cd1566f6ac1b4032e8b63c4331d837608953`、squash `5528fce1650e64b954994fa80fa77942a413b07a` のGit tree `227102f4aed0f376e2cd98ce49625157debb6686`が完全一致。
+- **Lean修正履歴**：初回は `rw [←pow_mul,pow_succ]` が目標の外側累乗ではなく内側の`x^8`を書き換え、未解決ゴールが生じた。全文と固定Mathlibの書換え機構・ACJ/ACA依存定義を点検し、外側`pow_mul`と`pow_succ`を明示的な別段等式に分けて修正。仮定も定理文も弱めず最終CIが成功。docs-only更新ではStrict Lean再実行なし。
+- **次の研究 AEY**：元の二球局所質量を超える、真正`S_H`の全体評価、正規化された共分散エネルギー割合・分散／残差構造、FC envelopeとの直接比較を研究。AEWの球下界を改善しただけで閾値を満たせると仮定せず、未解決の数値・体積一様障害を保持する。
+
+---
+
+## 検証済み定理 — AEW（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AEW定理PR [#6256](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6256) はMERGED、定理squash SHA `add2cccca4683ab12d8830246a227989f3f9d203`。AEVまでの真正interacting Wilson SU(2)、元の中心化Gauss-law物理源、元JQ物理受信器、Perron/transfer、joint sqrt-density・元JQ密度、元のSU(2) Haarとpair-Haar法則、固定Lean/mathlib、公開rootは不変更。
+
+### 元の真正受信器から共分散安定半径・Haar二球モーメントへの無条件接続
+
+- **AEVの真正全境界Lipschitz係数を統合**：`O_H` を元の有界連続受信器、`M_F(H)=||O_H||`、`M_src(H)=∫|f0|dμ_H`、`a_H=||T_H||^(-2)`、`lambda_rho(H)=sqrt(k_H^3)`、`L_rho(H)=13*beta0*exp(13*beta0)*sqrt((k_H^(-1))^3)` とする。実際に証明済みの `L_left=M_F*L_rho/lambda_rho+2*M_F`、`L_right=(a_H*13*beta0*M_src+M_F*L_rho)/lambda_rho+2*M_F` から、明示的な本来の`L_F(H)=L_left+L_right≥0` を定義。元受信器と真正SU(2) Haar共分散分子に対して **`|F_e(z,xi)-F_e(w,xi)|≤L_F(H)*D_H(z,w)`**、**`|N_e(z)-N_e(w)|≤L_F(H)*D_H(z,w)`** を外部受信器正則性仮定なしで形式化。
+- **AEKの真正密度下界を使用**：元のWilson kernel global floor `k_H>0` に対して **`lambda_q(H)=1/sqrt((k_H^(-1))^3)>0`** が全ての元二境界配置 `z` について `lambda_q(H)≤q_H(z)` であることを形式化。以前の密度net・自由な正数証明書を追加しない。
+- **明示的な真正安定半径**：元の正共分散中心 `a`（`C_e(a)>0`）と本物のHaar分子絶対値上界 `M≥0`（`|N_e(z)|≤M`）に対し、`L_q(H)=13*beta0*exp(13*beta0)*exp(beta0*ActionBudget(H))/sqrt(k_H^3)` とすると **`R_H=min((lambda_q*C_e(a)/4)/(L_F+1), 1, (lambda_q^2*C_e(a)/(4*(M+lambda_q)))/(L_q+1))>0`** を新規定理で得る。数学的対象は既存AER/AESの元の共分散で、異なるsource・law・metricではない。
+- **共分散半振幅安定性と真正pair-Haar二球下界**：任意の本来の二境界配置 `z,w` に対し `D_H(z,w)<R_H` なら **`|C_e(z)-C_e(w)|≤C_e(a)/2`**。さらに **`(C_e(a)/2)^2 * [2*(min(R_H/(2*card(Link_H)+1),2)/4)^(8*card(Link_H))] ≤ S(H,beta0,e)`** を無条件接続。ここで `S` は元の中心化共分散二乗モーメント。元のpair-HaarとSU(2) character `|chi|≤1` のみ使用。
+- **各物理リンクでの存在を無条件化**：AEDの `p4Q2PZ37AED_originalPositiveMaximumCovariance_exists` とAEGの `p4Q2PZ37AEG_originalNumerator_positiveMaxAbs_exists` を合成し、全ての真正リンク`e`で正中心`a`、真の分子上界`M>0`、表示公式を満たす`R_H>0` と真正二球モーメント下界の存在を新しいLean4定理にした。`M` と`a`の数値認証を済ませたとの主張ではない。
+- **真のGI/FC数値条件を分離**：既存の物理FC-envelope `B_H` に対し `B_H^2 <272 * [明示的二球下界]` が独立に確認できれば、元のGI平均予算`Budget(H,beta0,e)>0`を導く定理も追加。**この数値不等式の成立自体は未証明**であり、H一様強制性、物理Hamiltonian spectral gap、無限体積・連続体Yang--Mills質量ギャップは未証明のまま保持。
+
+### exact-source Lean4検証・公理監査
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalReceiverExplicitCovarianceBallV5_PZ37AEW.lean` のみ。明示係数定義1件、公開7定理と7件`#print axioms`。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を維持。既存Leanファイル、物理模型、CI/workflow、公開rootを不変更とする。
+- [exact-source CI #41627473372](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41627473372) は **11,304/11,304 SUCCESS**。新規7定理の公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、変更Lean warning/error **0/0**、独立MCP completion receipt **SUCCESS**。source HEAD `38789b124394edf74d7139db99ce89a449462afe`、test-merge `eeb79df229e21cd469819279c1adb697fb0e8245`、squash `add2cccca4683ab12d8830246a227989f3f9d203` のGit tree `5d16ffd52bab86b190e5f6b4211640f007af0d60` が完全一致。
+- **Lean4検証理由**：AEU・AEVで導出済みの完全左・右境界係数を原定義のまま再利用し、AEKの真正q下界、AES/AERの半振幅半径定理、AEDの正共分散anchor、AEGの真のHaar numerator boundと接続。新規外部正則性仮定や数値GI仮定の無条件化を行わず、型付きsourceと既存証明のauthority境界を維持。docs-onlyではStrict Leanを再実行しない。
+- **次の研究 AEX**：AEWで確立した半径と下界を、真正FC envelopeとの数値優越比較、およびH依存係数の非一様性の定量評価へ進める。両者を混同せず、H一様強制性・連続体質量ギャップへの飛躍は行わない。
+
+---
+
+## 検証済み定理 — AEV（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AEV定理PR [#6253](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6253) はMERGED、定理squash SHA `565a88c536b35063e62eb452b1d06b382b43e667`。AEUまでの真正interacting Wilson SU(2)、中心化Gauss-law物理源、元JQ受信器、元Perron/transfer、真正joint sqrt-density・JQ密度、元のSU(2) Haarとpair-Haar、固定Lean/mathlib・公開rootは不変更。
+
+### 真正Wilson源積分から右非観測リンク係数を無条件導出し、受信器全境界Lipschitzを閉じる
+
+- **元の符号付き物理源を保持**：`f0=p4Q2PZ37ZW_originalCenteredPhysicalDirection(H)`（真正Gauss-law Hilbert源）、本物の規格化spatial-slice Haar `mu_H` とone-slab Wilson核 `K_H(A,B)`を使用。`M_src(H)=∫ |f0(A)| dmu_H(A)≥0` は元の物理L²源の有限なHaar L¹質量であり、代理source・positive surrogate・独立posteriorではない。
+- **真の核と符号付き積分の局所変動**：既証明AEM/AEOの物理一スラブWilson作用 `|S_H(A,B[i:=g])-S_H(A,B[i:=h])|≤13*d_J(g,h)`、Boltzmann核 `|K_H(A,B[i:=g])-K_H(A,B[i:=h])|≤13*beta0*d_J(g,h)` を継承。汎用の符号付き被積分関数について `|∫f*u-∫f*v|≤C*∫|f|` をLeanで証明し、GNの真の転送積分 `t_f0(B)=∫K_H(A,B)f0(A)dmu_H(A)` に適用。従って **`|t_f0(B[i:=g])-t_f0(B[i:=h])|≤13*beta0*M_src(H)*d_J(g,h)`** を外部変動仮定なしで形式化。
+- **右境界のtyped gluing**：ADL全境界距離では単一右リンクだけの二つの置換に対し `D_H((A,B[i:=g]),(A,B[i:=h]))=d_J(g,h)`。右非観測リンク `i≠e` と受信器挿入リンク `e` の更新が可換であることを真正依存型のままLeanで証明。AETの右観測リンク `e` そのものの厳密な受信器不変性も継承。
+- **真の分母と振幅上界による右係数**：`a_H=||T_H||^(-2)`、`M_F(H)=||O_H||`、AEKの `lambda_rho(H)=sqrt(k_H^3)>0`、AEQの `L_rho(H)=13*beta0*exp(13*beta0)*sqrt((k_H^(-1))^3)`、`L_T(H)=13*beta0*M_src(H)` を使用。真正GNの `F_e(A,B;xi)=a_H*t_f0(B[e:=xi])/rho_H(A,B[e:=xi])` にAEFの商評価を適用し、右非観測リンクの`d_J≤1`について `L_R,unit(H)=(a_H*L_T(H)+M_F(H)*L_rho(H))/lambda_rho(H)` を無条件に導出。
+- **全弦距離・全境界の最終閉包**：`d_J>1` は真のBCF振幅上界 `2*M_F(H)` で処理し、**`L_right(H)=L_R,unit(H)+2*M_F(H)≥0`**。AEUの左係数 `L_left(H)=M_F*L_rho/lambda_rho+2*M_F` とAETの有限リンクgluingから、任意の元境界ペア `z,w`、元SU(2)挿入 `xi`、物理受信器リンク `e` について **`|F_e(z,xi)-F_e(w,xi)|≤(L_left(H)+L_right(H))*D_H(z,w)`** を無条件に形式証明。さらに元のSU(2) Haar character `|chi|≤1` を介し、元の中心化共分散分子 `N_e` にも同じ全境界Lipschitz係数を無条件に得る。
+- **authority/obstruction**：今回閉じたのは有限体積 `H` ごとの元の物理受信器・真正Haar分子の定量正則性であり、係数は `H` に依存する。AEK/AEQ/AEF/AER/AESとの共分散局所安定性・正の二球モーメント接続は可能だが、元の数値GI/FC閾値の成立、体積一様強制性、無限体積の物理spectral gap、連続体Yang--Mills質量ギャップは未証明。
+
+### exact-source Lean4検証・公理監査
+
+- 新規2ファイル `PhysicalYangMillsWilsonSU2OriginalReceiverRightBoundaryTransferKernelSlopeV5_PZ37AEV.lean`、`PhysicalYangMillsWilsonSU2OriginalReceiverRightBoundaryExplicitFullSlopeV5_PZ37AEV.lean`（ともに `MGAP4D/MathlibAnalytic/`）を追加。公開13定理と13件`#print axioms`。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。既存Leanファイル、模型、workflow、公開root不変更。
+- [exact-source CI #41625031361](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41625031361) は **11,303/11,303 SUCCESS**。新規13定理の公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、変更Lean warning/error **0/0**、独立MCP completion receipt **SUCCESS**。最終source HEAD `979f6bafad3a3bb5153e649ab791a0cc27dd2b63`、test-merge `20b0a63c1ddefdc4bfd3f0a916d0e9be9c9ef624`、squash `565a88c536b35063e62eb452b1d06b382b43e667` のGit tree `af143c17dad2398ce55f7c2a44136454b200deea` は完全一致。
+- **Lean4修正履歴**：CIの指摘箇所だけでなく新規Leanファイル全文、GN・AEM・AEK・AEQ・AEU・AEF・AESの依存型と固定mathlibを照合。`mul_le_mul_of_nonneg_left` が返す `|f|*C` と目標の `C*|f|` はLeanの構文上definitional equalではないため、`calc`と可換環の `ring` で明示的に接続。全13定理を維持し、最後の未使用`simp`引数を削除。docs-only同期ではStrict Leanを再実行しない。
+- **次段階 AEW**：証明済みの真正全境界受信器係数をAES/AERの具体的安定半径と元の共分散二球モーメントへ完全接続する。有限体積 `H` と `H` 一様数値証明は引き続き分ける。
+
+---
+
+## 検証済み定理 — AEU（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AEU定理PR [#6250](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6250) はMERGED、定理squash SHA `7c784c332db9feeb078d24c051b7ddce0f411952`。AETまでの真正interacting Wilson SU(2)、中心化Gauss-law物理源、元JQ受信器、元Perron/transfer、真正joint sqrt-density・JQ密度、元のSU(2) Haarとpair-Haar法則、固定Lean/mathlibおよび公開rootは不変更。
+
+### 真正物理受信器の左境界全リンク変動係数を無条件に導出
+
+- **GNの真正源・密度相殺式**：元の中心化Gauss-law源`f0`と真正SU(2)積分変数`xi`に対し、元JQ受信器は **`F_e(A,B;xi)=||T_H||^(-2)*t_f0(B[e:=xi])/rho_H(A,B[e:=xi])`** と厳密に等しい。`t_f0`は変更されていないone-slab Wilson transfer源積分であり、左境界`A`には依存しない。新しい確率法則・源・受信器の再定義は行わない。
+- **真の受信器の絶対振幅上界**：`O_H=normalizedPhysicalOneSlabJointReceiverProductBCF(H,2,beta0,f0)`は既存の真正有界連続BCF。`M_F(H)=||O_H||≥0`とすると、全ての元`A,B,e,xi`で **`|F_e(A,B;xi)|≤M_F(H)`** をLean4で無条件証明。コンパクト性から数値を創作せず、元BCF自体の実在するnormを使用。
+- **本来の左1リンク距離**：元のADL全リンク二境界弦距離`D_H`は、左リンク`i`のみの二つの置換では厳密に **`D_H((A[i:=g],B),(A[i:=h],B))=d_J(g,h)`**。代理擬距離・外部測度は不要。
+- **本来の左境界・短距離商変動**：AEKの真正Wilson joint sqrt-density下界`lambda_rho(H)=sqrt(k_H^3)>0`、AEQの`D_H≤1`での真正密度係数`L_rho(H)=13*beta0*exp(13*beta0)*sqrt((k_H^(-1))^3)`を使用。同じ右挿入境界を持つ二つの元受信器では転送積分分子が同一なので、分母の商差から`d_J(g,h)≤1`なら **`|F_e(A[i:=g],B;xi)-F_e(A[i:=h],B;xi)|≤(M_F*L_rho/lambda_rho)*d_J(g,h)`** を無条件形式化。
+- **元の左全リンク・全距離の明示的Lipschitz**：`d_J>1`では真のBCF振幅上界から`|F_g-F_h|≤2*M_F≤2*M_F*d_J`。従って任意の元左リンクについて **`L_left(H)=M_F(H)*L_rho(H)/lambda_rho(H)+2*M_F(H)`** が実際に有効な有限体積正則性係数として成立。数値評価済みの`M_F`やH非依存係数を主張するものではない。
+- **AETと接続して右側だけを残す**：観測右リンク`e`の独立性はAETで無条件証明済み。残る右**非観測**リンク`i≠e`の真正局所係数`L_R≥0`だけを証明書として仮定すれば、元の全境界で **`|F_e(z,xi)-F_e(w,xi)|≤(L_left(H)+L_R)*D_H(z,w)`**。これをAESの`|chi|≤1`、AERの真正Haar二球モーメントへ接続可能。右非観測リンクの係数`L_R`の存在・数値評価と体積一様性はAEUでは未証明として明示。
+- **authority/obstruction**：左境界全リンク係数は無条件の定理、右観測リンクの零変動も無条件。右非観測リンクの元のWilson transfer源積分・密度比の局所変動こそが次段階AEVの課題。GI数値FC閾値、体積一様強制性、物理スペクトルギャップ、連続体Yang--Mills質量ギャップは未証明。
+
+### exact-source Lean4検証・公理監査
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalReceiverLeftBoundaryExplicitSlopeV5_PZ37AEU.lean` のみ。公開7定理と7件`#print axioms`。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`固定。既存Leanファイル、物理模型、workflow、公開rootを不変更とする。
+- [exact-source CI #41616736179](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41616736179) は **11,301/11,301 SUCCESS**、新規7定理の公理依存は`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。最終source HEAD `bb13a0979d6c04b0e9aec3f9d17dd389719954c3`、test-merge `ce7ff95c0970b92dcc5f7c82c5d7bf728a13face`、squash `7c784c332db9feeb078d24c051b7ddce0f411952` のGit tree `414fdc0ef7d4d2d27f665f0b7f5ddc5ae9be2baf` は完全一致。
+- **Lean4修正履歴**：新規ファイルの全文とGN・AEK・AEQ・AETの依存定理を照合。局所notationを`dsimp`の書換え定理として渡せない理由を確認し、目標の`change`と正値因子の明示的積へ置換。`abs_sub_le`の3点不等式型を確認して`abs_add_le`へ修正。SU(2)のリンク変数`h`と証明名のshadowingを解消。新たな仮定を導入せず定理文を保持。docs-only同期ではStrict Leanを再実行しない。
+
+---
+
+## 検証済み定理 — AET（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AET定理PR [#6247](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6247) はMERGED、定理squash SHA `89ae225820b8eb7c37ce4ae0cfb4fb5659600111`。AESまでの真正interacting Wilson SU(2)、中心化Gauss-law物理源、元JQ source-link receiver、元Perron/transfer、真正joint sqrt-density・JQ密度、元SU(2) Haarとpair-Haar、固定Lean/mathlib・公開rootは不変更。
+
+### 真正受信器の正確な右リンク独立性・全リンクLipschitz descent
+
+- **無条件の元物理受信器不変性**：JQの受信器は元の中心化Gauss-law源 `f0` から作られ、`F_e(A,B;g)=normalizedPhysicalOneSlabJointReceiverProductBCF(A,Function.update(B,e,g))` を使う。したがって任意の真正SU(2) `h,g` に対し **`F_e(A,Function.update(B,e,h);g)=F_e(A,B;g)`** をLean4で証明。積分変数`g`で上書きされる前の右境界リンク`B(e)`の値に関する厳密な独立性であり、受信器全体の右境界独立性ではない。
+- **真正SU(2) Haar分子の同一性**：元の分子 `N_e(A,B)=∫_SU2 F_e(A,B;g)*chi(g)dmu(g)` についても **`N_e(A,Function.update(B,e,h))=N_e(A,B)`** を無条件に証明。これは元Haar積分の値を変えないもので、分母`q_H`や商の共分散`C_e=N_e/q_H`が`B(e)`に依存しないとの主張ではない。
+- **符号付き有限座標Lipschitz gluing**：AEPの真正finite-two-boundary exponential Harnack telescopeを`exp(f)`へ適用し、局所的`|f(update_i(g))-f(update_i(h))|≤L*d(g,h)`から、二境界全有限座標について`|f(z)-f(w)|≤L*sum_i(d(z.left_i,w.left_i)+d(z.right_i,w.right_i))`を証明。元の符号付き`f`に非負性を仮定せず、幾何学的`d`の対称性のみ使用。
+- **本物の受信器への適用**：元のADK弦距離`d_J`・ADL全リンク距離`D_H`を保持する。全左リンクと、右側について**観測リンクe以外**の各リンクで同一の局所変動係数`LF≥0`が証明されれば、右eの局所評価は上書き不変性から`0`で自動的に解決し、**`|F_e(z,g)-F_e(w,g)|≤LF*D_H(z,w)`** を導く。AESの証明済み`|chi|≤1`から`|N_e(z)-N_e(w)|≤LF*D_H(z,w)`も導く。
+- **AER・AESの定量的結論を継承**：真正`C_e(a)>0`、既存`lambda>0`・`M≥0`、元密度係数`Lq(H)`と局所受信器係数`LF`の証明書を入力すると、`R=min((lambda*C_e(a)/4)/(LF+1),1,(lambda^2*C_e(a)/(4*(M+lambda)))/(Lq(H)+1))>0`が元の共分散半振幅安定性と真正pair-Haar二球モーメント下界を与える。
+- **authority/obstruction**：右`B(e)`独立性、有限座標の加法的gluing、条件付きAER/AES接続は形式証明済み。ただし**それ以外の元物理受信器の各リンク`d_J`変動係数`LF`はまだ無条件に証明・数値評価されていない**。したがってこの局所証明書を無条件で使えるとは主張しない。有限体積`H`の正半径存在はAERで別途証明済み。GI数値閾値、体積一様強制性、物理spectral gap、連続体Yang--Mills質量ギャップは未証明。
+
+### exact-source Lean4検証・公理監査
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalReceiverLocalToGlobalChordalV5_PZ37AET.lean` のみ、公開7定理と7件`#print axioms`。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`、既存Leanファイル、物理模型、workflow、公開rootは不変更。
+- [exact-source CI #41613092993](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41613092993) **11,300/11,300 SUCCESS**、新規7定理の公理依存は`propext`・`Classical.choice`・`Quot.sound`以内、`sorryAx`なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。最終source HEAD `cc1ff43e62f696eddba29515e69fd37a9efe6d0d`、test-merge `50b1d26ad959089c2b635dae5b7cd82bbcebcac3`、squash `89ae225820b8eb7c37ce4ae0cfb4fb5659600111` のGit tree `7389cf9c2786a7bd3f0ec9bf82fa731ce3af145a` は完全一致。docs-onlyではStrict Lean再実行不要。
+- **次の段階 AEU**：元の中心化Wilson物理源・one-slab kernel・Perron因子の構造から、残る左リンクと右非観測リンクに対する本物の局所受信器変動を定量化する。有限体積ごとの局所係数の構成と体積一様上界を区別する。
+
+---
+
+## 検証済み定理 — AES（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AES定理PR [#6244](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6244) はMERGED、定理squash SHA `3d28af0d38e6832597fed74d4050c545ae0d9f97`。AERまでの真正interacting Wilson SU(2)、中心化Gauss-law物理源、JQの真正source-link receiver、元Perron/transfer、二境界joint sqrt-density・JQ密度、元のSU(2) Haarおよびpair-Haar、固定Lean/mathlibと公開rootは不変更。
+
+### 真正物理受信器から元Haar分子・共分散安定半径への明示的接続
+
+- **元Wilson characterの無条件数値上界**：元の実SU(2) character `chi(g)=1-specialUnitaryWilsonPlaquetteEnergy(2,g)`。既存のWilsonエネルギー `0≤E(g)≤2` から **`|chi(g)|≤1`** を新たにLean4形式証明。補助的に真のコンパクトSU(2)上の連続character norm `||chi||_sup<∞` もLeanで証明済み。代理character・代理群は使わない。
+- **Haar分子の真の物理的同一性**：元の中心化Gauss-law Hilbert源 `f0` のJQ受信器 `F_e(z,g)=p4Q2JQ_originalPhysicalSourceLinkReceiver(H,beta0,f0,e,z,g)` と元のSU(2) normalized Haar `mu` に対し、元AEFの**真正分子**を `N_e(z)=∫ F_e(z,g)*chi(g) dmu(g)` のまま使用。点ごとの受信器変動 `|F_e(z,g)-F_e(w,g)|≤LF*D_H(z,w)` が認証されれば、`|chi|≤1` と元Haar確率性から **`|N_e(z)-N_e(w)|≤LF*D_H(z,w)`** を形式証明。符号・独立性の仮定は不要。
+- **AERのrNの定量的明示式**：真正共分散正中心 `C_e(a)>0`、AEGの元密度下界 `lambda>0`、元分子上界 `M≥0`、AEQの明示的元密度係数 `Lq(H)=13*beta0*exp(13*beta0)*Mq(H)`、元受信器変動の認証係数 `LF≥0` を使用。`rN=(lambda*C_e(a)/4)/(LF+1)`、`deltaq=lambda^2*C_e(a)/(4*(M+lambda))`、`R=min(rN,1,deltaq/(Lq(H)+1))>0` と定義し、全ての元境界ペア `D_H(z,w)<R` に対し **`|C_e(z)-C_e(w)|≤C_e(a)/2`** を証明。
+- **真正pair-Haar二球モーメント**：同じ元の `D_H` と元pair-Haar法則・元ゲージ符号反転を保持し、`(C_e(a)/2)^2 * 2 * (min(R/(2*card(Link_H)+1),2)/4)^(8*card(Link_H)) ≤ S(H,beta0,e)` を形式証明。元FC envelopeによるGI mean positivityは別途数値優越条件を明示した**条件付き**結論。
+- **authority/obstruction**：`|chi|≤1` は無条件証明。一方 **真正JQ物理受信器のD_H-Lipschitz係数LFの実在・数値値はAESでは未証明**。従って、ここで与えた`R`は受信器認証に依存する明示式であって、数値的に確定した半径ではない。AERの定性的な正半径存在定理とは区別する。`lambda`、`M`、`C_e(a)`、`Lq(H)` の数値評価、GI数値閾値、体積一様強制性、物理スペクトルギャップ、連続体4D Yang--Mills質量ギャップは引き続き未証明。
+
+### exact-source Lean4・公理監査
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalReceiverToNumeratorExplicitRadiusV5_PZ37AES.lean` 1ファイル、9公開定理・9件の`#print axioms`。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`、旧Lean全ファイル・物理模型・workflow・公開rootは不変更。
+- [exact-source CI #41610291228](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41610291228) は**11,299/11,299 SUCCESS**。新規9定理の公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。最終source HEAD `754d55794f463efd377a1ebf3656132e64fbca32`、test-merge `61f4a7e4b95f3632c593566034bd92596e823a7b`、squash `3d28af0d38e6832597fed74d4050c545ae0d9f97` のGit tree `564b4133acc978813d58afb3aa616dcedb76e4e6` は完全一致。
+- **Lean4修正履歴**：絶対値・乗算間の字句解析（`|x| * |y|`）、局所notation`mu`の`.real`非展開に対する明示的`(normalizedCompactHaar G).real`、半径等式を前提に書き戻す`rw`、未使用証明引数の命名を修正。数学的仮定と結論は維持。次は元JQ受信器`F_e`の`LF`を真正Wilson核・連続Perron・中心化物理源から構成することが中心課題。docs-onlyではStrict Lean再実行不要。
+
+---
+
+## 検証済み定理 — AER（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AER定理PR [#6241](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6241) はMERGED、定理squash SHA `a5eb1ff0fa4bf1c6544df12a6c43271b092353aa`。AEP/AEQまでの真正interacting Wilson SU(2)、中心化Gauss-law物理源、元のFF受信器、Perron/transfer作用素、二境界joint sqrt-density、JQ密度、元のpair-Haar、固定Lean/mathlibおよび公開rootは不変更。
+
+### 元の共分散 C_e=N_e/q_H の半振幅安定球
+
+- **分母の明示的な真正評価**：AEQから、元の全リンク二境界弦距離 `D_H(z,w)≤1` で `|q_H(z)-q_H(w)|≤L_q(H) D_H(z,w)`、`L_q(H)=13*beta0*exp(13*beta0)*M_q(H)`。AEPの対数係数 `13*beta0` はH非依存だが、ここで使う絶対変動係数 `L_q(H)` はH依存。
+- **分子・分母の真正予算**：元の物理リンク `e`、正の共分散中心 `a`、AEGの元密度下界 `lambda>0`、真正Haar分子 `N_e` の有限体積上界 `M≥0`、分子誤差 `lambda*C_e(a)/4` に対する真正 `D_H` 半径 `r_N>0` を使う。`delta_q=lambda^2*C_e(a)/(4*(M+lambda))`、`R=min(r_N,1,delta_q/(L_q(H)+1))>0` を定義。
+- **新たに無条件形式化**：元の `q_H` にAEQ明示的変動を代入し、AEFの真正比率誤差則から、すべての元境界 `z,w` で `D_H(z,w)<R` なら `|C_e(z)-C_e(w)|≤C_e(a)/2`。AEGは真正 `r_N` の存在を、AEDは正の真正 `C_e(a)` の存在を証明済み。したがって任意の固定有限 `H` と真正物理リンク `e` について、この形式の正の半径が無条件に存在する。
+- **元Haar二球モーメントへの接続**：AEEのゲージ反転・両符号球の証明を同じ元の `D_H` と元pair-Haar測度で再利用し、`(C_e(a)/2)^2 * 2 * (min(R/(2*card(Link_H)+1),2)/4)^(8*card(Link_H)) ≤ S(H,beta0,e)` を形式証明。代理測度、独立posterior、物理的源・受信器の交換を行わない。
+- **authority/obstruction**：`r_N`、`lambda`、`M`、`C_e(a)`、`M_q(H)` は存在が証明された真正有限体積量だが、数値評価されていない。`R` はそれらを入力する明示式であり、特定の数値半径や体積一様正下界を算出したものではない。GIのFC数値優越、体積一様強制性、物理スペクトルギャップ、連続体4D Yang--Mills質量ギャップは未証明。
+
+### exact-source Lean4検証・公理監査
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalCovarianceCertifiedChordalBallV5_PZ37AER.lean` のみ、公開5定理と5件の `#print axioms`。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 固定。旧Leanファイル、物理模型、workflow、公開root不変更。
+- [exact-source CI #41605787162](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41605787162) **11,298/11,298 SUCCESS**、公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。最終source HEAD `5ded878cab71a0dea3283a91225d390f05c9ad7e`、test-merge `1f66b1b092e9505079cfc583032ab10164ddd472`、squash `a5eb1ff0fa4bf1c6544df12a6c43271b092353aa` のGit tree `5384861ef3a689c15459ef11ec9f9a63a9dbcdfb` は完全一致。
+- **修正履歴**：初回CIの半振幅 `C_e(a)-C_e(a)/2=C_e(a)/2` はLeanの定義上の一致ではなく実数環の等式なので `ring` で明示証明。既にゴールを閉じる `field_simp` 後の不要な `ring` を除去し、定理の仮定・結論は維持。次段階は真正分子 `N_e` のSU(2)リンク依存の明示的変動定数、有限Hでの数値認証、および物理的FC比較。docs-only同期ではStrict Leanを再実行しない。
+
+---
+
+## 検証済み定理 — AEQ（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AEQ定理PR [#6238](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6238) はMERGED、定理squash SHA `1ea9d87d6973035c6fc197a8a1c2176f4c1b80d4`。AEPまでの真正interacting Wilson SU(2)、中心化Gauss-law物理源、元Perron/transfer、真正joint sqrt-density・JQ密度・境界pair-Haar、固定Lean/mathlibと公開rootは不変更。
+
+### 真正二境界・全リンクD_Hの明示的絶対変動と球内Lipschitz
+
+- **前提を追加しない全リンク変動評価**：AEPの無条件相対Harnack `rho_H(z)≤exp(c*D_H(z,w))*rho_H(w)`、`q_H(z)≤exp(c*D_H(z,w))*q_H(w)`（両者の逆方向も成立）を使用。ここで `c=13*beta0` はH非依存、`D_H` はADLの元の二境界全リンクℓ1弦距離。AEKの真正物理的振幅天井 `M_rho(H)=sqrt((k_H⁻¹)^3)`、`M_q(H)=exp(beta0*B_H)/sqrt(k_H^3)`（`k_H=exp(-beta0*B_H)>0`、`B_H` は元のone-slab Wilson全作用budget）をそのまま使用。
+- **新たにLean4で無条件証明**：すべての実在有限Hの元境界ペア `z,w` に対して **`|rho_H(z)-rho_H(w)|≤(exp(c*D_H(z,w))-1)*M_rho(H)`** および **`|q_H(z)-q_H(w)|≤(exp(c*D_H(z,w))-1)*M_q(H)`**。代理密度、独立性、有限net標本、H一様振幅仮定は導入しない。
+- **半径指定の数値Lipschitz**：実指数の標準接線不等式から `exp(x)-1≤x*exp(x)` を証明。任意の元距離 `D_H(z,w)≤R` について、**`|rho_H(z)-rho_H(w)|≤c*exp(c*R)*M_rho(H)*D_H(z,w)`** および **`|q_H(z)-q_H(w)|≤c*exp(c*R)*M_q(H)*D_H(z,w)`** を形式証明。Rの大きさに応じて係数を明示でき、AEHの定性的な一様連続性だけに依存しない。
+- **authority/obstruction**：AEPの `log rho_H`・`log q_H` のH非依存係数 `c` と区別し、AEQの絶対変動振幅 `M_rho(H),M_q(H)` は有限体積Hに依存すると明示。今回の定理から源依存共分散のD_H安定球、GI 68/1:17閾値、体積一様強制性、物理スペクトルギャップ、連続体Yang--Mills質量ギャップの証明は主張しない。
+
+### exact-source Lean4検証・公理監査
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFullChordalExplicitDensityModulusV5_PZ37AEQ.lean` 1ファイル、6公開定理・6件 `#print axioms`。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。既存Leanファイル、物理模型、workflow、公開rootは不変更。
+- exact-source [CI #41601402216](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41601402216) は **11,297/11,297 SUCCESS**。新規6定理の公理依存は `propext`・`Classical.choice`・`Quot.sound` 以内、`sorryAx`なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。最終source HEAD `095f9bf3f0734f0f30c92c9aa55fe78dc7e70ab7`、squash `1ea9d87d6973035c6fc197a8a1c2176f4c1b80d4` のGit tree `752a6ac497e116ebf16f1f6e070918c3102522a5` は完全一致。
+- **次の段階**：元のsource-dependent共分散 `C_e` の真正D_H球内の定量的安定性を分離して形式化し、明示的なHaar球測度下界と二球モーメントのpositive witnessに接続する。体積一様強制性・連続体4D質量ギャップは引き続き未証明。今回のREADME・ROADMAP同期はdocs-onlyでStrict Leanを再実行しない。
+
+---
+
+## 検証済み定理 — AEP（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AEP定理PR [#6235](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6235) はMERGED、squash SHA `a79302bf97a7e3ab5127b46971a01dfddb9d9ee3`。AEOまでの真正interacting Wilson SU(2)、中心化Gauss-law物理源、元Perron/transfer、二interacting posterior、元境界pair-Haar、固定toolchainおよび公開rootを不変更に保つ。
+
+### 全リンク有限telescopingと元の二境界弦距離D_H
+
+- **有限座標の型付き経路**：原始的な有限リンク集合を `Finset` で走査し、`Function.update` による選択リンクの置換を累積する真正 `finiteBlend` を定義。空集合では元配置、全体集合では目標配置になることを関数外延性により証明。局所 `f(update(u,i,g))≤exp(c*d(g,h))*f(update(u,i,h))` から全有限座標の `f(a)≤exp(c*∑d(a_i,b_i))*f(b)` を帰納証明し、さらに二境界へ合成。新しい確率測度や密度の独立性は仮定しない。
+- **真正二境界D_H**：ADLで確定した元の全リンク距離 `D_H(z,w)=∑_{e∈Link_H}(d_J(z.1_e,w.1_e)+d_J(z.2_e,w.2_e))` をそのまま使用。AEOの第二境界・第一境界の相対係数 `exp(13*beta0*d_J)` を順次合成し、元の `rho_H` と真正JQ `q_H` について、任意の元境界ペア `z,w` に対し **`rho_H(z)≤exp(13*beta0*D_H(z,w))*rho_H(w)`、`q_H(z)≤exp(13*beta0*D_H(z,w))*q_H(w)`** を無条件に形式証明。両式の逆方向も成立。
+- **対数密度の数値Lipschitz係数**：元 `rho_H>0` は真正joint sqrt-density正値から、`q_H>0` はAEKの元Wilson密度下界から証明。全リンク両側指数比較の対数を取り、**`|log rho_H(z)-log rho_H(w)|≤13*beta0*D_H(z,w)`** および **`|log q_H(z)-log q_H(w)|≤13*beta0*D_H(z,w)`** を形式証明。係数 `13*beta0` は有限体積Hおよびリンク総数に依存せず、真正D_Hは全元リンクの距離を合算する。
+- **同一性と境界**：元のJQ相殺式 `q_H(z)=‖T_H‖⁻¹/rho_H(z)` による二境界対称性もLean4で形式証明。元の物理真空・Wilson核・二interacting posterior・Haar法則を置換せず、全リンクLipschitzからH一様強制性・スペクトルギャップ・連続体Yang--Mills質量ギャップを導いたとは主張しない。
+
+### Lean4 exact-source証明と記録監査
+
+- 追加した真正Leanモジュールは `PhysicalYangMillsWilsonSU2OriginalFullChordalTelescopingV5_PZ37AEP.lean`、`PhysicalYangMillsWilsonSU2OriginalFullChordalDensityHarnackV5_PZ37AEP.lean`、`PhysicalYangMillsWilsonSU2OriginalFullChordalLogDensityLipschitzV5_PZ37AEP.lean` の3件、17公開定理・17件の `#print axioms`。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。
+- 最終exact-source [CI #41595248815](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41595248815) は **11,296/11,296 SUCCESS**、17定理の公理依存は `propext`・`Classical.choice`・`Quot.sound` 以内、`sorryAx` なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。最終source HEAD `a797421515a9b793dc8a028645a8468e7cdfa32a` とsquash `a79302bf97a7e3ab5127b46971a01dfddb9d9ee3` のGit tree `9483d8719e6b70b88fc0ab8687245ff4e8469756` は完全一致。マージ後push CI [#41596154568](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41596154568) もSUCCESS。
+- 初期CIで発見した `Finset` の空集合・全体集合の関数外延性証明、局所証明の型合わせ・linter問題を、全ファイルと既存の定理型を照合して修正。既存Lean、物理模型、公開root、workflow、toolchain pinは変更しない。README・ROADMAPの両ブランチ計4文書に同一の追記を行い、docs-onlyではStrict Leanを再実行しない。
+
+### 次段階のobstruction
+
+- 数値的に明示された全リンク対数Lipschitz係数から、真正 `rho_H`・`q_H` の有限Hの絶対変動上界、共分散 `C_e` の同じD_H球における安定性、元のHaar球質量とGI 68/1:17必要条件を結ぶ定量評価へ進む。有限体積の密度振幅の上界がH依存であること、および体積一様強制性・物理スペクトルギャップ・連続体4D質量ギャップが未証明であることを明記する。
+
+---
+
+## 検証済み定理 — AEO（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。AEO定理PR [#6232](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6232) はMERGED、定理squash SHA `001cf697e13714e4bf194061312b35c7df63d61e`。AENまでの真正interacting Wilson SU(2)、中心化Gauss-law物理源、元Perron/transfer、二interacting posterior、元境界pair-Haar、固定toolchainと公開rootを不変更とする。
+
+### 真正有限HのWilson作用・核・連続Perron真空の距離依存Harnack
+
+- **実際の原始幾何**：AEMで確定した真正SU(2)弦距離 `d_J` と有限接続数により、1リンク置換 `B_g=B[e↦g]`・`B_h=B[e↦h]` で元空間Wilson作用差 `≤24*d_J(g,h)`、元時間crossing作用差 `≤d_J(g,h)`。対称一スラブ作用の絶対差 `|S_H(A,B_g)-S_H(A,B_h)|≤13*d_J(g,h)` をAEOで形式証明。
+- **指数への真正移送**：元のBoltzmann式 `K_H(A,B)=exp(-beta0*S_H(A,B))` から、`R(g,h)=exp(13*beta0*d_J(g,h))` として `K_H(A,B_g)≤R(g,h)*K_H(A,B_h)` および逆方向を無条件に形式証明。元の正規化real-eight Wilson特徴における `R(g,g)=1`、Rの対称性および `R(g,h)≥1` を区別して保持。
+- **真正物理Perron固有方程式**：元の非負Haar `L²` top eigenvector `V_H` と正の元transferノルム `lambda_H` を保持し、既存の厳密点ごと式 `lambda_H*Omega_H(B)=∫V_H(A)*K_H(A,B)dmu_H(A)` に積分単調性を適用。`Omega_H(B_g)≤R(g,h)*Omega_H(B_h)` と逆方向を形式証明。代理真空、独立性、新しい確率則、未知のH一様下界は仮定しない。
+
+### 真正joint weight・rho・JQ qへの無条件相対比較
+
+- **元joint weightの構造**：`W_H(A,B)=lambda_H⁻¹*Omega_H(A)*K_H(A,B)*Omega_H(B)` をそのまま使い、第二境界の1リンク置換で `W_H(A,B_g)≤R(g,h)^2*W_H(A,B_h)` と逆方向を証明。真正 `rho_H=sqrt(W_H)` について `rho_H(A,B_g)≤R(g,h)*rho_H(A,B_h)` と逆方向を証明。元Wilson核の二境界対称性により第一境界の同型比較も成立。
+- **元JQ密度**：AEGの厳密相殺恒等式 `q_H(z)=lambda_H⁻¹/rho_H(z)` と真正rho正値を使い、`q_H(A,B_g)≤R(g,h)*q_H(A,B_h)` および逆方向を形式証明。真のinverse transfer、元の二interacting posteriorとpair-Haarを維持。
+- **小距離に応答する絶対変動**：AEKの真正有限Hの大域上界 `M_rho(H)`・`M_q(H)` に基づき `|rho_H(A,B_g)-rho_H(A,B_h)|≤(R(g,h)-1)*M_rho(H)` とqの同型式を証明。`R-1→0` は弦距離とともに消えるが、上界M自体はH依存。AEL/ADLの真正1リンク校正 `D_H((A,B_g),(A,B_h))=d_J(g,h)` にも移送。**今回は任意の二境界配置を結ぶ全リンクtelescopingの形式証明までは含まない**。
+
+### exact-source Lean4・公理監査・正本記録
+
+- 新規Lean `PhysicalYangMillsWilsonSU2OriginalDistanceDependentKernelVacuumHarnackV5_PZ37AEO.lean` と `PhysicalYangMillsWilsonSU2OriginalDistanceDependentRhoPerronHarnackV5_PZ37AEO.lean` の2ファイル、21公開定理・21件の `#print axioms`。固定Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。
+- 最終exact-source [CI #41590838422](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41590838422) は **11,293/11,293 SUCCESS**。全21件の依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立commit-status receipt SUCCESS。最終exact-source HEAD `0c797ee5a72dea6f0439739b3f09a5645329de76`、test-merge `4b979176a42fa6e385b2622ad2fd394cb7e6621a`、squash `001cf697e13714e4bf194061312b35c7df63d61e` のGit tree `c23d403ca8eb6d13f38762b684c16cb7beeb0152` は完全一致。既存Lean・物理模型・公開rootは変更なし。
+- **次の数学的課題**：真正 `D_H` の全リンクtelescopingによるグローバルな相対比較・対数密度Lipschitzを導出し、真正共分散と二球モーメントの数値評価へ接続する。GI 68/1:17、H一様強制性、物理スペクトルギャップ、連続体4D Yang–Mills質量ギャップは未認証・未証明のまま保持。文書同期はdocs-only、Strict Leanを再実行しない。
+
+---
+
+## 検証済み定理 — AEN（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main`はREADME・ROADMAP文書ミラーのみ。AEN定理PR [#6229](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6229)はMERGED、squash SHA `42e07b20ef8c39e9e031a709c1f520490fa75100`。AEMまでの真正interacting Wilson SU(2)、中心化Gauss-law物理源、元Perron/transfer、二interacting posterior、境界pair-Haar、固定toolchainおよび公開rootを変更しない。
+
+### 真正Wilson核から元の連続Perron真空への小距離変動移送
+
+- **元の固有方程式をそのまま使用**：実際の物理transferノルム `lambda_H=‖T_H‖`、真正非負規格化Haar `L²` 固有ベクトル `V_H`、元のspatial-slice Haar確率 `mu_H` と真正Wilson核 `K_H` に対し、既存の点ごと恒等式 `lambda_H*Omega_H(B)=∫V_H(A)*K_H(A,B)dmu_H(A)` を使用。AEMの定理 `|K_H(A,B_g)-K_H(A,B_h)|≤13*beta0*d_J(g,h)` は全ての元のAと任意の1リンク置換について無条件。
+- **重み付き積分の一般補題**：元の非負 `V_H` と真の二核切片の可積分性から、積分の差分が `(13*beta0*d_J(g,h))*∫V_H dmu_H` 以下となることをLean4証明。AEKの `Omega_H≤k_H⁻¹` と元の連続真空のa.e.一致を使う粗い上界 `∫V_H≤k_H⁻¹` から、`|Omega_H(B_g)-Omega_H(B_h)|≤13*beta0*k_H⁻²*d_J(g,h)` を独立証明。
+- **真正Haar L²規格化による改善**：Haar確率測度の定数1ベクトルの `L²` ノルムが1、元の規格化されたPerron固有ベクトルのノルムも1であることから、実Hilbert Cauchy–Schwarzにより **`∫V_H dmu_H≤1`** をLean4証明。AEJの真正 `lambda_H≥k_H>0` と組み合わせ、**`|Omega_H(B_g)-Omega_H(B_h)|≤13*beta0*k_H⁻¹*d_J(g,h)`** へ係数を改善。新規正則性・独立性・代理真空は仮定しない。
+- **元の全二境界弦距離への校正**：AEL/ADLで証明済みの1リンク恒等式 `D_H((A,B_g),(A,B_h))=d_J(g,h)` を用いて両版の真正 `D_H` 一座標変動評価を形式証明。任意の二境界配置間を結ぶ全リンクtelescopingについては今後の拡張対象。
+
+### 未証明境界と次の研究
+
+- 係数 `13*beta0/k_H` は各有限Hで明示的であるが、`k_H` は元の全Wilson作用budgetに依存するので**体積一様Lipschitz係数とは断言しない**。次は元の `Omega_H` の変動を真正joint sqrt-density `rho_H` と厳密JQ `q_H` に移送する。さらにAEMの作用差分から小距離指数Harnack `exp(13*beta0*d_J)` を構成し、体積一様な相対比較を検討する。
+- 元の源依存共分散のD_H安定球、GI 68/1:17、H一様強制性、物理スペクトルギャップと連続体4D Yang–Mills質量ギャップは未認証・未証明のまま維持する。
+
+### exact-source Lean4検証と定理正本
+
+- 新規Lean `PhysicalYangMillsWilsonSU2OriginalPerronOneLinkChordModulusV5_PZ37AEN.lean` および `PhysicalYangMillsWilsonSU2OriginalPerronSharpHaarL2ModulusV5_PZ37AEN.lean` の2ファイル、7公開定理・7件の `#print axioms`。固定Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。
+- 最終exact-source [CI #41588933158](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41588933158) は **11,291/11,291 SUCCESS**。7/7件の公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。source/test-mergeファイル差分なし、最終source HEAD `dd64a4fbc6e223f2a2bc4d5f1ff069e351a25914` とsquashの新規2 Lean blobは完全一致。
+- 初回CIのLean4関数加算の点ごと展開、局所notationをsimpへ与えた型エラー、`le_div_iff₀` の乗法順序を修正し、物理モデルや定理文の仮定は弱めていない。既存Lean・公開root・workflow・toolchain pinは不変更。README／ROADMAPは両ブランチ計4文書で同一の追記を保持し、docs-onlyでStrict Leanは再実行しない。
+
+---
+
+## 検証済み定理 — AEM（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラーのみ。AEM定理PR [#6226](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6226) はMERGED、定理squash SHA `23ac7379b8f076c844c8f77245cc4849cc2610d4`。AELまでの元interacting Wilson SU(2)、centered Gauss-law物理源、元Perron/transfer、二interacting posterior、元boundary pair-Haar、固定toolchainおよび公開rootを不変更とする。
+
+### 元の正規化SU(2)弦距離による無条件1リンクWilson核Lipschitz評価
+
+- **真正Hilbert特徴から直接**：元のSU(2) normalized real-eight trace feature `J` と `d_J(g,h)=‖J(g)-J(h)‖` を保持し、`‖J(g)‖=1` と真正Cauchy–Schwarzより `|E(a⁻¹*g)-E(a⁻¹*h)|≤d_J(g,h)` をLean4証明。連続性を新規仮定するのではなく、元Wilson作用そのものから導出する。
+- **群作用と原始4辺ホロノミー**：真正 `d_J` のSU(2)左・右乗法および逆元に関する不変性を証明。元の空間4辺plaquette holonomyは同じ1リンクの置換 `B_g=B[e↦g]`、`B_h=B[e↦h]` で `d_J(Hol(B_g,p),Hol(B_h,p))≤4*d_J(g,h)`。幾何上の辺重複も許容する保守的な4倍評価。
+- **真正有限接続数を使用**：元空間リンクeに接する空間プラケットは最大6個。無関係プラケットの元エネルギー差は0で、全空間作用 `|Spatial_H(B_g)-Spatial_H(B_h)|≤24*d_J(g,h)`。時間crossing作用の変動は `≤d_J(g,h)`、対称one-slab作用は `|S_H(A,B_g)-S_H(A,B_h)|≤13*d_J(g,h)`。
+- **無条件Wilson核の定量係数**：元の `K_H(A,B)=exp(-beta0*S_H(A,B))` と `S_H≥0`、非正の実引数上の `exp` の1-Lipschitz評価を組み合わせ、**すべての有限H、同じ真正A,B,e,g,hについて `|K_H(A,B_g)-K_H(A,B_h)|≤13*beta0*d_J(g,h)`**。固定 `beta0=log(3/2)/64>0` のもとでこの核係数はHに依存せず、`d_J→0` で差分上界も0となる。代理Wilson核・独立Haar法則・追加の局所正則性仮定は導入しない。
+
+### 元Perron密度・joint sqrt-density・全リンクD_Hへの残る段階
+
+- 今回確定したのは**元Wilson核の真の1リンクLipschitz評価**まで。元の連続Perron真空 `Omega_H` の積分固有方程式による定量差分、真正 `rho_H`・厳密 `q_H` への積・平方根・逆数評価、全二境界・全リンク `D_H` へのtelescopingは次段階として未形式化。AELの粗いHarnack因子と今回の小距離比例評価を混同しない。
+- 既存AEKの体積依存の真の核・Perron・joint密度上下界は保持。現時点でGI 68/1:17、元source-dependent共分散の安定球、H一様強制性、物理スペクトルギャップ、連続体4D Yang–Mills質量ギャップは未認証・未証明。
+
+### exact-source Lean4・公理監査および正本記録
+
+- 新規Lean `PhysicalYangMillsWilsonSU2OriginalOneLinkChordKernelModulusV5_PZ37AEM.lean` と `PhysicalYangMillsWilsonSU2OriginalSpatialChordKernelV5_PZ37AEM.lean` の2件のみ、19公開定理・19件 `#print axioms`。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。
+- 最終exact-source [CI #41572482075](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41572482075) は **11,289/11,289 SUCCESS**、全19件の公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立commit status receipt SUCCESS。
+- 初回のLean `simp` 局所記法引数、`abs` 展開の負号正規化、tactic linterを**元の定理文・物理仮定を変えずに修正**。最終exact-source HEAD `68e8c43b1f7d449f931d77bf6995837ff1d3cff0`、test-merge `88a493f0742393bbf482ce0f0f3408c15628df2a` は差分0件、squashに含まれる新規2 Leanファイルの内容blobはsourceと完全一致。既存Lean・物理模型・workflow・公開rootは不変更。README/ROADMAPの追加記録のみ両ブランチで同文に同期し、docs-onlyではStrict Leanを再実行しない。
+
+---
+
+## 検証済み定理 — AEL（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。AEL定理PR [#6223](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6223) はMERGED、定理squash SHA `be751761848391bad1edc32a9007ada456b1beb2`。AEKまでの真正interacting Wilson SU(2)、centered Gauss-law物理源、元Perron/transfer、二interacting posterior、boundary pair-Haar、固定Lean/mathlibおよび公開rootを保持する。
+
+### 元の二境界joint sqrt-density・Perron密度の1リンクHarnack評価
+
+- **真正Wilson核と連続Perron真空を同じモデルで比較**：元の固定結合 `beta0`、元の1リンク置換 `B_g=B[e↦g]`、`B_h=B[e↦h]`、`t=exp(8*beta0)` を使用。既存の元Wilson核の `K_H(A,B_g)≤t*K_H(A,B_h)` と元連続真空の `Omega_H(B_g)≤t*Omega_H(B_h)` を掛け合わせ、実際の元joint weight `W_H(A,B_g)≤t²*W_H(A,B_h)` をLean4で証明。
+- **真正joint sqrt-densityとJQ分母**：`rho_H=sqrt(W_H)` から `rho_H(A,B_g)≤t*rho_H(A,B_h)` と逆方向を証明。元の厳密相殺恒等式 `q_H(z)=‖T_H‖⁻¹/rho_H(z)` から同じ係数 `t` の真正Perron密度 `q_H` 比較を証明。元Wilson核の交換対称性からjoint weight・rhoの二境界入替対称性、および第一境界の1リンク比較も証明。代理密度、積独立、別作用素は導入しない。
+- **明示的な絶対変動評価**：AEKの大域上下界と組み合わせ、`k_H=exp[-2*beta0*(P_H+L_H)]>0` に対して、同じ1リンク変更で `|rho_H(A,B_g)-rho_H(A,B_h)|≤(t-1)*sqrt((k_H⁻¹)^3)`、`|q_H(A,B_g)-q_H(A,B_h)|≤(t-1)*exp(beta0*2*(P_H+L_H))/sqrt(k_H^3)` を形式証明。どちらも固定Hで数値式が明示されるが体積一様評価ではない。
+
+### 真正全リンク弦距離 D_H への厳密な境界と残るobstruction
+
+- **元D_Hへの正確な校正**：元のSU(2) normalized trace feature弦距離 `d_J` と全二境界・全リンク `l1` 和 `D_H` を用い、`D_H((A,B_g),(A,B_h))=d_J(g,h)` をLean4で証明。距離の取り替えや一般化された合成幾何は使わない。
+- **限界を明示**：今回の `exp(8*beta0)-1` 上界は `d_J(g,h)→0` で消えないため、真正 `D_H` におけるLipschitz／数値的epsilon-delta変動率を証明したとは主張しない。次は元Wilsonエネルギーと連続真空の差分を `d_J` に比例させる鋭い評価を構成し、`rho_H`・`q_H` の小距離変動率からAEFの真正共分散および二球Haarモーメントへ接続する。GI 68/1:17、H一様強制性、物理スペクトルギャップおよび連続体Yang–Mills質量ギャップは未証明。
+
+### exact-source Lean4・公理監査
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalSqrtDensityOneLinkHarnackV5_PZ37AEL.lean` のみ、14公開定理・14件 `#print axioms`。固定Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。最終exact-source [CI #41563025656](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41563025656) は **11,287/11,287 SUCCESS**、14件全て `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。
+- 最初のCIで見つかった真正transferノルムの型付き正値証拠および `exp(8*beta0)≥1` の固定結合正値証明を修正。数式・元の物理仮定は弱めていない。最終source HEAD `6284076e0510bec4ab74536ef8c16694d4c6c8f8`、test-merge `0406d357eaf6b46ab8d4d68cbab74a0d50480de4`、squash `be751761848391bad1edc32a9007ada456b1beb2` のGit tree `0cac5cf5f27364cf1bf8bf916dd9aa1b17c01648` は完全一致。従来のLeanファイルと公開rootに変更なし。README/ROADMAPはappend-only同期し、docs-onlyではStrict Leanを再実行しない。
+
+---
+
+## 検証済み定理 — AEK（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。AEK定理PR [#6220](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6220) はMERGED、定理squash SHA `5972a2fc20deafd5ec72ba5e6e0383a1bb98c711`。AEJまでの真正interacting Wilson SU(2)・centered Gauss-law源・Perron/transfer・二interacting posterior・元のboundary pair-Haar・固定toolchain・公開rootを保持。
+
+### 元Wilson核とPerron方程式から真正連続真空・joint sqrt-densityの明示的上下界
+
+- **真正有限HのWilson作用budget**：`B_H=2*(P_H+L_H)`（元の空間プラケットリスト長と空間リンクリスト長）および `k_H=exp(-beta*B_H)>0` を使用。元のWilson一スラブ核 `k_H≤K_H(A,B)≤1`、AEJで証明済みの**未正規化Gauss-law物理transferノルム** `k_H≤lambda_H=‖T_H‖≤1` をそのまま引き継ぐ。
+- **真正連続物理真空の大域Harnack比較**：元の非負Haar `L²` top eigenvectorの正確な点ごとのPerron方程式に対し `k_H*K_H(A,B)≤K_H(A,C)` と積分の単調性を適用し、`k_H*Omega_H(B)≤Omega_H(C)` を全元境界配置で証明。既存の真正 `L²` ノルム1および元のHaar確率測度の全質量1を使い、**無条件の固定H点ごと上下界** `k_H≤Omega_H(A)≤k_H⁻¹` を得る。元の真空代表とHaar法則を入れ替えない。
+- **元の真正joint sqrt-densityの無条件有限H上下界**：元の `continuousJointWeight_H(z)=lambda_H⁻¹ * (Omega_H(z.1)*K_H(z.1,z.2)*Omega_H(z.2))` と `rho_H(z)=sqrt(continuousJointWeight_H(z))` を展開し、全元境界ペアで `sqrt(k_H^3)≤rho_H(z)≤sqrt((k_H⁻¹)^3)` をLean4形式証明。有限net、rho標本M/m、代理密度、物理的独立性は仮定しない。
+- **元のJQ Perron密度の無条件有限H上下界**：AEGの厳密相殺恒等式 `q_H(z)=lambda_H⁻¹/rho_H(z)` とAEJの逆ノルム `lambda_H⁻¹≤exp(beta*B_H)=k_H⁻¹` から、全元境界ペアについて `0<1/sqrt((k_H⁻¹)^3)≤q_H(z)≤k_H⁻¹/sqrt(k_H^3)`。AEH/AEI/AEJで残っていた**大域の有限ネット標本上下界の独立数値認証を不要化**する。ただし粗い有限体積指数評価であり、H一様の下界ではない。
+
+### 真正D_H変動率への接続と未解決条件
+
+- 元の `rho_H` の真の `D_H` 変動証明 `|rho_H(z)-rho_H(w)|≤delta` が `D_H(z,w)<R` で確認できれば、`|q_H(z)-q_H(w)|≤(exp(beta*B_H)/sqrt(k_H^3))*delta/sqrt(k_H^3)`。AEHの元密度一様連続性から任意の正のdeltaについて対応する正の半径Rの**存在**も証明。ただし数値的なRや最適なLipschitz定数を今回求めたわけではない。
+- 物理source-dependent Wilson Haar分子の具体的振幅と変動、同じ境界での二球モーメントマージン、GI 68/1:17閾値、H一様強制性、物理スペクトルギャップ、連続体4D Yang–Mills質量ギャップは**未認証・未証明**。次は元のPerron・Wilson局所作用から具体的な `rho_H` 変動率と半径Rを評価し、既存AEFの元共分散へ接続する。
+
+### exact-source Lean証明監査と継承正本
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalVacuumDensityExplicitHarnackV5_PZ37AEK.lean` 1本のみ（8公開定理・8件 `#print axioms`）。固定Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。[exact-source CI #41558724690](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41558724690) は **11,286/11,286 SUCCESS**、8件全ての依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。
+- 初回からの修正は固定mathlibの正値不等式・逆数・実数 `L²` ノルムおよび確率Haar全質量1を明示したもので、定理文・真のWilson物理モデル・元の証明を弱めていない。最終source HEAD `6c1b646cd825429a3563ce1446054cb188ae6a81`、test-merge `c8c3c5f64423b52d5796bea0fb01d631e93315b1`、squash `5972a2fc20deafd5ec72ba5e6e0383a1bb98c711` のGit tree `835dfaa1791c48f945663649ad3f408fb6f78cdf` は完全一致。既存Lean・物理作用素・公開rootは不変。README/ROADMAPはappend-only同期、docs-onlyではStrict Leanを再実行しない。
+
+---
+
+## 検証済み定理 — AEJ（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。AEJ定理PR [#6217](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6217) はMERGED、定理squash SHA `861d21996c82e5d5cbdf617afc310191fef211d5`。AEIまでの真正SU(2) Wilson・Gauss-law・Perron/transfer・二interacting posterior・元boundary pair-Haar・固定toolchain・公開rootを保持する。
+
+### 元Wilson作用の明示的下界から真の未正規化物理transferノルムを二側評価
+
+- **実際のWilson作用budget**：元モデルの空間プラケットリスト長 `P_H` と空間リンクリスト長 `L_H` によって、元のone-slab Wilson作用は `A_H(A,B)≤B_H=2*(P_H+L_H)`。既存の真正SU(N) Wilson核下界 `k_H(beta)=exp(-beta*B_H)≤K_H(A,B)≤1` を使用し、代理transferや新しい確率核を作らない。
+- **真正Gauss-law物理ノルム下界**：元のHaar `L²` 上のGauss-law不変な定数単位ベクトルを使い、元ambient Wilson kernelの真の行列要素 `<T_H 1,1>=∫K_H d(Haar×Haar)≥k_H` を得る。内積のCauchy–Schwarzと物理Hilbert上の作用素ノルムから、任意の有限H、正ランクN、非負結合betaについて `0<k_H(beta)≤‖T_phys(H,N,beta)‖≤1` をLean4で証明。右側はAEIの真正未正規化作用素定理。
+- **元物理transfer逆ノルムの数式化**：正ノルムの逆数単調性から `‖T_phys‖⁻¹≤exp(beta*B_H)`。元の固定結合SU(2)もこの不等式を満たす。体積に依存して指数増大する粗い上界であり、H一様なギャップは意味しない。
+
+### 元のPerron密度・有限ネット・共分散・二球Haarへ伝播
+
+- 元の厳密恒等式 `q_H(z)=‖T_H‖⁻¹/rho_H(z)` をそのまま使用。真正全リンク弦距離 `D_H` の有限ネットで、実際のrho上下標本 `m≤rho_H(a)≤M`、真正変動誤差 `epsilon`、`0<epsilon<m` が認証されれば、`1/(M+epsilon)≤q_H(z)≤exp(beta*B_H)/(m-epsilon)`。
+- `D_H(z,w)<R≤r` なら `|q_H(z)-q_H(w)|≤exp(beta*B_H)*epsilon/(m-epsilon)^2`。AEFの実source-dependent Wilson Haar分子の上界・変動率とこのq変動を組み合わせ、元共分散の変動および元のゲージ反転二球Haarモーメント下界に接続。正の中心振幅対変動誤差マージンは別途必要。
+- **証明済みと未認証を区別**：真のtransfer逆ノルム上界は無条件で具体的有限体積式になった。一方、実D_H-net、rho上下標本数値、rhoの具体的変動半径、真正Wilson Haar分子の振幅・変動率、GI 68/1:17はまだ数値認証していない。H一様強制性・物理スペクトルギャップ・連続体4D Yang–Mills mass gapを主張しない。
+
+### exact-source Lean監査と継承境界
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalTransferExplicitKernelFloorV5_PZ37AEJ.lean` 1本、12公開定理と12 `#print axioms`。固定Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。最終exact-source [CI #41553827962](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41553827962) は **11,285/11,285 SUCCESS**、12/12標準公理 `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。
+- 初回CIの `inv_le_inv₀` 正値証拠2か所の引数順を、変更ファイル全文とAEI・元Wilson kernel・Gauss-law・固定mathlib署名の照合に基づき修正。数式・定理文・元物理モデルの弱化なし。最終exact-source HEAD `b8613f06df78ab1fe313632cdfa0576711a43362`、test-merge `e64adf3ca9a3505f946ef48004def91c9fa85da3`、squash `861d21996c82e5d5cbdf617afc310191fef211d5` のGit tree `ce2ce3c357a4b9d90d56b58b9b82fd260582a9e4` は完全一致。
+- **次の障害**：真正 `rho_H` の具体的な上下界および変動率を、連続真空 `Omega_H`・真のWilson核・Perron固有方程式から量的に取り出す。数値を仮定して終わらせず、有限H依存の数学的上界と実行可能なinterval証明書を区別する。docs-only PRではStrict Leanを再実行しない。
+
+---
+
+## 検証済み定理 — AEI（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。AEI定理PR [#6214](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6214) はMERGED、定理squash SHA `2a9a09ace31ff90bee6a431b095e5d850c730765`。AEHまでの真正SU(2) Wilson・Gauss-law・Perron/transfer・二interacting posterior・元boundary pair-Haar・固定toolchain・公開rootを保持。
+
+### 元Wilson核から、未正規化物理transferノルム上界 U=1 を無条件に証明
+
+- **真正kernelのノルム制御**：元のone-slab Wilson Boltzmann kernelの `0<K_H≤1` と真正正規化spatial pair-Haar確率測度を使い、`‖K_H‖_{L²(pair-Haar)}≤1` を形式証明。既存のHilbert–Schmidt評価とGauss-law物理部分空間への制限を合成して、任意の有限H・正ランクN・非負結合betaで、**元の未正規化** `‖T_phys(H,N,beta)‖≤1` をLean4で証明。正規化後の作用素ノルム1を仮定して元作用素へ逆輸入したものではない。
+- **固定結合の物理正値とAEH改善**：真正SU(2)固定結合で `0<‖T_H‖≤1`。したがって、AEHが数値入力として残した `‖T_H‖≤U` を**定理によってU=1と確定**。真正有限D_H-net、元のrho_Hの上側標本 `rho_H(a)≤M`、実際の変動証明書 `|rho_H(z)-rho_H(w)|<epsilon` があれば、元物理分母は `0<1/(M+epsilon)≤q_H(z)`。元の `q_H(z)=‖T_H‖⁻¹/rho_H(z)` をそのまま使用する。
+
+### 真正rho_Hの下側標本からq_Hの変動と二球モーメントまで接続
+
+- **二側有限ネット証明書**：真正D_H-net上で `m≤rho_H(a)` が確認され、真の変動誤差epsilonが `epsilon<m` なら、全元境界配置で `m-epsilon<rho_H(z)`。さらに `D_H(z,w)<R≤r` に対し `|q_H(z)-q_H(w)|≤(‖T_H‖⁻¹/(m-epsilon))*epsilon/(m-epsilon)` を厳密に導出。逆transferノルムの絶対値評価そのものは**まだ別途必要**で、上界 `‖T_H‖≤1` だけで逆数を上から制御したとは主張しない。
+- **元Wilson source-dependent共分散と真正二球Haar下界**：上記`q_H`変動をAEFの実分子`N_e`条件へ代入し、元`C_e`の変動およびAEE/AEFの反対ゲージ二球モーメント下界へ移送。分子上界・変動率・中心振幅が変動誤差を超える条件は独立の検証義務として残す。
+
+### exact-source CI・公理監査・未解決境界
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalTransferKernelUnitNormDensityModulusV5_PZ37AEI.lean` 1本。10公開定理、10件の`#print axioms`。固定Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。[exact-source CI #41548934002](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41548934002) は **11,284/11,284 SUCCESS**、全10定理が `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。
+- source HEAD `85a4fef8d4be0801f088b02b9b7667713556db1a`、test-merge `d165b4228bcf2979785ad0095f69f691dee1d4ee`、squash `2a9a09ace31ff90bee6a431b095e5d850c730765` のGit tree `08cfd4b43c92d39bdc60fe38714e921cc7da6e9f` は一致。既存Leanファイル・物理モデル・公開rootは変更しない。
+- **未認証**：具体的D_H-net、rho_H上下標本の数値、実用的変動半径、逆transferノルムの数値上界、真正Wilson分子の上界と変動および振幅、GI 68/1:17、H一様強制性、物理スペクトルギャップ、連続体4D Yang–Mills質量ギャップ。次は元kernelの明示的下界と正規化真空構造から、`‖T_H‖` の実際の正下界と`rho_H`変動率を定量化する。docs-only変更でStrict Leanを再実行しない。
+
+---
+
+## 検証済み定理 — AEH（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。AEH定理PR [#6211](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6211) はMERGED、定理squash SHA `02e3f35651eb18e10b718060152d6696fe4fbdd3`。元のinteracting Wilson SU(2)、centered Gauss-law物理源、Perron/transfer作用素、FF receiver、二つのinteracting posterior、元boundary pair-Haar、Lean/mathlib pin、定理rootは変更しない。
+
+### 真正有限D_Hネットの観測データによる物理正規化分母の検査可能な下界
+
+- **実際のjoint sqrt-densityを使用**：元の `rho_H(z)=continuousJointSqrtDensity_H(z)` は真正二境界ペア空間上で連続であり、ADMの元全リンク弦距離 `D_H` に関して任意の正誤差に対する一様連続性半径が存在することをLean4で証明。代理densityや異なる距離は導入しない。
+- **真正有限サンプルから大域評価**：AEEで定義済みの実境界配置有限net `s` に対し、`∀z, ∃a∈s, D_H(a,z)<r`、`D_H(z,w)<r ⇒ |rho_H(z)-rho_H(w)|<ε`、`∀a∈s, rho_H(a)≤M` が**実際に検証できれば**、`∀z, rho_H(z)<M+ε` を証明。元のrhoの正値性と真正net非空性からサンプル上界 `M>0` も証明。
+- **元Perron/transferノルムを数値認証へ分離**：真正未正規化物理transfer作用素 `T_H` に独立に `‖T_H‖≤U` が確認できた場合、AEGの元物理分母の厳密恒等式 `q_H(z)=‖T_H‖⁻¹/rho_H(z)` を使い、全元境界配置について
+  `0<λ_cert(H)=1/(U*(M+ε))≤q_H(z)`
+  をLean4形式証明。これは**チェック可能な条件付き有限H数値式**であって、net、変動半径、サンプル数値M、transferノルム上界Uの実値が既に認証されたことは意味しない。
+
+### 元のWilson共分散変動・二球モーメント定理へ移送
+
+- **AEFの厳密な分子／分母証明書へ代入**：元のsource-dependent Haar分子 `N_e(z)` について `|N_e(z)|≤Nmax`、`D_H(z,w)<R ⇒ |N_e(z)-N_e(w)|≤dN`、元分母について `|q_H(z)-q_H(w)|≤dq` を**別途認証**できた場合、真正共分散変動は `|C_e(z)-C_e(w)|≤(dN+(Nmax/λ_cert)*dq)/λ_cert`。元のGauss-law・FF受信器・Perron重みを変えず、実数の補題と真正物理定理で接続する。
+- **真正ゲージ反転二球下界**：同じ真正共分散の正の中心振幅 `C_e(a)` が上記変動誤差 `δ_C` より大きいことが**別途確認できた場合**、AEE/AEFの互いに素な二球から `(C_e(a)-δ_C)^2*2*(min(R/(2*card(Link_H)+1),2)/4)^(8*card(Link_H))≤S(H,b₀,e)` が形式的に成立。物理振幅の数値、FCの68/1:17閾値、体積一様強制性、物理スペクトルギャップ、連続体4D Yang–Mills mass gapは未証明のまま保持する。
+
+### exact-source Lean検証・形式証明境界
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalSampledDensityNormBudgetV5_PZ37AEH.lean` 1本のみ。8公開定理、8件の `#print axioms`。固定Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。最終exact-source [CI #41545186979](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41545186979) は **11,283/11,283 SUCCESS**、8件すべて公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立exact-head completion receipt SUCCESS。
+- 初回CIの固定mathlib `inv_le_inv₀` 引数順エラーは、新規AEHファイル全文とAEG・AEE・AEFの依存シグネチャを再照合し修正。定理文・数値式・元物理モデルを弱めず、最終source HEAD `ba917e8829015758f57b7f77f002c786eca56d77`。source/test-merge/squash Git tree `12ea18c4648f40ff5cd1f62d0927987a792f15cd` 完全一致。
+- **次の定量的obstruction**：本当に検査可能な有限net中心・cardinality、`rho_H` のサンプルと変動半径、元transfer作用素ノルムの具体的上界U、Hに依存する共分散分子の数値、実際の物理二球の安定半径と振幅を独立に評価する必要がある。現時点では条件付き証明書が完成した段階。docs-onlyではStrict Leanを再実行しない。
+
+---
+
+## 検証済み定理 — AEG（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。AEG定理PR [#6208](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6208) はMERGED、定理squash SHA `2977080e8b9a65b250ea64ea08182c53ffd00505`。真正interacting Wilson SU(2)、元centered Gauss-law source、Perron/transfer、FF receiver、元二つのinteracting posterior、boundary pair-Haar、固定Lean/mathlib、定理rootは不変更。
+
+### 真正Perron分母の厳密な真空相殺と有限体積正下界
+
+- **真正密度の恒等式**：JQ/FFで定義済みの元の物理密度 `q_H(z)` は、元の半密度 `W_H(z)` と逆真空重み `V_H(z.2)` の積。FFの定義と真正正値定理をLean4で展開し、真空重みの厳密な相殺により `q_H(z)=‖T_H‖⁻¹ / ρ_H(z)` を証明。ここで `T_H` は元Perron/transfer作用素、`ρ_H(z)=continuousJointSqrtDensity_H(z)` は元の真正joint sqrt-density。新しい確率測度・代理分母を導入しない。
+- **固定Hの無条件正下界**：真正boundary pair空間のコンパクト性、元密度の連続性・正値性、上記恒等式から `ρ_H` は厳密に正の有限最大値 `M_H` を持ち、元の全境界配置zに対し `λ_H=‖T_H‖⁻¹/M_H>0`、`λ_H≤q_H(z)` をLean4形式証明。これは**各有限H依存の存在定理**であって、`M_H`、`λ_H` の数値計算や体積一様下界ではない。
+
+### 元Haar分子の連続性・最大値・共通誤差半径
+
+- **同一真正物理分子**：AEFの元のsource-dependent SU(2) Haar積分 `N_e(z)` と同じ物理共分散 `C_e(z)` に対し `N_e(z)=C_e(z)q_H(z)` を証明。ACDで証明済みの元物理共分散連続性と元density連続性を使い、`N_e` の連続性を証明。ACI/AEFの非零物理証人より、全真正物理空間リンクeで `|N_e|` の達成された厳密正値の有限大域最大値が存在する。
+- **AEFの個別条件が同時充足可能**：任意の真正リンクe、各 `δ_N>0`、`δ_q>0` に対して、同じ元の全リンク弦距離 `D_H` 上の共通 `R>0` と、真正密度下界 `λ_H>0`、分子上界 `M_{H,e}>0` が存在し、`D_H(z,w)<R` なら `|N_e(z)-N_e(w)|≤δ_N` と `|q_H(z)-q_H(w)|≤δ_q` が同時に成立することをLean4で証明。独立な一様連続性半径のminを使用し、元のAEF商の誤差評価へ接続できる。半径・振幅・分母上界の具体的数値は未認証。
+
+### Lean4 CI・公理監査・境界
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalDensityCompactNumeratorFloorV5_PZ37AEG.lean` 1本。公開11定理、11件の `#print axioms`。固定Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。最終exact-source [CI #41541628032](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41541628032) は **11,282/11,282 SUCCESS**、全11定理の公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。
+- 初回失敗で局所記法 `W.continuous`・`rho.continuous` のLean識別子解釈を確認し、元FFの連続写像型と、通常関数としての `continuousJointSqrtDensity` を区別。元密度の連続性と真空相殺からsqrt-density連続性を導き、最後にtransferノルム非零証拠を用いて逆数正規化を完了。数式・物理仮定・元ファイルは弱めていない。最終source HEAD `d7208d8a205e31a304f70a5961147d858777c21f`。source/test-merge/squash Git tree `836a858d4a5c2952f138169f26bd81703dc73a7c` は完全一致。
+- **未解決の数値obstruction**：元`ρ_H` の実際の最大数値、元transferノルム、`λ_H`、真正Haar分子の振幅・変動率、元共分散の数値、GI 68/1:17条件、体積一様強制性、物理スペクトルギャップ、連続体4D Yang–Mills質量ギャップは本定理からは数値確定しない。次は元のsqrt-density・Perron/FF量に対する計算可能な上下界を別途調べる。docs-onlyではStrict Leanを再実行しない。
+
+---
+
+## 検証済み定理 — AEF（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。P4-Q2-PZ37AEF定理PR [#6205](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6205) はMERGED、定理squash SHA `0f0ecf47e0f6c3e2c216595d83e6294583910606`。真正interacting Wilson SU(2)、original centered Gauss-law source、Perron/transfer、FF receiver、二つのinteracting posterior、元boundary pair-Haar、固定pin、公開rootは変更なし。
+
+### 真正Wilson共分散を元のHaar分子・元の正密度分母へ分離
+
+- **物理比率の恒等式**：ACIの完全に元の物理リンクreceiver `J_e(z,g)` と元のSU(2) Wilson character `χ(g)` を用いるHaar分子 `N_e(z)=∫ J_e(z,g) χ(g) dμ_SU(2)(g)` を新しく命名するだけで、`C_e(z)=N_e(z)/q_H(z)` を元の固定結合 `b₀` でLean4形式証明。分母 `q_H(z)` はJQの元の半密度・Perron/transfer逆密度からなる真正の厳密正値な正規化重みであり、代理確率分布ではない。ACI/AEDの非零真正共分散点から、各物理リンクeについて実際の `N_e(z)≠0` の存在もLean4証明。
+- **分子／分母の独立した定量証明書**：任意の真の `λ>0` について `λ≤q_H(z)` と `|N_e(z)|≤Nmax` が個別に検証できれば `|C_e(z)|≤Nmax/λ`。任意の元の二点の真正Haar分子・密度誤差がそれぞれ `dN,dq` 以下なら、元の真正共分散は `|C_e(z)-C_e(w)|≤(dN+(Nmax/λ)·dq)/λ`。さらにこれを元の全リンク弦距離 `D_H` における半径Rの統一モジュラスへ形式化した。数値のλ・Nmax・dN・dqそのものは計算していない。
+
+### 同じ元物理二球・モーメント・条件付きFCへの接続
+
+- **AEFの変動証明書の代入**：`ε=(dN+(Nmax/λ)·dq)/λ` とおき、実際に `R>0`、真正分子・密度のグローバルな境界および `ε<C_e(a)` が確認できた場合、AEEの元の反対符号・互いに素な二球と、AECの元boundary pair-Haar多項式下界から `(C_e(a)-ε)^2·2·(min(R/(2·card(Link_H)+1),2)/4)^(8·card(Link_H))≤S(H,b₀,e)` を証明。半径 `R=1/2` では真の係数 `2·(1/(8·(2·card(Link_H)+1)))^(8·card(Link_H))` となる。全て有限H依存を保持。
+- **元GI検証の厳密な条件境界**：元のFC envelope `B(H,b₀)^2` が `272` 倍の上記の真正二球モーメント下界より厳密に小さいとの**追加数値判定が成立する場合にのみ**元のGI squared mean budgetが正と証明。GI 68/1:17の閾値を無条件で通過したという意味ではない。
+
+### exact-source Lean監査・未解決境界
+
+- 追加は新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalPhysicalNumeratorDenominatorModulusV5_PZ37AEF.lean` 1本。公開Lean4定理11件、`#print axioms`11件。固定Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。exact-source [CI #41537256383](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41537256383) は **11,281/11,281 SUCCESS**、全11定理の公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、新規Lean warning/error 0/0、独立completion receipt成功。source HEAD `8a562e06faf2616cc8ea416867be3e7049c3f1e2`、source/test-merge/squash Git tree `c6cf5fd14f9c57aa43ba9fabb194fccf30cc984c` 完全一致。
+- **未解決の真の物理的obstruction**：元の `q_H` の数値的で一様な正下界、Haar積分分子 `N_e` の数値振幅・変動、真正 `D_H` に対する具体的変動率、実共分散 `C_e(a)` の認証、有限体積一様強制性、物理スペクトルギャップ、連続体4D Yang–Mills質量ギャップは依然として未証明。新規定理は検査可能な条件付き定量ルートであり、数値認証の代わりではない。docs-onlyではStrict Leanを再実行しない。
+
+---
+
+## 検証済み定理 — AEE（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。P4-Q2-PZ37AEE定理PR [#6202](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6202) はMERGED、定理squash SHA `a0420dca1ed357378db6f9e233096871ecf1904c`。旧Leanファイル、元のinteracting Wilson SU(2)、centered Gauss-law source、FF receiver、Perron/transfer、二つのinteracting posterior、真正boundary pair-Haar、pin、公開rootに変更はない。
+
+### 真正D_H有限ネットと物理共分散の有限サンプル証明書
+
+- **有限ネットの無条件存在**：ADLの元の全リンク校正弦距離 `D_H` と元のboundary pair空間のコンパクト性から、各有限体積Hと任意の実半径r>0に、全真正境界配置を覆う実際の有限 `D_H`-net `s` が存在することをLean4で証明。netの中心とcardinalityの具体的な数値は未計算。
+- **有限データから大域振幅への厳密評価**：真正net証明 `∀z, ∃a∈s, D_H(a,z)<r` と真の共分散一様変動証明 `D_H(z,w)<r ⇒ |C_e(z)-C_e(w)|<ε` があれば、各zであるサンプルa∈sについて `|C_e(z)|<|C_e(a)|+ε`。特に実サンプルが全て `|C_e(a)|≤M` なら `∀z, |C_e(z)|<M+ε` を証明した。ADMの真正一様連続性とコンパクト性から、各ε>0にこのような有限サンプル証明書が存在することも無条件にLean4証明。
+- **非零有限サンプル**：ACIの各真正リンクeの非零物理共分散証人と有限近似から、十分細かい有限netに非零共分散の実サンプルが存在する。これは**有限サンプルの存在**であって、数値的に算出したサンプルや一様半径の提示ではない。
+
+### 可変誤差の二球Wilsonモーメント下界
+
+- **固定値1/2から可変誤差へ**：真正元の中心aで `R>0`、`0≤ε<C_e(a)`、`D_H(z,w)<R ⇒ |C_e(z)-C_e(w)|≤ε` が確認されたとき、ACCのゲージ符号反転、相反する二つの互いに素な真正 `D_H` 球、AECの真正pair-Haar下界およびADEの二乗積分から、
+  `(C_e(a)-ε)^2 × 2 × (min(R/(2·card(Link_H)+1),2)/4)^(8·card(Link_H)) ≤ S(H,b₀,e)`
+  をLean4で証明。半径1/2では厳密な有理係数 `2×(1/(8(2·card(Link_H)+1)))^(8·card(Link_H))` となる。誤差・半径・振幅は数値認証されていない。
+- **FC/GIとの正確な境界**：元のFC envelope `B(H,b₀)^2` が `272×`上記の真の二球積下界より厳密に小さいと**別途検証できた場合のみ**、ADEの元のGI squared mean budgetの正値性を導く。閾値68/1:17の無条件判定を意味しない。
+
+### exact-source Lean検証・公理監査・未解決課題
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalCovarianceFiniteNetErrorCertificateV5_PZ37AEE.lean` に8公開定理と8 `#print axioms`。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。最終exact-source [CI #41534328138](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41534328138) は **11,280/11,280 SUCCESS**。8定理すべて `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。
+- 初回CIの絶対値差の対称性・固定mathlibの `add_le_add_right` の加法順序とunused hε linter warningを新規Leanファイル全文・ADE/ADM/AEC/AEDシグネチャ照合後に修正。定理型・物理法則・必要な仮定は変更なし。最終source HEAD `aaf6744d9db8444b3d534d35dbd0e69349867cac`。source/test-merge/squash Git treeは `411399842c9452544fb4a0a568aba4f1d0c8b697` で完全一致。squash `a0420dca1ed357378db6f9e233096871ecf1904c`。
+- **未解決**：実際に構成・検証した有限netの具体点と規模、数値的な真正共分散値・変動率・半径、H一様強制性、厳密なGI閾値、物理スペクトルギャップ、連続体4D Yang–Mills質量ギャップは未証明。次の物理研究では元のPerron/FF密度分母と共分散分子に対する計算可能な上界・下界を分離する。docs-onlyではStrict Leanを再起動しない。
+
+---
+
+## 検証済み定理 — AED（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。P4-Q2-PZ37AEDの定理PR [#6199](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6199) はMERGED、定理squash SHA `576f89f2476744e862a76ffb0758ebe42569e518`。元のinteracting Wilson SU(2)、centered Gauss-law源、FF receiver、Perron/transfer、二つのinteracting posterior、元boundary pair-Haar、Lean/mathlib pin、theorem rootは変更していない。
+
+### 最大真正共分散と中心ゲージ対称性から得る二球・2倍の物理モーメント下界
+
+- **真正物理共分散の最大振幅**：ACIが各有限体積H・元の空間物理リンクeについて構成した非零共分散点、ACDの元のFF receiver共分散連続性、真正boundary pair空間のコンパクト性を接続。元の `C_e(z)` について `M_(H,e)=max_z |C_e(z)|>0` の実際の達成点をLean4証明。ACCの真正central gauge `Γ_e` で `C_e(Γ_e(a))=-C_e(a)` を使い、`C_e(a)=M_(H,e)>0` とする**正の最大中心**と負の対中心を無条件に構成。これは振幅の数値計算ではない。
+- **元の全リンク距離で共通の安定半径**：ADMがコンパクト性から証明した元のWilson共分散一様連続性により、`R>0` を選んで、真正 `D_H` 球 `Ball(a,R)` 内で `C_e(z)≥M_(H,e)/2`、対中心の `Ball(Γ_e(a),R)` 内で `C_e(z)≤-M_(H,e)/2` を証明。両方の球は実際に互いに素で、共通の真の半径Rを用いる。Rの無条件数値評価は未達成。
+- **2倍の真正boundary pair-Haarと物理二乗モーメント**：AECの初等的な原Haar多項式 `P_H(R)=(min(R/(2·card(Link_H)+1),2)/4)^(8·card(Link_H))` を各球に適用。固定mathlibの `measureReal_union` と真正pair-Haarの加法性で、互いに素な球の和の質量 `ν_H(Ball(a,R)∪Ball(Γ_e(a),R))≥2P_H(R)` を証明。ADEの元Wilson共分散二乗モーメント `S(H,b₀,e)` へ `0<(M_(H,e)/2)^2·2P_H(R)≤S(H,b₀,e)` を、**全元物理空間リンクe** に対し無条件の存在証人付きでLean4証明。従来のAEC単一球下界を係数2で強化した。
+- **検査可能な半径1/2の有理下界**：もし元の真の共分散一様連続性が `D_H(z,w)<1/2 ⇒ |C_e(z)-C_e(w)|<C_e(a)/2` を満たすと確認できるなら、`(C_e(a)/2)^2·2·(1/(8(2·card(Link_H)+1)))^(8·card(Link_H))≤S(H,b₀,e)` が従う。これは**検査可能な条件付き半径1/2証明書**であり、この物理安定半径自体が数値認証されたという主張ではない。
+
+### Lean4検証・修正履歴・未解決境界
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalTwoSignCovarianceDoubleBallV5_PZ37AED.lean` に10公開定理と10 `#print axioms`。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。最終exact-source [CI #41528288716](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41528288716) は **11,279/11,279 SUCCESS**。全10定理の公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。
+- 初回CIでは真正SU(2)の局所コンパクト／Borelインスタンスと、固定mathlib `IsMaxOn` が点を暗黙引数にするシグネチャ等でelaboration失敗。変更Lean全文と依存定理シグネチャ・固定mathlib APIを照合し修正。次回は `IsMaxOn` に集合所属証明だけを渡す形へ修正し、最終CI成功。元の物理モデル・新規定理文・正下界・係数2は弱めず、不要な仮定のみ削除した。
+- Exact-source HEAD `f951407eeac10513dbfdd45fb1379aa0d79b3d2e`、source/test-merge/squash Git treeは `9ba92b8d0db5dfaff0105c53c575984fb47684ca` で完全一致。新規Lean blob `5a145f3e9669b9399822a2a9693d3450b392fd8f`。squash SHA `576f89f2476744e862a76ffb0758ebe42569e518`。マージ後push CIはexact-source CIと分離して確認する。
+- **未解決**：真正物理共分散の最大振幅 `M_(H,e)` と共通安定半径Rの計算可能な数値、H一様な強制性、GI 68/1:17閾値、物理スペクトルギャップ、連続体4D Yang–Mills質量ギャップは未証明。次は実際のWilson共分散の振幅・安定半径を定量評価するための真正物理的解析を別に行う。docs-onlyではStrict Leanを起動しない。
+
+---
+
+## 検証済み定理 — AEC（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。P4-Q2-PZ37AEC定理PR [#6196](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6196) はMERGED、定理squash SHA `29d667b08174ab833a0e20c8b503c99121e33410`。元のinteracting Wilson SU(2)、centered Gauss-law源、FF receiver、Perron/transfer、二つのinteracting posterior、元boundary pair-Haar、pin、theorem rootは不変更。
+
+### 固定mathlibに基づく真正Haar下界の初等的な四次・冪式
+
+- **固定mathlibの定義を厳密展開**：pinned `Mathlib/MeasureTheory/Constructions/HaarToSphere.lean` の `Measure.toSphereBallBound` は、`n≠0∧r>0` で `n*((min (Real.toNNReal r) 2)/4)^n`。従ってADQの元の `κ(r)=((toSphereBallBound 4 r : NNReal):ℝ)/4` に対し、全 `r>0` で `κ(r)=(min r 2/4)^4` をLean4で無条件証明。小半径 `0<r≤2` では `κ(r)=(r/4)^4`、`r≥2` では `κ(r)=1/16`（これは元Haarの等号値ではなく下界）。特に元のnormalized SU(2) Haar radial mass は `m(1)≥1/256`。
+- **真正boundary pair-Haarへ移送**：AEAの全有限体積H・全中心a・全 `R>0` の証明から、真正 `ν_H(B_D(a,R))≥(min (R/(2·card(Link_H)+1)) 2/4)^(8·card(Link_H))` を定理化。元の両boundaryの `2·card(Link_H)` 因子と実4次元の四次下界を保持し、指数 `8·card(Link_H)` の正確な掛け算を形式証明。
+- **半径1/2の完全有理下界**：実際の元の full `D_H` 球 `B_D(a,1/2)` の質量は `(1/(8*(2·card(Link_H)+1)))^(8·card(Link_H))` 以上。有限Hのリンク数が定まれば計算できる式であり、有限ネットの未知cardinalityを使わない。
+- **元の物理共分散二乗モーメント**：球内振幅 `A>0` が実際に検証できれば、ADE/AEBの元Wilson二乗モーメント `S(H,b₀,e)` へ `A²*(min(R/(2·card(Link_H)+1),2)/4)^(8·card(Link_H))≤S` を形式証明。全元物理空間リンクeについて、ACIの非零共分散点とADMの真の安定半径から、同じ多項式付き正下界の存在証人を無条件に得る。
+
+### exact-source Lean・修正理由・未解決境界
+
+- 新規 `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalExplicitSpherePolynomialFloorV5_PZ37AEC.lean` の9定理／9 `#print axioms`。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。修正後exact-source [CI #41522554271](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41522554271) は **11,278/11,278 SUCCESS**、全9件の公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error 0/0、独立MCP completion receipt SUCCESS。
+- 初回CIでLean `push_cast` により `↑(min a b)` が `min (↑a) (↑b)` に正規化され、元のキャスト形へ `rw` できず失敗。変更Lean全文・import先・固定mathlibの定義と依存シグネチャを確認し、正規化後の `Real.coe_toNNReal` で等式を証明。定理の型や物理仮定は弱めず、linterの不要sequence-focusも修正。
+- 最終source HEAD `6d8e13728eeb1ca0e1fb858a8197ca00c461cd31`、test-merge/squash Git tree `85fd436a3c38650022c6015bbb1e7972c3aa8527` で一致。新規AEC Lean blob `209b5f34137dfae8d1b21a52fd7c67d7c3fec913`。定理squash `29d667b08174ab833a0e20c8b503c99121e33410`。マージ後push CIは独立に記録する。
+- **未解決**：Hに依存しない強制性、実際の物理共分散振幅・安定半径の具体的な数値、68/1:17閾値判定、物理スペクトルギャップおよび連続体4D Yang–Mills質量ギャップは本定理からは導かれない。docs-onlyではStrict Leanを再実行しない。
+
+---
+
+## 検証済み定理 — AEB（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。P4-Q2-PZ37AEB定理PR [#6193](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6193) はMERGED、定理squash SHA `1dd4c2f5fa2b5013dcc84e87960cd15b534eb6ee`。元のinteracting Wilson SU(2)、centered Gauss-law物理源、FF受信器、Perron/transfer、二つのinteracting posterior、元boundary pair-Haar、定理rootと固定pinは変更なし。
+
+### 真正Wilson共分散二乗モーメントへの半径依存・振幅依存の明示的定量接続
+
+- **検査可能な球内振幅証明書**：実物理リンク `e`、元のboundary pair中心 `a`、`R>0`、`A>0` について、真正全リンク球 `Ball_D_H(a,R)` 内の全点で `A≤|C_e(z)|` が検証できれば、元ADEの共分散二乗モーメント評価とAEAの真正pair-Haar下界から、`A² κ(R/(2·card(Link_H)+1))^(2·card(Link_H)) ≤ S(H,b₀,e)` をLean4で証明。ここで `κ(r)=((Measure.toSphereBallBound 4 r : NNReal):ℝ)/4` はADZの固定mathlib由来の明示関数。
+- **任意の非零共分散点から存在証人**：元ADMの真正全リンク距離に関する一様連続性から、`C_e(a)≠0` なら、ある実際の `R>0` で球内振幅 `|C_e(a)|/2` を維持。従って `0 < (|C_e(a)|/2)² κ(R/(2·card(Link_H)+1))^(2·card(Link_H)) ≤ S(H,b₀,e)` を無条件に構成。
+- **全物理リンクの明示的存在証明書**：ACIが元の固定結合・元Gauss-law源・元FF受信器で構成した各空間リンク `e` の非零共分散証人を代入。すべての実リンクに、上記の正の定量証明書 `(a,R)` が存在し、真正の物理共分散二乗モーメント `S(H,b₀,e)>0` をLean4で再証明。有限体積 `H` に依存する半径・振幅は数値未評価。
+
+### Lean4 exact-source検証・継承境界
+
+- 新規Lean `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalCovarianceExplicitMomentFloorV5_PZ37AEB.lean` の6定理・`#print axioms`6件を検証。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。[exact-source CI #41514706212](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41514706212) **11,277/11,277 SUCCESS**、変更Lean warning/error 0/0、公理依存は `propext`・`Classical.choice`・`Quot.sound` のみで `sorryAx` なし。独立completion receipt SUCCESS。
+- 定理source HEAD `9a5875334aeae829be8ff1dd8fab874a0fb503bc`。source/test-merge/squashのGit treeは `b47715de07970fc835f5d9acd7d01b007e64971f` で一致。追加Leanのblob SHAは `60e5483209a151571ceaa48c8ede6e22b6c4d17a`。定理正本のマージ後HEADは `1dd4c2f5fa2b5013dcc84e87960cd15b534eb6ee`。マージ後push CIはexact-source CIと分離して確認する。
+- **残る定量obstruction**：真の `R` と `|C_e(a)|` の計算可能な数値評価、volume-independent物理強制性、68/1:17テスト、実物理スペクトルギャップ、連続体4D Yang–Mills質量ギャップはいずれも本定理の結論ではない。次は物理振幅と安定半径の実数値評価・半径関数の具体化を別々に検証。docs-onlyではStrict Leanを再実行しない。
+
+---
+
+## 検証済み定理 — AEA（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。P4-Q2-PZ37AEA定理PR [#6190](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6190) はMERGED、定理squash SHA `e9709855fb25e40273ca17f876123a30268088ca`。元のinteracting Wilson SU(2)、Gauss-law源、FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haar、定理rootおよびpinは不変更。
+
+### 真正boundary pair-Haar全リンク球の無条件・半径依存定量下界
+
+- **一リンクから全リンクへの厳密接続**：ADZの元のnormalized SU(2) Haar `m(r)≥κ(r)>0`（`r>0`、`κ(r)=((Measure.toSphereBallBound 4 r : NNReal):ℝ)/4`）と、ADMの元boundary pair-Haar全弦距離球 `ν_H(B_D(a,R))≥m(R/(2·card(Link_H)+1))^(2·card(Link_H))` を、追加の測度輸送条件なしで接続。正の分母とscaled radius、自然数冪の実数単調性をLean4形式証明。
+- **無条件の真正全リンク球評価**：すべての有限体積 `H`、元boundary pair中心 `a`、`R>0` で `ν_H(B_D(a,R))≥κ(R/(2·card(Link_H)+1))^(2·card(Link_H))>0`。指数は左右境界の元の実リンク数 `2·card(Link_H)` で、有限体積依存を明示。半径 `R=1/2` についても同じ下界を形式証明。
+- **真正Wilson共分散への接続**：全実物理空間リンク `e` についてACI/ADMの非零Wilson共分散証人 `a` と正半径 `R` を取り、上記の明示的pair-Haar正下界と既存ADEの真正共分散二乗モーメント評価を同時に形式証明。Gauss-law源・元の2 posterior・FF receiver・pair-Haar分布の置換なし。
+
+### 検証・未解決境界
+
+- 新規Lean `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalPairHaarExplicitFloorV5_PZ37AEA.lean` に7定理・`#print axioms`7件。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。[exact-source CI #41487286710](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41487286710) は **11,276/11,276 SUCCESS**。全7件の公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、変更Lean warning/error 0/0。独立MCP completion receipt SUCCESS。
+- 定理source HEAD `9fceb07db8962406dad9879ab4147cf44db4d2d6`、test-mergeとsquashのGit treeはすべて `c301320d34f945087653498b3101cc6492f86664` で一致。定理正本のマージ後HEADは `e9709855fb25e40273ca17f876123a30268088ca`。マージ後push CIの完了は別途確認対象であり、exact-source CIと混同しない。
+- **未解決**：この`κ`下界はHに依存する。体積一様な強制性、厳密な物理スペクトルギャップ、厳密数値68/1:17判定、連続体4D Yang–Mills質量ギャップはこの段階では証明されていない。次の研究では、この明示的H依存の球測度下界を真の物理的評価へ定量接続し、非零共分散振幅と半径の数値化を独立に扱う。docs-onlyではStrict Leanを再実行しない。
+
+---
+
+## 検証済み定理 — ADZ（2026-11-03 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。P4-Q2-PZ37ADZ定理PR [#6187](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6187) はMERGED、定理squash SHA `381369eb6f91ffb82685b0e5ddf0d600018543d5`。元のinteracting Wilson SU(2)、Gauss-law源、FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haar、定理rootは不変更。
+
+### 真正SU(2) Haarに対する正半径の無条件・全中心下界
+
+- **Haar／球面測度の厳密逆像評価**：ADUの元SU(2)↔S³ homeomorphism `Φ` と固定mathlib `MeasurableEquiv.map_apply` により、任意の球面集合 `s` で `μ_SU2(Φ⁻¹(s))=ν_G(s)` を証明。ADYの真正 `ν_G=σ̂`（独立固定mathlib球面測度の確率正規化）を使用し、可測集合に制限しない測度同一視を保持。
+- **元の表面測度の正規化・正値性**：有限測度 `μ=Measure.toSphere(volume)` に対して、固定mathlib `FiniteMeasure.self_eq_mass_mul_normalize` と実数値測度の変換を使い、全集合 `s` で `σ̂(s)·σ(S³)=σ(s)` を証明。`Measure.toSphere_ne_zero` と `measureReal_univ_pos` から `σ(S³)>0` を証明。非正規化の球面測度を元Haarと誤認しない。
+- **既存ADQ条件の無条件解除**：ADTで証明済みの元弦距離球 `BallJ(1,r)=Φ⁻¹(ball(Φ(1),r))` と、上記の測度輸送・総質量正値性をADQの条件付き定理に代入。全 `r>0` で、元のnormalized compact SU(2) Haarの半径質量 `m(r)` に `m(r)≥κ(r)>0` を**無条件**に証明。ここで `κ(r)=((Measure.toSphereBallBound 4 r : NNReal):ℝ)/4` は固定mathlib由来の陽な半径関数。
+- **全SU(2)中心へ拡張**：元の全 `a∈SU(2)` と `r>0` で `μ_SU2(BallJ(a,r)).toReal≥κ(r)` を証明。元の物理ゲージ・boundary pair-Haar・受信器・事後分布を置き換えない。
+
+### 正本検証・継承事項
+
+- 新規Lean `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalUnconditionalHaarRadiusV5_PZ37ADZ.lean` の7定理・`#print axioms`7件。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。exact-source [PR Lean Fast Check #41441980869](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41441980869) は **11,275/11,275 SUCCESS**。変更Lean warning/error 0/0、公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし。独立completion receipt SUCCESS。
+- 定理source HEAD `203eb5da6954fbff47e918012ad35d4a91719550` のsource/test-mergeに差分ファイルなし。source／squashの新規ADZ LeanファイルGit blob SHAは `cf3f533d30370b5533e98d372a8043f4a9b9b32e` で一致。親ADY正本に対する変更ファイルはADZ Leanファイル1件のみ。
+- **残る問題**：全有限体積Hで一様な強制性・volume-independent物理スペクトルギャップ・連続体4D Yang–Mills質量ギャップは、この球測度下界だけでは証明されない。次は真正boundary pair-Haar積への半径依存下界の定量移送などを別個に検証。docs-onlyではStrict Leanを再実行しない。
+
+---
+## 検証済み定理 — ADY（2026-11-02 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラーのみ。P4-Q2-PZ37ADY定理PR [#6184](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6184) はMERGED、定理squash SHA `38acbb00232f42db39790ebba1ad090d272b5c4b`。元のinteracting Wilson SU(2)、Gauss-law源、FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haar、定理rootは不変更。
+
+### 真正SU(2)直交左作用によるMathlib球面測度の無条件不変性
+
+- **放射状sectorの厳密移送**：ADXの真正SU(2)左作用を延長する実4次元線形等長同型 `L_g` と、ADU/ADVの元球面作用 `T_g` に対し、任意の球面集合 `s` で `L_g⁻¹(radialSector(s)) = radialSector(T_g⁻¹(s))` をLean4証明。集合の表示に由来するLean4 `rw` の照合差は、定義上の等式を明示し `congrArg` で運ぶことで解決。
+- **独立Mathlib球面測度の不変性**：固定mathlib `LinearIsometryEquiv.measurePreserving` のLebesgue体積保存、`Measure.toSphere_apply'` の放射状領域公式から、`σ = Measure.toSphere (volume : Measure E4)` に対し `Measure.map (T_g) σ = σ` を証明。
+- **正規化と元Haar一意性**：固定mathlib `Measure.toSphere_ne_zero` による非零性、`FiniteMeasure.normalize`、`Measure.map_smul` で `σ̂` の不変性を証明。ADUで既に証明した真正SU(2)左作用に関するHaar確率一意性に接続し、元の確率Haarの押し出し `Measure.map Φ μ_SU2 = σ̂` を**無条件**にLean4証明。別のSU(2)群・代替Haar・追加測度仮定を導入しない。
+
+### exact-source Lean4・公理依存・次の段階
+
+- 固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。[exact-source CI #41439134813](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41439134813) は **11,274/11,274 SUCCESS**、Leanジョブ・独立completion receiptともSUCCESS。新規4定理すべての `#print axioms` は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error 0/0。
+- 定理PRのsource/test-mergeで差分ファイルなし。source HEAD `11a656c7bd5a041ce3441ef427922c93bd2ed0eb` とsquashの変更対象2ファイル（新規ADY Leanファイル・CI実行時間設定）のGit blob SHAが一致し、親ADX正本に対する変更ファイル集合も一致。
+- **次のADZ課題**：ADTの元弦距離球と真正S³球の逆像一致、ADYの独立正規化球面Haar同一視、ADQの半径下界を接続し、元normalized SU(2) Haarの `m(r) ≥ toSphereBallBound(4,r)/4 > 0` （`r>0`）を無条件化する。全有限体積Hで一様な強制性や連続体4D Yang–Mills質量ギャップは引き続き別の未証明課題。docs-onlyでStrict Leanは再実行しない。
+
+---
+## 検証済み定理 — ADX（2026-11-02 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラーのみ。P4-Q2-PZ37ADXの定理PR [#6181](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6181) はMERGED、定理squash `376cf3e0f8f75908e81e2e3bb3c4a97b4ae37f29`。元のinteracting Wilson SU(2)、Gauss-law源、FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haar、定理rootは不変更。
+
+### 真正SU(2)左作用と実4次元線形直交変換の厳密一致
+
+- **ADW四元数の符号整合**：元SU(2)の第1列4実座標とADW真正四元数の第4成分の符号差を固定mathlibの`LinearIsometryEquiv.piLpCongrRight`による実4次元線形等長反射で補正。真正 `Quaternion.linearIsometryEquivTuple` と合成し、元の4実座標 `V(g)` と正確に一致することをLean4で証明。
+- **無条件の実4次元直交作用**：ADWの元SU(2)四元数左乗法線形等長同型を、固定mathlib `EuclideanSpace ℝ (Fin 4)` の `≃ₗᵢ[ℝ]` へ共役で移送。全元 `g,h∈SU(2)` で `L_g(V(h))=V(gh)`、全球面点 `x∈S³` で `L_g(x)=T_g(x)` をLean4無条件証明。ここで `T_g(x)=Φ(g Ψ(x))` はADV/ADUで確立した**同じ元の物理SU(2)作用**。
+- **真の球面保存**：`L_g` は元の4次元ノルムを保存する線形等長同型なので、元のMathlib単位3球を保ち、元の作用 `T_g` と完全一致する。別の群・物理ゲージ・Haar法則は導入しない。
+- **残存obstructionの限定**：独立の固定mathlib球面測度 `σ=Measure.toSphere(volume)` が上記線形直交変換 `L_g` で保存されることはこのPRでは未証明。従って `ν_G=σ̂` や元Haarの無条件半径依存下界はまだ主張しない。H一様強制性・連続体4D Yang–Mills質量ギャップも別問題。
+
+### exact-source Lean4・公理依存
+
+- 新規5定理と`#print axioms`5件。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。[exact-source CI #41394507779](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41394507779) は **11,273/11,273 SUCCESS**。全5件の公理依存は標準3公理 `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし、変更Lean warning/error 0/0、独立completion receipt SUCCESS。
+- Source/test-merge/squash treeは `a697191c476a65576e7d95977879a55f0435f747` で一致。次のADYでは固定mathlib `Measure.toSphere_apply'` と線形等長変換の体積保存から球面測度不変性を形式化する。docs-onlyでStrict Leanを再実行しない。
+
+---
+
+## 検証済み定理 — ADW（2026-11-02 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラーのみ。P4-Q2-PZ37ADW定理PR [#6178](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6178) はMERGED、定理squash SHA `e2f09f7f33ae0c3a1703ea4de996a57eef33cbea`。元interacting Wilson SU(2)、Gauss-law物理源、FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haar、定理rootは不変更。
+
+### 真正SU(2)の単位四元数表示と実4次元線形等長作用
+
+- **真正SU(2)→Mathlib四元数の正確な符号付き対応**：ADRで証明した元の行列`g=[[a,-conj(b)],[b,conj(a)]]`について、固定mathlibの`Quaternion ℝ`へ`q(g)=(Re(a),Im(a),Re(b),-Im(b))`を構成。第四成分の負符号は元SU(2)行列積を保存するために必要。全`g`に対して`Quaternion.normSq(q(g))=1`と`‖q(g)‖=1`をLean4で証明。
+- **真正の乗法整合性**：元の2×2 SU(2)行列積と固定Mathlib四元数の実部・3虚部の積公式を直接計算し、`q(1)=1`、`q(gh)=q(g)q(h)`をLean4無条件証明。元の特殊ユニタリ群から`Quaternion ℝ`へのモノイド準同型を構成。
+- **実4次元の線形等長作用と逆**：元の`g`に対応する左乗法`x↦q(g)x`を`Quaternion ℝ →ₗ[ℝ] Quaternion ℝ`として構成。四元数の乗法的ノルムと`‖q(g)‖=1`により真正の`→ₗᵢ[ℝ]`を証明し、元`g⁻¹`の四元数左乗法を逆とする`≃ₗᵢ[ℝ]`を構成。別の有限群Haarや仮想SU(2)を導入しない。
+- **残る独立の測度obstruction**：今回の四元数上の実線形等長作用が、ADVで証明済みの元`S³`作用`T_g(x)=Φ(g*Ψ(x))`と一致すること、および固定mathlibの`Measure.toSphere(volume)`正規化測度がその実4次元直交作用に不変であることは未証明。したがって`ν_G=σ̂`、元SU(2) Haarの無条件半径依存数値下界、全H一様強制性、連続体4D Yang–Mills質量ギャップは主張しない。
+
+### exact-source Lean4・公理依存
+
+- 新規4定理・`#print axioms`4件。固定Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。[exact-source CI #41385605532](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41385605532) は **11,272/11,272 SUCCESS**、変更Lean warning/error 0/0、4件は標準3公理`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、独立MCP completion receipt SUCCESS。
+- Source/test-merge/squash Git treeは `d2faeedaa725b20119b11b21249cb52ee26b35f5` で一致。次は四元数実4次元等長変換を`EuclideanSpace ℝ (Fin 4)`上で実装し、真の球面作用との一致、標準球面測度の不変性を個別に形式化する。docs-onlyのStrict Lean再実行は不要。
+
+---
+
+## 検証済み定理 — ADV（2026-11-02 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラーのみ。P4-Q2-PZ37ADV定理PR [#6175](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6175) はMERGED、定理squash SHA `1855cbbdc96f22bb8e1cf973c1156ecf4bc34dd7`。元interacting Wilson SU(2)、中心化Gauss-law源、FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haar、定理rootは不変更。
+
+### 真正SU(2)のS³左作用の等長性・推移性と全中心Haar球質量
+
+- **元ADKの弦距離の厳密左不変性**：実物理Wilsonエネルギーの `d_J(g,h)^2=2 E(g⁻¹h)` と真正SU(2)群則から、任意`a,g,h`で `d_J(ag,ah)=d_J(g,h)` をLean4無条件証明。別の距離・物理モデルへの置換なし。
+- **球面上の真正SU(2)作用の等長性と推移性**：ADUの `T_g(x)=Φ(g*Ψ(x))` について単位作用・合成作用・`g⁻¹`による左右逆作用、全`x,y`で `dist(T_g x,T_g y)=dist(x,y)` を証明。各`g`の具体的な`S³ ≃ᵢ S³`を構成し、任意の球面`x,y`間には `T_g x=y` を満たす元のSU(2)要素`g`が存在することを形式化。
+- **球集合の移送と元Haar球質量の中心不変性**：全半径`r`で `T_g⁻¹(ball(T_g a,r))=ball(a,r)` を証明。ADUの真正元SU(2) Haar押し出し`ν_G`と左作用による測度保存・推移性から、全球面中心`a`について `ν_G(ball(a,r)).toReal=m(r)` を無条件でLean4証明。ここで`m(r)`はADMの元normalized SU(2) Haar半径質量であり、固定mathlibの別の球面測度ではない。
+- **残存の独立測度obstruction**：固定mathlib `Measure.toSphere(volume)` を確率正規化した`σ̂`が各`T_g`で不変であることは未証明。従ってADUの一意性を使った`ν_G=σ̂`、元SU(2) Haarの無条件半径依存明示下界、全H一様強制性、連続体4D Yang–Mills質量ギャップは未達成。次は各`T_g`を実4次元線形直交変換として延長し、`toSphere`の不変性へ接続する。
+
+### exact-source Lean4・公理依存
+
+- 新規10定理・`#print axioms`10件。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。[exact-source CI #41382808932](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41382808932) は **11,271/11,271 SUCCESS**。変更Lean warning/error 0/0、全10件は標準3公理 `propext`・`Classical.choice`・`Quot.sound` のみで `sorryAx` なし、独立completion receipt SUCCESS。
+- 定理source/test-merge/squash Git treeは `dae10eff95da311a5eb0ec8b8559bd98fc166a11` で一致。docs-onlyではStrict Leanを再実行しない。default mainにはLean定理本体をコピーしない。
+
+---
+
+## 検証済み定理 — ADU（2026-11-02 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラーのみ。P4-Q2-PZ37ADU定理PR [#6172](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6172) はMERGED、定理squash SHA `7a7b01f8083d884d62c08872cf37329600b6f538`。元のinteracting Wilson SU(2)、centered Gauss-law物理源、FF受信器、Perron/transfer、二interacting posterior、boundary pair-Haar、定理rootは不変更。
+
+### 真正SU(2) HaarのS³押し出し、左作用不変性、Haar一意性への還元
+
+- **元の位相による真正Homeomorph**：ADSの元SU(2)↔S³双方向写像とADTの元`d_J`-球面Euclidean距離一致を利用し、ADKの元`J`連続性・SU(2)コンパクト性・S³のHausdorff性から `Φ : SU(2) ≃ₜ S³` をLean4証明。正逆写像ともBorel可測。
+- **元Haarを保持した球面確率測度**：元normalized compact Haar `μ_G` の真正押し出し `ν_G = Measure.map Φ μ_G` を定義し、確率測度性、`Φ`による測度保存、`Ψ`による元Haarの厳密復元、元ADMの半径球質量 `m(r) = ν_G(ball(Φ(1),r)).toReal` を無条件でLean4証明。有限群Haar・別の任意分布への置換はない。
+- **真正SU(2)作用と測度不変性**：球面上の作用 `T_g(x)=Φ(g*Ψ(x))` を元の群演算から構成し、各`T_g`の連続性・`MeasurePreserving T_g ν_G ν_G` をLean4証明。さらに、この元SU(2)作用に対して不変な**任意の球面確率測度**は`ν_G`と等しいことを、固定mathlibの確率Haar測度一意性から証明。
+- **別個の標準球面測度と残存obstruction**：固定mathlib `Measure.toSphere (volume : Measure (EuclideanSpace ℝ (Fin 4)))` を独立に確率正規化した`σ̂`を定義。`∀g, Measure.map (T_g) σ̂ = σ̂` という**具体的な作用不変性を前提**とすれば `ν_G=σ̂` が成立する条件付き定理を形式証明。しかしこの作用不変性そのものはADUでは未証明。元SU(2) Haarに対するADQの無条件半径依存数値下界、全H一様強制性、連続体Yang–Mills質量ギャップは未達成。
+
+### exact-source Lean4・公理依存
+
+- 新規14定理・`#print axioms`14件。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。[exact-source CI #41374989708](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41374989708) は **11,270/11,270 SUCCESS**、変更Lean warning/error 0/0、公理依存は14件すべて標準3公理 `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし。[定理マージ後push CI #41375511861](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41375511861) もSUCCESS、独立completion receipt SUCCESS。
+- 定理source/squash Git treeは `7d67e47e31fe5f3cb7ff2fbccff0a40fc3252f5b` で一致。次のADVでは固定球面測度 `σ̂` が真正SU(2)作用に対して不変であることを、実4次元の正規直交作用と固定mathlibの`toSphere`との整合性から証明する。docs-onlyでStrict Leanを実行しない。
+
+---
+
+## 検証済み定理 — ADT（2026-11-02 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラーのみ。P4-Q2-PZ37ADT定理PR [#6169](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6169) はMERGED、定理squash SHA `1e5ceac8e72c3f0b83e31b35e0c253ef2a0918e8`。元有限体積interacting Wilson SU(2)、元centered Gauss-law源、FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haar、定理rootは不変更。
+
+### 元SU(2)弦距離とS³ Euclidean距離の真正等長性
+
+- **真正相対トレース内積同定**：ADRで既に証明した元SU(2)の第1列からの厳密な2×2行列復元を使用し、`Re Tr(gᴴh)=2*⟪V(g),V(h)⟫_ℝ` を固定mathlibの元行列積と複素数計算でLean4証明。元のnormalized SU(2)相対トレースkernelが`EuclideanSpace ℝ (Fin 4)`上の実内積に厳密一致する。新規の代替ゲージ・カーネルは導入しない。
+- **元ADKの8実次元Wilson特徴と4実次元球面の厳密距離一致**：ADKの真正 `J` の単位ノルム、ADRの4実次元 `V` の単位ノルム、両者の内積一致から `d_J(g,h)^2=‖V(g)-V(h)‖²`、非負性から**`d_J(g,h)=dist(Φ(g),Φ(h))`** をLean4で無条件証明。ADSで構成済みの真正 `SU(2)≃S³` 全単射が元のWilson特徴弦距離を厳密に保存。
+- **ADQの球集合条件を無条件に解消**：すべての元SU(2)中心`a`、すべての実数半径`r`で `B_J(a,r)=Φ⁻¹(B_{S³}(Φ(a),r))` を形式証明。ADQで明示的だった元の半径球のinverse-image条件はもはや仮定ではない。
+- **未解決の独立obstruction**：元normalized compact SU(2) Haarから正規化S³ `Measure.toSphere` への**測度保存・全質量整合性**は未証明。等長全単射のみから測度移送を自動主張しない。したがってADQの半径だけによる正の下界は元SU(2) Haarへ無条件には移送していない。H一様強制性、共分散数値Lipschitz定数、連続体4D Yang–Mills質量ギャップも未証明。
+
+### exact-source Lean4・公理依存
+
+- 新規7定理・`#print axioms` 7件。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。[exact-source PR CI #41371772326](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41371772326) は **11,269/11,269 SUCCESS**。変更Lean warning/error 0/0、全7件は標準3公理 `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし、独立completion receipt SUCCESS。
+- Source/test-merge/squash Git treeは `0bb7f516836f75615dcacf434bce8ff44cc48f64` で一致。次のADUの主要目標は、ADS/ADTの具体的な等長全単射の連続性および元normalized Haarと球面測度の正規化・測度保存を真正Lean4で確立すること。docs-onlyでStrict Leanは再実行しない。
+
+---
+
+## 検証済み定理 — ADS（2026-11-02 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラーのみ。P4-Q2-PZ37ADS定理PR [#6166](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6166) はMERGED、定理squash SHA `04ad63891f9b24e7a62c09dfb5ddd0a22115939c`。元の有限体積interacting Wilson SU(2)、固定結合、中心化Gauss-law物理源、元FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haar、定理rootは不変更。
+
+### 真正SU(2)と単位3球の両方向の逆写像・具体的全単射
+
+- **真正S³→SU(2)逆写像の構成**：固定mathlibの `S³=Metric.sphere (0:EuclideanSpace ℝ (Fin 4)) 1` の全点 `x` に対して、実4座標から複素 `a=x₀+i x₁`、`b=x₂+i x₃` を取り、`|a|²+|b|²=1` をLean4で証明。代替の群構造や測度は導入しない。
+- **本物のspecial-unitary行列への所属**：真正行列 `[[a,-conj(b)],[b,conj(a)]]` に対し、固定mathlibの `Matrix.adjugate_fin_two` と `Matrix.mul_adjugate` を用いて、`det=1`、`conjTranspose=adjugate`、`M*star(M)=1` を形式証明。よってまさに元の `Matrix.specialUnitaryGroup (Fin 2) ℂ` に所属する。
+- **双方向の恒等写像と完全な全単射**：ADRの元第1列写像 `Φ:SU(2)→S³` に対し、新しい `Ψ:S³→SU(2)` を定義。全 `x∈S³` で `Φ(Ψ(x))=x`、全 `g∈SU(2)` で `Ψ(Φ(g))=g` をLean4証明。元 `Φ` の全射性・全単射性と、逆写像を備えた真正 `Equiv` を構成。
+- **未解決の本質的橋渡し**：この `Equiv` は**集合としての全単射**であり、元ADK `J` 弦距離とS³弦距離の一致・位相同型・正規化 `SU(2)` Haarと正規化S³球面測度の測度保存性はまだLean4で証明していない。したがってADQの半径依存S³ Haar下界は元SU(2)へ無条件移送しておらず、`c*r³`、H一様強制性、連続体Yang–Mills質量ギャップも主張しない。
+
+### exact-source Lean4・公理依存
+
+- 新規7定理・`#print axioms`7件。固定Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。[exact-source PR CI #41368903703](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41368903703) は **11,268/11,268 SUCCESS**。変更Leanファイルwarning/error 0/0、全7件は標準3公理 `propext`・`Classical.choice`・`Quot.sound` のみで `sorryAx` なし、completion receipt SUCCESS。
+- Source/test-merge/squash Git treeは `9acc6f7e740db0e17bbd9fe8a80219337982d4cd` で一致。今後は同じ `Equiv` の連続性・元弦距離同定・正規化Haar測度保存を独立に形式化し、初めてADQの明示的半径下界を元物理SU(2)へ移送する。docs-onlyでStrict Leanを再実行しない。
+
+---
+
+## 検証済み定理 — ADR（2026-11-02 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。P4-Q2-PZ37ADR定理PR [#6163](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6163) はMERGED、定理squash SHA `c43658962ec2c2caeab7cf1f5028668c8e0347c5`。元のinteracting Wilson SU(2)、中心化Gauss-law物理源、元FF受信器、Perron/transfer、二interacting posterior、boundary pair-Haar、定理root、固定toolchainは不変更。default mainは文書ミラーのみ。
+
+### 真正SU(2)行列の4実次元単位球面への単射と四元数形復元
+
+- **本物のSU(2)第1列の単位条件**：任意の元の特殊ユニタリ2×2行列 `g` で `Complex.normSq(g₀₀)+Complex.normSq(g₁₀)=1` を既存のunitary groupのstar積条件からLean4で証明。独立した四元数群の仮定は挿入しない。
+- **4実次元単位球面の実際の点**：行列成分の `(Re(g₀₀),Im(g₀₀),Re(g₁₀),Im(g₁₀))` を `EuclideanSpace ℝ (Fin 4)` に構成し、Euclidean normの2乗=1、norm=1、`S³` への真正写像を形式証明。従来の行列8実次元表現から4実次元表示へ還元。
+- **行列全体を第1列から厳密に復元**：元SU(2)の`det(g)=1`と`gᴴg=ggᴴ=I`を使用し、`adjugate(g)=conjTranspose(g)` と `g₁₁=conj(g₀₀)`、`g₀₁=-conj(g₁₀)` を証明。よって元の行列は `[[a,-conj(b)],[b,conj(a)]]` で完全に表され、第1複素列写像および `SU(2)→S³` 写像が**単射**であることを証明。
+- **未解決obstruction**：今回は`S³→SU(2)`逆写像・全射性・元ADK特徴弦距離との等長性・球面測度のnormalized SU(2) Haarへの移送はまだ証明していない。ADQの半径依存球面測度下界は現時点で元SU(2)上へ無条件移送していない。H一様強制性や連続体Yang–Mills質量ギャップは主張しない。
+
+### exact-source Lean4・公理依存
+
+- 新規8定理・`#print axioms`8件。固定Lean `v4.30.0-rc2`・mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。[exact-source CI #41366463730](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41366463730) は **11,267/11,267 SUCCESS**。変更Leanファイルwarning/error 0/0、全8件 `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし。Source/test-merge/squash Git tree `4a60cc5e85fa8281fa90b08409b22a9cce557cfe` 一致。
+- 次の形式化候補：同じ本物のSU(2)行列から具体的な `S³→SU(2)` 逆写像を構成し全射性を証明した後、元弦距離の一致と正規化Haar測度の移送を個別に証明する。docs-onlyではStrict Leanを再実行しない。
+
+---
+
+## 検証済み定理 — ADQ（2026-11-02 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラーのみ。P4-Q2-PZ37ADQ定理PR [#6160](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6160) はMERGED、定理squash SHA `481ac27155d7137dbf16f8e42e826cb09f966a7e`。元の有限体積interacting Wilson SU(2)、元Gauss-law物理源、元FF受信器、元boundary pair-Haar、固定Lean・mathlib・定理rootは不変更。
+
+### 実4次元単位球面の半径依存Haar評価と真正SU(2)移送の明示的条件
+
+- **固定mathlibの真正S³球面測度**：`E4 = EuclideanSpace ℝ (Fin 4)` は実次元4、`S3 = sphere(0,1)`。元Euclidean `volume` の `Measure.toSphere` をそのまま使用し、球面測度の総質量 `σ(S³)=4*volume(ball(0,1))` をLean4で証明。**`toSphere` を正規化済み確率測度と誤認しない**。
+- **球面の半径のみの陽な下界**：`κ(r)=((Measure.toSphereBallBound 4 r : NNReal):ℝ)/4` を定義し、全 `r` で `κ(r)>0`、全 `r>0` と `x∈S³` で `σ(ball(x,r))≥κ(r)*σ(S³)` をLean4証明。これは球面に関する**無条件**定理で、固定mathlibの `toSphereBallBound_mul_measureReal_unitBall_le_toSphere_ball` と総質量恒等式を使用する。
+- **元SU(2) Haarへの条件付き移送**：元ADKの `BallJ`、ADMの `m(r)=μ_G(BallJ(1,r))`、元normalized SU(2) Haar `μ_G` を保持したまま、写像 `f:G→S³` について (i) 元弦距離球の逆像一致、(ii) `μ_G(f⁻¹s)*σ(S³)=σ(s)`、(iii) `σ(S³)>0` を**明示的前提**として、`m(r)≥κ(r)` と任意中心の同じ下界を形式証明。
+- **未解決obstructionを保全**：このPRでは `SU(2)≃S³` の具体的等長写像、元 `J` 弦距離との一致、正規化Haarの測度保存移送は**まだ証明していない**。したがって元SU(2)上の**無条件**半径下界、`c*r³` の鋭い3次スケーリング、全有限Hに一様な強制性、連続体4D Yang–Mills質量ギャップは主張しない。次の実装は四元数・実4次元球面への写像と元Haarの正当な測度対応の個別証明。
+
+### exact-source Lean4・公理依存
+
+- 新規6定理・`#print axioms`6件、固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。[exact-source CI #41364001721](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41364001721) は **11,266/11,266 SUCCESS**、変更Leanファイルwarning/error 0/0、6件すべて標準3公理 `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし。
+- Source/test-merge/squash Git treeは `8e7c38ee32bc76ceabc54890b6112f026e508b6c` で一致。定理正本HEADは `481ac27155d7137dbf16f8e42e826cb09f966a7e`（文書同期前）。default mainへLean定理ソースはコピーしない。
+
+---
+
+## 検証済み定理 — ADP（2026-11-02 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラーのみ。P4-Q2-PZ37ADP定理PR [#6157](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6157) はMERGED、定理squash SHA `472b95ec8070088d66030c7ad067cc731f1f4ce2`。元の有限体積interacting Wilson SU(2)、固定結合、中心化Gauss-law物理源、元FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haar、定理rootは不変更。
+
+### 真正SU(2)弦距離の有限被覆と小球Haar数値証明書
+
+- **任意正半径での真正SU(2)有限net**：ADKの元の正規化行列特徴 `J` が定める `B_J(a,r)={g:d_J(a,g)<r}` は元位相で開き、真正 `SU(2)` はコンパクト。全 `r>0` について有限集合 `s:Finset SU(2)` を元のSU(2)内部から選び、全 `g` がある `a∈s` の球 `B_J(a,r)` に入ることをLean4証明。被覆集合 `s` は非空。
+- **元normalized SU(2) Haarの評価可能な数値下界**：ADMの中心不変な元Haar球質量 `m(r)=μ(B_J(1,r))` に対して、被覆が成立する任意の実際の有限 `s` について `1≤card(s)*m(r)`、従って **`m(r)≥1/card(s)`** をLean4証明。被覆と `card(s)≤N` を具体的に検査できれば **`m(r)≥1/N`**。真のnormalized Haarと測度劣加法性のみを使用し、有限群上の一様分布は使わない。どの真正SU(2)中心でも同じ質量下界が成立。
+- **元の全リンク・二境界D_H球への厳密移送**：元の有限`H`リンク集合`Link_H`と`R>0`について、被覆半径 `r=R/(2*card(Link_H)+1)` の真正net `s` から `ν_H(B_{D_H}(a,R))≥(1/card(s))^(2 card(Link_H))`。さらに`card(s)≤N`なら `ν_H(B_{D_H}(a,R))≥(1/N)^(2 card(Link_H))` を形式証明。元のpair-Haar法則とADMの箱⊆球をそのまま使用し、半径 `R=1/2` の元全リンク球でも存在証明書を構成。
+- **数値化に関する正確な境界**：全`r>0`で有限整数分母が存在することと、その値 `N(r)` を計算したことは異なる。今回の `s` はコンパクト性による存在証明であり、**明示した`r↦N(r)`・`c*r^3`等の半径だけによる数値下界は未証明**。ADI/ADHの厳密68条件、元Perron/FF共分散の定量Lipschitz係数、ACI非零点振幅、H一様強制性・連続体4D Yang–Mills質量ギャップも未解決。
+- **次の橋渡し**：固定mathlib `Mathlib/MeasureTheory/Constructions/HaarToSphere.lean` に球面Haarの `toSphereBallBound` がある。ただし、これを真正SU(2)へ移すには元の四元数・単位3球表示と元normalized Haarの測度保存対応を先にLean4証明する必要がある。現段階でその対応は仮定にも結論にも入れていない。
+
+### exact-source Lean4・公理依存
+
+- 新規12定理と `#print axioms` 12件。固定Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。[exact-source PR CI #41361036521](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41361036521) は **11,265/11,265 SUCCESS**、変更Leanファイルwarning/error 0/0、12件すべて標準3公理 `propext`・`Classical.choice`・`Quot.sound` のみで `sorryAx` なし、独立MCP completion receipt SUCCESS。
+- Source/test-merge/squash Git treeは `d940b7e31c9632dacd73e696576dbd7e89fc9f6e` で一致。定理正本はPR #6157のsquashに保持し、default mainにはLean証明をコピーしない。
+
+---
+
+## 検証済み定理 — ADO（2026-11-02 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAPの文書ミラーのみ。P4-Q2-PZ37ADO定理PR [#6154](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6154) はMERGED（squash `a1d8563a055198509557072de33666809a2420d6`）。元の有限体積interacting Wilson SU(2)、固定結合、中心化Gauss-law物理源、元FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haarと定理rootは不変更。
+
+### 真正異半径SU(2)反対極Haarと元全リンク球の数値障害拡張
+
+- **真正反対極の2球距離恒等式**：ADK・ADNの元正規化行列8実次元特徴による`d_J`と実際の中心元`z=-I`について、全真正`g∈SU(2)`で`d_J(1,g)^2+d_J(z,g)^2=4`をLean4証明。`r,s>0`かつ`r^2+s^2≤4`なら元の異半径OPEN球は交わらず、同じnormalized SU(2) Haarに対して`m(r)+m(s)≤1`。
+- **真正Haar質量の有理数半径上界**：元ADKの`m(5/4)≥1/8`と新しい2球非交差性から、全`r>0`、`r²≤39/16`で`m(r)≤7/8`を形式証明。とくに`1/2≤m(3/2)≤7/8`。さらに全`0<r<2`について、正Haar質量の反対極球を使い`m(r)<1`を証明。ただし`m(r)`の小半径での明示正下界ではない。
+- **元の零時刻格子に12本以上の物理空間リンク**：側長`2(H+1)≥2`の元の`ZMod`格子について、原点と3つの座標単位頂点が異なることをLean4証明し、3空間方向との積から全有限`H`について`card(Link_H)≥12`を形式証明。元幾何からの結論であり、人工的なリンク数の仮定なし。`Nat.card_prod`でFintypeインスタンスの不一致を回避。
+- **本物の全リンク距離球に対する強い数値obstruction**：元ADM/ADNの真正`D_H`全リンク球のpair-Haar上界を利用し、任意の元中心a・有限H・`0<R`・`R²≤39/16`について`ν_H(B_D(a,R))≤(7/8)^(2 card(Link_H))≤(7/8)^24<1/17`をLean4証明。半径`3/2`を含み、ADNの`R²≤2`から真に拡張された。
+- **元物理源のADI/ADH 68条件に直接接続**：同じ真正`C_e(a)`と`K_H`で`68*C_e(a)^2*ν_H(B_D(a,R))≤K_H`を上記半径範囲に対して形式証明。これはこの球を用いる**ADHの特定の68十分条件が成立しない**ことを意味し、GI非零性・物理質量ギャップそのものの不成立を意味しない。
+- **未証明の本質的障害**：元normalized SU(2) Haarの任意小半径での計算可能な正下界・四元数/単位3球への測度保存対応・元Perron/FF共分散の定量Lipschitz係数・ACI非零点の数値振幅・共分散が安定する大質量球での`ν_H>1/17`・H一様強制性・連続体4D Yang–Mills質量ギャップ。元の一様連続性をLipschitz性と混同しない。
+
+### exact-source Lean4 CI・公理依存
+
+- 新規14定理、`#print axioms`14件。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。 [exact-source PR CI #41358770192](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41358770192) は **11,264/11,264 SUCCESS**、変更Leanファイルwarning/error 0/0、14件全て`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、独立MCP completion receipt SUCCESS。
+- Source/test-merge/squash Git treeは`cd2132bb473d25c7d2ed8b19605d1af478973319`で完全一致。定理PR #6154はMERGED。default mainは文書ミラーであり、Lean定理源は正本branchにだけ保持する。
+
+---
+
+## 検証済み定理 — ADN（2026-11-02 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAPの文書ミラーのみ。P4-Q2-PZ37ADN定理PR [#6151](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6151) はMERGED（定理squash `0bdcc7da613baa448638605a41b08172e9c0960c`）。元の有限体積interacting Wilson SU(2)、固定結合、中心化Gauss-law物理源、元FF受信器、Perron/transfer、二interacting posterior、元boundary pair-Haarと定理rootは不変更。
+
+### 真正SU(2)反対極Haar球と元全リンク球の定量的上界
+
+- **真正中心反対極の弦距離**：ADKの元行列特徴 `J`、真正Wilsonエネルギー `E`、既存のSU(2)中心元 `z=-1` について `d_J(1,g)^2=2E(g)` と `d_J(z,g)^2=2(2-E(g))` をLean4証明。新しい測度模型・任意の正則性仮定は導入しない。
+- **元normalized SU(2) Haarの半径別数値境界**：ADMの真正 `m(r)=μ{g:d_J(1,g)<r}` に対し、`0<r` かつ `r^2≤2` なら反対極OPEN球は互いに素で `m(r)≤1/2`、`0<r` かつ `r^2>2` なら両球はSU(2)を覆い `m(r)≥1/2`。とくに `m(3/2)≥1/2`。ADKの単純な `1/8` cap質量とは異なる半径別校正である。
+- **元全リンク・二境界の球と箱の比較**：ADLの真正 `D_H` 球は同じ半径の真正全リンク箱に含まれる。ADMの厳密Haar積測度から `ν_H(B_{D_H}(a,R))≤m(R)^(2 card(Link_H))` をLean4証明。空間リンク型は実際の零時刻頂点×3空間方向であり、`card(Link_H)≥3` を元幾何から証明した（`Nat.card_prod` によってインスタンスに依らず計数）。
+- **数値的 `1/17` obstruction**：任意の元境界中心a・有限H・`0<R`・`R^2≤2` に対し `ν_H(B_{D_H}(a,R))≤(1/2)^(2 card(Link_H))≤1/64<1/17`。従ってADIの元物理共分散・元FC上界 `K_H` による `68 C_e(a)^2 ν_H(B_{D_H}(a,R))≤K_H` を証明し、ADHの厳密な68十分条件は**この半径領域の同じ元全リンク球では成立しない**。これは十分条件の数値的障害であり、真の物理mass gapの否定ではない。
+- **残る厳密な課題**：任意の小半径における `m(r)` の計算可能な正の数値下界、元物理共分散の計算可能なLipschitz係数、非零振幅の数値下界、より大きい真の安定球での `ν_H>1/17` の成立可否、有限体積一様強制性、連続体4D Yang–Mills mass gap はいずれも未証明。ADMの一様連続性をLipschitz性と混同しない。
+
+### exact-source Lean4検証
+
+- 新規定理14件・`#print axioms` 14件。固定Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。[exact-source CI #41356437448](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41356437448) は **11,263/11,263 SUCCESS**、変更Lean file error/warning 0、全14定理で公理は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし。独立MCP completion receiptもSUCCESS。
+- Source/test-merge/squashのGit treeはすべて `e677d0fd47e4209c4bd63cd6ee05d23cdad90081` で一致。定理正本はPR #6151のsquashであり、default mainには定理Leanをコピーしない。
+
+---
+
+## 検証済み定理 — ADM（2026-11-02 JST）
+
+唯一の定理正本は`formal/real-hilbert-uniform-coercive-strong-limit`、default `main`はREADME・ROADMAPの文書ミラーのみ。P4-Q2-PZ37ADM定理PR #6148はMERGED、定理squash SHA `454006a79a2332d45bdb3887db1f5be6e1e594d4`。元の有限体積interacting Wilson SU(2)、固定結合`b0=log(3/2)/64>0`、中心化Gauss-law物理源、元FF受信器、Perron/transfer、元二interacting posterior、元boundary pair-Haar確率は一切変更していない。
+
+### 真正SU(2)の任意半径Haar質量と全リンク弦距離での共分散一様連続性
+
+- **真正行列特徴弦距離の左平行移動不変性**：ADKの既存厳密校正式`d_J(a,g)^2=2*E(a^{-1}g)`とノルム非負性から、すべての真正`a,g∈SU(2)`で`d_J(a,g)=d_J(1,a^{-1}g)`をLean4証明。従って真正normalized SU(2) Haarの弦距離OPEN球質量は中心aに依存しない。真正SU(2)球質量関数`m(r)=μ{g:d_J(1,g)<r}`を定義し、**任意のr>0で厳密に`m(r)>0`**を元compact Haarのopen-positive性から証明。代替有限群Haarやposteriorへの置換なし。
+- **元の全リンク・二境界Haar箱の厳密な半径別積測度**：実際の`Link_H`と元`Pair_H=Cfg_H×Cfg_H`において、任意中心aと半径rに対する左右全リンク弦距離箱`Q_H(a,r)`について、元のpair-Haar`ν_H`の厳密等式`ν_H(Q_H(a,r))=m(r)^(2*card(Link_H))`を形式証明。これはADLの粗い`8^(-2card(Link_H))`からの前進であり、rが小さいときも成立する。`m(r)`自体は元の真正Haar測度の値で、**数値評価は未実施**。
+- **任意の正半径での真正全座標距離球の質量下界**：元の全リンク距離`D_H(z,w)=Σ_e[d_J(z.left(e),w.left(e))+d_J(z.right(e),w.right(e))]`について、すべての`R>0`で`Q_H(a,R/(2card(Link_H)+1))⊆B_{D_H}(a,R)`を証明。ゆえに`ν_H(B_{D_H}(a,R)) >= m(R/(2card(Link_H)+1))^(2card(Link_H))>0`が全有限H・全中心a・全R>0で真正pair-Haarについて成立。半径が小さい場合も有効だが、この下界の具体的な実数値はまだ未知。
+- **真正元物理共分散の全配置一様連続性**：元の`Pair_H`は真正SU(2)有限積のコンパクト空間、ADLの`D_H`は点を分離し、今回は`(z,w)↦D_H(z,w)`の**同時連続性**を証明。genericなcompact bad-pair最小距離補題をLean4証明し、ACDの真正元共分散`C_e(z)=Cov_Haar(F_original,e(z),E)`へ適用。全有限H・真正リンクe・全ε>0で**共通のδ>0が存在し**、`D_H(z,w)<δ`なら全元境界対z,wについて`|C_e(z)-C_e(w)|<ε`が成立。これは真のreceiver/transferに由来する一様連続性だが、数値δ・線形Lipschitz係数Lは導いていない。
+- **同じ真正D_H球で非零共分散・Haar質量・二乗momentを接続**：ACIによる同じ中心化Gauss-law物理源の非零真正Cov点`a`を選択し、ε=`|C_e(a)|/2`で上記一様連続性から`R>0`を取得。元の全リンクOPEN球`B_{D_H}(a,R)`全域で`|C_e(z)|>=|C_e(a)|/2`、同じ球の元pair-Haar質量`>=m(R/(2card(Link_H)+1))^(2card(Link_H))>0`、ADEの`(|C_e(a)|/2)^2*ν_H(B_{D_H}(a,R))<=S_e`を形式証明。物理元ソース・受信器・正Perron代表・二posterior・元Haar法則は不変更。
+- **残る厳密な数値障害**：存在する半径Rと一リンク小球質量`m(R/(2card(Link_H)+1))`、真正Cov非零点での振幅、および実線形Lipschitz係数は**数値評価されていない**。一様連続性を一様Lipschitz性と同一視しない。ADIで必要な`ν_H(ball)>1/17`、ADHの厳密`K_H<68*C_e(a)^2*ν_H(ball)`、H一様物理強制性・連続体4D Yang–Mills質量ギャップは引き続きOPEN。
+
+### exact-source CI・公理監査・独立completion receipt
+
+- 定理PR #6148 https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6148 — MERGED。唯一の新規Leanファイル`MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFullChordalCovarianceModulusV5_PZ37ADM.lean`、17定理・17件`#print axioms`、追加488行・削除0行。既存Lean・定理root・モデル・workflow・Lean/mathlib pin不変更。
+- 最終exact-source SHA `bf3e784fd9f852c9db6b4bafefedf59afef7f8be`、PR test-merge `9b4c45a29997eb0960d45577f45d1de161c2fcfa`、定理squash `454006a79a2332d45bdb3887db1f5be6e1e594d4`は**完全一致Git tree**`d75f7637916dab3f51a428dea8c6357cd81abd0b`。
+- source CI #41352932167 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41352932167 — **11262/11262 SUCCESS**。17/17公理が`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更警告・エラー0/0、独立completion receipt SUCCESS。
+- マージ後push CI #41353451974 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41353451974 — 正本squashで**11262/11262 SUCCESS**、17/17標準公理のみ、`sorryAx`・変更警告・エラー0/0、独立completion receipt SUCCESS。
+- 初回CI #41352489549の唯一のelaboration errorは`Finset.univ.card`と`Fintype.card Link`の同値正規化不足で、固定mathlibの`Finset.card_univ`を追加し修正。Leanファイル全文・imports・依存定理型・固定APIを確認。定理主張・仮定・数値定数を弱めず、Lean`v4.30.0-rc2`・mathlib`5450b53e5ddc75d46418fabb605edbf36bd0beb6`固定。docs-onlyのStrict Leanは起動しない。
+
+### 次の研究課題 — ADN（OPEN）
+
+ADMで実際の全リンク距離`D_H`、元pair-Haar全半径質量の厳密関数`m(r)^(2card(Link_H))`、元共分散一様連続性と同球二乗moment下界を確立。次は真正SU(2)の実8次元特徴＝S³上の球から**小半径Haar質量m(r)の計算可能な明示下界**を形式化し、真正Perron/transfer/FF受信器から共分散変動の数値モジュラスまたはLipschitz係数を評価する。元の同じ球についてADIの`1/17`とADHの68条件を独立数値比較する。有限Hの条件付き結果を、全H一様強制性・連続体mass gapと混同しない。
+
+---
+## 検証済み定理 — ADL（2026-11-02 JST）
+
+唯一の定理正本は`formal/real-hilbert-uniform-coercive-strong-limit`、default `main`はREADME・ROADMAP文書ミラーのみ。P4-Q2-PZ37ADL定理PR #6145はMERGED、定理squash SHA `c74c5aef86f89debdc6e97f1501b44be384e0073`。元の有限体積interacting Wilson SU(2)、固定結合`b0=log(3/2)/64>0`、中心化Gauss-law物理源、元FF受信器、Perron/transfer、元の二interacting posterior・真正境界pair-Haar測度は不変更。
+
+### 真正SU(2)正規化実8次元特徴の単射性と全境界リンク弦距離
+
+- **既存元SU(2)特徴Jの真正単射性**：既存`complexMatrixRealFeature 2`は元の複素2×2行列の全要素の実部・虚部を8座標として記録するため、`Complex.ext`と座標ごとの等式により単射であることをLean4証明。既存正規化係数`sqrt(1/2)≠0`でのスカラー倍も単射。従ってADKの数値校正弦距離`d_J(g,h)=||J(g)-J(h)||`について`d_J(g,h)=0 ↔ g=h`、正値分離性を真正SU(2)上で形式化。既存校正式`d_J(g,h)^2=2*E(g^-1*h)`を保持。
+- **元の全リンク・二境界の真正距離**：元の有限`Link_H`と`Pair_H=Cfg_H×Cfg_H`で`D_H(z,w)=Σ_{e∈Link_H}[d_J(z.left(e),w.left(e))+d_J(z.right(e),w.right(e))]`を定義。非負性、自己距離0、対称性、三角不等式、`D_H(z,w)=0 ↔ z=w`をLean証明。`D_H(z0,·)`は元のSU(2)有限積位相で連続であり、その数値距離OPEN球は元位相でOPEN。距離公理・連続性を主張し、別の物理確率法則を導入しない。
+- **全リンクを同時に制約した本来のHaar箱の正確な質量**：各元リンクe、左右両境界に同じ数値半径rの真正SU(2)弦距離球を課す実OPEN集合`Q_H(z0,r)`を構成。固定mathlibの`Measure.pi_pi`・`ENNReal.toReal_prod`と元の真正境界pair-Haar`ν_H=(⊗_{e∈Link_H}μ)⊗(⊗_{e∈Link_H}μ)`から、その実質量が**すべての2|Link_H|個のSU(2)球質量の積そのもの**であることを証明。ADKの`r>1`で各因子`>=1/8`を使い、`ν_H(Q_H(z0,r))>=(1/8)^(2*|Link_H|)>0`を無条件に証明。
+- **真正全リンク距離OPEN球への数値接続**：全座標半径r箱は`D_H`の中心z0、明示半径`R_H(r)=2*|Link_H|*r+1`のOPEN球に包含。具体的な数値`r=5/4`では`R_H=(5/2)|Link_H|+1`で、**元境界pair-Haarの真正全座標距離球**に対し`ν_H(B_{D_H}(z0,R_H)) >= 8^(-2*|Link_H|)>0`をLean証明。全リンク数に対する有限積質量低下を隠さない。
+- **元物理共分散の中心**：ACIが真正リンクeで与えた同じ中心化Gauss-law物理源の`C_e(z0)≠0`を、上記OPEN全座標距離球の実中心に選ぶことができる。中心で非零であることと、球全域で`|C_e|`が明示的な正下界を持つことは別。現段階で後者やLipschitz定数は未証明。
+- **数値障害・適用範囲**：`8^(-2|Link_H|)`は**H依存の数値下界**で、ADKの単一座標`1/8`と同一視しない。正Haar質量の構成だけではADIの球質量`>1/17`やADHの真正`K_H<68*C_e(z0)^2*ν_H(ball)`は得られない。全H一様な物理強制性、正の連続体4D Yang–Mills質量ギャップも未証明。
+
+### exact-source Lean・公理監査・マージ後push CI
+
+- 定理PR #6145 https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6145 — MERGED。新規Leanファイル`MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFullBoundaryChordalMetricV5_PZ37ADL.lean`1件のみ、25定理・25件`#print axioms`。既存Leanファイル、定理root、model、workflow、toolchain pin不変更。
+- 最終exact-source HEAD `6b4959aca31335d2e32e34aa5fad611eece1d055`、PR test-merge `3a0cdcf4b48c47c7f23ecf5b539a840c47d338be`、定理squash `c74c5aef86f89debdc6e97f1501b44be384e0073`のGit treeはすべて`daaa0f493f5b788d83c9fcb90b0d1c3b1fe01cb5`で完全一致。
+- exact-source CI #41350558042 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41350558042 — **11261/11261 Lean SUCCESS**、25/25公理は`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更警告・エラー0/0、独立completion receipt`event=pull_request`・`source_result=success`。
+- マージ後push CI #41351035719 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41351035719 — 正本squash HEADで**11261/11261 SUCCESS**、25/25標準3公理、`sorryAx`・変更警告・エラー0、独立completion receipt`event=push`・`source_result=success`。
+- 初回CI #41349647417のSU(2)型変数と同名の等式証拠、`slice.prod`局所記法、対称性rewrite方向を修正。次のCI #41350120558の`SFinite`型推論停止を、元pair-Haarを完全修飾して`measureReal_prod_prod`を対象指向`rw`で適用して解消。全文・imports・依存定理型・固定mathlib APIを検証し、定理主張・仮定・数値定数を一切弱めていない。Lean`v4.30.0-rc2`、mathlib`5450b53e5ddc75d46418fabb605edbf36bd0beb6`固定。文書のみのStrict Leanは起動しない。
+
+### 次の研究課題 — ADM（OPEN）
+
+ADLで**真正の全リンク距離とH依存Haar球質量下界**まで形式化完了。次は同じ全リンク距離の元位相との同値性を明示し、半径依存のSU(2) Haar球質量を強化して粗い`8^(-2|Link_H|)`の衰退を評価する。最重要の未解決課題は、元FF受信器とPerron/transferの同じ物理模型から数値Lipschitz係数`L_H,e`と非零Cov点での数値振幅を導き、**同じ全座標球**の実Haar質量と比較してADH/ADIの`1/17`および68閾値を検証すること。正値の存在と数値閾値通過、固定HとH一様性、有限体積と連続体質量ギャップを区別する。
+
+---
+## 検証済み定理 — ADK（2026-11-02 JST）
+
+唯一の定理正本は`formal/real-hilbert-uniform-coercive-strong-limit`、default `main`はREADME・ROADMAP文書ミラーのみ。P4-Q2-PZ37ADK定理PR #6142はMERGED、定理squash SHA `de512ca9efd2cfb3477d4e63524f8c3e16406be8`。元の有限体積interacting Wilson SU(2)、固定結合`b0=log(3/2)/64>0`、中心化Gauss-law物理源、元FF受信器、Perron/transfer、元二interacting posterior、元境界pair-Haar確率は不変更。
+
+### 真正行列実8次元特徴からの数値校正弦距離と物理的Haar球
+
+- **既存真正SU(2)特徴の距離校正**：normalized SU(2)実トレース核の既存行列実8次元Hilbert特徴`J(g)=sqrt(1/2)*realify(g)`を使用し、弦距離`d_J(g,h)=||J(g)-J(h)||`を定義。既存の元SU(2)相対トレース核内積と単位特徴ノルムから、元Wilsonエネルギー`E(g)=1-Re(tr(g))/2`に関する**厳密等式**`d_J(g,h)^2=2*E(g^{-1}h)`をLean4証明。`d_J>=0`、`d_J(g,g)=0`、対称性・三角不等式も証明。`J`の連続性から数値弦距離OPEN球は**元のSU(2)位相でOPEN**。`J`の単射性による距離分離性は別途形式化するため、ADK時点では校正済み**擬距離**と呼ぶ。
+- **全中心における具体的半径と真正Haar質量**：ABVの元normalized SU(2) compact Haarに対するquaternion8平行移動による真正Wilson閉cap`{g:E(g)<=1/2}`の数値下界`μ(cap)>=1/8`を再利用。任意の真正中心`a∈SU(2)`、任意の数値半径`r>1`で、元の閉capの`a`による実左平行移動は真の弦距離OPEN球`B_J(a,r)={g:d_J(a,g)<r}`に包含。実Haar左不変性から`μ(B_J(a,r))>=1/8`が成立。特に**明示半径`5/4`**で`μ(B_J(a,5/4))>=1/8>1/17`。
+- **元の有限体積Haar pairへの定量移送**：元境界`Pair_H=Cfg_H×Cfg_H`と真の`ν_H=(⊗_{e∈Link_H}μ)⊗(⊗_{e∈Link_H}μ)`に対し、`z↦z.left(e)`の真正測度保存射影から、一リンク弦距離円筒`V_{H,e,a,r}={z:d_J(a,z.left(e))<r}`はOPENで、`ν_H(V)=μ(B_J(a,r))>=1/8`、任意`H,e,a,r>1`で成立。ACIの真正中心化Gauss-law共分散非零点`z0`を選び、その**真の第1境界リンク値`z0.left(e)`を円筒の中心**にでき、中心点で`C_e(z0)≠0`、円筒Haar質量`>1/17`を同時に証明。ただし円筒全域で共分散が非零または一定振幅を保つとは主張しない。
+- **真正二境界座標での質量**：元の`(z.left(e),z.right(e))`射影は真正pair-Haarから`μ×μ`への測度保存。二つの独立した数値半径`5/4`弦距離球を同時に課す**元物理境界上の二座標円筒**は、実質量が各SU(2)球質量の積に正確に等しく`>=1/64`。これを全リンク制約の球、posterior法則、またはGI受信器の振幅と取り違えない。
+- **引き続きOPENな本質的障害**：全リンクの数値校正積距離での**真正全座標球**のHaar質量、SU(2)特徴単射性の独立Lean証明、元FF受信器の実Lipschitz係数`L_H,e`、非零点共分散の実数値下界、円筒の共分散安定部分の質量`>1/17`、ADHの`K_H<68*C_e(z0)^2*ν_H(ball)`、全H一様強制性および連続体4D Yang–Mills質量ギャップは未証明。`1/8`は一座標円筒、`1/64`は二座標円筒の数値下界に限定。
+
+### exact-source Lean・公理依存・独立completion receipt
+
+- 定理PR #6142 https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6142 — MERGED。新規Leanファイル`MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalCalibratedChordalHaarBallsV5_PZ37ADK.lean`のみ、21定理・21件`#print axioms`、追加430行・削除0行。既存Lean・root・物理模型・workflow・toolchain pin変更なし。
+- source SHA `3d2ce2128538a7c765b7dc61f8e5e1d8d7644fd1`、test-merge SHA `5253f765eaa54f86408ebe69a077026126dfdc88`、定理squash SHA `de512ca9efd2cfb3477d4e63524f8c3e16406be8`はすべて共通Git tree `c4cd8713a6e348184e1e4a8f40d631e2041c9881`。
+- exact-source CI #41347960546 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41347960546 — **11260/11260 Lean SUCCESS**。21/21公理は`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立completion receipt`event=pull_request`・`source_result=success`。
+- マージ後push CI #41348415962 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41348415962 — theorem squash正本HEADで**11260/11260 SUCCESS**、21/21標準公理、`sorryAx`・変更警告・エラー0、独立completion receipt`event=push`・`source_result=success`。
+- 初回source CIから追加修正なし。既存normalized-trace Hilbert特徴、Mathlibのノルム二乗等式・連続性・Haar測度保存射影を直接組み合わせて証明。Lean`v4.30.0-rc2`、mathlib`5450b53e5ddc75d46418fabb605edbf36bd0beb6`維持。docs-onlyではStrict Leanを起動しない。
+
+### 次の研究課題 — ADL（OPEN）
+
+ADKの数値校正されたSU(2)実8次元特徴について**単射性・元位相との同値性を形式化した真正距離**を確立する。その距離を元の有限リンク積・左右二境界の**全座標**に拡張し、真正pair-Haarの全座標球質量を`H`依存の実数値として評価する。単一/二座標円筒下界を全座標球へ無根拠に流用しない。その後、同じ全座標球で元FF受信器の物理共分散振幅・Lipschitz係数を導出し、ADH/ADIの数値`1/17`および68閾値を評価する。全H一様性・連続体mass gapは別ゲートとする。
+
+---
+## 検証済み定理 — ADJ（2026-11-02 JST）
+
+唯一の定理正本は`formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。P4-Q2-PZ37ADJ定理PR #6139はMERGED、定理squash SHA `0517a9bf440ba8fda37db56bb04ff3c657cdd662`。元の有限体積interacting Wilson SU(2)、固定結合`b0=log(3/2)/64>0`、中心化Gauss-law源、元FF受信器、Perron/transfer、元二interacting posteriorと真正境界pair-Haar確率は変更していない。
+
+### 元SU(2)単一リンクOPEN capと真正有限体積境界pair-Haarの定量下界
+
+- **既存の真正ABV数値Haar capをOPEN化**：元Wilsonエネルギー`E(g)=1-Re(tr g)/2`について、既存ABVの真正SU(2) quaternion8平行移動による閉cap`A={g:E(g)<=1/2}`の元normalized compact Haar質量`μ(A)>=1/8`を再利用。厳密なOPEN cap`U={g:E(g)<3/4}`は`A⊆U`を満たすので`μ(U)>=1/8`。補助的な有限群Haarには置換しない。
+- **元境界pair-Haarへの実際の測度保存移送**：元境界`Pair_H=Cfg_H×Cfg_H`、真の`ν_H=(⊗_{e∈Link_H}μ)⊗(⊗_{e∈Link_H}μ)`について、元の第1境界の指定リンク射影`z↦z.left(e)`は`MeasureTheory.measurePreserving_eval`と元productの`measurePreserving_fst`から真正測度保存。従ってすべての有限H・真正リンクeで`V_{H,e}={z:E(z.left(e))<3/4}`はOPEN、かつ`ν_H(V_{H,e})=μ(U)>=1/8>1/17`。これは**単一リンク円筒領域の真のH非依存質量下界**であって、共分散球やphysical coercivityのH一様下界ではない。
+- **八つの実quaternion平行移動で全元境界を被覆**：ABVの8個のSU(2)平行移動から、各`e`に対する8個の真正OPEN円筒領域`V_{H,e,i}={z:E(q_i*z.left(e))<3/4}`を作り、各領域に`ν_H(V_{H,e,i})=μ(U)>=1/8>1/17`を証明。さらに`⋃_i V_{H,e,i}=Pair_H`。元pair-Haarを任意の代替法則へ変更していない。
+- **元の非零物理共分散との交差**：ACIの元中心化Gauss-law物理源の真正`C_e(z0)≠0`から、この非零点が上の大質量OPEN円筒の少なくとも一つに属する。ACDの元Cov連続性と元pair-Haarのopen-positive性で、その内部に**より小さい**OPEN `W_e`、`a_e>0`、`ν_H(W_e)>0`を構成し、全`z∈W_e`で`|C_e(z)|>=a_e`とADEの`a_e²*ν_H(W_e)<=S(H,b0,e)`を形式証明。大きな親円筒の`>=1/8`を小領域の質量として誤って代入しない。
+- **元の二境界座標の実pair-Haar**：同じ元リンクeでの`z↦(z.left(e),z.right(e))`は真正`ν_H`から元の`μ×μ`への測度保存。ABVの真正low/high ordered capの`(μ×μ)(capPair)>=1/64`を、元の物理境界pair上の対応円筒の実質量`>=1/64`として形式証明。これは二posteriorのsigned GI応答下界ではない。
+- **未証明の正確な境界**：`ν_H(V)>=1/8`は成立しても、`ν_H(W_e)>1/17`、共分散の明示振幅`C_e(z0)^2>K_H/68`、真正Wilson共分散の数値Lipschitz係数、物理的に数値校正したSU(2)積距離球の質量、ADI/ADHの厳密`K_H<68*C_e(z0)^2*ν_H(ball)`、全体積一様強制性、連続体4D Yang–Mills質量ギャップは未証明。OPEN円筒と元のADH擬距離球を同一視しない。
+
+### exact-source CI・公理監査・マージ後push CI
+
+- 定理PR #6139 https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6139 — MERGED。新規Leanファイル`MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalBoundaryHaarCylindersV5_PZ37ADJ.lean`のみ、18定理・18件`#print axioms`、追加408行・削除0行。既存Lean、模型、root、workflow、Lean/mathlib pin不変。
+- 最終exact-source HEAD `d572a5a58264aae332e10c78052e50971dae8a1c`、test-merge `96fdbeed8c170317137c595bc69f992d9688cece`、定理squash `0517a9bf440ba8fda37db56bb04ff3c657cdd662`はすべて同一Git tree `7a27ee4d2922e7c9f6c329bb9c7b87c52f85ee96`。
+- exact-source CI #41343426933 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41343426933 — 11259/11259 Lean SUCCESS、18/18公理が`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更warning/error 0/0、独立completion receipt `event=pull_request`・`source_result=success`。
+- マージ後push CI #41343909762 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41343909762 — 定理squash HEADで11259/11259 SUCCESS、18/18標準3公理のみ、`sorryAx`・変更警告・エラーなし、独立completion receipt `event=push`・`source_result=success`。
+- 初回CIのLean局所記法`μ`と名前付き引数、`slice`・`outer`のドット記法、冗長な`dsimp`、最後の`μ.prod`名前解決エラーを、変更ファイル全文・依存定理型・固定mathlib APIを確認して完全修飾で修正。数学的主張・仮定・数値定数の緩和なし。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`固定。docs-onlyではStrict Leanを起動しない。
+
+### 次の研究課題 — ADK（OPEN）
+
+今回の`>=1/8`は元Haarの**単一リンクOPEN円筒**に対する数値下界であり、真正Cov下界が保たれる小領域の数値質量ではない。次は元SU(2)の具体的な行列／四元数座標に沿った数値校正距離、真正有限リンク積上の明示的なmetric ballとその元pair-Haar下界、元FF受信器の真正Lipschitz係数、およびACIの非零Cov振幅をそれぞれ形式化し、**同じ領域**で`ν_H(ball)>1/17`と`|C_e(z)|`を両立できるかを検証する。球半径・共分散振幅・Haar質量の存在と実数値評価、固定HとH一様性、有限体積と連続体を分離する。
+
+---
+## 検証済み定理 — ADI（2026-11-02 JST）
+
+唯一の定理正本は`formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。P4-Q2-PZ37ADI定理PR #6136はMERGED、定理squash SHAは`b48204a99e89a454aac1bda0fd9d11fd34dfc303`。元の有限体積interacting Wilson SU(2)、固定結合`b0=log(3/2)/64`、中心化Gauss-law源、元FF受信器、Perron/transfer、元の二interacting posterior、元の境界pair-Haar確率とADHの位相適合擬距離は不変更。
+
+### 真正Cov上界からのHaar球質量1/17障害
+
+- **元模型の無条件の点評価**：ACJの真正共分散分散上界`4*C_e(z)^2<=B_H^2`とADFの真のtransfer/プラケット上界`B_H^2<=K_H`を、各有限体積H、元の物理リンクe、元の境界対zにそのまま適用して`4*C_e(z)^2<=K_H`をLean4証明。独立した確率分布・抽象Covモデル・仮想距離へすり替えない。
+- **数値的必要条件（単一球の証明書に限る）**：元pair-Haar実質量`ν_H(A)<=1/17`の任意集合Aについて`68*C_e(z0)^2*ν_H(A)<=K_H`。従ってADHのstrict条件`K_H<68*C_e(z0)^2*ν_H(ball)`を満たす元Haar球には必ず`ν_H(ball)>1/17`（約5.882%）が必要。元pair-Haar確率正規化`ν_H(A)<=1`から別途`C_e(z0)^2>K_H/68`も必要。これらはADHの**特定の十分条件**に対する必要条件であり、GI応答そのものの必要条件ではない。
+- **同じ擬距離における真正Lipschitz半径の単調性**：`0<L1<=L2`なら`r(L)=|C_e(z0)|/(2L)`は`r(L1)>=r(L2)`。したがって**同一の元pair-Haar法則**に対して`ν_H(ball(r(L1)))>=ν_H(ball(r(L2)))`であり、68条件の右辺も悪化しない。さらに改善されたL1の真正Cov Lipschitz評価を**別途検証した場合**に限り、L2でのstrict数値条件からADHの元GI二乗平均証明書正値と、元二posteriorのsigned GI応答非零OPEN・正Haar質量領域に条件付き接続。
+- **未証明の境界**：元SU(2)受信器に対する実数値Lipschitz定数、非零Cov点の数値振幅、元Haar球質量の具体値、1/17超過、68閾値の成立、全H一様評価、連続体4D Yang–Mills質量ギャップは未証明。ADHの擬距離は元位相と適合するが、物理的な数値距離として未校正である。
+
+### exact-source CI・公理依存・マージ後push CI
+
+- 定理PR #6136 https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6136 — MERGED。新規Leanファイル`MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalNumericHaarMassObstructionV5_PZ37ADI.lean` 1件のみ、8定理・8件`#print axioms`、追加284行・削除0行。既存Lean・真正模型・root・workflow・pin不変更。
+- 最終exact-source HEAD `635ac1fab2f281c6e062a1aca4ea530ca56e0fdb`、test-merge commit `f9fa80d685e99e7cf9b8e3fdecb9fd536bcebb87`、定理squash `b48204a99e89a454aac1bda0fd9d11fd34dfc303`のGit treeはすべて`8eab57b6412e94d2b087a1bc1cce4b52256584f1`で完全一致。
+- exact-source CI #41329768683 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41329768683 — 11258/11258 Lean SUCCESS、8/8公理は`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立completion receipt `event=pull_request`・`source_result=success`。
+- マージ後push CI #41330387235 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41330387235 — 正本squash HEADで11258/11258 Lean SUCCESS、8/8標準3公理のみ、`sorryAx`・変更警告・変更エラーなし、独立completion receipt `event=push`・`source_result=success`。
+- 初回CI #41329233315では元`CompactEnergyMismatchMoment.variance μ`が一変数関数であるのに対し`Var(F) E`と余分な引数を渡したLean elaboration errorが3箇所あった。依存ACJ定理の完全な引数と既存分散記法を確認し、`Var(F)`へ訂正。定理主張・仮定の緩和なし。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`固定。docs-onlyではStrict Leanを起動しない。
+
+### 次の研究課題 — ADJ（OPEN）
+
+真正SU(2)境界配置の**数値校正された具体的な積距離**と元pair-Haar球質量下界、ACIの真正非零共分散の**数値振幅**、元FF受信器の真正Lipschitz定数をそれぞれ導出する。まずADHの特定十分条件に必要な球質量`>1/17`と点振幅`>sqrt(K_H/68)`の実現可能性を、有限Hの正確な物理量で検証する。存在・条件付き定理を数値的成功と同一視せず、全H一様性や連続体質量ギャップは別ゲートに保持する。
+
+---
+
+## 検証済み定理 — ADH（2026-11-01 JST）
+
+唯一の定理正本は`formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラーのみ。P4-Q2-PZ37ADH定理PR #6133はMERGED、定理squash SHA `729b2138ffa234e2c0f57f5e21abc8107fca3be0`。元の有限体積interacting Wilson SU(2)、中心化Gauss-law源、元FF受信器、Perron代表・transfer、元の二interacting posteriorと元境界pair-Haar測度は不変更。
+
+### 真正Cov非零点を含むOPEN Haar球と有限体積共通の球下界
+
+- 固定結合は既存ADCの`b0=log(3/2)/64>0`。元の実共分散`C_e(z)=Cov_Haar(F_e(z),E)`と真正共分散二乗モーメント`S_e=∫C_e(z)^2 dν_H(z)`、ADFの元transfer/プラケット上界`K_H=6*P_H*exp(2*b0*A_H)*(exp(8*b0)^3-1)^2`を維持。
+- 境界配置の**元の位相に適合する擬距離**によって`Metric.ball`を用いる。これは元のboundary pair-Haar確率法則・物理模型の置換ではなく、擬距離自体の物理的数値スケールを主張しない。
+- **各真正リンクの無条件Haar球構成**：ACIの元共分散非零点`z_e`とACDの実Cov連続性から、各`e`について`r_e>0`が存在し、`z∈ball(z_e,r_e)`なら`|C_e(z)|>=|C_e(z_e)|/2>0`。元pair-Haarのopen-positive性から球は`ν_H(ball(z_e,r_e))>0`。ADEの元積分評価により`(|C_e(z_e)|/2)^2*ν_H(ball(z_e,r_e))<=S_e`をLean4証明。
+- **固定H・全リンクに共通する実Haar球証拠**：真正リンク型が非空で固定有限`H`なら、有限個の半径、非零Cov振幅、正pair-Haar球質量の各最小値を取ることで、一組の`r_H>0`、`a_H>0`、`m_H>0`が存在。全真正リンク`e`について元境界点`z_e`を選べて、`ν_H(ball(z_e,r_H))>=m_H`かつ球上で`|C_e(z)|>=a_H`、従って`S_e>=a_H²*m_H`。`z_e`はリンク依存、三定数は固定H内でリンク非依存。
+- **条件付き明示半径**：もし元の真正Covに`L>0`かつ全境界`z`に対して`|C_e(z)-C_e(z_e)|<=L*dist(z,z_e)`が別途検証されれば、`r_e=|C_e(z_e)|/(2*L)>0`が具体的に使え、同じ元Haar球の正質量とモーメント下界が従う。Lipschitz定数`L`自体がこの元Wilson模型で数値的に得られるとは未証明。
+- **厳密68条件**：`K_H<68*C_e(z_e)^2*ν_H(ball(z_e,|C_e(z_e)|/(2L)))`が別途成立するなら、元GI二乗平均証明書`M_GI>0`、元の二interacting posteriorの実signed GI応答が非零となるOPEN・正pair-Haar質量領域が存在する。`272*(|C_e(z_e)|/2)^2=68*C_e(z_e)^2`は純代数的な等式。GI二乗平均の正値と実signed応答の符号を混同しない。
+- **未証明の境界**：Lipschitz定数の具体値、球半径・元Haar球質量の具体的数値、`K_H<272*a_H²*m_H`および上記68比較、全Hで一様な下界、連続体4D Yang–Mills質量ギャップは未証明。証明済みなのは真正有限体積・各リンクに関する存在と厳密な条件付き数値還元。
+
+### exact-source CI・公理依存・マージ後独立検証
+
+- ADH定理PR #6133 https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6133 — MERGED。新規Leanファイル`MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalCovarianceHaarBallsV5_PZ37ADH.lean`のみ、10定理・10件`#print axioms`、既存ファイル削除0。元模型・root・workflow・Lean/mathlib pin不変更。
+- 最終exact-source HEAD `2c3a2078f736e8557e34a54514942c0081074dd4`、PR test-merge commit `d2059e95733f471751c09d9d3be983a21090641f`、定理squash `729b2138ffa234e2c0f57f5e21abc8107fca3be0` のGit treeはすべて `758fffa12c2b0e7a69830896420423bf6074819c` で完全一致。
+- exact-source CI #41307792780 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41307792780 — 11257/11257 Lean SUCCESS、10/10公理は`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立completion receipt `event=pull_request`・`source_result=success`。
+- マージ後push CI #41308202510 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41308202510 — 定理squash HEADで11257/11257 Lean SUCCESS、10/10標準公理のみ、`sorryAx`・変更warning/errorなし、独立completion receipt `event=push`・`source_result=success`。
+- 初回CIの局所記法`outer`・`μ`と`.IsOpenPosMeasure`の名前解決、`field_simp`後の余分な`ring`、`(|C|/2)^2`の`div_pow`/`sq_abs`正規化を、全ファイル・imports・固定mathlib APIを確認して修正。証明条件緩和なし。Lean`v4.30.0-rc2`、mathlib`5450b53e5ddc75d46418fabb605edbf36bd0beb6`固定。文書のみのStrict Leanは起動しない。
+
+### 次の研究課題 — ADI（OPEN）
+
+同一の真正Wilson受信器について、非零Cov点での数値的下界、元境界配置上の物理的な距離と定量Lipschitz定数`L_H`、元SU(2)・有限リンク積のHaar球質量の明示的下界を別途確立し、`K_H<68*C_e(z_e)^2*ν_H(ball)`の有限体積数値判定へ接続する。半径・Haar測度の存在を数値評価や体積一様性と同一視しない。
+
+---
+## 検証済み定理 — ADG（2026-11-01 JST）
+
+唯一の定理正本は`formal/real-hilbert-uniform-coercive-strong-limit`、default `main`は文書ミラーのみ。P4-Q2-PZ37ADG定理PR #6130はMERGED、squash SHAは`41cd7430003e284f3d5ec59b9740bcd68d5de227`。元の有限体積interacting Wilson SU(2)、中心化Gauss-law物理源、FF受信器、正Perron代表、更新後transfer section、元の二interacting posteriorと境界pair-Haarを厳密に保持しています。
+
+### 固定有限体積・全真正リンクに共通する両符号Cov領域
+
+- ADCの真正固定結合`b0=log(3/2)/64>0`、ACJの元境界Cov`C_e(z)`・二乗モーメント`S_e=∫ C_e(z)^2 dν_H(z)>0`、ADFの元transfer・プラケット明示上界`K_H=6*P_H*exp(2*b0*A_H)*(exp(8*b0)^3-1)^2`を同一模型で使用。
+- ADEの有限リンク最小値から`s_H=min_e S_e>0`が存在。ACJの真正正負のOPEN領域`A_e^+={C_e>sqrt(S_e/2)}`、`A_e^-={-C_e>sqrt(S_e/2)}`は各リンクで実pair-Haar質量`ν_H(A_e^±)>=S_e/(B_H²-2*S_e)>0`を持つ。
+- **ADGの新規全リンク共通定量証拠**：`a_H=sqrt(s_H/2)>0`、`m_H=s_H/(K_H-2*s_H)>0`とすると、各有限Hのすべての真正リンク`e`について両領域がOPENで`ν_H(A_e^+)>=m_H`、`ν_H(A_e^-)>=m_H`、領域内でそれぞれ`C_e(z)>a_H`、`-C_e(z)>a_H`が成立。分母の正値はACJの`B_H²-2*S_e>0`、ADEの`s_H<=S_e`、ADFの`B_H²<=K_H`による形式証明。
+- **Sの値を入力しない独立の局所証拠**：ACI・ACD・ADEから各真正リンク`e`で実CovのOPEN集合`U_e`、振幅`a_e>0`、実Haar質量`ν_H(U_e)>0`、全`z∈U_e`で`|C_e(z)|>=a_e`が存在。有限個の真正リンク上でこれらの振幅・質量をそれぞれ最小化して別の`a'_H>0`、`m'_H>0`を構成し、全リンクで`ν_H(U_e)>=m'_H`、`|C_e(z)|>=a'_H`、`S_e>=(a'_H)^2*m'_H`をLean4証明した。選択したOPEN集合はリンクに依存するが、二定数はリンクに依存しない。
+- **数値条件は別問題**：局所証拠について`K_H<272*(a'_H)^2*m'_H`を別途満たせば、固定Hの全真正リンクで元GI二乗平均証明書`M_GI>0`。元の二interacting posteriorの実signed GI応答が非零となるOPEN・正pair-Haar質量集合も各リンクで存在する。これは既存ADE・ADFへの厳密な条件付き接続であり、signed応答の符号を断定しない。
+- **証明と未証明の境界**：両符号OPEN領域の存在、リンク共通の正振幅・正Haar質量下界、および局所領域からの正モーメント下界は無条件で形式化完了。正の共通定数の**数値評価**、`K_H<272*(a'_H)^2*m'_H`、全Hに一様な定数、連続体4D Yang–Mills質量ギャップは未証明。存在の定理を数値優越の証明と混同しない。
+
+### exact-source CI・squash・マージ後push CI
+
+- 定理PR #6130 https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6130 — MERGED。新規Leanファイル`MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalUniformTwoSignCovarianceV5_PZ37ADG.lean` 1件のみ、2定義・9定理・9件`#print axioms`、405行追加・削除0。既存Lean・root・toolchain・workflow・物理模型は不変。
+- 最終exact-source HEAD `432998c404d4d3553e642e95e7914338d38fa6f9`、test-merge commit `5e7f4257c82e1f24cfbcb5f9730b8a29af237418`、定理squash `41cd7430003e284f3d5ec59b9740bcd68d5de227`はすべて同じGit tree `5f4796263704cf58227db3efa017dd83c3a0d266`。単一新規ファイルによるappend-only。
+- exact-source CI #41303675413 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41303675413 — `11256/11256` Lean SUCCESS、9/9公理は`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error `0/0`、独立receipt`event=pull_request`・`source_result=success`。
+- マージ後push CI #41304074956 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41304074956 — squash HEADで`11256/11256` SUCCESS、9/9標準公理のみ、`sorryAx`・変更警告・変更エラーなし、独立receipt`event=push`・`source_result=success`。
+- 初回CI #41303150874のLean局所記法`S`と同名束縛変数の構文衝突を小文字変数に修正。連鎖した定理名解決エラー・未証明依存は全て解消。9定理の主張・仮定を弱めていない。Lean`v4.30.0-rc2`、mathlib`5450b53e5ddc75d46418fabb605edbf36bd0beb6`固定。
+- docs-onlyはREADME・ROADMAPの同文追記のみ。Strict Leanを別途起動しない。
+
+### 次の研究課題 — ADH（OPEN）
+
+実Covを非零にする具体的な元境界配置`z0`における`|C_e(z0)|`の数値的下界、受信器の局所連続性に対する**明示的な近傍半径**、その近傍の真正pair-Haar質量の明示的下界を調べる。これらが分かれば`(a'_H)^2*m'_H`を数値比較へ進められる。固定Hの成立、全リンク共通、全H一様を区別し、未証明の正値・質量ギャップを仮定しない。
+
+---
+
+## 検証済み定理 — ADF（2026-11-01 JST）
+
+唯一の定理正本は`formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーのみ。P4-Q2-PZ37ADF／定理PR #6127 MERGED、定理squash SHA `104a6d2dde97b6fcbe5d2031942d0bfba4b0cfb4`。ADE以前の証明を保持し、元の有限体積interacting Wilson SU(2)、中心化Gauss-law物理源、FF受信器、正Perron代表、更新後transfer section、元の二interacting posterior、境界pair-Haar、根・workflow・toolchain pinは無変更。
+
+### 真正物理transfer・プラケットに基づく明示的FC上界
+
+- 固定結合は既存ADCの`b0=log(3/2)/64>0`。元の実Wilson一スラブ作用量の上界を`A_H=2*(length(原空間plaquette list)+length(原空間link list))`、実空間プラケット数を`P_H=Fintype.card(原空間plaquette)`とする。
+- **追加仮定なしの真正transfer下界**：既存の原kernel global minorizationと定数物理単位ベクトルから`||T_(H,b0)||>=exp(-b0*A_H)>0`、従って`||T||^(-1)<=exp(b0*A_H)`。別の形式証明から元中心化Gauss-law源`||f0_H||²<=6*P_H`。定量性は有限Hに限定。
+- **ADF新規無条件定理**：元FC上界`B(H,b0)`に対して`B(H,b0)² <= K_H`、`K_H := 6*P_H*exp(2*b0*A_H)*(exp(8*b0)^3-1)^2`。従来の未知の物理transferノルムを、実格子作用量と実プラケット数で明示的に支配する。固定`b0`では`exp(8*b0)^3=exp(24*b0)`。
+- **真正Cov二乗モーメントとの条件付き比較**：各原リンク`e`で`K_H<272*S(H,b0,e)`を別途示せば、既存ADEより真正GI二乗平均証明書`M_GI(H,b0,e)>0`。さらに元の二interacting posteriorの実signed GI応答が非零となるOPEN・正pair-Haar質量集合が存在する。証明書の正値性とsigned応答の符号は同一視しない。
+- **実Cov開領域による十分条件**：OPEN集合`U`で`a>0`かつ`a<=|Cov(z)|`が全`z in U`に成り立ち、`K_H<272*a²*ν_H(U)`が別途成立すれば、同じ真正GI二乗平均証明書とsigned GI非零開領域が得られる。
+- **固定Hの全リンクへ**：既存ADEの正定数`s_H=min_e S(H,b0,e)>0`について`K_H<272*s_H`が別途成立すれば、固定有限Hの全真正リンクで`M_GI>0`。有限H依存定数と全H一様定数は区別する。
+- **非正証明書の障害**：元`M_GI<=0`なら`272*S(H,b0,e)<=B(H,b0)²<=K_H`。十分条件の障害のみを述べ、実signed GI応答の全消失を導かない。
+- **未解決の本質**：真正Wilson模型で`K_H<272*S`または`K_H<272*a²*ν_H(U)`が成立することは未証明。global actionの指数因子は粗い証明経路の体積依存性を露わにするだけで、物理transferの実際の悪化、全H一様性、連続体4D Yang–Mills質量ギャップは示さない。
+
+### exact-source CI・公理監査・マージ後独立検証
+
+- 定理PR #6127 https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6127 — MERGED。新規Leanファイル1件、1定義・8定理・8`#print axioms`、257行追加・削除0行。原模型、既存Lean、pin、root、workflowは不変更。
+- 修正済みexact-source HEAD `6ba61fd075d9e16db47f73869532480ca9fdb1c8`、CI test-merge commit `21028d9b3c9de6ae3aee38308f66e932063fe044`、squash `104a6d2dde97b6fcbe5d2031942d0bfba4b0cfb4` のGit treeはすべて `bb3a6fd435dcb08cdd6314f46816b541ff5da051` で一致。
+- exact-source CI #41301330625 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41301330625 — 11255/11255 Lean SUCCESS、8/8公理依存は`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立completion receipt `source_result=success`。
+- マージ後push CI #41301819870 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41301819870 — 同じsquash HEADで11255/11255 Lean SUCCESS、8/8標準3公理のみ、`sorryAx`なし、変更warning/error 0/0、独立completion receipt `event=push`／`source_result=success`。固定Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`維持。
+- 初回CIの作用素ノルム型推論、同一有限集合の`Fintype`インスタンス相違、`≤`と`<`の推移律誤用を、完全修飾作用素名・固定mathlibの`Fintype.card_eq_nat_card`・`lt_of_le_of_lt`で修正。主張・仮定の緩和なし。README・ROADMAPは正本とmain文書ミラーの同文追記を行い、docs-only Strict Leanは起動しない。
+
+### 次の研究課題 — ADG（OPEN）
+
+元の真正共分散`S(H,b0,e)`および実Cov開領域`a²*ν_H(U)`へ格子・作用・Perron/transfer・Haarの下界を接続し、`K_H<272*S`がいずれかの有限Hで成立するかを実際に評価する。粗いglobal action指数依存を改善できるかも調査するが、正値の存在だけを数値的優越性や体積一様性と誤認しない。
+
+---
+
+## 検証済み定理 — ADE（2026-11-01 JST）
+
+唯一の定理正本は`formal/real-hilbert-uniform-coercive-strong-limit`。default `main` はREADME・ROADMAP文書ミラーのみ。P4-Q2-PZ37ADE／定理PR #6124 MERGED、定理squash SHA `e21981875aae3c4c172a2e3758767e99d160fdd3`。ADCまでの既存定理を保存し、有限体積の真正interacting Wilson SU(2)、中心化Gauss-law源、元FF受信器、正Perron ground代表、更新後transfer section、元の二interacting posteriorと元境界pair-Haar測度を変更していません。
+
+### 実共分散モーメントの厳密定量閾値
+
+- ADCで固定済みの真正正結合`b0=log(3/2)/64`、元の共分散二乗モーメント`S(H,b0,e)>0`、元のFC上界`B(H,b0)²>0`、正規化した四成分信号`u(H,b0,e)=16*S/B²`について、`u>1/17` **iff** `B²<272*S`をLean4で証明しました。元GI二乗平均証明書の正値性に対する**条件付き十分条件**です。
+- **実物理量のみによる条件付きGI結論**：`B²<272*S`なら、元の真正GI二乗平均証明書`M_GI>0`。既存ACOより、元の二interacting posteriorのsigned GI応答が非零となるOPEN・正の元pair-Haar質量集合が存在します。二乗平均証明書と実signed GI応答は区別します。
+- **実Cov開領域の普遍的下界**：元outer空間の任意のOPEN集合`A`で`a>0`かつ`a<=|Cov(z)|`（全`z in A`）なら`a²*ν_H(A)<=S`。従って具体的な数値条件`B²<272*a²*ν_H(A)`を独立に示せば、同じ真のGI二乗平均証明書とsigned GI非零開領域が従います。
+- **この実Cov開領域は真正模型で存在**：既存ACIの元リンクにおける非零CovとACDの連続性・元Haar正質量から、各有限H・b0・真正リンクeについて、実際に`a>0`、OPEN`A`、`ν_H(A)>0`、`a<=|Cov|`を満たす証拠が存在し、`0<a²*ν_H(A)<=S`をLean4で構成しました。ただし`272*a²*ν_H(A)>B²`はここからは**導かれません**。
+- **物理的数値障害**：元GI二乗平均証明書が非正なら`272*S<=B²`。さらに任意の上記実Cov開領域`A`と閾値`a`に対し`272*a²*ν_H(A)<=B²`。これは証明書／十分条件の障害であり、signed GI応答の全消失ではありません。
+- **有限体積における定数化**：真正リンク型が非空で固定Hなら、有限個の元Covモーメントに対して`s_H=min_e S(H,b0,e)>0`が存在し、eに依存しない正定数が得られます。さらに`B(H,b0)²<272*s_H`が別途成立すれば固定Hの全リンクで正のGI二乗平均証明書が従う条件付き定理を証明。正の`s_H`の存在だけではこの数値272閾値は保証しません。
+
+### exact-source CI・公理・正本保全
+
+- 定理PR #6124 https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6124 — MERGED。新規Leanファイル1件、1定義・16定理・16`#print axioms`、359行追加・削除0行。既存Lean/model/root/toolchain/workflow/pinは無変更。
+- 完全修正後exact-source HEAD `e28ddd26c57b01efbe6605b8031e540b2097446b` と定理squash `e21981875aae3c4c172a2e3758767e99d160fdd3` のGit treeは `563057298367f49c1b98a685a6d6d5835b171479` で完全一致。Lean4局所表記`hb0.le`の非展開を完全修飾正値定理へ修正、既存定理の仮定緩和なし。
+- exact-source CI #41297952511 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41297952511 — 11254/11254 Lean SUCCESS。16/16公理依存`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立completion receipt SUCCESS。
+- マージ後push CI #41298470345 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41298470345 — squash HEAD上のLeanステップ・workflow・独立completion receiptすべてSUCCESS。
+- Lean`v4.30.0-rc2`、mathlib`5450b53e5ddc75d46418fabb605edbf36bd0beb6`維持。docs-onlyではStrict Leanを起動しません。
+
+### 次の研究課題 — ADF（OPEN）
+
+固定結合`b0`の元Perron/transferノルムを含むFC上界`B(H,b0)²`と、元Cov二乗モーメント`S(H,b0,e)`について、既存の具体的な格子・作用・転送の評価から`B²<272*S`、または実Cov開領域寄与`B²<272*a²*ν_H(A)`をさらに定量化できるかを検討する。とくに体積H依存の`s_H>0`と体積H一様な実数下界を明確に区別し、未証明の係数比較・連続体4D質量ギャップを既成事実としません。
+
+---
+
+## 検証済み定理 — ADC（2026-11-01 JST）
+
+唯一の定理正本は`formal/real-hilbert-uniform-coercive-strong-limit`、default `main` はREADME・ROADMAP文書ミラー。P4-Q2-PZ37ADC／定理PR #6119はMERGED、定理squash SHAは`99de1c420935a2c48440a94ad0951209fda5033d`。ADBまでの既存形式証明は維持し、元の有限体積interacting Wilson SU(2)、中心化Gauss-law物理源、FF受信器、正Perron ground代表、更新後transfer section、同じ二interacting posterior、真正境界pair-Haar測度は変更なし。
+
+### 真正結合の固定・厳密有理閾値・有限体積のリンク一様定数
+
+- **厳密な正結合**：`b0=log(3/2)/64>0` を定義。`exp(64*b0)=3/2`、既存ACPの真正posterior指数差平方`tau(b0)=(exp(64*b0)-1)²=1/4`をLean4で証明。従ってADBのFC割合判定に現れる`tau/(tau+4)=1/17`が厳密有理定数となります。
+- **元Wilson GI二乗平均証明書の正確な符号**：ADBの真正比率`u(H,b,e)=16S(H,b,e)/B(H,b)²`、`v(H,b,e)=Wbar(H,b,e)/B(H,b)²`を使うと、各有限H・元物理リンクeで`M_GI(H,b0,e)>0` **iff** `v(H,b0,e)<16*u(H,b0,e)`。これは平均二乗証明書の判定であり、signed GI応答そのものの同値ではありません。
+- **数値閾値を伴う条件付き証明**：真正FC残差配分`u+v<=1`から`u(H,b0,e)>1/17`なら`M_GI(H,b0,e)>0`。既存ACOにより元の同じ二つのinteracting posteriorのsigned GI応答が非零となるOPEN・正pair-Haar質量領域が存在します。逆に`M_GI<=0`なら`u<=1/17`。厳密に`1/17`を越えること自体は元模型で未証明。
+- **有限リンク集合から正の定数を得る**：固定有限Hで真正リンク型`Link(H)`が非空なら、全ての元リンクで`u(H,b0,e)>0`であり、型が有限であることから**リンクに依存しない正の実定数**`c_H=min_e u(H,b0,e)>0`が存在することを形式証明。さらに`c_H>1/17`を追加の数値条件として別に課す場合に限り、固定Hの全リンクで上記正値性が従います。正の`c_H`の存在と`c_H>1/17`は区別します。
+- **体積間の権限境界**：一つの実定数`c>1/17`について全ての有限体積`H`と元リンク`e`で`c<=u(H,b0,e)`を別途証明できれば、同じ固定結合で全体積の元GI二乗平均証明書が正となる条件付き定理を形式証明しました。実際の模型にそのような`H,e`一様下界が存在することは**未証明**であり、体積一様coercivityや連続体Yang–Mills質量ギャップは主張しません。
+
+### exact-source CI／公理依存／append-onlyガバナンス
+
+- 定理PR #6119 https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6119 — MERGED。新規Lean1ファイル・1定義・12定理・12`#print axioms`、281行追加・削除0、元物理模型・既存Lean・root・pin・workflowの変更なし。
+- 初回source検証済みHEAD`d1bb7b7d86728fa73815c9aa7a928f11037ad0a4`に続き、ADB文書同期を親コミットとしてfast-forward保持した最終exact-source HEAD`729047939706ebd725b38bed0b9312cd55b46438`で再検証。最終sourceとsquash`99de1c420935a2c48440a94ad0951209fda5033d`のGit treeは`a489fe48e133e23fe015d801cbc0471cfdd4d38d`で完全一致。改変・force-pushなし。
+- 正本baseと完全一致したexact-source CI #41296069589 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41296069589 — Lean11253/11253 SUCCESS、12/12公理依存は`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立completion receipt SUCCESS。
+- マージ後push CI #41296471435 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41296471435 — squash HEAD上のLean step／workflow全体／独立MCP completion receiptすべてSUCCESS。
+- Lean `v4.30.0-rc2`、mathlib`5450b53e5ddc75d46418fabb605edbf36bd0beb6`維持。docs-only Strict Leanは起動しません。
+
+### 次の物理的・形式的課題 — ADE（OPEN）
+
+固定結合の数値閾値を真正共分散モーメントの定量評価に還元する：`u(H,b0,e)>1/17`は正の`B(H,b0)²`のもとで`B(H,b0)²<272*S(H,b0,e)`と同値。まずこの厳密換算をLean4で明示し、その後、元Perron／transfer normを含む`B`と元境界pair-Haar上の`S`の間に、数値272を満たす証明済みの物理評価があるか検討する。固定Hのリンク最小値と全Hに共通する数値下界は分離し、未証明の下界を仮定なしで成立したと主張しない。
+
+---
+
+## 検証済み定理 — ADB（2026-11-01 JST）
+
+唯一の定理正本：`formal/real-hilbert-uniform-coercive-strong-limit`。default `main` はREADME・ROADMAP文書ミラーのみ。P4-Q2-PZ37ADBの定理PR #6118はMERGED（定理squash SHA `02a8b1ccd55e373d7faeb98bf39d50958f7dc4d0`）。既存ACZ/ADAと真正有限体積Wilson SU(2)模型、中心化Gauss-law物理源、FF受信器、正Perron代表、更新後transfer、元の二つのinteracting posterior・境界pair-Haar測度を変更しません。
+
+### 真正Wilsonの無次元四成分信号と高次Haar残差
+
+元のFC上界 `B`、真正四成分共分散二乗モーメント `S>0`、真正高次Haar残差平均 `Wbar>=0`、`tau=(exp(64*b)-1)^2>0` から、`u=16*S/B²`、`v=Wbar/B²` を定義します。すべて元の同じH・b>0・物理リンクeに属する量です。
+
+- **無条件の物理的エネルギー配分**：`B²>0`、`0<u<=1`、`0<=v`、`u+v<=1`。これは既存ACKの厳密な分散恒等式 `Vbar=16*S+Wbar` と元のFC上界 `Vbar<=B²` により成立します。従って`Wbar<=B²-16*S`、`v<=1-u`。
+- **ADA閾値の厳密無次元化**：元のHaar質量下界`F=u/(2-u)`、元のnegative-FC閾値比`C/(C+32*S)=tau/(tau+2*u)`。最適な内点閾値を選べる条件は`F>C/(C+32*S)` **iff** `u²>tau*(1-u)`。
+- **元GI二乗平均証明書の厳密符号判定**：既存ACPとの同一物理模型内の等価として、`M_GI>0` **iff** `tau*v<4*u`。その否定`M_GI<=0` **iff** `4*u<=tau*v`もLean4で証明。二乗平均証明書と実signed GI応答を同一視しません。
+- **具体的な条件付き十分性**：真の物理残差配分`v<=1-u`により、`u>tau/(tau+4)`（iff `tau*(1-u)<4*u`）なら`M_GI>0`。さらにADAの強い内点条件`u²>tau*(1-u)`だけでも`M_GI>0`。どちらの場合も既存ACOにより、同じ元二interacting posteriorのsigned GI応答が非零となるOPEN・正pair-Haar質量領域が存在します（すべて数値条件付き）。
+- **障害**：`M_GI<=0`なら`4*u<=tau*(1-u)`かつ`u²<=tau*(1-u)`。また`u=1`を仮定した場合のみ`v=0`と正の平均証明書を導きます。これらは実signed GI応答の消滅を示しません。
+
+### exact-source Lean4 verification／公理／境界
+
+- PR #6118 https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6118 — MERGED。変更は新規Leanファイル1件、3定義・27定理・27`#print axioms`、515行追加・削除0。既存Lean、元模型、theorem root、Lean pin、mathlib pin、workflowは無変更。
+- 最終exact-source HEAD `4cc326a7c9bc87c227dc440a5b00f3edeb2e4e57` と定理squash SHA `02a8b1ccd55e373d7faeb98bf39d50958f7dc4d0` は同一Git tree `f65a2b373f9e04010729c6e126da31c153d58f8d`。
+- PR exact-source CI #41285676155 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41285676155 — 11252/11252 Lean SUCCESS、27/27公理は`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立completion receipt SUCCESS。
+- マージ後push CI #41286073640 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41286073640 — 実Lean step／workflow／独立completion receiptいずれもSUCCESS。
+- Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 維持。docs-onlyではStrict Leanを起動しません。
+- **未解決の物理条件**：真正Wilsonデータが`u>tau/(tau+4)`または`u²>tau*(1-u)`を実際に満たすことは未証明。体積に一様な正の下界、再構成、連続体4D質量ギャップも未証明。
+
+### 次の定理課題 — ADC／固定結合と定数化（OPEN）
+
+真正正結合`b0=log(3/2)/64`を固定すると`tau(b0)=1/4`、`tau/(tau+4)=1/17`。各H,eで`u(H,b0,e)>1/17`なら元GI二乗平均証明書が正となる条件付きの厳密定数閾値をLean証明する。同時に、H,eに依存しない下界`c>1/17`の存在は別の未証明課題として分離し、固定結合から一様性を偽って導かない。
+
+---
+
+## 検証済み定理 — ADA（2026-11-01 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` はREADME・ROADMAP文書ミラーであり定理正本ではありません。P4-Q2-PZ37ADA／定理PR #6115 はMERGED、squash SHAは `d85c361bb368ba97c784a0d0c84087ad0cee22e0`。ACY・ACZ以前の全形式定理・no-goを維持し、append-only／tighten-only／overwrite-forbidden／same-rootを遵守しています。
+
+### 真正有限体積Wilson SU(2)・二閾値の閉形式最適化と障害
+
+元の相互作用Wilson SU(2)、中心化Gauss-law物理源、FF受信器、正Perron ground代表、更新後transfer section `U_z`、同じ二つのinteracting posterior、元の境界pair-Haar測度 `ν_H` と元空間リンク `e` は一切変更なし。各有限体積H・b>0・真正eで、四成分共分散二乗モーメント `S>0`、元FC上界 `B`、高次Haar残差平均 `Wbar>=0`、`tau=(exp(64b)-1)^2>0`、`C=tau*B²`、`F=4S/(B²/2-4S)`、`Q=32S` を使います。
+
+- **無条件の真正物理境界**：ACKの元の `S<=B²/16` とACNの正分母から `0<F<=1`、`0<C`、`0<Q` をLean4で証明。高信号Haar質量を独立確率モデルに置換していません。
+- **全閾値に対する平方完成**：`g(delta)=(Q-delta)*(F-C/(C+delta))`、`t=sqrt(C*(C+Q)/F)`、`delta_star=t-C`。すべての`delta>0`に対して `g(delta_star)-g(delta)=F*(delta-delta_star)^2/(C+delta)>=0` をLean4で証明。最適値は厳密に `g(delta_star)=(sqrt(F*(C+Q))-sqrt(C))²`。微分や数値的近似ではなく正確な代数的証明です。
+- **内点成立と真の必要十分条件**：元物理量の`F>C/(C+Q)`を満たせば `0<delta_star<Q`、ACZの`r_star=(Q-delta_star)/tau>0`、`delta_star+tau*r_star=Q`。さらに `Phi(delta)=g(delta)-tau*Wbar` とすると、`exists delta: 0<delta<Q and Phi(delta)>0` **iff** `F>C/(C+Q)` **and** `(sqrt(F*(C+Q))-sqrt(C))²>tau*Wbar` を元物理量に対して形式証明。
+- **条件付き正値性**：この二つの明示的数値条件が真正Wilsonデータに成立すれば、ACI/ACOの元平均GI**二乗証明書** `M_GI>0`。既存ACOから元の同じ二interacting posteriorの実signed GI応答が非零となるOPEN・正pair-Haar質量領域が帰結します。`M_GI`とsigned GI応答そのものを同一視しません。
+- **障害の完全分離**：`F<=C/(C+Q)`なら全`0<delta<Q`で `Phi(delta)<=0`。他方`M_GI<=0`かつ`F>C/(C+Q)`なら閉形式最適余剰`Phi(delta_star)<=0`。どちらもこの平均証明書に対するACZ閾値法の阻害であり、実signed GI応答の消失を含意しません。正の閉形式余剰なら既存ACPの厳密残差条件`tau*Wbar<64*S`も従います。
+- 元真正Wilson模型について上記二つの厳密数値条件を**無条件に証明したものではありません**。体積Hに一様なcoercivity、OS/Wightman再構成、連続体4D Yang–Mills質量ギャップも依然OPENです。
+
+### exact-source Lean4 CI・独立検証・正本保全
+
+- 定理PR #6115: https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6115 — MERGED。新規Leanファイル1件・2定義・19定理。追加486行・削除0行、既存Lean・物理模型・import root・workflow・pinは変更なし。
+- 最終exact-source HEAD `c7f84d3469c54afbc9219ccca79542a498f53a5b` と定理squash SHA `d85c361bb368ba97c784a0d0c84087ad0cee22e0` のGit treeは `c6602053b4edb6e8b826bade1ebc7497a835e3c7` で完全一致。
+- exact-source CI #41277266869: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41277266869 — workflow／11251/11251 Lean SUCCESS、19/19公理は`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error 0/0、独立MCP completion receipt job #124762791493 SUCCESS。
+- マージ後push CI #41277632795: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41277632795 — squash HEAD上の実Lean step／workflow SUCCESS、独立completion receipt job #124763731246 SUCCESS。
+- Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 維持。docs-only Strict Leanは起動しません。
+
+### 次の研究課題 — ADB（OPEN）
+
+ADAで得た閉形式必要十分条件を、真正元Wilson模型のS、FC境界B、高次Haar平均Wbarの間の追加の**証明済み**関係へ還元できるかを検討する。特に`F>C/(C+Q)`の実モデルでの実現可能性、最適閉形式余剰の厳密正値性と必要な物理追加境界、有限H依存性を区別する。勝手な独立Haar模型・Perron一様下界・連続体質量ギャップの主張は導入しません。
+
+---
+
+## 検証済み定理 — ACZ（2026-11-01 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` はREADME・ROADMAP文書ミラーであり定理正本ではありません。P4-Q2-PZ37ACZ／定理PR #6112 はMERGED、定理squash SHAは `fcc93417cca1e50af56543777bad74b857547b23`。ACY以前の全Lean定理・no-goを保持し、append-only／tighten-only／overwrite-forbidden／same-rootを維持しています。
+
+### 元Wilson受信器の残差・Perron判別量二閾値の最適化
+
+有限体積相互作用Wilson SU(2)、中心化Gauss-law真正物理源、元FF受信器、正Perron ground代表、更新後transfer section、同一の二interacting posterior、真正境界pair-Haar測度 `ν_H` と元空間リンク `e` は一切変更していません。各有限H、b>0、eについて、四成分共分散二乗モーメント `S>0`、元FC上界 `B`、高次Haar残差平均 `Wbar`、真正指数差 `tau=(exp(64b)-1)^2>0`、`C=tau B²`、ACYの元高信号領域Haar質量下界 `F=4S/(B²/2-4S)>0` を用います。
+
+- ACYの真正同一境界上の包含条件 `delta+tau*r<=32S` から、任意の `0<delta<32S` に対して `r_max(delta)=(32S-delta)/tau>0` を厳密定義し、`delta+tau*r_max=32S` を証明。許容される任意の `r` は `r<=r_max`。`F-C/(C+delta)>=0` なら、固定deltaのACY moment-overlap surplusはこの選択で最大になります。真のPerron²因子を削除しません。
+- **一変数に還元した元の物理十分条件**：`Phi(delta)=(32S-delta)*(F-C/(C+delta))-tau*Wbar`。`0<delta<32S` かつ `Phi(delta)>0` が実物理量で成立すれば、ACOの元平均GI**二乗証明書**`M_GI>0`。さらに同一の真正two-posterior signed GI応答が非零のOPEN・正pair-Haar質量領域が成立します。これらは実模型で無条件に成立したとは主張しません。
+- **逆向きの量的障害**：真正`M_GI<=0` なら、全適格`0<delta<32S`で`Phi(delta)<=0`。`delta=16S` に固定した分数型の物理十分条件もLean4で証明。正の最適化余剰には`tau*Wbar<32S*F`が必要で、十分とはしていません。
+- **元FC残差上限を直接使う別の経路**：ACYで無条件に証明した `Rcap=B²-8S>0` と `nu_H(High)>=F` を保持。`delta_FC=32S-tau*Rcap>0` かつ `F>C/(C+delta_FC)` が元物理量で確かめられれば`M_GI>0`、真正signed GIのOPEN・正Haar質量領域が存在します。元`M_GI<=0`なら`F<=C/(C+delta_FC)`という必要な障害も形式証明しました。
+- この成果は元の有限H,b,eにおける**条件付き物理数値判定**です。真正元Wilson模型での`Phi>0`、`delta_FC>0`、`F>C/(C+delta_FC)` の無条件成立、体積一様coercivity、OS/Wightman再構成、連続体4D Yang–Mills質量ギャップはいずれもOPEN。平均GI二乗証明書と実際のsigned GI応答は同一視しません。
+
+### exact-source CI・正本保全
+
+- 定理PR #6112: https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6112 — MERGED。新規Leanファイル1件・2定義・14定理。追加390行・削除0行、既存Lean／物理模型／import root／workflow／pinの変更なし。
+- 最終source HEAD `ec90952440bbecf1e0a5a7d8d6536eeaf12a99e6` と定理squash SHA `fcc93417cca1e50af56543777bad74b857547b23` のGit treeは `0736a73d34fc4dd0a96042a92e50de16f9a20cbc` と完全一致。
+- exact-source CI #41275287127: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41275287127 — workflow／Lean実検証11250/11250 SUCCESS、14/14の公理は`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更warning/error 0/0。独立MCP completion receipt job #124757333145 SUCCESS。
+- マージ後push CI #41275728172: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41275728172 — squash HEAD上のLean step／workflow SUCCESS、独立completion receipt job #124758367406 SUCCESS。
+- Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` は維持。文書同期はdocs-onlyでありStrict Leanは再起動しません。
+
+### 次の研究課題 — ADA（OPEN）
+
+残った一変数`delta`の閉形式最適化をLean4で追加形式化。解析上、内部候補は`delta*=sqrt(C*(C+32S)/F)-C`、`r*=(32S-delta*)/tau`。**この平方根最大化自体はACZの14定理には含まれていない**ため、候補の適格性`0<delta*<32S`、境界障害、真正モデルでの判定を別途証明する。元の物理模型、Perron重み、独立性なしのHaar法は保持する。
+
+---
+
+## 検証済み定理 — ACY（2026-11-01 JST）
+
+唯一のLean定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` はREADME・ROADMAPのみの文書ミラーであり定理正本ではありません。P4-Q2-PZ37ACY・定理PR #6109 はMERGED、squash SHA `a06b288f113227fa28da01669ca3f0021306206f`。ACX以前の全定理・no-goを保持し、append-only／tighten-only／overwrite-forbidden／same-rootを維持しています。
+
+### 真正同一境界の四成分高信号・高次Haar低残差の交差
+
+元の有限体積相互作用Wilson SU(2)、中心化Gauss-law物理源、元FF受信器、正Perron ground代表、真正transfer norm、更新後のjoint Perron半密度を分母に持つ元transfer section `U_z`、元の二つの相互作用posterior、境界対とそのpair-Haar測度 `ν_H` を変更していません。全有限H・b>0・元の真正空間リンクeについて、元の受信器四成分エネルギー `A(z)²`、高次SU(2) Haar残差 `W(z)`、真正共分散二乗モーメント `S>0`、受信器FC上界 `B_b` を使用します。
+
+- ACT/ACUの真正Perron二乗重み付き局所判別量 `w_b(z)=P_z²[16A_U(z)²−τ(b)W_U(z)]` は **同じ元受信器エネルギー**を用いて `w_b(z)=16A(z)²−τ(b)W(z)` と厳密一致。双方に同じ境界依存のPerron²因子を保持し、独立Haar法を導入しません。
+- 真正の元境界対上で `High={A²>2S}`、`Low_r={W<r}`、`Good_r=High∩Low_r` を定義し、すべてOPENと証明。元の受信器FC分散配分 `4A(z)²+W(z)≤B_b²` から、**High上では必ず** `W(z)<B_b²−8S`。ACNより `Rcap=B_b²−8S>0` を無条件に証明し、`Good_Rcap=High` という全配置での集合等式も証明しました。
+- さらに既存ACNの厳密な元pair-Haar量的下界 `F=4S/(B_b²/2−4S)>0` を保持し、`F≤ν_H(Good_Rcap)` を無条件に証明。このOPEN領域上で `w_b(z)>32S−τ(b)(B_b²−8S)`。ただし**右辺の正値性そのものは真正Wilsonデータについて未証明**です。
+- **新規の一般残差閾値の交差質量評価**：任意の `r>0` について元の受信器高次残差平均 `Wbar=∫W dν_H` だけを使って `r ν_H(High)≤r ν_H(Good_r)+Wbar`、従って `rF−Wbar≤rν_H(Good_r)` をLean4形式証明。独立性・濃度仮定・Perron密度一様下界は不要。右辺への正の下界には実モーメントの追加関係 `Wbar<rF` が必要で、これを実模型で仮定なしに示したとはしていません。
+- 元のACW閾値領域 `T_δ={z:δ<w_b(z)}` は `δ≤32S−τ(b)r` のとき `Good_r⊆T_δ`。よって `rF−Wbar≤rν_H(T_δ)`。実物理入力で `rF−Wbar>r C_b/(C_b+δ)` かつ `0<δ≤32S−τ(b)r`、`C_b=τ(b)B_b²` が成立すれば、元の平均GI**二乗証明書**が正となり、従来ACOにより真正のsigned二posterior GI応答が非零のOPEN・正Haar質量領域が導かれます。**この十分条件の真正Wilson模型での成立は未証明**です。
+- 逆に元の平均GI二乗証明書が非正なら、上記すべての適格`r,δ`について `rF−Wbar≤r C_b/(C_b+δ)` が必要。実際のsigned GI応答の消滅、H一様な下界、H1–H4、OS/Wightman再構成、連続体4D Yang–Mills存在・質量ギャップは主張しません。
+
+### 定理正本・exact-source Lean4 CI／独立再検証
+
+- 定理PR #6109: https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6109 — MERGED。新規Leanファイル1件・5定義・19公開定理。旧Lean・物理模型・root・workflow・pinの変更なし。最終exact-source HEAD `617473379cb8def1ce582ed66f1bc825f34adaa2`、squash SHA `a06b288f113227fa28da01669ca3f0021306206f` のGit treeはともに `83562463c9c6020438c2b44fe5077bbfdc63dbaf` と完全一致。
+- exact-source CI #41270835764: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41270835764 — workflow／11249/11249 Lean／独立completion receipt SUCCESS、19/19公理は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、変更Lean warning/error 0/0。
+- マージ後push CI #41271160320: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41271160320 — head=squash、workflow／実Lean step／11249/11249 SUCCESS、19/19公理標準3のみ、`sorryAx`なし、変更Lean warning/error 0/0。独立MCP completion receipt job #124744914566 もSUCCESS。
+- Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` は変更なし。
+
+### 次の課題 — ACZ（OPEN）
+
+真正交差領域のモーメント下界と既存ACW/ACXの閾値Haar質量判定を、`r,δ` の最適選択・局所残差分布の追加情報により鋭くする。各有限H,b,eの本来のPerron代表、元受信器、元の二posteriorと境界pair-Haar法を保持し、未証明の正値性・独立Haar模型・体積一様coercivityを導入しません。
+
+---
+
+## 検証済み定理 — ACX（2026-11-01 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` はREADME・ROADMAPの文書ミラーであり、定理正本ではありません。P4-Q2-PZ37ACX／定理PR #6106 はMERGED、定理squash SHAは `d1654e1bd5de789397dd659ed3753472b9ed484d` です。ACW以前の全形式定理とno-goを保持し、append-only／tighten-only／overwrite-forbidden／same-rootを維持しました。
+
+### 真正Perron閾値Haar質量の二側分布評価
+
+有限体積・相互作用Wilson SU(2)の元FF受信器、中心化Gauss-law物理源、正Perron ground代表、真正transfer normと更新後のjoint Perron半密度を分母に持つtransfer section `U_z`、二つの実interacting posterior、元境界対と元pair-Haar法 `ν_H` は変更しません。全有限H、b>0、真正空間リンクeで、ACT/ACWの本来のPerron二乗重み付き局所判別量 `w_b(z)=P_z²[16A_U(z)²−τ(b)W_U(z)]`、平均 `D_b=∫w_b dν_H=64S−τ(b)Wbar`、閾値領域 `T_δ={z:δ<w_b(z)}`、その質量 `m_δ=ν_H(T_δ)` を用います。
+
+- 元のFC境界上界を `Ucap_b=4B_b²`、負側上界を `C_b=τ(b)B_b²` とすると、**元の物理的wに対して無条件に** `−C_b≤w_b(z)≤Ucap_b` が成立。任意実数δについて `−C_b+(δ+C_b)m_δ≤D_b≤δ+(Ucap_b−δ)m_δ` をLean4で厳密に形式証明しました。
+- `0<δ<Ucap_b` なら真正の同じpair-Haar測度における**鋭い両側分布評価** `(D_b−δ)/(Ucap_b−δ)≤m_δ≤(D_b+C_b)/(δ+C_b)` が成立。左辺が負の場合は非自明な質量下界を主張せず、両分母の正値条件を保持しています。元Perron因子を積分から除去せず、独立Haar法へ置き換えていません。
+- `δ<D_b` なら真正閾値集合はOPENかつ元pair-Haar質量が厳密正。さらに`δ≥0`なら同じ真正境界対に更新後transfer四成分Haarエネルギー正のwitnessが存在することを証明しました。
+- **物理入力に直接還元した下界**：元高次SU(2)Haar残差の平均 `Wbar≤B_b²` を既存ACRの真正受信器FC上界から無条件に証明。`L_b=64S−τ(b)B_b²≤D_b` とすると、`δ<L_b` が元模型で検証できる場合に `(L_b−δ)/(4B_b²−δ)≤m_δ`、かつ`m_δ>0`が従います。`δ<L_b`の物理的成立は未証明です。
+- **非正平均GI証明書の定量的阻害**：もし元の`M_GI≤0`なら、全`δ>0`に対して `m_δ≤τ(b)B_b²/(δ+τ(b)B_b²)`、さらに `64S≤τ(b)B_b²` が必要です。これは正の平均GI**二乗証明書**に関する阻害であり、実際のsigned two-posterior GI応答の消滅を主張しません。
+- 正の平均判別量 `D_b>0`、元Wilsonの正側質量閾値達成、体積一様coercivity、H1–H4、OS/Wightman再構成、連続体4D Yang–Mills存在・質量ギャップはいずれも依然OPENです。新しい数値下界や残差優越を仮定していません。
+
+### exact-source Lean4 CIと正本保全
+
+- 定理PR #6106: https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6106 — MERGED。新規Leanファイル1、2定義・15公開定理、既存Lean／root／workflow／物理模型／pinは不変。source HEAD `a21b7a7b6b52addb084e9be1081ced79e2586e3a` とsquash SHA `d1654e1bd5de789397dd659ed3753472b9ed484d` のGit treeは共に `c525a438bf955a5787877faaacbd971fb4bc9d48` で完全一致。
+- exact-source PR CI #41268428773: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41268428773 — workflow／Lean実ビルド／独立completion receipt SUCCESS、11248/11248、15/15公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、変更Lean warning/error 0/0。
+- マージ後独立push CI #41268785456: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41268785456 — head=squash、workflow／Lean job／実Lean step SUCCESS、11248/11248、15/15公理標準3のみ、`sorryAx`なし、変更Lean warning/error 0/0。独立MCP completion receipt job #124738066988 もSUCCESS。
+- Pin維持：Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`。
+
+### 次の課題 — ACY（OPEN）
+
+ACXの元物理モーメント由来の閾値Haar質量両側評価を使い、局所四成分正信号領域と高次残差の共起・交差を元の境界pair-Haar測度上で定量評価します。元Perron代表／更新後transferの局所情報と平均を分離し、`m_δ`の下界を改善できるか、または具体的阻害条件を特定します。未証明の一様下界・独立Haar置換・連続体質量ギャップ主張は導入しません。
+
+---
+
+## 検証済み定理 — ACW（2026-11-01 JST）
+
+唯一のLean定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` はREADME・ROADMAPの文書ミラーであり定理正本ではありません。P4-Q2-PZ37ACW／定理PR #6103 はMERGED、定理squash SHAは `f2308ed9706e29410dced3f350d03f7135613569`。ACS・ACT・ACU・ACV以前の全証明・no-goを保持し、append-only／tighten-only／overwrite-forbidden／same-rootを維持しました。
+
+### 真正Perron重み付き閾値領域と補集合のFC負寄与比較
+
+変更していない有限体積相互作用Wilson SU(2)模型、中心化Gauss-law物理源、元FF受信器、正Perron ground代表、元transfer norm、更新後joint Perron半密度に依存する元transfer section `U_z`、二つの真正interacting posterior、元境界対と元pair-Haar法 `ν_H` を保持します。全有限H・b>0・真正リンクeにおいて、ACT/ACUの真の局所判別量 `w_b(z)=P_z²[16A_U(z)²−τ(b)W_U(z)]` と元受信器FC上界 `B_b` を用います。
+
+- 新しく元の負側FC予算 `C_b=τ(b)B_b²≥0` と閾値領域 `T_δ={z:δ<w_b(z)}` を定義し、`T_δ` がOPENであることを証明。`δ≥0` なら同じ元境界配置で `T_δ` 上は真正四成分振幅`A_U(z)²>0` と `d_b(z)>0` が成立します。未証明のPerron密度一様下界は不要です。
+- 元の正負寄与 `Eplus=∫max(w_b,0)dν_H`、`Eminus=∫max(−w_b,0)dν_H` に対し、`m_δ=ν_H(T_δ)` として**両側の定量不等式** `δm_δ≤Eplus`、`Eminus≤C_b(1−m_δ)` をLean4で証明。従って真正平均判別量 `D_ACT=Eplus−Eminus≥δm_δ−C_b(1−m_δ)` と、`16M_GI≥κ(b)[δm_δ−C_b(1−m_δ)]` が成立します。
+- **直接判定できる十分条件**：`δ>0` で元pair-Haar質量が `m_δ>C_b/(C_b+δ)` なら、元平均GI**二乗証明書**`M_GI>0`。従って既存ACOの真正二posterior GI応答が非零のOPEN正Haar質量集合が成立します。逆に`M_GI≤0`なら、すべての`δ≥0`で `δm_δ≤C_b(1−m_δ)` が必要です。これらは実模型の符号について無条件な結論ではありません。
+- **新たな条件付き直接Haar質量下界**：元ACO二乗GI証明書のFC上界から`w_b(z)≤4B_b²`を無条件に証明。`D_ACT>0`が元模型で確認された場合には、`T_{D_ACT/2}` がOPEN、`8B_b²−D_ACT>0` かつ `D_ACT/(8B_b²−D_ACT)≤ν_H(T_{D_ACT/2})` です。
+- 証明書`M_GI`を実際のsigned two-posterior GI応答そのものと同一視していません。真正Wilson模型で`D_ACT>0`または上記領域質量閾値を満たすかは依然**OPEN**です。全体積一様coercivity、H1–H4、OS/Wightman、連続体4D Yang–Mills存在・質量ギャップも主張しません。
+
+### exact-source Lean4 CI・定理正本保全
+
+- 定理PR #6103: https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6103 — MERGED。新規Lean定義2、公開15定理、新規Leanファイル1件のみ、既存Lean・model・workflow・theorem root変更なし。
+- 定理exact-source HEAD `37c0f3e5262b594f6cee243993a08e5e3ec89689`、squash SHA `f2308ed9706e29410dced3f350d03f7135613569` のGit treeは両方 `7fb83bb9952db1b0e58d305d4910bed8f60760a6` と完全一致。
+- exact-source PR CI #41267094810: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41267094810 — workflow・実Lean step・独立completion receipt SUCCESS。依存11247/11247、15/15公理は`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error 0/0。
+- マージ後独立push CI #41267548975: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41267548975 — head=squash、workflow/Lean job/実Lean step SUCCESS、11247/11247、15/15公理標準3のみ、`sorryAx`なし、変更Lean warning/error 0/0。独立MCP completion receipt job #124734422977 もSUCCESS。
+- PinはLean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` のまま。
+
+### 次の課題 — ACX（OPEN）
+
+元のboundary Perron密度、更新後transferの真正Haar四成分と高次残差、境界pair-Haar測度から`m_δ`を直接評価し、`m_δ>C_b/(C_b+δ)`を実際に満たすか、あるいはその阻害がどこにあるかを調べます。新しい体積一様下界・残差優越・独立Haar模型を置かず、元の各H,b,eでの局所情報と符号を区別します。
+
+---
+
+## 検証済み定理 — ACV（2026-11-01 JST）
+
+唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit` です。default `main` はREADME／ROADMAPのみの文書ミラーで定理正本ではありません。P4-Q2-PZ37ACV・定理PR #6100 はMERGED、定理squash SHAは `46f9580c668f94e819511c7a8b9487f400a030bf`。ACU以前の全定理とno-go、元の物理Wilson模型を保持し、append-only／tighten-only／overwrite-forbidden／same-rootを維持します。
+
+### 元のPerron密度と真正更新後transferでの厳密な正負境界評価
+
+有限体積・相互作用Wilson SU(2)の元FF受信器、中心化Gauss-law物理源、正Perron ground代表、真正transfer norm、更新後のjoint Perron半密度で正規化したoriginal transfer section `U_z`、本来の二interacting posterior、境界対とpair-Haar測度 `ν_H` を変更していません。ABZより `P_z=||T_b||⁻¹ sqrtDensity_b(z)>0`。元境界依存の平方密度を `R_b(z)=sqrtDensity_b(z)²>0`、共通因子を `c_b=||T_b||⁻²>0` とすると、`P_z²=c_b R_b(z)` は厳密な同一模型の恒等式です。密度Rは確率法への置換ではなく、積分から除去しません。
+
+- ACTの真正局所判別量 `d_b(z)=16A_U(z)²−τ(b)W_U(z)` に対し、`Iplus=∫R_b(z)max(d_b(z),0)dν_H`、`Iminus=∫R_b(z)max(−d_b(z),0)dν_H`、`I=∫R_b(z)d_b(z)dν_H` を定義しました。正負とも元の**同じ**Perron平方密度で重み付けします。
+- **唯一の消去可能因子は共通transfer norm**：ACU/ACTの真の寄与について、`Eplus=c_b Iplus`、`Eminus=c_b Iminus`、`D_ACT=c_b I`、`I=Iplus−Iminus` をLean4で厳密に証明。従って元の平均GI**二乗証明書** `M_GI>0 ⇔ Iplus>Iminus` です。
+- 真正四成分と高次SU(2)Haarの元transfer二乗モーメントを `I4=∫R_b A_U² dν_H`、`Ih=∫R_b W_U dν_H` とすると、`I=16I4−τ(b)Ih`。ACSの真正閾値 `η>τ(b)/(τ(b)+4) ⇔ τ(b)Ih<16I4` となります。`16M_GI=κ(b)c_b(Iplus−Iminus)` も厳密に成立し、原模型のsigned二posterior GI応答と**証明書**を同一視していません。
+- **追加の定量的阻害**：ACRの元FF受信器のFC上界`B_b`を用い、負側の元境界Perron重み付き寄与 `Eminus≤τ(b)B_b²` を全有限H・b>0・真正リンクeで無条件に証明。`Eplus>τ(b)B_b²` は元の正の平均GI証明書の十分条件で、逆に`M_GI≤0`なら`Eplus≤τ(b)B_b²`が必要。上記十分条件が実Wilson模型で成立することは**未証明**です。
+- 密度優越`Iplus>Iminus`が元模型で実際に確認できれば、ACOの元の二posterior GI応答が非零のOPEN正pair-Haar質量集合が従うことも形式証明しました。体積一様な下界、元の境界Perron密度の消去、残差優越、H1–H4、OS/Wightman再構成、4D連続体Yang–Mills存在・質量ギャップは依然OPENです。
+
+### 検証済みの定理正本・exact-source CI
+
+- 定理PR #6100: https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6100 — MERGED。新規Leanファイル1件、8定義・21公開定理、既存Lean・theorem root・workflow・physical model・pinの変更なし。最終source HEAD `5a8138e3cfb0cb3934595c8e57fdb2a7eeb5b51f` とsquash `46f9580c668f94e819511c7a8b9487f400a030bf` のGit treeは完全一致 `bb6d21207744217ab14659d11cce57daa7ae0cb7`。
+- exact-source CI #41265239612: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41265239612 — workflow・変更Lean実ビルド・独立completion receipt SUCCESS、11246/11246、21/21公理は`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error 0/0。
+- 独立マージ後push CI #41265614778: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41265614778 — head=squash、workflow/Lean job/実Lean step SUCCESS、11246/11246、21/21公理は標準3公理のみ、`sorryAx`なし、変更Lean warning/error 0/0。独立MCP completion receipt job #124728634849 もSUCCESS。
+- PinはLean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` のままで変更なし。
+
+### 次の課題 — ACW（OPEN）
+
+真正境界Perron密度Rと更新後transferの四成分・高次Haarモードを直接使い、正寄与が成立する具体的境界領域の正Haar質量と補集合の負寄与を評価します。FC全域上界より鋭い局所‐大域比較の条件、正負寄与の真の不等式またはその阻害を調べます。モデル置換、未証明の一様下界・残差優越、物理GI応答との証明書同一視を行いません。
+
+---
+
+## 検証済み定理 — ACU（2026-11-01 JST）
+
+唯一のLean定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` はREADME・ROADMAPの文書ミラーであり、定理正本ではありません。P4-Q2-PZ37ACU／定理PR #6097 はMERGED、squash SHA `cadb5d01c9380cea14e65e7f0ae1098fdb7d91e4`。ACT以前の全Lean証明・no-goを保持し、append-only／tighten-only／overwrite-forbidden／same-rootを維持します。
+
+### 元のPerron重み付き正負エネルギーの厳密分離
+
+真正相互作用Wilson SU(2)有限体積模型、Gauss-law中心化物理源、元FF受信器、正Perron ground代表と真正transfer norm、更新後の正規化Perron半密度を分母に含むoriginal transfer section `U_z`、元の二つの相互作用posteriorと境界対、元の外側pair-Haar測度 `ν_H` を一切置き換えていません。全有限H、b>0、真正空間リンクeにおいてACTの局所判別量 `d_b(z)=16A_U(z)²−τ(b)W_U(z)`、正Perron prefactor `P_z>0` を使用します。
+
+- 正負寄与を `Eplus=∫P_z² max(d_b(z),0)dν_H`、`Eminus=∫P_z² max(−d_b(z),0)dν_H` と定義し、両者の元境界Haar法での可積分性・非負性を証明。各符号部分で**同じ**真正Perron²重みを保持し、積分から除去していません。
+- 新しい厳密恒等式 `D_ACT=Eplus−Eminus`、`16M_GI=κ(b)(Eplus−Eminus)` をLean4で形式証明。`κ(b)>0`なので、元の**平均GI二乗証明書**が正であることと `Eplus>Eminus` は必要十分。ACSの `η>τ(b)/(τ(b)+4)` と完全同値です。`D_ACT≤0 ⇔ Eplus≤Eminus` および厳密な負側優越も同値です。
+- 量的優越評価 `Eminus+ε≤Eplus` から `κ(b)ε≤16M_GI` を証明。未証明の数値ε、残差優越、体積一様下界は持ち込みません。
+- **厳密負側優越に対する新定理**：`Eminus>Eplus` が成立する場合、元の境界対にはOPENかつ正の外側Haar測度を持つ集合が存在し、その全配置で `d_b(z)<0`、真正更新後transfer高次SU(2)直交Haar残差 `W_U(z)>0` となり、さらに非零の元transfer高次文字witnessが存在します。これは元GI応答が消えるとの主張ではありません。
+- **正側優越時の局所証拠**：`Eplus>Eminus` なら、ACTから `d_b(z)>0` のOPEN正Haar質量領域が従います。ただし局所正値例だけでは平均正値には足りません。
+- 元Wilson模型で正側・負側のどちらが実際に優越するかは依然**OPEN**。平均二乗証明書とsigned two-posterior GI応答は同一視せず、連続体4D Yang–Mills質量ギャップの成立も主張しません。
+
+### Lean4・exact-source CI・独立push完了receipt
+
+- 定理PR #6097 https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6097 — MERGED。新規Lean定義3、公開定理18、1新規Leanファイル（419行）。従来のLean本体・モデル・workflow・定理root・pinを変更していません。
+- exact-source HEAD `c43d643f7fc9d035f6f98f9cfc36d44f2418bd22` と定理squash `cadb5d01c9380cea14e65e7f0ae1098fdb7d91e4` のGit treeはともに `97c13506127dfb49dc0cc265732c412797f54ca2`。
+- PR exact-source CI #41263478269 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41263478269 — workflow／Lean job／独立MCP completion receiptすべてSUCCESS、11245／11245 Lean、18／18公理表示は`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更Lean warning／error 0／0。
+- マージ後独立push CI #41263878974 https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41263878974 — head=定理squash、workflow／Lean job／独立completion receipt job #124723530493 すべてSUCCESS。11245／11245 Lean、ACTを含む従来証明は維持、ACU18／18公理標準3個のみ、`sorryAx`なし、変更Lean warning／error 0／0。
+- Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を維持。
+
+### 次の研究課題 — ACV（OPEN）
+
+真正Perron代表、更新後transfer section、原boundaryから`Eplus`と`Eminus`を実際に比較できる強制評価・局所符号領域の定量評価を探します。単なる正負分離は元Wilsonデータの優越符号を決めません。根拠のない残差上界、共通support cylinder、体積一様性、full physical Hilbert coercivity、H1–H4、OS/Wightman再構成、連続体4D Yang–Mills存在と質量ギャップは引き続きOPENです。
+
+---
+
+## 検証済み定理 — ACT（2026-11-01 JST）
+
+唯一のLean定理正本は `formal/real-hilbert-uniform-coercive-strong-limit` です。default `main` はREADME・ROADMAPの文書ミラーであり定理正本ではありません。P4-Q2-PZ37ACT／定理PR #6094 はMERGED、squash SHA は `4b0a182c406f400fc5c2c2244e3bebc318042973`。ACSおよび以前の全証明・no-go・原Wilson SU(2)受信器を保持し、append-only／tighten-only／same-rootを維持します。
+
+### 真正Perron-transfer分解による厳密なGI二乗証明書判定
+
+元の有限体積相互作用Wilson SU(2)模型、中心化Gauss-law物理源、FF受信器、正Perron代表、真正transfer norm、更新後joint Perron半密度を分母に持つtransfer section `U_z`、真正二posterior、境界対、元の外側pair-Haar法 `ν_H` を変更していません。`P_z=||T_b||⁻¹√density_b(z)>0` を同じ配置に保持します。元の四成分Haar係数二乗和 `tA2(z)`、高次直交残差 `tW(z)`、`τ(b)=(exp(64b)−1)²`、`κ(b)=(2b exp(−32b))²` を用います。
+
+- 局所判別量 `d_b(z)=16 tA2(z)−τ(b)tW(z)=4(τ(b)+4)tA2(z)−τ(b)Var_Haar(U_z)` を定義。更新後の真正transfer sectionの四成分Haar係数と分散から直接評価でき、別受信器ではありません。
+- 正本のPerron重み付き平均判別量 `D_b=16∫P_z²tA2(z)dν_H−τ(b)∫P_z²tW(z)dν_H=∫P_z² d_b(z)dν_H=64S−τ(b)Wbar` を定義。外側平均から`P_z²`を除去せず、分散のみを用いた同値表現も形式証明しました。
+- 真正GI平均**二乗証明書**`M_GI`と局所証明書`Q_GI(z)`について、`16M_GI=κ(b)D_b`、`16Q_GI(z)=κ(b)P_z²d_b(z)` をLean4で厳密に証明。`b>0`では`D_b>0 ⇔ η>τ/(τ+4)`、`Q_GI(z)>0 ⇔ d_b(z)>0`。局所transfer分散が正なら、transfer四成分割合`4tA2/Var_Haar(U_z)`はACSの元受信器局所割合と一致し、同じposterior閾値で厳密に判定できます。
+- **阻害**：全真正境界対で`d_b(z)≤0`なら、真正平均四成分割合`η≤τ/(τ+4)`であり、正の**平均GI二乗証明書**は得られません。逆に`D_b>0`なら、局所`d_b(z)>0`の真正witnessがあり、ACOのFC上界を使って正質量OPEN領域およびHaar質量の明示下界を導けます。ただし局所の一例で`d_b(z)>0`であることだけでは外側Perron重み付き平均の正値性を保証しません。
+- `M_GI`と`Q_GI`は**証明書**であり、実際のsigned two-posterior GI応答そのものとは同一視していません。`D_b>0`が元相互作用Wilsonデータで成立するかは依然**OPEN**です。
+
+### Leanカーネル・独立CI確認
+
+- 定理PR #6094: https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6094 — MERGED。新規Lean定義3、公開定理15、1新規Leanファイル。旧定理、定理root、ワークフロー、模型、pinは変更しません。
+- exact-source HEAD `e8b0de41b6a1acce16e6d8326bef6f5ae32634cf`、定理squash `4b0a182c406f400fc5c2c2244e3bebc318042973` のGit treeは同一 `ae520d1e6b156fa85da05b15461d87a548e0e4b5` です。
+- exact-source CI #41261498896: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41261498896 — workflow・Lean job・独立completion receipt SUCCESS。Lean 11244/11244、15/15公理は`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、変更Lean warning/error 0/0。
+- マージ後独立push CI #41261969922: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41261969922 — head=定理squash、workflow・Lean job・独立completion receipt job #124717874524すべてSUCCESS。依存ビルド11244/11244、ACTの15/15公理は標準3公理のみ、`sorryAx`なし、変更Lean warning/error 0/0。
+- Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` は不変。
+
+### 次の物理課題 — ACU（OPEN）
+
+ACTは真正のPerron更新後transfer・原境界対で判別量を厳密に定義しましたが、元相互作用Wilson模型で`D_b>0`か否かを直接評価する問題は未解決です。次段階は原Perron代表・同一配置の四成分信号と高次Haar残差の重み付き比較を進め、符号の正否または具体的数学的阻害を判定します。未証明の体積一様下界、残差優越、共通support cylinder、遠方相殺、全Hilbert coercivity、H1–H4、OS/Wightman再構成、連続体4D Yang–Mills存在・質量ギャップを導入しません。
+
+---
+
+## 検証済み定理 — ACS（2026-11-01 JST）
+
+唯一のLean定理正本は formal/real-hilbert-uniform-coercive-strong-limit。default mainはREADME・ROADMAPの文書ミラーであり、定理正本ではありません。最新の証明は P4-Q2-PZ37ACS／PR #6091 MERGED、定理squash aa9af96e369fe5a808c739480ee40af6381667f5。既存ACK・ACL・ACM・ACN・ACO・ACP・ACQ・ACRと従来のno-goをすべて保持し、append-only／tighten-only／overwrite-forbidden／same-rootを維持します。
+
+### 真正Perron重み付き四成分の無次元エネルギー割合
+
+元の相互作用Wilson SU(2)模型、中心化Gauss-law物理源f0、FF受信器F、正Perron代表、真正transfer norm、二つの相互作用posterior、元の境界対と外側pair-Haar法ν_Hを変更しません。b>0、全有限H・真正リンクeにおいて、ACJ/ACKの S=∫Cov_Haar(F_z,E)^2 dν_H>0、Vbar=∫Var_Haar(F_z)dν_H=16S+Wbar>0、Wbar=∫W_F(z)dν_H≥0を使用します。
+
+- 真正四成分エネルギー割合 η=16S/Vbar と高次直交残差割合 ω=Wbar/Vbar を定義し、0<η≤1、0≤ω<1、η+ω=1をLean4で無条件に証明しました。両者は元の物理受信器の同じ分散を分配する数であり、別模型の割合ではありません。
+- ACQの元の更新後Perron正規化transfer section U_zとP_z=||T_b||^{-1}sqrtDensity_b(z)>0を維持。η=4∫P_z² A_U(z)² dν_H / ∫P_z² Var_Haar(U_z)dν_H、ω=∫P_z² W_U(z)dν_H / ∫P_z² Var_Haar(U_z)dν_H を厳密に証明しました。外側Haar積分のP_z²を削除していません。
+- ACI/ACPの真正posterior誤差に由来する τ(b)=(exp(64b)−1)²>0、κ(b)=(2b exp(−32b))²>0 を使い、臨界割合 c(b)=τ(b)/(τ(b)+4) が 0<c(b)<1 を満たすことを証明しました。
+- **鋭い元GI平均二乗証明書の判定**：M_GI>0 ⇔ η>c(b) ⇔ ω<4/(τ(b)+4)。M_GI≤0 ⇔ η≤c(b)。さらに厳密な量的恒等式 16 M_GI = κ(b)(τ(b)+4)Vbar(η−c(b)) をLean4で形式証明しました。元Wilson模型のηが臨界割合より大きいことは依然としてOPENです。
+- **同一配置の局所証明書**：真正の元受信器分散 V(z)>0 の場合、η_z=4A_F(z)²/V(z) は0≤η_z≤1、かつ q_GI(z)>0 ⇔ η_z>c(b)。さらに全b≥0に対し 16q_GI(z)=κ(b)[(τ(b)+4)4A_F(z)²−τ(b)V(z)]。この q_GI は真正ACM二乗GI**証明書**であり、実際のsigned two-posterior GI応答と同一ではありません。
+- η>c(b)が元物理データに対して実際に検証できれば、ACOの真正SU(2)軌道と外側pair-Haar測度でOPEN・正質量な元GI非零領域が従います。η≤c(b)の場合はACRの高次Perron-transferモード非零witnessが存在しますが、元GI応答がゼロとは結論しません。これらはいずれも既存の正確な物理量での条件付き接続です。
+
+### exact-source Lean4 CIと正本保全
+
+- 定理PR #6091: https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6091 — MERGED。新規Lean 1ファイル、16定理、新規419行・削除0。旧Leanファイル・定理root・workflow・モデル・pinは不変。
+- 最終source HEAD f1829049edb579a197d59277201d6bc3d283e738、実CI checkout c7d0251293a5c8a012ed0259878ebbc523a15830、定理squash aa9af96e369fe5a808c739480ee40af6381667f5のGit treeは全て93c3bdcb773119816b697102b07fc4ad69a364aaで一致。
+- exact-source CI #41258219511: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41258219511 — workflow/Lean step SUCCESS、Lean11243/11243、新規16/16公理表示はpropext・Classical.choice・Quot.soundのみ、sorryAxなし、変更Lean warning/error 0/0。
+- マージ後push CI #41258625202: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41258625202 （独立workflow/実Lean stepとMCP completion receiptを別途確認）。
+- 独立マージ後push完了receipt：run #41258625202（head=aa9af96e369fe5a808c739480ee40af6381667f5）、workflow/Lean job/実Lean stepすべてSUCCESS、Lean11243/11243、ACSの16/16公理表示はpropext・Classical.choice・Quot.soundのみ、sorryAxなし、変更Lean warning/error 0/0。独立MCP completion receipt job #124708141585 もSUCCESS。
+- Lean v4.30.0-rc2、mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6 を維持。
+
+### 次のACTの物理課題（OPEN）
+
+元の真正Perron重み付きtransfer sectionの四成分エネルギー割合ηについて、元受信器と二posterior/boundaryデータからη>τ/(τ+4)を実際に示せるか評価します。数値・体積一様の下界、full physical Hilbert coercivity、共通support cylinder、遠方相殺、共通positive-fine区間と同じendpoint E/F、H1–H4、OS/Wightman再構成および連続体4D Yang–Mills存在・質量ギャップは引き続きOPENです。
+
+---
+
+## 検証済み定理 — ACR（2026-11-01 JST）
+
+唯一のLean定理正本は formal/real-hilbert-uniform-coercive-strong-limit。default mainはREADME・ROADMAPの文書ミラーであり、定理正本ではありません。P4-Q2-PZ37ACR／PR #6088はMERGED、定理squash SHA fe2244da74fe91fff792cdc4808bb50d5a202855。従来のACK・ACL・ACM・ACN・ACO・ACP・ACQと全no-goを保持し、append-only／tighten-only／overwrite-forbidden／same-rootを維持しました。
+
+### 真正Wilson高次Haar残差の定量的阻害と正質量OPEN領域
+
+元の相互作用Wilson SU(2)模型、中心化Gauss-law物理源f0、FF受信器F、正Perron代表と物理transfer norm、両interacting posterior、元の境界対zおよび元の外側pair-Haar法ν_Hを変更しません。ACK/ACQによる四成分振幅A_F²、真正直交高次残差 W_F(z)=P_z² W_U(z)、平均S>0（b>0）、Wbar=∫W_F dν_H、真正FC上界B、ACPの τ(b)=(exp(64b)−1)² とGI平均二乗証明書 M_GI を使用します。
+
+- 全有限H・b≥0・真正リンクeにおいて、W_F(z)は元の境界対zの連続関数で、0≤W_F(z)≤B²をLean4で証明しました。Wbar>0なら、0<2B²−Wbarおよび ν_H{z:W_F(z)>Wbar/2}≥Wbar/(2B²−Wbar)>0。集合はOPENです。
+- **阻害条件付きの無条件含意**：b>0で実際の M_GI≤0 なら、τ(b)Wbar≥64S>0、すなわち Wbar≥64S/τ(b)>0。したがって真正Perron伝達断面U_zの高次残差 W_U(z)>0 が成立するOPENな正Haar質量集合が、上記の明示下界つきで必ず存在します。少なくとも一組の真正境界対zとSU(2)リンク値gにおいて、U_z(g)が定数＋四成分基本文字の射影と一致しない証拠も証明しました。
+- **追加GI符号仮定なし**：任意のε>0について Q_ε(z)=(Wbar+ε)A_F(z)²−4S W_F(z) と置くと、T_ε={z:Q_ε(z)>2Sε} はOPENで、0<D_ε=2(Wbar+ε)(B²/4)−4Sε および ν_H(T_ε)≥4Sε/D_ε>0。各z∈T_εでは真正transfer側のA_U(z)²>0と 4S W_U(z)<(Wbar+ε)A_U(z)² が同じ元の配置で成立します。P_z²はこの**局所比較に限り**正因子として相殺されますが、外側平均から除去していません。
+- もし全真正境界対で W_U(z)=0 が証明できるなら、逆に元GI平均予算は正になり、ACM/ACOの真正two-posterior GI応答が非零のOPEN正Haar質量集合が成立することもLean4で証明しました。このゼロ残差仮定を**実Wilson模型が満たすとは主張していません**。
+- M_GI≤0はあくまで**正の平均GI証明書**の阻害であり、真正two-posterior GI応答の消滅や連続体質量ギャップのno-goを意味しません。物理的な M_GI>0 自体は依然OPENです。
+
+### exact-source CIと形式化保全
+
+- 定理PR #6088: https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6088 — MERGED。新規Lean 1ファイル・10公開定理、追加329行・削除0。既存Lean、定理root、workflow、original Wilson receiverは不変。
+- exact-source HEAD 6533fc5f0daba0017ab77c3ded3a9ee0568c046d、実CI checkout be445b12de9ea73b857fcb74eb9bf86ec3ffa793、定理squash fe2244da74fe91fff792cdc4808bb50d5a202855 のGit treeは全て325b180f9cfdc53bbf7d048abd0cf68ba4d8e00aと一致。
+- exact-source CI #41256507169: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41256507169 — workflow/job/実Lean step SUCCESS、Lean 11242/11242、10/10定理の公理は propext・Classical.choice・Quot.soundのみ、sorryAxなし、変更Lean warning/error 0/0。
+- マージ後push CI #41256965003: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41256965003 （定理sourceとは独立に完了を再観測する）。
+- マージ後pushの独立完了receipt：#41256965003（head=fe2244da74fe91fff792cdc4808bb50d5a202855）、workflow/Lean job/Lean step すべてSUCCESS、Lean 11242/11242、ACR 10/10公理は標準3公理のみ、sorryAxなし、変更Lean warning/error 0/0。独立MCP completion receipt job #124703166858 もSUCCESS。
+- Lean v4.30.0-rc2、mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6、不変。
+
+### 次の課題 — ACS（OPEN）
+
+元の更新後Perron半密度と真正物理transfer断面の高次SU(2)モードを直接制御し、実模型で重み付き残差／四成分信号の厳格なACP閾値を満たすかを評価します。残差の正質量だけで高次残差の優越を導けず、平均予算の厳格正値も得られません。体積一様GI二乗モーメント正下界、共通support cylinder、遠方相殺、全物理Hilbert coercivity、共通positive-fine区間と同じendpoint E/F、H1–H4、OS/Wightman再構成、4D連続体Yang–Mills存在と質量ギャップは引き続きOPENです。
+
+---
+
+## 検証済み定理 — ACQ（2026-11-01 JST）
+
+唯一のLean定理正本は formal/real-hilbert-uniform-coercive-strong-limit。mainはREADME・ROADMAPだけの文書ミラーであり、定理正本ではありません。最新定理 P4-Q2-PZ37ACQ／PR #6085（MERGED）、定理squash a6a40dc277df4f0b6f8c1b28a7aa1319d60b5c36。既存ACK・ACL・ACM・ACN・ACO・ACP・各no-goを維持し、append-only／tighten-only／same-rootです。
+
+### ACQの真正Perron伝達断面と四成分直交残差
+
+元の相互作用Wilson SU(2)模型、中心化Gauss-law物理源 f0、FF受信器 F、正Perron代表、真正transfer norm、二つの相互作用posterior、元の境界対と外側pair-Haar法 ν_H は一切変更していません。ABZ/ACAの厳密な元物理恒等式 F_z(g)=定数_z−P_z U_z(g) を使用。ここで P_z=||T_b||^{-1} sqrtDensity_b(z)>0、U_z(g)=I_{f0}(B[e:=g])/sqrtDensity_b(A,B[e:=g]) は更新後の真正joint Perron半密度を分母に含む元のtransfer sectionです。
+
+- SU(2)の真正四成分零平均Haar文字 φ_j を用い、transfer係数 u_j(z)=∫U_z(g)φ_j(g)dHaar(g)、transfer四成分振幅 A_U²=∑_j u_j²、真正直交残差 W_U=∫[U_z−∫U_z−4∑_j u_j φ_j]²dHaar≥0 を定義します。
+- 全有限H、非負b、真正リンクe、元の境界対zで m_F(z,j)=−P_z u_j(z)、A_F(z)²=P_z² A_U(z)²、W_F(z)=P_z² W_U(z) が恒等的に成立することをLean4で形式証明。Perron正因子は**局所比では相殺**されますが、元の外側Haar平均から消してはいけません。
+- 元の pair-Haar平均について 4S=∫P_z² A_U(z)² dν_H、Wbar=∫P_z² W_U(z)dν_H、Vbar=∫P_z² Var_Haar(U_z)dν_H を厳密に証明。元の ACO GI二乗軌道margin も q_GI(z)=P_z²[κ(b)A_U(z)²−ρ(b)W_U(z)]、M_GI=∫q_GI dν_H の全因子を保持しています。
+- b>0 の厳密な正平均GI証明書判定は (exp(64b)−1)²∫P_z² W_U dν_H <16∫P_z² A_U² dν_H と必要十分。さらにACOの無条件same-context相対残差配置の存在を元transfer側で証明。正平均閾値が実際に成立**するならば**、真正二posterior GI応答の非零なOPEN正Haar質量集合が存在します。
+- 重要：この**厳格な重み付き不等式自体の元Wilson模型での成立は未証明**です。均一なfour-mode dominance、外側重みの除去、独立Haar代用品、真GIの無条件正値、質量ギャップ解決は主張していません。
+
+### exact-source CIと形式証明の保全
+
+- 定理PR #6085: https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6085 — MERGED。新規Lean 1ファイル、15定理、追加371行・削除0。変更は既存Lean root/模型/workflow/pinに及びません。
+- 最終source HEAD e4294ad15b7bd3361ba1acd8e8302a0dc2524f9e、実PR CI merge checkout 4929962faeec273a08e191e2b54f56326d5dfd8a、定理squash a6a40dc277df4f0b6f8c1b28a7aa1319d60b5c36 のGit treeは全て b1ccf760bb043678f4f5ef3e6fbe4fda65320070 と一致。
+- exact-source CI #41255009352: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41255009352 — workflow/job/実Lean step SUCCESS、Lean 11241/11241、15/15公理出力は propext・Classical.choice・Quot.soundのみ、sorryAxなし、変更Lean warning/error 0/0。
+- マージ後push CI #41255418655: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41255418655 （独立のworkflow/job/Lean step結果を別途確認）。
+- 独立マージ後push完了receipt：run #41255418655（head=a6a40dc277df4f0b6f8c1b28a7aa1319d60b5c36）、workflow/job/実Lean stepがいずれもSUCCESS、Lean 11241/11241、ACQ 15/15公理が標準3公理のみ、sorryAxなし、変更Lean warning/error 0/0。
+- Lean v4.30.0-rc2、mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6 を厳守。
+
+### 次のACRへのOPEN義務
+
+元の更新後Perron/transfer section U_z(g) の第一四成分信号と高次直交残差の**真の重み付き比**を、元の境界条件・相互作用posteriorとともに直接評価すること。S>0、W_U≥0、既存FC上界だけからstrict positive mean GIを推論できません。体積一様GI二乗モーメント下界、共通support cylinder、遠方相殺、全物理Hilbert coercivity、共通positive-fine区間、同じendpoint E/F、H1–H4、OS/Wightman再構成と4D連続体Yang–Mills質量ギャップはOPENのままです。
+
+---
+
+## 検証済み定理 — ACP（2026-11-01 JST）
+
+唯一のLean定理正本は formal/real-hilbert-uniform-coercive-strong-limit です。default mainはREADME・ROADMAPの文書ミラーであり定理正本ではありません。最新の定理は P4-Q2-PZ37ACP／PR #6082（MERGED）、squash SHA 40c85513fcd453166ba51fc02af440827ce2114f。既存ACO、ACK、ACL、ACM、ACN、各no-goを保持し、append-only／tighten-only／same-rootを継続しています。
+
+### ACPで形式証明した厳密な元GI平均予算の符号閾値
+
+元の相互作用Wilson SU(2)模型、中心化Gauss-law物理源、FF受信器、真正Perron代表・transfer norm、二つの相互作用posterior、元の境界データと外側pair-Haar測度を一切置換しません。ACKの真正四成分分解 Vbar=16S+Wbar と ACOの元GI平均二乗margin M_GI=4κS−ρWbarを使用しています。ここで S=∫C²dν_H>0 (b>0)、Wbar≥0、κ(b)=(2b exp(−32b))²、ρ(b)=b²(exp(32b)−exp(−32b))²/4。
+
+- 全bに対して 16ρ(b)=κ(b)(exp(64b)−1)² が厳密に成立。従って 16M_GI=κ(b)[64S−(exp(64b)−1)²Wbar]。b=0ではM_GI=0。
+- b>0に対し、M_GI>0 ⇔ (exp(64b)−1)²Wbar<64S ⇔ (exp(64b)−1)²Vbar<[64+16(exp(64b)−1)²]S。さらに一般の分散表現 M_GI=(4κ+16ρ)S−ρVbar の正値／非正値判定を厳密に証明しました。
+- 不等式が逆向きなら ACOの**平均GI証明書**は非正です。ただしこれは真正二posterior GI応答がゼロというno-goではなく、正の平均予算を経由する十分条件の阻害です。
+- 上記の厳密な元分散閾値が実際に成立する場合のみ、ACMの真正SU(2)軌道証明書が正になり、元の外側pair-Haar測度で正質量のOPEN集合上、真正二posterior GI応答が非零となります。閾値自体の元物理模型での正値成立は依然としてOPENです。
+
+### exact-sourceで検証したLean4定理と保全
+
+- PR #6082: https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6082 — MERGED。新規Lean 1ファイル、14定理（公理表示14件）、追加273行・削除0。既存Lean、workflow、pin、定理rootは変更なし。
+- source HEAD c6d734239bbd780d2b9a61c618b1505511d053fe、実CI checkout dd191e3fc96662e7733677ded431b5144dbd3972、定理squash SHA 40c85513fcd453166ba51fc02af440827ce2114f のGit treeは全て 604cd9bccafc21dcba62a783d198a308eb6af4dd と一致。
+- exact-source CI #41253444390: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41253444390 — workflow・Lean step SUCCESS、Lean 11,240/11,240、全14/14定理が propext・Classical.choice・Quot.sound の標準3公理のみ、sorryAxなし、変更Lean warning/error 0/0。既存依存ファイルの過去warningは非fatalで保持。
+- マージ後push CI #41253828302: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41253828302 （source CIとは別に確認する独立run）。
+- マージ後push CIの独立完了receipt: workflow/job/実Lean stepいずれもSUCCESS、Lean 11,240/11,240、ACPの14/14公理監査はpropext・Classical.choice・Quot.soundのみ、sorryAxなし、変更Lean warning/error 0/0（run head=定理squash 40c85513fcd453166ba51fc02af440827ce2114f）。
+- Lean v4.30.0-rc2、mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6 を維持。
+
+### 次の実物理評価（OPEN）
+
+ACOの正平均GIを無条件に確立するには、元の受信器の四成分Haarエネルギー割合を元posterior・Perron・境界データから直接評価し、上記の厳格閾値を実際に満たすか否かを示す必要があります。単にS>0、Wbar≥0、Vbar=16S+WbarだけからはM_GI>0を導けません。体積一様GI二乗モーメント下界、共通support cylinder、遠方相殺、全Hilbert coercivity、共通positive-fine区間、同じendpoint E/F、H1–H4、OS/Wightman再構成、連続体4D Yang–Mills存在と質量ギャップは引き続きOPENです。
+
+---
+
+## 検証済み定理 — ACO（2026-11-01 JST）
+
+唯一のLean定理正本は formal/real-hilbert-uniform-coercive-strong-limit。mainは文書ミラーであり、定理正本ではありません。最新の定理は P4-Q2-PZ37ACO／PR #6079／squash 7dc0737f363ad82686111a5db96bf0663adad1d8（MERGED）です。前段ACN／#6076を維持し、新規14定理（一般3・元物理11）を元の相互作用Wilson SU(2)模型のまま追加しました。
+
+### ACOで無条件にLean証明した範囲
+
+元の中心化Gauss-law物理源、FF符号付き受信器、元のPerron代表と物理transfer norm、二つの真正相互作用posterior、元の外側pair-Haar測度 ν_H、ACK/ACM/ACNの四成分分解とすべてのno-goを保持。全有限H（H=0を含む）、b>0、全真正リンクeで、S=∫ C(z)^2 dν_H>0、A(z)^2=∑_{j=0}^3 m_j(z)^2、W(z)=元の四成分直交残差エネルギー、Wbar=∫W(z)dν_H≥0、B=元FC物理受信器上界を用います。ACK・ACNより ∫A^2 dν_H=4S>0、A(z)^2≤B^2/4 が既に形式証明済みです。
+
+- 任意の ε>0 について、同じ元の物理配置で Q_ε(z)=(Wbar+ε)A(z)^2−4S W(z) と定義すると、厳密な元外側Haar平均恒等式 ∫Q_ε dν_H=4S ε>0。
+- 0<2(Wbar+ε)(B^2/4)−4S ε を証明し、元の高相対margin集合の定量的Haar下界 ν_H{z: Q_ε(z)>2S ε} ≥ (4S ε)/[2(Wbar+ε)(B^2/4)−4S ε]>0 を証明。
+- この選択集合は元の外側配置トポロジーでOPEN。したがって、同一の真正物理配置 z において A(z)>0 および 4S W(z)<(Wbar+ε)A(z)^2 を同時に満たすことを無条件で証明。GI正値閾値や一様量は一切仮定していません。
+- 一般定理 CompactPositiveMeanRelativeResidual.adjustedMargin_continuous / adjustedMargin_integral / adjustedMargin_half_mean_tail は、任意のコンパクト確率空間の連続信号 u、連続非負残差 v、実上限 u≤R と U=∫u>0 から、V=∫v、Q=(V+ε)u−Uv に対し ∫Q=εU>0、Q≤(V+ε)R と ν{Q>εU/2}≥εU/[2(V+ε)R−εU]>0 を証明。独立性、atom-free、架空の配置や体積一様性を使用しません。
+
+### 元GIの厳密な平均予算 — 条件付き橋渡しとOPEN境界
+
+ACMの元のGI証明書で κ(b)=(2 b exp(-32 b))^2、ACIの真正two-posterior error envelopeを ρ(b) と置きます。元のGI二乗軌道margin q_GI(z)=κ(b)A(z)^2−ρ(b)W(z) は連続で、次の平均等式が無条件にLean証明されました。
+
+  M_GI(H,b,e) = ∫q_GI(z)dν_H(z) = 4S κ(b)−ρ(b)Wbar.
+
+さらに元物理FC上界 q_GI(z)≤κ(b)B^2/4 を証明。もし M_GI>0 なら、2κ B^2/4−M_GI>0 と ν_H{q_GI>M_GI/2}≥M_GI/[2κ B^2/4−M_GI]>0、真正SU(2)軌道上の正のACM certificate、および開集合 U（ν_H(U)>0、各w∈Uで |original two-posterior GI(w)|>0）が成立することをLean4で証明しました。この含意は正確ですが、**実Wilson模型で M_GI>0 自体が成立することは未証明です**。これを暗黙の物理仮定や検証済み結論に置き換えていません。
+
+### exact-sourceとマージ後CIの確定receipt
+
+- 定理PR #6079: https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6079 — MERGED。
+- 定理squash: 7dc0737f363ad82686111a5db96bf0663adad1d8。
+- exact-source HEAD: 66b5a03e919e8e0c58a2241d71bb96da70d6a3b6。
+- actual source CI checkout: ce18d7d9fc97ad1837fbd5053497003355a4203b。
+- source／checkout／squashの共通Git tree: a07560f6397fac1bc2ea90c7a56ca4b5c4c97c93。
+- exact-source CI #41245182721: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41245182721 — workflow/job/実Lean step completed SUCCESS。独立source completion receipt job 124668123060 SUCCESS。
+- postmerge push CI #41245618767: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41245618767 — workflow/job/実Lean step completed SUCCESS。独立push completion receipt job 124669300972 SUCCESS。
+- 両CIとも Lean 11,239/11,239 SUCCESS、新規14/14定理の #print axioms は propext・Classical.choice・Quot.sound のみ、sorryAxなし、変更Lean warning/error 0/0。
+- Lean追加は新規2ファイルのみ（510行、削除0）。既存Lean、模型、定理root、workflows、Lean v4.30.0-rc2、mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6 を変更していません。初回の結合順序、宣言文法、物理積分定義展開の失敗は証明記法のみ修正済みで、数学的前提を弱めていません。
+
+### 次の研究課題 — ACP（OPEN）
+
+まず真正物理量 M_GI=4S κ(b)−ρ(b)Wbar の符号を、同じ受信器・posterior・Perron・境界データから追加仮定なしで評価する必要があります。別表現 Wbar=Vbar−16S（ACKの分散配分）から、M_GI=(4κ+16ρ)S−ρ Vbar に整理できますが、その厳格正値性は未証明です。体積一様original GI二乗モーメント正下界、共通support cylinder、遠方相殺、全物理Hilbert coercivity、共通positive-fine区間、同じendpoint E/F、H1–H4、OS/Wightman再構成、4D連続体Yang–Mills存在と質量ギャップも引き続きOPEN。ABS・ABM・PZ37ZA・ACC・ACG・ACK・ACL・ACM・ACNの阻害定理を維持し、旧正本に対しappend-only／tighten-onlyを続けます。
+
+---
+
+## 検証済み定理 — ACN（2026-11-01 JST）
+
+唯一のLean定理正本は formal/real-hilbert-uniform-coercive-strong-limit。main は文書ミラーであり、定理正本ではありません。最新の定理証明は P4-Q2-PZ37ACN／PR #6076／squash 12caee4dab07368a717aa1adc753155e91be91ae です。2026-11-01のACNは元の相互作用Wilson SU(2)模型と元の外側pair-Haarを変更せず、四成分振幅の定量的Haar評価を追加しました。
+
+### ACNでLean4により確定した範囲
+
+元の中心化Gauss-law物理源・真正FF受信器・正Perron代表・物理transfer norm・二つの相互作用posteriorをすべて維持します。全有限H（H=0を含む）、b>0、全真正リンクeにおいて、ACJの元共分散二乗モーメント S = ∫ C(z)^2 dν_H(z) > 0 を用います。ACKの四成分 m_j とACMの元SU(2)軌道最大振幅 A(z)^2 = ∑_{j=0}^3 m_j(z)^2 について、以下を証明しました。
+
+- 元外側Haarにおける厳密な振幅二乗平均： ∫ A(z)^2 dν_H(z) = 4 S > 0。
+- 元FC受信器上界 B による全配置上界： A(z)^2 ≤ B^2/4。Bは元のtransfer norm・物理源ノルムを保持します。
+- 分母の厳密正値性： 0 < B^2/2 - 4 S。高振幅集合の実Haar質量は ν_H{z : A(z)^2 > 2 S} ≥ 4 S/(B^2/2 - 4 S) = 8 S/(B^2 - 8 S) > 0。
+- よって、仮定ではない真正配置 z で A(z)^2 > 2 S が存在します。
+- ACMの同じ真正SU(2)軌道の共同最適化 C=A、D=W、および V=4 A^2+W、V≤B^2 を使い、開集合 {w : sqrt(2 S) < C(w), D(w) < B^2-8 S} が元外側Haarで正の質量を持つことを証明しました。
+- 一般化補題 CompactPositiveMomentTail.half_mean_upper_tail は、コンパクト確率空間の連続実関数 f に対する M=∫f>0、全配置 f≤R から、0<2R-M と M/(2R-M)≤ν{f>M/2} を証明します。独立性、atom-free、未証明の一様性を仮定していません。
+
+ACJの選択共分散閾値 sqrt(S/2)、残差上界 B^2-2S と比較して、ACNでは同じ元配置領域に対し sqrt(2S)、B^2-8S を実現します。これは実際の振幅集合の定量的質量下界と、共分散・残差の同時選択集合の正質量（後者は定量的一様下界をまだ持たない）を区別した成果です。
+
+### exact-sourceとマージ後の独立検証
+
+- 定理PR: https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6076 — MERGED。
+- 正本定理squash: 12caee4dab07368a717aa1adc753155e91be91ae。
+- exact-source HEAD: 7742e6596ca8b00d6022773321668c9709983270。
+- 実source CI checkout: 89cbd2e841383b0fdefaefed35254df6d2032834。
+- source／checkout／squash共通Git tree: 62e02e66153803a9bf9458684a33715444348c2f。
+- exact-source CI: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41240999298 — workflow、build job、実Lean step completed/SUCCESS。独立source receipt job 124655837296 SUCCESS。
+- マージ後push CI: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41241453102 — workflow、build job、実Lean step completed/SUCCESS。独立push receipt job 124657175508 SUCCESS。
+- 両CIで Lean 11,237/11,237 SUCCESS、新規公開8定理／8公理出力、propext・Classical.choice・Quot.sound のみ。sorryAxなし。変更Lean warning/error 0/0。
+- 追加したのはLean 2ファイルのみ（302行、削除0）。既存のLean、元物理模型、root、workflow、Lean v4.30.0-rc2、mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6 は不変です。
+- 初回CIの測度型推論、2回目CIの定数積分簡約を修正し、最終sourceで全8定理がkernel検証に合格しました。定理の主張、物理的前提、元の境界データは弱めていません。
+
+### 次の研究課題 — ACO（未証明）
+
+同じ元物理配置における A と四成分残差 W の比・共分散二乗モーメントの定量的制御を続けます。ACMの真正GI下界評価式が正になるための W(z) ρ(b) < (2 b exp(-32 b) A(z))^2 が実Wilson模型で成立することは、ACNでも未証明です。正質量は有限Hごとのもので、体積一様なGI二乗モーメント正下界、固定support cylinder、遠方相殺、全物理Hilbert coercivity、共通positive-fine区間、同一endpoint E/F、H1–H4、OS/Wightman再構成、4D連続体Yang–Mills存在・質量ギャップもOPENです。ACK・ACL・ACMおよびABS・ABM・PZ37ZA・ACC・ACGのno-goをすべて保持します。
+
+---
+
+> `main` は文書ミラーです。唯一のLean定理正本は `formal/real-hilbert-uniform-coercive-strong-limit` です。
+
+## 検証済み定理 — ACM（2026-10-31 JST）
+
+唯一のLean定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラー。[ACM #6073](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6073) は、元の相互作用Wilson SU(2)模型、中心化Gauss-law物理源、真正FF受信器、正Perron代表、物理transfer norm、二つの相互作用posterior、元の外側pair-Haarを保持する。
+
+### 1. 四成分から真正SU(2)軌道の最大共分散を厳密に構成
+
+同じ受信器について `C(z)=Cov_Haar(F_z,E)`、`V(z)=Var_Haar(F_z)`、`D(z)=V(z)-4*C(z)^2` と書く。ACKの四成分を `m_j(z)`、実際の四成分残差二乗積分を `W(z)` とし、
+
+```text
+A(z) = sqrt(sum_{j : Fin 4} m_j(z)^2)
+V(z) = 4*A(z)^2 + W(z),    W(z) >= 0
+```
+
+を用いる。全有限H（H=0を含む）・b>=0・全真正リンクe・全元配置zで成立する。一般的な非零共分散や残差小性を新たな物理仮定にはしない。
+
+実際の2×2複素行列から、任意の実単位四成分に対応する元SU(2)元を構成し、ユニタリ性と行列式1を証明した。ACKの四成分 `phi_j` に対して、
+
+```text
+chi(a*g) = sum_j phi_j(a^-1)*phi_j(g)
+C(Gamma_a z) = -sum_j m_j(z)*phi_j(a^-1)
+max_a |C(Gamma_a z)| = A(z)                 (実際に達成)
+```
+
+を得る。零振幅の場合も扱う。抽象的な四成分球面の上限だけでなく、元SU(2)の真正ゲージ変換で達成する。
+
+### 2. 共分散・回帰残差の軌道上の値域全体
+
+ACLの真正連続center pathを最適化元から動かし、中間値の定理で全区間を埋める。
+
+```text
+range_a C(Gamma_a z) = [-A(z), A(z)]
+range_a D(Gamma_a z) = [W(z), V(z)]
+```
+
+同じ真正ゲージ変換 `a*` で `C(Gamma_a* z)=A(z)` と `D(Gamma_a* z)=W(z)` を同時に達成する。したがって、ゲージ軌道内で除去可能なscalar回帰残差と、ACKの四成分を除いても残る実残差Wとを厳密に分離できる。
+
+### 3. 同じ元配置領域で共分散と残差を制御
+
+任意の実c,dで `c<A(z)`、`W(z)<d` ならば、
+
+```text
+{w | c < C(w) and D(w) < d}
+```
+
+は開集合であり、元の外側pair-Haarの正の質量を持つ。共同最適化された元配置 `Gamma_(a*) z` がこの同じ集合に属することから証明する。b>0ではACIから各真正リンクに正振幅配置zの存在を導き、全epsilon>0について `C(w)>A(z)/2` と `D(w)<W(z)+epsilon` を同じ正質量開集合で実現する。
+
+正の質量は厳密不等式で定めた元配置空間の開集合に対するもの。軌道自身や正確な極値のlevel setの測度、epsilon共通の正質量、体積一様な振幅・質量は主張しない。
+
+### 4. 真正GI絶対値の下界評価式の最適値と正値性の必要十分条件
+
+ACIの既存のposterior残差上界
+
+```text
+rho(b) = (b^2/4)*(exp(32*b)-exp(-32*b))^2
+```
+
+を保持し、元のGI絶対値に対して
+
+```text
+L(z) = 2*b*exp(-32*b)*|C(z)| - sqrt(D(z)*rho(b))
+L(z) <= |GI(z)|
+```
+
+を無条件に証明した。元のposterior係数は変換後の同じ第二境界で評価しており、posteriorのanchorを置換しない。
+
+この評価式は真正ゲージ軌道上で
+
+```text
+max_a L(Gamma_a z)
+  = Lstar(z)
+  = 2*b*exp(-32*b)*A(z) - sqrt(W(z)*rho(b))
+```
+
+を実際に達成する。よって、
+
+```text
+(exists a, 0 < L(Gamma_a z))
+  iff W(z)*rho(b) < (2*b*exp(-32*b)*A(z))^2
+```
+
+が成立する。b=0でLstar=0、A=0でLstar<=0も明示した。これは**このGI下界評価式の正値性**の必要十分条件であり、GI自体が非零であることの必要十分条件ではない。実際の物理配置で右辺の厳格不等式が成立することは未証明である。
+
+### 5. exact-source検証と保存
+
+| 項目 | 確定結果 |
+| --- | --- |
+| 定理PR | [#6073](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6073) — MERGED |
+| exact-source HEAD | `29478dcaa5fa632dc4e7d65145a93241e84d42a3` |
+| 実CI checkout | `d4aaeef3b23fd5a73e9427f73eff33ebfab5b448` |
+| 定理squash | `aece46412a07084b28389e862ed1e065a28d7b05` |
+| source／checkout／squash共通tree | `e8c0e9abf94e273f345def4d6520478d504cb039` |
+| exact-source CI | [41210066023](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41210066023) — completed / success |
+| 独立source receipt | [124564080061](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41210066023/job/124564080061) — success |
+| マージ後push CI | [41210529629](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41210529629) — completed / success |
+| 独立push receipt | [124565478045](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41210529629/job/124565478045) — success |
+| Lean検証 | 11235 / 11235 SUCCESS（source／push） |
+| 公開定理／公理出力 | 32 / 32、propext・Classical.choice・Quot.soundのみ |
+| sorryAx／変更Lean warning／error | なし / 0 / 0 |
+| 変更 | 新規Lean4ファイル、778行追加、削除0 |
+| 既存保存 | 8,763個の既存blobをpath・modeを含めすべて保存 |
+| Lean／mathlib | v4.30.0-rc2 / `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
+
+新規全文、imports、dependent signatures、固定mathlib API、実Lean elaboration、公理依存、source identity、completedログを確認。既存Lean、root、workflow、依存固定は変更しない。文書更新ではStrict Leanを再実行しない。
+
+### 6. 次段階 — ACN（未証明）
+
+ACMが与えた**同じ実配置のAとW**について、`W*rho < (2*b*exp(-32*b)*A)^2` を実Wilson模型で成立させる定量評価を研究する。Aの正値性のみからこの厳格不等式へ進むことはできない。
+
+体積一様な元GI二乗モーメント下界、固定support cylinder、遠方相殺、全物理Hilbert coercivity、共通positive-fine区間、同一endpoint E/F、H1–H4、OS/Wightman再構成、4D連続体Yang–Mills存在・質量ギャップは引き続きOPEN。ABS・ABM・PZ37ZA・ACC・ACGのno-go、ACK厳密分解、ACLの全配置／a.e.上界障害を保持する。
+
+_以下のACL以前の「最新」表現は各PR時点の履歴スナップショット。現在の検証済みfrontierは上記ACM。_
+
+> このmainは文書ミラー。唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。以下はACL定理PR #6070の正本検証記録の同期である。
+
+## 検証済み定理 — ACL（2026-10-31 JST）
+
+唯一のLean定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラー。[ACL #6070](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6070) は、元の中心化Gauss-law物理源、真正FF受信器、Perron代表、transfer norm、二つの相互作用Wilson posterior、元の外側pair-Haarを保持する。
+
+### 1. 真正連続SU(2)軌道で共分散ゼロと正分散を両立
+
+同じ受信器について `C(z)=Cov_Haar(F_z,E)`、`V(z)=Var_Haar(F_z)`、`D(z)=V(z)-4*C(z)^2` と書く。H=0を含む全有限H・b>0・全真正リンクeが対象であり、正の共分散配置を新しい仮定にはしない。
+
+ACIの既存定理から `C(z_plus)>0` の実在配置を取り、`4*C(z_plus)^2<=V(z_plus)` により正分散を得る。既存の真正回転族
+`a(t)=[[cos(t),-sin(t)],[sin(t),cos(t)]]` は連続で、`a(0)=1`、`a(pi)=centralMinusOne`。
+ACKの同時source頂点ゲージ作用を両外側境界に施すと、
+
+```text
+h(t) = C(Gamma_(a(t)) z_plus) is continuous,
+h(0) = C(z_plus) > 0, h(pi) = -C(z_plus) < 0,
+V(Gamma_(a(t)) z_plus) = V(z_plus) > 0.
+```
+
+ACCのcenter符号反転と中間値の定理から、実際の `t_* in [0,pi]` と `z_0=Gamma_(a(t_*)) z_plus` を得る：
+
+```text
+C(z_0)=0, V(z_0)>0, D(z_0)=V(z_0)>0.
+```
+
+元の物理源・受信器を代替せず、同じゲージ軌道で共分散だけをゼロにし、元の正分散を保存する。
+
+### 2. 任意の有限共分散二乗capは正質量の開領域で破れる
+
+任意の実数Kに対し、元の外側pair-Haarを `nu_H` として、
+
+```text
+U_K = {z | K*C(z)^2 < D(z)},
+U_K is open, nu_H(U_K)>0,
+not (forall z, D(z)<=K*C(z)^2),
+not (almost every z under nu_H, D(z)<=K*C(z)^2).
+```
+
+がACLの結論となる。Kの符号・大きさに制限はなく、固定したH・b>0・eに対してさえ、そのような有限Kは存在しない。ACKの `K<12` という障害を全有限Kへ拡張する。
+
+正質量はCとVの連続性、上の実在証人、元pair-Haarの非空開集合に対する正値性から導く。`C=0` 集合自体のHaar質量は評価していない。正質量を持つのは厳密違反の開集合であり、非零共分散の配置も含み得る。
+
+### 3. 分散capの鋭い係数は1
+
+元の共分散二乗評価から、全有限H・b>=0・全リンク・全配置で `0<=D(z)<=V(z)`。
+一方、b>0では任意の `theta<1` に対し、
+
+```text
+W_theta = {z | theta*V(z)<D(z)},
+W_theta is open, nu_H(W_theta)>0,
+not (forall z, D(z)<=theta*V(z)),
+not (almost every z under nu_H, D(z)<=theta*V(z)).
+```
+
+従って全配置またはほとんど至る所に共通する分散capの係数1は最良であり、ACKの `theta<3/4` から厳格化される。選んだ配置領域に限定した評価を否定する結論ではない。
+
+### 4. 一つの証人から全Kの違反と正の局所振幅を得る
+
+H・b>0・eを固定すると、Kを選ぶ前に一つの `z_0` を取り、
+
+```text
+C(z_0)=0, V(z_0)>0,
+forall K in R,
+  nu_H({z | V(z_0)/2<V(z) and K*C(z)^2<D(z)})>0.
+```
+
+同じ正の半分散振幅を全Kで保持するが、違反集合はKに依存する。全K共通の正質量、質量の数値的下界、H・b・リンクに一様な正質量や振幅は得ていない。ゼロ共分散点での除算には依存しない。
+
+### 5. 検証記録
+
+| 項目 | 確定値 |
+| --- | --- |
+| 定理PR | [#6070](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6070) — MERGED |
+| 定理squash | `9d8eed5a59c8b9eba5c093cf1d1008619d1701c8` |
+| exact-source HEAD | `c82fd8de685af3fc26c4a13423fbe017aa80eea1` |
+| 実CI checkout | `bf986355ff8a939513e8acdba2e6a42ef22e8bf3` |
+| source・checkout・squash共通Git tree | `9feda32dc1ebe46024171c37b08c325f8f52e0b0` |
+| exact-source CI | [#41206293933](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41206293933) — SUCCESS |
+| 独立source receipt | [#124553198555](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41206293933/job/124553198555) — SUCCESS |
+| マージ後push CI | [#41206896250](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41206896250) — SUCCESS |
+| 独立push receipt | [#124555009386](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41206896250/job/124555009386) — SUCCESS |
+| Lean検証 | source・マージ後とも 11,231 / 11,231 SUCCESS |
+| 新規Lean・公開定理 | 3ファイル、547行追加、削除0、29定理 |
+| 公理依存 | 全29定理とも propext・Classical.choice・Quot.sound のみ。sorryAxなし |
+| 変更Lean warning / error | source・マージ後とも 0 / 0 |
+| Lean / mathlib | v4.30.0-rc2 / `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
+
+workflow・job・実Lean stepのcompleted/success、全29件の公理出力、独立completion receipt、source/checkout/squash tree一致を完了ログで確認した。一般連続関数補題12定理、真正center経路3定理、元物理受信器への適用14定理を含む。新規3ファイルの全文・imports・依存署名・固定mathlib APIを独立レビューし、初回exact-source CIとマージ後CIの両方で検証した。定理PRでは既存8,760個のblobとそのpath/modeを保存し、旧Lean・root・workflow・依存固定は一切変更していない。
+
+### 6. 次段階 ACM（未証明）
+
+真正SU(2)ゲージ軌道の選択領域で、元受信器の共分散振幅と源残差を同時に解析する。ACKの四成分から同じ軌道上の共分散の最大振幅を厳密に表示できるかも検討対象だが、この段階では未証明である。
+
+同じ元配置域で `-C>=c>0`、`D<=d` と正の元pair-Haar質量を揃え、`rho(b)=b^2*(exp(32b)-exp(-32b))^2/4` に対するGI正値の十分条件 `2*b*exp(-32b)*c>sqrt(d*rho(b))` の実成立を調べる。ACLが排除した全配置／a.e.の有限capを次段階の前提にせず、選択領域の評価を元定義から構成する。
+
+固定b>0または `0<b0<=b(H)<=B0` における共分散二乗モーメントS・真正GI二乗モーメントの体積一様正下界、同一配置域の一様質量と振幅、遠方相殺、全物理Hilbert coercivity、共通positive-fine区間、同一endpoint E/F、H1–H4、OS/Wightman再構成、4D連続体Yang–Mills存在・質量ギャップは未解決。ABS・ABM・PZ37ZA・ACC・ACGの既存障害定理とACKの厳密分解を維持する。
+
+以下のACK以前の「最新」「次段階」は歴史スナップショットとして保存する。ACK節の「ACL（未証明）」や全有限Kについての留保は、当時の到達点を記録したものである。この節だけを先頭に追加し、旧本文はバイト単位で保存する。
+
+---
+
+> このmainは文書ミラー。唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。以下はACK定理PR #6067の正本検証記録の同期である。
+
+## 検証済み定理 — ACK（2026-10-31 JST）
+
+唯一のLean定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラー。[ACK #6067](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6067) は、元の中心化Gauss-law物理源、真正FF受信器、Perron代表、transfer norm、二つの相互作用Wilson posteriorと元の外側pair-Haarを保持したまま、SU(2)四成分と残差の厳密な配分を証明した。
+
+### 1. 真正SU(2)の四つのHaar直交実成分
+
+元の実Wilson characterを `chi(g)=1-E(g)`、元の四元数族を `q_j=(1,J,K,L)` とし、`phi_j(g)=chi(q_j*g)` を定義。有限群平均へ置換せず、元の正規化compact SU(2) Haarに対し、
+
+```text
+integral phi_j = 0,
+integral phi_i*phi_j = delta_ij/4,
+sum_j phi_j(g)^2 = 1
+```
+
+を証明した。任意の連続実関数Fに対する有限四分の一Gram射影を一般補題として構成し、元の物理受信器 `F_z` に適用する：
+
+```text
+m_j(z) = integral F_z(g)*phi_j(g),
+P_z(g) = 4*sum_j m_j(z)*phi_j(g),
+R_z(g) = F_z(g) - integral F_z - P_z(g).
+integral R_z = 0, integral R_z*phi_j = 0,
+W_z := integral R_z^2 = Var(F_z) - 4*sum_j m_j(z)^2 >= 0.
+```
+
+引く平均は同じリンクHaar上の実際の平均であり、元物理源の空間Haar中心化とは区別している。
+
+### 2. 任意SU(2)ゲージ値に対する元受信器の輸送
+
+選んだ真正リンクeのsource頂点に任意の `a:SU(2)` を置き、両外側境界へ同じ格子ゲージを施す `Gamma_a` を構成。H=0を含む全有限Hで、joint continuity、元pair-Haarの保存、恒等変換、元ACCのcenter変換との一致、および
+
+```text
+F_(Gamma_a z)(g) = F_z(a^(-1)*g),
+mean(F_(Gamma_a z)) = mean(F_z),
+Var(F_(Gamma_a z)) = Var(F_z),
+C(Gamma_a z) = -integral F_z(g)*chi(a*g),
+m_j(z) = -C(Gamma_(q_j) z)
+```
+
+を証明した。元のprefactorとPerron半密度は保持する。固定posterior anchorの輸送やGI自体の符号反転は主張しない。ACCの `C(Gamma_center z)=-C(z)` と `D_F(Gamma_center z)=D_F(z)` は維持される。
+
+### 3. 同じ元外側Haarにおける正確な分散・残差配分
+
+ACJの実積分 `S=integral_outer C^2` をそのまま用いる。各jのゲージ変換が同じ元外側測度を保存するため、`integral_outer m_j^2=S` が全四成分で成立する。実際の非負量 `W=integral_outer W_z` により、
+
+```text
+Vbar := integral_outer Var(F_z) = 16*S + W,
+Dbar := integral_outer (Var(F_z)-4*C(z)^2) = 12*S + W,
+W >= 0.
+```
+
+を証明した。全有限H・b>0・全真正リンクeでACJの `S>0` が使えるので、
+
+```text
+Dbar >= 12*S > 0,
+Dbar >= (3/4)*Vbar,
+0 < S <= B^2/16,
+B = norm(T)^(-1)*(exp(8*b)^3-1)*norm(f0)
+```
+
+が成立。元FC上界を保持したまま、ACJの `S<=B^2/4` を四倍厳格化した。ACJの数値分散評価と同じ元源のノルム評価を代入すると、
+
+```text
+S <= 36*b^2*exp((2*A_H+48)*b)*norm(f0)^2
+  <= 216*P_H*b^2*exp((2*A_H+48)*b).
+```
+
+作用予算A_H・真正プラケット数P_Hの体積依存は明示したまま。これらは上界であり、Sの数値的正下界や体積一様な正下界を与えるものではない。
+
+### 4. 元物理受信器についての新しい残差障害
+
+同じ固定H・b>0・eにおいて、`D_F<=theta*C^2` が全配置、または元の外側pair-Haarでほとんど至る所成立することは、`theta<12` なら不可能。同様に `D_F<=theta*Var(F_z)` は `theta<3/4` なら不可能。これは元物理源・元Haarからの無条件の結論であり、選んだ好条件領域での評価を否定しない。任意の有限Kに対する不可能性は今回証明していない。
+
+### 5. 検証記録
+
+| 項目 | 確定値 |
+| --- | --- |
+| 定理PR | [#6067](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6067) — MERGED |
+| 定理squash | `d26e285dc81061f39f4a8de7b9c19cef3e62527f` |
+| exact-source HEAD | `b998b94815761849b7d0ead7338842f14ee8aa43` |
+| 実CI checkout | `8416e2ec9eefcf7dc2268320fb1fa3aa6912f0a3` |
+| 三者共通Git tree | `c6ce20cdeee8253bcd4209a9a38785189e9f6174` |
+| exact-source CI | [#41203213018](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41203213018) — SUCCESS |
+| マージ後CI | [#41203671530](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41203671530) — SUCCESS |
+| 独立source receipt | [#124543920340](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41203213018/job/124543920340) — SUCCESS |
+| 独立push receipt | [#124545380755](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41203671530/job/124545380755) — SUCCESS |
+| Lean検証 | 11,228 / 11,228 SUCCESS |
+| 新規Lean・公開定理 | 4ファイル、1,200行追加、削除0、49定理 |
+| 公理依存 | propext・Classical.choice・Quot.sound のみ。sorryAxなし |
+| 変更Lean warning / error | 0 / 0 |
+| Lean / mathlib | v4.30.0-rc2 / `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
+
+workflow・job・実Lean stepのcompleted/success、49件の公理出力、独立completion receipt、source/checkout/squash tree一致を確認した。変更Lean全文・imports・依存署名・固定mathlib APIを読み、積分の型推論、ゲージ連続性の定義展開、実部と条件分岐、部分型ノルムと局所基数定義のelaborationを修正した。公開49定理の仮定・結論は修正前後で不変。旧Lean、root、workflow、依存固定は一切変更していない。
+
+### 6. 次段階 ACL（未証明）
+
+真正連続SU(2)軌道上の共分散ゼロと正の分散の両立、または同じposterior係数を保った残差比の厳格化を調べる。候補となる代数恒等式・連続軌道の議論は、この段階では研究案である。ACJの同一領域GI正値条件の実際の成立、固定bまたは `0<b0<=b(H)<=B0` におけるSの体積一様正下界は未証明。
+
+真正GI二乗モーメントの体積一様正下界、同一配置域の一様質量と振幅、遠方相殺、全物理Hilbert coercivity、共通positive-fine区間、同一endpoint E/F、H1–H4、OS/Wightman再構成、4D連続体Yang–Mills存在・質量ギャップは未解決。ABS・ABM・PZ37ZA・ACC・ACGの既存障害定理を維持する。
+
+以下のACJ以前の「最新」「次段階」は歴史スナップショットとして保存する。
+
+---
+
+## 検証済み定理 — ACJ（2026-10-31 JST）
+
+文書ミラー対応：[正本README／ROADMAP同期 #6065](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6065)。
+
+唯一のLean定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラー。[ACJ #6064](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6064) は元のWilson模型、中心化Gauss-law物理源、Perron代表、transfer norm、二posterior、真正外側pair-Haarを保持する。
+
+### 1. 真正外側共分散モーメントと正負対称性
+
+元の中心化物理源の同じFF受信器について `C(z)=Cov_Haar(F_z,E)`、元の外側pair-Haarを `nu_H` とし、実際の積分 `S=integral_outer C(z)^2` を定義した。ACIの各リンクでの非零共分散とACDの既存Haar開領域を使い、任意の有限H・b>0・真正リンクeで `S>0` を証明。真正center-gauge変換は同じ外側測度を保存しCの符号を反転するため、`integral_outer C=0` と任意の閾値tでの正負tail質量の一致を厳密に証明した。ゼロ平均はCの点ごとの消失を意味せず、ゼロ集合の質量は評価していない。
+
+### 2. 同じ真正配置域で共分散・源残差・Haar質量を定量評価
+
+元のACA/FC上界を `B=norm(T)^(-1)*(exp(8b)^3-1)*norm(f0)` とすると、`4*C(z)^2 <= Var(F_z) <= B^2` と `0<S<=B^2/4` が成立する。実際の同じSから
+
+```text
+c = sqrt(S/2), d = B^2-2*S,
+Aplus = {z | c < C(z)}, Aminus = {z | C(z) < -c}
+```
+
+を構成し、
+
+```text
+c>0, d>0, S/d>0,
+Aplus and Aminus are open,
+nu_H(Aplus) = nu_H(Aminus) >= S/d,
+on Aplus:  C >= c and 0 <= D_F <= d,
+on Aminus: -C >= c and 0 <= D_F <= d,
+D_F = Var(F_z)-4*C(z)^2
+```
+
+を証明した。共分散下界、源残差上界、正の外側質量が同じ元配置域で成立し、これらの正値性を新しい前提にしていない。厳密な開集合の境界が零測度だという仮定もない。定数は証明済みの正の元積分Sを含むため、SのH,bだけによる数値下界や体積一様下界を得たとは主張しない。
+
+### 3. 元物理源の数値的残差上界とGI回帰誤差の六次上界
+
+元の有限slab作用予算を `A_H`、真正プラケット数を `P_H` と書く。ACAの受信器上界、ABMの真正transfer逆ノルム評価、ACIのposterior残差評価から、b>0で任意の元物理源f・リンク・境界配置に対し
+
+```text
+Var(F), D_F <= 576*b^2*exp((2*A_H+48)*b)*norm(f)^2,
+(GI+4*k*C)^2 <= 589824*b^6*exp((2*A_H+112)*b)*norm(f)^2.
+```
+
+同じ中心化源f0について、互換なAAI枝の証明済み `norm(f0)^2<=6*P_H` を使い、
+
+```text
+D_f0 <= 3456*P_H*b^2*exp((2*A_H+48)*b),
+(GI_f0+4*k*C_f0)^2 <= 3538944*P_H*b^6*exp((2*A_H+112)*b)
+```
+
+を証明した。六次は回帰誤差の二乗に対する固定有限体積での上界。元の作用予算・プラケット数の体積依存を保持する。
+
+### 4. 検証と次段階
+
+追加Leanは3ファイル・683行、削除0行。公開18定理を検証。
+
+| 項目 | 確定値 |
+|---|---|
+| exact-source HEAD | `a1b3abc0b0f9b65a7faf486461401e97068c8bda` |
+| 実際のCI checkout | `48456fe599712544127eefd16f7a45ad802175ac` |
+| ACJ theorem squash | `322bbbeb6e5d5d5730b9db6879b0506c173c0422` |
+| source・checkout・squash共通Git tree | `0011f8ca48e1cbcd1a55de0e0444cce670e068e1` |
+| exact-source CI | [41198364175](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41198364175) — 11,224 / 11,224 SUCCESS |
+| exact-source独立receipt | [124529907827](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41198364175/job/124529907827) — SUCCESS |
+| マージ後push CI | [41198757390](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41198757390) — 11,224 / 11,224 SUCCESS |
+| マージ後独立receipt | [124531025560](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41198757390/job/124531025560) — SUCCESS |
+| 公理依存 | 全18定理とも propext・Classical.choice・Quot.sound のみ。sorryAxなし |
+| 変更Lean warning / error | source・マージ後とも 0 / 0 |
+
+変更全文・imports・dependent signatures・固定mathlib APIを確認し、実際のLean stepと独立completion receiptの成功、Git tree一致を確認済み。既存Lean・workflow・依存固定に変更なし。
+
+**次はACK（未証明）**：元のSU(2)ゲージ軌道で共分散と源残差がどう変わるかを解析し、同じ源の四つのHaar直交character成分と残余の分解を検討する。今回の正のSを数値的に下から評価する課題、および `rho(b)=b^2*(exp(32b)-exp(-32b))^2/4` として、負共分散領域でGI正値性の十分条件 `2*b*exp(-32b)*c > sqrt(d*rho(b))` を実際に満たすかという課題は残る。正のSの存在や六次誤差上界だけからこの閾値を推論しない。
+
+固定正結合／正の結合区間での共分散二乗モーメントS・GI二乗モーメントの共通正下界、真正外側pair-Haarの体積一様質量・振幅・遠方相殺、全物理Hilbert coercivity、common positive-fine、同一endpoint E/F、H1–H4、OS/Wightman再構成、4D連続体Yang–Mills mass gapは未解決。ABS・ABM・PZ37ZA・ACC・ACGの障害定理を保持。Lean v4.30.0-rc2／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 固定。
+
+> 以下のACI以前の「最新」「次段階」は歴史スナップショット。現行frontierはACJ。過去本文はバイト単位で保存。
+
+---
+
+# MGAP4D — 最新検証済み定理 P4-Q2-PZ37ACI
+
+> このmainは文書ミラー。Lean定理の唯一の正本は `formal/real-hilbert-uniform-coercive-strong-limit`。
+
+## 検証済み定理 — ACI（2026-10-31 JST）
+
+唯一のLean定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラー。[ACI #6061](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6061) の新規3Leanファイルが対象。以下の定理は元のWilson模型・中心化Gauss-law物理源・Perron代表・transfer norm・二つの相互作用posterior・真正外側pair-Haarを保持する。
+
+### 1. 真正posteriorのエネルギー直交残差を定量評価
+
+元の `d=p0-ppi`、`Q=∫d² dHaar`、`k=-∫E*d dHaar` に対し、`L=exp(-32b)`、`U=exp(32b)` と置く。ABYの真正行列式傾きを区間の中点と比較し、同じ二つの密度の正規化と完全な反対称二重積分から
+
+```text
+Var_Haar(d + b*(U+L)*E) <= b^2*(U-L)^2/4,
+0 <= Q-4*k^2
+   <= (2*k-b*L)*(b*U-2*k)
+   <= rho(b) := b^2*(U-L)^2/4
+   <= 1024*b^4*exp(64*b)
+```
+
+を証明。すべての有限H・真正リンク・右配置・b>=0に成立する。小残差を仮定へ移さず、元積分から得た体積・リンク・右配置に依存しない明示的上界。除算して定義した傾きの連続性は使わず、連続な行列式誤差そのものを積分する。
+
+ACHの同じ物理FF受信器 `F`、`C=Cov(F,E)`、`D_F=Var(F)-4*C^2` について、`(GI+4*k*C)^2 <= D_F*rho(b)` も証明。元の源残差D_Fの有効な小ささやGI正値閾値までを証明したものではない。
+
+### 2. 元の中心化Gauss-law物理源の共分散は各リンクで非自明
+
+同じFF/JQ受信器について `Cov(F,E)=∫JQ_receiver*(1-E)dHaar / q(z)` を厳密に証明。`q(z)>0` は元のPerron・transfer密度相殺係数であり、省略・置換しない。元のtransferが各選択リンクのidentity fiber上で非零になるOTと、真正SU(2)負指数Haar変換の単射性LA・元の左境界分解LCを接続し、
+
+```text
+forall H, b>0, actual link e,
+  exists genuine boundary pair z, Cov(F_{H,b,f0,e,z},E) != 0;
+  exists z_plus z_minus,
+    Cov(F_{H,b,f0,e,z_plus},E) > 0 and
+    Cov(F_{H,b,f0,e,z_minus},E) < 0.
+```
+
+を証明。f0は元の `p4Q2PZ37ZW_originalCenteredPhysicalDirection`。連続代表・Gauss-law不変性・非零性は既存のAAU2/OV/ZWで実際に充足し、共分散の非零性を仮定していない。正負両配置はACCの真正center-gauge対称性による。これは各有限体積での存在定理であり、体積一様な非零振幅・外側pair-Haar質量・GIの符号を与える定理ではない。
+
+### 3. 検証と次段階
+
+| 検証対象 | 確定結果 |
+|---|---|
+| 定理PR | [#6061](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6061) — MERGED |
+| exact-source HEAD | `c5191eaa5fd9b08669ab1cd05ebe0cc3b2dbe97a` |
+| CI checkout | `ba4d05b270ac0bbb5b9c66bd823451f0974ba2de` |
+| 定理squash | `932ebe169bca58d1afab73270bfdd3d1deccdf22` |
+| source・checkout・squash共通Git tree | `2c85570104a055a45e79870d0443363fc7f834cf` |
+| exact-source CI | [#41195518486](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41195518486) — 11,202/11,202 SUCCESS |
+| 独立completion receipt | [124521718419](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41195518486/job/124521718419) — SUCCESS、exact-source SHA一致 |
+| マージ後push CI | [#41195944256](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41195944256) — 11,202/11,202 SUCCESS |
+| マージ後独立receipt | [124522994315](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41195944256/job/124522994315) — SUCCESS、squash SHA一致 |
+| 追加Lean／公開定理 | 新規3ファイル・760追加行・削除0行／16定理 |
+| 公理依存 | 16/16すべて `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし |
+| 変更ファイルwarning/error | exact-source・マージ後とも0/0 |
+
+完全な変更ソース・imports・依存シグネチャ・固定mathlib API・実際のelaboration failure原因を確認し、成功した最終ソースのみをマージ。Lean/mathlib pin・既存Lean・workflow・既存仮定の変更なし。
+
+主要ソース（上記squash固定）：
+
+- [CompactPosteriorEnergyResidual.lean](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/932ebe169bca58d1afab73270bfdd3d1deccdf22/MGAP4D/MathlibAnalytic/CompactPosteriorEnergyResidual.lean)
+- [PhysicalYangMillsWilsonSU2OriginalPosteriorResidualBoundV5_PZ37ACI.lean](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/932ebe169bca58d1afab73270bfdd3d1deccdf22/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalPosteriorResidualBoundV5_PZ37ACI.lean)
+- [PhysicalYangMillsWilsonSU2OriginalPhysicalEnergyCovarianceV5_PZ37ACI.lean](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/932ebe169bca58d1afab73270bfdd3d1deccdf22/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalPhysicalEnergyCovarianceV5_PZ37ACI.lean)
+
+**次はACJ（未証明）**：今回の実在する共分散配置と、元物理源の実際の回帰残差D_Fを同時に定量評価する。同じ元配置域で、向き `s in {1,-1}` に対する `-s*C` の正の下界、源残差D_Fの上界、正の外側pair-Haar質量を実際に構成し、`s*GI>0` の定量閾値の成否を調べる。存在だけから一様定数を取り出さない。
+
+共通の正の元GIモーメント、固定正結合／正の結合区間での正の物理共分散振幅・GI下界の体積一様性、遠方相殺、全物理Hilbert coercivity、common positive-fine、同一endpoint E/F、H1–H4、OS/Wightman再構成、4D連続体Yang–Mills mass gapは未解決。ABS・ABM・PZ37ZA・ACC・ACGの障害定理を保持。Lean v4.30.0-rc2／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 固定。
+
+> 以下のACH以前の「最新」「次段階」は当時の歴史スナップショット。現行frontierはACI。過去本文はバイト単位で保存。
+
+---
+
+# MGAP4D — 最新検証済み定理 P4-Q2-PZ37ACH
+
+> **main文書ミラー（ACH同期）**：文書のみの反映。定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。
+
+## 検証済み定理 — ACG・ACH（2026-10-31 JST）
+
+唯一のLean定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラー。最新定理 [ACH #6058](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6058) はMERGED、定理squash `b609cedfc287923afed651a473d4d22238495877`、exact-source `c0fda4a7947d1c0b5d68244cbda5e156d575dd67`、実CI checkout `f1e25c4e78f566b3f608067b3e3b4d590480df1e`、三者の共通tree `670db41939647f4e18962cc774f080db4c56c9f0`。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`、元Wilson模型・物理源・真Perron・転送ノルム・二つの相互作用posterior・外側pair-Haarを保持する。
+
+### CLOSED — ACG：上限だけの結合条件に対する真正GIモーメントの障害
+
+[ACG #6057](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6057) は元のプラケット数P_H・一スラブ作用budget A_H・E_b=exp(8b)(exp(16b)-exp(-16b))を保持して、全真正リンクで
+
+`M(H,b,e) <= [exp(b A_H) P_H E_b/2]^2`。
+
+固定Hの数値上界の連続性と零結合での消失から、任意の正のcap(H),epsilon(H)に対して、全リンクのMをepsilon(H)未満にする0<b(H)<=cap(H)を構成する。従って任意B>0の下で、0<b(H)<=min(B,1/(H+1))かつ全リンクM<1/(H+1)の一つの族が存在し、どのH依存リンク選択にも共通m>0がない。同じ族の各有限HでACEのM>0とACFの正のRayleigh証明書は成立する。これは固定b>0や正の下限を持つ区間の否定ではなく、Rayleighが零へ収束するという定理でもない。
+
+### CLOSED — ACH：元posteriorのエネルギー応答の一様正下界
+
+同じ真正SU(2) Haar、元のWilsonエネルギーE、元の二posterior密度差d=p0-ppiについて `k=-integral E*d` と置く。真の全二コピー積分、ABYの行列式傾き、Var_Haar(E)=1/4を用い、全有限H・全真正リンクe・全右配置r・b>=0で
+
+`(b/2) exp(-32b) <= k(H,b,e,r) <= (b/2) exp(32b)`。
+
+従って指定した0<b0<=b<=Bでは、`k >= (b0/2)exp(-32B)>0` がH・リンク・右配置によらず成立する。領域capへの制限や都合のよいtail削除を使わない。ただしこれはposteriorのエネルギー応答であり、物理源のCov(F,E)が非零だという主張ではない。
+
+### CLOSED — ACH：真正GIの二重回帰残差評価
+
+任意の元Gauss-law物理源の真正FF受信器Fについて `C=Cov(F,E)`、`D_F=Var(F)-4C^2`、元FX感度 `Q=integral d^2` とする。受信器と密度差の両方からエネルギー成分を除くと
+
+`(Delta_GI+4kC)^2 <= D_F*(Q-4k^2)`、`0<=Q-4k^2`。
+
+右辺は二つの実際の回帰残差の分散の積である。真の中心化Haar-L2でのCauchy--Schwarzと厳密共分散恒等式から証明した。D_F=0なら `Delta_GI=-4kC`。D_Fが小さいことやC!=0を新たな物理的事実として仮定しない。元のPerron因子・transfer normはFの中に保持される。
+
+### 検証
+
+ACG exact-source e614d1c657083e0472c06533e160694a7034c231、squash 6d83a3d0c39d8e48d6c117f4b7a3e20b33ea6fd3、[CI #41185081567](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41185081567) SUCCESS、11215成功、9公開定理標準3公理のみ、変更0 warning/0 error。マージ後[CI #41186150614](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41186150614)もbuild・Lean step・独立receipt #124494239210 completed/SUCCESS。
+
+ACH [exact-source CI #41188053582](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41188053582) はworkflow・build・Lean step completed/SUCCESS、11197成功。新規434行・公開16定理・全16件の公理依存はpropext/Classical.choice/Quot.soundのみ、sorryAxなし、変更warning/error 0/0。独立completion receipt #124499925105は同じexact-sourceでsource_result=success。文書だけの更新は新規Lean定理ではなく、不要なLean再実行は行わない。
+
+### OPEN — 次はACI：実残差と物理源を評価する
+
+元の密度差のエネルギー直交残差Q-4k^2を実Wilson積分から定量化し、元中心化物理源のCとD_F、および元外側pair-Haar上での振幅・質量・遠方相殺を評価する。kの一様正値だけからCの非零性や真正GIモーメントMの一様正下界は従わない。固定正結合または正の下限を持つ明示的区間における共通m、全物理Hilbert coercivity、common positive-fine、同一endpoint E/F、H1-H4、OS/Wightman、4D連続体Yang-Mills存在・質量ギャップはOPEN。ABS・ABM・PZ37ZA・ACC・ACGの障害を保持する。
+
+以下のACF以前の本文はバイト単位で完全保存した履歴。旧「最新・次段階・OPEN」よりこの追補を優先する。
+
+---
+
+# MGAP4D — 最新検証済み定理 P4-Q2-PZ37ACF
+
+> **main文書ミラー（ACF同期）**：ここでは文書だけを反映する。Lean定理の唯一正本は `formal/real-hilbert-uniform-coercive-strong-limit`。
+
+## 検証済み定理 — ACD・ACE・ACF（2026-10-31 JST）
+
+**唯一のLean定理正本：** `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーであり、定理正本ではない。最新定理 [ACF #6054](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6054) はMERGED。定理squash `a1a7217a4d39e753792a117607db31d86d7e5891`、exact-source `2f83fdde6a2b609e2cf16f4cbc61d056564fde88`、source・checkout・squashの共通Git tree `959be2261c824cfe5092413b02da119efbe620f4`。文書だけの後続マージは新規定理ではない。
+
+Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`、元Wilson模型、Gauss-law物理源、真正Perron代表、transfer norm、二つの相互作用posterior、元外側pair-Haarを維持する。
+
+### CLOSED / CONDITIONAL — ACD：真正共分散領域
+
+[ACD #6052](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6052) は元受信器Fの実Haar共分散C(z)=Cov(F_z,E)、分散v(z)=Var(F_z)、ACCの絶対GI marginの連続性を証明した。実際の非零共分散証人C(z0)≠0が与えられれば、c=|C(z0)|/2、V=v(z0)+1、eta=min(1/2,2c²/V)から正の元外側pair-Haar質量を持つ開領域A={c<|C|,v<V}を構成する。領域上で0≤D_F≤(1−eta)v_F、真正PerronのP²恒等式により同じUに0≤D_U≤(1−eta)v_Uが成立する。
+
+**非零共分散証人そのもの、およびACC正値閾値を満たす実回帰欠損は未証明。非零GIから非零エネルギー共分散を推論しない。**
+
+### CLOSED — ACE：元GI二乗モーメントの有限体積正値性
+
+[ACE #6053](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6053) は真正連続GIの二乗可積分性を証明し、AAZの非a.e.ゼロ性と接続した。すべての有限Hとb>0について、ある真正リンクeに対し
+
+`M(H,b,e)=∫ Delta_GI(H,b,e,z)² d lambda_H(z)>0`
+
+が無条件に成立する。同じ連続二乗GIの上界K=‖Delta_GI²‖+1>0から、実開領域A={M/2<Delta_GI²}について`lambda_H(A)≥M/(2K)>0`を証明した。M、K、e、領域はH,bに依存し、共通の正下界はまだ得ていない。
+
+### CLOSED — ACF：真正FX上界を明示したRayleigh評価
+
+現在のJL定理とその公理依存を再検証し、同じ二つの相互作用Wilson posteriorの真正FX感度に
+
+`Q(H,b,e,right)≤q(b):=(exp(16b)−exp(−16b))²`
+
+を適用した。この上界はH・実リンク・右側配置に依存しない。qは非負結合上で単調、b>0でq(b)>0。元の生一リンク応答Jと同じ中心化物理源のRayleigh値Rについて
+
+`M≤q(b)J`、`M/q(b)≤J`、`(M/q(b))/18≤R_H(b)`。
+
+ACEの証人を選ぶと各有限H,b>0で`0<(M/q(b))/18≤R_H(b)`。b=0を正の分母として使用しない。これは一つの元中心化物理源に対する評価であり、全物理Hilbert空間の一様coercivityではない。
+
+ACDの可測領域Sで共分散下限c・分散上限Vが成立し、計算された
+
+`delta=b(exp(32b)+exp(−32b))c−(b/2)(exp(32b)−exp(−32b))sqrt(V)`
+
+が非負なら、独立のFX上界仮定なしに`(lambda_H(S)delta²/q(b))/18≤R_H(b)`。領域モーメントの正の一様性を追加で証明したものではない。
+
+### CLOSED / CONDITIONAL — 体積族への接続
+
+`0<b(H)≤B`と、真正リンクe(H)について共通の`m>0`および`M(H,b(H),e(H))≥m`が別途証明できれば
+
+`0<m/[18(exp(16B)−exp(−16B))²]≤R_H(b(H))`（全H）
+
+が従う。**共通mの存在はこの含意の前提であり、ACFの結論ではない。** FX上界自体はABAで独立に閉じていた。ACFは現在のJLの標準公理のみの依存を確認してACE/ACDの新しい領域評価へ接続したもので、過去のABA成果を新規に数え直さない。下の古いAAZ/JL追加公理の記述は当時の履歴である。
+
+### exact-source検証記録
+
+| 定理 | exact-source CI | 完了したLean検証 |
+| --- | --- | --- |
+| ACD #6052 | [#41178410965](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41178410965) | 11192/11192 SUCCESS |
+| ACE #6053 | [#41180324447](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41180324447) | 11194/11194 SUCCESS |
+| ACF #6054 | [#41182927973](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41182927973) | 11195/11195 SUCCESS |
+
+ACFは新規Lean1ファイル216行・公開12定理。JL依存を含む公理報告は標準`propext`・`Classical.choice`・`Quot.sound`のみ、sorryAxなし、変更warning/error 0/0、独立completion receipt #124484776836 SUCCESS。ACFマージ後の[CI #41183571719](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41183571719)も、正本SHAに対するbuild #124485798525・Lean step・独立receipt #124486722205すべてcompleted/SUCCESS。これは古い依存ファイルに警告が皆無という主張ではない。
+
+[ACD Lean](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/a1a7217a4d39e753792a117607db31d86d7e5891/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalCovarianceRegionV5_PZ37ACD.lean) ／ [ACE Lean](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/a1a7217a4d39e753792a117607db31d86d7e5891/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalMomentMassRayleighV5_PZ37ACE.lean) ／ [ACF Lean](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/a1a7217a4d39e753792a117607db31d86d7e5891/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalExplicitFXMomentRayleighV5_PZ37ACF.lean)。
+
+### OPEN — 次段階P4-Q2-PZ37ACG
+
+元の中心化源の真正GI二乗モーメントに体積一様な正下界を構成する。まず結合領域を明示し、上限のみの族0<b(H)≤Bと、固定b>0または0<b0≤b(H)≤Bを区別する。実Wilson積分、Perron係数、ゲージ対称性、局所変動、全遠方相殺、外側pair-Haar領域の質量と振幅を解析する。結合下限の指定だけでも一様性は証明されない。
+
+共通m、非零エネルギー共分散証人、ACC正値閾値を満たす実欠損、全物理Hilbert coercivity、common positive-fine、同一endpoint E/F、H1–H4、OS/Wightman再構成および非自明な4D連続体Yang–Mills existence/mass gapはOPEN。ABS・ABM・PZ37ZA・ACCの既存障害を保持する。非局所Perron応答を固定supportへ置換しない。
+
+**以下は旧本文をバイト単位で完全保存した履歴である。旧「最新・次段階・OPEN」の記述より上のACF追補を優先する。文書のみの同期ではLeanを再実行しない。**
+
+---
+
+> **main文書ミラー（ACC同期）**：唯一の定理正本は [formal/real-hilbert-uniform-coercive-strong-limit](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit)。確認済み正本HEAD `bf65a8ec672f565318a69d25f481a7e23e809ce3`（[正本文書同期 #6050](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6050)）、定理squash `e8803e0fcc69d051953d532ed246ff9467c5d616`（[ACC #6047](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6047)）。このmain更新はREADME・ROADMAPの追記だけで、以下のACC検証記録を鏡映する。
+
+# MGAP4D — 最新検証済み定理 P4-Q2-PZ37ACC（2026-10-31 JST）
+
+**唯一の定理正本：** `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラー。[ACC定理 PR #6047](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6047) **MERGED**。定理squash `e8803e0fcc69d051953d532ed246ff9467c5d616` とマージ直後の正本HEADを完全一致で確認。exact-source `460d15a44e7b428a5a632f7e37e6132f9050169c`、実CI checkout `87a1db0829b27919a9aeb7d9768bc33d2e04fe46`、定理squashの全Git treeは `ef26f66ec383060030c307bcc00decd117b98942` に完全一致。既に統合されたACB [#6046](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6046) とその文書履歴を保持し、この拡張をACCとして接続した。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 固定。
+
+**検証：** [CI #41174163063](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41174163063) workflow・build job・Lean step **completed / SUCCESS**、Lean **11,181 / 11,181 SUCCESS**。新規4 Leanファイル・1,208行・48公開定理・48件の `#print axioms`。公理依存は `propext`・`Classical.choice`・`Quot.sound` の範囲内、`sorryAx`なし、変更warning/error **0/0**。独立completion receipt [job #124459070461](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41174163063/job/124459070461) とpublish stepは **completed / SUCCESS**、同じexact-source SHAと `source_result=success` を確認。全文・imports・依存署名・固定APIを独立レビューし、既存Lean・元模型・仮定・公開root・workflowを変更していない。
+
+## CLOSED — 元の全GIを実共分散と実分散で直接評価
+
+元のFF受信器について、真正SU(2) Haar μに対し `v_z=Var_μ(F_z)`、`σ_z=sqrt(v_z)`、`C_z=Cov_μ(F_z,E)`、`D_z=v_z-4*C_z²≥0` とする。`Var_μ(E)=1/4` は既証の元Haar恒等式。`u=exp(32b)`、`l=exp(-32b)` と置くと、全有限H、b≥0、元の任意Gauss-law物理源、s²=1について、
+
+`-b*(u+l)*s*C_z-(b/2)*(u-l)*σ_z ≤ s*Δ_GI(z) ≤ -b*(u+l)*s*C_z+(b/2)*(u-l)*σ_z`、
+
+従って
+
+`|Δ_GI(z)+b*(u+l)*C_z| ≤ (b/2)*(u-l)*σ_z`
+
+を証明した。ABYの完全な正負tail比較、ABZの厳密な `M_s-M_{-s}=-4bsC_z`、ACAの全不整合上界を使う。内側長方形、小tail、特定の受信器profileは仮定しない。元の二つの相互作用posteriorと全負寄与を保持し、正寄与の上界を下界として代入していない。
+
+下界を `L_s(z)=-b*(u+l)*s*C_z-(b/2)*(u-l)*σ_z` とする。同じABX rectangle Rの外側領域で、s=R.signとすると、同じ最適不整合上界B_sを使うACAのrectangle marginはL_s以下。元FF/FCの `K=‖T‖⁻¹*((exp(8b))³-1)*‖f‖` によるσ_z≤Kを用いた誤差上界も証明し、真のtransfer normとそのH依存を保持した。
+
+## CLOSED / CONDITIONAL — 実回帰欠損による全tail上界と正値証明条件
+
+`B_s=b*(σ_z+2sC_z)` について `B_s*B_{-s}=b²D_z` を証明。望ましい共分散方向sC_z≤0なら、元の全不整合は
+
+`M_{-s}(z)≤b*sqrt(D_z)`、
+
+元posteriorの全負tailは `exp(32b)*b*sqrt(D_z)` 以下。一般解析葉では分母非零を明示した欠損の商表示、閾値の必要十分条件、D=0かつ望ましい向きでの不整合ゼロも証明した。実際のD_zが小さいことは、ここでは証明していない。
+
+b>0、r=exp(-64b)に対し、**この直接下界が正であること**の厳密な条件は
+
+`L_s(z)>0 ↔ [s*C_z<0 ∧ (1+r)²*D_z<4*r*v_z] ↔ B_s(z)<r*B_{-s}(z)`。
+
+この条件はs*Δ_GI(z)>0の十分条件であり、GI自体の正値性の必要条件とは主張しない。同じABX rectangle Rの外側領域内の点z∈R.outerEventで、ACA rectangle marginが正なら、s=R.signに対して同じ共分散・相対欠損条件が必ず成立する。
+
+同じ真正Perron断面 `F_z=C₀(z)-P(z)U_z`、`P(z)>0` から、条件は
+
+`s*Cov(U_z,E)>0` かつ `(1+r)²*D_U(z)<4*r*Var(U_z)`
+
+と同値。正のP²はこの相対欠損条件から消去できる。GIの中心は正符号の `b*(u+l)*P(z)*Cov(U_z,E)` で、下界・振幅にはPが残る。更新後の真正joint Perron半密度を含むUを別の源や局所量へ置換しない。この厳密条件が元の中心化物理源で成立することは未証明。
+
+## CLOSED — 真正中心化物理源のゲージ変換と全配置tail障害
+
+元のspatial Haar-L²中心化物理源 `f_H=½(W_H-⟨W_H,1⟩1)` を維持する。c=-I∈SU(2)をリンクeの始点だけに置く真正空間ゲージを、両外側境界へ同時に作用させる写像をΓ_eとする。元Perronの物理ベクトルと連続代表、元のkernel、物理源の連続代表を使い、
+
+`P(Γ_e z)=P(z)`、`U_{Γ_e z}(g)=U_z(cg)`、`F_{Γ_e z}(g)=F_z(cg)`
+
+を証明。右リンク更新は元のliteral Function.updateで、H=0も含め端点の相異性を使う。左右独立のゲージ不変性は仮定しない。
+
+真正二コピーHaarの変数変換とE(cg)=2−E(g)から、
+
+`M_s(Γ_e z)=M_{-s}(z)`、`C(Γ_e z)=-C(z)`、`v(Γ_e z)=v(z)`、`D(Γ_e z)=D(z)`、`B_s(Γ_e z)=B_{-s}(z)`
+
+を証明。共分散・分散・欠損の恒等式はFとUの双方で成立する。**二つの固定posteriorアンカーを輸送する定理ではなく、GI自体の符号反転は主張しない。**
+
+ABXの実際の正長方形に接続して、全有限H、b>0について、
+
+`∃e, ∀s=±1, ∀θ<1, ¬[∀z, M_{-s}(z)≤θ*M_s(z)]`
+
+を証明した。量化は**ある真正active linkの存在**であり、全リンクのactivityではない。同じリンクで各固定向きに対し全不整合が正となる外側配置も存在する。これは全配置で一つの向きに厳しいtail比率を課す方法の障害で、選択した外側領域上の制御や配置ごとの向き選択は排除しない。
+
+## CLOSED / CONDITIONAL — 共通符号を要求しない元外側Haar二乗積分
+
+`L_abs(z)=b*(u+l)*|C_z|-(b/2)*(u-l)*σ_z` と置くと `L_abs(z)≤|Δ_GI(z)|`。
+
+元の外側configuration pair-Haar λ_Hの任意の可測集合Aで、実際に `L_abs(z)≥δ≥0` が全z∈Aで検証されれば、
+
+`∫Δ_GI(z)²dλ_H≥λ_H(A)*δ²`
+
+が成立する。A全体に共通の向き・傾き、可測な向き選択、内側長方形を要求しない。補助SU(2)二コピーHaarと元外側pair-Haarは区別する。正のδや有用なλ_H(A)、それらのH一様性は別途証明が必要。
+
+[欠損解析](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/e8803e0fcc69d051953d532ed246ff9467c5d616/MGAP4D/MathlibAnalytic/CompactEnergyMismatchDefect.lean) ／ [元GI共分散評価](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/e8803e0fcc69d051953d532ed246ff9467c5d616/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalCovarianceGIBoundsV5_PZ37ACC.lean) ／ [真正Perron・源のゲージ対称性](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/e8803e0fcc69d051953d532ed246ff9467c5d616/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalGaugeTransferSymmetryV5_PZ37ACC.lean) ／ [元物理源の全配置tail障害](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/e8803e0fcc69d051953d532ed246ff9467c5d616/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalGaugeMismatchObstructionV5_PZ37ACC.lean)。
+
+## OPEN — 次段階P4-Q2-PZ37ACD
+
+元の中心化Gauss-law源の真正U_zについて、選択した元外側Haar領域上で共分散・分散・相対欠損を評価し、厳密な欠損条件と正の絶対GI marginを証明する。全配置で固定した向きに厳しいtail優越を求める方法には上記の障害がある。領域の質量・振幅とH,b依存を制御し、元の外側pair-Haar二乗GI積分から真Gram／Rayleigh下界へ接続する。
+
+実欠損・全tailの十分な小ささ、固定support cylinder、領域・振幅・Haar質量の体積一様性、遠方相殺、全物理Hilbert coercivityは未解決。元のHaar-L²中心化から固定リンク平均ゼロは導かず、MQの別Riesz商の局所性をUへ転用しない。ABSの粗誤差障害、ABM／PZ37ZA no-goを保持。common fine-positive、同一endpoint E/F、H1–H4、OS/Wightman、4D連続体Yang–Mills mass gapは**OPEN**。
+
+**以下のACB以前の節は当時の履歴として完全に保存する。最新の到達点はこのACC追補を優先する。文書同期はdocs-only。**
+
+---
+> **main文書ミラー（ACB同期）**：唯一の定理正本は [formal/real-hilbert-uniform-coercive-strong-limit](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit)、確認済み正本文書HEAD `9dde4d0174f85292f5b17eefcdef8e2cf2502701`（[正本docs #6048](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6048)）、定理squash `8721fe3bb5dc283ac55f67f27a254db18581973f`（[Lean PR #6046](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6046)）。ここではACBの検証記録だけを文書として反映し、Lean定理はmainに移さない。
+
+# MGAP4D — 最新検証済み定理 P4-Q2-PZ37ACB（2026-10-31 JST）
+
+**唯一の定理正本：** `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラー。[ACB定理 PR #6046](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6046) **MERGED**。定理squash SHA＝マージ直後の正本HEAD `8721fe3bb5dc283ac55f67f27a254db18581973f`。exact-source `8356fc4a72052527d8b446f8b16574fb5a286e60` と定理squashの全Git tree `2befd0cf522bf3fd32fd3e8f4953683a763ff73b` は**完全一致**。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 固定。
+
+**検証：** [CI #41173509336](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41173509336) workflow／build job／Lean step **completed / SUCCESS**、**11,177／11,177 SUCCESS**。新規2 Leanファイル・19公開定理・19件の`#print axioms`は `propext`／`Classical.choice`／`Quot.sound` の範囲内、`sorryAx`なし、変更warning/error **0／0**。独立[completion receipt #124457218765](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41173509336/job/124457218765) **SUCCESS**、同一exact-source SHA・`source_result=success`を確認。既存Lean、真正Wilson模型・Perron・Gauss-law源、両interacting posterior、物理transfer norm、公開rootおよびworkflowを変更していない。
+
+## CLOSED — 真正Perron断面上の符号付きエネルギー相関と回帰欠損
+
+ACAの元の `F_z=C_0(z)-P_z U_z`、`P_z>0` を保持する。ABXで実際に構成された同じ長方形 `R` の外側 `z∈R.outerEvent` に対して、真正 `U_z` の `v_z=Var_μ(U_z)>0` を初めて明示的に証明。元のWilsonエネルギー `E` に対し `C_z=Cov_μ(U_z,E)`、`D_z=v_z-4C_z²≥0`、`s=R.sign∈{±1}` と置くと、
+
+```text
+ρ_z = 2 s C_z / sqrt(v_z),    -1 ≤ ρ_z ≤ 1,
+1-ρ_z² = D_z/v_z.
+B_s(z) = b P_z sqrt(v_z) (1-ρ_z).
+```
+
+をLean形式化した。これは真正Haar `Var(E)=1/4` と元のPerron物理受信器を用いる同一量の恒等式であり、独立に作ったテスト源や一リンクHaar posteriorには置換していない。指定 `b>0` では、ACAの最適残差証明書 `B_s<T_R` と `1-ρ_z<T_R/(bP_z sqrt(v_z))` が厳密同値。
+
+## CLOSED / CONDITIONAL — 真の回帰欠損から全負tailと元GIの正値へ
+
+同じABX領域・向き・正閾値 `T_R=e^{-64b}ηκν(V)` を使用。**追加の物理条件** `s C_z≥0` が検証されれば、
+
+```text
+B_s(z) sqrt(v_z) ≤ b P_z D_z,
+true original negative tail ≤ exp(32b) b P_z D_z / sqrt(v_z).
+```
+
+を証明。さらに **`bP_zD_z<T_R sqrt(v_z)`** が別途成立すれば、ACAの正の残差証明書が成立し、実際の変更していない元の符号付き物理GI応答 `s Δ_GI(z)>0` が得られる。負tailは二つの本物のinteracting posteriorの全領域のまま。逆に、`s C_z≤0` かつ `T_R≤bP_z sqrt(v_z)` なら、**ACAの正の傾き残差族**はどの `a>0` を選んでも正の証明書にならない。この数値範囲で証明書が正なら `s C_z>0` が必要。いずれも実際のGIそのものの非正値や消失を意味しない。
+
+[汎用相関／欠損定理](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/8721fe3bb5dc283ac55f67f27a254db18581973f/MGAP4D/MathlibAnalytic/CompactEnergyMismatchRegressionThreshold.lean) ／ [真正Perron物理源定理](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/8721fe3bb5dc283ac55f67f27a254db18581973f/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalTransferDefectCertificateV5_PZ37ACB.lean)。
+
+## OPEN — 次はP4-Q2-PZ37ACC
+
+真正の中心化Gauss-law源について、望ましい`s C_z≥0`および`bP_zD_z<T_R sqrt(v_z)`を**まだ証明していない**。元のspatial Haar-L²中心化を固定リンク受信器の平均ゼロへ取り違えず、ABR／ABSの元の遠方補正と更新後Perron半密度を保持し、Wilsonエネルギーモード成分と直交残差の実積分を解析する。さらにP、v、A、V、η、κの体積依存、固定support cylinder、遠方符号相殺、一様Gram／Rayleigh下界を独立に証明する必要がある。
+
+ABS／ABM／PZ37ZAの障害は保持。全物理Hilbert coercivity、common fine-positive、同一endpoint E/F、H1–H4、OS/Wightman、非自明な4D連続体Yang–Mills existence/mass gap は**OPEN**。ACAの最適化の必要十分条件とACBの欠損による十分条件を区別する。
+
+**以下のACA以前の記録は当時の履歴として完全に保存する。今回のREADME更新はdocs-onlyで新規Lean定理を追加しない。**
+
+---
+
+> **main文書ミラー（ACA同期）**：定理の唯一の正本は [formal/real-hilbert-uniform-coercive-strong-limit](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit)。確認済み正本HEAD `f3cb167e576250dd55b630cec1d448cbadf90a6d`（[正本文書同期 #6044](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6044)）。定理squashは `055efd930b9c45a3894282c9a6023db2abe3a753`。このmain文書更新はLean定理を追加・変更せず、以下のACA検証記録を鏡映する。
+
+# MGAP4D — 最新検証済み定理 P4-Q2-PZ37ACA（2026-10-31 JST）
+
+**唯一の定理正本：** `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラー。[ACA PR #6043](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6043) **MERGED**。定理squash `055efd930b9c45a3894282c9a6023db2abe3a753` とマージ直後の正本HEADを完全一致で確認。exact-source `cdfdcc1a9150a1716b6f9153b400e25bbdbfc56f` と定理squashのGit tree `644c5d603630fb0266eb2099181dc16fdb5f7b96` も同一。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を維持。
+
+**検証：** [CI #41171556328](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41171556328) workflow・job・Lean step **completed / SUCCESS**、Lean **11,175 / 11,175 SUCCESS**。新規4 Leanファイル・43公開定理・43件の `#print axioms`、標準3公理以内、`sorryAx`なし、変更warning/error **0/0**。独立completion receipt [job #124451395379](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41171556328/job/124451395379) **SUCCESS**。
+
+## CLOSED — 全不整合モーメントの傾きパラメータを除いた上界
+
+元のFF物理受信器について `v_z=Var_μ(F_z)`、`C_z=Cov_μ(F_z,E)`、`s²=1` とする。ABZの元の残差上界 `Q_z(a)=(b/a)Var_μ(F_z+s*a*E)`（a>0）から、
+
+`M_{-s}(z) ≤ B_s(z) := b*(sqrt(v_z)+2*s*C_z)`
+
+を全有限H、b≥0、元のGauss-law物理源について証明した。v_z=0、b=0も含む。元の全負寄与を積分に残し、小tail仮定は使わない。正確な差は
+
+`Q_z(a)-B_s(z) = b/(4*a)*(a-2*sqrt(v_z))² ≥ 0`。
+
+任意の閾値tについて `(∃a>0, Q_z(a)<t) ↔ B_s(z)<t`。これは**ABZの正の傾き残差族における厳密な最適化**であり、B_sと実際のM_{-s}やGIが等しいという主張ではない。一般のv_z=0では下限が正のaで達成されない場合も処理した。
+
+## CLOSED — 真のエネルギー回帰残差とPerron転送断面
+
+真正SU(2) HaarのVar(E)=1/4を使い、
+
+`D_z := Var(F_z)-4*Cov(F_z,E)² = Var(F_z-4*Cov(F_z,E)*E) ≥ 0`、
+
+`Var(F_z+s*a*E)=D_z+(s*a+4*Cov(F_z,E))²/4`
+
+を証明。共分散Cauchy境界 `2*|Cov(F_z,E)|≤sqrt(Var(F_z))` も実残差から導く。**分散を最小にする回帰係数 -4Cov と、v_z>0のときにb/aを含むtail上界を最小にする傾き a*=2sqrt(v_z) は区別する。**
+
+ABZの元の `F_z=C₀(z)-P(z)U_z`、`P(z)=‖T‖⁻¹*sqrtDensity(z)>0`、`U_z(g)=I_f(z₂[e:=g])/sqrtDensity(z₁,z₂[e:=g])` から、
+
+`Var(F_z)=P(z)² Var(U_z)`、`Cov(F_z,E)=-P(z)Cov(U_z,E)`、
+`D_F=P(z)²D_U`、`Var(F_z+s*aE)=P(z)²Var(U_z-s*(a/P(z))*E)`
+
+を厳密に輸送した。従って実模型で評価すべき同じ最適上界は
+
+`B_s(z)=b*P(z)*(sqrt(Var(U_z))-2*s*Cov(U_z,E))`。
+
+更新後の真正joint Perron半密度、右リンク更新、元のtransfer normを保持する。元のspatial Haar-L²物理源の中心化は、固定リンク受信器の平均ゼロやPerron真空中心化ではない。MQの別のRiesz商の局所性をUへ転用していない。
+
+## CLOSED — 元の物理量による分散の上下評価
+
+元のFF/FCの係数 `K=‖T_{H,2,b}‖⁻¹*((exp(8*b))³-1)*‖f‖` を保持して、
+
+`Var(F_z)≤K²`、`sqrt(Var(F_z))≤K`、
+`M_{-s}(z)≤b*(K+2*s*Cov(F_z,E))`
+
+を証明。最後の粗い上界でも実共分散項を残すが、最適化の必要十分条件をKによる条件へ置き換えない。真transfer normのH依存、ABSの粗誤差障害は残る。
+
+さらに、ABXの実際の長方形 `A,V,η,κ,s` についてz∈Aなら、
+
+`Var(F_z)≥η²*(μ×μ)(V)/2>0`。
+
+これにより同じ領域上で `a*(z)=2sqrt(Var(F_z))>0` が実際に最適値を達成する。ABVの固定capの1/64下界は使っていない。η、V、Kの体積一様性は未証明。
+
+## CLOSED / CONDITIONAL — 正の残差証明書の必要十分条件と元GI
+
+ここでは `s=R.sign` とし、η・κ・Vも同じABX rectangle Rの値を使う。最適化するパラメータは正の傾きaである。
+
+各外側点zで、あるa>0についてABZ残差下界が厳密に正となることは、
+
+`B_s(z)<T_R := exp(-64*b)*η*κ*(μ×μ)(V)`
+
+と**必要十分**。この条件が失敗すれば、aを選び直してもこの残差族から正値は認証できない。これは元GI自体の非正値性を意味しない。
+
+元posteriorの全負tailは `exp(32*b)*B_s(z)` 以下。ABXのz∈Aでは元GIについて
+
+`s*Δ_GI(z)≥L_*(z):=[exp(-32*b)*η*κ*(μ×μ)(V)-exp(32*b)*B_s(z)]/2`。
+
+`L_*(z)≥δ≥0` がA全体で検証されるという明示条件の下で、元の外側configuration pair-Haar λ_Hに対し `∫Δ_GI(z)²dλ_H≥λ_H(A)*δ²` を証明。点ごとの最適上界を直接使うので、A全体に共通のaや可測な傾き選択を仮定しない。補助SU(2)二コピーHaarと元外側pair-Haarは区別したまま。
+
+[最適化解析](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/055efd930b9c45a3894282c9a6023db2abe3a753/MGAP4D/MathlibAnalytic/CompactEnergyMismatchOptimization.lean) ／ [分散・共分散輸送](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/055efd930b9c45a3894282c9a6023db2abe3a753/MGAP4D/MathlibAnalytic/CompactEnergyMismatchAffine.lean) ／ [真正転送断面](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/055efd930b9c45a3894282c9a6023db2abe3a753/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalTransferRegressionV5_PZ37ACA.lean) ／ [実物理最適証明書](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/055efd930b9c45a3894282c9a6023db2abe3a753/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalOptimizedMismatchCertificateV5_PZ37ACA.lean)。
+
+## OPEN — 次段階P4-Q2-PZ37ACB
+
+元の中心化Gauss-law源の真正U_zから、望ましい共分散方向と回帰欠損D_Uの大きさを評価し、実際の `bP*(sqrt(VarU)-2sCov(U,E))<T_R` を証明する。ACAの必要十分条件がこの実模型で充足されたとは主張しない。小bの係数だけで勝てるとも主張しない。ABXのκ・振幅・領域もb,Hに依存し得る。
+
+実残差の十分な小ささ、固定support cylinder、領域・振幅・Haar質量のH一様性、遠方相殺、真Gram／Rayleigh一様下界は未解決。ABSの粗Haar中心化誤差障害、ABM／PZ37ZA no-goを保持。全物理Hilbert coercivity、common fine-positive、同一endpoint E/F、H1–H4、OS/Wightman、4D連続体Yang–Mills mass gapは**OPEN**。
+
+**以下のABZ以前の節は当時の履歴として完全に保存する。最新の到達点はこのACA追補を優先する。文書同期はdocs-only。**
+
+---
+# main文書ミラー更新 — P4-Q2-PZ37ABZ（2026-10-31 JST）
+
+このmainは文書ミラー。唯一の定理正本は [formal/real-hilbert-uniform-coercive-strong-limit](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit)、現在の正本HEADは `15783bdb15a9df34e45dacf2629f9c25bac70ba2`（[README・ROADMAP同期 #6041](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6041) MERGED）。ABZ定理squashは `bf7d9575a7f3f25e041b901e00a72f3034ccd244`。その後の正本変更はREADME・ROADMAPへの追記のみ。以下は正本の検証済みABZ追補の文書ミラーであり、定理の正本をmainへ移していない。
+
+---
+
+# MGAP4D — 最新検証済み定理 P4-Q2-PZ37ABZ（2026-10-31 JST）
+
+**唯一の定理正本：** `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラー。[ABZ PR #6040](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6040) **MERGED**。定理squash `bf7d9575a7f3f25e041b901e00a72f3034ccd244` とマージ直後の正本HEADを完全一致で確認。exact-source `f1499f8d2d20e97e0f5a111e60628d35b6c6b7d5` とsquashのGit tree `971fc2f9be67aa8eb9e150d355dceaff037eb29e` も同一。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を維持。
+
+**検証：** [CI #41168743376](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41168743376) workflow・job・Lean step **completed / SUCCESS**、Lean **11,171／11,171 SUCCESS**。新規3 Leanファイル・35公開定理・35件の `#print axioms`、全て標準3公理以内、`sorryAx`なし、変更warning/error **0/0**。独立completion receipt [job #124442869146](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41168743376/job/124442869146) **SUCCESS**。
+
+## CLOSED — 全負tailを真正受信器のエネルギー残差分散で上から評価
+
+ABYの元の物理受信器 `F_z(g)`、元Wilsonエネルギー `E(g)`、全不整合モーメント `M_{-s}(z)` をそのまま用いる。任意の `a>0` に対し `R_{z,s,a}(g)=F_z(g)+s*a*E(g)` と定義すると、**全有限H、b≥0、元の任意Gauss-law物理源について、tailの小ささを仮定せず**
+
+`M_{-s}(z) ≤ (b/a) Var_μ(R_{z,s,a})`
+
+をLean証明した。元の `Ψ_s=2bs(F(g)-F(h))(E(h)-E(g))` に対する点ごとの平方完成
+
+`max(-Ψ_s(g,h),0) ≤ b*(R(g)-R(h))²/(2a)`
+
+と、真の二コピー積分 `∫(R(g)-R(h))² d(μ×μ)=2 Var_μ(R)` から導く。主上界は `s=±1` に限らず任意の実数sで成立し、`b=0` も含む。**全負寄与を捨てたり、残差を新しい物理源へ置換したりしていない。**
+
+元SU(2) Haarの既証character定理から `∫E=1`、`∫E²=5/4`、`Var_μ(E)=1/4` を導き、
+
+`Var_μ(R)=Var_μ(F_z)+2*s*a*Cov_μ(F_z,E)+(s*a)²/4`
+
+も厳密に証明。s=±1なら最後の項はa²/4となる。全負tailの**実物理量による上界**が得られた一方、この上界が正寄与を上回らないほど小さいことは別の未解決問題である。
+
+## CLOSED — 真正Perron転送断面と共分散の障害
+
+`L=‖T‖⁻¹`、`P(z)=L*sqrtDensity(z)>0`、
+`U_z(g)=I_f(B[e:=g])/sqrtDensity(z.left,B[e:=g])` とすると、元GN/FFの署名のまま
+
+`F_z(g)=L*I_f(B)-P(z)*U_z(g)`、
+`F_z(g)-F_z(h)=P(z)*(U_z(h)-U_z(g))`
+
+を証明。更新後の真正joint Perron半密度・元transfer norm・右リンク更新を保持する。Uの連続性、b>0でのエネルギー順序との符号同値、全不整合積分の厳密転送表示も証明した。Harnackの大きさ比較やMQのRiesz商の局所性からUの単調性・遠方消滅は導いていない。
+
+さらに `M_s-M_{-s}=∫Ψ_s=-4bs Cov_μ(F_z,E)`。従って `s Cov_μ(F_z,E)≥0` なら、**ABYの十分条件である `[e^{-32b}M_s-e^{32b}M_{-s}]/2` は非正**になる。これはこの比較下界に対するobstructionであり、実係数kの変動が残る元GI自体の非正値性ではない。
+
+## CLOSED / CONDITIONAL — ABX実長方形から元GI・外側pair-Haarへ接続
+
+元posteriorの**全**負tailは `e^{32b}*(b/a)*Var_μ(R)` 以下。ABXの実際の `A,V,η,κ,s` で、z∈Aなら
+
+`s Δ_GI(z) ≥ [e^{-32b}ηκ(μ×μ)(V) - e^{32b}(b/a)Var_μ(R_{z,s,a})]/2`。
+
+従って、この下界から厳密正値へ進むための具体的な目標は `(b/a)Var_μ(R_{z,s,a}) < e^{-64b}ηκ(μ×μ)(V)` を元の物理源で証明することになる。この比較は未証明。
+
+この右辺がA全体でδ≥0以上という**明示的なresidual margin条件の下でのみ**、元の外側configuration pair-Haarについて
+
+`∫ Δ_GI(z)² dμ_H(z) ≥ μ_H(A)*δ²`
+
+を証明。補助SU(2)二コピーHaarと元の外側pair-Haarは別の測度のまま保持。ABXのVはABVの固定capとは限らず、1/64の下界を転用していない。
+
+[一般解析Lean](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/bf7d9575a7f3f25e041b901e00a72f3034ccd244/MGAP4D/MathlibAnalytic/CompactEnergyMismatchMoment.lean) ／ [真正転送断面Lean](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/bf7d9575a7f3f25e041b901e00a72f3034ccd244/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalReceiverTransferSectionV5_PZ37ABZ.lean) ／ [実物理残差分散Lean](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/bf7d9575a7f3f25e041b901e00a72f3034ccd244/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalMismatchResidualVarianceV5_PZ37ABZ.lean)。
+
+## OPEN — 次段階P4-Q2-PZ37ACA：実残差の小ささと体積一様性
+
+元の中心化Gauss-law源について、真Perron転送断面から `Var_μ(F_z+s*a*E)` と共分散を評価し、正寄与との大小関係を証明する。aの最適化は可能な次の解析課題だが、実残差の小ささを自動的に与えない。ABXの領域・振幅・質量のH依存、固定support cylinder、遠方相殺、Gram／RayleighのH一様下界は未解決。ABSの粗いHaar中心化絶対誤差の障害、ABM／PZ37ZA no-goを保持。全物理Hilbert coercivity、common fine-positive、同一endpoint E/F、H1–H4、OS/Wightman、4D連続体Yang–Mills mass gapは**OPEN**。
+
+**以下のABY以前の節は当時の履歴として完全に保存する。最新の到達点はこのABZ追補を優先する。文書同期はdocs-only。**
+
+---
+
+
+# MGAP4D main文書ミラー — ABX–ABY（2026-10-31 JST）
+
+この `main` は唯一のLean定理正本 `formal/real-hilbert-uniform-coercive-strong-limit` の**文書ミラーのみ**であり、主張するLean定理をmainに移したものではない。正本docs-only [PR #6038](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6038) のsquash `344e3a857bea068a83e071d787cfcde56a42b9db` に基づく。最新定理bearing squashはABY [PR #6037](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6037) の `e9641c02a2830455ac8fec3ce288561acf589914`。ABX [PR #6036](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6036) も正本へ統合済み。mainの既存本文は以下に完全に保存する。
+
+---
+
+# MGAP4D — 最新検証済み定理 P4-Q2-PZ37ABX–ABY（2026-10-31 JST）
+
+**唯一の定理正本**は `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は**文書ミラー**であり定理正本ではない。ABXの定理PR [#6036](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6036) と、最新のABY定理PR [#6037](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6037) はともに **MERGED**。最新のABY定理squash `e9641c02a2830455ac8fec3ce288561acf589914` がマージ直後の正本HEADに完全一致。検証したABYのexact source `6070d795822f9908b359d3e58bca63c43ca3b10a` はsquashとは異なるコミットで、**全tree `49c34e6dbdc33a8b6f00fad606dd0ead73da35d1` が同一**。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` は不変。
+
+**独立検証：** ABX [CI #41162615381](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41162615381) は **11,166/11,166 SUCCESS**、新規10公開定理、標準3公理のみ、`sorryAx`なし、変更warning/error 0/0、独立completion receipt [#124424290535](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41162615381/job/124424290535) SUCCESS。ABY [CI #41165349729](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41165349729) は **11,168/11,168 SUCCESS**、新規16公開定理、標準3公理 `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、変更warning/error 0/0、独立completion receipt [#124432651768](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41165349729/job/124432651768) SUCCESS。
+
+## CLOSED — ABX：真正物理受信器の整合領域を実模型から構成
+
+AAZの既証定理「すべての有限H・b>0で、同一の中心化Gauss-law源の真正GI gapがあるリンクで非零」を、ABTの厳密な符号付き二点表示とFFの**変更していない真正受信器**へ接続。新規の整合仮定なく、ある真正リンク `e`、向き `s∈{1,-1}`、非空**開**の外側真正pair-Haar境界event `A` と、非空**開**の内側補助二コピーSU(2) Haar event `V` を構成し、両方の元のHaar質量が**厳密正**であること、`η,κ>0` があって `∀z∈A, ∀(g,h)∈V, s(F_z(g)-F_z(h))≥η, c_b(g,h)≥κ` を証明した。その結果、`∀z∈A, ∫_V s Φ_z d(μ×μ)≥ηκ exp(-32b)(μ×μ)(V)>0`。向きsは受信器の符号記録であり**物理源の置換ではない**。新規 `V` はABVの固定cap `U` と一致するとは限らず、固定capのHaar下界 `1/64` は移植しない。
+
+[ABX全Lean本文](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/72ea17713148f75bc59be714e0211a8b710e5a6d/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalActualReceiverAlignmentV5_PZ37ABX.lean)。
+
+## CLOSED — ABY：真正密度行列式・全符号付きtailの厳密両側比較
+
+ABUの元の二つの相互作用Wilson posteriorの行列式 `D_b(g,h)` と、元の時間Wilsonエネルギー交差 `c_b(g,h)=2b(E(h)-E(g))` に対し、全点で **`D_b=k_b c_b`** を証明した。`c_b≠0` で `k_b=D_b/c_b`、`c_b=0` では `k_b=1` と定義し、`exp(-32b)≤k_b≤exp(32b)` を全有限H・真正リンク・右背景について証明。零交差でのこの総関数の**連続性は主張しない**。係数は新しいposteriorでも新しい物理測度でもない。
+
+`Φ_z(g,h)=(F_z(g)-F_z(h))D_b(g,h)`、`Ψ_{z,s}(g,h)=s(F_z(g)-F_z(h))c_b(g,h)`、`M_s(z)=∫_{G×G} max(Ψ_{z,s},0)d(μ×μ)` とすると、全域で `sΦ_z=k_b Ψ_{z,s}`、負領域の一致、完全正・負部分の両側評価
+
+`exp(-32b)M_s≤∫max(sΦ_z,0)≤exp(32b)M_s`、
+
+`exp(-32b)M_{-s}≤∫max(-sΦ_z,0)≤exp(32b)M_{-s}`
+
+と、**元のGI gap** の両側下界／上界
+
+`(exp(-32b)M_s-exp(32b)M_{-s})/2 ≤ sΔ_GI(z) ≤ (exp(32b)M_s-exp(-32b)M_{-s})/2`
+
+を新たなtail上界の**仮定なしでLean証明**した。ABXの実整合長方形で `M_s(z)≥ηκ(μ×μ)(V)` を得るため `∀z∈A` で
+
+`sΔ_GI(z) ≥ [exp(-32b)ηκ(μ×μ)(V)-exp(32b)M_{-s}(z)]/2`。
+
+これは**全負寄与の小ささの証明ではない**。実物理受信器に依存する全不整合積分 `M_{-s}` が定量的に露出したことが成果。
+
+[ABY密度係数Lean](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/e9641c02a2830455ac8fec3ce288561acf589914/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalDeterminantSlopeV5_PZ37ABY.lean) ／ [ABY全符号付きtail Lean](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/e9641c02a2830455ac8fec3ce288561acf589914/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFullSignedTailV5_PZ37ABY.lean)。
+
+## OPEN — 次段階P4-Q2-PZ37ABZ（仮称）：実物理不整合・体積一様性
+
+最重要の未解決入力は `M_{-s}` の**真正Wilson物理源からの**小ささと、ABXで構成された `A,V,η,κ` の**Hに依存しない**局所・固定support構成または適切な割合評価である。さらにABW／ABX／ABYの補助 `μ×μ` と元の外側pair-Haar `μ_H` を混同しない。他プラケット・遠方相殺、ABSの粗いHaar中心化絶対誤差obstruction、ABM／PZ37ZA no-goを維持。全物理Hilbert coercivity、共通positive-fine、同一endpoint E/F、任意深さ、H1–H4、OS/Wightmanおよび4D連続体Yang–Mills mass gapは**OPEN**。
+
+**以下のABW以前の節は当時の履歴として無修正で保持する。** この文書同期はdocs-onlyで、Leanを不要に再実行しない。
+
+---
+
+# MGAP4D — main文書ミラー（P4-Q2-PZ37ABW・2026-10-31 JST）
+
+このdefault `main` は **README・ROADMAPのみの文書ミラー**であり、唯一のLean定理正本 `formal/real-hilbert-uniform-coercive-strong-limit` ではない。[正本docs-only #6034](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6034) の統合commit `7c6b3f093fa17939d6a54b8c3827bb4d6a620053` に基づき、定理 #6033 の検証済み成果を文書として反映する。ABW定理squash `f37f4fceb0ee6b74d3d30e63be9cb1006e3c1e4e`、exact-source `405aae45e47501ca868bad5258ead2c0fa7efd7e`、[CI #41159498041](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41159498041) はいずれも別々の証拠であり、mainにLean定理を移すものではない。
+
+---
+
+# MGAP4D — 最新検証済み定理 P4-Q2-PZ37ABW（2026-10-31 JST）
+
+**唯一の定理正本：** `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラーであり、Lean定理正本ではない。[ABW PR #6033](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6033) は **MERGED**。最後の定理bearing squash SHA とマージ直後の正本HEADは `f37f4fceb0ee6b74d3d30e63be9cb1006e3c1e4e` で完全一致した。検証したsource SHAは `405aae45e47501ca868bad5258ead2c0fa7efd7e` で、squash SHAとは区別する。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を固定。
+
+**exact-source検証：** [CI #41159498041](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41159498041) は workflow・Lean step **completed / SUCCESS**、依存先を含め **11,008 / 11,008 SUCCESS**。新規Lean 1ファイル（218行、8公開定理）のwarning/error **0/0**、8件の `#print axioms` は `propext`／`Classical.choice`／`Quot.sound` のみ、`sorryAx` なし。独立completion receipt [#124415047421](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41159498041/job/124415047421) も **SUCCESS**。検証sourceと定理squashの全ファイルtree `bc481a3ac39226e8a9426436f83cc67222c5c88c` は完全一致。
+
+## CLOSED — 真正物理受信器についての条件付き正Haar領域・負tail接続
+
+既存ABTの**元のGauss-law物理Hilbert源** `f`、FFの**元のsigned receiver** `F(g)`、二つの正規化された**元の相互作用Wilson posterior** `p₀,p₁` をそのまま保ち、ABUの `D_b(g,h)=p₀(g)p₁(h)-p₁(g)p₀(h)` と `Φ=(F(g)-F(h))D_b(g,h)` を同一視した。ABVの変更されていない固定SU(2) Haar領域 `U={E(g)≤1/2}×{E(h)≥3/2}` は `(μ×μ)(U)≥1/64`、`D_b≥2b exp(-32b)` を持つ。
+
+**今回の条件付き定理：** 実際の元の受信器について `b≥0`、`η≥0`、`∀(g,h)∈U, F(g)-F(h)≥η` を**明示的な前提**とすると、
+
+`Φ(g,h)≥2ηb exp(-32b)`（領域 `U` 上）、
+
+`∫_U Φ d(μ×μ) ≥ η b exp(-32b)/32`、
+
+`∫_(G×G) max(Φ,0) d(μ×μ) ≥ η b exp(-32b)/32`。
+
+さらに**全負部分** `∫max(-Φ,0)≤N` を独立に証明できれば、実際の同じ物理GI expectation gapについて
+
+`Δ_GI ≥ (η b exp(-32b)/32 - N)/2`
+
+が従う。`b>0` かつ `N<η b exp(-32b)/32` なら `Δ_GI>0`。代替として**実際の符号付き補集合積分** `∫_(Uᶜ)Φ≥-N` を前提にしても同じ下界をLean証明した。負tailも他プラケットも削除していない。
+
+[完全な新規Lean定理本文](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/f37f4fceb0ee6b74d3d30e63be9cb1006e3c1e4e/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalReceiverHaarRegionMarginV5_PZ37ABW.lean)。8定理には全て `#print axioms` が付く。ABV以前の定理・正規化・Perron代表・public rootを変更していない。
+
+## OPEN — 今回は証明していない独立した物理入力
+
+- 実際の元の物理受信器での、`η>0` となる点ごと・領域一様の**符号整合と振幅**。元のFF定義で `F` は正のWilson joint半密度×逆Perron因子で割った**真正joint receiverの右リンク更新差**であり、`D_b>0` だけから受信器差の符号は出ない。次はこの更新差の符号・定量範囲を元の物理源ごとに分析する。
+- 元の `∫max(-Φ,0)`、または `∫_(Uᶜ)Φ` に対する**実モデル内の全寄与制御**。この `N` の量的制御、他プラケット・遠方相殺、真正外側境界pair-Haar `A_p/G` の体積一様下界はOPEN。
+- 全物理Hilbert coercivity、共通positive-fine、同一endpoint E/F、任意深さ、H1–H4、OS/Wightman、非自明な4D連続体Yang–Millsとmass gapは**OPEN**。ABSの粗いHaar中心化絶対誤差の障害、ABM・PZ37ZAの量化されたno-goを保持する。
+
+**以降のABVまでの「最新」「OPEN」記述は、証明当時の履歴として原文を保持する。現在の到達はABWの上記条件付き定理であり、未証明条件はCLOSEDにしない。** この文書の追記はdocs-onlyで、Strict Leanを不要に再実行しない。
+
+---
+
+# MGAP4D
+
+## 現在の定理チェックポイント — 2026-10-31 JST · P4-Q2-PZ37ABR–ABV
+
+**この `main` は文書ミラーであり、Lean定理正本ではない。** 唯一の定理正本は [`formal/real-hilbert-uniform-coercive-strong-limit`](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit)。この追補は正本の検証済み結果を文書として反映する。Lean定理を `main` へ移したという意味ではない。
+
+**文書ミラー同期元：** 正本のdocs-only commit [`e30f72afe94c8023cc7d185ee059a1a08a58bc88`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/e30f72afe94c8023cc7d185ee059a1a08a58bc88) の [README](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/e30f72afe94c8023cc7d185ee059a1a08a58bc88/README.md)／[ROADMAP](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/e30f72afe94c8023cc7d185ee059a1a08a58bc88/ROADMAP.md)。この文書同期SHAとABVの検証source・定理squashを区別する。
+
+**検証済み基準点：** [ABV / PR #6030](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6030) の定理squash [`3b0974b18ad4d7843298ce92be2365fd1e2409e6`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/3b0974b18ad4d7843298ce92be2365fd1e2409e6)。このSHAはABR–ABVの統合を含む。ABVのexact-sourceは [`af809652c2ee4d77949fea7c9881c3aada45bacf`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/af809652c2ee4d77949fea7c9881c3aada45bacf)。検証したPR source SHAと定理squash SHAを区別し、後続のdocs-onlyマージは新しい定理の証明と数えない。Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を維持する。
+
+### ABR–ABV — 元の相互作用Wilson模型で閉じたこと
+
+| 段階 | 証明済みの内容 | 量化・限界 |
+| --- | --- | --- |
+| [ABR #6026](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6026) | 元のsourceにPerron因子を挿入しない遠方重み `S_B`、既存Perron遠方重み `R_B`、正の補正 `V_B=S_B/R_B` を区別。真の四辺Perron周辺密度と元のsourceの厳密積分表示、正負部分への分解。 | `V_B=1` を仮定しない。真の物理転送ノルム `t_(H,b)` と `Ω_b(B)` を保持。 |
+| [ABS #6027](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6027) | `b≥0` で `S_B` の相対比較係数 `exp(24b)`、`V_B` の相対比較係数 `exp(80b)`、任意の符号付き連続四辺テストの厳密な絶対誤差評価。 | 全絶対値費用は負部分を含む。正値性は明示したsigned-margin条件の下でのみ成立し、絶対質量の体積一様下界は得ていない。 |
+| [ABT #6028](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6028) | 同じ物理受信器と二つの元の相互作用posteriorについて、GI gapを二変数の符号付き積分として厳密表示。正負の積分の差と正値性の必要十分条件。 | Haarの二変数は補助的な一リンク群の二コピー。posterior独立性や元の外側境界pair-Haarの置換を意味しない。 |
+| [ABU #6029](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6029) | 実際のposterior密度行列式 `D_b` を時間Wilson crossing `c_b` と正の実密度積で表示し、体積に依存しない点ごとの下界を導出。 | `c_b` の定義は `H`・選択リンク・右背景に依存しない。密度行列式の正値性と物理受信器の符号・振幅の整合は別の入力。 |
+| [ABV #6030](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6030) | 元のSU(2) Haar上の固定領域 `U={E(g)≤1/2}×{E(h)≥3/2}` に質量 `≥1/64` を与え、実際の `∫_U D_b≥b exp(-32b)/32` を導出。 | 全有限 `H`・実リンク・右背景に共通。`b>0` で厳密正値。物理受信器差を掛けたGI積分の下界は別途必要。 |
+
+正本 `39b481be...` の完全な物理定理本文：[ABR](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/39b481be7bc2e64e406c66414f0a4224048727ef/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalSourceRemoteCorrectionV5_PZ37ABR.lean)／[ABS](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/39b481be7bc2e64e406c66414f0a4224048727ef/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalSourceSignedErrorV5_PZ37ABS.lean)／[ABT](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/39b481be7bc2e64e406c66414f0a4224048727ef/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalGITwoPosteriorPairingV5_PZ37ABT.lean)／[ABU](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/39b481be7bc2e64e406c66414f0a4224048727ef/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalPosteriorDeterminantBoundsV5_PZ37ABU.lean)。
+
+**ABRの正規化。** 元の四辺時間核を `K₄`、元の空間半重みを `hW` とし、`M_B=∫K₄(x,B_four)R_B(x)dμ⁴(x)`、`d_B(x)=K₄(x,B_four)R_B(x)/M_B` と置く。`d_B>0`、`∫d_B=1`、`hW(B)M_B=t_(H,b)Ω_b(B)` が成立し、元のsourceについて
+
+`∫K_b(A,B)f(A_four)dHaar_H(A) = t_(H,b)Ω_b(B) ∫d_B(x)V_B(x)f(x)dμ⁴(x)`。
+
+`d_B` はこのPerron四辺周辺密度であり、以下の二posterior行列式 `D_b` とは異なる。`Z_b⁴` や `Z_b^|L_H|` を物理転送ノルムに代入しない。
+
+**ABSの解析的注意（この段落の障害はABSで新しいLean定理として形式化したものではない）。** Haar中心化 `∫f=0` の場合、`q=K₄`、`J=∫qf`、`L=∫q|f|` とすると、元の一リンク核の評価から `exp(-8b)≤q≤1`、従って `|J|≤(exp(8b)-1)L≤(exp(24b)-1)L`。このため粗い絶対誤差による厳密十分条件 `(exp(24b)-1)L<J` は成立しない。この障害は元の符号付きsourceが消えるという定理ではなく、符号付き相関を保持する必要性を示す。
+
+**ABTの厳密な符号付きpairing。** 同じ元のGI物理受信器を `F`、二つの元の正規化相互作用Wilson posterior密度を `p₀,p₁` とし、
+
+`D_b(g,h)=p₀(g)p₁(h)-p₁(g)p₀(h)`、`Φ(g,h)=(F(g)-F(h))D_b(g,h)`
+
+と置く。連続性・可積分性を伴って
+
+`Δ_GI = (1/2) ∫_(μ×μ) (F(g)-F(h))D_b(g,h) = (1/2)(∫Φ₊-∫Φ₋)`
+
+を証明した。ここで `Φ₊=max(Φ,0)`、`Φ₋=max(-Φ,0)`。従って `Δ_GI>0` と `∫Φ₋<∫Φ₊` は同値であり、正部分の下界と全負tailの上界を独立に与えた場合に定量的GI下界が従う。その入力を無条件に成立したものとは扱わない。
+
+**ABUの実密度行列式下界。** `b≥0` について、同じ元のposteriorから
+
+`D_b(g,h)=p₁(g)p₀(h)(exp(c_b(g,h))-1)`、`exp(-32b)≤p₁(g)p₀(h)≤exp(32b)`
+
+を証明した。`D_b≥0 ↔ c_b≥0`、`c_b≥0 ⇒ D_b≥exp(-32b)c_b`、および `|D_b|≥exp(-32b)|c_b|`。元のSU(2)の `R(π)` に対し `c_b(1,R(π))=4b` なので、`b>0` なら全有限 `H`（`H=0` を含む）、全実リンク、全右背景で
+
+`D_b(1,R(π))≥4b exp(-32b)>0`。
+
+ABU単独では一対の群要素での点ごとの証明である。下のABVが正Haar測度領域とその行列式積分を閉じるが、`F(g)-F(h)` の正の下界や積分後の正のGI gapは別の入力として残る。
+
+### ABV — 固定の正Haar測度領域と実posterior行列式の積分下界
+
+`E` は変更されていないSU(2) Wilsonエネルギー、`μ` は元の正規化compact Haarである。`A={g:E(g)≤1/2}`、`C={h:3/2≤E(h)}`、`U=A×C` と置く。この領域は結合 `b`、体積 `H`、リンク、右背景に依存しない。
+
+元の四つのquaternion平行移動と `χ=1-E` から `Σ_(j<4)χ(q_j g)²=1` を導く。従って元のSU(2)の**八つのHaar保存左平行移動**による `A` の逆像が全群を覆い、`μ(A)≥1/8`。真正の中心元による平行移動で `μ(C)=μ(A)≥1/8`、よって `(μ×μ)(U)≥1/64`。八つの点を別の有限群Haarに置き換えていない。
+
+元の `R(π)` が中心の負単位元と等しいこと、`E(R(π)⁻¹g)=2-E(g)`、および
+
+`c_b(g,h)=2b(E(h)-E(g))`
+
+を厳密に証明した。このcrossingは連続で、`b≥0` なら `|c_b(g,h)-4b|=2b(E(g)+2-E(h))`。可測な `U` は `(1,R(π))` の近傍であり、厳密不等式 `E(g)<1/2`、`E(h)>3/2` の開近傍を含む。
+
+`b≥0` で `U` 上の `c_b≥2b` とABUの実密度行列式下界から、元の二つの相互作用posteriorについて
+
+`D_b(g,h)≥2b exp(-32b)`、`∫_U D_b(g,h)d(μ×μ)≥b exp(-32b)/32`
+
+を証明した。実行列式の連続性・可積分性も証明し、`b>0` なら右辺は厳密に正である。全有限 `H`（`H=0` を含む）、全実リンク、全右背景に同じ評価が成立する。
+
+定理本文：[元のSU(2) Haar capと八平行移動](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/3b0974b18ad4d7843298ce92be2365fd1e2409e6/MGAP4D/MathlibAnalytic/SpecialUnitaryTwoWilsonEnergyHaarCapsV5_PZ37ABV.lean)／[実posterior行列式の正領域・積分下界](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/3b0974b18ad4d7843298ce92be2365fd1e2409e6/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalPosteriorPositiveHaarRegionV5_PZ37ABV.lean)。これはABTの**補助的な二コピーHaar上での制限積分**であり、物理受信器差 `F(g)-F(h)` の整合、全負tail、元の外側境界pair-Haar上の下界は引き続き必要である。
+
+### 検証記録 — source・squash・CIを区別
+
+| PR | exact PR source SHA | 定理squash SHA | 完了したPR Lean Fast Check |
+| --- | --- | --- | --- |
+| ABR #6026 | `08c5d63bafa0e344ac1e7c34812f427d1cfcadea` | `bb6c8559693dd7bb48806408829b42c79828477a` | [#41139912350](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41139912350)：11,012/11,012 SUCCESS、18公開定理 |
+| ABS #6027 | `b448b6c183142433720a9450e0c0e3d47db1a831` | `59814cd69781b6ebae9bcf605e79441dad4b88bf` | [#41150355205](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41150355205)：11,014/11,014 SUCCESS、10公開定理 |
+| ABT #6028 | `4933d4f0dd7e8e3155d15c73b7fafb795a467893` | `dd5409990c522ec7dc86e2042e469521d8d718bc` | [#41153079696](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41153079696)：10,652/10,652 SUCCESS、17公開定理 |
+| ABU #6029 | `105023f814c64e6044263ea965a43e155634ad35` | `39b481be7bc2e64e406c66414f0a4224048727ef` | [#41155882313](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41155882313)：10,654/10,654 SUCCESS、14公開定理 |
+| ABV #6030 | `af809652c2ee4d77949fea7c9881c3aada45bacf` | `3b0974b18ad4d7843298ce92be2365fd1e2409e6` | [#41157968798](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41157968798)：11,007/11,007 SUCCESS、27公開定理 |
+
+いずれも変更Leanのwarning/error **0/0**、上記公開定理の `#print axioms` は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` なし、別のexact-source completion receipt **SUCCESS**。ABVの別receiptは [job #124410035502](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41157968798/job/124410035502)。ABRのPR本文に残る初期の検証待ち記述は、完了した上記runとreceiptを現在の検証状態として読む。ABRには任意の旧direct diagnosticが既存flagを尊重するための最小workflow修正が含まれるが、必須の依存関係付きLake検査は維持された。ABS–ABVは新規Lean leafと計画文書の追加であり、既存の物理定義・前提・依存pin・public root・workflowを変更していない。
+
+### OPEN — 真正GIから全物理Hilbert・4D連続体へ
+
+二つの元の相互作用posteriorと同じ物理受信器についての**体積一様な正のGI下界**、受信器差の符号・振幅と密度crossingとの整合、全負tailと他プラケット相殺の制御、元の完全外側pair-Haar上の `A_p`／`G` の一様正下界は **OPEN**。密度行列式下界を物理GI応答の下界へ自動的に読み替えない。
+
+**次のABW候補は条件付きの元の物理受信器整合。** ABVの同じ `U` 上に `F(g)-F(h)≥η≥0` という明示的な入力を置いた場合のsigned pair積分下界を、元の物理受信器のまま形式化する。その条件の実際の成立、正の一様 `η` の構成、および全負tailとの正の余裕は、条件付き命題の証明とは別のOPEN入力である。
+
+全物理Hilbert coercivity、共通positive-fine区間、同一endpoint E/F、任意深さの一様評価、H1–H4、OS/Wightman再構成、非自明な4D連続体Yang–Mills構成とmass gapも **OPEN**。ABMの上限のみの結合条件に対する障害、PZ37ZAの別の補償済み二文脈量のno-go、および全ての先行定理・履歴を保持する。詳しい次の独立入力は[正本ROADMAP](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/formal/real-hilbert-uniform-coercive-strong-limit/ROADMAP.md)。
+
+## 歴史的記録 — ABQ2以前の本文（原文保持）
+
+**この見出し以降の「最新」「現行」「Current」「OPEN」とSHAは各記述時点の履歴である。** ABQ2の「現在の正本は上記ABQ2」という文言も当時の状態を示す。現在の検証済み範囲は本追補による。以下の歴史的本文は削除・改変していない。
+
+---
+
+**Main-branch documentation mirror | 2026-10-29 JST.** Formalized four-dimensional Yang–Mills / genuine interacting Wilson SU(2) research in Lean 4 / pinned mathlib, by Hidetoshi Itakura.
+
+## 最新の定理チェックポイント — 2026-10-31 JST · P4-Q2-PZ37ABQ2 (#6023)
+
+**唯一のLean定理正本：** [`formal/real-hilbert-uniform-coercive-strong-limit`](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit)。`main` は文書ミラー。 [PR #6023](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6023) は **MERGED**、定理正本 HEAD は [`26632456e8c74d3f36453b4242a67cdbd9ae26a7`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/26632456e8c74d3f36453b4242a67cdbd9ae26a7)（squash SHA と完全一致）。Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を維持。
+
+**厳密検証：** source HEAD `9efc3034670654289f3ddb147f23f7562b9ada33` に対する [exact-source CI #41132500130](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41132500130) は **11,010 / 11,010 SUCCESS**。変更 Lean 2ファイルの warning/error **0/0**。新規公開定理の `#print axioms` は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx` **0件**、独立 completion receipt **SUCCESS**。
+
+### CLOSED — 元の空間Wilson半重み・Perron代表を保持した真正四辺積分
+
+MY の**実際の四辺単射** `e : Fin 4 ↪ L_H` と実際の全補集合 `R_(H,p) = {i : L_H // i ∉ Set.range e}` について、積Haarの座標再構成、選択座標・遠方座標の保存、有限積分の Fubini を Lean 4 で証明した（汎用5定理）。元の四辺以外の時間因子と、相互作用を含む**元の空間半重み × 正値のPerron代表**を保持して遠方積分 `R_(H,p,b,B)(x)` を定義し、その積分関数の可積分性、厳密正値性、および全有限 `H`（`H=0` を含む）、全真正プラケット `p`、`b≥0` での体積一様な相対比較
+
+`exp(-56b) R(y) ≤ R(x) ≤ exp(56b) R(y)`
+
+を証明した。これは**相対比較**であって、遠方重みの絶対質量に体積一様な正下界を与える主張ではない。
+
+元の全one-slab核 `K_b(A,B)`・元の連続Perron代表 `Ω_b(A)` に対し、任意の連続な実数値四辺テスト `f` について
+
+`∫ Ω_b(A) K_b(A,B) f(A∘e) dHaar_H(A) = hW_b(B) ∫ K_b⁽⁴⁾(x,B∘e) R_(H,p,b,B)(x) f(x) dμ⁴(x)`
+
+を厳密に証明した。特に `f=1` では、元の物理的転送ノルム `t_(H,b)` による**真の質量**
+
+`hW_b(B) ∫ K_b⁽⁴⁾(x,B∘e) R_(H,p,b,B)(x) dμ⁴(x) = t_(H,b) Ω_b(B)`
+
+を得る。`Z_b^|L_H|` や `Z_b⁴` を物理ノルム `t_(H,b)` に代入していない。
+
+定理ファイル：[汎用有限積再構成・Fubini](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/26632456e8c74d3f36453b4242a67cdbd9ae26a7/MGAP4D/MathlibAnalytic/FiniteProductEmbeddingAssemblyIntegral.lean)／[ABQ2 元の遠方Perron積分と真正核表示](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/26632456e8c74d3f36453b4242a67cdbd9ae26a7/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalRemotePerronMarginalV5_PZ37ABQ2.lean)。Lean 4 の最終型照合障害は、遠方補集合の `Fintype` に使う `DecidableEq Link` の異なる実装が不透明な `Measure.pi` 内へ入り込むことにあり、同じ `Classical.propDecidable` への局所統一で解消した。元の模型・定理文は不変。
+
+### OPEN — 真正GI・全物理Hilbert・4D連続極限
+
+二つの相互作用 posterior に対する**符号付きGI応答の体積一様正下界**、他プラケットとの相殺・負tail制御、完全pair-Haar `A_p`／`G` の一様正下界、全物理Hilbert coercivity、同一endpoint E/F・共通positive-fine区間、任意深さ、H1–H4、OS/Wightman、4D連続体 Yang–Mills mass gap は引き続き **OPEN**。相対密度比較・正値性だけからこれらを推論しない。
+
+**以下の過去の「最新」「OPEN」節は当時の歴史的チェックポイントとして保持する。現在の正本は上記ABQ2である。**
+
+---
+
+## 最新の定理チェックポイント — 2026-10-29 JST · P4-Q2-PZ37ABP (#6019)
+
+**文書ミラー同期元：** 正本の文書 [PR #6020](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6020)、squash [`170030b4503ca5f7b50c6fd144a68195bee1d463`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/170030b4503ca5f7b50c6fd144a68195bee1d463)。
+
+**唯一のLean定理正本：** [`formal/real-hilbert-uniform-coercive-strong-limit`](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit)。`main` は文書ミラー。[PR #6019](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6019) の検証sourceは [`85617e213deb0cb8101fde98f656d096b7f47899`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/85617e213deb0cb8101fde98f656d096b7f47899)、定理squashは [`d3879ed7352b68f68af0f1b467369f91cab11f19`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/d3879ed7352b68f68af0f1b467369f91cab11f19)。Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を保持。
+
+**検証結果：** [exact-source CI #40878551912](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40878551912) は依存関係を含む対象ビルド **11,007 / 11,007 SUCCESS**。新規Lean 2ファイルのwarning/error **0/0**、公開定理11件の公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、独立completion receipt SUCCESS、独立最終レビューPASS。CI実checkout `e6ec3bf2ee7006c103127bf2e4d7268d09dd607e` とsourceの全ファイルtreeは `ad2fcf3d82a810dbbbb8578d350ba4de000ca231` で完全一致。
+
+### 全空間リンクの元の時間核から、真正四辺への制限を証明
+
+実際の全空間リンク集合を `L_H`、MYの真正四辺embeddingを `ι_(H,p):Fin 4 ↪ L_H` とする。元の定義そのもの
+
+`T_(H,b)(A,B)=periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel H 2 b A B=∏_(e∈L_H) k_b(A_e⁻¹B_e)`
+
+に対し、ABPは全有限 `H`、全真正プラケット `p`（`H=0`を含む）、全実数 `b` で
+
+`[∫ T_(H,b)(A,B) f(A∘ι_(H,p)) dHaar_H(A)] / Z_b^|L_H| = [∫ K⁽⁴⁾_b(x,B∘ι_(H,p)) f(x) dμ⁴(x)] / Z_b⁴`
+
+を証明した。有限リンク集合をembeddingの像と補集合へ実際に分割し、積測度の保存同型・分離積のBochner積分公式・選択座標の再添字付けを使用する。各遠方リンクの積分は、同じ目標配置 `B_e` を保って厳密に `Z_b`。補集合 `R_(H,p)` の時間因子質量は `Z_b^|R_(H,p)|`、全リンク質量は `Z_b^|L_H|` である。
+
+一般補題はLeanのtotal integralの約束で任意の実数値 `f` に成立し、連続な物理テストについては通常の可積分性も別途証明した。ABO3の中心化半エネルギー伝送は、いまや**元の全リンク時間積分**として
+
+`F_all(B):=[∫ T_(H,b)(A,B)(E_p(A)−1)/2 dHaar_H(A)]/Z_b^|L_H| = r_b⁴(E_p(B)−1)/2`
+
+と同定され、`∫F_all² dHaar_H=r_b⁸/16`。指定した `0<b₀≤b≤b_max` では `∀H,p, ∫F_all²≥(b₀ exp(−2b_max)/4)⁸/16>0`。
+
+証明：[有限積の重み付きembedding積分](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/d3879ed7352b68f68af0f1b467369f91cab11f19/MGAP4D/MathlibAnalytic/FiniteProductWeightedEmbeddingIntegral.lean)、[ABP 元の全リンク時間Haar制限](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/d3879ed7352b68f68af0f1b467369f91cab11f19/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalAllLinkTemporalHaarRestrictionV5_PZ37ABP.lean)。
+
+### 次のOPEN — 空間相互作用・Perron・符号付き受信器
+
+閉じたのは**全リンク時間因子から真正四辺への制限**。元の全one-slab核は引き続き `spatialHalfWeight(A) · T_(H,b)(A,B) · spatialHalfWeight(B)` である。既存の一リンク作用変動・Perron Harnack・posterior密度の局所評価は保持する。その上で、空間半重みとPerron因子を残した四実リンクの遠方重みの厳密表示・体積一様比較、これと元の二つのinteracting posteriorの符号付き受信器との接続、全物理源の他プラケットとの相殺・負tail制御、一様な完全pair-Haar `A_p`／`G` 下界はOPEN。`Z_b^|L_H|` は全時間因子のHaar質量であり、真正物理転送ノルム `t` ではない。
+
+ABK・ABL・ABMと旧no-goを保持する。全物理Hilbert coercivity、共通positive-fine区間、同一endpoint E/F、任意深さ、H1–H4、OS/Wightman、連続体4D Yang–Mills質量ギャップはOPEN。
+
+**以下のABO以前の「最新」「次のOPEN」は当時の履歴として原文を保持する。** 現在の到達点は本節による。README/ROADMAP同期はdocs-onlyで、Lean CIを実行しない。
+
+---
+
+## 最新の定理チェックポイント — 2026-10-29 JST · P4-Q2-PZ37ABO / ABO2 / ABO3 (#6016)
+
+**文書ミラー同期元：** 正本の文書 [PR #6017](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6017)、squash [`3b168eb70e594c3719f3dac7f5fc9d6a76ae5600`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/3b168eb70e594c3719f3dac7f5fc9d6a76ae5600)。定理は引き続きformal正本上の #6016 に属する。
+
+**唯一のLean定理正本：** [`formal/real-hilbert-uniform-coercive-strong-limit`](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit)。`main` は文書ミラー。[PR #6016](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6016) の検証sourceは [`511bd76e290972caec371b4672a210033436cfa7`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/511bd76e290972caec371b4672a210033436cfa7)、定理squashは [`75f0c61fb538bef71a34a6e544831f98e792bc2b`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/75f0c61fb538bef71a34a6e544831f98e792bc2b)。Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を保持。
+
+**検証結果：** [exact-source CI #40869191576](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40869191576) は依存関係を含む対象ビルド **11005/11005 SUCCESS**。新規Lean 3ファイルのwarning/error **0/0**、公開定理17件の公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、独立completion receipt SUCCESS。既存Lean・元の物理模型・固定依存は変更しない。
+
+CIのPR検証用checkout `a2f6b42bb211a9e56f9c90068efe1390d8699266` と検証sourceは、全ファイルtree `7145a3fdd255089ba3af1b1243fb42f2eb5193a2` が完全一致することも確認した。
+
+### 真正四リンクの時間Wilson文字モードを導出
+
+元の `χ=1−E_W=Re Tr/2`、`k_b=exp(−bE_W)`、正規化SU(2) Haar `μ`、ABNの実積分 `Z_b=∫k_b`・`N_b=∫k_bχ`・`r_b=N_b/Z_b` を用いる。4リンクで `ν=μ^4`、`W(x)=x₂⁻¹x₃⁻¹x₀x₁` とし、**実際の4個の時間因子** `K⁽⁴⁾_b(x,y)=∏ᵢ k_b(xᵢ⁻¹yᵢ)` に対して
+
+`Q⁽⁴⁾_b f(y):=Z_b⁻⁴ ∫K⁽⁴⁾_b(x,y)f(x)dν(x)`
+
+を考える。この `Z_b⁴` は4リンク時間因子のHaar質量であり、全物理転送ノルム `t` ではない。
+
+4リンク上の中心化半エネルギーを `f₄(x)=(E_W(W(x))−1)/2`、実プラケットへの評価を `F_(H,p,b)(A)=(Q⁽⁴⁾_b f₄)(A∘edges_(H,p))` と定める。
+
+| 閉じた結果 | 正確な範囲 |
+| --- | --- |
+| `∫k_b(x⁻¹y)χ(axc)dμ=N_bχ(ayc)`、逆向きには `χ(ax⁻¹c)→χ(ay⁻¹c)` | 任意の周囲のSU(2)群要素と全実数 `b`。Haar平行移動・文字の巡回性・反転不変性から証明。 |
+| `∫K⁽⁴⁾_b(x,y)dν(x)=Z_b⁴`、従って `Q⁽⁴⁾_b1=1` | 同じ実時間因子と同じHaar質量で正規化。 |
+| `∫K⁽⁴⁾_b(x,y)χ(W(x))dν(x)=N_b⁴χ(W(y))`、従って `Q⁽⁴⁾_b(χ∘W)=r_b⁴(χ∘W)` | 元の非可換な四辺の順序を保つ。固有関係を仮定せず、4回の真正一リンク積分から導出。 |
+| 実際の任意の `H,p` で、空間Haarの `∫E_p=1`、`∫(E_p−1)²=1/4` | MYの真正四辺embeddingと元の向き付きWilsonエネルギー恒等式を使用。最小体積 `H=0` も含む。 |
+| 実四辺で評価した伝送後文字は平均0・二乗モーメント `r_b⁸/4`、中心化半エネルギー `(E_p−1)/2` の伝送後は平均0・二乗モーメント `r_b⁸/16` | 完全な元の空間Haar参照測度上の恒等式。選んだ四辺の時間畳込みについての結果。 |
+| `∫F_(H,p,b)(A)² dHaar_H(A)≥(b₀ exp(−2B)/4)⁸/16>0` | 指定した `0<b₀≤b≤B` で、全ての有限 `H` と真正 `p` に共通する下界。 |
+
+証明ファイル：[ABO 一リンクの向き](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/75f0c61fb538bef71a34a6e544831f98e792bc2b/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalOneLinkCharacterConvolutionV5_PZ37ABO.lean)、[ABO2 四リンク積分](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/75f0c61fb538bef71a34a6e544831f98e792bc2b/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFourLinkCharacterConvolutionV5_PZ37ABO2.lean)、[ABO3 真正プラケットへの輸送と分散](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/75f0c61fb538bef71a34a6e544831f98e792bc2b/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalPlaquetteTemporalHaarFloorV5_PZ37ABO3.lean)。
+
+### 次のOPEN — 実際の相互作用する重みと符号付き物理GIへの接続
+
+選択した四リンクの時間畳込み恒等式は閉じた。次に、全空間リンクにわたる時間因子の積からこの四辺への正確な制限・積分表示、遠方変数を積分して得る元の空間Wilson相互作用の実重み、その体積一様比較・下界を閉じる必要がある。続いてPerron半密度と二つのinteracting posteriorの符号付き対比、および全物理源の他プラケットとの相殺を制御する。
+
+このHaar二乗モーメントを完全pair-Haar上の `A_p` や `G` と同一視しない。固定 `b>0`／`0<b₀≤b(H)≤B` でも、一様 `A_p≥α>0`、全物理Hilbert coercivity、共通positive-fine区間、E/F、H1–H4、OS/Wightman、連続体Yang–Mills質量ギャップはOPEN。ABMの上限のみの結合条件に対する障害とABLの有限体積正値性を保持する。
+
+**以下のABN以前の「最新」「現行」とOPEN記述は当時の履歴として保持する。** 現在の到達点と量化範囲は本節による。README/ROADMAPの同期はdocs-onlyであり、Strict Leanを起動しない。
+
+---
+
+
+## 最新の定理チェックポイント — 2026-10-29 JST · P4-Q2-PZ37ABN / ABN2 (#6013)
+
+**唯一のLean定理正本：** [`formal/real-hilbert-uniform-coercive-strong-limit`](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit)。`main` は文書ミラー。[PR #6013](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6013) の検証sourceは [`e71a43d39c9ed71e93a33c6953ce39205aa90719`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/e71a43d39c9ed71e93a33c6953ce39205aa90719)、定理squashは [`1aa3b282399c534f2aba7f9f97307726d4c7f5e0`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/1aa3b282399c534f2aba7f9f97307726d4c7f5e0)。Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を保持。
+
+**検証結果：** [exact-source CI #40859191626](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40859191626) は **11003/11003 SUCCESS**。新規Lean 3ファイルのwarning/error **0/0**、公開定理24件の公理依存は `propext`・`Classical.choice`・`Quot.sound` のみ、`sorryAx`なし、独立completion receipt SUCCESS。文書同期は定理を追加しない。
+
+**文書ミラーの同期元：** 正本のdocs-only [PR #6014](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6014)、文書squash [`288d4381efdc92eef29d46d698b8a773cfd9e2c8`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/288d4381efdc92eef29d46d698b8a773cfd9e2c8)。mainへの追加はREADME/ROADMAPだけで、Lean定理は正本に保持する。
+
+### 元の一リンク時間Wilson核から閉じた下界
+
+元の正規化SU(2) Haarを `μ`、元のWilsonエネルギーを `E`、文字を `χ=1−E=Re Tr/2` とする。実際の時間因子 `k_b=exp(−bE)` から、`Z_b=∫k_b dμ`、`N_b=∫k_bχ dμ`、`r_b=N_b/Z_b` を定義する。ここで `Z_b` は一リンクHaar質量であり、全物理転送ノルム `t` と区別する。
+
+| 閉じた結果 | 正確な範囲 |
+| --- | --- |
+| `∫χ=0`、`∫χ²=1/4` と元の指数核から `b exp(−2b)/4≤N_b`、`b exp(−2b)/4≤r_b≤1` | `b≥0`。`b>0` なら `r_b>0`。`r_b` は全実数上連続で `r_0=0`。 |
+| `T_bχ(a):=Z_b⁻¹∫k_b(g)χ(g⁻¹a)dμ(g)=r_bχ(a)` | 実際のSU(2)行列恒等式とHaar反転不変性から証明した一リンク畳込み恒等式。固有関係を仮定しない。 |
+| `∫T_bχ=0`、`∫(T_bχ)²=r_b²/4` | 同じ元のHaar上での転送後文字モードの正確な分散。 |
+| `c₀:=b₀ exp(−2B)/4>0`、`r_b≥c₀`、`∫(T_bχ)²≥c₀²/4>0` | 指定した `0<b₀≤b≤B` 全域に共通する明示的下界。体積パラメータを含まない一リンク量についての結果。 |
+| `mλ‖v‖≤‖Q(W(v−cu))‖` とその二乗版 | 別の抽象補題。対称線形写像 `Q`、直交 `u,v`、`Qu=u`、`Qv=λv`、`0≤λ≤1`、`m≥0`、`⟨Wx,x⟩≥m‖x‖²` を明示した条件付き転送評価。 |
+
+証明ファイル：[ABN係数](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/1aa3b282399c534f2aba7f9f97307726d4c7f5e0/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalTemporalCharacterTransmissionV5_PZ37ABN.lean)、[ABN2固有恒等式・分散](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/1aa3b282399c534f2aba7f9f97307726d4c7f5e0/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalTemporalCharacterEigenlawV5_PZ37ABN2.lean)、[二モード重み付き転送補題](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/1aa3b282399c534f2aba7f9f97307726d4c7f5e0/MGAP4D/MathlibAnalytic/SymmetricTwoModeWeightedTransmission.lean)。
+
+### 次のOPEN — 真正四リンクと相互作用する物理応答への接続
+
+実際のプラケット四辺の時間畳込みへの固有恒等式の拡張、空間相互作用を積分した実重みの体積一様下界、Perron因子・二つのinteracting posteriorの符号付き対比との接続、全物理源の他プラケットとの相殺制御が残る。抽象補題の固有関係・重み下界を、完成した物理GIの事実として扱わない。
+
+従って固定 `b>0`、または `0<b₀≤b(H)≤B` でも、元の完全pair-Haar上の一様 `A_p≥α>0` と、それによる一様 `G` の正の下界はOPEN。ABMの「上限のみの結合条件では一様絶対重なりを保証できない」という実モデル内の障害を保持する。全物理Hilbert coercivity、共通positive-fine区間、E/F、H1–H4、OS/Wightman、連続体Yang–Mills質量ギャップもOPEN。
+
+**以下のABM以前の「最新」「現行」見出しとOPENは各時点の履歴として保持する。** 現在の到達点と量化範囲は本節による。元のWilson核・Perron真空・Gauss-law物理源・二つのposterior・完全pair-Haar・実転送ノルムと、全ての既存no-goを保持する。本同期はdocs-onlyでStrict Leanを起動しない。
+
+---
+
+## 最新の定理チェックポイント — 2026-10-29 JST · P4-Q2-PZ37ABM (#6010)
+
+**唯一のLean定理正本：** [`formal/real-hilbert-uniform-coercive-strong-limit`](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit)。`main` は文書ミラー。ABMの記録は [PR #6010](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6010)、検証対象source [`965054a69cf1be2c66830648ea90cf81fb85db47`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/965054a69cf1be2c66830648ea90cf81fb85db47)、[exact-source CI #40853685655](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40853685655)。Lean `v4.30.0-rc2`／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` を保持。
+
+**ABMの検証結果：** [exact-source CI #40853685655](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40853685655) は **11177/11177 SUCCESS**、変更Leanファイル1件のwarning/error **0/0**、新規公開定理12件の公理依存は `propext`・`Classical.choice`・`Quot.sound` の範囲、`sorryAx`なし、独立completion receipt SUCCESS。検証sourceと異なる定理squashは [`cf3d40e1dba4c2d8f718fb4525aa519351bc897c`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/cf3d40e1dba4c2d8f718fb4525aa519351bc897c)。後続の文書同期は定理を追加しない。
+
+**文書ミラーの同期元：** 定理正本のdocs-only [PR #6011](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6011)（[README](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/2a56ce70aeb18fe85934a289fd26df2a5d8cbe69/README.md)・[ROADMAP](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/2a56ce70aeb18fe85934a289fd26df2a5d8cbe69/ROADMAP.md)）。定理squashと文書同期SHAを区別し、mainへの追加は文書のみです。
+
+### ABG以後の検証済み到達点 — ABH〜ABL
+
+元のWilson核、Perron真空、Gauss-law物理源、実転送ノルム `t>0`、二つの相互作用するposterior、完全な元のpair-Haar `μ_H` を保持する。`C_p=t Δ_full Δ_local,p`、`c_p=∫C_p=tK_p`、`A_p=∫|C_p|`、`N_p=∫max(-C_p,0)` とし、`G=∫Δ_full²`、`Mcomp_p=∫(tΔ_local,p)²`、`E_b=exp(8b)(exp(16b)−exp(−16b))` を用いる。
+
+| 段階 | 閉じた数学的内容 | 残る条件・範囲 |
+| --- | --- | --- |
+| [ABH #6003](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6003) | 真正の符号付き密度の連続性・積分恒等式と、完全な負部分を含む `c_p≥ρδ−η`。 | `H` 一様な事象質量 `ρ`、振幅 `δ`、負tail上界 `η`、正の余裕は別途必要。 |
+| [ABI #6006](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6006) | `0<b(H)≤B` から実際の `E_b≤E_B` を証明。共通 `c_p≥κ>0` があれば `G≥4κ²/E_B²`。 | 結合上限が閉じるのはスケール上界。一様な正の交差相関は未導出。 |
+| [ABJ #6007](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6007) | 真正の全プラケットBessel評価から `Σ Mcomp_p≤6E_b²`、`Σ c_p²≤6E_b²G`、`Σ N_p²≤6E_b²G`。 | 最初のbudgetは体積非依存。交差・負tailの評価には元の `G` が残る。 |
+| [ABK #6008](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6008) | `A_p=c_p+2N_p`、`A_p²≤G Mcomp_p`、`Σ A_p²≤6E_b²G` と正確な相殺費用 `4N_p(N_p+c_p)≤G Mcomp_p−c_p²`。 | 独立の十分条件 `A_p≥α>0` が一様なら `G≥4α²/E_B²`。その証人の一様存在は別問題。 |
+| [ABL #6009](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6009) | 真の二次モーメント `J_p=∫C_p²≤G(E_b/2)²`、`ΣJ_p≤6E_b²G`。各有限 `H,b>0` で正の `A_p` の証人を選び、開事象 `U_p={A_p/2<abs(C_p)}` を構成し `μ_H(U_p)≥A_p²/(E_b²G)>0`。 | 同じ事象でfull/localの両GI応答が非零。一様な事象質量や一様な `A_p` は未証明。 |
+
+ABLは [CI #40849967415](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40849967415) が11,176/11,176 SUCCESS、変更Lean warning/error 0/0、7公開定理の `#print axioms` が標準3公理 `propext`／`Classical.choice`／`Quot.sound` のみ、`sorryAx` なし、独立completion receipt SUCCESS。検証sourceは `1352fa52f2068d4a420fb959bea05ddeea786f95`、squashは `10c81d79d36008cfff20cb53e0adc5d5e5292e5f`。
+
+### ABM — 結合上限だけでは一様な絶対重なりを保証できない
+
+`P_H` を真正のプラケット数、`M_H` を元の有限スラブ作用budgetとする。実際の応答の和と実転送ノルムの下界から、全ての真正の `e,p` について
+
+`0≤A_(H,b,e,p)≤Q_H(b):=P_H exp(b M_H)(E_b/2)²`
+
+を得る。体積因子は省略しない。固定した有限 `H` ごとに**このスカラー上界**は連続で `Q_H(0)=0` となるため、任意の `B>0` に対し、一つの厳密に正の結合族 `b(H)` を選んで
+
+`0<b(H)≤min(B,1/(H+1))`、かつ `∀H,e,p, A_(H,b(H),e,p)<1/(H+1)`
+
+とできる。従って、この族では `∃α>0, ∀H, ∃e,p: α≤A_(H,b(H),e,p)` が成立しない。一方、**同じ族の各有限体積にはABLの正の証人が存在する**。有限体積での正値性から共通の正の下限へ進む推論が、実際の相互作用するモデル内で破れる。
+
+**更新されたOPEN：** 固定 `b>0`、または明示した `0<b₀≤b(H)≤B` の領域で、真正Wilsonから必要な一様下界を独立に導出する課題が残る。結合の正の下限を仮定するだけでは証明は閉じない。ABLの有限体積の正の事象比 `A_p²/(E_b²G)` は保持され、`A_p` の小ささだけではその比や事象質量の極限は決まらない。全物理Hilbert coercivity、共通positive-fine区間、E/F、H1–H4、OS/Wightman、連続体Yang–Mills質量ギャップはOPEN。
+
+**以下のABG見出しにある「Latest」・「Current」および旧OPEN記述は、その時点の履歴として保持する。** 現行の到達点・量化範囲は本節による。旧PZ37ZAのno-goと全ての先行証明・履歴を残す。この文書同期はdocs-onlyであり、Lean定理を追加せず、Strict Leanを起動しない。
+
+---
+
+## Current authoritative theorem MIRROR — ABG / PR #6002 (2026-10-29 JST)
+
+**This default `main` is documentation only.** The sole Lean theorem-bearing branch remains [`formal/real-hilbert-uniform-coercive-strong-limit`](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit). Its current docs-only checkpoint was squash-merged by [#6004](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6004) at `46e70e32ab3af2b0506c0a9b57f0520d8e192b02`; **this is not a theorem-bearing SHA**. The latest *verified Lean theorem-bearing* [PR #6002 / PZ37ABG](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6002) was MERGED with tested source `f752141618f07a5d0c2b1cfd51c5cc2e60bb34d4`, theorem squash `6f68bc2989b7b46b2c3ef1702d521982ed37e521`. [Exact-head CI #40831840574](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40831840574): **11,171/11,171 SUCCESS**, changed Lean warning/error **0/0**, five public axioms reports with only `propext`, `Classical.choice`, `Quot.sound`, no `sorryAx`, independent completion receipt **SUCCESS**.
+
+**New finite-volume ORIGINAL interacting Wilson facts after ABE:** [ABF/ABF2 #6001](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6001) proves `G=K_p+Σ_(q≠p)K_q` with the full signed residual and an actual plaquette `0<G/|P_H|≤K_p`. For the authentic physical one-slab transfer norm `t_(H,b)>0`, the local Gauss-law physical response satisfies `|t Δ_local,p|≤E_b/2` and complete original pair-Haar squared moment `Mcomp≤(E_b/2)²`; `E_b=exp(8b)(exp(16b)−exp(−16b))` depends on coupling, not spatial volume. [ABG #6002](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6002) proves genuine Cauchy–Schwarz `(tK_p)²≤G Mcomp≤G(E_b/2)²`, hence `G≥(tK_p)²/(E_b/2)²`, with an actual strictly positive certificate for EACH finite volume.
+
+**CRITICAL OPEN:** no independently proved H-uniform `κ>0` with `tK_p≥κ`, and thus no uniform positive `G` yet. Positive local open Haar regions, same-sign events, and finite-volume `K>0` do not supply common amplitude, mass or control of the entire signed negative remote contribution. Remaining all-physical-Hilbert coercivity, common positive-fine interval, E/F, H1–H4, OS/Wightman and continuum 4D Yang–Mills mass gap remain OPEN. Historical PZ37ZA no-go remains. **No Lean files transferred to main.** The older ABE mirror checkpoint below is history; this docs-only mirror must not run Strict Lean.
+
+---
+
+## Historical Lean theorem mirror snapshot (2026-10-29 JST · PZ37ABE)
+
+**This `main` branch is a documentation-only mirror, NOT the Lean theorem-bearing branch.** The sole authoritative Lean theorem source is [`formal/real-hilbert-uniform-coercive-strong-limit`](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit). The authoritative [README](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/c570350ea9e876fb4e11f6fd947d1b759d5ab7c8/README.md) and [ROADMAP](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/c570350ea9e876fb4e11f6fd947d1b759d5ab7c8/ROADMAP.md) were updated by **docs-only** [PR #5999](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5999); this docs SHA is **not** a new mathematical theorem.
+
+| Verified source/evidence | Grounded conclusion |
+| --- | --- |
+| Latest **theorem-bearing PR** | [#5998 P4-Q2-PZ37ABE](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5998) **MERGED**, following [ABA/ABA2 #5994](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5994), [ABB/ABB2 #5995](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5995), [ABC/ABC2 #5996](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5996), and [ABD/ABD2 #5997](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5997), all MERGED on the theorem branch |
+| Actual exact tested **PR source** SHA | [`25b6cc2bc6171603bfbb909a23918be3a25586b4`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/25b6cc2bc6171603bfbb909a23918be3a25586b4) |
+| Last **theorem-bearing squash** SHA | [`75bee4a633cb1296a47a85624cd65a0917fddc8d`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/75bee4a633cb1296a47a85624cd65a0917fddc8d), confirmed equal to the authority HEAD immediately after PR #5998 squash |
+| [Exact-source-head CI #40827511993](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40827511993) | **11,168 / 11,168 Lean SUCCESS**, changed Lean warning/error **0/0**, three new public `#print axioms` only `propext`, `Classical.choice`, `Quot.sound`, no `sorryAx`, independent receipt **SUCCESS** |
+| Latest authoritative **docs-only** squash | [`c570350ea9e876fb4e11f6fd947d1b759d5ab7c8`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/c570350ea9e876fb4e11f6fd947d1b759d5ab7c8) via #5999, advancing the document HEAD without modifying Lean sources |
+| Pinned environment | Lean `v4.30.0-rc2` / mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
+
+**Proven genuine finite-volume Wilson results:** ABA independently bounds the actual interacting-posterior FX variance by `(e^(16b)-e^(-16b))²`, without inherited JL `native_decide` axioms. At every finite `H,b>0`, the unchanged centered Gauss-law physical Wilson GI gap has a strictly positive genuine full pair-Haar unweighted squared moment on some real link. ABB constructs genuine positive-mass open pair-Haar GI events and two-sided comparison with GB's actual physical source projection. ABC splits the original GI gap exactly into all genuine centered spatial-plaquette contributions **without discarding the signed full residual**. ABD turns every selected centered plaquette into an actual Gauss-law physical Hilbert source and proves a same-sign positive-mass open context with the full source. ABE proves **`Σ_p K_(H,b,e,p)=G_(H,b,e)>0` on a selected actual link**, where `K=∫(original full physical GI gap)(actual centered local plaquette physical GI gap)d(original full pair-Haar)`. Hence at each finite volume some authentic plaquette has a strictly positive **integrated signed global physical cross-response**.
+
+**Still OPEN:** `inf_H G_(H,b(H),e_H)>0`, a fixed-support original Wilson/Perron local response cylinder with a common positive Haar mass/amplitude, control of signed nonlocal remaining-plaquette response, all-Gauss-law physical-Hilbert coercivity, common positive-fine interval, matching endpoint E/F, all-depth H1–H4, OS/Wightman reconstruction and continuum 4D Yang–Mills existence with mass gap. For `0<b(H)≤B`, ABA has **already closed** the common *upper FX cap* `q_B=(e^(16B)-e^(-16B))²>0`, not the uniform positive GI moment. The PZ37ZA no-go concerns a **different compensated two-context quantity** and is retained.
+
+**No Lean theorem files are moved to `main`.** Historical AAZ2 and earlier receipts remain below, explicitly retained as past checkpoints.
+
+---
+
+## Historical main-mirror checkpoint — AAZ2 (#5991), 2026-10-29
+
+**Only authoritative theorem branch:** [`formal/real-hilbert-uniform-coercive-strong-limit`](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit). The default **`main` is a documentation mirror, not the theorem carrier**. In particular, merging documentation into this root cannot be interpreted as merging the current Lean proof library into `main`.
+
+The complete current, audited repository-root documents on the **theorem branch** are:
+- [Authoritative README — theorem-branch docs checkpoint `93a6a06c...`](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/93a6a06c18c7a66f9e29353ea7e2b034b90c0a33/README.md).
+- [Authoritative ROADMAP — genuine outstanding analytic gates](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/93a6a06c18c7a66f9e29353ea7e2b034b90c0a33/ROADMAP.md).
+- [Latest verified theorem-bearing PR #5991 (AAZ / AAZ2)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5991), preceded by [#5990 AAY](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5990) and [#5989 AAX / AAX2](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5989).
+
+| Evidence / pin | Verified value |
+| --- | --- |
+| Latest **theorem-bearing squash** | [`20f910f54791d662b687965af231842a27f093b6`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/20f910f54791d662b687965af231842a27f093b6), equal to the theorem branch HEAD immediately after #5991 was merged |
+| Exact **PR-source SHA** tested (different from squash) | [`d769e275d016b6645e924a116acb0d7653f7e9a0`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/d769e275d016b6645e924a116acb0d7653f7e9a0) |
+| [Exact-head CI #40814241452](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40814241452) | **11,159 / 11,159 SUCCESS**, both changed Lean files **0 warnings / 0 errors**, eight `#print axioms` with only `propext`, `Classical.choice`, `Quot.sound`; no `sorryAx`; independent completed MCP CI receipt **SUCCESS** |
+| Pinned toolchain / mathlib (theorem branch) | Lean `v4.30.0-rc2` / `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
+| Current **docs-only** theorem-branch HEAD | [`93a6a06c18c7a66f9e29353ea7e2b034b90c0a33`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/93a6a06c18c7a66f9e29353ea7e2b034b90c0a33), PR [#5992](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5992); a later docs-only HEAD does **not** replace the theorem-bearing checkpoint |
+
+### Precisely what is established
+
+All of the following refer to the **original** finite-volume interacting Wilson SU(2) model with unchanged positive Perron vacuum, Gauss-law physical Hilbert source, **both actual normalized interacting one-link conditional posterior laws**, and original outer boundary pair-Haar integration. No independent-Haar posterior or artificial physical source is substituted.
+
+For every finite volume `H` and frozen coupling `b>0`, let `V_H` be the original centered Gauss-law source, `C_H=4‖V_H‖²>0` its reference-Haar covariance, `e` an actual spatial link, `Δ_{H,b,e}(z)` the genuine signed GI expectation gap under the two interacting Wilson posteriors, and `Q_{H,b,e}(z)>0` their actual FX Haar-`L²` density-contrast variance. Define the **raw** one-link response and the **source-specific** Rayleigh value:
+
+```text
+J_(H,b,e) = ∫ [Δ_(H,b,e)(z)^2 / Q_(H,b,e)(z)] dμ_H(z)
+R_(H,b)   = (4 / C_H) Σ_e J_(H,b,e)
+G_(H,b,e) = ∫ Δ_(H,b,e)(z)^2 dμ_H(z)   (unweighted GI-gap moment)
+```
+
+**CLOSED, at each fixed finite `H,b>0`:** `R_(H,b)>0`, an actual `e` has `J_(H,b,e)>0`, and — newly in [AAZ #5991](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5991) — the centered `Δ` for some actual link is **not zero pair-Haar-almost everywhere**. Previous AAU results give genuine Wilson spatial-translation covariance, second-moment bound `M₂≤3R²` and positive link participation fraction `≥1/3`. These are *qualitative or relative* finite-volume results, not a volume-uniform positive Rayleigh constant.
+
+**CLOSED combinatorial / conditional analytic steps:** The genuine spatial plaquette count equals link count (`P_H=L_H`), and `C_H≤24L_H`. Hence `J_e≥ε≥0 ⇒ R≥ε/18`. A measurable genuine pair-Haar event with mass `≥ρ`, `|Δ|≥δ` and `0<Q≤q` yields `J_e≥ρδ²/q`. AAZ2 further proves that under a pointwise actual FX upper bound `Q≤q`, the original unweighted square is automatically integrable and `G_e≤qJ_e`; consequently a **common** `G_e≥m>0` and **common** `q>0` would imply the **conditional** bound `R≥m/(18q)>0` across all volumes.
+
+**OPEN and central:** Independently construct a positive volume-uniform `m` for the **actual GI unweighted second moment** on one authentic link per volume, and establish an appropriate common genuine FX upper bound `q` for the chosen frozen coupling schedule. Finite-`H` non-a.e.-zero `Δ` does **not** establish a uniform `m`. The existing JL fixed-coupling genuine FX bound has **five inherited legacy finite-grid `native_decide` axioms** in its original proof and is not silently imported into the standard-only AAZ2 theorem dependency path.
+
+Even source-specific `R≥c` would not, alone, imply uniform coercivity for **all** Gauss-law Hilbert vectors; the common positive-fine interval, same physical endpoint E/F, all-depth results, H1–H4 and continuum 4D Yang–Mills existence/mass gap remain **OPEN**. The older [PZ37ZA #5935](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5935) disproved a **different** bounded compensated **two-context** `Q_GI/N_H` density floor; this is **not** a no-go for genuine full-link, full-boundary-pair-Haar physical GL mass.
+
+**Recommended workflow:** read the fresh theorem-branch HEAD and its complete Lean sources/imports and authoritative exact-head CI receipts first; use the theorem-branch [ROADMAP](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/93a6a06c18c7a66f9e29353ea7e2b034b90c0a33/ROADMAP.md) for next mathematical gates. A documentation-only root update must not trigger or imply a new Strict Lean validation.
+
+---
+
+## Historical root documentation (2026-10-04; preserved)
+
+The following original `main` README documents a prior #5077/#5078 stage. References below to “current” or “next” were true **at that dated checkpoint**, but are superseded as present-day status by the section above. Historical mathematical achievements, no-go statements and exact-head receipts are preserved, not deleted.
+
+Hidetoshi Itakura's Lean 4 / mathlib development for the four-dimensional Yang--Mills existence and mass-gap program.
+
+## Historical theorem status — through merged PRs #5077 and #5078 (2026-10-04)
+
+The finite-volume positive-coupling transfer-gap route remains closed with the explicit volume/rank/scale-uniform constants
+
+~~~text
+1/2304 <= kappa_12(s,beta)
+
+1/3072 <= finite-volume physical top-eigenspace transfer gap
+
+q0 = 3071/3072
+
+||R_n^m x|| <= q0^m ||x||.
+~~~
+
+The q0 estimate is available on the full completed physical pair non-top sector.
+
+The main change since the #5061 documentation checkpoint is that the old completed H1-D5 seam has not been revived. Instead the repository now has two weaker post-no-go routes:
+
+1. a canonical projected/local-coefficient route (#5063--#5076), and
+2. a stronger finite-dimensional SU(2) Gram--Schmidt route opened by #5077.
+
+The second route is now the preferred next target because it can avoid any vacuum/top fidelity assumption. PR #5078 has already closed its pure finite-dimensional core: two real scalar constraints on a unit vector in Euclidean R^3 have a common normalized solution by rank-nullity.
+
+A complete continuum four-dimensional Yang--Mills existence theorem and Wightman mass-gap theorem are not yet claimed.
+
+## Authority checkpoint — 2026-10-04 JST
+
+| Item | Authoritative value |
+| --- | --- |
+| Repository | itakura-hidetoshi/4d-mass-gap |
+| Unique theorem-carrier branch | formal/real-hilbert-uniform-coercive-strong-limit |
+| Latest theorem-bearing merge | 426ad4fe783d030a61687fbb123aca00b90a3d1d |
+| Latest theorem-bearing branch tip | merge 426ad4fe783d030a61687fbb123aca00b90a3d1d; #5077 merged after #5078 and contains both theorem lines |
+| #5077 | all SU(2) Wilson-energy Gram--Schmidt modes realized as physical endpoint pairs |
+| #5077 validation | head aaa6d50c2da21461a76a6a0e6e2f9ee72b518998; run 37157037971 success; exact-head receipt success |
+| #5078 | abstract Fin 3 two-functional unit-kernel selector |
+| #5078 validation | head 61acb9b380ee3822e5574c1e9fd56e61cba5d64f; run 37156892868 success; exact-head receipt success |
+| Pinned Lean | v4.30.0-rc2 |
+| Pinned mathlib | 5450b53e5ddc75d46418fabb605edbf36bd0beb6 |
+
+The default branch main is not theorem authority. It is a documentation mirror.
+
+Authority order is fixed:
+
+1. fresh exact theorem-carrier SHA;
+2. formal Lean theorem artifacts at that SHA;
+3. README / ROADMAP;
+4. exact-head CI receipts;
+5. history / conversation memory.
+
+README / ROADMAP-only commits are docs-only and do not replace the latest theorem-bearing snapshot.
+
+## Current claim boundary
+
+### Closed
+
+- beta = 0 physical transfer gap equals 1;
+- positive-beta finite-volume coercivity;
+- volume/rank/scale-uniform transfer-gap floor 1/3072;
+- q0 = 3071/3072 and uniform q0^m decay;
+- q0^m decay on the full completed physical pair non-top sector;
+- one-dimensional finite physical top eigenspace;
+- one-dimensional completed pair top-top block;
+- scale-coherent projective L2 carrier;
+- explicit SU(N) Wilson two-mode boundary representatives;
+- H1-D4:
+  independent endpoint gauge-fixed pair sector equals the completed physical pair carrier;
+- positive-coupling SU(2) completed H1-D5 no-go;
+- canonical projection of the actual centered pair to the physical non-top sector;
+- theorem-generated nonzero projected centered excitation at every finite scale;
+- common-projective embedding of projected non-top modes;
+- fixed-mode infinite-subsequence extraction;
+- exact rank-one top subtraction formula for projected common images;
+- canonical-sign OS vacuum pair common-projective image equals constant one at every scale;
+- pair-top convergence reduced to the scalar vacuum/top overlap criterion;
+- stronger projected convergence criterion using only the local top coefficient;
+- exact canonical OS-vacuum pair coefficient factorization through normalized positive-half transfer;
+- exact one-slice formula for the local projected-top coefficient;
+- all SU(2) Wilson-energy Gram--Schmidt modes realized as physical one-slice modes and physical endpoint pairs;
+- the entire SU(2) Gram--Schmidt endpoint-pair family is orthonormal in pair Haar L2;
+- the pure finite-dimensional #5078 selector: any two real linear functionals on Euclidean R^3 admit a common unit vector in both kernels.
+
+### Not yet closed
+
+- model-facing instantiation of the #5078 selector with the #5077 three-mode pair synthesis, OS-vacuum pairing and pair-top pairing;
+- proof that the synthesized selector has exact unit pair norm and belongs to the completed pair non-top sector;
+- projective strong convergence of that scale-dependent selected combination;
+- coherence / strong convergence of evolved finite q0-controlled states;
+- identification of a limiting discrete-time physical transfer on the nonzero continuum excitation;
+- spacing-scaled physical-time dynamics;
+- final OS Hamiltonian lower bound;
+- Wightman / energy-momentum mass-gap theorem.
+
+## 1. Finite-volume gap route
+
+The finite-volume transfer analysis has already reached
+
+~~~text
+kappa_12(s,beta) * ||f - B f||^2 <= E_12(f),
+
+1/2304 <= kappa_12(s,beta),
+
+1/3072 <= physical transfer gap,
+
+q0 = 3071/3072.
+~~~
+
+The corresponding top-orthogonal natural-power estimate is volume/rank/scale uniform.
+
+The pair theory upgrades this to the full completed physical pair non-top sector.
+
+This part is not the present bottleneck.
+
+## 2. H1-D4 is closed
+
+PRs #5022--#5029 prove
+
+~~~text
+IndependentEndpointGaugeFixedPairSector
+  =
+PhysicalPairCarrier.
+~~~
+
+Consequences:
+
+- the canonical-sign finite OS vacuum pair is in the completed physical pair carrier;
+- independent endpoint gauge fixedness is no longer an assumption;
+- pair-carrier membership does not need the old H1-D5 compatibility.
+
+## 3. The old H1-D5 seam is formally refuted
+
+PRs #5031--#5061 expose the old completed compatibility as far too strong.
+
+The chain is
+
+~~~text
+completed H1-D5
+  -> finite Wilson path identity
+  -> one-slab power identity
+  -> vanishing top-orthogonal restriction
+  -> rank-one normalized one-slab transfer
+  -> two-mode Wilson Gram degeneracy
+  -> nontrivial feature-analysis kernel.
+~~~
+
+PRs #5058/#5059/#5061 prove that the concrete positive-coupling SU(2) two-mode sector has strictly positive crossing quadratic form and an injective physical feature-analysis map.
+
+Therefore
+
+~~~text
+beta(n) > 0
+  ->
+not completed H1-D5 at scale n.
+~~~
+
+Do not reintroduce the old compatibility, or an equivalent vacuum/top alignment statement, under a new name.
+
+## 4. Post-no-go projected route — #5063--#5069
+
+### #5063
+
+The actual vacuum-normalized centered pair receives an exact scalar top-pair expansion.
+
+This gives a strictly weaker excitation-level scalar seam than H1-D5.
+
+### #5064
+
+The old SU(2) global vacuum/top alignment route is explicitly excluded.
+
+### #5065
+
+Define the canonical completed TopTop and nonTop projections of the actual centered pair.
+
+The projected vector is unconditionally:
+
+- in the completed physical pair carrier;
+- top-top orthogonal;
+- therefore controlled by the existing q0^m estimate.
+
+### #5066/#5067
+
+Nonzero projected excitation is reduced to a finite OS-vacuum / physical-pair-top overlap.
+
+That overlap is theorem-generated strictly positive.
+
+Hence at every finite scale at least one selected projected centered Wilson mode is nonzero and already receives q0^m decay.
+
+### #5068/#5069
+
+The projected modes are embedded into one common projective continuum L2 carrier.
+
+An infinite increasing subsequence can be chosen on which one fixed mode label remains nonzero.
+
+This closes the finite nonzero-q0 excitation existence problem without H1-D5.
+
+## 5. Projective strong-convergence reduction — #5070--#5074
+
+### #5070
+
+The projected common image has the exact form
+
+~~~text
+centered image
+  -
+<top image, centered image> * top image.
+~~~
+
+Therefore no independent scalar-convergence proof is required if both moving vectors converge.
+
+### #5071
+
+The uncentered Wilson pair common image is eventually exactly one fixed continuum mode.
+
+Centered convergence is reduced to the OS-vacuum pair image and pair-top image.
+
+### #5072
+
+The canonical-sign OS-vacuum pair common-projective image is exactly
+
+~~~text
+1
+~~~
+
+at every scale.
+
+Thus the vacuum part of centered convergence is completely closed.
+
+### #5073
+
+For unit pair-top common images,
+
+~~~text
+pair-top image -> 1 strongly
+  iff
+finite vacuum/top overlap -> 1.
+~~~
+
+This yields one valid conditional route, but it is stronger than necessary.
+
+### #5074
+
+A weaker Hilbert-space lemma removes the need for convergence of the moving top direction:
+
+~~~text
+c_n -> c,
+||t_n|| = 1,
+<t_n,c_n> -> 0
+  ->
+c_n - <t_n,c_n> t_n -> c.
+~~~
+
+Therefore it is enough to prove the finite local projected-top coefficient tends to zero.
+
+This local criterion is the preferred interpretation of the #5070 projection formula.
+
+## 6. Local coefficient factorization — #5075/#5076
+
+### #5075
+
+For arbitrary physical one-slice endpoint vectors x,y,
+
+~~~text
+<v_OS, x tensor y>
+  =
+<v_OS, omega tensor omega>
+  *
+<S_half x, y>,
+~~~
+
+where S_half is the normalized positive-half physical transfer and omega is the normalized one-slice top mode.
+
+The finite partition normalization cancels exactly.
+
+No H1-D5 compatibility or vacuum/top alignment is used.
+
+### #5076
+
+For the explicit primary Wilson two-mode pair f_k tensor 1, the local projected-top coefficient has the exact one-slice form
+
+~~~text
+a_k
+  =
+alpha_k * delta
+  -
+gamma^2 * m_k,
+~~~
+
+with
+
+~~~text
+alpha_k = <omega, f_k>,
+delta   = <omega, 1>,
+gamma   = <v_OS, omega tensor omega>,
+m_k     = <S_half f_k, 1>.
+~~~
+
+This removes pair-Haar geometry from the local-coefficient problem.
+
+It is useful diagnostically, but the next preferred route no longer needs to prove gamma -> 1.
+
+## 7. #5077 — infinite SU(2) Gram--Schmidt family realized as physical pairs
+
+PR #5077 extends the kinematic input from two special modes to the full theorem-generated SU(2) Wilson-energy Gram--Schmidt family.
+
+For every mode index k and finite scale n, the repository now has:
+
+- an explicit primary-spatial-plaquette continuous Wilson Gram--Schmidt observable;
+- a gauge-invariant physical one-slice L2 vector;
+- an exact ordered endpoint-pair identification with a decomposable physical pair;
+- membership in the completed physical pair carrier;
+- orthonormality of the whole endpoint-pair family after transport to pair Haar L2.
+
+Schematically,
+
+~~~text
+u_{k,n}
+  in PhysicalPairCarrier,
+
+<u_{i,n},u_{j,n}> = delta_ij.
+~~~
+
+This is the kinematic input needed for the new three-mode route.
+
+## 8. Preferred next route: instantiate the #5078 selector on three #5077 pair modes
+
+Take the first three orthonormal physical pair modes at scale n:
+
+~~~text
+u_0,n, u_1,n, u_2,n.
+~~~
+
+For coefficients c in R^3 define
+
+~~~text
+X_n(c) = sum_{k<3} c_k u_k,n.
+~~~
+
+Define the two real linear functionals
+
+~~~text
+L_vac,n(c) = <v_OS,n, X_n(c)>,
+
+L_top,n(c) = <Omega_pair,n, X_n(c)>.
+~~~
+
+Combine them into
+
+~~~text
+L_n : R^3 -> R^2.
+~~~
+
+PR #5078 already proves the abstract rank-nullity statement needed here: two real scalar functionals on Euclidean R^3 have a common unit kernel vector. Therefore, after packaging L_vac,n and L_top,n as the two functionals required by #5078, one obtains c_n with
+
+~~~text
+L_vac,n(c_n) = 0,
+L_top,n(c_n) = 0,
+||c_n|| = 1.
+~~~
+
+Then
+
+~~~text
+x_n := X_n(c_n)
+~~~
+
+has all of the desired finite properties at once:
+
+~~~text
+||x_n|| = 1                 by orthonormality,
+
+<v_OS,n, x_n> = 0           by construction,
+
+<Omega_pair,n, x_n> = 0     by construction,
+
+x_n in PhysicalPairCarrier  by #5077,
+
+x_n in PairNonTop           by one-dimensional TopTop,
+
+||S_pair,n^m x_n||
+  <= q0^m ||x_n||
+  = q0^m.
+~~~
+
+Because the vacuum coefficient is already zero, vacuum centering does not change x_n.
+
+The remaining work in this section is model-facing: define the three-mode synthesis map from #5077, prove its exact norm formula from orthonormality, and instantiate #5078 with the two physical pairings.
+
+This avoids:
+
+- completed H1-D5;
+- vacuum/top alignment;
+- gamma_n -> 1;
+- decay of the #5076 fidelity defect.
+
+## 9. Expected projective compactness step after the three-mode selector
+
+The coefficient vectors c_n lie on the unit sphere in R^3.
+
+Finite-dimensional compactness should provide a subsequence
+
+~~~text
+c_{n_j} -> c_infinity,
+||c_infinity|| = 1.
+~~~
+
+The SU(2) Gram--Schmidt projective-cylinder machinery already gives coherent continuum realizations of every fixed mode.
+
+For the first three fixed continuum modes U_0,U_1,U_2, one should then obtain
+
+~~~text
+Embed(x_{n_j})
+  ->
+sum_{k<3} c_infinity,k U_k
+~~~
+
+strongly.
+
+Because the continuum modes remain orthonormal,
+
+~~~text
+||sum c_infinity,k U_k|| = 1.
+~~~
+
+So the limiting excitation is automatically nonzero.
+
+This is stronger than the older fixed-two-mode pigeonhole route because nonzero norm is built into the coefficient normalization.
+
+## 10. What the three-mode route does not yet solve
+
+Even after the initial nonzero strong limit is constructed, the dynamical identification remains open.
+
+The finite estimate
+
+~~~text
+||S_n^m x_n|| <= q0^m
+~~~
+
+does not by itself define a continuum operator T or prove
+
+~~~text
+||T^m x|| <= q0^m ||x||.
+~~~
+
+The evolved finite states must first be shown to live coherently in the same projective carrier, or otherwise converge strongly to an identified limiting discrete-time dynamics.
+
+This is the next H1-C3 layer after the three-mode selection and compactness steps.
+
+## 11. H1-C3 — projective dynamics
+
+Required sequence:
+
+1. theorem-generate the three-mode unit selector c_n;
+2. construct the exact finite non-top unit pair x_n;
+3. extract a coefficient-convergent subsequence;
+4. prove the projective image of x_n has a nonzero strong limit;
+5. prove coherence / strong convergence of the evolved sequence S_n^m x_n for fixed m;
+6. identify a limiting discrete-time operator T;
+7. transport
+
+~~~text
+||S_n^m x_n|| <= q0^m
+~~~
+
+to the continuum limit.
+
+Only after this step does finite q0 become a theorem about actual continuum discrete-time dynamics.
+
+## 12. H2 — physical-time scaling
+
+The fixed discrete factor q0 is not itself the continuum mass.
+
+If lattice spacing a_n tends to zero, then for fixed t > 0,
+
+~~~text
+q0^floor(t/a_n) -> 0.
+~~~
+
+That is an instantaneous-collapse scaling, not a nontrivial strongly continuous physical-time semigroup.
+
+The continuum-time layer needs a spacing-sensitive statement such as
+
+~~~text
+q_n = exp(-m_n a_n + o(a_n))
+~~~
+
+or an equivalent generator / Dirichlet lower bound.
+
+Existing rate and scaling modules remain downstream tools for this stage.
+
+## 13. H3/H4 — OS Hamiltonian and Wightman mass gap
+
+After projective dynamics and physical-time scaling provide actual continuum model data, the remaining route is
+
+~~~text
+continuum physical Hilbert space
+  ->
+strongly continuous contraction semigroup
+  ->
+self-adjoint Hamiltonian
+  ->
+vacuum-orthogonal spectral lower bound
+  ->
+positive mass gap
+  ->
+Wightman / energy-momentum mass-gap theorem.
+~~~
+
+Generic functional-analytic infrastructure is already substantial, but these model-facing identifications are not yet closed.
+
+## 14. Lean / CI engineering rules
+
+Current repository rules:
+
+- fresh exact theorem-carrier SHA has highest authority;
+- pinned Lean v4.30.0-rc2 and pinned mathlib API take precedence over current-master examples;
+- inspect every changed Lean file, not only the first compiler error;
+- distinguish theorem-bearing commits from docs-only commits;
+- use exact-head CI receipts before theorem PR merge;
+- do not rerun strict Lean for an unchanged exact head that is already GREEN;
+- docs-only changes do not require a redundant strict-Lean rebuild;
+- prefer explicit named parameters when section-variable inference is fragile;
+- prefer direct theorem terms / simpa using when rw cannot match through coercions;
+- avoid brittle change steps across definitional aliases;
+- preserve the direction of inner-product symmetry lemmas explicitly.
+
+## 15. Recent milestone ledger
+
+| PR | Status | Contribution |
+| --- | --- | --- |
+| #5061 | merged | positive-coupling SU(2) completed H1-D5 no-go |
+| #5062 | merged | docs refresh through #5061 |
+| #5063 | merged | centered-pair scalar replacement for the failed seam |
+| #5064 | merged | exclude old SU(2) vacuum/top alignment route |
+| #5065 | merged | canonical physical non-top projection of centered pairs |
+| #5066 | merged | reduce projected nonzero to finite vacuum/top overlap |
+| #5067 | merged | prove projected centered excitation nonzero at every scale |
+| #5068 | merged | common projective embedding of projected modes |
+| #5069 | merged | fixed nonzero mode on an infinite increasing subsequence |
+| #5070 | merged | projected strong-convergence factorization |
+| #5071 | merged | centered-image convergence reduced to OS vacuum pair |
+| #5072 | merged | canonical OS vacuum pair projective image is exactly one |
+| #5073 | merged | pair-top convergence iff vacuum/top overlap tends to one |
+| #5074 | merged | local top-coefficient convergence criterion |
+| #5075 | merged | OS vacuum pair coefficient = overlap times normalized half-transfer coefficient |
+| #5076 | merged | exact one-slice local projected-top coefficient formula |
+| #5077 | merged | full SU(2) Gram--Schmidt Wilson family realized as physical orthonormal endpoint pairs |
+| #5078 | merged | abstract Euclidean R^3 two-functional common unit-kernel selector |
+
+## 16. Restart checkpoint
+
+Latest theorem-bearing baseline before this docs refresh:
+
+~~~text
+426ad4fe783d030a61687fbb123aca00b90a3d1d
+~~~
+
+Latest theorem PR evidence:
+
+~~~text
+PR #5077 exact head:
+  aaa6d50c2da21461a76a6a0e6e2f9ee72b518998
+
+PR Lean Fast Check:
+  run 37157037971
+  completed / success
+
+exact-head receipt:
+  success
+~~~
+
+Read these files first for the current frontier:
+
+1. PhysicalYangMillsWilsonVacuumNormalizedProjectedLocalTopCoefficientCriterion.lean — #5074
+2. PhysicalYangMillsWilsonVacuumNormalizedPairPositiveHalfTransferRatio.lean — #5075
+3. PhysicalYangMillsWilsonVacuumNormalizedLocalTopOneSliceFormula.lean — #5076
+4. PhysicalYangMillsWilsonSU2GramSchmidtPairPhysical.lean — #5077
+5. RealEuclideanFinThreeTwoFunctionalKernel.lean — #5078
+6. SpecialUnitaryTwoWilsonEnergyHaarL2GramSchmidt.lean
+7. PhysicalYangMillsWilsonSU2PrimaryPlaquetteGramSchmidtCylinder.lean
+8. PhysicalYangMillsWilsonSU2PrimaryPlaquetteGramSchmidtPointwiseCoherentReadout.lean
+9. the full physical pair non-top q0 receiver from #5006
+
+Current restart target:
+
+~~~text
+THREE COHERENT ORTHONORMAL PHYSICAL PAIR MODES (#5077)
+  +
+ABSTRACT TWO-FUNCTIONAL UNIT-KERNEL SELECTOR (#5078)
+  ->
+instantiate with
+  [vacuum pairing, pair-top pairing]
+  ->
+exact finite unit non-top excitation
+  ->
+existing q0^m receiver
+  ->
+coefficient-sphere subsequence
+  ->
+nonzero projective strong limit
+
+THEN:
+  evolved projective coherence
+  ->
+continuum discrete-time q0 dynamics
+
+THEN:
+  spacing-scaled physical-time rate
+
+LATER:
+  OS Hamiltonian
+  ->
+spectral / Wightman mass gap.
+~~~
+
+
+## 検証済み定理 — AIS／真正Ward交差評価による全有限体積共通の半Haar区間（2026-11-09 JST）
+
+[AIS定理PR #6551](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6551) **MERGED**。[正式記録](docs/proofs/P4-Q2-PZ37AIS_verified_20261109.md)。定理正本は引き続き `formal/real-hilbert-uniform-coercive-strong-limit` であり、mainは文書ミラーである。
+
+元の完全SU(2) Wilson作用、両端halfweight、符号付きZW物理源、真正Haar、AIGの元の全余裕と厳密負領域を保持した。AHUの正確な混合モーメント `∫f_H² Cross_H = p_H V_H` と指数関数の接線評価から、元の交差二次モーメントに `exp(-β p_H) V_H` という新しい下界を与えた。新補助床 `D_H=β exp(-5βp_H/2)V_H` に対して元の余裕が `2ε_H≤D_H` を満たし、**全ての有限Hと0<β≤1（上端1を含む）で、同じ元の全余裕負領域のHaar質量が1/2以上**となる。
+
+β=1ではAIRの旧比較因子が2を超える一方で半Haar下界が成立する。元の固定 `β₀=log(3/2)/64` も全Hで含まれ、H≥2では `θ_H<β₀`、旧床 `δ_H<ε_H<D_H` と半Haar下界を同時に証明した。旧比較法の不成立を物理的な負領域の喪失へ読み替えない。
+
+[Exact-source CI #42540948252](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42540948252/attempts/1)：**11407/11407 SUCCESS**、28定理＋1定義、29/29公理出力は標準3公理のみ、sorryAx・全Lean error・変更warning/errorは0。別job receiptもSUCCESS。認証source・実test-merge・[定理squash](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/3dd12415adb88e30abbd97ab6d7d4cf7579eb38b) のGit treeは `a752ee83411955a74b4eddae55707f9c87a4ad40` で一致した。初回の固定mathlib乗法消去APIの失敗と1行修正は正式記録に保持する。
+
+結合区間と質量下界は体積共通だが、`p_H=24(H+1)^3`、`V_H≤p_H²/4`、`D_H=β exp(-60β(H+1)^3)V_H` という振幅の体積依存性は残る。β>1での旧全余裕半Haar性、体積一様の正の余裕・coercivity、作用素の負固有値、Hamiltonian spectral gap、連続体4次元Yang–Mills mass gapは未証明。
+
+
+## 検証済み定理 — AIT／有理Ward評価と体積により拡大する半Haar範囲（2026-11-09 JST）
+
+[AIT定理PR #6554](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6554) **MERGED**。[正式記録](docs/proofs/P4-Q2-PZ37AIT_verified_20261109.md)。定理正本は引き続き `formal/real-hilbert-uniform-coercive-strong-limit`、mainは文書ミラーである。
+
+元の完全SU(2) Wilson作用、両端halfweight、符号付きZW物理源、真正Haar、AIGの元の全余裕を保ち、源の両符号で有理二次係数 `β/(1+βp_H/2)` を証明した。源が非正の集合 `f_H(B)≤0` 上で、元のtransferは `T_β f₀(B)≤-Dhat_H` を満たす。新しい床 `Dhat_H=β/(1+βp_H/2) exp(-2βp_H)V_H` は、全正結合でAISの床より厳密に大きい。
+
+真正分配関数の単調非増加性と結合1のGaussian評価を接続し、**各有限Hと0<β≤b_H=1+p_H/4=1+6(H+1)^3で、同じ元の全余裕厳密負領域のHaar質量が1/2以上**となる。上端b_Hそのものを含む。したがって**全有限体積に共通し上端を含む範囲0<β≤7**が得られ、さらに**任意の固定β>0について、十分大きい全てのHで半Haar下界**が成立する。量化は `∀β>0, ∃N, ∀H≥N` であり、各固定Hで全正結合を覆う定理ではない。b_Hを最適上端や物理的臨界結合とは認定しない。
+
+同じ新補助床について、固定β>0で `0<Dhat_H≤(β/4)p_H² exp(-2βp_H)→0` と、全体積一様の正の下界の不存在を形式証明した。これはこの補助床に限った障害である。実際のtransferの負値振幅の上界・減衰や、別の一様な証明書の不可能性は含まない。
+
+[Exact-source CI #42554354126](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42554354126/attempts/1)：**11408/11408 SUCCESS**、46定理＋3定義、49/49実公理出力は標準3公理のみ、sorryAx・全Lean error・変更warning/errorは0。別job receiptもSUCCESS。認証source・実test-merge・[定理squash](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/57cbe6241f41adbface0d8e379f9e98d81bf723a) のtreeは `95c1647ee996fff0ba88ba9281f4a3207afd02b1` で一致し、[統合後push CI #42555080816](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42555080816/attempts/1) も同じ監査条件でSUCCESS。初回CIはLean検証に成功したが、不要なringの4warningにより統合を見送り、2か所の削除後に再認証した。その履歴は正式記録に保存する。
+
+各固定有限Hにおける任意正結合での全余裕半Haar性、別の構成による体積一様の正の余裕・coercivity、共通の極限作用素への接続、負固有値、Hamiltonian spectral gap、連続体4次元Yang–Mills mass gapは未証明のまま保持する。
+
+
+
+## 検証済み定理 — AIU／元transfer像の全境界一様な体積減衰と振幅の障害（2026-11-09 JST）
+
+[AIU定理PR #6557](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6557) **MERGED**。[正式記録](docs/proofs/P4-Q2-PZ37AIU_verified_20261109.md)。定理正本は引き続き `formal/real-hilbert-uniform-coercive-strong-limit`、mainは文書ミラーである。
+
+元の完全SU(2) Wilson作用、両端halfweight、符号付きZW物理源、真正Haar、AIGの元の余裕と厳密負領域を保持した。元のcrossing kernelの対称性とHaar積分、源の絶対値上界から、**全有限H・全β≥0・全境界B**で `|T_H,β f0_H(B)|≤exp(-βW_H(B)/2)(p_H/2)Zcross_H(β)≤(p_H/2)Zcross_H(β)` を形式証明した。
+
+真正一リンク分配関数から `ρ(β)=-log z(β)`、`d(β)=β exp(-2β)` を構成し、`Zcross_H(β)=exp(-ρ(β)p_H)`、正結合で `0<d(β)≤ρ(β)` を証明。`p_H=24(H+1)^3` により、**任意の固定β>0とη>0について、十分大きい全Hで、全境界の実際の元transfer像が絶対値η未満**となる。Hに依存する境界空間を同一視する仮定は置かない。
+
+したがって、この元の非正規化transferと元の源のfamilyには、各Hで境界を選んでも維持できる正の一様絶対振幅・負値深さがない。固定した深さηの集合 `{B:T_H,β f0_H(B)≤-η}` はeventually emptyである。AITの特定補助床の消失からこの結論を推測したのではなく、実際のtransferに対する独立した上界を用いる。
+
+同時に、**元の正の余裕ε_H,βも0へ近づき、AITの元の全余裕半Haar性と全境界のtransfer振幅の小ささが、同じ十分大きいHで成立する**。各有限体積での負値境界の存在と、既存の認証範囲での半Haar下界は保持され、Hに依存する元の余裕の領域が空になるとは主張しない。元の固定 `β₀=log(3/2)/64` では全H・全Bに `|T_H,β₀ f0_H(B)|≤12(H+1)^3 exp(-(H+1)^3/16)` を得た。
+
+[Exact-source CI #42559591642](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42559591642/attempts/1) と [統合後push CI #42560361781](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42560361781/attempts/1) は、ともに **11409/11409 SUCCESS**、32定理＋3定義、35/35実公理出力が標準3公理のみ、sorryAx・全Lean error・変更warning/errorは0、独立receiptもSUCCESS。認証source・実test-merge・[定理squash](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/ac30f9db7932c94f5a2cb82fd6d1998102cf0c4e) のtreeは `18b2c818e2266ca590ffd484498e4f1964959e78` で一致し、Lean全文とblobも一致した。初回CIで認証され、CI後のsource修正・再試行はなかった。
+
+この振幅の障害は元の非正規化transferと一つの元の源の固定正結合familyに限る。正規化後のtransfer、別の源族、作用素ノルム、coercivity一般の不可能性、負固有値、Hamiltonian spectral gap、連続体4次元Yang–Mills mass gapへは昇格しない。各固定Hにおける任意正結合での元の全余裕半Haar性も、別の未証明課題として残す。
+
+
+
+## 検証済み定理 — AIV／元transfer作用素ノルムの体積減衰と既存正規化尺度（2026-11-09 JST）
+
+[AIV定理PR #6560](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6560) **MERGED**。[正式記録](docs/proofs/P4-Q2-PZ37AIV_verified_20261109.md)。定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`、mainは文書ミラーである。
+
+元の完全SU(2) Wilson作用、両端halfweight、真正Haar、符号付きZW物理源、AIGの元の余裕と厳密負領域を保持した。**AIUの単一源の点ごとの評価に加え、全L²単位球を作用素ノルムで評価した**。既存ambient Haar L²作用素をR、既存のGauss-law物理制限をPとすると、全H・全β≥0で `‖P‖≤‖R‖≤‖K_β‖_L²≤√Zcross_H(2β)`。2βは元kernelを二乗する恒等式から生じ、評価対象の作用素の結合を置き換えない。
+
+さらに、両端halfweightから真正kernelの行積分を上下評価し、既存の正値連続top eigenvectorの最大・最小を用いて、**`exp(-2βp_H)Zcross_H(β)≤‖P‖≤Zcross_H(β)`** を証明した。Haar L² classと連続代表の接続は既存a.e.等式を明示する。このZcross(β)上界は物理制限の評価であり、ambient側には上記√Zcross(2β)上界を用いる。
+
+`p_H=24(H+1)^3`、既存の真正分配関数率 `ρ(β)=-log z(β)>0` により、**固定β>0で両作用素ノルムはHとともに0へ近づく**。任意η>0に対し、十分大きい全Hのambient L²単位球全体で `‖R_H,β f‖<η` が同時に成立し、元の物理ノルムに正の体積一様下限は存在しない。異なるHのHilbert空間を同一視する仮定は置かない。L²ノルム評価だけからAIUの全境界点ごとの評価が従うとは主張しない。
+
+同じ物理ノルムλの**既存の逆ノルム正規化尺度**は `exp(ρp_H)≤λ⁻¹≤exp((2β+ρ)p_H)` を満たし、固定β>0で+∞へ発散する。一方、既存正規化物理作用素のノルムは各Hで1であり、rawノルムの減衰と両立する。元の `β₀=log(3/2)/64` では `λ_H(β₀)≤exp(-(H+1)^3/16)`、`λ_H(β₀)⁻¹≥exp((H+1)^3/16)`。
+
+Exact-source CI [#42567459390](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42567459390/attempts/1) と 統合後push CI [#42568082026](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42568082026/attempts/1) は全workflow・必須Lean step・独立receiptがSUCCESS。依存閉包はそれぞれ 11410/11410、11410/11410 SUCCESS、38定理＋0定義、38/38実公理出力が標準3公理のみ、この最終認証2 runのsorryAx・全Lean error・変更warning/errorは0。認証source・実test-merge・[定理squash](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/33cb9e84a415ac46275cc8a118c54b5e4336aa3a) のtreeは `52191ac4df018b4b7307825c09fd67ffb09ec371` で一致し、Lean全文とblobも一致した。初回・2回目の実CI失敗 [#42564655886](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42564655886/attempts/1)、[#42566323927](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42566323927/attempts/1) は、実ログ・artifact・failure receiptの照合結果と識別情報を正式記録に保存した。初回の35定理の署名を維持して構造補題3件を追加し、2回目の38定理の全署名も最終sourceと一致する。元の物理定理への仮定追加、固定heartbeatの増加、元対象の変更はない。
+
+元の源・余裕・厳密負領域は変更していない。正規化後のノルム1はgapを意味せず、正規化後のcoercivity・励起スペクトル、共通の極限作用素、各固定Hでの任意正結合における元の全余裕半Haar下界、Hamiltonian spectral gap、連続体4次元Yang–Mills mass gapには別の形式証明が必要である。源像の負値を作用素の負固有値へ昇格させない。
+
+
+
+## 検証済み定理 — AIW／真正空間平均による正規化相対評価と元の負領域（2026-11-09 JST）
+
+[AIW定理PR #6563](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6563) **MERGED**。[正式記録](docs/proofs/P4-Q2-PZ37AIW_verified_20261109.md)。定理正本は引き続き `formal/real-hilbert-uniform-coercive-strong-limit`、mainは文書ミラーである。
+
+元の完全SU(2) Wilson作用、両端halfweight、真正Haar、符号付きZW物理源、AIGの元の余裕δと厳密負領域、既存の正規化作用素N=P/‖P‖を保持する。全有限H・β≥0で、元の空間作用の正確なHaar平均p_Hとcrossing kernelの両周辺積分から、**exp(-βp_H)Zcross_H(β)≤Q_H(β)≤‖P_H,β‖≤Zcross_H(β)** を証明した。Qは元の完全one-slab・自由境界のpair-Haar積分であり、既存物理定数単位ベクトルの行列要素に一致する。周期時間方向のtrace分配関数や物理ノルムそのものとは同一視しない。AIVの下界exp(-2βp_H)Zcrossを同じ条件のもとで強めた。
+
+λ=‖P‖とおくと、**exp(-βp_H)≤λ/Zcross≤1、1≤Zcross/λ≤exp(βp_H)**。AIUの真正率ρ=-log zとの接続により、既存逆ノルム正規化尺度は **exp(ρp_H)≤λ⁻¹≤exp((β+ρ)p_H)** を満たす。元の積分像T f0/λが既存の正規化物理作用素Nの出力L² classをHaar-a.e.に表すことも証明し、点ごとの評価はこの連続な指定積分代表に対して行う。
+
+元の余裕を同じλで割ったm_H=δ_H/λ_Hは、V_Hを元のsource Haar二次モーメントとして、**(βV_H/2)exp(-2βp_H)≤m_H≤(βV_H/2)exp(-βp_H)≤(β/8)p_H²exp(-βp_H)**。全有限H・β>0で正、固定β>0でH→∞に0へ収束する。正規化厳密負領域 **{B:T f0(B)/λ<-δ/λ}={B:T f0(B)<-δ}** は元のAIG領域と集合として一致する。任意の固定β>0・η>0について、AITのeventual半Haar下界、0<m_H<η、既存作用素の‖N‖=1を一つの共通cutoffで同時に得た。元のβ₀=log(3/2)/64では **m_H(β₀)≤72β₀(H+1)^6 exp(-(H+1)^3/8)**。
+
+Exact-source CI [42574638690](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42574638690/attempts/1) と統合後自動push CI [42575438682](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42575438682/attempts/1) は、全workflow・必須Lean step・独立receiptがSUCCESS。依存閉包は両runとも11411/11411、30定理＋2定義、全32実公理出力は標準3公理のみ。この最終認証2 runのsorryAx・全Lean error・変更warning/errorは0。認証source・実test-merge・[定理squash](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/bd7357e21e0ab24de11d7f957d0000e503f95851) のtreeは `a0315279084e58d44de4daafc4645168f1bc494f` で一致し、Lean全文とblobも一致した。初回失敗run [42573651318](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42573651318/attempts/1) の2件のelaboration errorと回復用sorryAx出力は正式記録に保持する。点ごとの関数形を明示する2か所の証明修正に限り、全32宣言の署名・仮定・固定環境・heartbeatを保持して再認証した。
+
+消失を証明したのは、元のAIG余裕を既存物理ノルムで割った証明書である。実際の正規化源像の全境界上界は(p_H/2)Zcross/λ≤(p_H/2)exp(βp_H)であり、これから像の減衰は導かない。より深い正規化負領域の不存在、正規化coercivity、励起gap、共通Hilbert空間上の極限、各固定Hで任意正結合の全余裕半Haar性、Hamiltonian spectral gap、連続体4次元Yang–Mills mass gapは未証明のまま保持する。
+
+
+## P4-Q2-PZ37AIX — 正結合windowにおける元の正規化余裕の一様消失（2026-11-09、形式認証済み）
+
+[Lean定理PR #6566](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6566)はMERGED。新規独立Lean leafに7定理（206行追加／削除0）を構成し、元の完全SU(2) Wilson作用、両端halfweight、真正Haar、元の符号付きZW物理L²源、AIG負領域、既存物理norm正規化、固定環境を変更していない。
+
+任意の固定a>0と有限bについて、すべての有限Hおよびa≤β≤bで元の正規化AIG証明書は `0<m_H(β)≤(b/8)p_H² exp(-a p_H)`。同一cutoffでwindow内の**全β**について任意の正閾値を下回り、すべての結合列β_H∈[a,b]でm_H(β_H)→0。元の正規化物理作用素はノルム1で、厳密負領域は元のAIG領域と集合として一致する。一方で、変動結合の半Haar一様下界、正規化源像の実振幅減衰、top固有空間との関係、Hamiltonian spectral gap、連続体mass gapは未証明。β_Hが正の下限や有限上限を持たない場合へ適用しない。
+
+Exact-source [#42579467910](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42579467910)・統合後push [#42580324130](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42580324130)はともにSUCCESS。両runでLean依存閉包11,412/11,412、7/7公理出力は標準3公理のみ、sorryAx・Lean error・新規warning0。実artifact SHA256と独立receipt照合済み。Source/test-merge/squash共通Git tree `28ecc5480bfde0da3625da11c18bf24c520762a4`、定理squash `84b822848e825c8aa46aefc416af3864b1b39259`。正式記録: [P4-Q2-PZ37AIX_verified_20261109](docs/proofs/P4-Q2-PZ37AIX_verified_20261109.md)。
+
+
+## P4-Q2-PZ37AIY — 元の正規化ZW物理源像の真正Haar-L²非零性（2026-11-09、形式認証済み）
+
+[AIY定理PR #6569](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6569)をformalへMERGED。元の完全SU(2) Wilson one-slab作用・両端halfweight・真正Haar・符号付きZW物理L²源・既存物理ノルム正規化を保持し、新規独立Lean leaf 219行（9定理、新規定義0、削除0）を追加した。
+
+実際のGauss-law物理Hilbert空間内で `||N_H,β f0,H||=||P_H,β f0,H||/||P_H,β||≤||f0,H||` を全H・β≥0で証明。AIWの元の正規化積分代表と既存L²作用素出力のHaar-a.e.等式、およびAITの元の厳密負領域の半Haar測度を接続し、各有限H・`0<β≤1+p_H/4` で `0<||N_H,β f0,H||` を証明した。全有限Hに共通の`0<β≤7`、固定β>0でのeventual非零性も含む。これは実L²クラスの非零性であって、体積一様な正の振幅下限・振幅極限・sourceのtop固有空間直交性・Hamiltonianや連続体gapを証明しない。
+
+修正版Exact-source [CI #42584457250](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42584457250)・定理squash統合後自動push [CI #42585431281](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42585431281)ともSUCCESS。両runで11,413／11,413・公理9／9標準3公理のみ・sorryAx0・Lean error0・新規warning0、実artifact SHA256と独立receiptを監査済み。初回 [CI #42583714289](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42583714289) は型検査成功・冗長`change`のwarning1件で、証明署名を変えず当該1行を削除して再認証した。認証source/test-merge/squashの共通tree `e4420fa7158a3708eea9f87eb935ee8100623ab0`、定理squash `0c3413dd7b619918fbfd9de1b51d7238f8e6c7cf`。正式記録：[AIY verified](docs/proofs/P4-Q2-PZ37AIY_verified_20261109.md)。
+
+## P4-Q2-PZ37AIZ — 全正結合での真正正規化ZW源像Haar-L²非零性（2026-11-09、形式認証・統合済み）
+
+[定理PR #6572](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6572)はformalへsquash MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AIZ_verified_20261109.md)。AIGの元厳密負領域が **各有限H・任意β>0で真正Haar正測度** を持つ定理と、AIWの元領域＝既存物理ノルム正規化後の領域一致、AIYのHaar-a.e.代表から真正物理L²非零性への橋を、元のSU(2) Wilson one-slab作用・両端halfweight・署名付きZW物理源・真正Haarのまま接続した。
+
+**全H∈ℕ、全β>0で `0<‖N_H,β f0,H‖_(L²)≤‖f0,H‖_(L²)`、および `0<‖P_H,β f0,H‖_(L²)`。** 任意正結合列β_Hでも各有限Hで成立する。AIT半Haar結合上端はこのL²非零性には不要となったが、任意β>0で半Haar下界を得たわけではない。新規独立Lean leaf 207行・10定理・追加定義0・削除0。
+
+修正版Exact-source [#42600834308](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42600834308)、定理squash後push [#42603169982](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42603169982) ともSUCCESS。双方11,414/11,414、10/10実公理出力は標準3公理のみ、AIZ変更warning/error0、sorryAxなし、独立receipt SUCCESS。認証source `94f896b1d0cd82b78377384040b7c7e766c3355d`・test-merge `da0e340d692c7cc45ab05762593478a5405a8e0e`・[squash](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/dc334fa6d68eee8f0d75f4c236f02be92b6f14a1) のGit treeは `86f6816c1139a92aee72549ce081d3377e206ae9` で一致。初回warningと中間エラーの履歴は正式記録に保持。
+
+**OPEN / AJA：** 元の正規化余裕と元のHaar負領域質量を用いた有限体積の定量的L²下界、およびtop固有空間への真正物理射影を、独立に検証する。各Hでの非零性を体積一様振幅・top直交・励起gap・Hamiltonian gap・4D連続体mass gapに昇格させない。append-only／tighten-only／overwrite-forbidden／same-root、固定Lean/mathlib維持。
+
+## P4-Q2-PZ37AJA — 元の正規化ZW物理源像の定量的Haar-L²下界（2026-11-09、形式認証・統合済み）
+
+[定理PR #6575](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6575) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AJA_verified_20261109.md)。AIGの元厳密負領域の可測性・正Haar質量、AIWの元正規化積分代表と既存Gauss-law物理L²作用素出力のHaar-a.e.橋、AIZの全有限H・全β>0の非零性を保持して、**全H∈ℕ・β>0で元の余裕二乗×真正Haar負領域の実測度が、元の正規化ZW物理源像の真正L²ノルム二乗以下**と形式証明：`0<m_H,β²·Measure.real μ_H(R_H,β)≤‖N_H,β f0,H‖²`。一般の有限測度実L²補題を先に証明し、任意代表の点ごとの符号を勝手に主張せずに元の物理量へ降下した。新規Leanファイル168行・3定理・削除0・元の物理定義と固定Lean/mathlib不変更。
+
+修正版Exact-source [#42608468069](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42608468069)、統合後push [#42609883742](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42609883742) ともSUCCESS、両run 11,415/11,415、3/3実公理出力は標準`propext`/`Classical.choice`/`Quot.sound`のみ、変更warning/error0、AJA sorryAxなし、独立receipt SUCCESS。最終source `a4cd620ea2c153d2cf2c5dbc5b93d9e2f89b1f9b`・test-merge `e40341db30e8cf0c2ac61f93a11688ff492485ef`・[squash](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/e5beaef8120445c216753125ec31cd8c86a852ed) の共通Git tree `28b728a8dd9f387ff053f21db03f6ec80e7296fe`。初回 #42607467139の `InnerProductSpace ?m ℝ` 型推論失敗と `(𝕜 := ℝ)` 明示修正の履歴は正式記録へ保存した。
+
+**OPEN／AJB:** 元のtop eigenspaceへの射影と真正直交成分を別に形式化する。AJAのH・β依存の証明書を体積一様正振幅、top直交性、励起gap、Hamiltonian gap、連続体4D mass gapへ昇格させない。append-only／tighten-only／overwrite-forbidden／same-root。
+
+## P4-Q2-PZ37AJB — 真正ZW正規化物理源像の全top／直交成分定量分解（2026-11-09、形式認証・統合済み）
+
+[定理PR #6578](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6578) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AJB_verified_20261109.md)。既存の元SU(2) Wilson物理Hilbert空間・Gauss-law ZW源・正規化transfer・全top eigenspaceの直交補空間を変更せず、**各有限H・全β>0**における真の正規化源像 `N f0=u_top+u_⊥`、`‖N f0‖²=‖u_top‖²+‖u_⊥‖²` を形式化。元AJAの真正Haar-L²証明書 `0<m²·Measure.real μ(R)≤‖u_top‖²+‖u_⊥‖²` を同じ元物理Hilbert空間で証明した。さらに、**実際のtop成分が証明書より小さいという条件が別途成立するときに限り**直交成分が非零となる。実top成分の上界・top直交性そのものは未認証。
+
+新規Lean 158行・4定理・削除0、固定Lean/mathlib・元物理定義・公開root/workflow変更なし。Exact-source [#42613066943](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42613066943) とsquash後push [#42613812145](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42613812145) はともに11,416/11,416 SUCCESS、4/4公理出力が標準3公理のみ、変更warning/error0、AJB sorryAxなし、独立receipt SUCCESS。認証source `c776a9585b0082b63b0f834ccaacb60d97b57afe` と[squash](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/0c98fec903366eae58722fdeeb5e2ae0ae81dca7) はGit tree `96f9cccb415fcbffe90271f7ed7cca4515456426` で一致。初回CI #42612123173でのノルム積と`^2`の型不一致、`simpa only [pow_two]`による修正も正式記録に保持した。
+
+**OPEN／AJC:** 真正元ZW源像の全top射影・top内積を評価し、条件付き直交成分非零を無条件へ強化可能か検証する。単独の正L²ノルム証明書をtop直交や励起gapへ昇格させない。体積一様coercivity、Hamiltonian gap、4D連続体mass gapは未証明。append-only／tighten-only／overwrite-forbidden／same-root。
+
+## P4-Q2-PZ37AJC — 元の正規化ZW源像の全top正準射影と残余下界（2026-11-09、形式認証・統合済み）
+
+[定理PR #6581](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6581)はformalへMERGED。[正式記録](docs/proofs/P4-Q2-PZ37AJC_verified_20261109.md)。AJBの存在的top/直交分解を、**同一の元Gauss-law物理Hilbert空間における既存全top固有空間**へのMathlib正準Hilbert射影とその直交補の射影で具体化した。元のSU(2) Wilson one-slab・両端halfweight・真正Haar・符号付きZW源・既存物理transfer/norm正規化は不変更。全有限H・β>0で元正規化ZW源像 = 正準top成分 + 正準直交成分、ノルム二乗のピタゴラス等式、**0 < AJA真正Haar-L²証明書 ≤ 両射影ノルム二乗の和**を証明。さらに実top二乗ノルムを差し引いた直交残余下界と、実top射影二乗が証明書未満の場合に限る直交非零性を得た。**実top射影が十分小さいこと自体は未証明**であり、正の証明書を励起sectorやmass gapへ昇格しない。
+
+新規Lean 186行（定義2・定理7・削除0）、実公理9/9標準3公理のみ。Exact-source [#42617449250](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42617449250)と統合後push [#42618394145](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42618394145)はいずれも11,417/11,417 SUCCESS、変更warning/error0・新規sorryAxなし、独立receipt SUCCESS。認証source `6f16501c87ff57941b9244efd0ef7b6465cf9f9c`・[squash](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/eda6b204e5bbbae65809aa968957736ad763b62e) のGit tree同一 `caefa8a12dbe42b122f559fe0a6f198e9a49b237`。初回CI #42616327394のLean `No goals to be solved` と閉部分空間CompleteSpaceインスタンス明示による修正は正式記録に保持。
+
+**OPEN／AJD:** 元のZW源像の真正top-overlapを評価し、条件付き直交成分の正値化に必要な厳密不等式を検証する。体積一様coercivity、真の励起gap、Hamiltonian gap、4D連続体mass gapは未認証。append-only／tighten-only／overwrite-forbidden／same-root、固定Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6。
+
+## P4-Q2-PZ37AJD — 真正元ZW源の全top射影不変性（2026-11-09、形式認証・統合済み）
+
+[Lean定理PR #6584](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6584) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AJD_verified_20261109.md)。元のSU(2) Wilson one-slab、真正Haar、中心化ZW Gauss-law物理源、対称正規化transfer、既存**全top eigenspace**を変更せず、全有限H・β>0で `Π_Top(N f₀)=Π_Top(f₀)` と全topベクトルに対する内積不変性をLean4で証明。AJCの定量証明書を**転送前の元ZW源の真正top射影**で書き直し、`‖u_⊥‖²≥C_H,β−‖Π_Top f₀‖²` と、厳密上界が別途成立するときのみ直交成分非零となることを証明。**top射影の小ささ自体は未証明**。
+
+新規Lean 1ファイル206行、派生定義1・定理6・削除0、7/7公理出力は標準3公理のみ、AJD変更warning/error0、sorryAxなし。Exact-source [#42634322528](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42634322528)／統合後push [#42637270766](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42637270766) ともSUCCESS（統合後11,418/11,418）、独立receipt SUCCESS。source `714aec58d29953b631010cd04d431ca4ccef4ca8`・squash `f646eb48342eac60f5e05acbbea60c5e846a33fb` の共通Git tree `ce3176c00891e63ed5b7adaf796113a05fec1409`。
+
+**OPEN／AJE:** 元のZW源の真正全top射影ノルム二乗 `‖Π_Top f₀‖²` を既存物理定義から評価する。必要な `‖Π_Top f₀‖²<C_H,β` を無証明に仮定せず、励起sector一様下界・全物理Hilbert coercivity・Hamiltonian gap・4D連続体mass gapへ昇格しない。append-only／tighten-only／overwrite-forbidden／same-root。
+
+## P4-Q2-PZ37AJE — 元ZW源の全top射影の双対上界と真正障害（2026-11-10、形式認証・統合済み）
+
+[Lean定理PR #6587](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6587) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AJE_verified_20261110.md)。既存Gauss-law物理Hilbert、完全SU(2) Wilson one-slab、中心化ZW物理源、真の全top eigenspaceを不変更とし、任意b≥0について **‖Q_H,β f₀,H‖≤b と ∀v∈Top_H,β, |⟨f₀,H,v⟩|≤b‖v‖ が同値** とLean4で証明。既存選択単位top固有ベクトル Ω に対して |⟨f₀,Ω⟩|≤‖Q f₀‖ も証明するが、Ωが全topを張るとは主張しない。元AJA正のHaar-L²証明書 C_H,β に対して、‖Q f₀‖²<C_H,β と C_H,β 未満の**全top一様内積予算bの存在**が同値であることも証明。**必要なbは未構成**であり、元源の真のtop射影の小ささも未証明。
+
+新規Lean1件230行・定理9宣言・削除0。初回CI [#42640480799](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42640480799)での乗法不等式APIの型不一致を、定理文・仮定不変の明示的正値背理法に修正。修正版Exact-source [#42641688446](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42641688446)と統合後push [#42642608623](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42642608623)はともにSUCCESS、後者11,419／11,419、9／9実公理出力は標準3公理のみ、変更warning/error0、sorryAxなし、receipt SUCCESS。source 750b0fd38e88e85bc7965ab2ec7386a9abbdd9aa とsquash 661345cdc4100c06996dbf431a84f4ee96dacb35 の共通Git tree c4321886c4420c28d3d5e7782dd4974f964a132e。
+
+**OPEN／AJF:** 真正元ZW源と全top固有空間との実際のWilson–Haar内積を評価し、‖Q f₀‖²<C_H,β を元物理定義から導けるか検証する。無条件の励起非零性、体積一様下界、Hamiltonian spectral gap、4D連続体mass gapは未認証。append-only／tighten-only／overwrite-forbidden／same-root。
+
+## P4-Q2-PZ37AJF — 元ZW源の選択top方向と追加top残余の厳密分解（2026-11-10、形式認証・統合済み）
+
+[定理PR #6590](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6590) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AJF_verified_20261110.md)。元SU(2) Wilson・真正Gauss-law ZW源・既存全top eigenspaceを不変更とし、既存選択単位top固有ベクトルΩに対し追加top残余 r=Qf₀−⟨f₀,Ω⟩Ω を導入。r∈全top、⟨r,Ω⟩=0、**‖Qf₀‖²=|⟨f₀,Ω⟩|²+‖r‖²** をLean4で証明。真正AJA証明書 C から ‖u⊥‖²≥C−|⟨f₀,Ω⟩|²−‖r‖²、両寄与の合計がC未満なら直交成分非零、選択ΩだけでC以上なら全top小条件が不可能という必要障害を得た。**r=0も、双方のC未満の上界も未証明**。
+
+新規Lean1件264行（11宣言・削除0）。Exact-source [#42686668837](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42686668837)および統合後push [#42687789720](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42687789720)は11,420／11,420 SUCCESS、11／11実公理は標準3公理のみ、変更warning/error0、sorryAxなし、独立receipt SUCCESS。source 144ee091cf8821c417d0b54f73ee325d852f6c11 とsquash 31145eea77605526aec2b57a201303387ac8f2ae のGit tree 49b452ae6e86781a43df75e5e0eb928b34c6a99f 一致。
+
+**OPEN／AJG:** 真正選択Ω以外の追加top成分の消滅・定量上界と、選択top元源内積の真正Wilson–Haar上界を独立に調べる。top単純性やH一様coercivity、Hamiltonian gap、4D連続体mass gapを無根拠に挿入しない。append-only／tighten-only／overwrite-forbidden／same-root。
+
+## P4-Q2-PZ37AJG — 真正元ZW中心化源と選択top真空の定数方向偏差（2026-11-10、形式認証・統合済み）
+
+[定理PR #6593](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6593) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AJG_verified_20261110.md)。既存のGauss-law物理Hilbert・Haar定数単位ベクトル c_H・元ZW中心化源 f₀,H・元Wilson transferと全top eigenspaceを変更せず、**⟨f₀,H,c_H⟩=0**を元のZW定義からLean4で直接証明。既存選択単位topΩと追加top残余 r を保ち、**‖Qf₀‖²≤‖f₀‖²(1−|⟨Ω,c_H⟩|²)+‖r‖²**の真正H,β依存上界を形式化。右辺が元AJA証明書C未満という別途の厳密評価がある場合だけ直交成分が非零。**β>0のHaar定数単位ベクトルをtop固有ベクトルとは仮定せず、Ωの偏差とrの真の上界は未証明**。
+
+追加Lean1件255行・新規10宣言・既存削除0。初回CI [#42689972569](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42689972569) と二回目 [#42691058717](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42691058717) のLean4内積書換え・型推論失敗の履歴を正式記録に保持。最終Exact-source [#42692558676](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42692558676)／統合後push [#42693592821](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42693592821) は両方11,421／11,421 SUCCESS、10／10標準3公理のみ、変更warning/error0、sorryAxなし、独立receipt SUCCESS。source 9975cad37f9af393fcd40905df475341c3e89247 とsquash 76951507130749219e08c1b133eb596f633d43ca のGit tree 8bc702e4107d1af14e58d2ff9f4b080254a96068 が一致。
+
+**OPEN／AJH:** 真正ΩとHaar定数のずれ、および追加top成分の厳密なH・β上界を別個に評価する。条件未証明のままtop単純性・励起sector非零・体積一様coercivity・Hamiltonian gap・4D連続体mass gapへ昇格しない。append-only／tighten-only／overwrite-forbidden／same-root。
+
+## P4-Q2-PZ37AJH — 元Wilson transfer反復による全topと追加top残余の上界（2026-11-10、定理MERGED／形式認証済み）
+
+[定理PR #6596](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6596) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AJH_verified_20261110.md)。元SU(2) Gauss-law Hilbert・正規化Wilson transfer S・真正中心化ZW源 f₀・全top射影 Q・選択単位Ω・Haar定数単位cを変更せず、すべての n∈ℕ で **Q(Sⁿf₀)=Qf₀**、**‖Qf₀‖²≤‖Sⁿf₀‖²**、AJF追加top残余 **‖r‖²≤‖Sⁿf₀−⟨f₀,Ω⟩Ω‖²** をLean4で形式証明。定数方向偏差 D に関して得たのは **1−‖Sⁿc‖²≤D** という下界であり、必要な上界ではない。
+
+新規Lean leaf1件304行・9宣言・削除0。Exact-source [#42704315781](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42704315781) は11,422／11,422 SUCCESS、9／9の標準3公理のみ、warning/error0、sorryAxなし、独立receipt SUCCESS。認証source 55160801c2dd9b9ec728bb6b20a08cefb9fcc3b5、squash 76bca4c6b505dc5506696c95dbd0d71ea422fe8c、共通Git tree 82a90be5f9336bbd60af44566370d73d58271a53。統合後push [#42705520744](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42705520744) の結果は正式記録の独立検証欄で追う。
+
+**OPEN／AJI:** 真正偏差Dの上界と追加top残余EのH,β依存定量上界が、AJA証明書C未満の合計を実現することは未証明。n=1の反復power予算はAJA既証明下界と矛盾するため成立不可。top一次元性、無条件励起sector非零、H一様coercivity、Hamiltonian gap、連続体4D Yang–Mills mass gapを主張しない。append-only／tighten-only／overwrite-forbidden／same-root。
+
+**AJH統合後push再認証（追記）:** 正式squashを対象とする [#42705520744](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42705520744) は completed／SUCCESS、11,422／11,422、9／9の公理出力は標準3のみ、変更warning/error0、sorryAxなし、独立receipt SUCCESS。正本証明記録と区別して保存。
+
+## P4-Q2-PZ37AJI — 元Wilson transfer反復の全topへの幾何収束とAJA予算有限証人の同値性（2026-11-10、形式認証・定理MERGED）
+
+[定理PR #6599](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6599) MERGED。[正式記録](docs/proofs/P4-Q2-PZ37AJI_verified_20261110.md)。真正SU(2)正規化物理transfer S、元の中心化ZW源f₀、全top正準射影Qおよび全top直交補の既証明の有限体積収縮率 q=‖R‖<1 を用いて、**‖Sⁿf₀−Qf₀‖≤qⁿ‖Qᗮf₀‖**（n≥1）と全topへの強収束をLean4で証明。**‖Qf₀‖²<C_AJA ⇔ ∃n>0,‖Sⁿf₀‖²<C_AJA**も形式証明。AJA既証明によりn=1は不可能だが、**n≥2の証人自体は未構成**。top一次元性・元Haar定数cのtop固有性・体積一様縮小率は一切仮定していない。
+
+新規Lean leaf1件336行・9宣言、既存証明変更・削除0。初回 [CI #42708843152](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42708843152) の射影インスタンス不足・巨大isDefEq timeoutは固定mathlibの実際のインスタンス署名を照合し、型付き局所作用素へ修正。修正版exact-source [#42710645084](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42710645084) completed／SUCCESS、11,423／11,423、9／9宣言は標準3公理のみ、変更warning/error0、sorryAxなし、独立receipt SUCCESS。認証source bfe386d1a9d8a236c9605ea1b9914a2a93f8cfb1／squash 0548de742afda7894e6647a65dad2348b5a0ceac／共通Git tree f2fdd35a8f37ce05a8512a2d28f9d2984fee3539。統合後push [#42711612792](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42711612792) は別途終了観測する。
+
+**OPEN／AJJ:** 有限n≥2の厳密AJA証明書を下回る真正物理上界、真空ΩのHaar定数方向偏差Dの上界、追加top残余E、top多重度の評価を維持。H一様coercivity、Hamiltonian gap、4D連続体mass gapへ未証明のまま昇格しない。append-only／tighten-only／overwrite-forbidden／same-root。
+
+**AJI統合後push独立受領（追記）:** [#42711612792](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42711612792) completed／SUCCESS、11,423／11,423、全9宣言の実公理出力は標準3のみ、変更warning/error0、sorryAxなし、独立completion receipt SUCCESS。実際のAJA有限n証人は未構成。
+
+## P4-Q2-PZ37AJJ — 真正Haar定数Wilson残差からの全top距離上界と追加top二残余（2026-11-10、形式証明MERGED）
+
+[定理PR #6602](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6602) MERGED。[正式証明記録](docs/proofs/P4-Q2-PZ37AJJ_verified_20261110.md)。元SU(2) Wilson one-slab、真正物理Hilbert、正規化transfer S、Haar定数単位ベクトルc、全top射影Q、直交補制限R、選択Ωを不変更とし、固定H,βでの既証明‖R‖<1から **‖Qᗮ c‖≤‖c−Sc‖/(1−‖R‖)** をLean4で証明。選択Ωからの定数方向偏差 **D=1−⟨Ω,c⟩²=‖Qᗮc‖²+‖Qc−⟨c,Ω⟩Ω‖²** を厳密分解。AJGの元ZW源f₀に接続し、**‖Qf₀‖²≤‖f₀‖²[(‖c−Sc‖/(1−‖R‖))²+‖rᶜ‖²]+‖rᶠ‖²** を得た（rᶜは定数側、rᶠはZW源側の別々の追加top残余）。**この3項和がAJA正Haar-L²証明書未満という厳密予算は未証明**。Ω一方向の評価を全topと同一視しない。
+
+新規Lean leaf1件391行、13宣言の実公理監査13／13は標準3公理のみ、sorryAxなし、変更warning/error0。初回 [CI #42718290328](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42718290328) と第2回 [#42719671153](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42719671153) の線形算術正規化・加法単調性の辺順・norm_nonneg適用失敗を仮定不変更で修正。最終Exact-source [#42720802925](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42720802925) は11,424／11,424 SUCCESS、独立receipt SUCCESS。認証source c1c116a2f3de28104b411614e2070de975c321b0、統合merge 2857d5b2a566a28b32f0268333d684d1f24d829d。統合後push CIは別途完了認証まで保留。
+
+**OPEN／AJK:** 元Wilson残差‖c−Sc‖、定数側追加top残余‖rᶜ‖²、源側追加top残余‖rᶠ‖²を独立に評価し、AJA証明書との厳密比較を試みる。top一次元性、無条件励起sector非零、H一様coercivity、Hamiltonian spectral gap、連続体4D mass gapは未認証。append-only／tighten-only／overwrite-forbidden／same-root、固定Lean/mathlib維持。
+
+## P4-Q2-PZ37AJK — 真正Wilson有限冪による定数側・ZW源側の追加top残余の別々の上界（2026-11-10、Lean定理MERGED）
+
+[定理PR #6605](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6605) MERGED。[正式証明記録](docs/proofs/P4-Q2-PZ37AJK_verified_20261110.md)。元SU(2) Wilson物理Hilbert、正規化transfer S、全top射影Q、直交補制限R、選択Ω、Haar定数c、真正中心化ZW源f₀を不変更とし、任意のn>0で**定数側残余** rᶜ=Qc−⟨c,Ω⟩Ω と**ZW源側残余** rᶠ=Qf₀−⟨f₀,Ω⟩Ω を別々に評価した。
+
+**‖rᶜ‖≤‖Sⁿc−⟨c,Ω⟩Ω‖+‖R‖ⁿ(‖c−Sc‖/(1−‖R‖))**、**‖rᶠ‖≤‖Sⁿf₀−⟨f₀,Ω⟩Ω‖+‖R‖ⁿ‖Qᗮf₀‖**。AJI・AJJの既証明の真の固定H,β全top評価を再利用し、追加top消滅・top一次元性・H一様gapを仮定しない。**右辺の実際の小ささ、AJA厳密予算の有限n証人は未証明**。
+
+新規Lean1件190行／4宣言、既存ソース変更・削除0。初回 [#42731583927](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42731583927) FAILUREは68／101行の`add_le_add_left`に対する加法順不一致。仮定・定理文を不変更で`add_le_add_right`へ修正。修正Exact-source [#42740594286](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42740594286) は11,425／11,425 SUCCESS、4／4標準3公理のみ、sorryAxなし、変更warning/error0、独立receipt SUCCESS。source e822c2118f15d3a4a8b912a6d60826829f4332b9、formal merge dea4a9117fe257ce4f490ae5606a451cb7473a83。source/mergeファイル差分0。統合後push CIは別途認証対象。
+
+**OPEN／AJL:** 元物理の有限冪normや(I−S)cの非自明な定量評価を実際に構成できるか、全topへの漸近と追加top残余の非消滅を別々に検証する。AJA予算、無条件励起非零、H一様coercivity、Hamiltonian gap、4D質量ギャップはOPEN。append-only／tighten-only／overwrite-forbidden／same-root、固定Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6。
+
+**AJK統合後push独立認証（追記）:** [#42741398639](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42741398639) completed／SUCCESS。正式AJK定理merge `dea4a9117fe257ce4f490ae5606a451cb7473a83` のexact pushで11,425／11,425 Lean依存閉包SUCCESS、4／4実公理は標準3のみ、変更warning/error0、sorryAxなし。独立receiptの `event=push exact_sha` とrunが一致。先行のpush未確認状態を追認したが、厳密AJA予算・H一様gapは依然OPEN。
+
+## P4-Q2-PZ37AJL — 元Wilson有限冪の選択top偏差の正確な極限と二種類の残余（2026-11-10、Lean4形式証明MERGED）
+
+[定理PR #6610](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6610) **MERGED**。[正式記録](docs/proofs/P4-Q2-PZ37AJL_verified_20261110.md)。元の正規化SU(2) Wilson transfer S、全top射影Q、選択top単位Ω、Haar定数cと中心化ZW源f₀を不変更とし、固定H,β>0でのAJI全top冪収束を使って **‖Sⁿ⁺¹c−⟨c,Ω⟩Ω‖→‖rᶜ‖**、**‖Sⁿ⁺¹f₀−⟨f₀,Ω⟩Ω‖→‖rᶠ‖**、各二乗ノルムの収束もLean4で証明。rᶜ=Qc−⟨c,Ω⟩Ωとrᶠ=Qf₀−⟨f₀,Ω⟩Ωは、既存AJJとAJFの**別個の追加top残余**である。極限が0となることは**未証明**。
+
+新規Lean leaf1件207行／6宣言・既存削除0。初回 [CI #42743082760](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42743082760) FAILUREは `open Filter` 欠落による `Tendsto` 未認識および後続の型束縛連鎖。Lean定理文・物理定義を不変更で1行追加。修正source `49a7d20aff1483e84129e40bfb6b3dae64383732` の [Exact-source #42743773415](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42743773415) は11,426／11,426 SUCCESS、全6宣言の公理は標準3のみ、変更warning/error0、sorryAxなし、独立receipt SUCCESS。formal merge `a2fc5d9f25d8e551364812d2375fbb59bf8ee636`、source/mergeファイル差分0。統合後push CIは別途認証。
+
+**OPEN／AJM:** 選択Ωを引いた冪極限が残余ノルムへ収束するという結果を、残余消失や数値的小ささへ飛躍させない。元AJA厳密予算が不可能となる必要障害を検討する。無条件励起sector非零性、H一様coercivity、Hamiltonian spectral gap、連続体4D mass gapは未認証。append-only／tighten-only／overwrite-forbidden／same-root、固定Lean v4.30.0-rc2・mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6。
+
+**AJL統合後push独立認証（追記）:** [#42755310628](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42755310628) completed／SUCCESS。定理merge `a2fc5d9f25d8e551364812d2375fbb59bf8ee636` のexact pushで11,426／11,426 Lean依存閉包SUCCESS、AJL6／6宣言の実公理は標準3のみ、変更warning/error0、sorryAxなし、独立receiptのevent=pushとexact_shaが一致。先行の「push CI別途認証」を追認した。AJA厳密予算とmass gapは依然OPEN。
+
+
+### P4-Q2-PZ37AJM — 元Wilson有限冪の二側残余評価とAJA予算の必要障害（Lean4認証・統合済み、2026-11-10）
+
+[定理PR #6615](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6615) はMERGED、正式定理merge `0ebbab58cae7f42043f61392dba40020380df37d`。新規Lean leaf317行・7宣言／7公理監査。修正後source `eeee78092d89093d63f8d9d8c0436b7f0c59a39e` の[CI #42757780577](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42757780577)はcompleted／SUCCESS、11,427／11,427、標準3公理のみ、sorryAxなし、変更warning/error0。独立exact-head receiptもSUCCESS、sourceとmergeのLean Git blobは `be7824ea909751b81bf8c1accb1ff8391bf84a23` で一致。
+
+AJI/AJKの元Wilson冪・全top射影誤差から、固定H・β>0、n>0の選択top偏差`dₙ(x)`と追加top残余`r(x)`に `|dₙ(x)−r(x)|≤‖R‖ⁿ‖Q⊥x‖` が成り立つことを形式証明。Haar定数側は真正(I−S)c欠陥のtail、中心化ZW源側は独立の直交source tailを使う。源の追加top残余が元AJA証明書の予算以上なら、全top射影が予算未満という**厳密小条件は不可能**。また十分な有限冪下界とtail評価による条件付き否定判定も形式化した。数値的な条件の成立、残余ゼロ、top一次元性、無条件励起、H一様coercivityと4D Yang–Mills mass gapは**OPEN**。
+
+[正式検証記録](docs/proofs/P4-Q2-PZ37AJM_verified_20261110.md)に初回CI #42757038071の加法不等式のLean順序不一致と3箇所修正を保存。定理統合後push CI #42758364446の独立完成認証は追記まで保留。Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6、元Wilson物理定義とrootは不変更。append-only／tighten-only／overwrite-forbidden／same-root。
+
+
+**AJM統合後push独立認証（追記、2026-11-10）:** [#42758364446](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42758364446) completed／SUCCESS。定理merge `0ebbab58cae7f42043f61392dba40020380df37d` のexact pushで11,427／11,427 Lean依存閉包SUCCESS、AJM新規7／7宣言は標準3公理のみ、変更Lean warning/error0、新規sorryAxなし。二ジョブSUCCESS、独立receipt `event=push exact_sha=0ebbab58cae7f42043f61392dba40020380df37d source_result=success run=42758364446`。先行の「push未認証」は歴史的記録として残し、追記で認証確定。元AJA厳密予算と4D mass gapはOPEN。
+
+
+### P4-Q2-PZ37AJN — 元Wilson冪の厳密直交二乗分解とAJA条件付き証明書（2026-11-10）
+
+[定理PR #6620](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6620) **MERGED**。新規Lean leaf323行、7宣言・7件の核公理監査、元の物理定義・固定Lean/mathlib・root不変更。初回CI #42760340150で4件のLean elaboration error（`real_inner_comm`等式方向、`add_le_add_left`位置、元top空間の`CompleteSpace`局所インスタンス不足2件）を全文・imports・固定APIから修正。修正source `47f5a1aa4e3b80f9113204d8252042deffd090b6` の[CI #42805725280](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42805725280) はcompleted／SUCCESS、**11,428／11,428**、7／7宣言は標準3公理のみ、sorryAxなし、変更warning/error0、独立exact-head receipt SUCCESS。正式merge `ef62746f1abbe37f960d6967aa93865fa1e31859` は認証sourceと同一Lean Git blob `40dd45d72282ca0743e4f36e0a33cc37fd34f2bd`。
+
+AJH/AJI/AJF/AJMの全top正射影と元Wilson冪を使用し、`‖S^n x−⟨x,Ω⟩Ω‖²=‖Qx−⟨x,Ω⟩Ω‖²+‖S^n x−Qx‖²` を一般実Hilbertと真正Haar定数・元中心化ZW源で形式証明。元AJA厳密予算に対し、有限冪観測による**条件付き**十分条件と平方tailを含む必要障害を証明。数値的証人は未提出であり、追加top残余の消失、top一次元性、H一様coercivity、Hamiltonian gap、4次元連続体Yang–Mills mass gapは依然OPEN。[正式証明記録](docs/proofs/P4-Q2-PZ37AJN_verified_20261110.md)。定理統合後push CI #42809741159の独立認証は別途追記。append-only／tighten-only／overwrite-forbidden／same-root。
+
+### P4-Q2-PZ37AJO — 元Wilson二時点冪の厳密平方残余予算（2026-11-11）
+
+[定理PR #6623](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6623) **MERGED**、formal定理統合HEAD `c6612ee088e9938dadf1d011b8e0451c28f4bcf8`。新規Lean leafのみ318行追加／既存ファイル変更削除0。初回 [CI #42811595277](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42811595277) の`norm_nonneg _`型推論不成立をimports・全文・既存定理・固定APIから修正し、修正版 [CI #42877533307](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42877533307) **11,429/11,429 SUCCESS**、6/6実公理は標準3のみ、sorryAxなし、変更warning/error0、独立receipt SUCCESS。source `6c8014755dbf0753d74847766dc57abbe670c374` と統合後Lean Git blob `9d1b502c66191e5992da5bb3a6fa8787ab3e7648` 一致。
+
+真正元SU(2) Wilson `S`、全top射影`Q`、選択top`Ω`、全top直交補制限`R`から、`D_(n+1)−q²D_n≤(1−q²)r²`、`r²≤D_(n+1)`（`q=‖R‖`）を形式証明。元中心化ZW源の二時点有限冪観測による厳密AJA予算の条件付き十分判定と必要障害を示した。数値的証人、top一次元性、残余消失、無条件励起、H一様coercivity、Hamiltonian spectral gap、連続体mass gapは引き続きOPEN。[正式記録](docs/proofs/P4-Q2-PZ37AJO_verified_20261111.md)。統合後push CI #42897129027は独立完了認証待ち。append-only／tighten-only／overwrite-forbidden／same-root。
+
+**AJN統合後push追認（2026-11-11）:** [CI #42809741159](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42809741159) completed/SUCCESS、exact merge `ef62746f1abbe37f960d6967aa93865fa1e31859`、11,428/11,428、7/7標準公理のみ、独立push receipt SUCCESS、変更warning/error0、sorryAxなし。旧「未認証」は当時の履歴として保持。
+
+**AJO定理統合後push独立認証（2026-11-11追記）:** [CI #42897129027](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42897129027) completed/SUCCESS、exact formal merge `c6612ee088e9938dadf1d011b8e0451c28f4bcf8`、11,429/11,429、6/6定理は標準3公理のみ、sorryAxなし、変更Lean warning/error0、独立receipt `event=push exact_sha=c6612ee088e9938dadf1d011b8e0451c28f4bcf8 source_result=success run=42897129027 attempt=1`。元AJA証人と4D質量ギャップはOPEN。
+
+### P4-Q2-PZ37AJP — original Wilson two-step posterior interval asymptotic sharpness（2026-11-11）
+
+[Lean定理PR #6628](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6628) **MERGED**。修正版exact-source [CI #42904188256](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42904188256) completed／SUCCESS、11,430/11,430、2定義＋5定理すべて標準3公理のみ、sorryAxなし、変更warning/error0、独立receipt SUCCESS。初回CI #42902166859の巨大Wilson定義whnf heartbeat超過を、新規leafの型付き局所表現と局所ring証明で解消した。formal squash `57cbb9c8dc338e54014bb2748bff1cc75781cf17`、認証source・統合後Lean Git blobは同一 `124591833461c10b50566cbb49650f98f764029a`。
+
+真正中心化ZW元源の `D_n=‖Sⁿf₀−⟨f₀,Ω⟩Ω‖²`、`q=‖R‖<1`、真正追加top残余二乗`r²`について、`L_n=(D_(n+2)−q²D_(n+1))/(1−q²)` を定義し、`L_n≤r²≤D_(n+2)`と**上下両端のr²への収束**を形式証明。元AJA厳密小／大予算は各々独立に仮定された場合に限り、やがて有限の十分判定／必要障害へ反映される。等号境界、具体的数値証人、追加top残余の大小・消失、top一次元性、無条件励起非零、H一様coercivity、Hamiltonian gap、4D continuum mass gapは**OPEN**。[正式記録](docs/proofs/P4-Q2-PZ37AJP_verified_20261111.md)。統合後push CI #42905294183は完了・受領再認証待ち。
+
+
+### P4-Q2-PZ37AJS — 真正元Wilson重み付き一時点欠損の独立下界（2026-11-11）
+
+[定理PR #6633](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6633) はMERGED。認証source `59c5a9759f60f043204dc406d0d021d7654ee3cf`、[exact-source CI #42917279603](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42917279603) completed/SUCCESS（11,433/11,433、6/6標準3公理、sorryAxなし、変更warning/error0、独立receipt SUCCESS）。元定理formal squash `8295e64a19cacb9d96945a2d5f603deed1ca314a`、source/merge tree `64b050a125274b767c2ca7bd860a1abe2056a230` 一致、元Lean blob `de658374cf76f6a934640317f084d4a214a5d67c` 一致。新規Lean1ファイル263行・既存ファイル変更削除0。
+
+AJQ正源半重みHaar積分とAIG真正負Wilson転送平均を接続し、`D_w=∫e^(β W_H/2)(f₀−T_H f₀/||P_H||)dμ_H` について `D_w≥βV_H+||P_H||⁻¹β Z_cross e^(−βp_H)V_H>0` と、AHN真正Haar箱から `D_w≥β(3p_H/8)²κ(1/96)^card(Link_H)` を形式証明。**これは重み付き実数積分の下界であり、真正物理Hilbertの`||f₀−S_Hf₀||`下界ではない。** L²双対評価、AJA予算との厳密比較、具体的有限冪証人、転送後励起sector非零、top一次元性、H一様coercivity、Hamiltonian gap、連続体4D mass gapはOPEN。[正式記録](docs/proofs/P4-Q2-PZ37AJS_verified_20261111.md)。統合後push CI #42918264258は独立受領待ち。固定pin・元物理定義・root不変更、append-only／tighten-only／overwrite-forbidden／same-root。
+
+
+### P4-Q2-PZ37AJT — 真正Wilson物理L²一時点欠損下界（2026-11-11、正式追記）
+
+定理PR [#6636](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6636) **MERGED**、source `db521df94a095ad1e3c76267163d2ba5e10037dc`、[exact-source CI #42925478976](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42925478976) 11,434/11,434 SUCCESS、9/9公理は標準3のみ、sorryAxなし、変更warning/error0、独立receipt SUCCESS。formal merge `b45bf3a17004a765c73dc66c2bea171a7fcb7e2a`、source/merge Git tree一致、Lean blob `e3803fcfb82af46c3025d2fed90999968da1edc6`一致。[統合後push #42926260138](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42926260138)も同一HEADで11,434/11,434 SUCCESS・receipt SUCCESS。
+
+元の中心化ZW物理L²源`f₀`、元SU(2) Wilson正規化転送`S`と真正Haarの重み付き積分を実Hilbert内積へ型付きa.e.同一性で接続し、`‖f₀−Sf₀‖≥β e^(−βp_H) (3p_H/8)²(1/384)^(4n_H)>0`をLean4形式証明。これは真正物理L²欠損の有限H,β下界。AJA厳密予算の成立、無条件有限冪証人、H一様coercivity、Hamiltonian gap、4D continuum mass gapはOPEN。[正式証明記録](docs/proofs/P4-Q2-PZ37AJT_verified_20261111.md)。append-only／tighten-only／overwrite-forbidden／same-root。
+
+### P4-Q2-PZ37AJU — 真正Wilson二時点冪の定量補正とAJA条件付きn=2証人（2026-11-11、正式追記）
+
+定理PR [#6637](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6637) **MERGED**、source `edf8d3ba1ed574687c6a32fba8a19d81447ac15c`、[CI #42957344244](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42957344244) completed/SUCCESS、11,435/11,435、12/12実公理は標準3のみ、sorryAxなし、変更warning/error0、独立receipt SUCCESS。formal squash `033420df2039e5bed9e9509bb55e6343266b0683`、source/merge Git tree `ee4ef1452fcaab89047a19580f59c05701705e0e`一致、Lean blob `32db516f2b130693bda7e2c63917eb81ae9bd3d6`一致。[統合後push #42958127760](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42958127760) 11,435/11,435 SUCCESS・receipt SUCCESS。初回と2回目の失敗CIを修正、証明手順のみ変更。
+
+元有限H,βの`d=βv_H/e^(βp_H)`、全top直交補制限`q=‖R‖<1`について`‖S²f₀‖²+(1−q⁴)(d/(1+q))²≤V_H`および`‖S²f₀‖²<V_H`を**無条件に**形式証明。元AJA証明書予算`B_H`に対して`V_H−(1−q⁴)(d/(1+q))²<B_H`が成立する**場合に限り**、具体的`n=2`証人と転送後励起sector非零を得る。比較の真偽は未証明。H一様coercivity、Hamiltonian gap、連続体4D Yang–Mills mass gapもOPEN。[正式証明記録](docs/proofs/P4-Q2-PZ37AJU_verified_20261111.md)。元Wilson、root、固定Lean/mathlib・既存Lean不変更。
+
+
+### P4-Q2-PZ37AJV — 真正元Wilson全top射影のq-free明示分散補正（2026-11-11）
+
+[Lean定理PR #6640](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6640) MERGED。認証source `d295c85ffa10d4c097ecab20e9d6312ca705f852`、[CI #42972219152](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42972219152) 11,436/11,436 SUCCESS、9/9公理は標準3のみ、sorryAxなし、変更Lean warning/error 0/0、独立receipt SUCCESS。正式squash `716693195bc51c8f45776b089c16e516bd8529b3`、source/merge Git tree `783c21db4fb2e869315eae8551c6e452dcfc50af`一致、Lean blob `8dd7dca631b5bf14dc1280792291cfde43049a18`一致。既存Lean変更0、新規Lean 273行。統合後push [#42973075691](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42973075691)は独立完成受領を別途確認。
+
+AJTの真正欠損下界 `d=βv_H/e^(βp_H)>0` とAJRの `‖f₀−Sf₀‖≤(1+q)‖Q⊥f₀‖`、元`q=‖R‖<1`を用い、**qを消去した無条件定量上界** `‖Qf₀‖²+(d/2)²≤V_H`、追加top残余 `‖r‖²≤V_H−⟨f₀,Ω⟩²−(d/2)²` を形式証明。元AJA厳密予算`B_H`との`V_H−(d/2)²<B_H`は未認証であり、条件付き有限冪存在・転送後励起非零を無条件とは扱わない。top一次元性、数値的AJA証人、H一様coercivity、Hamiltonian gap、4D Yang–Mills mass gapもOPEN。[正式記録](docs/proofs/P4-Q2-PZ37AJV_verified_20261111.md)。元模型・root・pins不変更。append-only／tighten-only／overwrite-forbidden／same-root。
+
+
+**AJV統合後push独立追認（2026-11-11）:** [#42973075691](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42973075691) completed／SUCCESS。formal exact merge `716693195bc51c8f45776b089c16e516bd8529b3`、11,436／11,436 Lean、9／9新規公理は標準3のみ、変更AJV warning/error0、新規sorryAxなし。独立receipt `event=push exact_sha=716693195bc51c8f45776b089c16e516bd8529b3 source_result=success run=42973075691`。源の全top射影のq-free上界は認証済みだが、真正AJA予算との厳密比較・具体的有限冪数値証人は依然OPEN。
+
+### P4-Q2-PZ37AJW — 真正AJA予算とAJV q-free上界の**厳密障害**（2026-11-11）
+
+[Lean定理PR #6643](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6643) **MERGED**。修正版source `a7bad255ae2c080a9f78d0077975d3677d8babb5`、[Exact-source CI #42988068487](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42988068487) completed/SUCCESS、**11,437／11,437**、5/5公理監査は`propext`・`Classical.choice`・`Quot.sound`のみ、新規sorryAxなし、変更warning/error0/0、独立MCP CI receipt SUCCESS。正式squash `c2b2c769dc31375768767cffc60469956ad9ede2`、source/test-merge/merge Git tree `4108358f9c044f614dcc8436a184f5b22454500d`一致、Lean blob `2c555dbd368ff78051a45704f407d1e9a4746e1d`一致。新規Lean leaf221行追加、既存ファイル変更0。
+
+固定有限H、β>0の真正元物理系で `V_H=‖f₀‖²>0`、`d_H=βe^(−βp_H)v_H>0`、元AJA Haar-L²予算`B_H,β=m_H,β²·Measure.real μ_H({u_H,β<−m_H,β})>0`とすると、**新規Lean認証** `B_H,β+(d_H/2)²≤V_H/8<V_H`。従って`B_H,β<V_H−(d_H/2)²`であり、AJVが**十分条件**として留保していた`V_H−(d_H/2)²<B_H,β`は**全有限H・β>0で不可能**と証明された。AIW余裕上界、AIK/Haar分散、AIS上界、Haar確率と`βp_H e^(−βp_H)≤1`のみから得る。
+
+**重要:** この不可能性はAJVの粗い上界による判定方法に限定され、実際の`‖Qf₀‖²<B_H,β`や真正Wilson有限冪証人の存在を否定しない。top一次元性、体積一様coercivity、Hamiltonian gap、4D continuum mass gapはいずれもOPEN。[正式証明記録](docs/proofs/P4-Q2-PZ37AJW_verified_20261111.md)。元Wilson定義、Haar、ZW源、AJA予算、root・pinを変更せず。append-only／tighten-only／overwrite-forbidden／same-root。
+
+**AJW正式formal push独立追認（2026-11-11）:** [CI #42988868560](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42988868560) `event=push`、exact merge `c2b2c769dc31375768767cffc60469956ad9ede2`、completed／SUCCESS。Lean依存閉包 11,437／11,437、AJW新規5/5公理は標準3のみ、sorryAxなし、変更warning/error0/0、独立receipt job SUCCESS、exact-head status `chatgpt-ci-receipt/PR Lean Fast Check` SUCCESS。形式結論`B+c≤V/8`を無条件の有限冪証人不存在とは解釈しない。
+
+### P4-Q2-PZ37AJX — 真正AJA証明書の1/16上界と元源excited-sectorの必要角度条件（2026-11-11）
+
+[Lean定理PR #6646](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6646) **MERGED**。認証source `8d0394673bbd7ab20c35e39a6ca4f6709cd61b00`、[Exact-source CI #42993769844](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42993769844) completed/SUCCESS、**11,438／11,438**、新規9/9宣言は`propext`、`Classical.choice`、`Quot.sound`のみ、新規sorryAxなし、変更warning/error0/0、独立receipt SUCCESS。正式formal squash `e552961d3533df32f653b4213443144120f413c2`、認証source／test-merge／merge共通Git tree `e70ced55c1d6786da137728716e16d4ac7be953c`、新規Lean blob `098176c09ba56886d388d1602ac3d07bb4806e9b`一致。新規Lean1件・326行追加・既存Lean変更0。統合後push [#42994602655](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42994602655)は別途完成照合。
+
+元有限H・全β>0について、**真正元AJA正Haar-L²証明書** `0<B_H,β=m_H,β²·Measure.real μ_H({u_H,β<−m_H,β})≤V_H/16`を無条件形式証明。AIWの元正規化margin上界、AIS元分散`V_H≤p_H²/4`、Haar確率、および`βp_H exp(−βp_H)≤1`の合成であり、AJVの粗いq-free上界に依存しない。**真正有限冪証人が別途存在した場合に限り** `‖Sⁿf₀‖²<V_H/16`、`‖Qf₀‖²<V_H/16`、選択top/追加top個別二乗も`<V_H/16`、さらに元源の`‖Q⊥f₀‖²>15V_H/16`が必要と証明。真の全topが`≥V_H/16`またはtop直交が`≤15V_H/16`なら有限冪AJA証人は不可能、ただしこれらの前提は**未認証**。角度必要条件と実際の角度成立・証人存在を区別する。[正式証明記録](docs/proofs/P4-Q2-PZ37AJX_verified_20261111.md)。次段AJYでは真の全top／Wilson冪ノルムの独立Haar上界を追う。元物理定義、Haar、AJA予算、root・pin不変更。append-only／tighten-only／overwrite-forbidden／same-root。
+
+**AJX formal push独立追認（2026-11-11）:** [CI #42994602655](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/42994602655) completed／SUCCESS、正式squash exact HEAD `e552961d3533df32f653b4213443144120f413c2`、11,438／11,438 Lean、新規9/9宣言の公理は標準3のみ、sorryAxなし、変更AJX warning/error0/0。独立completion receipt job SUCCESS、`chatgpt-ci-receipt/PR Lean Fast Check` exact-head status SUCCESS。B≤V/16は無条件だが、源のexcited sector >15V/16は有限冪証人を**仮定した必要条件**であって無条件事実ではない。
+
+### P4-Q2-PZ37AJY — 真正AJUの二乗冪AJA十分条件に対する限定障害（2026-11-11）
+
+[定理PR #6649](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6649) MERGED、[Exact-source CI #43005620828](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43005620828) completed/SUCCESS：Lean 11,439/11,439、新規6宣言・6/6公理は標準3のみ、sorryAxなし、変更warning/error0/0、独立receipt SUCCESS。認証source `86ae17bbf2a4789d55843029a96291877aa6eeca`、正式squash `879bd96508d4d89f92a8d1cd6659fe858ce81091`、source/test-merge/squash tree `cdab9308ad43709912e18a0037f167ea67dc3696` 一致。AJXの `B≤V/16` と真正AJU補正 `C₂=(1−q⁴)(d/(1+q))²≤d²≤V/4` を合成して `B+C₂≤5V/16<V`、したがってAJUの**特定の十分条件** `V−C₂<B` は不可能と形式証明。実際の `‖S²f₀‖²<B` や任意有限冪証人の不存在を証明したわけではない。真の全top射影とAJA予算の直接比較は未認証。[正式記録](docs/proofs/P4-Q2-PZ37AJY_verified_20261111.md)。formal push [#43006708442](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43006708442) は独立受領書の確認対象。既存物理定義・root・pin不変、append-only。
+
+**AJY formal push独立追認（2026-11-11）:** [CI #43006708442](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43006708442) completed／SUCCESS、正式squash exact HEAD `879bd96508d4d89f92a8d1cd6659fe858ce81091`、11,439／11,439 Lean依存閉包、新規6/6公理は標準3のみ、新規sorryAxなし・変更warning/error 0/0。独立completion receipt jobおよびexact-head commit status `chatgpt-ci-receipt/PR Lean Fast Check` SUCCESS。これは実行時受領書であり、数学的内容は定理leafの認証範囲に限定する。
+
+### P4-Q2-PZ37AJZ — 元Wilson有限冪と真正AJA予算の厳密な直交残余同値判定（2026-11-11）
+
+[定理PR #6652](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6652) MERGED。認証source `529a9354426c2d3d18ef78bb44605c6d59ccbdf8`、[Exact-source CI #43008681741](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43008681741) completed/SUCCESS：Lean **11,440／11,440**、新規6/6公理は標準3のみ、sorryAxなし、変更AJZ warning/error0/0、独立receiptとexact-head status SUCCESS。正式squash `a8b410d9a907b00697a3da2f7358060a10d4f17c`、source/test-merge/squashのGit tree `bd83d90cf1d67d0d982cc9ff458c0eb63b029693` 一致。元のWilson one-slab・ZW源・全top射影・AJA証明書を変えず、任意の自然数nで **`‖Sⁿf₀‖²=‖Qf₀‖²+‖Sⁿf₀−Qf₀‖²`**、したがって **`‖Sⁿf₀‖²<B ↔ ‖Sⁿf₀−Qf₀‖²<B−‖Qf₀‖²`** を形式認証。AJIの1乗不可能性と合わせて、正の有限冪証人の存在は **あるn≥2の真の残余判定** と同値。ただし実際の残余の大きさ、証人の有無はNO_DATA、mass gapもOPEN。[正式記録](docs/proofs/P4-Q2-PZ37AJZ_verified_20261111.md)。formal push [#43009561728](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43009561728)の独立追認は別途。append-only・same-root。
+
+**AJZ formal push独立追認（2026-11-11）:** [CI #43009561728](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43009561728) `event=push`、正式squash exact HEAD `a8b410d9a907b00697a3da2f7358060a10d4f17c`、completed/SUCCESS。Lean 11,440/11,440、AJZ新規6宣言の公理は標準3のみ、新規sorryAxなし、変更warning/error0/0。独立completion receipt jobとexact-head commit status `chatgpt-ci-receipt/PR Lean Fast Check`もSUCCESS。
+
+### P4-Q2-PZ37AKA — 真正Wilson二乗冪の独立Haar–Cauchy下界（2026-11-12）
+
+[定理PR #6656](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6656) MERGED、exact-source [CI #43011969101](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43011969101) completed/SUCCESS。source `9265a9ef537d6a5e8898181af8098ac523587e95`、formal squash `7baa491a509eeda8d1e0b46fa68f8c1018992485`、source/test-merge/squash共通tree `d27a22ad4d545799804c2c4d025b7954c3504011`。Lean依存閉包 **11,441／11,441**、新規7宣言／7公理監査は標準3のみ、新規sorryAxなし、変更AKA warning/error0/0、独立receiptとexact-head status SUCCESS。1新規Lean leaf259行、削除0、元Wilson/Haar/ZW/AJA、Lean/mathlib pinとrootは不変。真正Haar源の `B>0`, `V=‖f₀‖²>0` について対称性とCauchyから **`0<B²/V≤‖S²f₀‖²`**、AJXから **`B²/V<B`** を形式認証。**実際のn=2 AJA証人はNO_DATA**、もし別途 `‖S²f₀‖²<B` が成り立つ場合のみ `B²/V≤‖S²f₀‖²<B`。top一次元性・H一様coercivity・質量ギャップはOPEN。[証明記録](docs/proofs/P4-Q2-PZ37AKA_verified_20261112.md)。formal push [CI #43046698800](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43046698800) は本追記時in_progress・未認証。追認は完了後別記する。append-only。
+
+### P4-Q2-PZ37AKB — 元Wilson三乗冪の真正Haar–Cauchy下界（2026-11-12）
+
+[定理PR #6659](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6659) MERGED、source `85ca5eb4575fbc89d69fd43eb17d9316bad0c4bf`、formal squash `b508a059daa252507f02ec175143d975188556c9`、共通tree `388f6a17df60650a9191d47e388e3f8da9e93970`。[Exact-source CI #43104537528](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43104537528)とformal push独立[CI #43105393399](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43105393399) completed/SUCCESS、11,442/11,442、8/8新宣言の公理は標準3のみ、新規sorryAxなし、変更warning/error0/0、独立receipt成功。真正対称Wilson作用素とHaar源に対し、**`0<B³/V²≤‖S³f₀‖²`**、かつ **`B³/V²<B`** を形式認証。第三冪AJA区間 `[B³/V²,B)` は実際の厳密上界を**別途仮定した条件付き**。無条件のn=2/n=3 AJA証人、top一次元性、一様coercivity、質量ギャップはOPEN。[正式記録](docs/proofs/P4-Q2-PZ37AKB_verified_20261112.md)。既存定義・pin・root不変、append-only。
+
+
+
+### P4-Q2-PZ37AKC — 真正Wilson全正整数冪のHaar–Cauchy下界（2026-11-12）
+
+[定理PR #6662](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6662) MERGED。修正版source `0ee259ee8c712b88a0a2a030e86a5322e40f43e4`、formal squash `a36bf6966611c557a07aec182495e21aa3c15f82`、共通tree `f2cda6c622aa9dedb3f281fb2e40373e76fac533`。[Exact-source #43109258870](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43109258870)と独立formal push [#43110233807](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43110233807) completed/SUCCESS、Lean **11,443/11,443**、6/6公理は標準`propext`/`Classical.choice`/`Quot.sound`のみ、sorryAxなし、変更error/warning0/0、独立completion receipt SUCCESS。初回CIの型・簡約不一致2件と不要simpa警告を新規leaf内だけで解消。既存Lean変更0、1新規leaf268行、pinとroot維持。
+
+真正SU(2) Wilson対称転送`S`、元ZW物理源`f₀`、Haar分散`V>0`、元AJA証明書`0<B≤‖Sf₀‖²`から、全有限`H`・`β>0`・`n:ℕ`で **`0<B^(n+1)/V^n≤‖S^(n+1)f₀‖²`** をLean4形式認証。log-convex energyの帰納法に基づく真の元Wilson冪下界。無条件AJA厳密上界・具体的`n=2,n=3`証人、top一次元性、H一様coercivity、Hamiltonian／4D continuum質量ギャップは**OPEN**。[正式記録](docs/proofs/P4-Q2-PZ37AKC_verified_20261112.md)。append-only／tighten-only／overwrite-forbidden／same-root。
+
+
+### P4-Q2-PZ37AKD — 真正Wilson隣接冪のHaar保持率下界（2026-11-12）
+
+[Lean定理PR #6665](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6665) MERGED。認証source `d4fd6295f23f77040296d10692cfaafe01026391`、formal squash `9f71815ec5df4336493f492b28f6d9108538b456`、source/test-merge/squash共通tree `a1f4842fea48791b75551b02c2d6640e295a7e6e`。[Exact-source #43112959710](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43112959710) および独立[formal push #43114001431](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43114001431) completed/SUCCESS、Lean **11,444/11,444**、新規7/7公理は標準3のみ、sorryAxなし、変更warning/error 0/0、独立completion receipt・exact-head status SUCCESS。新規AKD leaf282行、既存Lean変更・削除なし。元Wilson/Haar/ZW/AJA不変。
+
+全有限H、β>0、全n:ℕで真正源の `a_n=‖S^n f₀‖²>0`、`0<B≤a₁`、`V=a₀>0` に対し、**`B*a_n≤V*a_(n+1)` および `B/V≤a_(n+1)/a_n`** をLean4形式認証。`qV<B`なら`a_(n+1)≤q*a_n`は任意nで不可能。これはH・β依存のsource-orbit保持率下界であり、体積一様coercivityやスペクトルギャップではない。無条件n=2/n=3 AJA証人・top一次元性・Hamiltonian/4D連続体質量ギャップはOPEN。[正式記録](docs/proofs/P4-Q2-PZ37AKD_verified_20261112.md)。append-only／tighten-only／overwrite-forbidden／same-root。
+
+
+### P4-Q2-PZ37AKE — genuine AJA witness-tail stability and conditional finite-power test（2026-11-12）
+
+[定理PR #6666](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6666) MERGED。最終source `a82d74542653d42c4d564486429934d29c6eb47f`、formal squash `08e4fe2a92df2595cbfb2da141baa588e44d9eea`、source/test-merge/squash共通tree `92499907d8cf255b1de62e45bccc5e6c5c9a71c6`。[Exact-source #43115696190](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43115696190) と独立[formal push #43116444718](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43116444718) は completed/SUCCESS。Lean 11,444/11,444、新規8/8公理監査は標準3のみ、sorryAxなし、変更warning/error 0/0、独立completion receipt SUCCESS。新規Lean leaf 1件278行追加・既存Lean変更0。
+
+真正元SU(2) Wilson正規化転送`S`・元ZW源`f0`・真正全top射影`Q`・元AJA Haar予算`B`を維持。全有限`H`・`β>0`で`||S^k f0||²≤||S^n f0||²`（n≤k）を証明し、もし実際のAJA厳密証人`||S^n f0||²<B`が存在すれば**以後すべての冪**で成立すること、および`||Qf0||²<B ↔ ∃N≥2 ∀k≥N:||S^k f0||²<B`を形式化。真正`Q,R,f0,B`の有限幾何学的十分テストも認証した。さらにAJV補正`C>0`により`∃n≥2:||S^n f0||²<V−C/2`を**無条件**に証明したが、**この不等式はAJA証人ではない**。
+
+**OPEN:** `||Qf0||²<B`、実際の無条件AJA有限冪証人、真正Haar数値比較、top一次元性、H一様coercivity、Hamiltonian・連続体4D mass gap。AJXの`B≤V/16`とAJWの粗い十分条件no-goを消さず保持。[AKE正式証明記録](docs/proofs/P4-Q2-PZ37AKE_verified_20261112.md)。元物理定義・pin・root不変、append-only/same-root。docs-only Strict Lean手動実行禁止。
+
+
+### P4-Q2-PZ37AKF — 抽象二成分列の証人推論障害と現行Wilson境界（2026-11-12）
+
+[定理PR #6672](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6672) MERGED。AKI正本へ同期したsource `09b3f601682889eda8dacd83007e92f7e2cfbf71`、formal squash `2b8b15f8317d8e2b449b5c047a2f9b0e447a5175`、source/test-merge/squash共通tree `803f6b61d4e85e8bf9cb883d28793d2df2823aed`。[Exact-source CI #43152268848](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43152268848)と独立[formal push CI #43152945449](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43152945449)はworkflow/job/Lean step/receiptまでcompleted/SUCCESS。Lean **11,445/11,445**、9/9宣言公理監査は標準3のみ、sorryAxなし、変更AKF warning/error 0/0。新規leaf162行、既存Lean変更・削除0。[正式証明記録](docs/proofs/P4-Q2-PZ37AKF_verified_20261112.md)。
+
+AKFは抽象実数列 `a_n=1/4+(3/4)*(1/4)^n` と `B=1/32`について、log-convex性・厳密減衰・全冪Cauchy下界・`a_n→1/4`と、**`¬∃n>0:a_n<B`**の同時成立を形式認証した。各nで`a_n≥1/4>B`。実数列の認証を真正Wilson模型の不存在定理や新しい作用素構成へ読み替えない。
+
+**現行正本の追記:** AKI [#6675](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6675)は`0<beta≤kappa_H=log(2)/(2*p_H)`で元AJA証人不存在。さらにMERGED済みAKJ [#6676](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6676)は、元ABN係数を使う `C_H(beta)=2*exp(-2*beta*p_H)+exp(-beta*p_H)*r(beta)^4` に対し`beta>0 ∧ 1≤C_H(beta)`から全冪の元証人不存在を証明し、`beta>kappa_H`にも不存在の結合が存在することを形式化した。AKJの[source CI #43153265889](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43153265889)と[formal push #43154080548](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43154080548)もcompleted/SUCCESS。旧OPEN記述は履歴として保持し、現行範囲はこの追記を参照する。
+
+**NEXT/OPEN:** 存在探索では`beta>kappa_H`に加えて必要条件`C_H(beta)<1`を確認し、真正full-topと元Haar予算の差 `Delta=B-||Qf0||²` を直接評価する。`C_H(beta)<1`は十分条件ではない。既知不存在範囲外のDeltaの符号、top一次元性、H一様coercivity、Hamiltonian/4D連続体質量ギャップはOPEN。全H・全beta>0での一律の元AJA証人存在は既知不存在範囲により否定。元Wilson/Haar/ZW/AJA・pin・root不変、append-only/same-root。mainは同一正式記録blobと同一文書追記だけをミラーし、formal専用Lean leafは含めない。
+
+**具体的候補:** 元固定結合`beta0=log(3/2)/64`と`H=1`では、既存ADC/AIB/ABNから`p_1=192`、`exp(-beta0*p_1)=8/27`、`C_1(beta0)≤344/729<1`、`kappa_1<beta0`を算術的に導ける。この組合せは新規Lean宣言として未認証であり、真正`Delta_(1,beta0)`の符号はNO_DATA。次の直接比較の対象候補として区別して保持する。
+
+
+### P4-Q2-PZ37AKG—AKJ — original Wilson AJA non-witness cutoffs and Ward coefficient extension (2026-11-12 JST)
+
+[AKG #6673](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6673) MERGED: certified original finite-H no-witness for all n and 0<β≤τ_H; (9/4) B≤‖Sⁿf₀‖². [AKH #6674](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6674) MERGED: extends interval to original AIM θ_H>τ_H. [AKI #6675](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6675) MERGED: genuine Ward d_H=β exp(-3βp_H)V_H>0 ensures ‖Sⁿf₀‖²≥d_H² for all β>0; excludes AJA witness through κ_H=log2/(2p_H)>θ_H, including original β0 at H=0 only. [AKJ #6676](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6676) MERGED: retains original positive Ward coefficient r(β) and proves D_H(β)=2exp(-2βp_H)+exp(-βp_H)r(β)^4≥1 implies no original finite-power AJA witness; D_H(κ_H)>1 and continuity yield ∃β>κ_H with no witness for every finite H. **This does not decide all β>κ_H, any global witness existence, top rank-one, uniform coercivity, Hamiltonian or 4D continuum mass gap.**
+
+Exact-source runs: [AKG #43127198792](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43127198792) (11,445 Lean,11/11 axioms); [AKH #43143567948](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43143567948) (11,446,7/7); [AKI #43148059365](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43148059365) (11,447,13/13); [AKJ #43153265889](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43153265889) (11,448,9/9). All completed/SUCCESS, standard 3 axioms only, new sorryAx absent, changed warning/error 0, exact-head independent receipts SUCCESS, source/merge trees equal. Formal pushes AKG [#43128076902](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43128076902), AKH [#43144248736](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43144248736), AKI [#43148760017](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43148760017) all completed/SUCCESS; AKJ [#43154080548](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43154080548) is a separately pending push audit in this record. Proof receipts: [AKG](docs/proofs/P4-Q2-PZ37AKG_verified_20261112.md), [AKH](docs/proofs/P4-Q2-PZ37AKH_verified_20261112.md), [AKI](docs/proofs/P4-Q2-PZ37AKI_verified_20261112.md), [AKJ](docs/proofs/P4-Q2-PZ37AKJ_verified_20261112.md). Original definitions, fixed Lean/mathlib, formal proof branch, same-root, append-only/tighten-only retained; main is docs-only mirror.
+
+**Subsequent AKJ push confirmation (2026-11-12):** the pending state above is retained as history. Independent [formal push #43154080548](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43154080548) at exact squash `2403229c6db3ba3e7702cc014a875fa9f91493d6` is now completed/SUCCESS, including actual Lean job `130969835468`, Lean step 17 and exact-head receipt job `130972144127`. Complete job logs confirm 11,448/11,448, nine standard-only axiom audits, no sorryAx and changed AKJ warning/error 0/0; source/test-merge/squash tree equality is independently rechecked. [Appended AKJ receipt](docs/proofs/P4-Q2-PZ37AKJ_verified_20261112.md#subsequent-independent-formal-push-confirmation-2026-11-12). The mathematical scope and OPEN boundaries above are unchanged.
+
+
+### P4-Q2-PZ37AKK — squared Haar mass strengthens the genuine full-top floor (2026-11-12 JST)
+
+[Theorem PR #6681](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6681) proves, for every original finite `H`, `β>0`, and `n:ℕ`, with `λ=‖P‖`, the unchanged AKI `c,d`, and `L=d²λ/(λ−c)²`:
+
+$$
+0<\lambda-c,\qquad
+d^2<\frac{d^2\lambda}{(\lambda-c)^2}
+\le\|Qf_0\|^2\le\|S^n f_0\|^2.
+$$
+
+The proof retains AKG's squared Haar mass estimate and AKJ's affine Ward pairing, and uses AJE's general full-top overlap bound and AJH's power invariance. It does not use top simplicity or identify the nonnegative top vector with a separately selected vacuum.
+
+For the original AJA Haar budget `B`, `B≤L` excludes every strict finite-power witness, and a witness requires `L<B`. The reverse implication and a new numerical coupling decision are not established. In particular, the actual full-top/Haar budget difference at `H=1, β₀`, H-uniform coercivity, Hamiltonian spectral gap and the continuum 4D mass gap remain outside this result.
+
+Exact-source CI [43161340043](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43161340043) and independent formal-push CI [43162137343](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43162137343) are completed/SUCCESS, including Lean step 17, post-build processing and separate exact-SHA receipts. Each reports 11449/11449, all 10 declarations use only the standard axiom set, no sorryAx, and changed AKK warning/error 0/0. Source/test-merge/squash share tree `23315c7084b766284aae2865f49ff40e026c1457`. [Formal proof and audit record](docs/proofs/P4-Q2-PZ37AKK_verified_20261112.md).
+
+**Finite-volume scope correction:** canonical source already contains a top-simplicity theorem for this same finite-volume physical Wilson operator, successfully built in [#5012](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5012). The record above distinguishes that existing theorem and historical build evidence from a fresh current-head replay or theorem-specific axiom audit, which are not claimed here. A blanket finite-volume “top simplicity OPEN” description should not be repeated.
+
+Original definitions, assumptions, roots and Lean/mathlib pins are preserved. Formal receives the new Lean leaf; main mirrors only this record and the identical public-document appendices.
+
+
+### P4-Q2-PZ37AKL — original Wilson H-uniform top-orthogonal coercivity (2026-11-12 JST)
+
+[Theorem PR #6683](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6683) explicitly formalizes H-uniform coercivity for the unchanged genuine SU(2) Wilson normalized physical transfer `S=P/||P||` on the orthogonal complement of its **full** eigenvalue-one space. The canonical two-sided twelve-spatial cutoff at `s=9` gives one `beta_*>0`, independent of H. For every `0<=beta<=beta_*`, every H and every `x` in that sector:
+
+$$
+\frac1{3072}\|x\|^2\le\langle x-Sx,x\rangle,
+\qquad
+\frac1{3072}\|x\|\le\|x-Sx\|,
+\qquad
+\frac{6143}{9437184}\|x\|^2\le\|x\|^2-\|Sx\|^2.
+$$
+
+The proof uses the existing genuine physical contraction `||S|_(full-top-perp)||<=3071/3072`, Cauchy--Schwarz and the exact raw/normalized transport. It also proves that one positive coupling `beta_*/2` can be fixed before all H. The raw squared-defect bound retains `||P||^2`; no volume-dependent replacement coupling or assumed uniform frame is introduced.
+
+The leaf also repairs an inherited compiled-decision dependency in the six-color cardinality proof: it supplies the identical proposition by ordinary kernel reduction and reconstructs the affected proof terms, with explicit kernel checking and final axiom audits, while preserving every imported declaration and physical definition.
+
+**Scope correction:** older blanket statements that H-uniform coercivity is OPEN are retained as history. This result certifies the specified normalized full-top-orthogonal coercivity on a common positive small-coupling interval. It makes no coercivity claim at the original numerical `beta0=log(3/2)/64`, no H-uniform original GL-source Rayleigh claim, and no common-carrier/Hamiltonian/continuum mass-gap conclusion. At positive coupling the original source retains the AKI/AKK nonzero top component, so the AJA non-witness results are unchanged.
+
+Exact-source CI [43169160435](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43169160435) and independent formal-push CI [43169855373](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43169855373) are completed/SUCCESS, including Lean step 17, post-build processing and separate exact-SHA receipts. Each reports **9443/9443**, all **11 new mathematical declarations** and the separate existing cutoff-positivity audit use only `[propext, Classical.choice, Quot.sound]`, no sorryAx/native dependency remains in the new mathematical declarations, and changed AKL warning/error is **0/0**. The three private Meta helper definitions and one tactic registration are counted separately. Existing imported-source warnings are preserved. Source/test-merge/squash share tree `c047dc43f8ec69266add2cd78968e90715c90904`. [Formal proof and audit record](docs/proofs/P4-Q2-PZ37AKL_verified_20261112.md).
+
+One new 327-line Lean leaf; existing definitions, assumptions, roots and Lean/mathlib pins preserved. Formal receives the leaf; main mirrors only the identical proof-record blob and public-document appendices. append-only / tighten-only / overwrite-forbidden / same-root.
+
+## P4-Q2-PZ37AKM — genuine AJA Haar-budget comparison with H-uniform coercivity (2026-11-12, verified)
+
+The original SU(2) Wilson normalized transfer `S=P/||P||`, true signed centered ZW source `f0`, entire fixed-top projection `Q`, genuine Haar variance `V=||f0||²` and unchanged original AJA negative-region certificate `B` are retained. For **every finite H**, **0<beta<=beta_*** with one `H`-independent positive AKL cutoff, and **n>=1**, the kernel-certified AKM comparison is
+
+```text
+L_AKK(H,beta) <= ||Q f0||² <= ||S^n f0||²
+  <= ||Q f0||² + ((3071/3072)^n * ||Q^perp f0||)^2,
+B_original(H,beta) <= V_H/16.
+```
+
+If the actual upper envelope is strictly below the **original B**, the same finite n is a genuine AJA witness; any genuine witness requires `L_AKK<B`, `||Q f0||²<B`, and `||Q^perp f0||²>15V/16`. On overlap with AKI's logarithmic no-witness region, actual top-orthogonal coercivity and absence of a strict AJA witness hold simultaneously. **NO_DATA remains** for the independent numerical comparison `||Q f0||²<B`; no unconditional AJA witness at arbitrary H/beta, no beta0 inclusion in the uniform cutoff, no GL/Hamiltonian/continuum mass gap is claimed. AKI's explicit no-witness theorem at H=0 and original beta0 is preserved.
+
+[AKM theorem PR #6686](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6686) is MERGED as formal `37f0fd533bd4a1758215f6c612e67114834b1f2d`. Exact-source [CI 43176986881](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43176986881) and independent formal-push [CI 43178103712](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43178103712) are both completed/SUCCESS: **11,451/11,451**, all **5/5** new theorem axiom prints standard three only, no sorryAx, AKM warning/error **0/0**, separate exact-SHA receipts SUCCESS. Source, actual test-merge and squash share tree `a311ed1efd7e4f5931681265fc69758ead193523`. Initial two failed attempts and Lean4 type/order repairs remain in the [append-only AKM proof record](docs/proofs/P4-Q2-PZ37AKM_verified_20261112.md). Original physical definitions, hypotheses, Lean/mathlib pins, root and workflows remain unchanged.
+
+## P4-Q2-PZ37AKN — genuine halfweighted Haar/top quadratic AJA no-go (2026-11-12, verified)
+
+The original finite-H SU(2) Wilson transfer `P`, normalized `S=P/||P||`, centered ZW source `f0`, full-top projection `Q`, actual spatial halfweight `w`, Haar probability, original negative margin `m`, and original AJA negative-region budget `B=m²*mu{u<-m}` are unchanged. The true weighted kernel/top-eigenvector and Ward identities yield `a²<=||P||*|<f0,psi>|²`, `m*||P||=a*Z/2`, and, if `beta²*p_H/2<=log4`, `Z²<=4||P||`. Thus, for **every n:Nat**, `B_original<=m²<=|<f0,psi>|²<=||Q f0||²<=||S^n f0||²`. **The strict original AJA finite-power witness does NOT exist in this scalar region**; no top-smallness hypothesis is introduced. At the unchanged `beta0=log(3/2)/64`, this is proven **for every H<=10**, including H=1 (using `p_H<=31944` and `beta0<=1/128`). This is a no-go for the original AJA witness criterion, NOT a 4D Yang–Mills mass-gap refutation.
+
+[AKN theorem PR #6688](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6688) **MERGED** into canonical formal HEAD `ca23a8d07c522e3a9e893d814936275619bc085d`. [Exact-source CI #43191093628](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43191093628) completed **11,450/11,450 SUCCESS**, new 14/14 theorem axiom audits limited to `propext`, `Classical.choice`, `Quot.sound`, no new `sorryAx`, AKN warning/error **0/0**, and independent completion receipt SUCCESS. Source/test-merge/squash Git tree matches `9206ca6befa39921a31e0e7bfd0fc9d93cb0ecb6`. Separate formal-push run [#43192002019](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43192002019) has its own completion status. The append-only [AKN formal proof/repair record](docs/proofs/P4-Q2-PZ37AKN_verified_20261112.md) preserves failed CI history and exact repairs; fixed pins, roots, existing physics definitions, and workflows unchanged.
+
+**NEXT/OPEN:** The original AJA top-vs-Haar budget outside `beta²p_H/2<=log4`, including fixed beta0 at H>10, remains NO_DATA. Nothing here proves fixed beta0 lies in AKL's uniform cutoff, nor a uniform GL-Rayleigh lower bound, Hamiltonian gap, or 4D continuum mass gap. Docs-only Strict Lean is not dispatched. The earlier AKM conditional comparison remains valid and cannot override this certified no-go.
+
+
+### AKN independent formal-push authentication (2026-11-12 JST)
+
+The separately triggered canonical squash `push` [CI #43192002019](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43192002019) completed **SUCCESS**, with exact integrated HEAD `ca23a8d07c522e3a9e893d814936275619bc085d`, 11,450/11,450 Lean closure, new AKN `#print axioms` **14/14** standard three only, no `sorryAx`, modified-leaf warning/error **0/0**, and independent receipt job `131095723504` SUCCESS (`event=push`, exact SHA matched, commit status success). This is independent of the earlier certified PR exact-source run; see [AKN proof record](docs/proofs/P4-Q2-PZ37AKN_verified_20261112.md). No scope enlargement.
+
+## P4-Q2-PZ37AKO — fixed original beta0 Haar-budget no-witness through H=13 (2026-11-12, verified)
+
+From the unchanged genuine SU(2) Wilson P, normalized S, signed centered ZW source f0, original Haar measure, halfweight, margin, full-top Q, and AJA negative-region budget B, AKO strengthens the certified AKN fixed coupling region from H<=10 to **H<=13**. A pinned-Mathlib analytical rational power bound gives `log(3/2)<=16/39`, therefore the **original** `beta0=log(3/2)/64<=1/156`. Pinned `Real.log_two_gt_d9` gives `11/8<=log4`, and the exact genuine `p_H=24(H+1)^3<=65856` at H<=13 gives `beta0²*p_H/2<=686/507<11/8<=log4`. AKN's true weighted Haar/top proof then yields `B_original<=||Qf0||²<=||S^n f0||²` **for all n:Nat** at each H<=13, so the strict original AJA finite-power witness does not exist there, including newly H=11,12,13.
+
+[AKO theorem PR #6691](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6691) MERGED to formal `06a9f3448894f1b3f3311660949e74fc98f382b6`. Exact-source [CI #43195520536](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43195520536) completed 11,451/11,451 SUCCESS, seven theorem axiom prints standard `propext/Classical.choice/Quot.sound` only, new sorryAx absent, AKO warning/error 0/0, independent receipt SUCCESS. Source/test-merge/squash tree `f5c79a356e8f734cc0255316247d7477c7742601` identical. Formal push [CI #43196476342](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43196476342) independently audited. [Formal AKO proof record](docs/proofs/P4-Q2-PZ37AKO_verified_20261112.md).
+
+**OPEN/NO_DATA:** The quadratic test alone makes no claim at fixed beta0 for H>=14, and its failure cannot certify a positive AJA witness. No original physical hypothesis changed, no Hamiltonian, continuum or full 4D Yang–Mills mass-gap claim. append-only/tighten-only/overwrite-forbidden/same-root, pinned Lean/mathlib and public root retained.
+
+## P4-Q2-PZ37AKP — exact original fixed-beta0 quadratic criterion frontier H<=13 (2026-11-12, verified)
+
+AKP retains the genuine SU(2) Wilson transfer P, S=P/||P||, centered signed ZW f0, top Q, original Haar halfweight/margin/negative-region budget and fixed `beta0=log(3/2)/64`. From `log(3/2)>=3/8`, `beta0>=3/512`, pinned `log4<139/100` and genuine `p_H=24(H+1)^3>=81000` at H>=14, it proves `beta0²*p_H/2>=91125/65536>139/100>log4`. Combined with AKO's H<=13 half, the **exact scalar applicability criterion** is `beta0²*p_H/2<=log4 IFF H<=13`. AKO/AKN rule out strict original AJA Haar-budget finite-power witnesses at H<=13. **For H>=14 the scalar sufficient no-witness test fails, but that does NOT prove any actual AJA witness exists.**
+
+[AKP theorem PR #6694](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6694) MERGED at formal `7ca307b8183663e66a8cc1d70b6b8ef5756bcb31`. Exact-source [CI #43197769130](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43197769130) completed 11,452/11,452 SUCCESS, 6/6 standard three axiom audits, no sorryAx, AKP warning/error 0/0, independent exact-head receipt SUCCESS. Source/test-merge/squash Git tree matches `3bfa897c75cc512ae2f46f75b32e8b212a632d5f`. Separate formal-push [CI #43198677404](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43198677404) is independently assessed. [AKP proof record](docs/proofs/P4-Q2-PZ37AKP_verified_20261112.md).
+
+**NEXT/OPEN:** Original AJA outcome outside scalar region H>=14 at fixed beta0 is NO_DATA; no uniform GL-source Rayleigh, Hamiltonian or continuum 4D Yang–Mills mass-gap theorem is claimed. Original physical definitions, root, pinned Lean/mathlib and workflows unchanged; append-only/tighten-only/overwrite-forbidden/same-root.
+
+## P4-Q2-PZ37AKQ — actual H=14 negative-region Haar-mass threshold (2026-11-12, certified conditional theorem)
+
+The unchanged original Wilson SU(2) normalized transfer `S=P/||P||`, signed centered source `f0`, full-top `Q`, Haar probability and original negative region `E={u<-m}` remain fixed. Let `r=mu_H(E)`, original crossing partition `Z` and transfer norm `lambda=||P||`. AKN's genuine weighted Ward/top bound now retains **r** instead of replacing it by 1: `r*Z²<=4lambda ==> B_original=m²r<=|<f0,psi>|²<=||Qf0||²<=||S^n f0||²` for all n. Genuine AIW/AIQ estimates give the simpler mass-sensitive sufficient test `r*exp(beta²p_H/2)<=4`. At the unchanged original `H=14`, `p_H=81000`, `beta0=log(3/2)/64`, this asks that the actual Haar-negative mass satisfy `r_14<=4exp(-beta0²*81000/2)`, numerically about **0.787208553359**. Conversely any strict AJA witness would require `r_14*exp(beta0²*81000/2)>4`. The actual mass has **NOT** been measured/certified, so no H14 witness or no-witness is claimed.
+
+[AKQ theorem PR #6696](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6696) MERGED to canonical formal at `517ed6be3b9032c9d6c01fc52ec9432fa924f7da`. Exact-source [CI #43203431326](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43203431326) completed **11,453/11,453 SUCCESS**, all seven new theorem axiom audits standard three only, sorryAx none, AKQ warning/error 0/0, independent completion receipt SUCCESS, source/test-merge/squash tree `33dc7aaa323ce4948b8c8cbb224b5f11413f253c` identical. Separate formal-push CI [#43204266634](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43204266634) must be independently certified. [AKQ proof record](docs/proofs/P4-Q2-PZ37AKQ_verified_20261112.md). Same-root / append-only / unchanged original physics, pins, workflows.
+
+**NEXT/OPEN:** Build an *actual original Haar measure upper certificate* for the H14 negative region or a directly evaluated top/Haar difference. The threshold alone is conditional and its decimal value is not a certified original mass. No GL/Hamiltonian/continuum Yang–Mills mass gap claim.
+
+
+### AKQ independent formal-push authentication — 2026-11-12 JST
+
+The separately triggered canonical formal-squash [CI #43204266634](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43204266634) at exact integrated HEAD `517ed6be3b9032c9d6c01fc52ec9432fa924f7da` completed **SUCCESS**. Direct Lean 11,453/11,453, 7/7 AKQ axioms exactly the standard three, no sorryAx, changed-file warning/error 0/0. The independent exact-SHA `event=push` receipt job `131138679934` completed/SUCCESS. The original-model source/test-merge/squash Git tree is identical. The actual H14 negative-region mass remains unmeasured/NO_DATA; conditional mathematics does not become an unconditional no-witness statement.
+
+## AKR — H=14真正Haar負領域と有限Borel補集合証明書（2026-11-12 JST）
+
+[AKR定理PR #6700](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6700) **MERGED**。元Wilson SU2の固定β₀=log(3/2)/64、H=14、元Haar確率測度、元ZW符号付きsource、正規化transfer u、元のmargin m、真のtop Qおよび元AJA予算を変更しない。AITの真正負領域半Haar下界とAIBのβ₀<7、AIWの負領域同一性から **r₁₄≥1/2** をLean4で導出。新規の有限Borelセル証明書は、互いに素な可測補集合セル Cᵢ の元Haar質量有理下界 qᵢ と、全セル内部で厳密に認証した元transfer有理下界（−m₁₄以上）が与えられると **r₁₄≤1−Σqᵢ** を証明。Σqᵢ≥1−4exp(−β₀²·81000/2) が別途認証されればAKQの元AJA有限冪証人不存在へ降下する。**具体的なセル質量表・r₁₄の上界はNO_DATA**。閾値約0.212791447は実測質量ではない。
+
+[Exact-source CI #43222014058](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43222014058) completed/SUCCESS、Lean 11,454/11,454、AKR新規5定理の公理監査5/5は標準3公理のみ、sorryAxなし、変更AKR error/warning 0/0。認証source `a6b2ac20a83c79371a557771920ab2b2b256001e`、canonical squash `a1184bd3840f39e0753cd096703f397028dbf96a`、source/test-merge/squash共通Git tree `7e45dcafe8945d152b588617333be408d57b59ab`。独立formal push [CI #43223016144](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43223016144) は別途検証する。[AKR正式記録](docs/proofs/P4-Q2-PZ37AKR_verified_20261112.md)。
+
+**NEXT/OPEN:** 真正H14 Borelセルと全点Wilson作用量の厳密有理下界、元Haar質量下界総和の明示的検証。AGP/AGU/AGQの非計算的区間選択と実際の数値表を区別する。元AJA証人の存在・不存在、Δ₁₄符号、H一様Rayleigh下界、Hamiltonian gap、連続体4D質量ギャップは未証明。append-only／same-root／元物理・固定Lean/mathlib不変更。
+
+
+### AKR canonical formal-push independent authentication — 2026-11-13 JST
+
+Canonical AKR squash `a1184bd3840f39e0753cd096703f397028dbf96a` received an independent actual push [CI #43223016144](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43223016144) completed **SUCCESS**: Lean 11,454/11,454, 5/5 AKR axiom prints standard three only, no sorryAx, changed AKR warning/error 0/0, source/test-merge/squash Git tree identical `7e45dcafe8945d152b588617333be408d57b59ab`. Exact-head completion receipt job `131202291241` completed/SUCCESS and published `event=push; source_result=success`. Genuine H14 upper mass and concrete complement-cell certificate remain **NO_DATA**.
+
+## AKS — 元H=14 AJA有限冪証人の無条件不存在を形式認証（2026-11-13 JST）
+
+[AKS定理PR #6703](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6703) **MERGED**。真正SU(2) Haarの元single-link character χについてAIQの平均0とACKの二次モーメントEχ²=1/4を、固定mathlibの指数関数Taylor厳密剰余と接続。0≤β≤1で元partition Z_H(β)≤exp(p_H(-β+β²/4)) をLean4証明。AKOの元固定β₀≤1/156、log4≥11/8、p₁₄=81000から β₀²·81000/4≤log4。真正Haar負領域質量r₁₄≤1のみを用い、AKQの元partition-Haar判定 r₁₄ Z₁₄≤4exp(-β₀p₁₄) が**無条件成立**。元の正規化Wilson transfer S、符号付きZW源f0、元Haar、元margin、元AJA厳密予算を変更せず **H=14のAJA有限冪証人不存在**、AKOと合わせ **全H≤14の証人不存在** を認証した。AKPの指数係数1/2の判定がH≥14で不成立であることと矛盾しない。今回の指数係数1/4は真正Haar二次モーメントからの改善である。
+
+[Exact-source CI #43309954309](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43309954309) completed/SUCCESS、Lean依存閉包11,454/11,454、新規9宣言の公理監査9/9は標準3公理のみ、sorryAxなし、変更AKS warning/error 0/0、独立exact-HEAD受領書SUCCESS。認証source `cba7df900ed607959531c01905e68a125705ee34`、canonical squash `0481923e78a323faf04c6efc1c77dd402ec3bb3c`、source/test-merge/squash共通Git tree `3b45ae6a224dbc81293c10b37a985c31d151cb83`。独立formal-push [CI #43311024308](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43311024308) は別途認証する。[AKS正式記録](docs/proofs/P4-Q2-PZ37AKS_verified_20261113.md)。
+
+**境界:** 真正H=14 Haar質量r₁₄の実値・上界、Δ₁₄符号、H≥15判定、H一様Rayleigh、Hamiltonian gap、連続体4D質量ギャップは依然未認証（NO_DATA）。元物理定義・Lean/mathlib pins・same-root・workflow不変更、追記のみ。
+
+
+### AKS independent canonical formal-push verification — 2026-11-13 JST
+
+The actual canonical AKS squash `0481923e78a323faf04c6efc1c77dd402ec3bb3c` passed independently triggered [push CI #43311024308](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43311024308), **completed/SUCCESS**. Direct Lean 11,454/11,454, nine/nine axioms only the standard three, no sorryAx, changed AKS warning/error 0/0. The exact integrated HEAD independent completion receipt job `131509548538` completed/SUCCESS and published `event=push`, `source_result=success`, status `success`. Source/test-merge/squash Git tree `3b45ae6a224dbc81293c10b37a985c31d151cb83` identical. The H=14 AJA no-witness is now unconditional, while the actual negative Haar mass r14 and Delta14 sign are still NO_DATA.
+
+## AKT — 元SU(2)固定結合β₀の真正AJA有限冪証人不存在をH≤16へ拡張（2026-11-13 JST）
+
+[AKT定理PR #6706](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6706) **MERGED**。元Wilson SU(2)作用素、元ZW符号付きsource、元Haar確率、負領域 `{u_H<-m_H}`、margin、top、元のAJA厳密予算 `B_H=m_H² mu_H{u_H<-m_H}`、β₀=log(3/2)/64は不変。AKSが認証した**真正Haar character二次モーメント1/4**に基づく元のcrossing partition上界 `Z_H(beta)<=exp(p_H*(-beta+beta²/4))` を再利用。H≤16では元plaq数 `p_H=24(H+1)^3≤117912`、既存AKOの `β₀≤1/156` と `11/8≤log4` により `β₀²p_H/4≤log4`。元の真正Haar確率質量 `r_H≤1` だけからAKQの実際のpartition–Haar比較を満たし、**H≤16すべてで元AJA有限冪証人は存在しない**とLean4で証明。H=15、16は今回の新規結果。H≥17に自動拡張しない。
+
+[Exact-source CI #43317972326](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43317972326) completed/SUCCESS：Lean 11,455/11,455、新規5定理公理監査5/5（標準 `propext`, `Classical.choice`, `Quot.sound` のみ）、sorryAxなし、変更AKT error/warning 0/0、completion receipt SUCCESS。source `45a513f59d90aced02a4d1787e42c98bd81c954e`／test-merge／canonical squash `8d9f8b7db2da7cb29b6506518f9f9d4b2ac561b0` のGit treeは `2fef4b6d8ed7951cd2ef4a6d935124ab7cfa13be` で一致。[正式証明記録](docs/proofs/P4-Q2-PZ37AKT_verified_20261113.md)。独立正式push CI [#43318982017](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43318982017) の受領書は別途監査。
+
+**OPEN:** H≥17の新たな解析、元Haar負領域質量の具体値、top–Haar残差の厳密なstrict sign、H一様Rayleigh下界、Hamiltonian spectral gap、連続体4次元質量ギャップ。元物理・Lean/mathlib pin・公開rootは不変。append-only／same-root。
+
+
+### AKT independent canonical formal-push authentication — 2026-11-13 JST
+
+AKT canonical formal-squash `8d9f8b7db2da7cb29b6506518f9f9d4b2ac561b0` passed independent actual push [CI #43318982017](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43318982017): **completed/SUCCESS**; Lean 11,455/11,455, 5/5 standard-three axioms, no sorryAx, changed AKT warning/error 0/0. Completion receipt job `131537470852` completed SUCCESS and published exact-head `event=push`, `source_result=success`, commit status `success`. Original source/test-merge/integrated tree `2fef4b6d8ed7951cd2ef4a6d935124ab7cfa13be` remains identical. This certifies finite-power original AJA no-witness at H<=16 only; H>=17 and mass gap OPEN.
+
+
+## AKU — H≤16の元AJA予算・真正full-top残差の非正性（2026-11-13 JST）
+
+[AKU定理PR #6709](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6709) **MERGED**。元の固定結合β₀=log(3/2)/64、元の真正SU(2) Wilson作用素・正規化S・ZW符号付きsource・Haar確率測度・元AIG負margin・真正top射影Q・元のAJA予算を一切変更しない。既存AKQの元Haar-budget/full-top比較 `r_H Z_H²≤4||P_H|| => B_H≤||Qf0_H||²` を、AKTが既に形式認証した元partition-Haar比較とAIWの元物理ノルム下界へ接続。**全H≤16で真正 `B_(H,β₀)≤||Qf0_H||²`、従って `Δ_H:=B_H−||Qf0_H||²≤0`** を新規Lean4定理として形式証明した。H=16を個別認証。**Δ_Hが厳密負か零かは未判定**であり、H≥17に自動拡張せず、元Haar質量の具体値も未認証。
+
+[Exact-source CI #43320891189](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43320891189) completed/SUCCESS、Lean 11,456/11,456、AKU4定理の公理監査4/4標準3公理のみ、sorryAxなし、変更warning/error 0/0、completion receipt SUCCESS。source `d5879fde1935ba140fbd0e5f942ceee3242d7574`／test-merge／canonical squash `468196fa09489101b857d65d054dd0d3c2ecbae1` でGit tree `8b5026f5c6861e5d9787c443f9771a3884b5c60b` 一致。独立formal push [CI #43321778660](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43321778660) は別途認証。[AKU正式証明記録](docs/proofs/P4-Q2-PZ37AKU_verified_20261113.md)。append-only／same-root、物理定義・固定Lean/mathlib維持。
+
+**OPEN:** Δの厳密な負値／零判定、元Haar質量の数値認証、H≥17、H一様GL Rayleigh、Hamiltonian gap、連続体mass gap。
+
+
+### AKU independent canonical formal-push authentication — 2026-11-13 JST
+
+The actual canonical AKU theorem squash `468196fa09489101b857d65d054dd0d3c2ecbae1` independently passed [push CI #43321778660](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43321778660), event `push`, run attempt 1, completed/**SUCCESS**. The pinned Lean build completed **11,456/11,456**, all four AKU axiom audits used only `propext`, `Classical.choice`, `Quot.sound`, with no new `sorryAx` and AKU changed-file warning/error **0/0**. Exact-HEAD receipt job `131547094006` completed/**SUCCESS**, logged `event=push; exact_sha=468196fa09489101b857d65d054dd0d3c2ecbae1; source_result=success`, and published commit status `success` under `chatgpt-ci-receipt/PR Lean Fast Check`. Integrated AKU Git tree remains `8b5026f5c6861e5d9787c443f9771a3884b5c60b`, identical to the authenticated source/test-merge tree. This authenticates only the original finite-volume budget/top inequality `Delta_H<=0` for H<=16; strict sign/equality, H>=17, Hamiltonian spectral gap and continuum mass gap remain **OPEN/NO_DATA**. Append-only; no source/physics/root/pin/workflow alteration.
+
+
+## AKV — genuine original H<=18 third-Taylor AJA no-witness and nonpositive full-top/Haar residual (2026-11-13 JST)
+
+[AKV定理PR #6712](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6712) **MERGED**。固定mathlib `Real.exp_bound (n=3)` を使い、元SU(2) Haar characterの平均0・二次モーメント1/4から `exp x<=1+x+13*x²/18`、元MGF上界 `1+13*beta²/72`、元AIF crossing partition `Z_H<=exp(p_H*(-beta+13*beta²/72))` をLean4で証明。真正 `p_H=24(H+1)^3`、固定 `beta0=log(3/2)/64`、H≤18の `p_H≤164616` と有理認証から、**H≤18の元AJA厳密有限冪証人不存在および `B_H<=||Q f0_H||²`、`Delta_H<=0` を無条件形式証明**。H17・H18が新規拡張。数値Haar負領域質量の仮定を追加せず、元Wilson物理・source・margin・top・予算は不変。
+
+[Exact-source CI #43341670288](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43341670288) completed/SUCCESS、Lean 11,457/11,457、新規12宣言の公理監査12/12標準3公理のみ、新規sorryAxなし、変更warning/error 0/0、exact-head receipt SUCCESS。認証source `af98ad2279e3698c8f6d9ebcde531d66d600fc4f`／canonical formal squash `da81af5042b1dcab219912423d966c982ef0c351` の共通Git tree `6878c4853cc8e790a96c7b437998b386be4178de`。独立formal push [#43342455181](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43342455181) は別途認証。[AKV正式記録](docs/proofs/P4-Q2-PZ37AKV_verified_20261113.md)。
+
+**OPEN:** H≤18のΔが厳密負か零か、真正Haar負領域質量値、H≥19、H一様Rayleigh、Hamiltonian gap、連続体mass gap。証人不存在はスペクトルギャップの証明ではない。append-only／same-root／元Lean/mathlib・物理定義維持。
+
+
+### AKV independent canonical formal-push verification — 2026-11-13 JST
+
+AKV canonical formal squash `da81af5042b1dcab219912423d966c982ef0c351` independently passed actual [push CI #43342455181](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43342455181), **completed/SUCCESS**, with pinned Lean **11,457/11,457**, 12/12 AKV axiom prints standard three only, sorryAx none and changed warning/error **0/0**. Exact-head completion receipt job `131616632898` completed/SUCCESS; execution log `event=push; exact_sha=da81af5042b1dcab219912423d966c982ef0c351; source_result=success; run=43342455181; attempt=1`, GitHub commit status `success`. Formal tree `6878c4853cc8e790a96c7b437998b386be4178de` matches the exact-source/test-merge/squash tree. This separately certifies original H<=18 finite-AJA no-witness and B_H<=||Qf0_H||² only; Delta strictness, H>=19, Hamiltonian/continuum gap OPEN.
+
+
+## AKW — H≤21 original SU(2) small-coupling third-Taylor AJA no-witness and top–Haar residual (2026-11-13 JST)
+
+[AKW定理PR #6715](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6715) **MERGED**。元のSU(2) Haar character平均0・二次モーメント1/4と、固定mathlib `Real.exp_bound (n=3)` の剰余を元の小結合 `beta0<=1/156` で精密化。`exp(x)<=1+x+(176/351)*x²` (|x|<=1/156)、真正MGF `<=1+(44/351)*beta²`、元AIF crossing `Z_H(beta)<=exp(p_H*(-beta+(44/351)*beta²))` をLean4で認証。元の `p_H=24*(H+1)^3<=255552` (H<=21) からAKQの真正partition–Haar条件へ降下し、**全H<=21で元AJA厳密有限冪証人不存在、`B_(H,beta0)<=||Qf0_H||²`、`Delta_H<=0`** を形式認証。H=19,20,21が新規。元Wilson/Haar/source/margin/top/予算は不変更。
+
+[Exact-source CI #43345340030](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43345340030) completed/SUCCESS、Lean 11,458/11,458、AKW新規12宣言の公理監査12/12標準3公理のみ、新規sorryAxなし、変更AKW warning/error 0/0、独立exact-head completion receipt SUCCESS。認証source `861d23d3940f766616562632ac89534638b47444`、canonical formal squash `d250db7baffefdaeb02b399e8a528ec407a53646`、source/test-merge/squash共通tree `0ce53f3e6d88692b58e2ab73b41f5a2afaf3bbb3`。独立formal squash push [#43362764404](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43362764404) は別途認証。[AKW正式記録](docs/proofs/P4-Q2-PZ37AKW_verified_20261113.md)。
+
+**OPEN:** Delta_Hの厳密負／零、真正r_Hの数値認証、H>=22、H一様Rayleigh、Hamiltonian gap、連続体4D mass gap。有限体積AJA証人不存在はHamiltonian spectral gapの証明ではない。append-only／same-root／固定Lean/mathlib変更なし。
+
+
+### AKW independent canonical formal-push authentication — 2026-11-13 JST
+
+AKW canonical squash `d250db7baffefdaeb02b399e8a528ec407a53646` separately passed actual [formal push CI #43362764404](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43362764404), completed/**SUCCESS**, build **11,458/11,458**, 12/12 AKW standard-three axiom audits, no sorryAx, changed warning/error 0/0. The independent exact-head completion receipt job `131681746397` completed/**SUCCESS** and logged `event=push; exact_sha=d250db7baffefdaeb02b399e8a528ec407a53646; source_result=success; run=43362764404; attempt=1`; GitHub commit status `success`. Actual canonical tree `0ce53f3e6d88692b58e2ab73b41f5a2afaf3bbb3` matches exact-source/test-merge/squash tree. This certifies only H<=21 genuine finite-AJA no-witness and B_H<=||Qf0_H||²; strict Delta, H>=22 and Hamiltonian/continuum gaps OPEN.
+
+
+## AKX — H=22 genuine Haar-negative mass conditional threshold (2026-11-13 JST)
+
+[AKX定理PR #6718](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6718) **MERGED**。元の固定 `beta0=log(3/2)/64`、真正SU(2) Haar負領域 `r_H=mu_H{u_H<-m_H}` と、認証済みAKWの真正crossing partition係数 `44/351` を変更せず保持。**厳密な条件付き判定** `r_H*exp((44/351)*beta0²*p_H)<=4` からAKQの元partition–Haar条件を導き、元AJA厳密有限冪証人不存在と `B_H<=||Qf0_H||²`、`Delta_H<=0` を形式証明。元H22プラケット数 `p22=292008` について必要な追加上界 `r22<=4*exp(-(44/351)*beta0²*292008)`（約0.920418）を明示した。**実際のr22上界はNO_DATA、無条件H22判定は未証明**。
+
+[Exact-source CI #43364965116](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43364965116) completed/SUCCESS、Lean 11,459/11,459、AKX新規9宣言の公理監査9/9標準3公理のみ、sorryAxなし、変更warning/error 0/0、独立exact-head completion receipt SUCCESS。認証source `90eb68e7c3662d3dfa85dc1eefe4093f18dd4654`、formal squash `ee5f4f91a72ee01bb859420df5eb4c5022db1ccd`、source/test-merge/squash Git tree `d48502479e8c5089a88246fd6182f4c48f6c9c88`。独立formal push [#43365907391](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43365907391) は別途認証。[AKX正式記録](docs/proofs/P4-Q2-PZ37AKX_verified_20261113.md)。
+
+**OPEN:** 真正H22 Haar負領域質量の数値・厳密上界、H22無条件AJA判定、Delta厳密負／零、H>=23、Hamiltonian/連続体mass gap。元Wilson/Haar/ZW-source/margin/top/AJA予算・Lean/mathlib固定を変更せずappend-only／same-root。
+
+
+### AKX independent canonical formal-push verification — 2026-11-13 JST
+
+AKX conditional H22 theorem squash `ee5f4f91a72ee01bb859420df5eb4c5022db1ccd` independently passed actual [formal push CI #43365907391](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43365907391), completed/**SUCCESS**, Lean **11,459/11,459**, 9/9 AKX standard-three axiom audits, new sorryAx none, changed AKX warning/error **0/0**. Exact-head completion receipt job `131692258724` completed/**SUCCESS**: `event=push; exact_sha=ee5f4f91a72ee01bb859420df5eb4c5022db1ccd; source_result=success; run=43365907391; attempt=1`, published GitHub commit status `success`. Canonical Git tree `d48502479e8c5089a88246fd6182f4c48f6c9c88` equals original source/test-merge/squash tree. **H22 numerical Haar-mass bound remains NO_DATA**; this is authentication of conditional results only, not unconditional H22 no-witness or mass gap.
+
+
+## AKY — genuine H22 complementary Haar-cell certificate (2026-11-13 JST)
+
+[AKY theorem PR #6721](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6721) **MERGED**, canonical formal squash `f34fc3334decf7d2e525cffd05878b17948e0890`. One append-only H22 original SU(2) Haar proof leaf, nine public Lean4 declarations. Certifies original negative Haar mass **lower** bound `r22>=1/2` and complement mass `mu22(E22^c)<=1/2`. For genuine measurable disjoint complementary Borel cells with separately certified rational transfer pointwise floors and original Haar lower masses `qi`, proves `r22<=1-sum(qi)`. The additional **explicit** requirement `sum(qi)>=1-4*exp(-(44/351)*beta0²*292008)` (about 0.079582) implies the AKX H22 mass-sensitive no-AJA witness and original `B22<=||Qf0_22||²`, `Delta22<=0` **only conditionally**. Actual cells/measure table and H22 unconditional upper mass remain **NO_DATA**.
+
+[Exact-source CI #43369969692](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43369969692) completed/**SUCCESS**, Lean **11,461/11,461**, nine/nine new public `#print axioms` standard `propext, Classical.choice, Quot.sound` only, new sorryAx none, changed warning/error 0/0, independent exact-head receipt SUCCESS. Certified source `549a9e14087a340c24a83dd49c5569a5d880bf5e`, source/test-merge/squash common Git tree `ee881a351fa32fa78f909673a6bb698c7b690d25`. Separate canonical formal push [#43370875467](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43370875467) pending independent completion receipt, not pre-certified here. [Formal proof record](docs/proofs/P4-Q2-PZ37AKY_verified_20261113.md). Original Wilson/Haar/ZW source/margin/full-top/AJA definitions, Lean/mathlib pins and earlier lines retained.
+
+**OPEN:** genuinely validated H22 complement cells or stronger direct physical norm/overlap estimates; any unconditional H22 criterion, strict Delta sign, H>=23, Hamiltonian and continuum 4D Yang–Mills mass gaps.
+
+
+### AKY independent canonical formal-squash push certificate — 2026-11-13 JST
+
+Canonical formal squash `f34fc3334decf7d2e525cffd05878b17948e0890` independently passed its actual [formal push CI #43370875467](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43370875467), completed/**SUCCESS**, event=push. The changed Lean job `131706055882` completed/SUCCESS with pinned **11,461/11,461** build and all **9/9** AKY declaration axiom outputs restricted to `propext`, `Classical.choice`, `Quot.sound`; new sorryAx absent, AKY warning/error **0/0**. The independent exact-head completion receipt job `131708103665` completed/SUCCESS and logged `[mcp-receipt] event=push exact_sha=f34fc3334decf7d2e525cffd05878b17948e0890 source_result=success run=43370875467 attempt=1`, with published commit status `success`. Integrated Git tree `ee881a351fa32fa78f909673a6bb698c7b690d25` matches certified source and synthetic test-merge. The actual H22 numerical Haar upper bound remains **NO_DATA**; all cell descent statements are conditional.
+
+
+## AKZ — genuine H22–H25 AKX scalar threshold frontier (2026-11-13 JST)
+
+[AKZ theorem PR #6724](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6724) **MERGED** as canonical `9b42d878487e8cf435d660a7ded4657803b9a477`. On the ORIGINAL unchanged SU(2) Wilson/Haar/ZW-source/margin/top/AJA system at `beta0=log(3/2)/64`, define `r_H=mu_H{u_H<-m_H}`, `T_H=4*exp(-(44/351)*beta0²*p_H)`, `p_H=24*(H+1)^3`. The previously certified AIT/AIW original Haar lower bound is `r_H>=1/2`. AKZ proves `T_H>1/2` for ALL `H<=24` (individual H=22,23,24 theorems) and `T_H<1/2<=r_H` for ALL `H>=25` (individual H25 theorem). **Therefore the AKX sufficient mass assumption `r_H<=T_H` is PROVED FALSE at H>=25**, but this does NOT imply AJA witness existence. At H22–24, *logical compatibility is not true Haar upper mass certification*: all three actual r_H upper values remain **NO_DATA**.
+
+Actual pinned `Real.exp_bound` and fixed rational `Real.log_two_*_d9` certify the boundary without floating assumptions. [Exact-source CI #43376033297](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43376033297) completed/SUCCESS, Lean **11,462/11,462**, 16/16 new standard-three axiom audits, sorryAx absent, changed warning/error 0/0, independent exact-head completion receipt SUCCESS. Source `6ad1f350dd1c9b38ee68184e154a74ee8cd4821e`; source/test-merge/squash tree `116fb9e131306f89d56d627bd5b0f392df846ce5`. Separate canonical formal push [#43377047107](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43377047107) is not pre-certified. [Formal proof record](docs/proofs/P4-Q2-PZ37AKZ_verified_20261113.md). No original physics, source, Haar, Lean/mathlib/root/CI workflow changed.
+
+**OPEN:** actual r22/r23/r24 original upper mass certificates; a stronger genuine physical norm/Ward/top comparator beyond H25; H-uniform coercivity, Hamiltonian and continuum 4D Yang–Mills mass gaps.
+
+
+### AKZ independent authoritative formal-push receipt — 2026-11-13 JST
+
+Canonical AKZ theorem squash `9b42d878487e8cf435d660a7ded4657803b9a477` independently passed actual [formal push CI #43377047107](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43377047107), completed/**SUCCESS**. Genuine pinned Lean dependency closure **11,462/11,462**; all **16/16** AKZ declarations' `#print axioms` are limited to `propext`, `Classical.choice`, `Quot.sound`, no new sorryAx, changed AKZ warning/error **0/0**. Independent push CI main job `131725856870` completed/SUCCESS and exact-head completion receipt job `131728298910` completed/SUCCESS, logging `[mcp-receipt] event=push exact_sha=9b42d878487e8cf435d660a7ded4657803b9a477 source_result=success run=43377047107 attempt=1`, with GitHub commit status `success`. Original theorem source, synthetic test-merge and integrated squash tree are all `116fb9e131306f89d56d627bd5b0f392df846ce5`. This authenticates scalar-test feasibility for H<=24 and its contradiction with genuine r_H>=1/2 for H>=25; it does NOT provide actual r22/r23/r24 upper bounds, AJA witness existence, or Hamiltonian/continuum mass gaps.
+
+
+## ALA — original SU(2) diagonal center-twist kernel and pair-Haar descent (2026-11-13 JST)
+
+[ALA theorem PR #6727](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6727) **MERGED**, canonical formal squash `7134b92179196b40b0e454060b4ef77e69bb0be3`. Nine append-only Lean4 theorems extend AHW/AHW2's original even-torus center twist to the *actual two-boundary SU(2) crossing*: `Kcross(TA,TB)=Kcross(A,B)`, `f(TA)+f(TB)=-(f(A)+f(B))`, even paired source square, genuine `Prod.map T T` preserving the **original product spatial Haar** and exact original spatial halfweight duality. The crossing-weighted pair-source is odd; its square is even. This is a proved local-to-global measure bridge, NOT a new H22 Haar mass upper bound or a norm/spectral conclusion.
+
+[Exact-source CI #43382294445](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43382294445) completed/**SUCCESS**, Lean **11,463/11,463**, 9/9 standard-three axiom audits, sorryAx absent, ALA changed warning/error 0/0, independent exact-head receipt SUCCESS. Final source `c684da81d1ab7ac14dea73d26b9791821b2e1853`, canonical squash/source/test-merge Git tree `4a32fbc9e9cf7f55d70f2d60126b63c5da647fdd`. Independent canonical push [#43382985587](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43382985587) separately monitored. [Formal proof record](docs/proofs/P4-Q2-PZ37ALA_verified_20261113.md). Original Wilson/Haar/ZW-source/margin/Q/AJA definitions and Lean/mathlib pins preserved.
+
+**OPEN:** actual pair-Haar cosh integration and source second-moment quantitative floor for stronger physical norm; H22 genuine mass upper bound/alternate AJA criterion, Hamiltonian and continuum 4D mass gaps.
+
+
+### ALA canonical formal-push exact-head certificate — 2026-11-13 JST
+
+ALA canonical squash `7134b92179196b40b0e454060b4ef77e69bb0be3` independently passed genuine [formal push CI #43382985587](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43382985587), completed/**SUCCESS**, pinned Lean **11,463/11,463**, all 9/9 new ALA actual `#print axioms` only `propext`, `Classical.choice`, `Quot.sound`, sorryAx none, ALA changed warning/error **0/0**. Main Lean job `131744850974` completed SUCCESS and exact-head completion receipt job `131746833019` completed SUCCESS, with actual `[mcp-receipt] event=push exact_sha=7134b92179196b40b0e454060b4ef77e69bb0be3 source_result=success run=43382985587 attempt=1`; published GitHub commit status SUCCESS. The integrated tree `4a32fbc9e9cf7f55d70f2d60126b63c5da647fdd` matches certified source and test-merge. It still does not numerically bound r22 or prove a new AJA no-witness.
+
+
+## ALC — authentic crossing-weighted pair-Haar quadratic correction (2026-11-13 JST)
+
+[ALC theorem PR #6731](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6731) **MERGED**, canonical formal squash `ee0843243261bfe239d6269f5a1dc2d6c3add2d8`. One new original-model Lean4 leaf proves true two-endpoint crossing-weighted source first Haar moment **zero** using actual center `MeasurePreserving`, genuine nonnegative crossing-weighted pair-square moment `M2pair_H(beta)`, and original Laplace quadratic lower bound `Zcross_H(beta)+(t²/4)*M2pair_H(beta) <= Lpair_H(beta,t)` (including H22). This is **not** yet a physical one-slab norm improvement or an original H22 negative-region upper Haar bound.
+
+Failed initial CI #43401508412 (unexpanded `Pi.add_apply` in the new integrability proof) was repaired at exact source `776207b858d37cfaf4920a4c39ebc00b5c5713ee`. Final [CI #43402704562](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43402704562) completed **SUCCESS**, pinned Lean **11,465/11,465**, all **9/9** ALC `#print axioms` standard three only, sorryAx absent, ALC warning/error **0/0**. Source/test-merge/integrated tree all `f0ed94feba23b15a1ae98387f7c27c332be93680`. Independent canonical formal push [CI #43403627674](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43403627674) initially PENDING; completion/receipt must be appended only after explicit recheck. [Proof record](docs/proofs/P4-Q2-PZ37ALC_verified_20261113.md).
+
+**OPEN:** original H22 r22 <= ~0.920418, equivalently genuine complement >= ~0.079582, not proved. H23/H24 require actual complementary masses >= ~0.246494/~0.393771; H>=25 AKX test impossible (does not create AJA witness). Next: bridge ALC pair Haar to unchanged full Wilson spatial halfweights, then independently certify source moment quantitative floor / true H22 complementary Haar cells. No Hamiltonian or continuum Yang--Mills gap asserted.
+
+
+### ALC independent canonical formal-push completion (2026-11-13 JST)
+
+ALC canonical squash `ee0843243261bfe239d6269f5a1dc2d6c3add2d8` independently passed actual [formal push CI #43403627674](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43403627674), completed/**SUCCESS**, pinned Lean **11,465/11,465**, ALC 9/9 standard-three `#print axioms`, sorryAx absent, ALC warning/error **0/0**. Main job `131812405167` completed SUCCESS; exact-HEAD receipt job `131814762641` completed SUCCESS with actual `[mcp-receipt] event=push exact_sha=ee0843243261bfe239d6269f5a1dc2d6c3add2d8 source_result=success run=43403627674 attempt=1`. Verified source/test-merge/squash tree `f0ed94feba23b15a1ae98387f7c27c332be93680`. H22 genuine Haar upper mass and unconditional AJA still OPEN.
+
+
+## ALD — genuine full-Wilson physical norm from true pair-Haar source moments (2026-11-13 JST)
+
+[ALD theorem PR #6734](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6734) **MERGED**, canonical formal `4683de2e6aeffbbb26baa58d7b87d8eeb669a1a1`. One append-only Lean4 leaf certifies original AGN `W_H=p_H+2*f_H` within the **UNCHANGED complete Wilson one-slab kernel retaining both spatial halfweights**, so its genuine product-Haar integral is exactly `exp(-beta*p_H)*Lpair_H(beta,-beta)`. AIW's actual physical constant vector and original operator norm prove, for every H and beta>=0, `exp(-beta*p_H)*(Zcross_H(beta)+(beta^2/4)*M2pair_H(beta)) <= ||P_H(beta)||`. H22 and exact original `beta0=log(3/2)/64`, `p22=292008` included; strict gain over AIW is conditional on true `M2pair_H(beta)>0` at beta>0, **not unconditional**.
+
+Authentic [exact-source CI #43408076701](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43408076701) completed/**SUCCESS**, pinned Lean **11,466/11,466**, all nine ALD `#print axioms` standard-three only, sorryAx absent, ALD warning/error **0/0**, independent PR exact-source receipt SUCCESS. Exact source `8ec67a50d8b0ee3b9a447ac2f423099921a65d38`, source/test-merge/squash tree `7d1d9304e0e9da0712c6bfea6c183b52aa5d8f9e`. Independent formal push [CI #43408865099](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43408865099) was initially in progress; append actual completed result after independent observation. [Formal proof record](docs/proofs/P4-Q2-PZ37ALD_verified_20261113.md).
+
+**OPEN:** actual H22 genuine Haar negative-region upper mass (AKX), explicit unconditional positive original second-moment lower bound, strict AJA classification, H-uniform coercivity, Hamiltonian gap and continuum 4D mass gap. Potential next exact source route: AHR original crossing-source orthogonality and AHN positive variance to evaluate true pair second moment, without changing the physical model.
+
+
+### ALD next-step obstruction: original crossing ACTION is not crossing KERNEL
+
+The AHR theorem about vanishing `∫ f_H(A)*C_cross,H(A,B) dmu_H(A)` concerns the **linear crossing action** `C_cross,H`; it cannot be substituted for `∫ f_H(A)*exp(-beta*C_cross,H(A,B)) dmu_H(A)`. Thus the tempting equality `M2pair_H(beta)=2*V_H*Zcross_H(beta)` is **UNPROVED** and must not be used to certify strict ALD improvement. A safer subsequent proof is an independently verified positive lower bound for the original exponential crossing kernel, combined with the original AHN positive Haar source variance and exact centering. No unconditional quantitative M2pair bound is yet certified by ALD.
+
+
+### ALD independently certified canonical formal push (2026-11-13 JST)
+
+Formal ALD squash `4683de2e6aeffbbb26baa58d7b87d8eeb669a1a1` independently passed [push CI #43408865099](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43408865099), completed/**SUCCESS**, pinned Lean **11,466/11,466**, all ALD 9/9 standard-three `#print axioms`, no sorryAx or changed warning/error. Changed Lean job `131829934752` and independent receipt job `131833042147` both SUCCESS, exact push receipt `[mcp-receipt] event=push exact_sha=4683de2e6aeffbbb26baa58d7b87d8eeb669a1a1 source_result=success run=43408865099 attempt=1`. Source/test-merge/squash tree `7d1d9304e0e9da0712c6bfea6c183b52aa5d8f9e` consistent. M2pair positivity and genuine H22 r22 upper mass remain unproved.
+
+
+## ALE — original SU(2) pair-Haar M2 positive floor and unconditional finite-H norm gain (2026-11-13 JST)
+
+[Original-model ALE theorem PR #6737](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6737) **MERGED** on canonical formal as `958ea765ab503a6bdf02471192a7e60a85973d20`. One new append-only Lean4 leaf (357 lines, 15 audited declarations) proves the original non-Gaussian crossing kernel floor `Kcross_H(beta,A,B) >= exp(-2*beta*ell_H)` for beta>=0 from the **original crossing ACTION** bound, independently certifies original product-Haar centered pair-source-square integral `=2*V_H`, and descends to the genuine **crossing-weighted** source moment `M2pair_H(beta) >= 2*exp(-2*beta*ell_H)*V_H>0`. Thus ALE discharges ALD's conditional `M2pair>0`: the original true physical Wilson one-slab norm is strictly larger than AIW's spatial-mean lower baseline at every finite H and beta>0, including original H22 fixed beta0 and p22=292008. No replacement Wilson kernel, source, Haar measure or physical operator. Importantly the **unweighted** mixed Haar integral vanishes; the weighted mixed term is not erroneously canceled by AHR's linear crossing-action orthogonality.
+
+Initial [CI #43418097047](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43418097047) FAILURE (16 direct Lean elaboration errors: local notation/projected field, product measure syntax, dependent rewriting), intermediate [CI #43419061238](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43419061238) FAILURE (two residual elaboration errors); both failures remain in provenance. Final exact-source `9091fd8489b5a2a7a4583b0404a7eb6b89abe73b` passed [PR CI #43419944499](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43419944499) completed/**SUCCESS**. Separate canonical [formal push CI #43420956000](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43420956000) completed/**SUCCESS** at exact squash HEAD. Both pinned Lean **11,467/11,467**; all 15/15 new `#print axioms` only `propext`, `Classical.choice`, `Quot.sound`, no new `sorryAx`, ALE warning/error **0/0**, independent exact-head completion receipts SUCCESS. Formal source/squash tree `1a9de2ce638756f593bc491518a39b759f956a62` identical. [Formal proof record](docs/proofs/P4-Q2-PZ37ALE_verified_20261113.md).
+
+**OPEN:** the positive finite-H floor decays in H and is NOT H-uniform coercivity or physical Hamiltonian/continuum mass gap. Actual H22 negative-region Haar upper mass r22 and unconditional AJA witness verdict remain NO_DATA. AKX fails as a sufficient condition at H>=25, not as a statement of witness existence. NEXT: test a new exact norm/top/AJA sufficient criterion with proven inequalities and unchanged genuine physics, independently seek AKY complementary Haar-cell certificate for H22.
+
+## ALS／ALT — 8色frame高温認証と元のβ₀有限prefixの厳密な到達範囲（2026-11-15 JST）
+
+[ALS theorem PR #6753](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6753) と [ALT theorem PR #6754](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6754) はいずれも **MERGED**、exact-source CIと統合後独立push CIがそれぞれ completed/SUCCESS。元のSU(2) Wilson作用素、Haar/AJA、物理的固定結合 β₀=log(3/2)/64、Lean/mathlib固定値は不変更。
+
+ALSは正しい右境界・同一ground-state carrierで E₁₂=(1/2)E₆、E₈=(3/4)E₆=(3/2)E₁₂ を形式化し、**既存高温cutoff内のみ** E₈≥(1/1536)‖x‖² と gap_H≥1−√(1−1/1536)>1/3072 を証明。ALK/ALMは当該cutoffが元の β₀ に届かないことを証明済みであり、β₀での一様gapを主張しない。[ALS形式証明記録](docs/proofs/P4-Q2-PZ37ALS_verified_20261115.md)。
+
+ALTは元のβ₀における既証明の各有限Hの平方欠損 δ_H>0 を使い、**任意の有限M**について d_M=min_{H≤M}δ_H>0、全H≤Mで gap_H≥d_M/2>0 を無条件に構成。全Hへの接続は、H>Mの元物理Wilson raw-moment上界という未証明条件を明示し、成立した場合だけ gap_H≥min(d_M/2,1−q)>0 を結論する。[ALT形式証明記録](docs/proofs/P4-Q2-PZ37ALT_verified_20261115.md)。
+
+**検証来歴：** ALS source `8074fa960e15`, 正本squash `d15e4f4d094b`, [source CI #43607964235](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43607964235) と [push CI #43608757057](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43608757057) は各11,483/11,483 SUCCESS、19/19標準3公理のみ、sorryAxなし・ALS警告／エラー0/0、source/test-merge/squash tree `d01d426820ad` 完全一致。ALT source `06d35cbb3dba`、正本squash `e251dad5b805`、[source CI #43612424066](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43612424066) と [push CI #43613074250](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43613074250) は各11,484/11,484 SUCCESS、11/11標準3公理のみ、sorryAxなし・ALT警告／エラー0/0、共通tree `9fcfbb150f26`。誤識別子（ALS）・無名section終端（ALT）の失敗歴も記録に保持。
+
+**OPEN：** 実際の元β₀における大体積tailの一様定量上界。有限Hごとの正値性や高温βの一様下界を、元β₀での全H一様gap・Hamiltonian gap・連続体4D Yang–Mills mass gapへ無条件昇格しない。新たな体積間欠損変動予算（ALU）は独立研究PRとして認証結果を別途記録する。
+
+### ALU — 体積段階の平方欠損減少予算：正本統合・独立認証完了（2026-11-15 JST）
+
+[ALU定理PR #6755](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6755) **MERGED**、正本squash `c45c3df5a4cde0a8744ed5ccb18bcc774c839a39`。異なるHのHilbert空間上の作用素を直接引かず、元の固定結合β₀の真正な実数値平方欠損 δ_H=1−‖R_H‖²>0 に対して L_H=max(0,δ_H−δ_{H+1})≥0、V_H=∑_{i<H}L_i を定義。Lean4で正確な δ_H≥δ₀−V_H と gap_H≥(δ₀−V_H)/2 を無条件に証明。**全H一様の正gapは別途 V_H≤B<δ₀ を証明した場合に限る**。元Wilson模型でこの一様総変動予算が成立することは未証明（NO_DATA）。
+
+初回source `bc0895a88af9` のLeanは全依存成功でも未使用 `hb` 警告1件が残り、証明だけを修正したsource `28e4a62081ad` の [exact-source CI #43628524967](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43628524967) **11,485/11,485 SUCCESS**、15/15標準3公理のみ・sorryAxなし・ALU警告／エラー0/0、独立completion receipt SUCCESS。[正本独立push CI #43629063478](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43629063478)も同じ認証基準で **completed/SUCCESS**。source/test-merge/squash共通tree `1c63d76800fb8119a7ac0b02431d264a387b38d9`。[ALU形式証明記録](docs/proofs/P4-Q2-PZ37ALU_verified_20261115.md)。
+
+**NEXT/OPEN:** 元β₀の真のWilson作用から、Hごとの下降変動L_Hの上界と全体積での総予算を独立に示す。高温cutoffのβ₀延長、元β₀一様gap、Hamiltonian/連続体Yang–Mills質量ギャップは未証明。
+
+### ALV — 元Wilson固定β₀の体積間励起ノルム平方・幾何下降予算（2026-11-15 JST）
+
+[ALV定理PR #6758](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6758) **MERGED**。正本commit `7b33f85634aae0a93f2d4665336a2df4359f3b6a`。元の固定β₀、真正SU(2) Wilson作用素、規格化、Hilbert carrier、Haar/AJAは変更しない。異なるHの作用素を直接引かず、元の物理的励起ノルム平方 `n_H=‖R_H(β₀)‖²` の実数値を用い、ALUの一段階下降損失について **`L_H=max(0,n_(H+1)-n_H)`** をLean4で厳密に証明。加えて、各段階の真正な実数値増分が `n_(H+1)≤n_H+Cρ^H`（`0≤ρ<1`, `C≥0`, `C<(1−ρ)δ₀`）を満たすと **別途証明できた場合のみ**、全有限Hで `gap_H(β₀)≥(δ₀−C/(1−ρ))/2>0`。有限prefix Mまでを無条件に証明済みのALTで扱い、tail `H>M`だけに幾何増分評価を要求する条件付き経路も形式化した。
+
+[Exact-source CI #43643045960](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43643045960) completed/SUCCESS、Lean **11,486/11,486**、新規8/8宣言標準3公理のみ、sorryAxなし、ALV warning/error 0/0、completion receipt SUCCESS。source／test-merge／統合後 Git tree は `2ba386aef10da531805bb20be2e965a9b0cc5128` で一致。[ALV形式証明記録](docs/proofs/P4-Q2-PZ37ALV_verified_20261115.md)。
+
+**未解決（NO_DATA）：** 原Wilson模型の固定β₀で、幾何減衰を満たす体積間ノルム平方増分上界および係数C,ρはまだ証明されていない。条件付き補題の機械認証を元のβ₀全H一様gap、Hamiltonian/連続体Yang–Mills質量ギャップの無条件認証に昇格させない。統合後の独立push CI #43643707032は別途確認・記録する。
+
+
+#### ALV統合後の独立認証（2026-11-15 JST）
+
+元の固定β₀ ALV canonical formal HEAD `7b33f85634aae0a93f2d4665336a2df4359f3b6a` は、独立した[event=push CI #43643707032](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43643707032) **completed/SUCCESS**、Pinned Lean **11,486/11,486**、ALV **8/8標準3公理のみ**、新規sorryAxなし・ALV警告/エラー0/0。Lean job `132596625899`とcompletion receipt job `132598258246` はともにSUCCESS。実ログの `[mcp-receipt] event=push exact_sha=7b33f85634aae0a93f2d4665336a2df4359f3b6a source_result=success run=43643707032 attempt=1` を確認。真のWilson体積間幾何増分評価は依然未証明。
+
+### ALW — 元β₀ Wilson raw-moment体積段階評価から一様gapへ（2026-11-15 JST）
+
+[ALW定理PR #6761](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6761) **MERGED**、正本squash `2760ea8269b03a1e712306fdd8643de15bcc7137`。元の固定結合 `β₀=log(3/2)/64`、真正SU(2) Wilson `P_H`・正規化励起制限 `R_H`・Haar/AJA・公開rootは不変。ALNで実際に証明済みの `0<F_H≤‖P_H‖` を使用し、次体積の真正励起空間 `K_(H+1)` 上で `‖P_(H+1)x‖≤√(q_H+b_H)F_(H+1)‖x‖`（`q_H=‖R_H‖²`、`b_H≥0`）が**独立に成立する場合に限り**、Lean4で `q_(H+1)≤q_H+b_H` とALUの下降損失 `L_H≤b_H` を証明。さらに `∑_{i<H}b_i≤B<δ₀`、幾何減衰 `b_H=Cρ^H`、および有限prefix後のtail予算について条件付き一様gap定理を形式化した。
+
+**真正なWilson物理モデルでこれらのraw評価、総予算、係数C/ρが成立することは未証明（NO_DATA）**。ALJのFは作用素ノルムの下界であり、raw励起上界へ自動変換はできない。元β₀の全H一様gap、Hamiltonian・連続体4D Yang–Mills質量ギャップはOPEN。
+
+初回〜4回目のLean4失敗は補題`sq_le_sq₀`の方向、`Q`略記を通る型推論、繰返しdependent CLMインスタンス探索に起因し、同じ型付き`Rnext`を共有した最終source `14c07266dc45fbf330550e962fe463889310eac9`で修復。[Exact-source CI #43649964065](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43649964065) **completed/SUCCESS**、Lean **11,487/11,487**、全8/8標準3公理のみ、sorryAxなし・ALW warning/error 0/0、独立completion receipt SUCCESS。source/test-merge/squash tree `b3065d6a5cd663c8f16136489ad4a48c86646d73` 一致。[ALW正式証明記録](docs/proofs/P4-Q2-PZ37ALW_verified_20261115.md)。
+
+**NEXT:** 実Wilson raw励起上界と独立normalizer下界を同一体積で評価し、真正な2体積スカラー増分の総予算を導く。統合後独立push CI #43650478333は別途実測して記録する。
+
+
+#### ALW統合後の独立認証（2026-11-15 JST）
+
+Original Wilson固定β₀ ALW正本コミット `2760ea8269b03a1e712306fdd8643de15bcc7137` は[独立event=push CI #43650478333](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43650478333) **completed/SUCCESS**。Pinned Lean **11,487/11,487**、ALW全8/8標準3公理のみ、ALW `sorryAx`なし・warning/error 0/0。Lean job `132617591073` と独立completion receipt job `132618904816` ともにSUCCESS。実受領書は `[mcp-receipt] event=push exact_sha=2760ea8269b03a1e712306fdd8643de15bcc7137 source_result=success run=43650478333 attempt=1`。真正Wilson raw体積段階評価は引き続き未証明。
+
+### ALX — 元のSU(2) Wilson物理励起rawノルムと全規格化の厳密比（2026-11-15 JST）
+
+[ALX定理PR #6764](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6764) **MERGED**、authoritative formal定理commit `d9f5c4210a9afcf742ec5da573f83efc8dd7cf57`。元の固定結合 `β₀=log(3/2)/64`、実際のWilson `P_H` と正規化励起制限 `R_H`、Haar/AJA/物理carrier・公開rootは不変。真正なraw制限 `A_H=P_H.comp(K_H.subtypeL): K_H→L[ℝ]G_H` を構成し、各Hで無条件に `‖A_H x‖=‖P_H‖‖R_H x‖`、`‖A_H‖=‖P_H‖‖R_H‖`、`‖A_H‖²=q_H‖P_H‖²` （`q_H=‖R_H‖²`）をLean4形式化。ALWのHaar-moment下界 `F_H≤‖P_H‖` による余裕を取り除いた**正確な物理的作用素ノルム関係**である。
+
+体積間の十分条件 `‖A_(H+1)‖²≤(q_H+b_H)‖P_(H+1)‖²` は依然**独立に未証明**。その条件からのみ `q_(H+1)≤q_H+b_H`、非負の損失 `L_H≤b_H`、条件付きの総予算／幾何減衰gap定理へ接続する。raw/full比の書換え自体は元β₀での全H一様gapの証明ではない（NO_DATA）。
+
+初回から5回目までの失敗CIを保存し、最後に同じ物理的 `K_H` の `Submodule.normedSpace` をジェネリック定理へ直接渡すことでLean4の型クラス障害を解消。Source `5c086f63023aed0bff2bb8f5d2ea1135daeaf3a6`、[Exact-source CI #43663023266](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43663023266) **completed/SUCCESS**、Lean **11,488/11,488**、全15/15標準3公理のみ・新規sorryAxなし・ALX warning/error 0/0・独立receipt SUCCESS。source/test-merge/squash同一tree `26cc3e880dbb4efdd29b0ae25de1e29a7649e236`。[ALX正式証明記録](docs/proofs/P4-Q2-PZ37ALX_verified_20261115.md)。
+
+**NEXT/OPEN:** 真正Wilson模型の`‖A_H‖/‖P_H‖`について、異体積carrierを不当に同一視しない実際の体積間上界と小さい総変動を証明する。元β₀全H一様gap・Hamiltonian/連続体4D Yang–Mills質量ギャップは未証明。統合後独立push CI #43663546613は別途観測する。
+
+
+#### ALX統合後の独立認証（2026-11-15 JST）
+
+元の固定β₀ SU(2) Wilson ALX定理正本 `d9f5c4210a9afcf742ec5da573f83efc8dd7cf57` は、[独立event=push CI #43663546613](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43663546613) **completed/SUCCESS**。Pinned Lean **11,488/11,488**、ALX15/15標準3公理のみ、sorryAxなし、ALX warning/error 0/0。Lean job `132657882564`／独立completion receipt job `132659360957` ともにSUCCESS。実受領書 `[mcp-receipt] event=push exact_sha=d9f5c4210a9afcf742ec5da573f83efc8dd7cf57 source_result=success run=43663546613 attempt=1` を確認。真正Wilson二体積ノルム比の物理的な上界は依然未証明。
+
+
+### ALY・ALZ — 元Wilson固定β₀の体積間スケール共変／線形誤差予算（2026-11-16 JST 正式認証記録）
+
+[ALY定理 #6767](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6767)／[ALZ定理 #6768](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6768) は共にauthoritative `formal/real-hilbert-uniform-coercive-strong-limit` に **MERGED**。ALY canonical `c951f4f669b7f50226303ba2fd7e634270153382`、ALZ／現正本 canonical `4e0f4d894dfab5f4ebc426b946052db825ca6c6d`。元のSU(2) Wilson物理作用素・Haar/AJA・固定結合 `β₀=log(3/2)/64`・公開root・Lean/mathlib pinは**不変**。
+
+ALXの真正な同体積関係 `||A_H||=||P_H||*||R_H||` に、ALYは**独立に未証明**の物理的実数スカラー条件 `a_(H+1)<=s_H*a_H+eta_H`、`p_(H+1)>=s_H*p_H-xi_H>0`（`eta_H,xi_H>=0`）を結び、`t_H=(eta_H+xi_H)/(s_H*p_H-xi_H)` による `r_(H+1)<=r_H+t_H` および `Q_(H+1)<=Q_H+2*t_H+t_H²` を証明した。ALZは線形誤差を先に望遠和にして `r_H<=r_0+sum_{i<H}t_i` を証明。独立に `sum_{i<H}t_i<=T<1-r_0` が得られれば、元β₀の全有限Hで条件付きに `gap_H>=(1-r_0-T)/2>0`。有限prefix／tailと幾何級数型tailも形式化。異なるHのHilbert作用素を不正に減算・同一視しない。
+
+ALY修正前 [CI #43665639036](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43665639036) の `norm_nonneg _` 型推論失敗を、同一の真正Wilson作用素を明示する証明項に修正（元の定理文・物理定義は不変）。最終ALY source `3ecdfd60aa339f8fc463708d8ad24c1298f5c504`、[PR CI #43676401197](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43676401197) completed/SUCCESS **11,489／11,489・15／15標準3公理のみ・sorryAxなし・ALY warning/error 0／0**。ALZ source `2a9a4ec7c047fe3a722b41f00d4d1cac6c2d516f`、[PR CI #43676467795](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43676467795) completed/SUCCESS **11,490／11,490・7／7標準3公理のみ・sorryAxなし・ALZ warning/error 0／0**。ALY単独push #43693028187はALZ後続マージによりCANCELLED（SUCCESSへ読み替えない）。
+
+双方統合した正本HEAD `4e0f4d894dfa...` は、独立[formal push CI #43693765510](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43693765510) **completed/SUCCESS**。Lean **11,490／11,490**、ALY **15／15**＋ALZ **7／7** の公理監査は `propext`／`Classical.choice`／`Quot.sound` のみ、sorryAxなし、両ファイルwarning/error **0／0**。Lean job `132750063860`／独立receipt `132783704522` 成功、実受領書 `[mcp-receipt] event=push exact_sha=4e0f4d894dfab5f4ebc426b946052db825ca6c6d source_result=success run=43693765510 attempt=1`。ALZ source/test-merge/canonical Git tree `1f3227d815b37d39909d0a509c1092ae0f74bc3c` 一致。[ALY正式証明記録](docs/proofs/P4-Q2-PZ37ALY_verified_20261116.md)／[ALZ正式証明記録](docs/proofs/P4-Q2-PZ37ALZ_verified_20261116.md)。
+
+**OPEN／NO_DATA:** 実際のWilson SU(2)模型からの `s_H,eta_H,xi_H` の独立構成・相対誤差和の厳密な小ささは未証明。条件付き形式定理から元β₀の無条件全H一様gap、Hamiltonian gap、連続体4D Yang–Mills質量ギャップを結論しない。次段は真正Wilson kernel/Haar・体積間normalizerの物理的評価を扱う。
+
+
+
+### AMA — fixed-beta0 Wilson scaled relative-cost sharp obstruction: certified and formally merged (2026-11-16 JST)
+
+[AMA theorem PR #6771](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6771) **MERGED** into authoritative formal commit `fbb609791eb0ad93e78b5c266eb34d39b24737da`. From the *actual unchanged* SU(2) Wilson norms `a_H=||A_H||=p_H*r_H`, `p_H=||P_H||>0`, `r_H=||R_H(beta0)||`, AMA proves every admissible ALY scaled raw/full comparison cost `t_H=(eta_H+xi_H)/(s_H*p_H-xi_H)` must satisfy `max(r_(H+1)-r_H,0)<=t_H`. Canonical algebraic `s_H=p_(H+1)/p_H`, `xi_H=0`, `eta_H=p_(H+1)*max(r_(H+1)-r_H,0)` attains equality, but **eta depends on the unknown next-volume physical excited norm**; it is not an independent Wilson bound. Cumulative positive norm variation is a necessary lower bound on all ALY costs; violating ALZ's strict sufficient budget says *nothing* about impossibility of the mass gap.
+
+[Exact-source CI #43759790656](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43759790656) and separately [canonical push CI #43760759944](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43760759944) **completed/SUCCESS**, pinned Lean **11,491/11,491**, AMA **10/10** `#print axioms` only `propext`/`Classical.choice`/`Quot.sound`, no `sorryAx` or AMA warning/error. Push Lean job `132954813399`, exact-head receipt job `132956229058` SUCCESS; observed `event=push exact_sha=fbb609791eb0ad93e78b5c266eb34d39b24737da source_result=success run=43760759944 attempt=1`. Actual source/test-merge/merge Git tree `97239e84f3760795ada2a504119806ded20cc9f2` identical. [AMA formal proof record](docs/proofs/P4-Q2-PZ37AMA_verified_20261116.md).
+
+**OPEN / NO_DATA:** Actual two-volume Wilson raw/full/Haar/Gauss compatible physical bounds, cluster expansion and summably small costs, unconditional all-H beta0 gap, Hamiltonian and continuum 4D Yang–Mills mass gap. Follow the genuine SU(2) plaquette/character coefficients and independent physical volume-uniform estimates; scalar optimization alone cannot supply them.
+
+
+
+### AMB・AMC — 真正SU(2) primary spatial plaquetteのHaar文字・Wilson係数（2026-11-16 JST）
+
+[AMB #6775](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6775) **MERGED** canonical `1e141c99ba8c8b2f9ffd6203f9dbabb838ad4233`。元の空間plaquetteの4本の異なる物理リンク、向き付きholonomyと同じ共役類にある巡回holonomy `Phi_H` を、既存の真正積Haar写像定理に接続。元のSU(2) Wilson文字 `chi=1-E` について自由境界Haar参照測度の `E[chi(Phi_H)]=0`、`E[chi(Phi_H)^2]=1/4`、`0<=beta<=1/156` で `E[exp(beta*chi(Phi_H))]<=1+(44/351)beta^2` を、元の固定 `beta0=log(3/2)/64` を含めてLeanで形式化。**独立postmerge event=push CI #43764326088** completed/SUCCESS、Lean **11,459/11,459**、5/5公理監査は標準 `propext`／`Classical.choice`／`Quot.sound` のみ、sorryAxなし・変更警告/エラー0/0。source/testmerge/canonical Git tree `8dfa25d3c5c554ee27376611fb875ea093d6d275` 一致。[正式記録](docs/proofs/P4-Q2-PZ37AMB_verified_20261116.md)。
+
+[AMC #6776](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6776) **MERGED** canonical `95d9290ef8a7053cf36eb91a5b772367cd9a23d8`。実際の向き付きSU(2) Wilson primary plaquette文字と巡回Haar代表の厳密一致を証明。真正境界積Haarにおける `∫exp(-beta*E(Phi_H))=z_original_SU2(beta)` を無条件で全H・全実betaで示し、固定beta0で `0<z_original_SU2(beta0)<=exp(-beta0+(44/351)beta0^2)`。Exact-source CI #43764567401 completed/SUCCESS、Lean **11,460/11,460**、4/4標準3公理のみ、sorryAxなし・変更警告/エラー0/0。source/testmerge/canonical Git tree `f5a24cad79c9472424b7cda5a541f12e5be151d7` 一致。[正式記録](docs/proofs/P4-Q2-PZ37AMC_verified_20261116.md)。この記録の作成時、**別run #43765204840の独立統合後push認証は未完了**であり、旧PR CIで代用しない。
+
+**OPEN/NO_DATA:** これらは真の4辺の局所plaquetteを自由積Haar参照法で評価した結果で、相互作用したWilson Gibbs測度のplaquette同士の独立性／connected clusterの総和可能性や、Gauss-law/Haar互換の異体積Hilbert写像を認証するものではない。元beta0全H一様transfer gap、Hamiltonian gap、連続体4D Yang–Mills質量ギャップは未証明。
+
+
+
+#### AMC統合後の独立CI認証（2026-11-16 JST）
+
+旧「pending」の観測記録はその時点の状態として保持する。AMC実正本 `95d9290ef8a7053cf36eb91a5b772367cd9a23d8` は別途[event=push CI #43765204840](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43765204840) **completed/SUCCESS**。Lean依存閉包 **11,460/11,460**、AMC公理監査4/4標準 `propext`／`Classical.choice`／`Quot.sound` のみ、sorryAx・対象warning/error 0/0、Lean job `132968633031` と独立completion receipt job `132969998406` 共にSUCCESS。実受領書 `event=push exact_sha=95d9290ef8a7053cf36eb91a5b772367cd9a23d8 source_result=success run=43765204840 attempt=1`。Source/test-merge/canonical tree `f5a24cad79c9472424b7cda5a541f12e5be151d7` 一致。自由Haar一plaquette計算を相互作用Gibbs系の全H一様gapに昇格しない。
+
+
+
+### AMD — genuine primary-plaquette SU(2) nontrivial Wilson character coefficient, local Haar covariance (2026-11-16 JST)
+
+[AMD theorem PR #6779](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6779) **MERGED**, authoritative canonical theorem `69ed84590a06cf0f6ecfea10abfe0cba6e744a2e`. Without changing the original four-edge SU(2) Wilson plaquette, fixed `beta0=log(3/2)/64`, Haar/Gauss/AJA/physical transfer, AMD combines existing certified AMB/AMC actual primary-plaquette Haar law with ABN's **already verified** original SU(2) temporal fundamental-character coefficient: exact primary weighted moment and partition mass coincide with their ABN group integrals, hence the normalized local coefficient equals `r_ABN(beta)` at **each true H**, for all real beta. The actual **one-plaquette, free-Haar** Wilson-weight/character connected covariance satisfies `Cov_H(chi(Phi_H),exp(-beta*E(Phi_H)))>=beta*exp(-2beta)/4` for `beta>=0`. At beta0, `0<beta0*exp(-2beta0)/4<=r_primary(H,beta0)<=1`. The lower bound on ABN's original group coefficient is not claimed as newly derived; its transport to the four-edge physical plaquette is new.
+
+Initial [CI #43773246230](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43773246230) **FAILED** due to `positivity` not automatically using the existing exact beta0 positivity theorem. Proof-only repair of that single tactic led to [exact-source CI #43773899078](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43773899078) **completed/SUCCESS**, pinned Lean **11,461/11,461**, AMD 7/7 `#print axioms` outputs only `propext`/`Classical.choice`/`Quot.sound`, no new `sorryAx` or changed warnings/errors, independent PR receipt SUCCESS. Source/testmerge/canonical Git tree `a3e7f2620a830830ec248946278cc3b6c7362ff8` identical. [AMD exact formal proof record](docs/proofs/P4-Q2-PZ37AMD_verified_20261116.md). Separate postmerge [canonical push #43774439459](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43774439459) initially in progress; later outcome must be independently appended, not inferred.
+
+**OPEN/NO_DATA:** physical fixed-beta0 *interacting* multi-plaquette joint law, genuine connected spatial cluster bounds and volume-uniform constants, Gauss-law-compatible cross-H Hilbert transport, independent ALY/ALZ norm error summability, all-H original transfer gap, Hamiltonian and continuum 4D Yang–Mills mass gap. Free-Haar one-plaquette covariance does not imply these.
+
+
+
+#### AMD canonical postmerge independent Lean certificate (2026-11-16 JST)
+
+The historical AMD source-stage note above remains unchanged. Actual canonical formal commit `69ed84590a06cf0f6ecfea10abfe0cba6e744a2e` separately passed [event=push CI #43774439459](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43774439459) **completed/SUCCESS**, fixed Lean **11,461/11,461**, AMD **7/7** axiom prints only `propext` / `Classical.choice` / `Quot.sound`, no sorryAx and zero AMD warning/error. Main Lean job `132997374925`, independent exact-head receipt job `132999310483` completed/SUCCESS; actual receipt `event=push exact_sha=69ed84590a06cf0f6ecfea10abfe0cba6e744a2e source_result=success run=43774439459 attempt=1`. Source/test-merge/canonical tree `a3e7f2620a830830ec248946278cc3b6c7362ff8` equal. This is local free-Haar physical primary plaquette evidence, not interacting cluster/gap certification.
+
+### PZ37AME — true neighboring SU(2) plaquettes, full interacting Wilson Gibbs pair (2026-11-16 JST)
+
+[AME theorem PR #6782](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6782) **MERGED** into the authoritative Formal branch as two-parent canonical commit `021deafa6aada17ab0cc43fcb360fcba5de2b710`. New append-only Lean leaf proves the distinct first-axis translate of AMD's actual four-link primary spatial plaquette shares a genuine physical lattice link, constructs its true two-observable connected **interacting** Wilson Gibbs character covariance, proves exact full Gibbs-to-Haar-density conversion and strictly positive full Wilson finite-volume partition function. The **complete Wilson action over all plaquettes** stays in the Gibbs weight; no pair-independence or replacement mass is assumed.
+
+Initial source [CI #43778845941](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43778845941) **FAILED** on three Lean arithmetic/normalization presentation problems; the corrected proof-only source `d1ecfde018be0954083bb5064ebbd1c3180132e5` passed [exact PR CI #43779493581](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43779493581): **11,466/11,466**, 7/7 standard-three-only `#print axioms`, no `sorryAx`, new AME warning/error 0/0, independent exact-HEAD receipt SUCCESS. Source/test-merge/canonical Git tree `a1f8192db3ca8c0313e45620358f6daf293087e9` identical. [Full AME proof and repair record](docs/proofs/P4-Q2-PZ37AME_verified_20261116.md). Separate canonical [event=push CI #43780128247](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43780128247) was initially observed in progress; its actual completion belongs to a separate independent evidence entry.
+
+**NEXT/NO_DATA:** a nontrivial explicit H-uniform **connected Gibbs cluster bound** for shared-link plaquettes remains unproved. Exact measure identity does not give an interaction decay estimate. Derive physical local influence/cluster constants under original SU(2) Wilson law, verify decay and Gauss-law/cross-volume compatibility; original beta0 all-H transfer gap, Hamiltonian gap and continuum Yang–Mills 4D mass gap remain **OPEN**.
+
+
+
+#### PZ37AME independent canonical push certificate — 2026-11-16 JST
+
+Reobserved the actual canonical Formal theorem merge `021deafa6aada17ab0cc43fcb360fcba5de2b710` under independent [event=push CI #43780128247](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43780128247): workflow, changed-Lean job `133015193039`, required Lean step, completion receipt job `133017203933` **completed/SUCCESS**. Exact integrated HEAD Lean dependency build **11,466/11,466**, AME 7/7 standard-three-only axiom outputs, no sorryAx, AME direct warning/error 0/0. Receipt `event=push exact_sha=021deafa6aada17ab0cc43fcb360fcba5de2b710 source_result=success run=43780128247 attempt=1`. Certified Git tree `a1f8192db3ca8c0313e45620358f6daf293087e9`. The interacting two-plaquette nontrivial cluster estimate remains OPEN.
+
+### PZ37AMF — genuine fixed-beta0 SU2 Wilson conditional-link Dobrushin strictness (2026-11-16 JST)
+
+[AMF theorem PR #6785](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6785) **MERGED** into authoritative Formal at `73b1c310f34f9158957dc942988cc30613215e3c`. For original `beta0=log(3/2)/64`, a new theorem proves the exact `beta0<log(19/17)/4` Dobrushin threshold using AKO `beta0<=1/156` and the NEW rational logarithm floor `2/19<=log(19/17)`. For every physical periodic SU2 volume `n=2(H+1)` with `H>0` (n>=4), constructs the **actual full interacting Wilson Gibbs** one-link Dobrushin matrix and proves its **H-independent** strict coefficient `alpha0=18*(exp(4beta0)-1)/(exp(4beta0)+1)<1`, all-link strict row sums, bounded-test conditional Gibbs expectation influence, and finite `ell^2` influence nonexpansivity. Also connects one strict row to a real physical edge shared by the distinct AME neighboring plaquettes.
+
+Initial [CI #43782230120](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43782230120) **FAILED** on SU2 measurable-space instance and named beta0 nonnegativity elaboration. Proof-only repaired source `a154dc732b959f248d6f7ab9ee03d7fd9a5ebf07` passed [exact-head CI #43782877096](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43782877096): **11,467/11,467** Lean, eight/eight standard-three-only `#print axioms`, no sorryAx, AMF warnings/errors 0/0, independent exact-SHA receipt SUCCESS. Source/test-merge/canonical Git tree `ac2ed3e62e3e82d021b3db620802b2b873116c01` equal. [Exact AMF proof record](docs/proofs/P4-Q2-PZ37AMF_verified_20261116.md). Separate [canonical push CI #43783428357](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43783428357) initially pending; independent postmerge success must be recorded separately.
+
+**OPEN:** link-local Dobrushin control is NOT joint Gibbs connected-plaquette covariance decay. Construct an actual `SU(2)` conditional-to-covariance comparison and physical link-support Green-tail bound, then prove H-uniform summability and Gauss-law/physical transfer compatibility. H=0 (periodic side two) is outside the existing n>=3 uniqueness hypothesis and remains explicit. No fixed-beta0 transfer, Hamiltonian or continuum 4D mass gap claimed.
+
+
+
+#### PZ37AMF independent canonical push result — 2026-11-16 JST
+
+Independent [event=push CI #43783428357](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43783428357) on **actual formal theorem merge `73b1c310f34f9158957dc942988cc30613215e3c`** completed/SUCCESS, distinct from source CI. Pinned Lean **11,467/11,467**, eight/eight AMF declarations only the three standard axioms, no sorryAx, AMF warning/error 0/0; main Lean job `133025628213`, required Lean step, independent receipt job `133027681892` completed/SUCCESS. Exact receipt `event=push exact_sha=73b1c310f34f9158957dc942988cc30613215e3c source_result=success run=43783428357 attempt=1`, canonical Git tree `ac2ed3e62e3e82d021b3db620802b2b873116c01`. Physical joint-plaquette Gibbs covariance decay, all-H beta0 transfer/Hamiltonian/continuum mass gap still OPEN.
+
+### PZ37AMG — authentic SU2 Wilson physical plaquette Gibbs covariance geometric decay (2026-11-16 JST)
+
+[AMG theorem PR #6788](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6788) **MERGED** into authoritative Formal canonical `6b48eabefc06aeeb7e508745167d598693ab0135`. Extends unchanged AMF fixed original beta0=`log(3/2)/64` strict one-link compact-Haar Dobrushin influence to actual **two-plaquette full interacting SU2 Wilson Gibbs connected covariance** by applying the previously certified finite-support random-scan covariance theorem (not falsely re-proving it). Proves exact active-TV/density-ratio influence equality, original beta0 strictness, the real four-edge physical Wilson character bounded-continuous readout, its exact four-positive-link support, `||chi_p||<=1`, support cardinal ≤4, each variation sum ≤8, and the new **explicit H-independent bound** `|Cov_{Gibbs}(chi_p,chi_q)| <= 64 * rho0^D/(1-rho0)`, `rho0=18*(exp(4beta0)-1)/(exp(4beta0)+1)<1` for **H>0 and genuine typed physical-link support separation D**. No independent-plaquette Gaussian or full partition replacement. Adjacent shared-link plaquettes do **not** acquire an unjustified positive separation; H=0 is outside n≥3 uniqueness.
+
+Initial source `a3c9597...` [CI #43793544193](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43793544193) **CANCELLED** upon namespace repair (not a completed Lean FAILURE). Intermediate source `ef73cb7...` [CI #43793693508](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43793693508) passed Lean but retained three unused sum-binder warnings. Exact final strengthened source `b0dfef7bac142b1a52fd1f9c19cdf8f5a8fcb080`, [CI #43794645216](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43794645216) **completed/SUCCESS**, Lean **11,510/11,510**, 12/12 standard-three-only axiom prints, sorryAx absent, AMG warning/error 0/0 and independent exact-HEAD receipt success. Source/test-merge/canonical tree `a91ceb217a4028324c01efbc1d49ee49764f66d1` exact match. [Full AMG proof and provenance](docs/proofs/P4-Q2-PZ37AMG_verified_20261116.md). Independent canonical [event=push #43795226737](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43795226737) initially pending, audited separately.
+
+**NEXT:** quantitative actual Euclidean plaquette separation and H-uniform shell summability, compatibility with changing continuum coupling, physical Gauss-law OS one-slab transfer, Hamiltonian and continuum Yang–Mills mass-gap remain OPEN. Static finite-volume Gibbs clustering does not itself imply those conclusions.
+
+
+
+#### PZ37AMG independently certified canonical theorem push — 2026-11-16 JST
+
+Independently reobserved actual two-parent AMG Formal theorem merge `6b48eabefc06aeeb7e508745167d598693ab0135` under [event=push CI #43795226737](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43795226737): completed/SUCCESS, pinned Lean **11,510/11,510**, AMG 12/12 standard-three-only axiom audit, no sorryAx, AMG warning/error 0/0; Lean job `133062412337`, required Lean step and independent receipt job `133064594630` all SUCCESS. Actual receipt `event=push exact_sha=6b48eabefc06aeeb7e508745167d598693ab0135 source_result=success run=43795226737 attempt=1`. Source/test-merge/canonical Git tree `a91ceb217a4028324c01efbc1d49ee49764f66d1`. Geometric Gibbs covariance remains conditional on physically separated actual plaquette supports and is NOT an OS transfer/Hamiltonian/continuum mass-gap proof.
+
+
+#### PZ37AMH physical periodic-time separation → actual SU2 Wilson Gibbs covariance — 2026-11-16 JST
+
+[Theorem PR #6791](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6791) MERGED as Formal two-parent SHA `851a1f3f5da209bd5c8238af00cd533dd472be6b`. From actual four-edge plaquette boundaries, Lean certifies source-time cyclic distance `d_t(p,q) <= 2+d_t(e,f)`, and the typed D-step Wilson-local support-separation condition whenever `D+2<=d_t(p,q)`. Connecting to original exact beta0 full interacting SU2 Wilson Gibbs covariance (AMG) yields, for H>0, **unconditionally for every two physical plaquettes**, `|Cov_Gibbs(chi_p,chi_q)| <= 64*rho0^(d_t(p,q)-2)/(1-rho0)`; natural exponent subtraction is truncated at zero, preserving shared-link obstruction. This is a physical **single time-coordinate** separation bound, NOT full four-dimensional distance, total covariance shell summability or Gauss-law physical transfer/Hamiltonian/continuum mass gap.
+
+Exact source `7db514b877bf57635a8bcb0d38d9727823c53b52` [PR CI #43797665387](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43797665387) **completed/SUCCESS**, pinned Lean **11,511/11,511**, AMH **6/6** standard-three-only axiom audits, no sorryAx, changed-file warnings/errors 0/0, required Lean step and independent receipt SUCCESS. Source/testmerge/actual canonical tree `30005de0f63818558f6e86fa49b81e7392ee8d69`. Formal [canonical push CI #43798561047](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43798561047) was still in progress at this point and must be separately audited before promotion. [Full AMH proof record](docs/proofs/P4-Q2-PZ37AMH_verified_20261116.md). Next: polynomial 4D physical shell count or actual Dobrushin Green-kernel incidence-sum bridge, and separately physical Gauss-law OS transfer; no final Yang–Mills mass gap.
+
+
+#### PZ37AMH independently certified canonical event=push — 2026-11-16 JST
+
+
+
+## Postmerge canonical independent push receipt — observed after the pending entry
+
+**Certified:** The actual Formal merge commit `851a1f3f5da209bd5c8238af00cd533dd472be6b` passed [independent event=push CI #43798561047](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43798561047), workflow **completed/SUCCESS**. Main Lean job `133072968316`, required `Run changed Lean fast check` step **completed/SUCCESS**, pinned dependency build **11,511/11,511** with newly built AMH leaf. All six AMH `#print axioms` again reported only `propext`, `Classical.choice`, `Quot.sound`, with no sorryAx and **0 direct AMH warnings/errors**. The distinct independent receipt job `133075116685` **completed/SUCCESS** and issued:
+
+```text
+[mcp-receipt] event=push exact_sha=851a1f3f5da209bd5c8238af00cd533dd472be6b source_result=success run=43798561047 attempt=1
+```
+
+The source `7db514b...`, GitHub PR test-merge `3d15cd6...` and canonical merged commit `851a1f3...` share identical Git tree `30005de0f63818558f6e86fa49b81e7392ee8d69`. This later observation **resolves the earlier pending canonical push status** without altering the historical entry.
+
+
+#### PZ37AMI original SU2 Wilson plaquette incidence and Green L¹ — 2026-11-16 JST
+
+[Lean theorem PR #6794](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6794) **MERGED** as original Formal two-parent theorem SHA `8194a5d107cbb4e2477457c9b6115da851c49374`. The **actual four-edge physical positive-link support** matches canonical touching incidence; at most six oriented coordinate plaquettes meet any physical link in four dimensions, and the original Wilson SU2 fundamental-character family obeys `sum_p variation_e(chi_p) <= 12` for every physical link e. For every H>0, every original physical plaquette p and finite random-scan cutoff M, its genuine compact-Haar Wilson fixed-beta0 Dobrushin Green-resolvent link mass obeys **`sum_e w[p,M](e) <= 8/(1-rho0)`**, with `rho0=18*(exp(4beta0)-1)/(exp(4beta0)+1)<1`, `beta0=log(3/2)/64`.
+
+Final exact source `c790585f058014b6a1f6402c1af0373865eaef5a`, [CI #43825859327](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43825859327) **completed/SUCCESS**, pinned Lean **11,512/11,512**, AMI six/six standard-three-only axiom prints, no sorryAx, direct warning/error 0/0, independent exact-head receipt success. Actual source/test-merge/canonical Git tree `a5ea3dad73c570aead556492f1fc60202eff1888` exact match. Two earlier FAILED source candidates were repaired by fixing post-simp redundant tactic, the n>=3 side-length arithmetic and implicit compact system/link parameter inference; all theorem strengths retained. Canonical integrated [event=push CI #43826552529](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43826552529) was pending at this observation and needs separate verification. [Full AMI proof/evidence](docs/proofs/P4-Q2-PZ37AMI_verified_20261116.md).
+
+**OPEN next:** Sum the *actual interacting Gibbs connected plaquette covariances* by a finite-family random-scan covariance telescope plus finite-sum limit; the prospective `96/(1-rho0)` bound is **not yet a proven AMI theorem**. No all-H Gauss-law OS transfer gap, Hamiltonian gap, continuum scaling, or 4D Yang–Mills mass gap is obtained. 
+
+
+#### PZ37AMI independently authenticated canonical event=push — 2026-11-16 JST
+
+
+After preserving the earlier `in_progress` observation, GitHub MCP independently reobserved the actual two-parent canonical Formal theorem merge `8194a5d107cbb4e2477457c9b6115da851c49374`. The [event=push CI #43826552529](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43826552529) is **workflow completed/SUCCESS**, main changed-Lean job `133161661401` and required `Run changed Lean fast check` step completed/SUCCESS. The actual pinned dependency-aware build is **11,512/11,512**, AMI six/six axiom outputs only `propext`, `Classical.choice`, `Quot.sound`, no `sorryAx`, direct AMI warning/error `0/0`. The distinct independent completion receipt job `133163626375` completed/SUCCESS and emitted:
+
+```text
+[mcp-receipt] event=push exact_sha=8194a5d107cbb4e2477457c9b6115da851c49374 source_result=success run=43826552529 attempt=1
+```
+
+Actual canonical Git tree `a5ea3dad73c570aead556492f1fc60202eff1888` matches source/test-merge exactly. This authenticates the *finite physical plaquette incidence and fixed-beta0 finite Green L1 resolvent* declarations only; the finite-family Gibbs covariance sum `96/(1-rho0)` remains a separate unverified target.
+
+
+#### PZ37AMJ — original SU2 Wilson all-plaquette Gibbs connected covariance L¹ — 2026-11-16 JST
+
+[Theorem PR #6797](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6797) **MERGED** as actual Formal two-parent theorem commit `eac442f17d84c6856a3efa1ec8c475aaf1d3b207`. For every original even periodic four-dimensional physical Wilson SU(2) finite lattice H>0, and any REAL oriented four-link plaquette p, the exact FULL INTERACTING Gibbs fundamental-character connected-correlation family satisfies the **unconditional** uniform finite sum `sum_q |Cov_(mu[H,beta0])(chi_q,chi_p)| <= 96/(1-rho0)`; `beta0=log(3/2)/64`, `rho0=18*(exp(4beta0)-1)/(exp(4beta0)+1)<1`. No pairwise positive-support-separation hypothesis is needed, including shared-link neighbors.
+
+New generic proof directly uses the genuine finite Gibbs random-scan covariance telescope, typed left variation sum B, actual right Dobrushin Green L1 resolvent R, finite-sum exchange and vanishing random-scan Gibbs remainder, proving `sum_i |Cov(F_i,O)|<=B*R`. Physical specialization uses certified AMI B=12 and R=8/(1-rho0). No independent free-Haar law or assumed covariance bound. Final exact source `7afe4a94d897b48bd6947d588018c65117d5dec0`, [PR CI #43842195242](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43842195242) **completed/SUCCESS**, pinned Lean **11,513/11,513**, both new axiom audits only `propext`, `Classical.choice`, `Quot.sound`, no sorryAx, direct AMJ warnings/errors 0/0, independent exact-source receipt SUCCESS. Source/test-merge/canonical tree `545a52f83a1b286365c47bee6a042a911e458745`. Initial `5f91398...` source CI failed when `change` incorrectly equated proof-relevant finite-support profile fields with independently elaborated `if` expressions; corrected via typed on/off-support lemmas and `Finset.sum_congr`, preserving theorem strength. [Formal proof and failure provenance](docs/proofs/P4-Q2-PZ37AMJ_verified_20261116.md). The separate canonical event=push [CI #43843337150](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43843337150) was initially in progress; verify exact commit and receipt before marking postmerge certified.
+
+**OPEN:** Actual all-H physical Gauss-law-compatible OS transfer norm gap, Hamiltonian spectral mass gap, weak-coupling scale-varying continuum reconstruction, Euclidean four-coordinate correlation decay and continuous four-dimensional Yang–Mills mass gap. The AMJ static finite-Gibbs susceptibility bound is NOT authority for these conclusions.
+
+
+#### PZ37AMJ independently certified original Formal event=push — 2026-11-16 JST
+
+The actual original beta0 SU2 Gibbs all-plaquette covariance theorem was merged as exact canonical Formal theorem HEAD `eac442f17d84c6856a3efa1ec8c475aaf1d3b207`. Independent [event=push CI #43843337150](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/43843337150) **workflow completed/SUCCESS**, Lean job `133217215316`, required `Run changed Lean fast check` step completed/SUCCESS, actual pinned build **11,513/11,513**, AMJ 2/2 `#print axioms` only standard `propext`, `Classical.choice`, `Quot.sound`, no `sorryAx`, changed file warning/error **0/0**; distinct exact-HEAD receipt job `133220693947` completed/SUCCESS and emitted:
+
+```text
+[mcp-receipt] event=push exact_sha=eac442f17d84c6856a3efa1ec8c475aaf1d3b207 source_result=success run=43843337150 attempt=1
+```
+
+The exact merged Git tree `545a52f83a1b286365c47bee6a042a911e458745` equals the source and synthetic test-merge trees. Actual original fixed beta0 full interacting finite Gibbs `sum_q |Cov(chi_q,chi_p)|<=96/(1-rho0)` is certified; Gauss-law physical OS transfer gap, Hamiltonian gap, varying-beta continuum reconstruction, Euclidean 4D continuum Yang–Mills mass gap remain OPEN.
+
+#### PZ37ANB — exact original full-periodic Wilson positive-half fiber (2026-11-17 JST)
+
+[Formal proof and independent receipts](docs/proofs/P4-Q2-PZ37ANB_verified_20261117.md): [PR #6843](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6843) **MERGED**, source `d6d0552c5cb7`, Formal theorem HEAD `b302fc29610c`, source/test-merge/merged Git tree `d9d13cb1d393fa0055c3bfa4d1415420bd373742` identical. Exact-source [CI #44044663034](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44044663034) and separate Formal [push #44045273155](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44045273155) both completed/SUCCESS, required Lean jobs/steps successful (8,550/8,550), two theorem axiom audits standard three only, no `sorryAx`, changed source warning/error 0/0, both independent exact-head receipts successful.
+
+Scope: in original finite even-periodic SU(N) Wilson Gibbs law, integrating the **normalized full-periodic** density over the negative open half gives the exact original boundary vacuum moment times the positive completed Gram feature, with a strict positive fiber. This is **not** an identification with ANA's normalized temporal-gauge half-path measure. Positive-closure pushforward, terminal-gauge boundary compatibility, physical OS carrier/one-slab intertwining, volume-uniform spectral gap and continuum four-dimensional Yang–Mills mass gap remain unproved.
+
+#### PZ37ANB — genuine full-periodic positive-closure Gibbs marginal, independently certified (2026-11-17 JST)
+
+[Formal proof record](docs/proofs/P4-Q2-PZ37ANB_positive_closure_marginal_verified_20261117.md): [ANB theorem PR #6846](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6846) **MERGED**, corrected source `2a0c2db3232f`, formal theorem HEAD `fcde2ab4648a`, source/test-merge/squash tree `0fdb5c2b02fbeb52269013ad6b8835e2d4ad7d1e` identical. Corrected [exact-source CI #44047088998](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44047088998) and [independent Formal push CI #44047592307](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44047592307) both completed/SUCCESS (8,562/8,562, 3/3 standard-three axioms, no `sorryAx`, changed warning/error 0/0, both exact-HEAD independent receipts). Initial CI #44046432046 failed on one reflexive goal; a single-line `rfl` repair was made **in the same PR**, preserving all statements and assumptions.
+
+Mathematical scope: the **literal normalized original full-periodic** SU(N) Wilson Gibbs law pushes forward onto the entire shared-boundary plus positive-open-half physical configuration as product Haar with fiberwise **negative-half** Gibbs-density lintegral. This preserves the true full-periodic partition function, unlike identification with separately normalized ANA temporal-gauge half-path law. Explicit fiber-to-vacuum-feature ENNReal conversion, boundary residual gauge transport, typed OS carrier/one-slab intertwining, uniform spectral gap and continuum 4D Yang–Mills mass gap remain **OPEN**.
+
+#### PZ37ANB — exact original full-periodic positive-closure vacuum-feature density (2026-11-17 JST)
+
+[Verified theorem/CI record](docs/proofs/P4-Q2-PZ37ANB_positive_closure_exact_density_verified_20261117.md): [PR #6849](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6849) **MERGED**; corrected source `9f495de098a93acbc6e592d9ec80e60fe0a8d163`, integrated Formal theorem HEAD `ab2d7e56a7cabda5b65dd0e2b3e20e2732132e84`; source/test-merge/squash tree `1f5cb9c267f290ae398615643500d3e5ab6e8ec2` identical. Exact-source [CI #44053015102](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44053015102) and independent Formal [push CI #44053827415](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44053827415) both completed/SUCCESS, 8,564/8,564 Lean jobs, 2/2 standard-three axioms, no `sorryAx`, changed warning/error 0/0, both exact-head completion receipts successful. Initial CI #44052283780 failed after `dsimp` eliminated `‖·‖`; redundant `Real.norm_eq_abs` rewrite removed within the **same PR**, retaining failed/corrected provenance.
+
+Finite-original-model proof: the normalized true periodic `SU(N)` positive-closure Gibbs probability is **exactly** boundary/open-half product Haar with density `ENNReal.ofReal (Ψ_boundary(b) * G_plus(b,x))`, for arbitrary finite H and beta≥0. No ANA temporal-gauge half-path equality, OS Hilbert/one-slab intertwining, volume-uniform spectral gap, or continuum 4D Yang–Mills mass gap is proved.
+
+#### PZ37ANB — true periodic positive-closure Gibbs/Haar mutual absolute continuity (2026-11-17 JST)
+
+[Formal source and independent proof/CI record](docs/proofs/P4-Q2-PZ37ANB_positive_closure_haar_equivalence_verified_20261117.md): [theorem PR #6852](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6852) **MERGED**. Corrected source `39c4a8c0972016ca8e3665c02501c218e9942547`, integrated Formal theorem HEAD `5bb800c4a0f074671e8f75d9e7a081cf5f5a3694`, source/test-merge/Formal tree `d8a2a116f29c6f7053e0931642b5a18e331f7753` identical. Exact-source [CI #44056320194](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44056320194) and independent Formal [push CI #44057074202](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44057074202) both completed/SUCCESS (8,565/8,565 Lean, three theorem axiom audits standard three only, no `sorryAx`, changed warning/error 0/0, both exact-head independent receipts). Initial CI #44055656583 failed from an underspecified product carrier in `measurable_fst`; the **same PR** repaired the implicit type by annotating measurable `Boundary × OpenHalf` intermediates, without changing theorem statements.
+
+Certified finite-original-model scope: the genuine normalized full-periodic Wilson positive-closure Gibbs marginal and unchanged boundary/open-half product Haar measure are **mutually absolutely continuous** with exactly the same null sets. This does not identify ANA's separately normalized temporal-gauge half-path law, abstract OS Hilbert, physical one-slab transfer, volume-uniform gap, or continuum 4D Yang–Mills mass gap.
+
+#### PZ37ANC — genuine full-periodic Gibbs positive-closure time-one Wilson cylinder nonzero (2026-11-17 JST)
+
+[Certified proof record](docs/proofs/P4-Q2-PZ37ANC_positive_closure_time_one_nonzero_verified_20261117.md): [theorem PR #6855](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6855) **MERGED**; corrected source `5bb3457db452975c0b0c13f7955615714cc35d04`, integrated Formal theorem HEAD `aee4012c1735327385859c093663cc76fcae7471`, source/test-merge/actual Formal tree `ff821b2f3d4d772f48a2377c2be93194be1db874` identical. [Exact-source CI #44061158470](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44061158470) and independent [Formal push CI #44061714947](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44061714947) both completed/SUCCESS (8,858/8,858 Lean, 5/5 standard-three axioms, no `sorryAx`, changed warning/error 0/0, both exact-head independent receipts). Initial CI #44060383992 failed on a non-normalized slab-count `NeZero` goal and reserved `λ` binder; the **same PR** repaired both without modifying theorem statements or assumptions.
+
+Certified scope: the literal physical two-mode time-one spatial Wilson cylinder is transported through existing measurable positive-closure coordinates and Haar-preserving projection. A genuinely nonzero top-orthogonal witness under the original **normalized full-periodic SU(2) Wilson Gibbs positive-closure marginal** follows from AMY Haar nonzero and ANB mutual absolute continuity. This is a finite-volume a.e.-nonzero theorem, NOT an identification with ANA's separately normalized temporal-gauge half-path law, true-periodic Gibbs L² vector, physical OS Hilbert quotient, completed one-slab intertwining, uniform volume gap, or continuum 4D mass gap.
+
+#### PZ37AND — genuine periodic Gibbs positive-closure time-one real L² state (2026-11-17 JST)
+
+[Exact-source and independent Formal proof record](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/6141d68f636a9773682ba4c2b7e8e4fb8ac138a9/docs/proofs/P4-Q2-PZ37AND_positive_closure_time_one_l2_verified_20261117.md): [theorem PR #6858](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6858) **MERGED**. Certified source `6d44b68e7f56af2c03c629e4ca8cf9fb677d1645`, integrated Formal theorem HEAD `64b023cf5fb8cd6bb85b8f53988f64e1ff189d73`, [source CI #44068323375](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44068323375) and independent [Formal push CI #44069041571](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44069041571) completed/SUCCESS: 8,859/8,859 Lean jobs, five audited declarations with only `propext`, `Classical.choice`, `Quot.sound`, no `sorryAx`, changed-file warning/error 0/0.
+
+Certified scope: the true normalized full-periodic SU(2) Wilson Gibbs positive-closure pushforward is a probability; the literal ANC time-one two-mode observable is measurable, pointwise bounded, in real L² of that original marginal, and has a nonzero real L² class for some original physical top-eigenspace-orthogonal coefficients. It is **not** an OS quotient nonzero theorem, an identification with ANA's separately normalized temporal-gauge half-path law, a one-slab intertwining theorem, or a continuum mass-gap proof.
+
+#### PZ37ANE — common genuine periodic Gibbs/product-Haar time-one L² zero classes (2026-11-17 JST)
+
+[Exact-source and independent Formal proof record](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/c3b1c35d7f618d17905e8dbb1b55287250241b23/docs/proofs/P4-Q2-PZ37ANE_true_periodic_positive_closure_common_L2_zero_classes_verified_20261117.md): [theorem PR #6861](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6861) **MERGED**. Certified source `d9a1e4e685ba49d3155456f02e21524d5ff54bd3`, integrated Formal HEAD `dc857262d472937f179b64c506733bb45dca7484`; source/test-merge/integrated Git tree `debd3dfa268edb5b0792717e333913c193f05d6a` identical. [Source CI #44073515475](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44073515475) and independent [Formal push CI #44074295269](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44074295269) completed/SUCCESS: 8,860/8,860 Lean, four audited declarations with standard three axioms only, no `sorryAx`, changed warning/error 0/0. Earlier same-PR [failed CI #44072873596](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44072873596) used reserved Lean4 token `λ` as a local variable; replacing its uses by `haar` repaired the parser failure without weakening hypotheses.
+
+Certified scope: for **every** real two-mode coefficient pair, the unchanged time-one Wilson observable has zero class in L² of the true full-periodic Gibbs positive-closure marginal **iff** it has zero class in L² of original boundary/open-half product Haar. Some unchanged original physical top-orthogonal coefficients give **nonzero classes in both**. This is compatibility of coefficient zero kernels, **not** equivalence of L² norms, OS reflection-semidefinite null-space equality, nonzero OS physical Hilbert quotient, original Wilson one-slab intertwining, volume-uniform gap, or continuum Yang–Mills gap.
+
+#### PZ37ANF — genuine original Wilson time-one OS reflection Gram (2026-11-17 JST)
+
+[Exact-source and independently push-certified Formal proof record](docs/proofs/P4-Q2-PZ37ANF_original_time_one_wilson_OS_reflection_gram_verified_20261117.md): [theorem PR #6862](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6862) **MERGED**. Certified source `29ea9cfdf71bd8929e7c832682c5ee09e55b1f3f`; actual integrated Formal theorem HEAD `79ebe826acd2185862560bcda4c88b4a4f08fe45`; source/test-merge/integrated Git tree `4616bc62658453160dc014b0b0c48cd4cb850188` identical. Exact-source [CI #44077115100](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44077115100) and independent [Formal push #44077693517](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44077693517) completed/SUCCESS: 8,864/8,864 Lean jobs, five explicit theorem audits standard three axioms only, no `sorryAx`, no ANF warning/error, source/push exact SHA completion receipts.
+
+**New certified statement:** the literal ANC/AND/ANE physical time-one two-mode Wilson cylinder is a bounded measurable observable on the ORIGINAL full-periodic Gibbs reflection-fixed boundary plus positive open half. Its actual finite Wilson Gibbs OS reflection form is nonnegative and **equals the exact shared-boundary Haar integral of squared boundary-conditioned Wilson Gram moments**:
+
+`Q_OS(F) = ∫_b |∫_x G_W(b,x) F(b,x) dλ_open(x)|² dλ_boundary(b) >= 0`.
+
+**Open obstruction:** strict `Q_OS(F)>0` for the ANE top-orthogonal nonzero ordinary L² witness is **NOT proved**. Ordinary Gibbs/Haar real L² nonzero is not OS quotient nonzero. The pointwise original `beta=0` boundary-feature degeneracy already proved in earlier files requires careful treatment. No original Wilson/OS one-slab intertwining, uniform gap or continuum 4D Yang–Mills mass gap is claimed.
+
+
+#### PZ37ANG / ANG0 — source- and push-certified original Wilson time-one OS boundary Gram two-mode and beta-zero Haar-mean obstruction (2026-11-17 JST)
+
+[Formal proof and independent CI record](docs/proofs/P4-Q2-PZ37ANG_ANG0_original_two_mode_OS_boundary_gram_beta_zero_verified_20261117.md): theorem [PR #6863](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6863) **MERGED**, original source HEAD `1e58efb2935a9be4a7f7161ce6c17663fe595822`, Formal theorem HEAD `de5b2d769706c99470ece2746b42e3ac1e6306d7`, identical source/test-merge/integrated Git tree `93a0b400f629590481ca584a6604c5f54f44c726`. Independent [source CI #44081246060](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44081246060) and [Formal push CI #44082674307](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44082674307) both completed/SUCCESS (8,876/8,876 Lean, 7 new axioms audits standard-three only, no sorryAx, changed file warnings/errors 0/0, both exact-head receipts verified).
+
+Theorems: exact linearity of the **unchanged original full-periodic SU(2) Wilson** physical time-one two-mode boundary Gram moment, exact OS quadratic form as `∫ |c0*M0+c1*M1|² dHaar_boundary`, and, at `beta=0`, exact Gram moment `sqrt(Z_H(0)⁻¹) * ∫_open F(b,x) dHaar_open`. Vanishing under an explicit boundary-a.e. zero fiber Haar mean is certified as a **conditional** null-space obstruction. The actual top-eigenspace-orthogonal physical coefficient pair's fiber mean zero, any `beta>0` strict OS positivity, OS quotient nonzero class, original one-slab intertwining, uniform gap and continuum Yang–Mills mass gap are **NOT** certified. This is not an unconditional OS excitation proof.
+
+
+#### PZ37ANJ — actual full-periodic Wilson time-one closure-Haar mean (2026-11-18 JST)
+
+[Exact Formal proof and independent receipts](docs/proofs/P4-Q2-PZ37ANJ_original_time_one_closure_haar_mean_verified_20261118.md): [Lean theorem PR #6868](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6868) **MERGED** into authoritative Formal theorem HEAD `0e4fc7d20f3a02c3f97688a74c3f054192766ae0`. Final source `b1198958e4a5078adac9010e171c21af604e7067`; source/test-merge/actual integrated tree identical `43c4526c5e140bea0e2b33298a328a91b6f124ac`. [Source CI #44151196885](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44151196885) and independent [Formal push CI #44151835940](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/44151835940) completed/SUCCESS, fixed Lean **8,879/8,879**, eight new declarations standard-three-only `propext/Classical.choice/Quot.sound`, no `sorryAx`, changed warning/error 0/0, both exact-HEAD completion receipts SUCCESS. Source repair failures #44149784895 and #44150545444 (named Haar Fubini `SFinite nu` then `SFinite mu`) retained, corrected in **same** PR without weakening hypotheses.
+
+**CERTIFIED:** Under actual original boundary × positive-open-half product Haar, the unchanged physical time-one SU(2) plaquette holonomy pushes to normalized SU(2) Haar, canonical Wilson Gram–Schmidt first two modes have means 1 and 0, so original time-one two-mode cylinder has **joint** mean `c0`. At beta=0 the original Wilson boundary Gram moment has **first boundary mean** `sqrt(Z_H(0)⁻¹)*c0`. This does **not** assert fixed-boundary Haar-fiber mean zero, positive OS norm for the original physical top-eigenspace-orthogonal coefficient pair, nonzero OS quotient, original one-slab↔OS intertwining, uniform volume gap or continuum 4D Yang–Mills mass gap.
