@@ -34,6 +34,11 @@
       ],
       "candidates": [
         {
+          "id": "R2",
+          "path": "diagnostics/pz37aqr/full-v1-r1/AQR_R2.lean.txt",
+          "blob": "b4e8f4d5af0d8f6185db5cc7fd5ed6165b3a70b4"
+        },
+        {
           "id": "R1",
           "path": "diagnostics/pz37aqr/full-v1-r1/AQR_R1.lean.txt",
           "blob": "e9019f194f0938fb529139477a6639f43e81fe8a"
