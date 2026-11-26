@@ -1,0 +1,2 @@
+# AQI R5/R6 exact API repair
+Terminal R3/R4 run 45789934664 job 139806104993 artifact 15102760932: unknown identifiers `mul_le_mul_left₀` and `mul_le_mul_right₀`, no remaining parser errors. Use the exact previously certified AKC API `(mul_le_mul_iff_of_pos_left hN).mp`, and commute both right-hand products before applying the same checked left API. All theorem signatures, hypotheses, imports, existing files and baseline unchanged. TEST_REQUIRED; independent CI only after direct Lean and real MCP GREEN.
