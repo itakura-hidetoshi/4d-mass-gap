@@ -1,0 +1,19 @@
+name: PZ37AQH full-cache sandbox v2 genuine connected reflection correlation
+on:
+  pull_request:
+    paths:
+      - "diagnostics/pz37aqh/full-v2-r3-r4/**"
+      - ".github/workflows/pz37aqh-full-v2-r3-r4.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pz37aqh-full-v2-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    uses: ./.github/workflows/lean-warm-sandbox-reusable-aqh-full-v2.yml
+    with:
+      pack: diagnostics/pz37aqh/full-v2-r3-r4/pack.json
+      source_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      baseline_commit: 06870bd2862c82d96605eda2efd5b7db2bb61249

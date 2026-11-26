@@ -1,0 +1,2 @@
+# AQH R3/R4 preflight correction
+R1/R2 preserved at bf4b47c2b349ca4f8bced85a08ea0792f9916dc5, not run. Pinned mathlib Basic.lean `real_inner_comm (x y : F) : inner ℝ y x = inner ℝ x y` means `real_inner_comm v x` is required in the centered inner algebra. Replace final rewrite plus rfl with exact congrArg to avoid redundant tactic. No signature or import changes. This is static API evidence, not a Lean failure receipt. R3/R4 TEST_REQUIRED. Baseline AQG merge 06870bd2862c82d96605eda2efd5b7db2bb61249. Independent CI only after direct Lean + real MCP GREEN.
