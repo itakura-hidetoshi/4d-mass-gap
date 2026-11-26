@@ -1,0 +1,2 @@
+# AQO R3/R4 — explicit coordinate transport and real inner product
+Run 45883310366/job 140127731578 failed: external tensor norm rw could not match; APN private endpoint projections differ from PairE only by actual index transport; missing local notation Vac caused two downstream defeq failures; norm_inner_le_norm scalar metavariable stuck. Explicit tensor norm term, piCongrLeft_apply_apply at inverse index, correct actual boundary vacuum notation, real_inner_le_norm. All intended public statements retained; no assumptions weakened. Baseline tree exact.
