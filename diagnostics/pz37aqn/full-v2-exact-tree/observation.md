@@ -1,0 +1,2 @@
+# AQN exact-tree infrastructure repair
+Run 45815652851 job 139894593484 failed before any Lean invocation: baseline MGAP4D tree mismatch. Previous pack contained truncated e67bdca0a728ccb22400c45b5f96d19de64b4e3; actual MGAP4D tree verified from canonical root 85e83b1db29fb092071fb834312f4a48ed056f00 is e67bdca0a728ccb22400c45b5f96d19de64b4e3e. Candidate R1/R2 blobs unchanged; only diagnostic pack tree binding and paths changed. No mathematical candidate was tested by prior run. Keep exact source verification, direct Lean and actual MCP before independent CI.

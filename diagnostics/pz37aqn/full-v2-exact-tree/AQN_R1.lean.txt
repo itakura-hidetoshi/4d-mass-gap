@@ -1,0 +1,327 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSCenteredNullFiberV5_PZ37AQM
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37AQN — concrete centered time-one ray and four-link budget
+Use exactly AMS's four native links and APW's genuine observable. Its Gibbs
+center has APP's strictly nonzero boundary image for positive beta. All
+scalar multiples form a faithful ray with a fixed four-edge support and
+uniform sup-norm numerator. The remaining relative-amplitude denominator
+is the actual finite-volume centered OS norm; no uniform lower bound is
+asserted. No replacement of the Wilson model or mass gap claim.
+-/
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory Filter Set
+open scoped ENNReal Topology InnerProductSpace InnerProduct BigOperators
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 6000000
+set_option synthInstance.maxHeartbeats 100000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "O" => PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
+local notation "P" => periodicHypercubicEvenEdgeOrbitPartition
+local notation "L" => PeriodicHypercubicEvenSideLength
+local notation "Tau" => periodicHypercubicIntegerTemporalConfigurationTranslation
+local notation "Theta" => periodicHypercubicEvenConfigurationReflection
+local notation "Gibbs" => periodicHypercubicSpecialUnitaryWilsonSystem
+local notation "Pair" => p4Q2PZ37AQC_reflectedPair
+local notation "Supported" => p4Q2PZ37APZ_DependsOn
+local notation "Local" => p4Q2PZ37AQB_localHalfObservable
+local notation "Read" => p4Q2PZ37AQC_boundaryRead
+local notation "L2" => periodicHypercubicEvenWilsonOpenHalfObservableL2
+local notation "HalfMu" => periodicHypercubicEvenOpenHalfHaarMeasure
+local notation "BoundaryMu" => periodicHypercubicEvenBoundaryHaarMeasure
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "Obs" => (fun H : ℕ => BoundedContinuousFunction (O H 2) ℝ)
+
+local instance p4Q2PZ37AQN_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37AQN_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37AQN_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37AQN_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37AQN_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37AQN_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37AQN_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37AQN_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37AQN_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+local instance p4Q2PZ37AQN_openHalfProbability (H : ℕ) :
+    IsProbabilityMeasure (periodicHypercubicEvenOpenHalfHaarMeasure H 2) := by
+  dsimp [periodicHypercubicEvenOpenHalfHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
+  infer_instance
+
+
+local instance p4Q2PZ37AQN_boundaryProbability (H : ℕ) :
+    IsProbabilityMeasure (BoundaryMu H 2) := by
+  dsimp [periodicHypercubicEvenBoundaryHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure]
+  infer_instance
+
+
+
+
+
+local notation "Cfg" => (fun H : ℕ => PeriodicHypercubicEvenEdge H → G)
+local notation "FullObs" => (fun H : ℕ => BoundedContinuousFunction (Cfg H) ℝ)
+local notation "Ref" => periodicHypercubicEvenEdgeReflection
+local notation "Shift" => p4Q2PZ37APZ_edgeShift
+local notation "Corr" => p4Q2PZ37AQG_fullReflectedCorrelation
+local notation "Conn" => p4Q2PZ37AQH_connectedCorrelation
+local notation "Mean" => p4Q2PZ37AQH_fullGibbsMean
+local notation "EvenC" => p4Q2PZ37AQI_evenConnected
+local notation "Rho" => (fun beta : ℝ => 18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta)
+
+
+local notation "Center" => p4Q2PZ37AQH_center
+local notation "Vac" => periodicHypercubicEvenBoundaryVacuumL2
+local notation "Bnd" => p4Q2PZ37AQK_prefactor
+
+local notation "W" => p4Q2PZ37APW_openTimeOneObservable
+local notation "Slice" => p4Q2PZ37APW_openTimeOneSlice
+local notation "Mode" => specialUnitaryWilsonPlaquetteEnergyTwoContinuousGramSchmidtMode
+local notation "Hol" => p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy
+local notation "X" => p4Q2PZ37APP_originalTimeOneBoundaryMomentL2
+local notation "U" => p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2
+
+/-- Exactly the native time-one lifts of AMS's four plaquette links. -/
+def p4Q2PZ37AQN_fourEdge (H : ℕ) (hH : 0 < H) (i : Fin 4) :
+    PeriodicHypercubicEvenEdge H :=
+  (periodicHypercubicEvenPositiveHalfOpenIndexToPositiveEdge H
+    (Sum.inl (⟨0, hH⟩, p4Q2PZ37AMS_primarySpatialSliceEdgeEmbedding H i))).1
+
+def p4Q2PZ37AQN_fourSupport (H : ℕ) (hH : 0 < H) :
+    Finset (PeriodicHypercubicEvenEdge H) := by
+  classical
+  exact Finset.univ.image (p4Q2PZ37AQN_fourEdge H hH)
+
+local notation "S4" => p4Q2PZ37AQN_fourSupport
+local notation "Edge4" => p4Q2PZ37AQN_fourEdge
+
+theorem p4Q2PZ37AQN_fourSupport_card_le (H : ℕ) (hH : 0 < H) :
+    (S4 H hH).card ≤ 4 := by
+  classical
+  unfold p4Q2PZ37AQN_fourSupport
+  exact Finset.card_image_le.trans (by simp)
+
+theorem p4Q2PZ37AQN_fourSupport_positive_time
+    (H : ℕ) (hH : 0 < H) (e : PeriodicHypercubicEvenEdge H)
+    (he : e ∈ S4 H hH) :
+    periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive ∧
+      (e.1 0).val = 1 := by
+  classical
+  unfold p4Q2PZ37AQN_fourSupport at he
+  obtain ⟨i, _, rfl⟩ := Finset.mem_image.mp he
+  change periodicHypercubicEvenEdgeSide H
+      (periodicHypercubicEvenPositiveHalfInteriorSpatialEdge H
+        (⟨0, hH⟩, p4Q2PZ37AMS_primarySpatialSliceEdgeEmbedding H i)) =
+      ReflectionEdgeSide.positive ∧
+    ((periodicHypercubicEvenPositiveHalfInteriorSpatialEdge H
+        (⟨0, hH⟩, p4Q2PZ37AMS_primarySpatialSliceEdgeEmbedding H i)).1 0).val = 1
+  exact ⟨periodicHypercubicEvenPositiveHalfInteriorSpatialEdge_positive H _,
+    by rw [periodicHypercubicEvenPositiveHalfInteriorSpatialEdge_time_val]⟩
+
+/-- The unchanged APW observable depends only on the four original links. -/
+theorem p4Q2PZ37AQN_fourSupport_dependsOn
+    (H : ℕ) (hH : 0 < H) (c0 c1 : ℝ) :
+    Supported H (↑(S4 H hH) : Set (PeriodicHypercubicEvenEdge H))
+      (fun A => W H hH c0 c1 ((P H).positiveRestriction A)) := by
+  classical
+  intro A B hAB
+  have he : (fun i : Fin 4 => Slice H hH ((P H).positiveRestriction A)
+      (p4Q2PZ37AMS_primarySpatialSliceEdgeEmbedding H i)) =
+    (fun i : Fin 4 => Slice H hH ((P H).positiveRestriction B)
+      (p4Q2PZ37AMS_primarySpatialSliceEdgeEmbedding H i)) := by
+    funext i
+    have hm : Edge4 H hH i ∈ S4 H hH := by
+      unfold p4Q2PZ37AQN_fourSupport
+      exact Finset.mem_image.mpr ⟨i, Finset.mem_univ i, rfl⟩
+    exact hAB (Edge4 H hH i) hm
+  have hh : Hol H 2 (Slice H hH ((P H).positiveRestriction A)) =
+      Hol H 2 (Slice H hH ((P H).positiveRestriction B)) := by
+    unfold p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy
+    exact congrArg haarFinFourCyclicPlaquetteWord he
+  change c0 * Mode 0 (Hol H 2 (Slice H hH ((P H).positiveRestriction A))) +
+      c1 * Mode 1 (Hol H 2 (Slice H hH ((P H).positiveRestriction A))) =
+    c0 * Mode 0 (Hol H 2 (Slice H hH ((P H).positiveRestriction B))) +
+      c1 * Mode 1 (Hol H 2 (Slice H hH ((P H).positiveRestriction B)))
+  rw [hh]
+
+/-- This fixed compact-group norm is independent of H and beta. -/
+def p4Q2PZ37AQN_modeBound : ℝ :=
+  ‖BoundedContinuousFunction.mkOfCompact (Mode 1)‖
+
+local notation "M1" => p4Q2PZ37AQN_modeBound
+
+theorem p4Q2PZ37AQN_modeBound_nonneg : 0 ≤ M1 := norm_nonneg _
+
+theorem p4Q2PZ37AQN_modeOne_norm_le
+    (H : ℕ) (hH : 0 < H) :
+    ‖W H hH 0 1‖ ≤ M1 := by
+  apply (BoundedContinuousFunction.norm_le p4Q2PZ37AQN_modeBound_nonneg).2
+  intro x
+  change ‖(0 : ℝ) * Mode 0 (Hol H 2 (Slice H hH x)) +
+      1 * Mode 1 (Hol H 2 (Slice H hH x))‖ ≤ M1
+  simpa only [zero_mul, one_mul, zero_add] using
+    (BoundedContinuousFunction.norm_coe_le_norm
+      (BoundedContinuousFunction.mkOfCompact (Mode 1)) (Hol H 2 (Slice H hH x)))
+
+variable [Nontrivial G]
+
+def p4Q2PZ37AQN_centeredMode
+    (H : ℕ) (hH : 0 < H) (beta : ℝ) (hb : 0 ≤ beta) : Obs H :=
+  Center H beta hb (W H hH 0 1)
+
+local notation "Z" => p4Q2PZ37AQN_centeredMode
+
+theorem p4Q2PZ37AQN_centeredMode_mean_zero
+    (H : ℕ) (hH : 0 < H) (beta : ℝ) (hb : 0 ≤ beta) :
+    Mean H beta hb (Z H hH beta hb) = 0 :=
+  p4Q2PZ37AQH_mean_center_zero H beta hb (W H hH 0 1)
+
+theorem p4Q2PZ37AQN_centeredMode_supported
+    (H : ℕ) (hH : 0 < H) (beta : ℝ) (hb : 0 ≤ beta) :
+    Supported H (↑(S4 H hH) : Set (PeriodicHypercubicEvenEdge H))
+      (fun A => Z H hH beta hb ((P H).positiveRestriction A)) :=
+  p4Q2PZ37AQH_center_supported H (↑(S4 H hH)) beta hb (W H hH 0 1)
+    (p4Q2PZ37AQN_fourSupport_dependsOn H hH 0 1)
+
+theorem p4Q2PZ37AQN_mean_norm_le
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (u : Obs H) :
+    ‖Mean H beta hb u‖ ≤ ‖u‖ := by
+  let mu : Measure (Cfg H) := (Gibbs (L H) 2 (by norm_num) beta hb).gibbsMeasure
+  letI : IsProbabilityMeasure mu := by dsimp [mu]; infer_instance
+  change ‖∫ A, u ((P H).positiveRestriction A) ∂mu‖ ≤ ‖u‖
+  have hh := norm_integral_le_of_norm_le_const (μ := mu)
+    (f := fun A => u ((P H).positiveRestriction A)) (C := ‖u‖)
+    (Eventually.of_forall fun A => u.norm_coe_le_norm ((P H).positiveRestriction A))
+  have hm : mu.real Set.univ = 1 := by simp [Measure.real]
+  rw [hm, mul_one] at hh
+  exact hh
+
+theorem p4Q2PZ37AQN_centeredMode_norm_le
+    (H : ℕ) (hH : 0 < H) (beta : ℝ) (hb : 0 ≤ beta) :
+    ‖Z H hH beta hb‖ ≤ 2 * M1 := by
+  let u := W H hH 0 1
+  change ‖u - Mean H beta hb u • (1 : Obs H)‖ ≤ 2 * M1
+  calc
+    _ ≤ ‖u‖ + ‖Mean H beta hb u • (1 : Obs H)‖ := norm_sub_le _ _
+    _ = ‖u‖ + ‖Mean H beta hb u‖ := by rw [norm_smul, norm_one, mul_one]
+    _ ≤ ‖u‖ + ‖u‖ := add_le_add_left (p4Q2PZ37AQN_mean_norm_le H beta hb u) _
+    _ ≤ 2 * M1 := by
+      have hh := p4Q2PZ37AQN_modeOne_norm_le H hH
+      change ‖u‖ ≤ M1 at hh
+      linarith
+
+/-- The new concrete representative reads to precisely APP's actual vector. -/
+theorem p4Q2PZ37AQN_centeredMode_read_eq
+    (H : ℕ) (hH : 0 < H) (beta : ℝ) (hb : 0 ≤ beta) :
+    Read H beta hb (Z H hH beta hb) = U H beta hb := by
+  let u := W H hH 0 1
+  have hr : Read H beta hb u = X H beta hb 0 1 := by
+    exact (p4Q2PZ37APW_originalTimeOneBoundaryMomentL2_eq_openSynthesis
+      H hH beta hb 0 1).symm
+  change Read H beta hb (Center H beta hb u) = U H beta hb
+  rw [p4Q2PZ37AQH_read_center,
+    ← p4Q2PZ37AQH_vacuum_inner_eq_mean H beta hb u, hr,
+    p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2_eq_sub]
+
+theorem p4Q2PZ37AQN_centeredMode_read_ne_zero
+    (H : ℕ) (hH : 0 < H) (beta : ℝ) (hb : 0 < beta) :
+    Read H beta hb.le (Z H hH beta hb.le) ≠ 0 := by
+  rw [p4Q2PZ37AQN_centeredMode_read_eq]
+  intro hz
+  have hh := p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2_norm_sq_pos H beta hb
+  rw [hz, norm_zero] at hh
+  norm_num at hh
+
+/-- The concrete one-dimensional family has injective genuine OS readout. -/
+theorem p4Q2PZ37AQN_centeredRay_injective
+    (H : ℕ) (hH : 0 < H) (beta : ℝ) (hb : 0 < beta) :
+    Function.Injective (fun t : ℝ => Read H beta hb.le (t • Z H hH beta hb.le)) := by
+  intro t s he
+  change Read H beta hb.le (t • Z H hH beta hb.le) =
+    Read H beta hb.le (s • Z H hH beta hb.le) at he
+  rw [map_smul, map_smul] at he
+  exact smul_left_injective ℝ (p4Q2PZ37AQN_centeredMode_read_ne_zero H hH beta hb) he
+
+theorem p4Q2PZ37AQN_centeredRay_initial
+    (H k : ℕ) (hH : 0 < H) (beta : ℝ) (hb : 0 ≤ beta) (t : ℝ) :
+    EvenC H k 0 beta hb (t • Z H hH beta hb) = t ^ 2 * ‖U H beta hb‖ ^ 2 := by
+  have hm : Mean H beta hb (t • Z H hH beta hb) = 0 := by
+    rw [← p4Q2PZ37AQH_vacuum_inner_eq_mean H beta hb, map_smul, real_inner_smul_right,
+      p4Q2PZ37AQH_vacuum_inner_eq_mean H beta hb,
+      p4Q2PZ37AQN_centeredMode_mean_zero, mul_zero]
+  rw [p4Q2PZ37AQM_initial_eq_normSq H k beta hb _ hm, map_smul,
+    p4Q2PZ37AQN_centeredMode_read_eq, norm_smul, mul_pow, Real.norm_eq_abs, sq_abs]
+
+/-- A fixed numerator and the actual positive finite-volume denominator
+give a quantitative relative amplitude for every member of the ray. -/
+theorem p4Q2PZ37AQN_centeredRay_normBudget
+    (H k : ℕ) (hH : 0 < H) (beta : ℝ) (hb : 0 < beta) (t : ℝ) :
+    ‖t • Z H hH beta hb.le‖ ^ 2 ≤
+      ((2 * M1) ^ 2 / ‖U H beta hb.le‖ ^ 2) *
+        EvenC H k 0 beta hb.le (t • Z H hH beta hb.le) := by
+  have hd := p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2_norm_sq_pos H beta hb
+  have hsq := pow_le_pow_left₀ (norm_nonneg (Z H hH beta hb.le))
+    (p4Q2PZ37AQN_centeredMode_norm_le H hH beta hb.le) 2
+  rw [p4Q2PZ37AQN_centeredRay_initial H k hH beta hb.le t, norm_smul,
+    mul_pow, Real.norm_eq_abs, sq_abs]
+  calc
+    _ ≤ t ^ 2 * (2 * M1) ^ 2 := mul_le_mul_of_nonneg_left hsq (sq_nonneg t)
+    _ = _ := by
+      calc
+        t ^ 2 * (2 * M1) ^ 2 =
+            t ^ 2 * (((2 * M1) ^ 2 / ‖U H beta hb.le‖ ^ 2) *
+              ‖U H beta hb.le‖ ^ 2) := by
+          rw [div_mul_cancel₀ _ hd.ne']
+        _ = _ := by ring
+
+/-- The explicit four-edge prefactor needs only the true centered OS
+denominator and a positive high-temperature denominator floor. -/
+theorem p4Q2PZ37AQN_centeredRay_relativeBudget
+    (H k : ℕ) (hH : 0 < H) (beta : ℝ) (hb : 0 < beta) (t d : ℝ)
+    (hd : 0 < d) (hden : d ≤ 1 - Rho beta) :
+    Bnd H (S4 H hH) beta (t • Z H hH beta hb.le) ≤
+      (4 * (4 : ℝ) ^ 2 * ((2 * M1) ^ 2 / ‖U H beta hb.le‖ ^ 2) / d) *
+        EvenC H k 0 beta hb.le (t • Z H hH beta hb.le) := by
+  have hc : ((S4 H hH).card : ℝ) ≤ 4 := by
+    exact_mod_cast p4Q2PZ37AQN_fourSupport_card_le H hH
+  exact p4Q2PZ37AQL_prefactor_le_of_normBudget H k (S4 H hH) beta hb.le _
+    4 _ d hd hden hc (p4Q2PZ37AQN_centeredRay_normBudget H k hH beta hb t)
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQN_fourEdge
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQN_fourSupport
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQN_fourSupport_card_le
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQN_fourSupport_positive_time
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQN_fourSupport_dependsOn
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQN_modeBound
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQN_modeBound_nonneg
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQN_modeOne_norm_le
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQN_centeredMode
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQN_centeredMode_mean_zero
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQN_centeredMode_supported
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQN_mean_norm_le
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQN_centeredMode_norm_le
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQN_centeredMode_read_eq
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQN_centeredMode_read_ne_zero
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQN_centeredRay_injective
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQN_centeredRay_initial
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQN_centeredRay_normBudget
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQN_centeredRay_relativeBudget
