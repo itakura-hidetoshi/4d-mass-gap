@@ -1,0 +1,2 @@
+# AQP R1 — genuine one-link Haar and vacuum norm floor
+Use unchanged AMS four-edge injective embedding, APL physical vector, NB product Haar refresh, existing vacuum kernel Harnack and positivity. All seven public theorem candidates are unverified pending direct Lean and real MCP. No uniform normalized transfer quadratic, partition normalization, OS denominator or mass gap claimed. AQO base certified independently in 45894555500 and merged at d401555b432add745150c1c28d3e54a0fae59e64.
