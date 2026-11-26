@@ -1,0 +1,19 @@
+name: PZ37AQC full-cache sandbox v3 explicit finite Gibbs measure
+on:
+  pull_request:
+    paths:
+      - "diagnostics/pz37aqc/full-v3-r7-r9/**"
+      - ".github/workflows/pz37aqc-full-v3-r7-r9.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pz37aqc-full-v3-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    uses: ./.github/workflows/lean-warm-sandbox-reusable-diagnostic-full-v1.yml
+    with:
+      pack: diagnostics/pz37aqc/full-v3-r7-r9/pack.json
+      source_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      baseline_commit: b8c8f49797f5659535851eb96ac7bb59fc5a02cc

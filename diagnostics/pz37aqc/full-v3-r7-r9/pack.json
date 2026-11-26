@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "baseline_commit": "b8c8f49797f5659535851eb96ac7bb59fc5a02cc",
+  "baseline_mgap4d_tree": "d1e649d8e7b0baa4b48d51c75e9ce4709c70ec81",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalLocalHaarL2DescentV5_PZ37AQB",
+    "MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenGibbsReflection",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "AQC",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQC_reflectedPair",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQC_boundaryRead",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQC_reflectedPair_integrable",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQC_reflectedPair_symm",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQC_reflectedPair_diagonal",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQC_reflectedPair_eq_inner",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQC_local_doubleBudget_pair",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQC_local_doubleBudget_norm_sq",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQC_local_null_of_doubleBudget",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQC_local_congr_of_doubleBudget",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQC_timeOne_doubleBudget_norm_sq"
+      ],
+      "candidates": [
+        {
+          "id": "R7",
+          "path": "diagnostics/pz37aqc/full-v3-r7-r9/AQC_R7.lean.txt",
+          "blob": "ca104329621ff18219bc9803d1e0cf8c4dd571c9"
+        },
+        {
+          "id": "R8",
+          "path": "diagnostics/pz37aqc/full-v3-r7-r9/AQC_R8.lean.txt",
+          "blob": "493b09947faa2c0296c5d1420ef1c78977e5dcdc"
+        },
+        {
+          "id": "R9",
+          "path": "diagnostics/pz37aqc/full-v3-r7-r9/AQC_R9.lean.txt",
+          "blob": "dad665185d42d22d3369f2777649d7c085317b27"
+        }
+      ]
+    }
+  ]
+}
