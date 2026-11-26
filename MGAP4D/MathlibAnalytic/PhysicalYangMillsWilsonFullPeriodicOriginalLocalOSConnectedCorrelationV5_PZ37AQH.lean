@@ -1,0 +1,354 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSReflectedCorrelationThresholdV5_PZ37AQG
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37AQH — genuine finite Gibbs mean and local OS connected correlation
+The constant observable is identified with the existing actual boundary vacuum.
+The literal finite Wilson Gibbs mean is its OS coefficient and is invariant
+under the admissible local displacement. Centering preserves support and
+commutes with that displacement. The mixed shifted centered OS inner product
+is exactly the connected finite Gibbs reflection correlation. A conditional
+terminal connected-correlation threshold controls the centered local norm.
+No global semigroup, decay rate, completed carrier extension or mass gap is asserted.
+APX/APY/AQF/AQG obstructions are retained.
+-/
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory Filter Set
+open scoped ENNReal Topology InnerProductSpace InnerProduct
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 1200000
+set_option synthInstance.maxHeartbeats 100000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "O" => PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
+local notation "P" => periodicHypercubicEvenEdgeOrbitPartition
+local notation "L" => PeriodicHypercubicEvenSideLength
+local notation "Tau" => periodicHypercubicIntegerTemporalConfigurationTranslation
+local notation "Theta" => periodicHypercubicEvenConfigurationReflection
+local notation "Gibbs" => periodicHypercubicSpecialUnitaryWilsonSystem
+local notation "Pair" => p4Q2PZ37AQC_reflectedPair
+local notation "Supported" => p4Q2PZ37APZ_DependsOn
+local notation "Local" => p4Q2PZ37AQB_localHalfObservable
+local notation "Read" => p4Q2PZ37AQC_boundaryRead
+local notation "L2" => periodicHypercubicEvenWilsonOpenHalfObservableL2
+local notation "HalfMu" => periodicHypercubicEvenOpenHalfHaarMeasure
+local notation "BoundaryMu" => periodicHypercubicEvenBoundaryHaarMeasure
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "Obs" => (fun H : ℕ => BoundedContinuousFunction (O H 2) ℝ)
+
+local instance p4Q2PZ37AQH_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37AQH_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37AQH_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37AQH_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37AQH_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37AQH_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37AQH_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37AQH_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37AQH_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+local instance p4Q2PZ37AQH_openHalfProbability (H : ℕ) :
+    IsProbabilityMeasure (periodicHypercubicEvenOpenHalfHaarMeasure H 2) := by
+  dsimp [periodicHypercubicEvenOpenHalfHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
+  infer_instance
+
+
+local instance p4Q2PZ37AQH_boundaryProbability (H : ℕ) :
+    IsProbabilityMeasure (BoundaryMu H 2) := by
+  dsimp [periodicHypercubicEvenBoundaryHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure]
+  infer_instance
+
+
+
+local notation "Corr" => p4Q2PZ37AQG_fullReflectedCorrelation
+local notation "Vac" => periodicHypercubicEvenBoundaryVacuumL2
+
+variable [Nontrivial G]
+
+/-- The actual finite Wilson Gibbs expectation of a positive-half observable. -/
+def p4Q2PZ37AQH_fullGibbsMean (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (u : Obs H) : ℝ :=
+  ∫ A, u ((P H).positiveRestriction A)
+    ∂(Gibbs (L H) 2 (by norm_num) beta hb).gibbsMeasure
+
+local notation "Mean" => p4Q2PZ37AQH_fullGibbsMean
+
+/-- Subtract the literal Gibbs expectation, not a Haar or one-slab mean. -/
+def p4Q2PZ37AQH_center (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (u : Obs H) : Obs H :=
+  u - Mean H beta hb u • (1 : Obs H)
+
+local notation "Center" => p4Q2PZ37AQH_center
+
+/-- Exact connected reflected correlation in the unchanged finite Gibbs law. -/
+def p4Q2PZ37AQH_connectedCorrelation (H j : ℕ)
+    (beta : ℝ) (hb : 0 ≤ beta) (u v : Obs H) : ℝ :=
+  Corr H j beta hb u v - Mean H beta hb u * Mean H beta hb v
+
+local notation "Conn" => p4Q2PZ37AQH_connectedCorrelation
+
+/-- The canonical synthesis of the constant one is the existing boundary vacuum. -/
+theorem p4Q2PZ37AQH_read_one_eq_vacuum
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) :
+    Read H beta hb (1 : Obs H) = Vac H 2 (by norm_num) beta hb := by
+  let m := periodicHypercubicEvenBoundaryObservableMomentL2
+    H 2 (by norm_num) beta hb (1 : Obs H)
+  have hm : m = Read H beta hb (1 : Obs H) :=
+    periodicHypercubicEvenBoundaryObservableMomentL2_eq_synthesisOperator
+      H 2 (by norm_num) beta hb (1 : Obs H)
+  rw [← hm]
+  apply Lp.ext
+  filter_upwards [periodicHypercubicEvenBoundaryObservableMomentL2_coeFn
+      H 2 (by norm_num) beta hb (1 : Obs H),
+    periodicHypercubicEvenBoundaryVacuumL2_coeFn H 2 (by norm_num) beta hb]
+    with b hx hv
+  calc
+    m b = periodicHypercubicEvenBoundaryObservableMoment
+      H 2 (by norm_num) beta hb (1 : Obs H) b := hx
+    _ = periodicHypercubicEvenBoundaryVacuumMoment H 2 (by norm_num) beta hb b := by
+      unfold periodicHypercubicEvenBoundaryObservableMoment
+        periodicHypercubicEvenBoundaryVacuumMoment
+      apply integral_congr_ae
+      filter_upwards [] with x
+      unfold periodicHypercubicEvenBoundaryObservableGramFeature
+      change periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+        H 2 (by norm_num) beta hb b x * 1 = _
+      exact mul_one _
+    _ = _ := hv.symm
+
+/-- The literal full Gibbs expectation is the actual OS vacuum coefficient. -/
+theorem p4Q2PZ37AQH_vacuum_inner_eq_mean
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (u : Obs H) :
+    inner ℝ (Vac H 2 (by norm_num) beta hb) (Read H beta hb u) =
+      Mean H beta hb u := by
+  calc
+    _ = Pair H beta hb (1 : Obs H) u := by
+      rw [← p4Q2PZ37AQH_read_one_eq_vacuum H beta hb]
+      exact (p4Q2PZ37AQC_reflectedPair_eq_inner H beta hb (1 : Obs H) u).symm
+    _ = Pair H beta hb u (1 : Obs H) :=
+      p4Q2PZ37AQC_reflectedPair_symm H beta hb (1 : Obs H) u
+    _ = _ := by
+      unfold p4Q2PZ37AQC_reflectedPair p4Q2PZ37AQH_fullGibbsMean
+      apply integral_congr_ae
+      filter_upwards [] with A
+      change u ((P H).positiveRestriction A) * 1 = _
+      exact mul_one _
+
+/-- The synthesis of the centered observation subtracts precisely the actual vacuum component. -/
+theorem p4Q2PZ37AQH_read_center
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (u : Obs H) :
+    Read H beta hb (Center H beta hb u) =
+      Read H beta hb u - Mean H beta hb u • Vac H 2 (by norm_num) beta hb := by
+  unfold p4Q2PZ37AQH_center
+  rw [map_sub, map_smul, p4Q2PZ37AQH_read_one_eq_vacuum H beta hb]
+
+/-- The Gibbs-centered observable is orthogonal to the genuine unit vacuum. -/
+theorem p4Q2PZ37AQH_center_vacuum_orthogonal
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (u : Obs H) :
+    inner ℝ (Vac H 2 (by norm_num) beta hb)
+      (Read H beta hb (Center H beta hb u)) = 0 := by
+  rw [p4Q2PZ37AQH_read_center, inner_sub_right, real_inner_smul_right,
+    p4Q2PZ37AQH_vacuum_inner_eq_mean, real_inner_self_eq_norm_sq,
+    p4Q2PZ37APP_originalBoundaryVacuum_norm H beta hb]
+  ring
+
+/-- Centering has zero actual Gibbs mean. -/
+theorem p4Q2PZ37AQH_mean_center_zero
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (u : Obs H) :
+    Mean H beta hb (Center H beta hb u) = 0 := by
+  rw [← p4Q2PZ37AQH_vacuum_inner_eq_mean H beta hb]
+  exact p4Q2PZ37AQH_center_vacuum_orthogonal H beta hb u
+
+/-- Subtracting a scalar leaves the same finite edge support valid. -/
+theorem p4Q2PZ37AQH_center_supported
+    (H : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta) (u : Obs H)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A))) :
+    Supported H s (fun A => Center H beta hb u ((P H).positiveRestriction A)) := by
+  intro A B hAB
+  change u ((P H).positiveRestriction A) - Mean H beta hb u * 1 =
+    u ((P H).positiveRestriction B) - Mean H beta hb u * 1
+  exact congrArg (fun z : ℝ => z - Mean H beta hb u * 1) (hu A B hAB)
+
+/-- Local supported translations preserve the true Gibbs mean by full-lattice invariance. -/
+theorem p4Q2PZ37AQH_local_mean_eq
+    (H k : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta) (u : Obs H)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A)))
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hk : ∀ e ∈ s, (e.1 0).val + k ≤ H) :
+    Mean H beta hb (Local H k u) = Mean H beta hb u := by
+  let mu : Measure (PeriodicHypercubicEvenEdge H → G) :=
+    (Gibbs (L H) 2 (by norm_num) beta hb).gibbsMeasure
+  let F : (PeriodicHypercubicEvenEdge H → G) → ℝ :=
+    fun A => u ((P H).positiveRestriction A)
+  let T := periodicHypercubicIntegerTemporalConfigurationTranslation
+    (Gauge := G) (L H) (-(k : ℤ))
+  have hmp := periodicHypercubicSpecialUnitary_gibbs_measurePreserving_integerTemporalTranslation
+    (L H) 2 (by norm_num) beta hb (-(k : ℤ))
+  calc
+    _ = ∫ A, F (T A) ∂mu := by
+      apply integral_congr_ae
+      filter_upwards [] with A
+      change p4Q2PZ37AQA_localRead H k
+        (fun Z => u ((P H).positiveRestriction Z)) ((P H).positiveRestriction A) =
+        u ((P H).positiveRestriction (Tau (L H) (-(k : ℤ)) A))
+      exact p4Q2PZ37AQA_localRead_full_eq H k s
+        (fun Z => u ((P H).positiveRestriction Z)) hu hp hk A
+    _ = _ := hmp.integral_comp T.measurableEmbedding F
+
+/-- Centering commutes with local shift under the same original support budget. -/
+theorem p4Q2PZ37AQH_local_center_commutes
+    (H k : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta) (u : Obs H)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A)))
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hk : ∀ e ∈ s, (e.1 0).val + k ≤ H) :
+    Local H k (Center H beta hb u) = Center H beta hb (Local H k u) := by
+  ext x
+  change (Local H k u) x - Mean H beta hb u * 1 =
+    (Local H k u) x - Mean H beta hb (Local H k u) * 1
+  rw [p4Q2PZ37AQH_local_mean_eq H k s beta hb u hu hp hk]
+
+omit [Nontrivial G] in
+private theorem centered_inner_algebra
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    (v x y : E) (a b : ℝ) (hv : ‖v‖ = 1)
+    (hx : inner ℝ v x = a) (hy : inner ℝ v y = b) :
+    inner ℝ (x - a • v) (y - b • v) = inner ℝ x y - a * b := by
+  have hx' : inner ℝ x v = a := (real_inner_comm v x).trans hx
+  have hv' : inner ℝ v v = 1 := by
+    rw [real_inner_self_eq_norm_sq, hv]
+    norm_num
+  simp only [inner_sub_left, inner_sub_right, real_inner_smul_left,
+    real_inner_smul_right, hy, hx', hv']
+  ring
+
+/-- Exact connected correlation equals the inner product of genuinely centered
+shifted OS states under AQG's unequal support budgets. -/
+theorem p4Q2PZ37AQH_localMixedShift_centered_inner_eq_connected
+    (H k l : ℕ) (s t : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta) (u v : Obs H)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A)))
+    (hv : Supported H t (fun A => v ((P H).positiveRestriction A)))
+    (hps : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hpt : ∀ e ∈ t, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hk : ∀ e ∈ s, (e.1 0).val + k ≤ H)
+    (hkl : ∀ e ∈ t, (e.1 0).val + k + l ≤ H) :
+    inner ℝ (Read H beta hb (Local H k (Center H beta hb u)))
+      (Read H beta hb (Local H l (Center H beta hb v))) =
+      Conn H (k + l) beta hb u v := by
+  have hl : ∀ e ∈ t, (e.1 0).val + l ≤ H := by
+    intro e he
+    have hh := hkl e he
+    omega
+  have hmu := p4Q2PZ37AQH_local_mean_eq H k s beta hb u hu hps hk
+  have hmv := p4Q2PZ37AQH_local_mean_eq H l t beta hb v hv hpt hl
+  have hxu := (p4Q2PZ37AQH_vacuum_inner_eq_mean H beta hb (Local H k u)).trans hmu
+  have hxv := (p4Q2PZ37AQH_vacuum_inner_eq_mean H beta hb (Local H l v)).trans hmv
+  calc
+    _ = inner ℝ (Read H beta hb (Center H beta hb (Local H k u)))
+        (Read H beta hb (Center H beta hb (Local H l v))) := by
+      rw [p4Q2PZ37AQH_local_center_commutes H k s beta hb u hu hps hk,
+        p4Q2PZ37AQH_local_center_commutes H l t beta hb v hv hpt hl]
+    _ = inner ℝ (Read H beta hb (Local H k u)) (Read H beta hb (Local H l v)) -
+        Mean H beta hb u * Mean H beta hb v := by
+      rw [p4Q2PZ37AQH_read_center, p4Q2PZ37AQH_read_center, hmu, hmv]
+      exact centered_inner_algebra _ _ _ _ _
+        (p4Q2PZ37APP_originalBoundaryVacuum_norm H beta hb) hxu hxv
+    _ = _ := congrArg (fun z : ℝ => z - Mean H beta hb u * Mean H beta hb v)
+      (p4Q2PZ37AQG_localMixedShift_inner_eq_fullCorrelation
+        H k l s t beta hb u v hu hv hps hpt hk hkl)
+
+/-- Squared centered OS norm equals the true even connected correlation. -/
+theorem p4Q2PZ37AQH_localNormSq_eq_connected
+    (H k : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta) (u : Obs H)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A)))
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hkk : ∀ e ∈ s, (e.1 0).val + k + k ≤ H) :
+    ‖Read H beta hb (Local H k (Center H beta hb u))‖ ^ 2 =
+      Conn H (k + k) beta hb u u := by
+  have hk : ∀ e ∈ s, (e.1 0).val + k ≤ H := by
+    intro e he
+    have hh := hkk e he
+    omega
+  calc
+    _ = inner ℝ (Read H beta hb (Local H k (Center H beta hb u)))
+        (Read H beta hb (Local H k (Center H beta hb u))) :=
+      (real_inner_self_eq_norm_sq _).symm
+    _ = _ := p4Q2PZ37AQH_localMixedShift_centered_inner_eq_connected
+      H k k s s beta hb u u hu hu hp hp hk hkk
+
+theorem p4Q2PZ37AQH_localEvenConnected_nonneg
+    (H k : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta) (u : Obs H)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A)))
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hkk : ∀ e ∈ s, (e.1 0).val + k + k ≤ H) :
+    0 ≤ Conn H (k + k) beta hb u u := by
+  rw [← p4Q2PZ37AQH_localNormSq_eq_connected H k s beta hb u hu hp hkk]
+  exact sq_nonneg _
+
+/-- A connected terminal correlation threshold suffices for centered local
+contraction, without asserting such a threshold unconditionally. -/
+theorem p4Q2PZ37AQH_localDyadicConnectedThreshold
+    (H k n : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta) (u : Obs H)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A)))
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hbudget : ∀ e ∈ s, (e.1 0).val + (2 : ℕ) ^ n * k + (2 : ℕ) ^ n * k ≤ H)
+    (c : ℝ) (hc : 0 ≤ c)
+    (hcorr : Conn H ((2 : ℕ) ^ n * k + (2 : ℕ) ^ n * k) beta hb u u ≤
+      (c ^ ((2 : ℕ) ^ n) * ‖Read H beta hb (Center H beta hb u)‖) ^ 2) :
+    ‖Read H beta hb (Local H k (Center H beta hb u))‖ ≤
+      c * ‖Read H beta hb (Center H beta hb u)‖ := by
+  have hs : ∀ e ∈ s, (e.1 0).val + (2 : ℕ) ^ n * k ≤ H := by
+    intro e he
+    have hh := hbudget e he
+    omega
+  have hsq : ‖Read H beta hb (Local H ((2 : ℕ) ^ n * k) (Center H beta hb u))‖ ^ 2 ≤
+      (c ^ ((2 : ℕ) ^ n) * ‖Read H beta hb (Center H beta hb u)‖) ^ 2 := by
+    rw [p4Q2PZ37AQH_localNormSq_eq_connected H ((2 : ℕ) ^ n * k) s beta hb u hu hp hbudget]
+    exact hcorr
+  have hterm : ‖Read H beta hb (Local H ((2 : ℕ) ^ n * k) (Center H beta hb u))‖ ≤
+      c ^ ((2 : ℕ) ^ n) * ‖Read H beta hb (Center H beta hb u)‖ := by
+    apply (Real.rpow_le_rpow_iff (norm_nonneg _)
+      (mul_nonneg (pow_nonneg hc _) (norm_nonneg _)) (by norm_num : (0 : ℝ) < 2)).mp
+    simpa only [Real.rpow_two] using hsq
+  exact p4Q2PZ37AQF_localDyadicTerminalThreshold H k n s beta hb
+    (Center H beta hb u) (p4Q2PZ37AQH_center_supported H s beta hb u hu) hp hs c hc hterm
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_fullGibbsMean
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_center
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_connectedCorrelation
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_read_one_eq_vacuum
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_vacuum_inner_eq_mean
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_read_center
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_center_vacuum_orthogonal
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_mean_center_zero
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_center_supported
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_local_mean_eq
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_local_center_commutes
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_localMixedShift_centered_inner_eq_connected
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_localNormSq_eq_connected
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_localEvenConnected_nonneg
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_localDyadicConnectedThreshold
