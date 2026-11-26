@@ -1,0 +1,2 @@
+# R3/R4 terminal direct diagnostics; append R5
+Run 45908168872/job 140209871226 completed FAILURE. Both R3 and R4 have exactly one linter diagnostic: unnecessarySeqFocus at field_simp <;> ring. All 15 declarations reported exactly propext, Classical.choice, Quot.sound, no sorryAx in actual direct audit. Strict gate failed due warningAsError; no real MCP or independent CI. R5 replaces only that sequencing token with two sequential tactics. All candidate files and prior packs preserved. TEST_REQUIRED.
