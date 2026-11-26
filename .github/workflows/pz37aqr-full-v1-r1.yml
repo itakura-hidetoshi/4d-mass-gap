@@ -1,0 +1,19 @@
+name: PZ37AQR full-cache sandbox v1 full residual selected four-link PSD
+on:
+  pull_request:
+    paths:
+      - "diagnostics/pz37aqr/full-v1-r1/**"
+      - ".github/workflows/pz37aqr-full-v1-r1.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pz37aqr-full-v1-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    uses: ./.github/workflows/lean-warm-sandbox-reusable-aqr-full-v1.yml
+    with:
+      pack: diagnostics/pz37aqr/full-v1-r1/pack.json
+      source_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      baseline_commit: b61bba86ceee0ba4886b3582bd73072640a4521e

@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "baseline_commit": "b61bba86ceee0ba4886b3582bd73072640a4521e",
+  "baseline_mgap4d_tree": "398919507fdb98534ee4c69a985772e64209b35c",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalVacuumWeightedProbeUniformNormV5_PZ37AQP",
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonVacuumNormalizedH1D5TwoModeCrossingSelectedFactorization",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "AQR",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQR_localEdges",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQR_localEdges_card",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQR_localEdges_subset",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQR_crossingOn",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQR_residualCrossing",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQR_crossing_factor",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQR_crossingOn_pos",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQR_crossingOn_le_one",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQR_fourCrossing_lower",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQR_crossing_relative_to_residual",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQR_crossingOn_psd",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQR_retainedSelected",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQR_crossing_sub_retainedSelected_psd",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQR_slab_sub_retainedSelected_psd"
+      ],
+      "candidates": [
+        {
+          "id": "R2",
+          "path": "diagnostics/pz37aqr/full-v1-r1/AQR_R2.lean.txt",
+          "blob": "b4e8f4d5af0d8f6185db5cc7fd5ed6165b3a70b4"
+        },
+        {
+          "id": "R1",
+          "path": "diagnostics/pz37aqr/full-v1-r1/AQR_R1.lean.txt",
+          "blob": "e9019f194f0938fb529139477a6639f43e81fe8a"
+        }
+      ]
+    }
+  ]
+}
