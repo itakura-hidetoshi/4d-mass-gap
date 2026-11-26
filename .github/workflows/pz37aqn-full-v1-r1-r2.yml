@@ -1,0 +1,19 @@
+name: PZ37AQN full-cache sandbox v1 concrete centered four-link ray
+on:
+  pull_request:
+    paths:
+      - "diagnostics/pz37aqn/full-v1-r1-r2/**"
+      - ".github/workflows/pz37aqn-full-v1-r1-r2.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pz37aqn-full-v1-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    uses: ./.github/workflows/lean-warm-sandbox-reusable-aqn-full-v1.yml
+    with:
+      pack: diagnostics/pz37aqn/full-v1-r1-r2/pack.json
+      source_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      baseline_commit: e72717fb1c5e12a7e49d3b19a1c243ffc24db540

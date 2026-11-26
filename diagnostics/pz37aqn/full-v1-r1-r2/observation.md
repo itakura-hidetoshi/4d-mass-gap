@@ -1,0 +1,2 @@
+# AQN candidates — unverified
+Use exact AMS four links, APW observation, APP nonzero centered vector, AQH center, AQM initial norm and AQL relative budget. Four-edge support, fixed compact-group sup-norm bound, scalar ray injective, explicit relative coefficient with actual finite-volume denominator. No uniform lower bound or mass gap asserted. Fixed AQM base e72717fb1c5e12a7e49d3b19a1c243ffc24db540. Direct Lean and real MCP before independent CI.
