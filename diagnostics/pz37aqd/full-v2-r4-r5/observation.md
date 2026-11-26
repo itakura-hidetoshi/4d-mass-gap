@@ -1,0 +1,3 @@
+# AQD R1–R3 obstruction (2026-11-26)
+
+Source HEAD `1c097b7e33a1e556b5864495806b3cfd25ae6557`; run 45761718265, job 139713020120, artifact 15091127299. All three direct invocations reached 420-second timeout, direct.log empty, no real Lean MCP calls. Runner cleanup detected three remaining Lean processes. This is incomplete testing, not mathematical no-go. R4–R5 retain the thirteen public declarations and imports, abstract the quotient descent over generic modules, replace recursive ext on bounded continuous functions, bound elaboration heartbeats, and kill/reap the isolated process group on timeout. No canonical changes or independent certification before direct and actual MCP success.
