@@ -1,0 +1,373 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSNullDescentV5_PZ37AQC
+import Mathlib.LinearAlgebra.Isomorphisms
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37AQD — algebraic local Wilson OS range transport
+Construct actual support submodules, their Wilson synthesis images, and a
+linear map between those images using the kernel inclusion from AQC.
+Composition is only on the common double-budget domain. A mixed norm
+bound uses the original Haar carrier and the actual synthesis norm.
+No global positive-time closure, OS operator boundedness, completed
+semigroup or transfer identification is asserted. APX/APY remain unchanged.
+-/
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory Filter Set
+open scoped ENNReal Topology InnerProductSpace InnerProduct
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 1200000
+set_option synthInstance.maxHeartbeats 100000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "O" => PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
+local notation "P" => periodicHypercubicEvenEdgeOrbitPartition
+local notation "L" => PeriodicHypercubicEvenSideLength
+local notation "Tau" => periodicHypercubicIntegerTemporalConfigurationTranslation
+local notation "Section" => periodicHypercubicEvenSpecialUnitaryPositiveHalfSection
+local notation "Step" => periodicHypercubicEvenSpecialUnitaryPositiveHalfSectionIntegerTemporalStep
+local notation "Shift" => p4Q2PZ37APZ_edgeShift
+local notation "Supported" => p4Q2PZ37APZ_DependsOn
+local notation "Local" => p4Q2PZ37AQB_localHalfObservable
+local notation "Read" => p4Q2PZ37AQC_boundaryRead
+local notation "L2" => periodicHypercubicEvenWilsonOpenHalfObservableL2
+local notation "HalfMu" => periodicHypercubicEvenOpenHalfHaarMeasure
+local notation "BoundaryMu" => periodicHypercubicEvenBoundaryHaarMeasure
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "Obs" => (fun H : ℕ => BoundedContinuousFunction (O H 2) ℝ)
+local notation "BL2" => (fun H : ℕ => Lp ℝ 2 (BoundaryMu H 2))
+
+local instance p4Q2PZ37AQD_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37AQD_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37AQD_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37AQD_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37AQD_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37AQD_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37AQD_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37AQD_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37AQD_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+local instance p4Q2PZ37AQD_openHalfProbability (H : ℕ) :
+    IsProbabilityMeasure (periodicHypercubicEvenOpenHalfHaarMeasure H 2) := by
+  dsimp [periodicHypercubicEvenOpenHalfHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
+  infer_instance
+
+
+local instance p4Q2PZ37AQD_boundaryProbability (H : ℕ) :
+    IsProbabilityMeasure (BoundaryMu H 2) := by
+  dsimp [periodicHypercubicEvenBoundaryHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure]
+  infer_instance
+
+
+variable [Nontrivial G]
+
+/-- All bounded continuous half observables determined by the same edge set. -/
+def p4Q2PZ37AQD_supportedSubmodule (H : ℕ)
+    (s : Set (PeriodicHypercubicEvenEdge H)) : Submodule ℝ (Obs H) where
+  carrier := {u | Supported H s (fun A => u ((P H).positiveRestriction A))}
+  zero_mem' := by
+    intro A B _
+    rfl
+  add_mem' := by
+    intro u v hu hv A B hAB
+    change u ((P H).positiveRestriction A) + v ((P H).positiveRestriction A) =
+      u ((P H).positiveRestriction B) + v ((P H).positiveRestriction B)
+    have hu' : u ((P H).positiveRestriction A) = u ((P H).positiveRestriction B) :=
+      hu A B hAB
+    have hv' : v ((P H).positiveRestriction A) = v ((P H).positiveRestriction B) :=
+      hv A B hAB
+    rw [hu', hv']
+  smul_mem' := by
+    intro c u hu A B hAB
+    change c * u ((P H).positiveRestriction A) =
+      c * u ((P H).positiveRestriction B)
+    have hu' : u ((P H).positiveRestriction A) = u ((P H).positiveRestriction B) :=
+      hu A B hAB
+    rw [hu']
+
+local notation "Supp" => p4Q2PZ37AQD_supportedSubmodule
+
+/-- Linearity of the literal AQB half-section pullback. -/
+def p4Q2PZ37AQD_localShiftLinear (H k : ℕ) : Obs H →ₗ[ℝ] Obs H where
+  toFun := Local H k
+  map_add' := by
+    intro u v
+    apply BoundedContinuousFunction.ext
+    intro x
+    rfl
+  map_smul' := by
+    intro c u
+    apply BoundedContinuousFunction.ext
+    intro x
+    rfl
+
+omit [Nontrivial G] in
+/-- Supported pullback is supported on the actual translated link set. -/
+theorem p4Q2PZ37AQD_localShift_supported
+    (H k : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (u : Obs H)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A)))
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hk : ∀ e ∈ s, (e.1 0).val + k ≤ H) :
+    Supported H (Shift H (k : ℤ) '' s)
+      (fun A => Local H k u ((P H).positiveRestriction A)) := by
+  have heq (A : PeriodicHypercubicEvenEdge H → G) :
+      Local H k u ((P H).positiveRestriction A) =
+        u ((P H).positiveRestriction (Tau (L H) (-(k : ℤ)) A)) := by
+    change p4Q2PZ37AQA_localRead H k
+      (fun Z => u ((P H).positiveRestriction Z)) ((P H).positiveRestriction A) = _
+    exact p4Q2PZ37AQA_localRead_full_eq H k s
+      (fun Z => u ((P H).positiveRestriction Z)) hu hp hk A
+  intro A B hAB
+  exact (heq A).trans ((p4Q2PZ37APZ_dependsOn_shift H (k : ℤ) s
+    (fun Z => u ((P H).positiveRestriction Z)) hu A B hAB).trans (heq B).symm)
+
+/-- Literal half shift restricted to the supported submodules. -/
+def p4Q2PZ37AQD_supportedShift
+    (H k : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hk : ∀ e ∈ s, (e.1 0).val + k ≤ H) :
+    Supp H s →ₗ[ℝ] Supp H (Shift H (k : ℤ) '' s) :=
+  LinearMap.codRestrict _ ((p4Q2PZ37AQD_localShiftLinear H k).comp (Supp H s).subtype)
+    (fun u => p4Q2PZ37AQD_localShift_supported H k s u.1 u.2 hp hk)
+
+local notation "SS" => p4Q2PZ37AQD_supportedShift
+
+/-- The unchanged actual synthesis restricted to the supported carrier. -/
+def p4Q2PZ37AQD_restrictedRead
+    (H : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta) : Supp H s →ₗ[ℝ] BL2 H :=
+  (Read H beta hb).toLinearMap.comp (Supp H s).subtype
+
+local notation "R" => p4Q2PZ37AQD_restrictedRead
+
+omit [Nontrivial G] in
+private theorem singleBudget
+    (H k : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (hkk : ∀ e ∈ s, (e.1 0).val + k + k ≤ H) :
+    ∀ e ∈ s, (e.1 0).val + k ≤ H := by
+  intro e he
+  have hh := hkk e he
+  omega
+
+/-- The actual synthesis kernel inclusion on the double-budget domain. -/
+theorem p4Q2PZ37AQD_restrictedRead_ker_le
+    (H k : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta)
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hkk : ∀ e ∈ s, (e.1 0).val + k + k ≤ H) :
+    LinearMap.ker (R H s beta hb) ≤
+      LinearMap.ker ((R H (Shift H (k : ℤ) '' s) beta hb).rangeRestrict.comp
+        (SS H k s hp (singleBudget H k s hkk))) := by
+  intro u hu
+  rw [LinearMap.mem_ker] at hu ⊢
+  apply Subtype.ext
+  change Read H beta hb (Local H k u.1) = 0
+  change Read H beta hb u.1 = 0 at hu
+  exact p4Q2PZ37AQC_local_null_of_doubleBudget H k beta hb s u.1 u.2 hp hkk hu
+
+/- Elaborate the full source and target submodule construction over abstract
+   ambient types, so neither range carrier needs specialized typeclass search. -/
+private def rangeDescend {A B : Type*}
+    [AddCommGroup A] [Module ℝ A] [AddCommGroup B] [Module ℝ B]
+    (p q : Submodule ℝ A) (f : p →ₗ[ℝ] B) (g : q →ₗ[ℝ] B)
+    (t : p →ₗ[ℝ] q)
+    (h : LinearMap.ker f ≤ LinearMap.ker (g.rangeRestrict.comp t)) :
+    LinearMap.range f →ₗ[ℝ] LinearMap.range g :=
+  ((LinearMap.ker f).liftQ (g.rangeRestrict.comp t) h).comp f.quotKerEquivRange.symm.toLinearMap
+
+omit [Nontrivial G] in
+private theorem rangeDescend_apply {A B : Type*}
+    [AddCommGroup A] [Module ℝ A] [AddCommGroup B] [Module ℝ B]
+    (p q : Submodule ℝ A) (f : p →ₗ[ℝ] B) (g : q →ₗ[ℝ] B)
+    (t : p →ₗ[ℝ] q)
+    (h : LinearMap.ker f ≤ LinearMap.ker (g.rangeRestrict.comp t)) (x : p) :
+    rangeDescend p q f g t h (f.rangeRestrict x) = g.rangeRestrict (t x) := by
+  have he : f.quotKerEquivRange.symm (f.rangeRestrict x) =
+      (LinearMap.ker f).mkQ x :=
+    f.quotKerEquivRange_symm_apply_image x (LinearMap.mem_range_self f x)
+  change (LinearMap.ker f).liftQ (g.rangeRestrict.comp t) h
+    (f.quotKerEquivRange.symm (f.rangeRestrict x)) = (g.rangeRestrict.comp t) x
+  rw [he]; rfl
+
+/-- A genuine linear map between local synthesis image subspaces, obtained
+by the first isomorphism theorem and the certified kernel inclusion. -/
+def p4Q2PZ37AQD_rangeShift
+    (H k : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta)
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hkk : ∀ e ∈ s, (e.1 0).val + k + k ≤ H) :
+    LinearMap.range (R H s beta hb) →ₗ[ℝ]
+      LinearMap.range (R H (Shift H (k : ℤ) '' s) beta hb) :=
+  by
+    let p : Submodule ℝ (Obs H) := Supp H s
+    let q : Submodule ℝ (Obs H) := Supp H (Shift H (k : ℤ) '' s)
+    let f : p →ₗ[ℝ] BL2 H := R H s beta hb
+    let g : q →ₗ[ℝ] BL2 H := R H (Shift H (k : ℤ) '' s) beta hb
+    let t : p →ₗ[ℝ] q := SS H k s hp (singleBudget H k s hkk)
+    have h : LinearMap.ker f ≤ LinearMap.ker (g.rangeRestrict.comp t) :=
+      p4Q2PZ37AQD_restrictedRead_ker_le H k s beta hb hp hkk
+    exact rangeDescend (A := Obs H) (B := BL2 H) p q f g t h
+
+local notation "T" => p4Q2PZ37AQD_rangeShift
+
+/-- The descended map evaluates exactly to the genuine shifted synthesis. -/
+theorem p4Q2PZ37AQD_rangeShift_apply
+    (H k : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta)
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hkk : ∀ e ∈ s, (e.1 0).val + k + k ≤ H)
+    (u : Supp H s) :
+    T H k s beta hb hp hkk ((R H s beta hb).rangeRestrict u) =
+      (R H (Shift H (k : ℤ) '' s) beta hb).rangeRestrict
+        (SS H k s hp (singleBudget H k s hkk) u) := by
+  exact rangeDescend_apply (A := Obs H) (B := BL2 H)
+    (Supp H s) (Supp H (Shift H (k : ℤ) '' s))
+    (R H s beta hb) (R H (Shift H (k : ℤ) '' s) beta hb)
+    (SS H k s hp (singleBudget H k s hkk))
+    (p4Q2PZ37AQD_restrictedRead_ker_le H k s beta hb hp hkk) u
+
+/-- The range map is uniquely determined by the action on representatives. -/
+theorem p4Q2PZ37AQD_rangeShift_unique
+    (H k : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta)
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hkk : ∀ e ∈ s, (e.1 0).val + k + k ≤ H)
+    (F : LinearMap.range (R H s beta hb) →ₗ[ℝ]
+      LinearMap.range (R H (Shift H (k : ℤ) '' s) beta hb))
+    (hF : ∀ u : Supp H s, F ((R H s beta hb).rangeRestrict u) =
+      (R H (Shift H (k : ℤ) '' s) beta hb).rangeRestrict
+        (SS H k s hp (singleBudget H k s hkk) u)) :
+    F = T H k s beta hb hp hkk := by
+  apply LinearMap.ext
+  intro x
+  obtain ⟨u, rfl⟩ := (R H s beta hb).surjective_rangeRestrict x
+  exact (hF u).trans (p4Q2PZ37AQD_rangeShift_apply H k s beta hb hp hkk u).symm
+
+omit [Nontrivial G] in
+/-- AQA composition at the actual bounded continuous representative level. -/
+theorem p4Q2PZ37AQD_localShift_comp
+    (H k l : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (u : Obs H)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A)))
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hkl : ∀ e ∈ s, (e.1 0).val + k + l ≤ H) :
+    Local H l (Local H k u) = Local H (k + l) u := by
+  apply BoundedContinuousFunction.ext
+  intro x
+  change p4Q2PZ37AQA_localRead H k (fun A => u ((P H).positiveRestriction A))
+      (Step H 2 (-(l : ℤ)) x) =
+    p4Q2PZ37AQA_localRead H (k + l) (fun A => u ((P H).positiveRestriction A)) x
+  exact p4Q2PZ37AQA_localRead_comp H k l s
+    (fun A => u ((P H).positiveRestriction A)) hu hp hkl x
+
+omit [Nontrivial G] in
+/-- Double-budget admissibility of the residual shifted support. -/
+theorem p4Q2PZ37AQD_doubleBudget_residual
+    (H k l : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (h : ∀ e ∈ s, (e.1 0).val + (k + l) + (k + l) ≤ H) :
+    ∀ e ∈ Shift H (k : ℤ) '' s,
+      periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive ∧
+      (e.1 0).val + l + l ≤ H := by
+  have hb : ∀ e ∈ s, (e.1 0).val + k + (l + l) ≤ H := by
+    intro e he
+    have hh := h e he
+    omega
+  intro e he
+  have he' := p4Q2PZ37AQA_shifted_support_residual_budget H k (l + l) s hp hb e he
+  exact ⟨he'.1, by have hh := he'.2; omega⟩
+
+/-- Composition on the actual local synthesis images. The explicit
+intermediate budget is generated by doubleBudget_residual above.
+The target subtypes need not be identified; equality holds in the same
+ambient boundary Haar carrier. -/
+theorem p4Q2PZ37AQD_rangeShift_comp
+    (H k l : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta)
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hkk : ∀ e ∈ s, (e.1 0).val + k + k ≤ H)
+    (hp' : ∀ e ∈ Shift H (k : ℤ) '' s,
+      periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hll : ∀ e ∈ Shift H (k : ℤ) '' s, (e.1 0).val + l + l ≤ H)
+    (htot : ∀ e ∈ s, (e.1 0).val + (k + l) + (k + l) ≤ H)
+    (x : LinearMap.range (R H s beta hb)) :
+    (T H l (Shift H (k : ℤ) '' s) beta hb hp' hll
+      (T H k s beta hb hp hkk x) : BL2 H) =
+      (T H (k + l) s beta hb hp htot x : BL2 H) := by
+  obtain ⟨u, rfl⟩ := (R H s beta hb).surjective_rangeRestrict x
+  rw [p4Q2PZ37AQD_rangeShift_apply H k s beta hb hp hkk u,
+    p4Q2PZ37AQD_rangeShift_apply H l (Shift H (k : ℤ) '' s) beta hb hp' hll
+      (SS H k s hp (singleBudget H k s hkk) u),
+    p4Q2PZ37AQD_rangeShift_apply H (k + l) s beta hb hp htot u]
+  change Read H beta hb (Local H l (Local H k u.1)) =
+    Read H beta hb (Local H (k + l) u.1)
+  have hkl : ∀ e ∈ s, (e.1 0).val + k + l ≤ H := by
+    intro e he
+    have hh := htot e he
+    omega
+  exact congrArg (fun v => Read H beta hb v)
+    (p4Q2PZ37AQD_localShift_comp H k l s u.1 u.2 hp hkl)
+
+/-- Mixed estimate with the genuine Haar representative norm.
+This is not an estimate solely in the local OS norm. -/
+theorem p4Q2PZ37AQD_localShift_mixedNormBound
+    (H k : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta)
+    (u : Obs H)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A)))
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hkk : ∀ e ∈ s, (e.1 0).val + k + k ≤ H) :
+    ‖Read H beta hb (Local H k u)‖ ^ 2 ≤
+      ‖Read H beta hb u‖ *
+        (‖periodicHypercubicEvenWilsonBoundaryGramFeatureSynthesisOperator
+          H 2 (by norm_num) beta hb‖ * ‖L2 H 2 u‖) := by
+  have hk2 : ∀ e ∈ s, (e.1 0).val + (k + k) ≤ H := by
+    intro e he
+    have hh := hkk e he
+    omega
+  let B := periodicHypercubicEvenWilsonBoundaryGramFeatureSynthesisOperator
+    H 2 (by norm_num) beta hb
+  calc
+    _ = inner ℝ (Read H beta hb u) (Read H beta hb (Local H (k + k) u)) :=
+      p4Q2PZ37AQC_local_doubleBudget_norm_sq H k beta hb s u hu hp hkk
+    _ ≤ ‖Read H beta hb u‖ * ‖Read H beta hb (Local H (k + k) u)‖ :=
+      real_inner_le_norm _ _
+    _ ≤ _ := by
+      apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
+      change ‖B (L2 H 2 (Local H (k + k) u))‖ ≤ ‖B‖ * ‖L2 H 2 u‖
+      calc
+        _ ≤ ‖B‖ * ‖L2 H 2 (Local H (k + k) u)‖ := B.le_opNorm _
+        _ = _ := by rw [p4Q2PZ37AQB_localL2_norm H (k + k) s u hu hp hk2]
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQD_supportedSubmodule
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQD_localShiftLinear
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQD_localShift_supported
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQD_supportedShift
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQD_restrictedRead
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQD_restrictedRead_ker_le
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQD_rangeShift
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQD_rangeShift_apply
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQD_rangeShift_unique
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQD_localShift_comp
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQD_doubleBudget_residual
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQD_rangeShift_comp
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQD_localShift_mixedNormBound
