@@ -1,0 +1,210 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalVacuumWeightedProbeUniformNormV5_PZ37AQP
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonVacuumNormalizedH1D5TwoModeCrossingSelectedFactorization
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37AQR — genuine selected four-link sector with the full residual
+The prior selected-sector factorization freezes every off-plaquette link at
+Taylor degree zero. Retain their entire original relative Wilson kernel
+instead. Prove exact factorization, local-only comparison and PSD domination,
+including the unchanged spatial halfweights. This is a kernel-level bridge,
+not yet a uniform signed quadratic lower bound or a mass gap.
+-/
+namespace MGAP4D.MathlibAnalytic
+open MeasureTheory Filter
+open scoped BigOperators InnerProductSpace InnerProduct Topology
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 12000000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "Cfg" => PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration
+local notation "Link" => PeriodicHypercubicEvenSpatialSliceLink
+local notation "E" => p4Q2PZ37AMS_primarySpatialSliceEdgeEmbedding
+local notation "Full" => periodicHypercubicEvenSpatialSliceLinkSet
+local notation "K" => specialUnitaryWilsonRelativeKernel
+local notation "D" => specialUnitaryWilsonRelativeSelectedDegreeKernel
+local notation "Cross" => periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
+local notation "Slab" => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+local notation "Half" => periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeight
+local notation "PSD" => RealKernelPositiveSemidefiniteCertificate
+
+/-- EXACT four links used by AQP's literal AMS cyclic holonomy. -/
+def p4Q2PZ37AQR_localEdges (H : ℕ) : Finset (Link H) :=
+  Finset.univ.map (E H)
+
+local notation "S" => p4Q2PZ37AQR_localEdges
+
+theorem p4Q2PZ37AQR_localEdges_card (H : ℕ) : (S H).card = 4 := by
+  simp [p4Q2PZ37AQR_localEdges]
+
+theorem p4Q2PZ37AQR_localEdges_subset (H : ℕ) : S H ⊆ Full H := by
+  classical
+  intro e _
+  exact List.mem_toFinset.mpr (periodicHypercubicEvenSpatialSliceLink_mem_list H e)
+
+/-- The original factors on any specified subset of genuine links. -/
+def p4Q2PZ37AQR_crossingOn (H : ℕ) (s : Finset (Link H)) (beta : ℝ)
+    (A B : Cfg H 2) : ℝ :=
+  ∏ e ∈ s, K 2 beta (A e) (B e)
+
+local notation "C" => p4Q2PZ37AQR_crossingOn
+
+/-- Full retained off-plaquette kernel, NOT the degree-zero residual. -/
+def p4Q2PZ37AQR_residualCrossing (H : ℕ) (beta : ℝ) (A B : Cfg H 2) : ℝ :=
+  C H (Full H \ S H) beta A B
+
+local notation "R" => p4Q2PZ37AQR_residualCrossing
+
+theorem p4Q2PZ37AQR_crossing_factor (H : ℕ) (beta : ℝ) (A B : Cfg H 2) :
+    Cross H 2 beta A B = R H beta A B * C H (S H) beta A B := by
+  classical
+  rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_eq_linkSet_prod]
+  have hu : Full H \ S H ∪ S H = Full H :=
+    Finset.sdiff_union_of_subset (p4Q2PZ37AQR_localEdges_subset H)
+  have hd : Disjoint (Full H \ S H) (S H) := Finset.sdiff_disjoint
+  unfold p4Q2PZ37AQR_residualCrossing p4Q2PZ37AQR_crossingOn
+  conv_lhs => rw [← hu, Finset.prod_union hd]
+
+theorem p4Q2PZ37AQR_crossingOn_pos
+    (H : ℕ) (s : Finset (Link H)) (beta : ℝ) (hb : 0 ≤ beta)
+    (A B : Cfg H 2) : 0 < C H s beta A B := by
+  unfold p4Q2PZ37AQR_crossingOn
+  exact Finset.prod_pos (fun e _ => specialUnitaryWilsonRelativeKernel_pos
+    (by norm_num : 0 < (2 : ℕ)) hb (A e) (B e))
+
+theorem p4Q2PZ37AQR_crossingOn_le_one
+    (H : ℕ) (s : Finset (Link H)) (beta : ℝ) (hb : 0 ≤ beta)
+    (A B : Cfg H 2) : C H s beta A B ≤ 1 := by
+  unfold p4Q2PZ37AQR_crossingOn
+  apply Finset.prod_le_one
+  · intro e _
+    exact (specialUnitaryWilsonRelativeKernel_pos
+      (by norm_num : 0 < (2 : ℕ)) hb (A e) (B e)).le
+  · intro e _
+    exact (specialUnitaryWilsonRelativeKernel_mem_Icc
+      (by norm_num : 0 < (2 : ℕ)) hb (A e) (B e)).2
+
+theorem p4Q2PZ37AQR_fourCrossing_lower
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (A B : Cfg H 2) :
+    Real.exp (-8*beta) ≤ C H (S H) beta A B := by
+  have h : (∏ _e ∈ S H, Real.exp (-2*beta)) ≤
+      ∏ e ∈ S H, K 2 beta (A e) (B e) := by
+    apply Finset.prod_le_prod
+    · intro e _
+      exact (Real.exp_pos _).le
+    · intro e _
+      exact (specialUnitaryWilsonRelativeKernel_mem_Icc
+        (by norm_num : 0 < (2 : ℕ)) hb (A e) (B e)).1
+  rw [Finset.prod_const, p4Q2PZ37AQR_localEdges_card] at h
+  have he : (Real.exp (-2*beta))^4 = Real.exp (-8*beta) := by
+    calc
+      (Real.exp (-2*beta))^4 = (Real.exp (-2*beta) * Real.exp (-2*beta)) *
+          (Real.exp (-2*beta) * Real.exp (-2*beta)) := by ring
+      _ = Real.exp ((-2*beta + -2*beta) + (-2*beta + -2*beta)) := by
+        rw [Real.exp_add, Real.exp_add, Real.exp_add]
+      _ = _ := by congr 1; ring
+  rw [he] at h
+  exact h
+
+/-- Pointwise positive comparison loses only FOUR factors, independently of H.
+Do NOT use it as a signed quadratic comparison. -/
+theorem p4Q2PZ37AQR_crossing_relative_to_residual
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (A B : Cfg H 2) :
+    Real.exp (-8*beta) * R H beta A B ≤ Cross H 2 beta A B ∧
+      Cross H 2 beta A B ≤ R H beta A B := by
+  have hr : 0 ≤ R H beta A B :=
+    (p4Q2PZ37AQR_crossingOn_pos H (Full H \ S H) beta hb A B).le
+  rw [p4Q2PZ37AQR_crossing_factor H beta A B]
+  constructor
+  · calc
+      _ = R H beta A B * Real.exp (-8*beta) := mul_comm _ _
+      _ ≤ _ := mul_le_mul_of_nonneg_left
+        (p4Q2PZ37AQR_fourCrossing_lower H beta hb A B) hr
+  · calc
+      _ ≤ R H beta A B * 1 := mul_le_mul_of_nonneg_left
+        (p4Q2PZ37AQR_crossingOn_le_one H (S H) beta hb A B) hr
+      _ = _ := mul_one _
+
+theorem p4Q2PZ37AQR_crossingOn_psd
+    (H : ℕ) (s : Finset (Link H)) (beta : ℝ) (hb : 0 ≤ beta) :
+    PSD (Cfg H 2) (C H s beta) := by
+  unfold p4Q2PZ37AQR_crossingOn
+  apply RealKernelPositiveSemidefiniteCertificate.finsetProd
+  intro e _
+  exact (specialUnitaryWilsonRelativeKernel_positiveSemidefiniteCertificate
+    2 (by norm_num) beta hb).comap (fun A : Cfg H 2 => A e)
+
+/-- Retain every off-plaquette exact factor and select an arbitrary common
+degree on the four actual AQP edges. -/
+def p4Q2PZ37AQR_retainedSelected
+    (H : ℕ) (beta : ℝ) (n : ℕ) (A B : Cfg H 2) : ℝ :=
+  R H beta A B * ∏ e ∈ S H, D 2 beta n (A e) (B e)
+
+local notation "Sel" => p4Q2PZ37AQR_retainedSelected
+
+/-- PSD, not pointwise, dominance: the full residual is not replaced by
+exp(-beta)^residual.card. -/
+theorem p4Q2PZ37AQR_crossing_sub_retainedSelected_psd
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (n : ℕ) :
+    PSD (Cfg H 2) (fun A B => Cross H 2 beta A B - Sel H beta n A B) := by
+  have hlocal :
+      PSD (Cfg H 2) (fun A B => C H (S H) beta A B -
+        ∏ e ∈ S H, D 2 beta n (A e) (B e)) :=
+    specialUnitaryWilsonRelativeKernel_finsetProd_sub_selectedDegreeProd_positiveSemidefiniteCertificate
+      2 (by norm_num) beta hb (S H) (fun _ => n)
+  have hres : PSD (Cfg H 2) (R H beta) :=
+    p4Q2PZ37AQR_crossingOn_psd H (Full H \ S H) beta hb
+  have h := hres.mul hlocal
+  have heq :
+      (fun A B : Cfg H 2 => Cross H 2 beta A B - Sel H beta n A B) =
+      (fun A B : Cfg H 2 => R H beta A B * (C H (S H) beta A B -
+        ∏ e ∈ S H, D 2 beta n (A e) (B e))) := by
+    funext A B
+    rw [p4Q2PZ37AQR_crossing_factor H beta A B, p4Q2PZ37AQR_retainedSelected]
+    ring
+  rw [heq]
+  exact h
+
+/-- Carry PSD domination through BOTH actual spatial halfweights. -/
+theorem p4Q2PZ37AQR_slab_sub_retainedSelected_psd
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (n : ℕ) :
+    PSD (Cfg H 2) (fun A B => Slab H 2 beta A B -
+      Half H 2 beta A * Sel H beta n A B * Half H 2 beta B) := by
+  let f := Half H 2 beta
+  let hF : RealHilbertKernelFeature (Cfg H 2) (fun A B => f A * f B) :=
+    { FeatureHilbert := ℝ
+      feature := f
+      kernel_eq_inner := fun A B => (realL2Scalar_inner_eq_mul (f A) (f B)).symm }
+  have h := hF.toPositiveSemidefiniteCertificate.mul
+    (p4Q2PZ37AQR_crossing_sub_retainedSelected_psd H beta hb n)
+  have heq :
+      (fun A B : Cfg H 2 => Slab H 2 beta A B -
+        f A * Sel H beta n A B * f B) =
+      (fun A B : Cfg H 2 => (f A * f B) *
+        (Cross H 2 beta A B - Sel H beta n A B)) := by
+    funext A B
+    change f A * Cross H 2 beta A B * f B - f A * Sel H beta n A B * f B = _
+    ring
+  change PSD (Cfg H 2) (fun A B => Slab H 2 beta A B -
+    f A * Sel H beta n A B * f B)
+  rw [heq]
+  exact h
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQR_localEdges
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQR_localEdges_card
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQR_localEdges_subset
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQR_crossingOn
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQR_residualCrossing
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQR_crossing_factor
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQR_crossingOn_pos
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQR_crossingOn_le_one
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQR_fourCrossing_lower
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQR_crossing_relative_to_residual
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQR_crossingOn_psd
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQR_retainedSelected
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQR_crossing_sub_retainedSelected_psd
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQR_slab_sub_retainedSelected_psd
