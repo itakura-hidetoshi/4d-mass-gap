@@ -6,10 +6,10 @@
 
 ## 1. 認証の現在地
 
-- Formal 正本：[d401555b432add745150c1c28d3e54a0fae59e64](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/d401555b432add745150c1c28d3e54a0fae59e64)、AQO まで正式統合。
+- Formal 正本：[b61bba86ceee0ba4886b3582bd73072640a4521e](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/b61bba86ceee0ba4886b3582bd73072640a4521e)、AQP まで正式統合。
 - AQN：[PR #7058](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/7058)・[CI #45818034796](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/45818034796)、19 / 19 公理監査。
 - AQO：[PR #7062](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/7062)・[CI #45894555500](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/45894555500)、11,607 / 11,607 jobs、13 / 13 公理監査、統合後成果物引継ぎ [CI #45897012142](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/45897012142) SUCCESS。
-- AQP：[PR #7066](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/7066)・[CI #45902581226](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/45902581226)、11,608 / 11,608 jobs、7 / 7 公理監査、独立認証済みで未マージ。
+- AQP：[PR #7066](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/7066)・[CI #45902581226](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/45902581226)、11,608 / 11,608 jobs、7 / 7 公理監査、独立認証・正式統合済み。
 - AQR：以下の相対転送二次形式の研究候補。Lean 候補・CI・認証は未実施。
 
 | 区分 | 判定 |
@@ -25,19 +25,19 @@
 | 層 | 状態 | 残りの証明義務 |
 |---|---|---|
 | 真正有限格子作用・Haar・Gibbs・Gauss-law transfer | 既存正本 | 元の定義・型・測度の保持 |
-| 小結合区間の全top直交補一様収縮 | [AKL](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/d401555b432add745150c1c28d3e54a0fae59e64/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalUniformTopOrthogonalCoercivityV5_PZ37AKL.lean) MERGED：3071/3072 | これを真正完成 OS の非零励起、適切な半群、連続体スケールへ接続する |
-| 真正物理モードと局所真空評価 | [AOG](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/d401555b432add745150c1c28d3e54a0fae59e64/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalUniformFirstModeMagnitudeV5_PZ37AOG.lean)、[AOU](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/d401555b432add745150c1c28d3e54a0fae59e64/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFirstRowRightSlopeLimitV5_PZ37AOU.lean) MERGED | 固定Hの極限を移動体積の極限と混同しない |
+| 小結合区間の全top直交補一様収縮 | [AKL](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/b61bba86ceee0ba4886b3582bd73072640a4521e/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalUniformTopOrthogonalCoercivityV5_PZ37AKL.lean) MERGED：3071/3072 | これを真正完成 OS の非零励起、適切な半群、連続体スケールへ接続する |
+| 真正物理モードと局所真空評価 | [AOG](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/b61bba86ceee0ba4886b3582bd73072640a4521e/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalUniformFirstModeMagnitudeV5_PZ37AOG.lean)、[AOU](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/b61bba86ceee0ba4886b3582bd73072640a4521e/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalFirstRowRightSlopeLimitV5_PZ37AOU.lean) MERGED | 固定Hの極限を移動体積の極限と混同しない |
 | 真正有限体積 OS 像 | APL–APW MERGED | 完成OSの実現条件・非退化の保持 |
-| 支持予算付き時間移動・零方向降下 | [APZ](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/d401555b432add745150c1c28d3e54a0fae59e64/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonFullPeriodicOriginalLocalSupportBudgetTransportV5_PZ37APZ.lean)、[AQC](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/d401555b432add745150c1c28d3e54a0fae59e64/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSNullDescentV5_PZ37AQC.lean) MERGED | 支持予算が尽きる前の局所代数と極限の整合 |
-| 真正 Gibbs 反射相関の絶対・条件付き相対減衰 | [AQJ](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/d401555b432add745150c1c28d3e54a0fae59e64/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSConnectedGeometricV5_PZ37AQJ.lean)、[AQK](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/d401555b432add745150c1c28d3e54a0fae59e64/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSRelativeHorizonV5_PZ37AQK.lean) MERGED | 相対前因子 B/a₀ の一様制御 |
-| 四辺の具体的中心化方向 | [AQN](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/d401555b432add745150c1c28d3e54a0fae59e64/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSFourEdgeCenteredRayV5_PZ37AQN.lean) MERGED | H 一様な OS 分母の下界 |
-| 定量的端点テンソル試験 | [AQO](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/d401555b432add745150c1c28d3e54a0fae59e64/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSQuantitativeEndpointTensorV5_PZ37AQO.lean) MERGED | 正の下界の体積一様化 |
-| 真空重み付き二モードノルム | [AQP](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/2b302a130419ec95d290bb472a4d3cd8ef992a43/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalVacuumWeightedProbeUniformNormV5_PZ37AQP.lean) INDEPENDENT GREEN | 同一tree正式統合、認証済み成果物引継ぎ |
+| 支持予算付き時間移動・零方向降下 | [APZ](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/b61bba86ceee0ba4886b3582bd73072640a4521e/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonFullPeriodicOriginalLocalSupportBudgetTransportV5_PZ37APZ.lean)、[AQC](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/b61bba86ceee0ba4886b3582bd73072640a4521e/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSNullDescentV5_PZ37AQC.lean) MERGED | 支持予算が尽きる前の局所代数と極限の整合 |
+| 真正 Gibbs 反射相関の絶対・条件付き相対減衰 | [AQJ](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/b61bba86ceee0ba4886b3582bd73072640a4521e/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSConnectedGeometricV5_PZ37AQJ.lean)、[AQK](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/b61bba86ceee0ba4886b3582bd73072640a4521e/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSRelativeHorizonV5_PZ37AQK.lean) MERGED | 相対前因子 B/a₀ の一様制御 |
+| 四辺の具体的中心化方向 | [AQN](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/b61bba86ceee0ba4886b3582bd73072640a4521e/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSFourEdgeCenteredRayV5_PZ37AQN.lean) MERGED | H 一様な OS 分母の下界 |
+| 定量的端点テンソル試験 | [AQO](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/b61bba86ceee0ba4886b3582bd73072640a4521e/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSQuantitativeEndpointTensorV5_PZ37AQO.lean) MERGED | 正の下界の体積一様化 |
+| 真空重み付き二モードノルム | [AQP](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/b61bba86ceee0ba4886b3582bd73072640a4521e/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalVacuumWeightedProbeUniformNormV5_PZ37AQP.lean) MERGED | 認証済み成果物引継ぎ（実行中） |
 | 完成OSの真正 transfer・連続体 | OPEN | 下記 3–5 |
 
 ## 3. 直近のクリティカルパス：真正 OS 分母
 
-### AQP — 統合ゲート
+### AQP — 正式統合完了
 
 真正SU(2) Wilson の一辺 Haar refresh と局所真空 Harnack により、任意 H・β≥0・q∈ℝ で
 
@@ -45,7 +45,7 @@ $$ \|w_{H,\beta,q}\|^2\geq e^{-16\beta}(1+q^2). $$
 
 R1の格子辺長と内積展開の失敗、R2/R3の型接続失敗を保持し、R4の独立抽象Hilbert補題で解消。Sandbox直接Lean・実Lean MCPの7/7監査、独立CIの7/7監査、標準3公理のみ。認証済み提出blob `30625b2eb6daa7e3394dc16cae1225c713b05b0b`。
 
-次に、Formal 正本との提出・テストマージ・統合 tree の一致を確認して正式統合し、認証済み leaf delta を引き継ぐ。文書更新のみで Formal HEAD を動かし、この認証を失効させない。
+提出・テストマージ・正式統合の Git tree は `674b005cb87fc11924b071ada33a5e35dcc79658` で完全一致。認証済み leaf delta の引継ぎ [CI #45904145140](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/45904145140) は観測時点で実行中。公開確認後に次の Sandbox を起動する。
 
 ### AQR — 相対転送二次形式（OPEN / 研究候補）
 
@@ -71,11 +71,11 @@ $$ \frac{J_H}{\|w_H\|}=P_HR_HN_H,\quad P_H=c_H\lambda_H^{H+1},\quad R_H=\frac{\l
 
 | 既存形式成果 | 保持する障害 | 代替経路 |
 |---|---|---|
-| [APX](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/d401555b432add745150c1c28d3e54a0fae59e64/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonFullPeriodicOriginalPositiveTimeHalfTurnObstructionV5_PZ37APX.lean) / [APY](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/d401555b432add745150c1c28d3e54a0fae59e64/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonFullPeriodicOriginalCompletedOSVacuumLineObstructionV5_PZ37APY.lean) | 全時間の同一正半代数保存は真空線への退化を強いる条件付き障害 | 支持予算のある局所時間移動と極限での降下 |
-| [AQG](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/d401555b432add745150c1c28d3e54a0fae59e64/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSReflectedCorrelationThresholdV5_PZ37AQG.lean) | Haar norm majorant は非零基底を厳密に縮める証明書にならない | 真正 Gibbs 反射相関へ戻る |
-| [AQK](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/d401555b432add745150c1c28d3e54a0fae59e64/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSRelativeHorizonV5_PZ37AQK.lean) | 絶対幾何上界から一様相対収縮は自動的に出ない | 非零初期値に対する前因子を制御 |
-| [AQL](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/d401555b432add745150c1c28d3e54a0fae59e64/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSRelativeAmplitudeFiberV5_PZ37AQL.lean) | 定数加算で中心化相関を保ちながら raw prefactor を非有界化できる | 中心化した代表を選ぶ |
-| [AQM](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/d401555b432add745150c1c28d3e54a0fae59e64/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSCenteredNullFiberV5_PZ37AQM.lean) | 非零OS零方向が存在すると中心化fiberも非有界化する | read の単射性を確認した選択部分空間 |
+| [APX](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/b61bba86ceee0ba4886b3582bd73072640a4521e/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonFullPeriodicOriginalPositiveTimeHalfTurnObstructionV5_PZ37APX.lean) / [APY](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/b61bba86ceee0ba4886b3582bd73072640a4521e/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonFullPeriodicOriginalCompletedOSVacuumLineObstructionV5_PZ37APY.lean) | 全時間の同一正半代数保存は真空線への退化を強いる条件付き障害 | 支持予算のある局所時間移動と極限での降下 |
+| [AQG](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/b61bba86ceee0ba4886b3582bd73072640a4521e/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSReflectedCorrelationThresholdV5_PZ37AQG.lean) | Haar norm majorant は非零基底を厳密に縮める証明書にならない | 真正 Gibbs 反射相関へ戻る |
+| [AQK](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/b61bba86ceee0ba4886b3582bd73072640a4521e/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSRelativeHorizonV5_PZ37AQK.lean) | 絶対幾何上界から一様相対収縮は自動的に出ない | 非零初期値に対する前因子を制御 |
+| [AQL](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/b61bba86ceee0ba4886b3582bd73072640a4521e/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSRelativeAmplitudeFiberV5_PZ37AQL.lean) | 定数加算で中心化相関を保ちながら raw prefactor を非有界化できる | 中心化した代表を選ぶ |
+| [AQM](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/b61bba86ceee0ba4886b3582bd73072640a4521e/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSCenteredNullFiberV5_PZ37AQM.lean) | 非零OS零方向が存在すると中心化fiberも非有界化する | read の単射性を確認した選択部分空間 |
 
 これらは指定した仮定・表現・評価経路の no-go である。真正模型全体や連続体 Yang–Mills の不可能性には昇格させない。局所的に得た証明を大域化する際は型・定義域・極限の互換性を改めて検証する。
 
@@ -98,8 +98,8 @@ $$ \frac{J_H}{\|w_H\|}=P_HR_HN_H,\quad P_H=c_H\lambda_H^{H+1},\quad R_H=\frac{\l
 ## 7. 記録と出典
 
 - [README — 現況](README.md)
-- [Formal 正本の観測時ソース](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/d401555b432add745150c1c28d3e54a0fae59e64/MGAP4D/MathlibAnalytic)
-- [AQP 合格候補ソース](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/2b302a130419ec95d290bb472a4d3cd8ef992a43/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalVacuumWeightedProbeUniformNormV5_PZ37AQP.lean)、[独立認証](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/45902581226)
+- [Formal 正本の観測時ソース](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/b61bba86ceee0ba4886b3582bd73072640a4521e/MGAP4D/MathlibAnalytic)
+- [AQP 正式統合済みソース](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/b61bba86ceee0ba4886b3582bd73072640a4521e/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalVacuumWeightedProbeUniformNormV5_PZ37AQP.lean)、[独立認証](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/45902581226)
 - [旧 ROADMAP 全文の保存コピー](docs/archive/2026-11-27-pre-refresh/ROADMAP.md) / [更新前の固定版（元の相対リンク付き）](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/bcea883b55142c8c53c51271bb8861107813519b/ROADMAP.md)
 
 本ロードマップは研究経路と証明義務の記録であり、定理の認証はソースと実行証拠に従う。旧版は全文・blobを保存し、現在地を誤読させないため現行入口から分離した。
