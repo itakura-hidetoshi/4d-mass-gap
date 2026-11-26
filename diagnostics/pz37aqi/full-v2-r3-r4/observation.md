@@ -1,0 +1,2 @@
+# AQI R3/R4 repair
+R1/R2 each reported two parser errors at `∀ j, j + 2 ≤ m, ...` and two resulting downstream type mismatches. Replace the second comma by implication `→` in both scalar signatures to express the intended finite recurrence exactly. No physical hypothesis or mathematical condition changed; no existing files modified. Terminal run 45789206865 job 139803645523 artifact 15101094779. Fixed Lean and mathlib. TEST_REQUIRED; independent CI only after GREEN.

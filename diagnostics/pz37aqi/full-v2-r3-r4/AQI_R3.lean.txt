@@ -1,0 +1,296 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSConnectedCorrelationV5_PZ37AQH
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37AQI — finite connected reflection Hankel inequalities
+Use the actual AQH centered Gibbs correlation, not an abstract transfer,
+to obtain the mixed Cauchy–Schwarz inequality and log-convexity of the
+even finite-time sequence under explicit double-support budgets.
+A scalar induction propagates its first ratio to arbitrary integer
+endpoints, giving a conditional geometric threshold without dyadic rounding.
+Neither finite log-convexity nor the endpoint criterion supplies a decay
+rate. Preserve APX/APY/AQF/AQG and the original Wilson law.
+-/
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory Filter Set
+open scoped ENNReal Topology InnerProductSpace InnerProduct
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 1200000
+set_option synthInstance.maxHeartbeats 100000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "O" => PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
+local notation "P" => periodicHypercubicEvenEdgeOrbitPartition
+local notation "L" => PeriodicHypercubicEvenSideLength
+local notation "Tau" => periodicHypercubicIntegerTemporalConfigurationTranslation
+local notation "Theta" => periodicHypercubicEvenConfigurationReflection
+local notation "Gibbs" => periodicHypercubicSpecialUnitaryWilsonSystem
+local notation "Pair" => p4Q2PZ37AQC_reflectedPair
+local notation "Supported" => p4Q2PZ37APZ_DependsOn
+local notation "Local" => p4Q2PZ37AQB_localHalfObservable
+local notation "Read" => p4Q2PZ37AQC_boundaryRead
+local notation "L2" => periodicHypercubicEvenWilsonOpenHalfObservableL2
+local notation "HalfMu" => periodicHypercubicEvenOpenHalfHaarMeasure
+local notation "BoundaryMu" => periodicHypercubicEvenBoundaryHaarMeasure
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "Obs" => (fun H : ℕ => BoundedContinuousFunction (O H 2) ℝ)
+
+local instance p4Q2PZ37AQI_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37AQI_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37AQI_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37AQI_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37AQI_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37AQI_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37AQI_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37AQI_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37AQI_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+local instance p4Q2PZ37AQI_openHalfProbability (H : ℕ) :
+    IsProbabilityMeasure (periodicHypercubicEvenOpenHalfHaarMeasure H 2) := by
+  dsimp [periodicHypercubicEvenOpenHalfHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
+  infer_instance
+
+
+local instance p4Q2PZ37AQI_boundaryProbability (H : ℕ) :
+    IsProbabilityMeasure (BoundaryMu H 2) := by
+  dsimp [periodicHypercubicEvenBoundaryHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure]
+  infer_instance
+
+
+
+
+/-- Nonnegative log-convex finite sequences dominate the geometric
+progression of the first ratio, with no assumption on later positivity. -/
+theorem p4Q2PZ37AQI_finiteLogConvexRatioPower
+    (a : ℕ → ℝ) (m : ℕ) (hm : 0 < m) (hbase : 0 < a 0)
+    (ha : ∀ j ≤ m, 0 ≤ a j)
+    (hrec : ∀ j, j + 2 ≤ m → a (j + 1) ^ 2 ≤ a j * a (j + 2)) :
+    (a 1 / a 0) ^ m * a 0 ≤ a m := by
+  have ha1 : 0 ≤ a 1 := ha 1 (by omega)
+  by_cases hz : a 1 = 0
+  · rw [hz, zero_div, zero_pow hm.ne', zero_mul]
+    exact ha m le_rfl
+  let q : ℝ := a 1 / a 0
+  have hq : 0 < q := div_pos (lt_of_le_of_ne ha1 (Ne.symm hz)) hbase
+  have hstep : ∀ j, j < m → 0 < a j ∧ q * a j ≤ a (j + 1) := by
+    intro j
+    induction j with
+    | zero =>
+      intro _
+      exact ⟨hbase, (div_mul_cancel₀ _ hbase.ne').le⟩
+    | succ j ih =>
+      intro hj
+      have hp := ih (by omega)
+      have hjpos : 0 < a (j + 1) :=
+        (mul_pos hq hp.1).trans_le hp.2
+      have hmul := mul_le_mul_of_nonneg_right hp.2 hjpos.le
+      have hh : a j * (q * a (j + 1)) ≤ a j * a (j + 2) := by
+        calc
+          _ = (q * a j) * a (j + 1) := by ring
+          _ ≤ a (j + 1) ^ 2 := by simpa only [pow_two] using hmul
+          _ ≤ _ := hrec j (by omega)
+      exact ⟨hjpos, (mul_le_mul_left₀ hp.1).mp hh⟩
+  have hgeom : ∀ j, j ≤ m → q ^ j * a 0 ≤ a j := by
+    intro j
+    induction j with
+    | zero =>
+      intro _
+      simp
+    | succ j ih =>
+      intro hj
+      calc
+        _ = q * (q ^ j * a 0) := by rw [pow_succ]; ring
+        _ ≤ q * a j := mul_le_mul_of_nonneg_left (ih (by omega)) hq.le
+        _ ≤ _ := (hstep j (by omega)).2
+  exact hgeom m le_rfl
+
+/-- An arbitrary integer terminal budget certifies the first ratio. -/
+theorem p4Q2PZ37AQI_finiteLogConvexTerminalThreshold
+    (a : ℕ → ℝ) (m : ℕ) (hm : 0 < m) (hbase : 0 < a 0)
+    (ha : ∀ j ≤ m, 0 ≤ a j)
+    (hrec : ∀ j, j + 2 ≤ m → a (j + 1) ^ 2 ≤ a j * a (j + 2))
+    (c : ℝ) (hc : 0 ≤ c) (hterminal : a m ≤ c ^ m * a 0) :
+    a 1 ≤ c * a 0 := by
+  have hp : (a 1 / a 0) ^ m ≤ c ^ m :=
+    (mul_le_mul_right₀ hbase).mp
+      ((p4Q2PZ37AQI_finiteLogConvexRatioPower a m hm hbase ha hrec).trans hterminal)
+  have hmR : 0 < (m : ℝ) := by exact_mod_cast hm
+  have hq : a 1 / a 0 ≤ c :=
+    (Real.rpow_le_rpow_iff (div_nonneg (ha 1 (by omega)) hbase.le) hc hmR).mp
+      (by simpa only [Real.rpow_natCast] using hp)
+  exact (div_le_iff₀ hbase).mp hq
+
+local notation "Conn" => p4Q2PZ37AQH_connectedCorrelation
+local notation "Center" => p4Q2PZ37AQH_center
+
+variable [Nontrivial G]
+
+/-- Genuine mixed centered correlation satisfies the two-diagonal
+Cauchy–Schwarz inequality. Each diagonal has its own double reach. -/
+theorem p4Q2PZ37AQI_mixedConnected_sq_le
+    (H k l : ℕ) (s t : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta) (u v : Obs H)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A)))
+    (hv : Supported H t (fun A => v ((P H).positiveRestriction A)))
+    (hps : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hpt : ∀ e ∈ t, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hkk : ∀ e ∈ s, (e.1 0).val + k + k ≤ H)
+    (hll : ∀ e ∈ t, (e.1 0).val + l + l ≤ H)
+    (hkl : ∀ e ∈ t, (e.1 0).val + k + l ≤ H) :
+    Conn H (k + l) beta hb u v ^ 2 ≤
+      Conn H (k + k) beta hb u u * Conn H (l + l) beta hb v v := by
+  have hk : ∀ e ∈ s, (e.1 0).val + k ≤ H := by
+    intro e he
+    have hh := hkk e he
+    omega
+  let x := Read H beta hb (Local H k (Center H beta hb u))
+  let y := Read H beta hb (Local H l (Center H beta hb v))
+  have hi : inner ℝ x y = Conn H (k + l) beta hb u v :=
+    p4Q2PZ37AQH_localMixedShift_centered_inner_eq_connected
+      H k l s t beta hb u v hu hv hps hpt hk hkl
+  have hx : ‖x‖ ^ 2 = Conn H (k + k) beta hb u u :=
+    p4Q2PZ37AQH_localNormSq_eq_connected H k s beta hb u hu hps hkk
+  have hy : ‖y‖ ^ 2 = Conn H (l + l) beta hb v v :=
+    p4Q2PZ37AQH_localNormSq_eq_connected H l t beta hb v hv hpt hll
+  have hcs := abs_real_inner_le_norm x y
+  rw [hi] at hcs
+  have hsq := mul_le_mul hcs hcs (abs_nonneg _) (mul_nonneg (norm_nonneg _) (norm_nonneg _))
+  calc
+    _ = |Conn H (k + l) beta hb u v| ^ 2 := (sq_abs _).symm
+    _ ≤ (‖x‖ * ‖y‖) ^ 2 := by simpa only [pow_two] using hsq
+    _ = _ := by rw [mul_pow, hx, hy]
+
+/-- The even genuine autocorrelation at stride k, with no model replacement. -/
+def p4Q2PZ37AQI_evenConnected (H k j : ℕ)
+    (beta : ℝ) (hb : 0 ≤ beta) (u : Obs H) : ℝ :=
+  Conn H (j * k + j * k) beta hb u u
+
+local notation "EvenC" => p4Q2PZ37AQI_evenConnected
+
+theorem p4Q2PZ37AQI_evenConnected_nonneg
+    (H k m : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta) (u : Obs H)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A)))
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hbudget : ∀ e ∈ s, (e.1 0).val + m * k + m * k ≤ H)
+    (j : ℕ) (hj : j ≤ m) :
+    0 ≤ EvenC H k j beta hb u := by
+  have hle : j * k ≤ m * k := Nat.mul_le_mul_right k hj
+  have hreach : ∀ e ∈ s, (e.1 0).val + j * k + j * k ≤ H := by
+    intro e he
+    have hh := hbudget e he
+    omega
+  exact p4Q2PZ37AQH_localEvenConnected_nonneg H (j * k) s beta hb u hu hp hreach
+
+/-- Adjacent Hankel minors of the actual finite even connected correlation
+are nonnegative. This is not an assertion of monotone decay. -/
+theorem p4Q2PZ37AQI_evenConnected_logConvex
+    (H k m : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta) (u : Obs H)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A)))
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hbudget : ∀ e ∈ s, (e.1 0).val + m * k + m * k ≤ H)
+    (j : ℕ) (hj : j + 2 ≤ m) :
+    EvenC H k (j + 1) beta hb u ^ 2 ≤
+      EvenC H k j beta hb u * EvenC H k (j + 2) beta hb u := by
+  have hle1 : j * k ≤ m * k := Nat.mul_le_mul_right k (by omega)
+  have hle2 : (j + 2) * k ≤ m * k := Nat.mul_le_mul_right k hj
+  have h1 : ∀ e ∈ s, (e.1 0).val + j * k + j * k ≤ H := by
+    intro e he
+    have hh := hbudget e he
+    omega
+  have h2 : ∀ e ∈ s, (e.1 0).val + (j + 2) * k + (j + 2) * k ≤ H := by
+    intro e he
+    have hh := hbudget e he
+    omega
+  have h12 : ∀ e ∈ s, (e.1 0).val + j * k + (j + 2) * k ≤ H := by
+    intro e he
+    have hh := hbudget e he
+    omega
+  have heq : j * k + (j + 2) * k = (j + 1) * k + (j + 1) * k := by ring
+  have hh := p4Q2PZ37AQI_mixedConnected_sq_le H (j * k) ((j + 2) * k) s s
+    beta hb u u hu hu hp hp h1 h2 h12
+  rw [heq] at hh
+  exact hh
+
+/-- Quantitative lower envelope at every admissible integer terminal index. -/
+theorem p4Q2PZ37AQI_evenConnected_ratioPower
+    (H k m : ℕ) (hm : 0 < m) (s : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta) (u : Obs H)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A)))
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hbudget : ∀ e ∈ s, (e.1 0).val + m * k + m * k ≤ H)
+    (hbase : 0 < EvenC H k 0 beta hb u) :
+    (EvenC H k 1 beta hb u / EvenC H k 0 beta hb u) ^ m *
+      EvenC H k 0 beta hb u ≤ EvenC H k m beta hb u := by
+  exact p4Q2PZ37AQI_finiteLogConvexRatioPower
+    (fun j => EvenC H k j beta hb u) m hm hbase
+    (p4Q2PZ37AQI_evenConnected_nonneg H k m s beta hb u hu hp hbudget)
+    (p4Q2PZ37AQI_evenConnected_logConvex H k m s beta hb u hu hp hbudget)
+
+/-- An actual endpoint estimate at any positive integer m implies the
+corresponding first-step relative correlation bound. The rate is an input. -/
+theorem p4Q2PZ37AQI_evenConnected_terminalThreshold
+    (H k m : ℕ) (hm : 0 < m) (s : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta) (u : Obs H)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A)))
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hbudget : ∀ e ∈ s, (e.1 0).val + m * k + m * k ≤ H)
+    (hbase : 0 < EvenC H k 0 beta hb u)
+    (c : ℝ) (hc : 0 ≤ c)
+    (hterminal : EvenC H k m beta hb u ≤ c ^ m * EvenC H k 0 beta hb u) :
+    EvenC H k 1 beta hb u ≤ c * EvenC H k 0 beta hb u := by
+  exact p4Q2PZ37AQI_finiteLogConvexTerminalThreshold
+    (fun j => EvenC H k j beta hb u) m hm hbase
+    (p4Q2PZ37AQI_evenConnected_nonneg H k m s beta hb u hu hp hbudget)
+    (p4Q2PZ37AQI_evenConnected_logConvex H k m s beta hb u hu hp hbudget)
+    c hc hterminal
+
+/-- If the first even correlation does not decay, no strict geometric
+endpoint threshold is possible on this admissible finite interval. -/
+theorem p4Q2PZ37AQI_evenConnected_nondecay_obstruction
+    (H k m : ℕ) (hm : 0 < m) (s : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta) (u : Obs H)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A)))
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hbudget : ∀ e ∈ s, (e.1 0).val + m * k + m * k ≤ H)
+    (hbase : 0 < EvenC H k 0 beta hb u)
+    (hno : EvenC H k 0 beta hb u ≤ EvenC H k 1 beta hb u)
+    (c : ℝ) (hc : 0 ≤ c) (hc1 : c < 1) :
+    c ^ m * EvenC H k 0 beta hb u < EvenC H k m beta hb u := by
+  apply lt_of_not_ge
+  intro hterm
+  have hh := p4Q2PZ37AQI_evenConnected_terminalThreshold H k m hm s beta hb u
+    hu hp hbudget hbase c hc hterm
+  have hlt : c * EvenC H k 0 beta hb u < EvenC H k 0 beta hb u := by
+    simpa only [one_mul] using mul_lt_mul_of_pos_right hc1 hbase
+  exact (not_lt_of_ge (hno.trans hh)) hlt
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQI_finiteLogConvexRatioPower
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQI_finiteLogConvexTerminalThreshold
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQI_mixedConnected_sq_le
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQI_evenConnected
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQI_evenConnected_nonneg
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQI_evenConnected_logConvex
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQI_evenConnected_ratioPower
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQI_evenConnected_terminalThreshold
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQI_evenConnected_nondecay_obstruction
