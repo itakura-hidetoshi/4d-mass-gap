@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "baseline_commit": "15a746bf0d01dd0b819142017d424ced091c1f4f",
+  "baseline_mgap4d_tree": "15e1c94b5899fd72c00ff51612c474a1c5c72b1c",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalRetainedResidualFourLinkPSDV5_PZ37AQR",
+    "MGAP4D.MathlibAnalytic.SpecialUnitaryTwoWilsonEnergyContinuousGramSchmidtClassFunction",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "AQS",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_feature_rankOne_psd",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_localScale",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_localScale_psd",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_affineFeature",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_traceDual",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_traceDual_inner",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_affineDual",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_affineDual_inner",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_affineScale",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_affine_local_psd",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_local_product_eq",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_affine_slab_psd",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_mode_affine",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_original_observable_affine",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_original_observable_slab_psd"
+      ],
+      "candidates": [
+        {
+          "id": "R2",
+          "path": "diagnostics/pz37aqs/full-v1-r1/AQS_R2.lean.txt",
+          "blob": "4d45afcb34696adcebf274ee4557351c8ced05f1"
+        },
+        {
+          "id": "R1",
+          "path": "diagnostics/pz37aqs/full-v1-r1/AQS_R1.lean.txt",
+          "blob": "c297d1489aa555a1e4a5ee50ace0533f1b979470"
+        }
+      ]
+    }
+  ]
+}

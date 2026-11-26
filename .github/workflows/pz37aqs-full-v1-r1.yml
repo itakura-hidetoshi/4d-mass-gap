@@ -1,0 +1,19 @@
+name: PZ37AQS full-cache sandbox v1 local affine rank-one PSD
+on:
+  pull_request:
+    paths:
+      - "diagnostics/pz37aqs/full-v1-r1/**"
+      - ".github/workflows/pz37aqs-full-v1-r1.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pz37aqs-full-v1-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    uses: ./.github/workflows/lean-warm-sandbox-reusable-aqs-full-v1.yml
+    with:
+      pack: diagnostics/pz37aqs/full-v1-r1/pack.json
+      source_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      baseline_commit: 15a746bf0d01dd0b819142017d424ced091c1f4f
