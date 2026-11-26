@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "baseline_commit": "b8c8f49797f5659535851eb96ac7bb59fc5a02cc",
+  "baseline_mgap4d_tree": "d1e649d8e7b0baa4b48d51c75e9ce4709c70ec81",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalLocalHaarL2DescentV5_PZ37AQB",
+    "MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenGibbsReflection",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "AQC",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQC_reflectedPair",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQC_boundaryRead",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQC_reflectedPair_integrable",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQC_reflectedPair_symm",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQC_reflectedPair_diagonal",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQC_reflectedPair_eq_inner",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQC_local_doubleBudget_pair",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQC_local_doubleBudget_norm_sq",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQC_local_null_of_doubleBudget",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQC_local_congr_of_doubleBudget",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQC_timeOne_doubleBudget_norm_sq"
+      ],
+      "candidates": [
+        {
+          "id": "R4",
+          "path": "diagnostics/pz37aqc/full-v2-r4-r6/AQC_R4.lean.txt",
+          "blob": "0f21e3e73cd070585bb280b8bf2cf06e2c7e46c9"
+        },
+        {
+          "id": "R5",
+          "path": "diagnostics/pz37aqc/full-v2-r4-r6/AQC_R5.lean.txt",
+          "blob": "6951ce15f827658b211809c5deb4d420b1b2e1df"
+        },
+        {
+          "id": "R6",
+          "path": "diagnostics/pz37aqc/full-v2-r4-r6/AQC_R6.lean.txt",
+          "blob": "5c895e2e3ca95548ac5ce2951430aa6a72d065b7"
+        }
+      ]
+    }
+  ]
+}
