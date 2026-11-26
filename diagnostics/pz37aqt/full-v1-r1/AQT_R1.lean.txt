@@ -1,0 +1,429 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalAffineRankOnePSDV5_PZ37AQS
+import MGAP4D.MathlibAnalytic.RealHilbertKernelFeatureWeightedGramStrictness
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37AQT — integrated retained-residual rank-one comparison
+
+Integrate AQS's continuous PSD difference against the unchanged APL probe.
+Use the exact continuous vacuum eigen-equation and right one-link Harnack,
+then AQP's uniform probe norm floor. All comparison is on the genuine
+finite-volume physical transfer. This is not a spectral mass-gap theorem.
+-/
+namespace MGAP4D.MathlibAnalytic
+open MeasureTheory Filter
+open scoped ENNReal BigOperators InnerProductSpace InnerProduct Topology
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 12000000
+set_option synthInstance.maxHeartbeats 200000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "Cfg" => PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration
+local notation "Link" => PeriodicHypercubicEvenSpatialSliceLink
+local notation "P" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "nu" => normalizedCompactHaar G
+local notation "E" => p4Q2PZ37AMS_primarySpatialSliceEdgeEmbedding
+local notation "R" => p4Q2PZ37AQR_residualCrossing
+local notation "Full" => periodicHypercubicEvenSpatialSliceLinkSet
+local notation "S" => p4Q2PZ37AQR_localEdges
+local notation "C" => p4Q2PZ37AQR_crossingOn
+local notation "Cross" => periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
+local notation "K" => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+local notation "Half" => periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeight
+local notation "PSD" => RealKernelPositiveSemidefiniteCertificate
+local notation "Obs" => p4Q2PZ37APL_originalTwoModeObservable
+local notation "W" => p4Q2PZ37APL_originalVacuumWeightedTwoMode
+local notation "Tr" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+local notation "Vac" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+local notation "VacC" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+local notation "Mul" => periodicHypercubicEvenSpecialUnitaryPhysicalSpatialSliceObservableMulOperator
+
+local instance p4Q2PZ37AQT_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37AQT_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37AQT_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37AQT_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37AQT_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37AQT_linkFintype (H : ℕ) : Fintype (Link H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37AQT_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37AQT_probability (H : ℕ) : IsProbabilityMeasure (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+
+/-- Finite Gram PSD descends to the actual signed product-Haar quadratic
+through a continuous RKHS feature. -/
+theorem p4Q2PZ37AQT_psd_pair_integral_nonneg
+    {Y : Type} [TopologicalSpace Y] [CompactSpace Y] [SecondCountableTopology Y]
+    [MeasurableSpace Y] [BorelSpace Y]
+    (mu : Measure Y) [IsFiniteMeasure mu]
+    {k : Y → Y → ℝ} (hk : Continuous (fun p : Y × Y => k p.1 p.2))
+    (cert : PSD Y k) (f : Y → ℝ) (hf : Continuous f) :
+    0 ≤ ∫ p : Y × Y, f p.1 * k p.1 p.2 * f p.2 ∂(mu.prod mu) := by
+  let F := cert.toHilbertFeature
+  have hF := F.continuous_feature_of_continuous_kernel hk
+  let g : Y → F.FeatureHilbert := fun x => f x • F.feature x
+  have hg : Continuous g := hf.smul hF
+  have hi : Integrable g mu :=
+    hg.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+  have hp : Integrable (fun p : Y × Y => inner ℝ (g p.1) (g p.2)) (mu.prod mu) :=
+    ((hg.comp continuous_fst).inner (hg.comp continuous_snd)).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  have he : (∫ p : Y × Y, f p.1 * k p.1 p.2 * f p.2 ∂(mu.prod mu)) =
+      ∫ p : Y × Y, inner ℝ (g p.1) (g p.2) ∂(mu.prod mu) := by
+    apply integral_congr_ae
+    filter_upwards with p
+    rw [F.kernel_eq_inner p.1 p.2]
+    simp only [g, real_inner_smul_left, real_inner_smul_right]
+    ring
+  rw [he, MeasureTheory.integral_prod _ hp]
+  change 0 ≤ ∫ x, ∫ y, inner ℝ (f x • F.feature x) (f y • F.feature y) ∂mu ∂mu
+  rw [F.weighted_inner_doubleIntegral_eq_norm_integral_sq mu f hi]
+  exact sq_nonneg _
+
+theorem p4Q2PZ37AQT_residual_continuous (H : ℕ) (beta : ℝ) :
+    Continuous (fun p : Cfg H 2 × Cfg H 2 => R H beta p.1 p.2) := by
+  classical
+  unfold p4Q2PZ37AQR_residualCrossing p4Q2PZ37AQR_crossingOn
+  apply continuous_finset_prod
+  intro e _
+  exact (continuous_specialUnitaryWilsonRelativeKernel 2 beta).comp₂
+    ((continuous_apply e).comp continuous_fst) ((continuous_apply e).comp continuous_snd)
+
+/-- Actual continuous representative of the APL probe, kept on the same Haar class. -/
+theorem p4Q2PZ37AQT_weightedProbe_ae (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (q : ℝ) :
+    (W H beta hb q : Lp ℝ 2 (Mu H 2)) =ᵐ[Mu H 2]
+      (fun A => Obs H q A * VacC H 2 (by norm_num) beta hb A) := by
+  let mu := Mu H 2
+  let a := Obs H q
+  let omega : P H 2 := Vac H 2 (by norm_num) beta hb
+  have hVacRep := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_ae_eq_existing
+    H 2 (by norm_num) beta hb
+  change ((Mul H 2 a (p4Q2PZ37APL_originalTwoModeObservable_gaugeInvariant H q)
+    omega : P H 2) : Lp ℝ 2 mu) =ᵐ[mu] _
+  rw [periodicHypercubicEvenSpecialUnitaryPhysicalSpatialSliceObservableMulOperator_coe,
+    periodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservableMulOperator_apply]
+  have hM := periodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservableMulL2_coeFn
+    H 2 a (omega : Lp ℝ 2 mu)
+  filter_upwards [hM, hVacRep] with A hMul hO
+  calc
+    _ = a A * (omega : Lp ℝ 2 mu) A := hMul
+    _ = _ := congrArg (fun y : ℝ => a A * y) hO.symm
+
+/-- The actual physical transfer pairing, no change of Hilbert carrier. -/
+theorem p4Q2PZ37AQT_physical_pair_eq
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (w : P H 2)
+    (f : Cfg H 2 → ℝ) (hRep : (w : Lp ℝ 2 (Mu H 2)) =ᵐ[Mu H 2] f) :
+    inner ℝ (Tr H 2 (by norm_num) beta hb w) w =
+      ∫ p : Cfg H 2 × Cfg H 2, f p.1 * K H 2 beta p.1 p.2 * f p.2 ∂((Mu H 2).prod (Mu H 2)) := by
+  let mu := Mu H 2
+  let u : Lp ℝ 2 mu := w
+  change inner ℝ ((Tr H 2 (by norm_num) beta hb w : P H 2) : Lp ℝ 2 mu) u = _
+  rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_coe,
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_inner_eq_integral]
+  have hLeft : (fun p : Cfg H 2 × Cfg H 2 => u p.1) =ᵐ[mu.prod mu] (fun p => f p.1) := by
+    simpa only [Function.comp_def] using
+      (Measure.quasiMeasurePreserving_fst (μ := mu) (ν := mu)).ae_eq hRep
+  have hRight : (fun p : Cfg H 2 × Cfg H 2 => u p.2) =ᵐ[mu.prod mu] (fun p => f p.2) := by
+    simpa only [Function.comp_def] using
+      (Measure.quasiMeasurePreserving_snd (μ := mu) (ν := mu)).ae_eq hRep
+  apply integral_congr_ae
+  filter_upwards [hLeft, hRight] with p hL hR
+  rw [hL, hR]
+
+/-- Positive scalar density of the actual ground-state pair, with exact top norm. -/
+def p4Q2PZ37AQT_joint (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (A B : Cfg H 2) : ℝ :=
+  ‖Tr H 2 (by norm_num) beta hb‖⁻¹ *
+    (VacC H 2 (by norm_num) beta hb A * K H 2 beta A B *
+      VacC H 2 (by norm_num) beta hb B)
+
+local notation "J" => p4Q2PZ37AQT_joint
+
+theorem p4Q2PZ37AQT_joint_continuous (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) :
+    Continuous (fun p : Cfg H 2 × Cfg H 2 => J H beta hb p.1 p.2) := by
+  have ho := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
+    H 2 (by norm_num) beta hb
+  exact continuous_const.mul (((ho.comp continuous_fst).mul
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous H 2 beta)).mul
+    (ho.comp continuous_snd))
+
+theorem p4Q2PZ37AQT_joint_nonneg (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (A B : Cfg H 2) :
+    0 ≤ J H beta hb A B := by
+  unfold p4Q2PZ37AQT_joint
+  exact mul_nonneg (inv_nonneg.mpr (norm_nonneg _))
+    (mul_nonneg (mul_nonneg
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_pos H 2 (by norm_num) beta hb A).le
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos H 2 beta A B).le)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_pos H 2 (by norm_num) beta hb B).le)
+
+/-- Pointwise exact marginal, from the continuous vacuum eigen-equation
+and the symmetry of the actual Wilson kernel. -/
+theorem p4Q2PZ37AQT_joint_right_integral (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (A : Cfg H 2) :
+    (∫ B : Cfg H 2, J H beta hb A B ∂(Mu H 2)) =
+      (VacC H 2 (by norm_num) beta hb A)^2 := by
+  let mu := Mu H 2
+  let o := VacC H 2 (by norm_num) beta hb
+  let l := ‖Tr H 2 (by norm_num) beta hb‖
+  have hl : 0 < l := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos_from_uniform_kernel_floor
+    H 2 (by norm_num) beta hb
+  have he := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_topNorm_mul_eq_integral_kernel
+    H 2 (by norm_num) beta hb A
+  have hRep := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_ae_eq_existing
+    H 2 (by norm_num) beta hb
+  have hI : (∫ B : Cfg H 2, K H 2 beta A B * o B ∂mu) = l * o A := by
+    rw [he]
+    apply integral_congr_ae
+    filter_upwards [hRep] with B hB
+    change K H 2 beta A B * o B = _ * K H 2 beta B A
+    rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_symmetric H 2 (by norm_num) beta hb A B,
+      show o B = _ from hB]
+    ring
+  calc
+    _ = ∫ B : Cfg H 2, (l⁻¹ * o A) * (K H 2 beta A B * o B) ∂mu := by
+      apply integral_congr_ae
+      filter_upwards with B
+      change l⁻¹ * (o A * K H 2 beta A B * o B) = _
+      ring
+    _ = _ := by
+      rw [integral_const_mul, hI]
+      field_simp [ne_of_gt hl]
+      ring
+
+/-- Right endpoint one-link refresh lower bound with the exact AQP Haar moment. -/
+theorem p4Q2PZ37AQT_joint_right_sq_lower (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (q : ℝ) (A : Cfg H 2) :
+    Real.exp (-16*beta) * (1+q^2) * (VacC H 2 (by norm_num) beta hb A)^2 ≤
+      ∫ B : Cfg H 2, J H beta hb A B * (Obs H q B)^2 ∂(Mu H 2) := by
+  classical
+  let mu := Mu H 2
+  let a := Obs H q
+  let e := E H 0
+  let j := J H beta hb A
+  have hj : Continuous j :=
+    (p4Q2PZ37AQT_joint_continuous H beta hb).comp (continuous_const.prodMk continuous_id)
+  let F : C(Cfg H 2, ℝ) := ⟨fun B => j B * (a B)^2, hj.mul (a.continuous.pow 2)⟩
+  have hF (B : Cfg H 2) : 0 ≤ F B :=
+    mul_nonneg (p4Q2PZ37AQT_joint_nonneg H beta hb A B) (sq_nonneg _)
+  have hUpdate : Continuous (fun z : Cfg H 2 × G => Function.update z.1 e z.2) := by
+    apply continuous_pi_iff.mpr
+    intro i
+    by_cases hi : i = e
+    · subst i
+      simpa [Function.update] using (continuous_snd : Continuous (fun z : Cfg H 2 × G => z.2))
+    · simpa [Function.update, hi] using ((continuous_apply i).comp
+        (continuous_fst : Continuous (fun z : Cfg H 2 × G => z.1)))
+  have hJoint := F.continuous.comp hUpdate
+  have hJointInt : Integrable (fun z : Cfg H 2 × G => F (Function.update z.1 e z.2))
+      (mu.prod nu) := hJoint.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+  have hFiber (B : Cfg H 2) :
+      (Real.exp (-16*beta) * j B) * (1+q^2) ≤ ∫ g : G, F (Function.update B e g) ∂nu := by
+    have hB : Continuous (fun g : G => (B,g)) := continuous_const.prodMk continuous_id
+    have hInnerInt : Integrable (fun g : G => F (Function.update B e g)) nu :=
+      (hJoint.comp hB).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+    have hAInt : Integrable (fun g : G => (a (Function.update B e g))^2) nu :=
+      ((a.continuous.comp (hUpdate.comp hB)).pow 2).integrable_of_hasCompactSupport
+        (HasCompactSupport.of_compactSpace _)
+    have hMoment : (∫ g : G, (a (Function.update B e g))^2 ∂nu) = 1+q^2 :=
+      p4Q2PZ37AQP_oneLinkHaar_sq H q B
+    rw [← hMoment, ← integral_const_mul]
+    apply integral_mono (hAInt.const_mul _) hInnerInt
+    intro g
+    have hH : j B ≤ Real.exp (16*beta) * j (Function.update B e g) := by
+      simpa only [j, p4Q2PZ37AQT_joint,
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumGroundStateSpatialLinkFiberWeightReal,
+        Function.update_eq_self] using
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumGroundStateSpatialLinkFiberWeightReal_update_right_le_exp_sixteen_mul_update_right
+          H 2 (by norm_num) beta hb A B e (B e) g)
+    have he : Real.exp (-16*beta) * Real.exp (16*beta) = 1 := by
+      rw [← Real.exp_add, show -16*beta + 16*beta = 0 by ring, Real.exp_zero]
+    have hL : Real.exp (-16*beta) * j B ≤ j (Function.update B e g) := by
+      calc
+        _ ≤ Real.exp (-16*beta) * (Real.exp (16*beta) * j (Function.update B e g)) :=
+          mul_le_mul_of_nonneg_left hH (Real.exp_pos _).le
+        _ = _ := by rw [← mul_assoc, he, one_mul]
+    exact mul_le_mul_of_nonneg_right hL (sq_nonneg _)
+  have hLowerInt : Integrable (fun B : Cfg H 2 => (Real.exp (-16*beta) * j B) * (1+q^2)) mu :=
+    (hj.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+      |>.const_mul (Real.exp (-16*beta))).mul_const (1+q^2)
+  have hOuter := integral_mono hLowerInt hJointInt.integral_prod_left hFiber
+  have hRefresh := GroundStatePosteriorJoint.p4Q2NB_originalSpatialHaar_integral_oneLinkRefresh H e F hF
+  change (∫ B : Cfg H 2, (Real.exp (-16*beta) * j B) * (1+q^2) ∂mu) ≤
+    ∫ B : Cfg H 2, (∫ g : G, F (Function.update B e g) ∂nu) ∂(Mu H 2) at hOuter
+  rw [hRefresh, integral_mul_const, integral_const_mul,
+    show (∫ B : Cfg H 2, j B ∂mu) = (VacC H 2 (by norm_num) beta hb A)^2 from
+      p4Q2PZ37AQT_joint_right_integral H beta hb A] at hOuter
+  convert hOuter using 1
+  ring
+
+/-- Both endpoints' nonnegative squared observable moment, with one actual
+Haar refresh and the AQP norm floor, rather than signed pointwise comparison. -/
+theorem p4Q2PZ37AQT_joint_pair_sq_lower (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (q : ℝ) :
+    Real.exp (-32*beta) * (1+q^2)^2 ≤
+      ∫ p : Cfg H 2 × Cfg H 2, J H beta hb p.1 p.2 * (Obs H q p.1)^2 * (Obs H q p.2)^2
+        ∂((Mu H 2).prod (Mu H 2)) := by
+  let mu := Mu H 2
+  let a := Obs H q
+  let o := VacC H 2 (by norm_num) beta hb
+  let c := Real.exp (-16*beta) * (1+q^2)
+  have hc : 0 ≤ c := by dsimp [c]; positivity
+  have ho := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
+    H 2 (by norm_num) beta hb
+  let f : Cfg H 2 × Cfg H 2 → ℝ := fun p => J H beta hb p.1 p.2 * (a p.1)^2 * (a p.2)^2
+  have hf : Continuous f :=
+    ((p4Q2PZ37AQT_joint_continuous H beta hb).mul ((a.continuous.comp continuous_fst).pow 2)).mul
+      ((a.continuous.comp continuous_snd).pow 2)
+  have hfi : Integrable f (mu.prod mu) :=
+    hf.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+  have hLower : Integrable (fun A : Cfg H 2 => c * (a A * o A)^2) mu :=
+    ((a.continuous.mul ho).pow 2).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _) |>.const_mul c
+  have hFiber (A : Cfg H 2) : c * (a A * o A)^2 ≤ ∫ B : Cfg H 2, f (A,B) ∂mu := by
+    have h := mul_le_mul_of_nonneg_left (p4Q2PZ37AQT_joint_right_sq_lower H beta hb q A)
+      (sq_nonneg (a A))
+    calc
+      _ = (a A)^2 * (c * (o A)^2) := by ring
+      _ ≤ (a A)^2 * (∫ B : Cfg H 2, J H beta hb A B * (a B)^2 ∂mu) := h
+      _ = _ := by
+        rw [← integral_const_mul]
+        apply integral_congr_ae
+        filter_upwards with B
+        dsimp [f]
+        ring
+  have h := integral_mono hLower hfi.integral_prod_left hFiber
+  rw [integral_const_mul, ← p4Q2PZ37AQP_weightedNormSq_eq_integral H beta hb q,
+    ← MeasureTheory.integral_prod f hfi] at h
+  have hNorm := mul_le_mul_of_nonneg_left (p4Q2PZ37AQP_weightedNormSq_lower H beta hb q) hc
+  have he : (Real.exp (-16*beta))^2 = Real.exp (-32*beta) := by
+    rw [pow_two, ← Real.exp_add]
+    congr 1
+    ring
+  calc
+    _ = c * c := by
+      dsimp [c]
+      rw [← he]
+      ring
+    _ ≤ c * ‖W H beta hb q‖^2 := hNorm
+    _ ≤ _ := h
+
+/-- Signed PSD comparison, followed by pointwise comparison only after the
+observable has been squared at both endpoints. -/
+theorem p4Q2PZ37AQT_integrated_rankOne (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (q d : ℝ) (hd : PSD (Cfg H 2) (fun A B => d * K H 2 beta A B -
+      Half H 2 beta A * R H beta A B * Half H 2 beta B * (Obs H q A * Obs H q B))) :
+    (∫ p : Cfg H 2 × Cfg H 2, J H beta hb p.1 p.2 * (Obs H q p.1)^2 * (Obs H q p.2)^2
+      ∂((Mu H 2).prod (Mu H 2))) ≤
+      d * (‖Tr H 2 (by norm_num) beta hb‖⁻¹ * inner ℝ
+        (Tr H 2 (by norm_num) beta hb (W H beta hb q)) (W H beta hb q)) := by
+  let mu := Mu H 2
+  let a := Obs H q
+  let o := VacC H 2 (by norm_num) beta hb
+  let l := ‖Tr H 2 (by norm_num) beta hb‖
+  let f : Cfg H 2 → ℝ := fun A => a A * o A
+  let s : Cfg H 2 → Cfg H 2 → ℝ := fun A B => Half H 2 beta A * R H beta A B * Half H 2 beta B
+  let k : Cfg H 2 → Cfg H 2 → ℝ := fun A B => d * K H 2 beta A B - s A B * (a A * a B)
+  have ho := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
+    H 2 (by norm_num) beta hb
+  have hf : Continuous f := a.continuous.mul ho
+  have hh := periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeight_continuous H 2 beta
+  have hs : Continuous (fun p : Cfg H 2 × Cfg H 2 => s p.1 p.2) :=
+    ((hh.comp continuous_fst).mul (p4Q2PZ37AQT_residual_continuous H beta)).mul (hh.comp continuous_snd)
+  have hK := periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous H 2 beta
+  have hk : Continuous (fun p : Cfg H 2 × Cfg H 2 => k p.1 p.2) :=
+    (continuous_const.mul hK).sub (hs.mul ((a.continuous.comp continuous_fst).mul (a.continuous.comp continuous_snd)))
+  let L : Cfg H 2 × Cfg H 2 → ℝ := fun p => d * (f p.1 * K H 2 beta p.1 p.2 * f p.2)
+  let M : Cfg H 2 × Cfg H 2 → ℝ := fun p => s p.1 p.2 * (a p.1)^2 * (a p.2)^2 * o p.1 * o p.2
+  let N : Cfg H 2 × Cfg H 2 → ℝ := fun p => K H 2 beta p.1 p.2 * (a p.1)^2 * (a p.2)^2 * o p.1 * o p.2
+  have hLi : Integrable L (mu.prod mu) :=
+    (continuous_const.mul (((hf.comp continuous_fst).mul hK).mul (hf.comp continuous_snd))).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  have hMi : Integrable M (mu.prod mu) :=
+    ((((hs.mul ((a.continuous.comp continuous_fst).pow 2)).mul ((a.continuous.comp continuous_snd).pow 2)).mul
+      (ho.comp continuous_fst)).mul (ho.comp continuous_snd)).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  have hNi : Integrable N (mu.prod mu) :=
+    ((((hK.mul ((a.continuous.comp continuous_fst).pow 2)).mul ((a.continuous.comp continuous_snd).pow 2)).mul
+      (ho.comp continuous_fst)).mul (ho.comp continuous_snd)).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  have hPSD : PSD (Cfg H 2) k := hd
+  have hQ := p4Q2PZ37AQT_psd_pair_integral_nonneg mu hk hPSD f hf
+  have he : (∫ p : Cfg H 2 × Cfg H 2, f p.1 * k p.1 p.2 * f p.2 ∂(mu.prod mu)) =
+      ∫ p, L p - M p ∂(mu.prod mu) := by
+    apply integral_congr_ae
+    filter_upwards with p
+    dsimp [L, M, k, f]
+    ring
+  rw [he, integral_sub hLi hMi] at hQ
+  have hNM : (∫ p, N p ∂(mu.prod mu)) ≤ ∫ p, M p ∂(mu.prod mu) := by
+    apply integral_mono hNi hMi
+    intro p
+    have hR := (p4Q2PZ37AQR_crossing_relative_to_residual H beta hb p.1 p.2).2
+    have hHalf₁ := (periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeight_pos H 2 beta p.1).le
+    have hHalf₂ := (periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeight_pos H 2 beta p.2).le
+    have hks : K H 2 beta p.1 p.2 ≤ s p.1 p.2 :=
+      mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hR hHalf₁) hHalf₂
+    have hO₁ : 0 ≤ o p.1 :=
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_pos H 2 (by norm_num) beta hb p.1).le
+    have hO₂ : 0 ≤ o p.2 :=
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_pos H 2 (by norm_num) beta hb p.2).le
+    exact mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right
+      (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hks (sq_nonneg _)) (sq_nonneg _)) hO₁) hO₂
+  have hL : (∫ p, L p ∂(mu.prod mu)) =
+      d * inner ℝ (Tr H 2 (by norm_num) beta hb (W H beta hb q)) (W H beta hb q) := by
+    dsimp only [L]
+    rw [integral_const_mul, ← p4Q2PZ37AQT_physical_pair_eq H beta hb (W H beta hb q) f
+      (p4Q2PZ37AQT_weightedProbe_ae H beta hb q)]
+  have hI : (∫ p : Cfg H 2 × Cfg H 2, J H beta hb p.1 p.2 * (a p.1)^2 * (a p.2)^2
+      ∂(mu.prod mu)) = l⁻¹ * ∫ p, N p ∂(mu.prod mu) := by
+    rw [← integral_const_mul]
+    apply integral_congr_ae
+    filter_upwards with p
+    change l⁻¹ * (o p.1 * K H 2 beta p.1 p.2 * o p.2) * (a p.1)^2 * (a p.2)^2 = _
+    dsimp [N]
+    ring
+  rw [hI]
+  calc
+    _ ≤ l⁻¹ * (∫ p, L p ∂(mu.prod mu)) :=
+      mul_le_mul_of_nonneg_left (hNM.trans (sub_nonneg.mp hQ)) (inv_nonneg.mpr (norm_nonneg _))
+    _ = _ := by rw [hL]; ring
+
+/-- For every fixed positive coupling and actual probe coefficient, a positive
+volume-independent normalized physical transfer quadratic floor. -/
+theorem p4Q2PZ37AQT_relative_quadratic_floor (beta : ℝ) (hb : 0 < beta) (q : ℝ) :
+    ∃ d : ℝ, 0 < d ∧ ∀ H : ℕ, Real.exp (-32*beta) * (1+q^2)^2 ≤
+      d * (‖Tr H 2 (by norm_num) beta hb.le‖⁻¹ *
+        inner ℝ (Tr H 2 (by norm_num) beta hb.le (W H beta hb.le q)) (W H beta hb.le q)) := by
+  obtain ⟨d, hd, hPSD⟩ := p4Q2PZ37AQS_original_observable_slab_psd beta hb q
+  refine ⟨d+1, by linarith, ?_⟩
+  intro H
+  have h := (p4Q2PZ37AQT_joint_pair_sq_lower H beta hb.le q).trans
+    (p4Q2PZ37AQT_integrated_rankOne H beta hb.le q d (hPSD H))
+  have hp : 0 ≤ ‖Tr H 2 (by norm_num) beta hb.le‖⁻¹ *
+      inner ℝ (Tr H 2 (by norm_num) beta hb.le (W H beta hb.le q)) (W H beta hb.le q) :=
+    mul_nonneg (inv_nonneg.mpr (norm_nonneg _))
+      (p4Q2PZ37APL_originalVacuumWeightedTwoMode_quadratic_pos H beta hb q).le
+  exact h.trans (mul_le_mul_of_nonneg_right (by linarith) hp)
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQT_psd_pair_integral_nonneg
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQT_residual_continuous
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQT_weightedProbe_ae
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQT_physical_pair_eq
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQT_joint
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQT_joint_continuous
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQT_joint_nonneg
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQT_joint_right_integral
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQT_joint_right_sq_lower
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQT_joint_pair_sq_lower
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQT_integrated_rankOne
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQT_relative_quadratic_floor
