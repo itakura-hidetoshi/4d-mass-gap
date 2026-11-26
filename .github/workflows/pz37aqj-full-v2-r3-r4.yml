@@ -1,0 +1,19 @@
+name: PZ37AQJ full-cache sandbox v2 actual reflected Gibbs geometric bound
+on:
+  pull_request:
+    paths:
+      - "diagnostics/pz37aqj/full-v2-r3-r4/**"
+      - ".github/workflows/pz37aqj-full-v2-r3-r4.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pz37aqj-full-v2-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    uses: ./.github/workflows/lean-warm-sandbox-reusable-aqj-full-v2.yml
+    with:
+      pack: diagnostics/pz37aqj/full-v2-r3-r4/pack.json
+      source_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      baseline_commit: 2c2908f2a8bce27c5773e2573d90682251232a30
