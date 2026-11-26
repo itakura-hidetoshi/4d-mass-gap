@@ -1,0 +1,2 @@
+# AQM R7/R8 syntax-only repair
+R5/R6 direct run 45811531146 job 139880343868: both emitted exactly one parser diagnostic at line 256, unexpected omit after doc comment. All ten public axiom reports list only propext, Classical.choice, Quot.sound, but exit status was nonzero; no promotion. R7/R8 replace the single doc-comment opener /-- with ordinary /- before omit. All theorem statements, proof terms, imports, and pins are unchanged. Require warning-free direct Lean and real MCP GREEN before independent CI.
