@@ -1,0 +1,3 @@
+# AQF finite dyadic threshold
+
+Formal base dd6898fa5306850ea5dc4c0a91cd26a8fec1d81f. AQE independently certified in run 45774282675; exact merged tree 9f6540d2626fbe572b5d153f32b22f7bfa4af4f8. Compared existing factorial rational-slot contraction and AQE; the former uses unlimited time and a uniform bound, whereas AQF retains finite positive support and genuine Haar majorant. Eight theorem candidates: power ratio, explicit root, threshold incl zero base, sharp finite scalar no-go, genuine Wilson relative root, actual terminal threshold, Haar sufficient threshold and necessary budget for expansion. No global contraction or actual Wilson expansion assertion. APX/APY unchanged. TEST_REQUIRED.
