@@ -1,0 +1,259 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSRelativeHorizonV5_PZ37AQK
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37AQL — representation dependence of the genuine relative amplitude
+Constant shifts preserve support and actual centered correlations. The raw AQK
+prefactor is unbounded on each such fiber with positive initial correlation
+and nonempty support. A norm budget on selected representatives supplies the
+conditional relative prefactor. No centered coercivity or mass gap asserted.
+-/
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory Filter Set
+open scoped ENNReal Topology InnerProductSpace InnerProduct BigOperators
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 6000000
+set_option synthInstance.maxHeartbeats 100000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "O" => PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
+local notation "P" => periodicHypercubicEvenEdgeOrbitPartition
+local notation "L" => PeriodicHypercubicEvenSideLength
+local notation "Tau" => periodicHypercubicIntegerTemporalConfigurationTranslation
+local notation "Theta" => periodicHypercubicEvenConfigurationReflection
+local notation "Gibbs" => periodicHypercubicSpecialUnitaryWilsonSystem
+local notation "Pair" => p4Q2PZ37AQC_reflectedPair
+local notation "Supported" => p4Q2PZ37APZ_DependsOn
+local notation "Local" => p4Q2PZ37AQB_localHalfObservable
+local notation "Read" => p4Q2PZ37AQC_boundaryRead
+local notation "L2" => periodicHypercubicEvenWilsonOpenHalfObservableL2
+local notation "HalfMu" => periodicHypercubicEvenOpenHalfHaarMeasure
+local notation "BoundaryMu" => periodicHypercubicEvenBoundaryHaarMeasure
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "Obs" => (fun H : ℕ => BoundedContinuousFunction (O H 2) ℝ)
+
+local instance p4Q2PZ37AQL_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37AQL_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37AQL_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37AQL_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37AQL_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37AQL_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37AQL_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37AQL_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37AQL_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+local instance p4Q2PZ37AQL_openHalfProbability (H : ℕ) :
+    IsProbabilityMeasure (periodicHypercubicEvenOpenHalfHaarMeasure H 2) := by
+  dsimp [periodicHypercubicEvenOpenHalfHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
+  infer_instance
+
+
+local instance p4Q2PZ37AQL_boundaryProbability (H : ℕ) :
+    IsProbabilityMeasure (BoundaryMu H 2) := by
+  dsimp [periodicHypercubicEvenBoundaryHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure]
+  infer_instance
+
+
+
+
+
+local notation "Cfg" => (fun H : ℕ => PeriodicHypercubicEvenEdge H → G)
+local notation "FullObs" => (fun H : ℕ => BoundedContinuousFunction (Cfg H) ℝ)
+local notation "Ref" => periodicHypercubicEvenEdgeReflection
+local notation "Shift" => p4Q2PZ37APZ_edgeShift
+local notation "Corr" => p4Q2PZ37AQG_fullReflectedCorrelation
+local notation "Conn" => p4Q2PZ37AQH_connectedCorrelation
+local notation "Mean" => p4Q2PZ37AQH_fullGibbsMean
+local notation "EvenC" => p4Q2PZ37AQI_evenConnected
+local notation "Rho" => (fun beta : ℝ => 18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta)
+
+
+local notation "Center" => p4Q2PZ37AQH_center
+local notation "Vac" => periodicHypercubicEvenBoundaryVacuumL2
+local notation "Bnd" => p4Q2PZ37AQK_prefactor
+
+/-- Adding a constant preserves the specified literal finite support. -/
+theorem p4Q2PZ37AQL_supported_add_const
+    (H : ℕ) (s : Set (PeriodicHypercubicEvenEdge H)) (u : Obs H) (t : ℝ)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A))) :
+    Supported H s (fun A => (u + t • (1 : Obs H)) ((P H).positiveRestriction A)) := by
+  intro A B hAB
+  change u ((P H).positiveRestriction A) + t * 1 =
+    u ((P H).positiveRestriction B) + t * 1
+  have heq : u ((P H).positiveRestriction A) = u ((P H).positiveRestriction B) :=
+    hu A B hAB
+  exact congrArg (fun z : ℝ => z + t * 1) heq
+
+variable [Nontrivial G]
+
+/-- Genuine Gibbs mean shifts by exactly the added scalar. -/
+theorem p4Q2PZ37AQL_mean_add_const
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (u : Obs H) (t : ℝ) :
+    Mean H beta hb (u + t • (1 : Obs H)) = Mean H beta hb u + t := by
+  calc
+    _ = inner ℝ (Vac H 2 (by norm_num) beta hb)
+        (Read H beta hb (u + t • (1 : Obs H))) :=
+      (p4Q2PZ37AQH_vacuum_inner_eq_mean H beta hb _).symm
+    _ = _ := by
+      rw [map_add, map_smul, inner_add_right, real_inner_smul_right,
+        p4Q2PZ37AQH_read_one_eq_vacuum H beta hb,
+        p4Q2PZ37AQH_vacuum_inner_eq_mean H beta hb,
+        real_inner_self_eq_norm_sq, p4Q2PZ37APP_originalBoundaryVacuum_norm H beta hb]
+      ring
+
+/-- Constant shifts do not change the actual centered observable. -/
+theorem p4Q2PZ37AQL_center_add_const
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (u : Obs H) (t : ℝ) :
+    Center H beta hb (u + t • (1 : Obs H)) = Center H beta hb u := by
+  unfold p4Q2PZ37AQH_center
+  rw [p4Q2PZ37AQL_mean_add_const, add_smul]
+  abel
+
+/-- Centering selects a representative with zero mean, idempotently. -/
+theorem p4Q2PZ37AQL_center_idem
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (u : Obs H) :
+    Center H beta hb (Center H beta hb u) = Center H beta hb u := by
+  change Center H beta hb u -
+    Mean H beta hb (Center H beta hb u) • (1 : Obs H) = Center H beta hb u
+  rw [p4Q2PZ37AQH_mean_center_zero, zero_smul, sub_zero]
+
+/-- The actual even connected correlation is invariant under the same
+constant shifts at every admissible finite endpoint. -/
+theorem p4Q2PZ37AQL_evenConnected_add_const
+    (H k j : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta) (u : Obs H) (t : ℝ)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A)))
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hbudget : ∀ e ∈ s, (e.1 0).val + j * k + j * k ≤ H) :
+    EvenC H k j beta hb (u + t • (1 : Obs H)) = EvenC H k j beta hb u := by
+  change Conn H (j * k + j * k) beta hb (u + t • (1 : Obs H)) (u + t • (1 : Obs H)) =
+    Conn H (j * k + j * k) beta hb u u
+  rw [← p4Q2PZ37AQH_localNormSq_eq_connected H (j * k) s beta hb
+      (u + t • (1 : Obs H)) (p4Q2PZ37AQL_supported_add_const H s u t hu) hp hbudget,
+    ← p4Q2PZ37AQH_localNormSq_eq_connected H (j * k) s beta hb u hu hp hbudget,
+    p4Q2PZ37AQL_center_add_const]
+
+/-- On the genuine finite Wilson model, the raw AQK prefactor is unbounded
+on a constant-shift fiber with nonzero initial connected correlation.
+This is an obstruction to a representative-independent raw prefactor,
+not a failure of actual relative contraction or centered coercivity. -/
+theorem p4Q2PZ37AQL_rawPrefactor_unbounded_on_centered_fiber
+    (H k : ℕ) (S : Finset (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta) (hThreshold : Rho beta < 1)
+    (u : Obs H) (x : O H 2)
+    (hu : Supported H (↑S : Set (PeriodicHypercubicEvenEdge H))
+      (fun A => u ((P H).positiveRestriction A)))
+    (hp : ∀ e ∈ S, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hbudget : ∀ e ∈ S, (e.1 0).val ≤ H)
+    (hS : 0 < S.card) (hbase : 0 < EvenC H k 0 beta hb u)
+    (K : ℝ) :
+    ∃ t : ℝ, let v := u + t • (1 : Obs H)
+      Supported H (↑S : Set (PeriodicHypercubicEvenEdge H))
+        (fun A => v ((P H).positiveRestriction A)) ∧
+      Center H beta hb v = Center H beta hb u ∧
+      EvenC H k 0 beta hb v = EvenC H k 0 beta hb u ∧
+      0 < EvenC H k 0 beta hb v ∧
+      K * EvenC H k 0 beta hb v < Bnd H S beta v := by
+  let a := EvenC H k 0 beta hb u
+  let d := 1 - Rho beta
+  let M := |K * a| + d + 1
+  let t := M - u x
+  let v := u + t • (1 : Obs H)
+  have hd : 0 < d := sub_pos.mpr hThreshold
+  have hM : 0 < M := by
+    dsimp [M]
+    linarith [abs_nonneg (K * a)]
+  have hvx : v x = M := by
+    change u x + (M - u x) * 1 = M
+    ring
+  have hnorm : M ≤ ‖v‖ := by
+    have hh := BoundedContinuousFunction.norm_coe_le_norm v x
+    rw [hvx, Real.norm_eq_abs, abs_of_pos hM] at hh
+    exact hh
+  have hc : (1 : ℝ) ≤ (S.card : ℝ) := by
+    exact_mod_cast (show 1 ≤ S.card by omega)
+  have hnum : M ≤ (S.card : ℝ) * (2 * ‖v‖) := by
+    calc
+      _ ≤ ‖v‖ := hnorm
+      _ ≤ 2 * ‖v‖ := by linarith [norm_nonneg v]
+      _ = 1 * (2 * ‖v‖) := (one_mul _).symm
+      _ ≤ _ := mul_le_mul_of_nonneg_right hc (by positivity)
+  have hsq : M ^ 2 ≤ ((S.card : ℝ) * (2 * ‖v‖)) ^ 2 :=
+    pow_le_pow_left₀ hM.le hnum 2
+  have habs : |K * a| < M := by
+    dsimp [M]
+    linarith
+  have hdM : d ≤ M := by
+    dsimp [M]
+    linarith [abs_nonneg (K * a)]
+  have hlt : K * a * d < M ^ 2 := by
+    calc
+      _ ≤ |K * a| * d := mul_le_mul_of_nonneg_right (le_abs_self _) hd.le
+      _ < M * d := mul_lt_mul_of_pos_right habs hd
+      _ ≤ M * M := mul_le_mul_of_nonneg_left hdM hM.le
+      _ = _ := (pow_two M).symm
+  have hEq : EvenC H k 0 beta hb v = a := by
+    exact p4Q2PZ37AQL_evenConnected_add_const H k 0 (↑S) beta hb u t hu hp
+      (by simpa using hbudget)
+  refine ⟨t, p4Q2PZ37AQL_supported_add_const H (↑S) u t hu,
+    p4Q2PZ37AQL_center_add_const H beta hb u t, hEq, ?_, ?_⟩
+  · rw [hEq]
+    exact hbase
+  · change K * EvenC H k 0 beta hb v < Bnd H S beta v
+    rw [hEq]
+    change K * a < ((S.card : ℝ) * (2 * ‖v‖)) ^ 2 / d
+    exact (lt_div_iff₀ hd).2 (hlt.trans_le hsq)
+
+/-- On a chosen representative with a norm-to-initial-OS bound, a bounded
+support cardinality and denominator floor suffice for AQK's relative
+amplitude budget. The norm-to-OS estimate is a hypothesis, not a result. -/
+theorem p4Q2PZ37AQL_prefactor_le_of_normBudget
+    (H k : ℕ) (S : Finset (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta) (u : Obs H)
+    (N C d : ℝ) (hd : 0 < d) (hden : d ≤ 1 - Rho beta)
+    (hcard : (S.card : ℝ) ≤ N)
+    (hnorm : ‖u‖ ^ 2 ≤ C * EvenC H k 0 beta hb u) :
+    Bnd H S beta u ≤ (4 * N ^ 2 * C / d) * EvenC H k 0 beta hb u := by
+  have hcard2 : (S.card : ℝ) ^ 2 ≤ N ^ 2 :=
+    pow_le_pow_left₀ (by positivity) hcard 2
+  have hnum : ((S.card : ℝ) * (2 * ‖u‖)) ^ 2 ≤
+      4 * N ^ 2 * (C * EvenC H k 0 beta hb u) := by
+    calc
+      _ = 4 * (S.card : ℝ) ^ 2 * ‖u‖ ^ 2 := by ring
+      _ ≤ 4 * N ^ 2 * ‖u‖ ^ 2 :=
+        mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hcard2 (by norm_num)) (sq_nonneg _)
+      _ ≤ _ := mul_le_mul_of_nonneg_left hnorm (by positivity)
+  unfold p4Q2PZ37AQK_prefactor
+  calc
+    _ ≤ ((S.card : ℝ) * (2 * ‖u‖)) ^ 2 / d :=
+      div_le_div_of_nonneg_left (sq_nonneg _) hd hden
+    _ ≤ (4 * N ^ 2 * (C * EvenC H k 0 beta hb u)) / d :=
+      div_le_div_of_nonneg_right hnum hd.le
+    _ = _ := by ring
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQL_supported_add_const
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQL_mean_add_const
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQL_center_add_const
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQL_center_idem
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQL_evenConnected_add_const
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQL_rawPrefactor_unbounded_on_centered_fiber
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQL_prefactor_le_of_normBudget
