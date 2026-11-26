@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "baseline_commit": "06870bd2862c82d96605eda2efd5b7db2bb61249",
+  "baseline_mgap4d_tree": "75993597cd105cac5694e11d3c5fe7131134d14d",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSReflectedCorrelationThresholdV5_PZ37AQG",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "AQH",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_fullGibbsMean",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_center",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_connectedCorrelation",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_read_one_eq_vacuum",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_vacuum_inner_eq_mean",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_read_center",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_center_vacuum_orthogonal",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_mean_center_zero",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_center_supported",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_local_mean_eq",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_local_center_commutes",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_localMixedShift_centered_inner_eq_connected",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_localNormSq_eq_connected",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_localEvenConnected_nonneg",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQH_localDyadicConnectedThreshold"
+      ],
+      "candidates": [
+        {
+          "id": "R1",
+          "path": "diagnostics/pz37aqh/full-v1-r1-r2/AQH_R1.lean.txt",
+          "blob": "7655a2cbab804234b7f31a34c0895fac05cc62ab"
+        },
+        {
+          "id": "R2",
+          "path": "diagnostics/pz37aqh/full-v1-r1-r2/AQH_R2.lean.txt",
+          "blob": "a5927b2c47a2e4097d1a3fc56f5617272933d97e"
+        }
+      ]
+    }
+  ]
+}
