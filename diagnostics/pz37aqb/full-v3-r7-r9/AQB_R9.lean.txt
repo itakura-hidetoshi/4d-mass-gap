@@ -1,0 +1,262 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalLocalSupportCompositionV5_PZ37AQA
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37AQB — local support transport in the actual Haar L2 carrier
+The genuine positive restriction and full edge permutation preserve their
+respective product Haar laws. Pullback embeds the half L2 carrier isometrically
+in the full carrier. On a locally supported bounded continuous observable,
+APZ/AQA identify the translated half representative with that full transport.
+This descends to Haar L2, not to the Wilson OS null quotient. APX/APY remain.
+-/
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory Filter Set
+open scoped ENNReal Topology InnerProductSpace InnerProduct
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 12000000
+set_option synthInstance.maxHeartbeats 100000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "O" => PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
+local notation "P" => periodicHypercubicEvenEdgeOrbitPartition
+local notation "L" => PeriodicHypercubicEvenSideLength
+local notation "Tau" => periodicHypercubicIntegerTemporalConfigurationTranslation
+local notation "Section" => periodicHypercubicEvenSpecialUnitaryPositiveHalfSection
+local notation "Step" => periodicHypercubicEvenSpecialUnitaryPositiveHalfSectionIntegerTemporalStep
+local notation "Shift" => p4Q2PZ37APZ_edgeShift
+local notation "Supported" => p4Q2PZ37APZ_DependsOn
+local notation "W" => p4Q2PZ37APW_openTimeOneObservable
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+
+local instance p4Q2PZ37AQB_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37AQB_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37AQB_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37AQB_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37AQB_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37AQB_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37AQB_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37AQB_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37AQB_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+local instance p4Q2PZ37AQB_openHalfProbability (H : ℕ) :
+    IsProbabilityMeasure (periodicHypercubicEvenOpenHalfHaarMeasure H 2) := by
+  dsimp [periodicHypercubicEvenOpenHalfHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
+  infer_instance
+
+local notation "FullMu" => (fun H : ℕ =>
+  Measure.pi (fun _ : PeriodicHypercubicEvenEdge H => normalizedCompactHaar G))
+local notation "HalfMu" => periodicHypercubicEvenOpenHalfHaarMeasure
+local notation "L2" => periodicHypercubicEvenWilsonOpenHalfObservableL2
+
+/-- The genuine positive restriction preserves the product Haar marginal. -/
+theorem p4Q2PZ37AQB_positiveRestriction_measurePreserving (H : ℕ) :
+    MeasurePreserving
+      ((P H).positiveRestriction : (PeriodicHypercubicEvenEdge H → G) → O H 2)
+      (FullMu H) (HalfMu H 2) := by
+  let μ := normalizedCompactHaar G
+  letI : IsProbabilityMeasure ((P H).boundaryPiMeasure μ) := by
+    unfold FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure
+    infer_instance
+  letI : IsProbabilityMeasure ((P H).openHalfPiMeasure μ) := by
+    unfold FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure
+    infer_instance
+  have hc := (P H).boundaryFiberedPiMeasurableEquiv_measurePreserving μ
+  have hs : MeasurePreserving Prod.snd
+      (((P H).boundaryPiMeasure μ).prod
+        (((P H).openHalfPiMeasure μ).prod ((P H).openHalfPiMeasure μ)))
+      (((P H).openHalfPiMeasure μ).prod ((P H).openHalfPiMeasure μ)) :=
+    measurePreserving_snd
+  have hf : MeasurePreserving Prod.fst
+      (((P H).openHalfPiMeasure μ).prod ((P H).openHalfPiMeasure μ))
+      ((P H).openHalfPiMeasure μ) :=
+    measurePreserving_fst
+  have hm := hf.comp (hs.comp hc)
+  have he : (fun A : PeriodicHypercubicEvenEdge H → G =>
+      ((P H).boundaryFiberedPiMeasurableEquiv G A).2.1) =
+      (P H).positiveRestriction := by
+    funext A
+    rw [(P H).boundaryFiberedPiMeasurableEquiv_apply G A]
+    rfl
+  rw [← he]
+  exact hm
+
+/-- Full product Haar is invariant under the actual inverse integer displacement. -/
+theorem p4Q2PZ37AQB_fullShift_measurePreserving (H k : ℕ) :
+    MeasurePreserving (periodicHypercubicIntegerTemporalConfigurationTranslation (Gauge := G) (L H) (-(k : ℤ)))
+      (FullMu H) (FullMu H) := by
+  simpa [periodicHypercubicIntegerTemporalConfigurationTranslation,
+    periodicHypercubicConfigurationTranslationMeasurableEquiv] using
+    (MeasureTheory.measurePreserving_piCongrLeft
+      (fun _ : PeriodicHypercubicEvenEdge H => normalizedCompactHaar G)
+      (periodicHypercubicEdgeTranslationEquiv (L H)
+        (periodicHypercubicIntegerTemporalDisplacement (L H) (-(k : ℤ)))))
+
+/-- The literal half-section step is continuous; no full-half measure
+preservation is asserted for this map. -/
+theorem p4Q2PZ37AQB_halfStep_continuous (H k : ℕ) :
+    Continuous (Step H 2 (-(k : ℤ))) := by
+  have hsec : Continuous (Section H 2) := by
+    apply continuous_pi
+    intro e
+    change Continuous (fun x : O H 2 =>
+      (P H).boundaryFiberedAssemble (fun _ => (1 : G)) x (fun _ => (1 : G)) e)
+    by_cases hpos : (P H).side e = ReflectionEdgeSide.positive
+    · simpa [FiniteInvolutiveEdgeOrbitPartition.boundaryFiberedAssemble, hpos] using
+        (continuous_apply (⟨e, hpos⟩ : (P H).PositiveEdge) :
+          Continuous (fun x : O H 2 => x ⟨e, hpos⟩))
+    · by_cases hneg : (P H).side e = ReflectionEdgeSide.negative
+      · simp [FiniteInvolutiveEdgeOrbitPartition.boundaryFiberedAssemble, hpos, hneg] <;>
+          exact continuous_const
+      · have hfixed : (P H).side e = ReflectionEdgeSide.fixed := by
+          cases hside : (P H).side e <;> simp_all
+        simp [FiniteInvolutiveEdgeOrbitPartition.boundaryFiberedAssemble, hpos, hneg, hfixed] <;>
+          exact continuous_const
+  apply continuous_pi
+  intro e
+  have he : (fun x : O H 2 => Step H 2 (-(k : ℤ)) x e) =
+      (fun x : O H 2 => Section H 2 x (Shift H (k : ℤ) e.1)) := by
+    funext x
+    have ht := periodicHypercubicIntegerTemporalConfigurationTranslation_apply_translatedEdge
+      (L H) (k : ℤ) (Tau (L H) (-(k : ℤ)) (Section H 2 x)) e.1
+    rw [periodicHypercubicIntegerTemporalConfigurationTranslation_apply_neg] at ht
+    exact ht.symm
+  rw [he]
+  exact (continuous_apply (Shift H (k : ℤ) e.1)).comp hsec
+
+/-- The actual bounded continuous half-observable after the literal step. -/
+def p4Q2PZ37AQB_localHalfObservable (H k : ℕ)
+    (u : BoundedContinuousFunction (O H 2) ℝ) :
+    BoundedContinuousFunction (O H 2) ℝ :=
+  BoundedContinuousFunction.mkOfCompact
+    ⟨fun x => u (Step H 2 (-(k : ℤ)) x),
+      u.continuous.comp (p4Q2PZ37AQB_halfStep_continuous H k)⟩
+
+local notation "Local" => p4Q2PZ37AQB_localHalfObservable
+
+/-- Canonical isometric pullback of the positive Haar carrier into full Haar L2. -/
+def p4Q2PZ37AQB_halfEmbed (H : ℕ) :
+    Lp ℝ 2 (HalfMu H 2) →ₗᵢ[ℝ] Lp ℝ 2 (FullMu H) :=
+  MeasureTheory.Lp.compMeasurePreservingₗᵢ ℝ
+    ((P H).positiveRestriction : (PeriodicHypercubicEvenEdge H → G) → O H 2)
+    (p4Q2PZ37AQB_positiveRestriction_measurePreserving H)
+
+/-- Actual full Haar L2 pullback by the inverse temporal displacement. -/
+def p4Q2PZ37AQB_fullShift (H k : ℕ) :
+    Lp ℝ 2 (FullMu H) →ₗᵢ[ℝ] Lp ℝ 2 (FullMu H) :=
+  MeasureTheory.Lp.compMeasurePreservingₗᵢ ℝ
+    (periodicHypercubicIntegerTemporalConfigurationTranslation (Gauge := G) (L H) (-(k : ℤ)))
+    (p4Q2PZ37AQB_fullShift_measurePreserving H k)
+
+local notation "Embed" => p4Q2PZ37AQB_halfEmbed
+local notation "Move" => p4Q2PZ37AQB_fullShift
+
+/-- The isometric embedding reads the actual bounded continuous representative. -/
+theorem p4Q2PZ37AQB_halfEmbed_observable_coeFn
+    (H : ℕ) (u : BoundedContinuousFunction (O H 2) ℝ) :
+    (fun A => Embed H (L2 H 2 u) A) =ᵐ[FullMu H]
+      (fun A => u ((P H).positiveRestriction A)) := by
+  have hr := p4Q2PZ37AQB_positiveRestriction_measurePreserving H
+  filter_upwards [Lp.coeFn_compMeasurePreserving (L2 H 2 u) hr,
+    hr.quasiMeasurePreserving.ae_eq
+      (periodicHypercubicEvenWilsonOpenHalfObservableL2_coeFn H 2 u)] with A h1 h2
+  exact h1.trans h2
+
+/-- The supported step agrees in the full Haar carrier with the genuine
+measure-preserving full translation, not with a globally invariant half map. -/
+theorem p4Q2PZ37AQB_localL2_intertwine
+    (H k : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (u : BoundedContinuousFunction (O H 2) ℝ)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A)))
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hk : ∀ e ∈ s, (e.1 0).val + k ≤ H) :
+    Embed H (L2 H 2 (Local H k u)) = Move H k (Embed H (L2 H 2 u)) := by
+  have hpt (A : PeriodicHypercubicEvenEdge H → G) :
+      Local H k u ((P H).positiveRestriction A) =
+        u ((P H).positiveRestriction (Tau (L H) (-(k : ℤ)) A)) := by
+    change u ((P H).positiveRestriction
+      (Tau (L H) (-(k : ℤ)) (Section H 2 ((P H).positiveRestriction A)))) = _
+    exact (p4Q2PZ37APZ_dependsOn_shift_factor_of_budget H k s
+      (fun Z => u ((P H).positiveRestriction Z)) hu hp hk A).symm
+  have ht := p4Q2PZ37AQB_fullShift_measurePreserving H k
+  apply Lp.ext
+  filter_upwards [p4Q2PZ37AQB_halfEmbed_observable_coeFn H (Local H k u),
+    Lp.coeFn_compMeasurePreserving (Embed H (L2 H 2 u)) ht,
+    ht.quasiMeasurePreserving.ae_eq
+      (p4Q2PZ37AQB_halfEmbed_observable_coeFn H u)] with A h1 h2 h3
+  exact h1.trans ((hpt A).trans (h3.symm.trans h2.symm))
+
+/-- Exact Haar L2 norm preservation in the permitted support window. -/
+theorem p4Q2PZ37AQB_localL2_norm
+    (H k : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (u : BoundedContinuousFunction (O H 2) ℝ)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A)))
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hk : ∀ e ∈ s, (e.1 0).val + k ≤ H) :
+    ‖L2 H 2 (Local H k u)‖ = ‖L2 H 2 u‖ := by
+  calc
+    _ = ‖Embed H (L2 H 2 (Local H k u))‖ := ((Embed H).norm_map _).symm
+    _ = ‖Move H k (Embed H (L2 H 2 u))‖ := by
+      rw [p4Q2PZ37AQB_localL2_intertwine H k s u hu hp hk]
+    _ = ‖Embed H (L2 H 2 u)‖ := (Move H k).norm_map _
+    _ = _ := (Embed H).norm_map _
+
+/-- Equality of Haar L2 representatives is preserved by the supported step.
+The common support can contain the supports of both representatives. -/
+theorem p4Q2PZ37AQB_localL2_congr
+    (H k : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (u v : BoundedContinuousFunction (O H 2) ℝ)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A)))
+    (hv : Supported H s (fun A => v ((P H).positiveRestriction A)))
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hk : ∀ e ∈ s, (e.1 0).val + k ≤ H)
+    (he : L2 H 2 u = L2 H 2 v) :
+    L2 H 2 (Local H k u) = L2 H 2 (Local H k v) := by
+  apply (Embed H).injective
+  rw [p4Q2PZ37AQB_localL2_intertwine H k s u hu hp hk,
+    p4Q2PZ37AQB_localL2_intertwine H k s v hv hp hk, he]
+
+/-- The literal time-one two-mode observable has exactly the same Haar L2
+norm throughout its admissible forward time window. -/
+theorem p4Q2PZ37AQB_timeOne_localL2_norm
+    (H k : ℕ) (hH : 0 < H) (hk : 1 + k ≤ H) (c0 c1 : ℝ) :
+    ‖L2 H 2 (Local H k (W H hH c0 c1))‖ = ‖L2 H 2 (W H hH c0 c1)‖ := by
+  apply p4Q2PZ37AQB_localL2_norm H k
+    (p4Q2PZ37APZ_timeOneEdgeSupport H hH) (W H hH c0 c1)
+    (p4Q2PZ37APZ_timeOneFullObservable_dependsOn H hH c0 c1)
+  · rintro e ⟨a, rfl⟩
+    exact periodicHypercubicEvenPositiveHalfInteriorSpatialEdge_positive H (⟨0, hH⟩, a)
+  · rintro e ⟨a, rfl⟩
+    change ((periodicHypercubicEvenPositiveHalfInteriorSpatialEdge H
+      (⟨0, hH⟩, a)).1 0).val + k ≤ H
+    rw [periodicHypercubicEvenPositiveHalfInteriorSpatialEdge_time_val]
+    exact hk
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQB_positiveRestriction_measurePreserving
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQB_fullShift_measurePreserving
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQB_halfStep_continuous
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQB_localHalfObservable
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQB_halfEmbed
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQB_fullShift
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQB_halfEmbed_observable_coeFn
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQB_localL2_intertwine
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQB_localL2_norm
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQB_localL2_congr
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQB_timeOne_localL2_norm
