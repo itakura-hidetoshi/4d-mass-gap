@@ -1,0 +1,308 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSFourEdgeCenteredRayV5_PZ37AQN
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenOSBoundaryL2SpatialSlicePair
+import MGAP4D.MathlibAnalytic.RealL2ExternalTensor
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37AQO — quantitative genuine OS endpoint tensor test
+Recover the exact APN endpoint test in the actual shared-boundary Haar L2
+using the existing two-slice measure-preserving equivalence and external
+tensor. Quantify APM's noncancellation by Cauchy–Schwarz. Separate partition
+normalization, actual transfer quadratic, and test norm without asserting
+any uniform lower bound or identification of completed OS and physical transfer.
+-/
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory Filter Set
+open scoped ENNReal Topology InnerProductSpace InnerProduct BigOperators
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 6000000
+set_option synthInstance.maxHeartbeats 100000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "O" => PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
+local notation "P" => periodicHypercubicEvenEdgeOrbitPartition
+local notation "L" => PeriodicHypercubicEvenSideLength
+local notation "Tau" => periodicHypercubicIntegerTemporalConfigurationTranslation
+local notation "Theta" => periodicHypercubicEvenConfigurationReflection
+local notation "Gibbs" => periodicHypercubicSpecialUnitaryWilsonSystem
+local notation "Pair" => p4Q2PZ37AQC_reflectedPair
+local notation "Supported" => p4Q2PZ37APZ_DependsOn
+local notation "Local" => p4Q2PZ37AQB_localHalfObservable
+local notation "Read" => p4Q2PZ37AQC_boundaryRead
+local notation "L2" => periodicHypercubicEvenWilsonOpenHalfObservableL2
+local notation "HalfMu" => periodicHypercubicEvenOpenHalfHaarMeasure
+local notation "BoundaryMu" => periodicHypercubicEvenBoundaryHaarMeasure
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "Obs" => (fun H : ℕ => BoundedContinuousFunction (O H 2) ℝ)
+
+local instance p4Q2PZ37AQO_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37AQO_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37AQO_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37AQO_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37AQO_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37AQO_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37AQO_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37AQO_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37AQO_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+local instance p4Q2PZ37AQO_openHalfProbability (H : ℕ) :
+    IsProbabilityMeasure (periodicHypercubicEvenOpenHalfHaarMeasure H 2) := by
+  dsimp [periodicHypercubicEvenOpenHalfHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
+  infer_instance
+
+
+local instance p4Q2PZ37AQO_boundaryProbability (H : ℕ) :
+    IsProbabilityMeasure (BoundaryMu H 2) := by
+  dsimp [periodicHypercubicEvenBoundaryHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure]
+  infer_instance
+
+
+
+
+
+local notation "B" => PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration
+local notation "Phys" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "Slab" => periodicHypercubicEvenPositiveHalfCylinderSlabCount
+local notation "E" => periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
+local notation "Closure" => PeriodicHypercubicEvenPositiveHalfClosureConfiguration
+local notation "CM" => periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureHaarMeasure
+local notation "Gram" => periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+local notation "Moment" => p4Q2PZ37ANF_originalTimeOneWilsonBoundaryGramMoment
+local notation "X" => p4Q2PZ37APP_originalTimeOneBoundaryMomentL2
+local notation "U" => p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2
+local notation "Vac" => periodicHypercubicEvenBoundaryVacuumL2
+local notation "A" => p4Q2PZ37APL_originalTwoModeObservable
+local notation "W" => p4Q2PZ37APL_originalVacuumWeightedTwoMode
+local notation "Omega" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+local notation "Tr" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+local notation "NormZ" => periodicHypercubicEvenBoundaryPositiveHalfPartitionSqrtNormalization
+local notation "NativeAmp" => periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeSliceObservableAmplitude
+local notation "Amp" => periodicHypercubicEvenSpecialUnitaryTransferSliceObservableAmplitude
+local notation "Z" => p4Q2PZ37AQN_centeredMode
+local notation "S4" => p4Q2PZ37AQN_fourSupport
+local notation "EvenC" => p4Q2PZ37AQI_evenConnected
+local notation "PairE" => periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv
+
+/-- The actual two-endpoint tensor, pulled back to the genuine shared boundary. -/
+def p4Q2PZ37AQO_endpointProbe (H : ℕ) (f g : Phys H 2) : Lp ℝ 2 (BoundaryMu H 2) :=
+  periodicHypercubicEvenSpatialSlicePairHaarL2ToBoundaryLinearIsometry H 2
+    (realL2ExternalTensor (f : Lp ℝ 2 (Mu H 2)) (g : Lp ℝ 2 (Mu H 2)))
+
+local notation "Probe" => p4Q2PZ37AQO_endpointProbe
+
+theorem p4Q2PZ37AQO_endpointProbe_norm (H : ℕ) (f g : Phys H 2) :
+    ‖Probe H f g‖ = ‖f‖ * ‖g‖ := by
+  unfold p4Q2PZ37AQO_endpointProbe
+  rw [(periodicHypercubicEvenSpatialSlicePairHaarL2ToBoundaryLinearIsometry H 2).norm_map]
+  exact realL2ExternalTensor_norm (f : Lp ℝ 2 (Mu H 2)) (g : Lp ℝ 2 (Mu H 2))
+
+theorem p4Q2PZ37AQO_endpointProbe_coeFn (H : ℕ) (f g : Phys H 2) :
+    Probe H f g =ᵐ[BoundaryMu H 2] (fun b : B H 2 =>
+      (f : Lp ℝ 2 (Mu H 2)) ((PairE H G b).1) *
+      (g : Lp ℝ 2 (Mu H 2)) ((PairE H G b).2)) := by
+  let fl : Lp ℝ 2 (Mu H 2) := f
+  let gl : Lp ℝ 2 (Mu H 2) := g
+  let h := periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_measurePreserving_specialUnitaryHaar H 2
+  have h1 := periodicHypercubicEvenSpatialSlicePairHaarL2ToBoundaryLinearIsometry_coeFn
+    H 2 (realL2ExternalTensor fl gl)
+  have h2 := h.quasiMeasurePreserving.ae_eq (realL2ExternalTensor_coeFn fl gl)
+  simpa only [Function.comp_def, realL2ExternalTensorFunction] using h1.trans h2
+
+variable [Nontrivial G]
+
+/-- The APN Fubini pairing is precisely the inner product with the actual
+boundary tensor. No pointwise representative is used as a new state. -/
+theorem p4Q2PZ37AQO_probe_inner_eq_closure
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (q : ℝ) (f g : Phys H 2) :
+    inner ℝ (Probe H f g) (X H beta hb q 1) =
+      ∫ z : Closure H G,
+        Gram H 2 (by norm_num) beta hb z.1 z.2 *
+          (f : Lp ℝ 2 (Mu H 2)) ((E H 2 z).1 0) *
+          (g : Lp ℝ 2 (Mu H 2)) ((E H 2 z).1 (Fin.last (Slab H))) *
+          A H q ((E H 2 z).1 (p4Q2PZ37AMX_positiveTimeOne H)) ∂(CM H 2) := by
+  rw [p4Q2PZ37APN_originalTimeOneClosure_eq_testedBoundaryMoment H beta hb q f g,
+    MeasureTheory.L2.inner_def]
+  apply integral_congr_ae
+  filter_upwards [p4Q2PZ37AQO_endpointProbe_coeFn H f g,
+    p4Q2PZ37APP_originalTimeOneBoundaryMomentL2_coeFn H beta hb q 1] with b hf hm
+  rw [hf, hm, periodicHypercubicEven_real_inner_eq_mul]
+  have hL : (PairE H G b).1 = (fun e : PeriodicHypercubicEvenSpatialSliceLink H =>
+      b (periodicHypercubicEvenPrimarySpatialSliceLinkToFixedEdge H e)) := by
+    funext e
+    let k := periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices H
+    change MeasurableEquiv.piCongrLeft (fun _ : PeriodicHypercubicEvenSpatialSliceLink H ⊕
+      PeriodicHypercubicEvenSpatialSliceLink H => G) k b (Sum.inl e) =
+        b (k.symm (Sum.inl e))
+    have hh := MeasurableEquiv.piCongrLeft_apply_apply k (β := fun _ : PeriodicHypercubicEvenSpatialSliceLink H ⊕ PeriodicHypercubicEvenSpatialSliceLink H => ↥G) b (k.symm (Sum.inl e))
+    rw [Equiv.apply_symm_apply] at hh
+    exact hh
+  have hR : (PairE H G b).2 = (fun e : PeriodicHypercubicEvenSpatialSliceLink H =>
+      b (periodicHypercubicEvenAntipodalSpatialSliceLinkToFixedEdge H
+        (periodicHypercubicEvenPrimaryAntipodalSpatialSliceLinkEquiv H e))) := by
+    funext e
+    let k := periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices H
+    change MeasurableEquiv.piCongrLeft (fun _ : PeriodicHypercubicEvenSpatialSliceLink H ⊕
+      PeriodicHypercubicEvenSpatialSliceLink H => G) k b (Sum.inr e) =
+        b (k.symm (Sum.inr e))
+    have hh := MeasurableEquiv.piCongrLeft_apply_apply k (β := fun _ : PeriodicHypercubicEvenSpatialSliceLink H ⊕ PeriodicHypercubicEvenSpatialSliceLink H => ↥G) b (k.symm (Sum.inr e))
+    rw [Equiv.apply_symm_apply] at hh
+    exact hh
+  rw [hL, hR] <;> rfl
+
+/- Exact finite index transport of the existing native insertion amplitude. -/
+omit [Nontrivial G] in
+private theorem p4Q2PZ37AQO_native_cast
+    (H : ℕ) (beta : ℝ) {n m : ℕ} (h : n = m)
+    (j : Fin (n + 1)) (a : PeriodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservable H 2)
+    (f g : Lp ℝ 2 (Mu H 2)) :
+    NativeAmp H 2 beta n j a f g =
+      NativeAmp H 2 beta m (Fin.cast (congrArg (fun k : ℕ => k + 1) h) j) a f g := by
+  subst m
+  rfl
+
+/-- The exact positive APN test amplitude, retaining the normalization factor
+and the original vacuum-weighted physical insertion quadratic. -/
+theorem p4Q2PZ37AQO_weighted_probe_inner
+    (H : ℕ) (beta : ℝ) (hb : 0 < beta) (q : ℝ) :
+    let w := W H beta hb.le q
+    let o := Omega H 2 (by norm_num) beta hb.le
+    let t := Tr H 2 (by norm_num) beta hb.le
+    inner ℝ (Probe H w o) (X H beta hb.le q 1) =
+      NormZ H 2 (by norm_num) beta hb.le * (‖t‖ ^ H * inner ℝ (t w) w) := by
+  let a := A H q
+  let w := W H beta hb.le q
+  let o := Omega H 2 (by norm_num) beta hb.le
+  let t := Tr H 2 (by norm_num) beta hb.le
+  let j := p4Q2PZ37AMX_positiveTimeOne H
+  let c := NormZ H 2 (by norm_num) beta hb.le
+  have hTotal : Slab H = 1 + H := by
+    simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount, Nat.add_comm]
+  have hIndex : Fin.cast (congrArg (fun k : ℕ => k + 1) hTotal) j =
+      periodicHypercubicEvenSpecialUnitaryTransferSliceIndex 1 H := by
+    apply Fin.ext
+    rfl
+  have hEq : NativeAmp H 2 beta (Slab H) j a
+      (w : Lp ℝ 2 (Mu H 2)) (o : Lp ℝ 2 (Mu H 2)) =
+      Amp H 2 beta 1 H a (w : Lp ℝ 2 (Mu H 2)) (o : Lp ℝ 2 (Mu H 2)) := by
+    calc
+      _ = NativeAmp H 2 beta (1 + H)
+          (Fin.cast (congrArg (fun k : ℕ => k + 1) hTotal) j) a
+          (w : Lp ℝ 2 (Mu H 2)) (o : Lp ℝ 2 (Mu H 2)) :=
+        p4Q2PZ37AQO_native_cast H beta hTotal j a _ _
+      _ = _ := congrArg (fun k => NativeAmp H 2 beta (1 + H) k a
+          (w : Lp ℝ 2 (Mu H 2)) (o : Lp ℝ 2 (Mu H 2))) hIndex
+  change inner ℝ (Probe H w o) (X H beta hb.le q 1) =
+    c * (‖t‖ ^ H * inner ℝ (t w) w)
+  rw [p4Q2PZ37AQO_probe_inner_eq_closure H beta hb.le q w o,
+    p4Q2PZ37APM_originalClosureInsertedIntegral_eq_nativeAmplitude
+      H beta hb.le j a (p4Q2PZ37APL_originalTwoModeObservable_gaugeInvariant H q) w o,
+    hEq]
+  exact congrArg (fun y : ℝ => c * y)
+    (p4Q2PZ37APL_originalTimeOneInsertion_vacuumWeighted_pos H beta hb q).1
+
+/-- Use the literal APP centering coefficient, not the physical vacuum mean. -/
+def p4Q2PZ37AQO_centerCoefficient (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) : ℝ :=
+  -inner ℝ (Vac H 2 (by norm_num) beta hb) (X H beta hb 0 1)
+
+local notation "qC" => p4Q2PZ37AQO_centerCoefficient
+
+/-- The actual normalized test's numerator: no positive floor is assumed. -/
+def p4Q2PZ37AQO_testAmplitude (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) : ℝ :=
+  inner ℝ (Probe H (W H beta hb (qC H beta hb))
+    (Omega H 2 (by norm_num) beta hb)) (U H beta hb)
+
+local notation "J" => p4Q2PZ37AQO_testAmplitude
+
+theorem p4Q2PZ37AQO_testAmplitude_eq (H : ℕ) (beta : ℝ) (hb : 0 < beta) :
+    let w := W H beta hb.le (qC H beta hb.le)
+    let t := Tr H 2 (by norm_num) beta hb.le
+    J H beta hb.le =
+      NormZ H 2 (by norm_num) beta hb.le * (‖t‖ ^ H * inner ℝ (t w) w) :=
+  p4Q2PZ37AQO_weighted_probe_inner H beta hb (qC H beta hb.le)
+
+theorem p4Q2PZ37AQO_testAmplitude_pos (H : ℕ) (beta : ℝ) (hb : 0 < beta) :
+    0 < J H beta hb.le := by
+  unfold p4Q2PZ37AQO_testAmplitude
+  change 0 < inner ℝ (Probe H (W H beta hb.le (qC H beta hb.le))
+    (Omega H 2 (by norm_num) beta hb.le)) (X H beta hb.le (qC H beta hb.le) 1)
+  rw [p4Q2PZ37AQO_probe_inner_eq_closure]
+  exact p4Q2PZ37APM_originalTimeOneClosurePairing_pos H beta hb (qC H beta hb.le)
+
+/-- Quantitative strengthening of the APN noncancellation test. -/
+theorem p4Q2PZ37AQO_testAmplitude_le_norm (H : ℕ) (beta : ℝ) (hb : 0 < beta) :
+    J H beta hb.le ≤ ‖W H beta hb.le (qC H beta hb.le)‖ * ‖U H beta hb.le‖ := by
+  let w := W H beta hb.le (qC H beta hb.le)
+  let o := Omega H 2 (by norm_num) beta hb.le
+  change inner ℝ (Probe H w o) (U H beta hb.le) ≤ ‖w‖ * ‖U H beta hb.le‖
+  calc
+    _ ≤ ‖Probe H w o‖ * ‖U H beta hb.le‖ := real_inner_le_norm _ _
+    _ = _ := by
+      rw [p4Q2PZ37AQO_endpointProbe_norm,
+        show ‖o‖ = 1 from periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_norm
+          H 2 (by norm_num) beta hb.le, mul_one]
+
+theorem p4Q2PZ37AQO_weightedTest_norm_pos (H : ℕ) (beta : ℝ) (hb : 0 < beta) :
+    0 < ‖W H beta hb.le (qC H beta hb.le)‖ := by
+  have hp := p4Q2PZ37AQO_testAmplitude_pos H beta hb
+  have h := p4Q2PZ37AQO_testAmplitude_le_norm H beta hb
+  by_contra hn
+  have hz : ‖W H beta hb.le (qC H beta hb.le)‖ = 0 :=
+    le_antisymm (le_of_not_gt hn) (norm_nonneg _)
+  rw [hz, zero_mul] at h
+  exact (not_le_of_gt hp) h
+
+/-- Normalized endpoint probe lower bound on the genuine OS denominator. -/
+theorem p4Q2PZ37AQO_centeredOS_normSq_lower (H : ℕ) (beta : ℝ) (hb : 0 < beta) :
+    (J H beta hb.le / ‖W H beta hb.le (qC H beta hb.le)‖) ^ 2 ≤ ‖U H beta hb.le‖ ^ 2 := by
+  have hw := p4Q2PZ37AQO_weightedTest_norm_pos H beta hb
+  have hj := p4Q2PZ37AQO_testAmplitude_pos H beta hb
+  have h := p4Q2PZ37AQO_testAmplitude_le_norm H beta hb
+  have hh : J H beta hb.le / ‖W H beta hb.le (qC H beta hb.le)‖ ≤ ‖U H beta hb.le‖ :=
+    (div_le_iff₀ hw).2 (by simpa only [mul_comm] using h)
+  exact pow_le_pow_left₀ (div_nonneg hj.le hw.le) hh 2
+
+/-- A common positive normalized endpoint amplitude is sufficient for
+the AQN initial connected correlation floor, without a new model. -/
+theorem p4Q2PZ37AQO_initial_floor_of_normalizedTest
+    (H k : ℕ) (hH : 0 < H) (beta : ℝ) (hb : 0 < beta) (d : ℝ)
+    (hd : 0 ≤ d)
+    (hTest : d ≤ J H beta hb.le / ‖W H beta hb.le (qC H beta hb.le)‖) :
+    d ^ 2 ≤ EvenC H k 0 beta hb.le (Z H hH beta hb.le) := by
+  have h := p4Q2PZ37AQN_centeredRay_initial H k hH beta hb.le 1
+  rw [one_smul, one_pow, one_mul] at h
+  rw [h]
+  exact (pow_le_pow_left₀ hd hTest 2).trans
+    (p4Q2PZ37AQO_centeredOS_normSq_lower H beta hb)
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQO_endpointProbe
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQO_endpointProbe_norm
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQO_endpointProbe_coeFn
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQO_probe_inner_eq_closure
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQO_weighted_probe_inner
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQO_centerCoefficient
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQO_testAmplitude
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQO_testAmplitude_eq
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQO_testAmplitude_pos
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQO_testAmplitude_le_norm
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQO_weightedTest_norm_pos
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQO_centeredOS_normSq_lower
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQO_initial_floor_of_normalizedTest

@@ -1,0 +1,19 @@
+name: PZ37AQO full-cache sandbox v3 genuine endpoint tensor lower bound
+on:
+  pull_request:
+    paths:
+      - "diagnostics/pz37aqo/full-v3-r5-r6/**"
+      - ".github/workflows/pz37aqo-full-v3-r5-r6.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pz37aqo-full-v3-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    uses: ./.github/workflows/lean-warm-sandbox-reusable-aqo-full-v2.yml
+    with:
+      pack: diagnostics/pz37aqo/full-v3-r5-r6/pack.json
+      source_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      baseline_commit: 5011764ce548e898afdfa0d85173eee707327ea5
