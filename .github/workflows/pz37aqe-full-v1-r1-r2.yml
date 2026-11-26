@@ -1,0 +1,19 @@
+name: PZ37AQE full-cache sandbox v1 finite dyadic OS budget
+on:
+  pull_request:
+    paths:
+      - "diagnostics/pz37aqe/full-v1-r1-r2/**"
+      - ".github/workflows/pz37aqe-full-v1-r1-r2.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pz37aqe-full-v1-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    uses: ./.github/workflows/lean-warm-sandbox-reusable-aqe-full-v1.yml
+    with:
+      pack: diagnostics/pz37aqe/full-v1-r1-r2/pack.json
+      source_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      baseline_commit: 044f12bbac0f7dccc28077b21148e5c1f310e1d6

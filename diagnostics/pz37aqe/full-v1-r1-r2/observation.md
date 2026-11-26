@@ -1,0 +1,3 @@
+# AQE finite dyadic budget
+
+Formal base 044f12bbac0f7dccc28077b21148e5c1f310e1d6. AQD independently certified in run 45772016133; exact merged tree c7de1ae1bee6495582a2399e61d92c537e244e8d. Existing factorial OS carrier contraction uses an infinite rational-time recurrence and uniform bound, not a finite periodic Wilson local support budget. AQE constructs finite real dyadic recurrence, actual Wilson midpoint estimate and terminal Haar majorant; all shifts require the explicit terminal support budget. APX/APY unchanged. No contraction, global semigroup, completion or mass-gap claim. Candidates TEST_REQUIRED.

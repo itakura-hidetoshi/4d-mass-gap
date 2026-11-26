@@ -1,0 +1,198 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSRangeTransportV5_PZ37AQD
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37AQE — finite-budget dyadic estimate on the genuine Wilson OS image
+
+The original Gibbs midpoint identity and Haar norm isometry yield a dyadic
+power estimate only while every required shift fits the actual positive support.
+The terminal majorant is the genuine synthesis operator norm times the original
+Haar representative norm. Unlike the existing infinite rational-slot OS
+contraction argument, this finite periodic estimate never assumes an unbounded
+admissible time interval. No contraction, completion, mass gap, or transfer
+identification is asserted.
+-/
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory Filter Set
+open scoped ENNReal Topology InnerProductSpace InnerProduct
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 1200000
+set_option synthInstance.maxHeartbeats 100000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "O" => PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
+local notation "P" => periodicHypercubicEvenEdgeOrbitPartition
+local notation "Supported" => p4Q2PZ37APZ_DependsOn
+local notation "Local" => p4Q2PZ37AQB_localHalfObservable
+local notation "Read" => p4Q2PZ37AQC_boundaryRead
+local notation "L2" => periodicHypercubicEvenWilsonOpenHalfObservableL2
+local notation "HalfMu" => periodicHypercubicEvenOpenHalfHaarMeasure
+local notation "BoundaryMu" => periodicHypercubicEvenBoundaryHaarMeasure
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "Obs" => (fun H : ℕ => BoundedContinuousFunction (O H 2) ℝ)
+
+local instance p4Q2PZ37AQE_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37AQE_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37AQE_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37AQE_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37AQE_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37AQE_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37AQE_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37AQE_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37AQE_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+local instance p4Q2PZ37AQE_openHalfProbability (H : ℕ) :
+    IsProbabilityMeasure (periodicHypercubicEvenOpenHalfHaarMeasure H 2) := by
+  dsimp [periodicHypercubicEvenOpenHalfHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
+  infer_instance
+
+
+local instance p4Q2PZ37AQE_boundaryProbability (H : ℕ) :
+    IsProbabilityMeasure (BoundaryMu H 2) := by
+  dsimp [periodicHypercubicEvenBoundaryHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure]
+  infer_instance
+
+
+/-- A finite real midpoint recurrence implies a dyadic power bound,
+including the zero-base case, without division or an infinite-time premise. -/
+theorem p4Q2PZ37AQE_finiteDyadicPower
+    (b : ℝ) (a : ℕ → ℝ) (ha : ∀ j, 0 ≤ a j)
+    (n : ℕ) (hrec : ∀ j < n, a j ^ 2 ≤ b * a (j + 1)) :
+    a 0 ^ ((2 : ℕ) ^ n) ≤ b ^ ((2 : ℕ) ^ n - 1) * a n := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+      have hprev := ih (fun j hj => hrec j (Nat.lt_trans hj (Nat.lt_succ_self n)))
+      have hsq : (a 0 ^ ((2 : ℕ) ^ n)) ^ 2 ≤
+          (b ^ ((2 : ℕ) ^ n - 1) * a n) ^ 2 := by
+        simpa only [pow_two] using
+          mul_self_le_mul_self (pow_nonneg (ha 0) ((2 : ℕ) ^ n)) hprev
+      have hexp : (2 : ℕ) ^ (n + 1) - 1 = ((2 : ℕ) ^ n - 1) * 2 + 1 := by
+        have hp : 0 < (2 : ℕ) ^ n := pow_pos (by norm_num) _
+        rw [pow_succ]
+        omega
+      calc
+        a 0 ^ ((2 : ℕ) ^ (n + 1)) = (a 0 ^ ((2 : ℕ) ^ n)) ^ 2 := by
+          rw [pow_succ (2 : ℕ) n, pow_mul]
+        _ ≤ _ := hsq
+        _ = (b ^ ((2 : ℕ) ^ n - 1)) ^ 2 * (a n) ^ 2 := by ring
+        _ ≤ (b ^ ((2 : ℕ) ^ n - 1)) ^ 2 * (b * a (n + 1)) :=
+          mul_le_mul_of_nonneg_left (hrec n (Nat.lt_succ_self n)) (sq_nonneg _)
+        _ = b ^ ((2 : ℕ) ^ (n + 1) - 1) * a (n + 1) := by
+          rw [hexp, pow_add, pow_mul, pow_one]
+          ring
+
+variable [Nontrivial G]
+
+/-- Cauchy--Schwarz retains the exact doubled-time OS norm before
+using any Haar majorant. -/
+theorem p4Q2PZ37AQE_localMidpointNorm
+    (H k : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta)
+    (u : Obs H)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A)))
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hkk : ∀ e ∈ s, (e.1 0).val + k + k ≤ H) :
+    ‖Read H beta hb (Local H k u)‖ ^ 2 ≤
+      ‖Read H beta hb u‖ * ‖Read H beta hb (Local H (k + k) u)‖ := by
+  calc
+    _ = inner ℝ (Read H beta hb u) (Read H beta hb (Local H (k + k) u)) :=
+      p4Q2PZ37AQC_local_doubleBudget_norm_sq H k beta hb s u hu hp hkk
+    _ ≤ _ := real_inner_le_norm _ _
+
+/-- Any single admissible shift has the same genuine Haar representative
+majorant, with no OS operator norm asserted. -/
+theorem p4Q2PZ37AQE_localTerminalBound
+    (H k : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta)
+    (u : Obs H)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A)))
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hk : ∀ e ∈ s, (e.1 0).val + k ≤ H) :
+    ‖Read H beta hb (Local H k u)‖ ≤
+      ‖periodicHypercubicEvenWilsonBoundaryGramFeatureSynthesisOperator
+        H 2 (by norm_num) beta hb‖ * ‖L2 H 2 u‖ := by
+  let B := periodicHypercubicEvenWilsonBoundaryGramFeatureSynthesisOperator
+    H 2 (by norm_num) beta hb
+  change ‖B (L2 H 2 (Local H k u))‖ ≤ ‖B‖ * ‖L2 H 2 u‖
+  calc
+    _ ≤ ‖B‖ * ‖L2 H 2 (Local H k u)‖ := B.le_opNorm _
+    _ = _ := by rw [p4Q2PZ37AQB_localL2_norm H k s u hu hp hk]
+
+/-- Finite dyadic iteration on the genuine Wilson synthesis image.
+All intermediate times are justified by the single terminal support budget. -/
+theorem p4Q2PZ37AQE_localDyadicPower
+    (H k n : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta)
+    (u : Obs H)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A)))
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hbudget : ∀ e ∈ s, (e.1 0).val + (2 : ℕ) ^ n * k ≤ H) :
+    ‖Read H beta hb (Local H k u)‖ ^ ((2 : ℕ) ^ n) ≤
+      ‖Read H beta hb u‖ ^ ((2 : ℕ) ^ n - 1) *
+        ‖Read H beta hb (Local H ((2 : ℕ) ^ n * k) u)‖ := by
+  let a : ℕ → ℝ := fun j => ‖Read H beta hb (Local H ((2 : ℕ) ^ j * k) u)‖
+  have hrec (j : ℕ) (hj : j < n) : a j ^ 2 ≤ ‖Read H beta hb u‖ * a (j + 1) := by
+    have htime : (2 : ℕ) ^ j * k + (2 : ℕ) ^ j * k = (2 : ℕ) ^ (j + 1) * k := by
+      rw [pow_succ]
+      ring
+    have hpow : (2 : ℕ) ^ (j + 1) ≤ (2 : ℕ) ^ n :=
+      pow_le_pow_right' (by norm_num : (1 : ℕ) ≤ 2) (Nat.succ_le_of_lt hj)
+    have hmul := Nat.mul_le_mul_right k hpow
+    have hkk : ∀ e ∈ s, (e.1 0).val + (2 : ℕ) ^ j * k + (2 : ℕ) ^ j * k ≤ H := by
+      intro e he
+      have h := hbudget e he
+      calc
+        _ = (e.1 0).val + ((2 : ℕ) ^ j * k + (2 : ℕ) ^ j * k) := by omega
+        _ = (e.1 0).val + (2 : ℕ) ^ (j + 1) * k := by rw [htime]
+        _ ≤ (e.1 0).val + (2 : ℕ) ^ n * k := Nat.add_le_add_left hmul _
+        _ ≤ H := h
+    have hmid := p4Q2PZ37AQE_localMidpointNorm H ((2 : ℕ) ^ j * k) s beta hb u hu hp hkk
+    rw [htime] at hmid
+    exact hmid
+  have ha : ∀ j, 0 ≤ a j := fun _ => norm_nonneg _
+  have h := p4Q2PZ37AQE_finiteDyadicPower ‖Read H beta hb u‖ a ha n hrec
+  simpa only [a, pow_zero, one_mul] using h
+
+/-- The finite dyadic power estimate with the genuine Haar terminal majorant.
+The exponent depends explicitly on the available positive-time budget. -/
+theorem p4Q2PZ37AQE_localDyadicHaarBound
+    (H k n : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta)
+    (u : Obs H)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A)))
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hbudget : ∀ e ∈ s, (e.1 0).val + (2 : ℕ) ^ n * k ≤ H) :
+    ‖Read H beta hb (Local H k u)‖ ^ ((2 : ℕ) ^ n) ≤
+      ‖Read H beta hb u‖ ^ ((2 : ℕ) ^ n - 1) *
+        (‖periodicHypercubicEvenWilsonBoundaryGramFeatureSynthesisOperator
+          H 2 (by norm_num) beta hb‖ * ‖L2 H 2 u‖) := by
+  exact (p4Q2PZ37AQE_localDyadicPower H k n s beta hb u hu hp hbudget).trans
+    (mul_le_mul_of_nonneg_left
+      (p4Q2PZ37AQE_localTerminalBound H ((2 : ℕ) ^ n * k) s beta hb u hu hp hbudget)
+      (pow_nonneg (norm_nonneg _) _))
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQE_finiteDyadicPower
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQE_localMidpointNorm
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQE_localTerminalBound
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQE_localDyadicPower
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQE_localDyadicHaarBound

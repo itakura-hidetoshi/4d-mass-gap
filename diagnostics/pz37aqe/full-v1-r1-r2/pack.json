@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "baseline_commit": "044f12bbac0f7dccc28077b21148e5c1f310e1d6",
+  "baseline_mgap4d_tree": "cab9cac9b528b67f417e68e17e1e939642a22e54",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSRangeTransportV5_PZ37AQD",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "AQE",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQE_finiteDyadicPower",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQE_localMidpointNorm",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQE_localTerminalBound",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQE_localDyadicPower",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQE_localDyadicHaarBound"
+      ],
+      "candidates": [
+        {
+          "id": "R1",
+          "path": "diagnostics/pz37aqe/full-v1-r1-r2/AQE_R1.lean.txt",
+          "blob": "5620e9b4df57bf044fe5fd5ea246e03d31a62d46"
+        },
+        {
+          "id": "R2",
+          "path": "diagnostics/pz37aqe/full-v1-r1-r2/AQE_R2.lean.txt",
+          "blob": "506996d6ad2339b0427d7fdb879917c94cbae449"
+        }
+      ]
+    }
+  ]
+}
