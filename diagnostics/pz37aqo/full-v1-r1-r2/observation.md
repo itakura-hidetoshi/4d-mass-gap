@@ -1,0 +1,2 @@
+# AQO — quantitative APN test (unverified)
+Exact actual boundary product-Haar external tensor of physical endpoint states. APN Fubini + APM exact insertion amplitude + APL weighted quadratic formula. Normalize by the exact tensor norm and derive genuine OS initial-correlation lower bound. No uniform floor claimed. Fixed AQN base 5011764ce548e898afdfa0d85173eee707327ea5; exact tree eeb204d894efb207cb49710c8bbebb133bc6ba3f obtained directly from API. Direct Lean and real MCP before independent CI.
