@@ -1,0 +1,275 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSFiniteDyadicThresholdV5_PZ37AQF
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37AQG — Haar threshold obstruction and actual reflected correlation
+
+The unchanged Haar operator-norm majorant is at least the base OS norm:
+it cannot certify a strictly contracting factor at a nonzero base. The
+actual finite Gibbs reflection form instead has an exact unequal-shift
+identity for two bounded continuous observables with separate explicit
+support budgets. Under doubled terminal reach this gives a necessary and
+sufficient reflected correlation test for the terminal norm threshold, and
+hence a sufficient dyadic test at the original step. No estimate of the
+correlation by a strict decay rate is assumed to have been proved.
+APX/APY remain unchanged. No global contraction or mass gap is asserted.
+-/
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory Filter Set
+open scoped ENNReal Topology InnerProductSpace InnerProduct
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 1200000
+set_option synthInstance.maxHeartbeats 100000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "O" => PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
+local notation "P" => periodicHypercubicEvenEdgeOrbitPartition
+local notation "L" => PeriodicHypercubicEvenSideLength
+local notation "Tau" => periodicHypercubicIntegerTemporalConfigurationTranslation
+local notation "Theta" => periodicHypercubicEvenConfigurationReflection
+local notation "Gibbs" => periodicHypercubicSpecialUnitaryWilsonSystem
+local notation "Pair" => p4Q2PZ37AQC_reflectedPair
+local notation "Supported" => p4Q2PZ37APZ_DependsOn
+local notation "Local" => p4Q2PZ37AQB_localHalfObservable
+local notation "Read" => p4Q2PZ37AQC_boundaryRead
+local notation "L2" => periodicHypercubicEvenWilsonOpenHalfObservableL2
+local notation "HalfMu" => periodicHypercubicEvenOpenHalfHaarMeasure
+local notation "BoundaryMu" => periodicHypercubicEvenBoundaryHaarMeasure
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "Obs" => (fun H : ℕ => BoundedContinuousFunction (O H 2) ℝ)
+
+local instance p4Q2PZ37AQG_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37AQG_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37AQG_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37AQG_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37AQG_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37AQG_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37AQG_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37AQG_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37AQG_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+local instance p4Q2PZ37AQG_openHalfProbability (H : ℕ) :
+    IsProbabilityMeasure (periodicHypercubicEvenOpenHalfHaarMeasure H 2) := by
+  dsimp [periodicHypercubicEvenOpenHalfHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
+  infer_instance
+
+
+local instance p4Q2PZ37AQG_boundaryProbability (H : ℕ) :
+    IsProbabilityMeasure (BoundaryMu H 2) := by
+  dsimp [periodicHypercubicEvenBoundaryHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure]
+  infer_instance
+
+
+private theorem sq_threshold_iff (a d : ℝ) (ha : 0 ≤ a) (hd : 0 ≤ d) :
+    a ^ 2 ≤ d ^ 2 ↔ a ≤ d := by
+  have h := Real.rpow_le_rpow_iff ha hd (by norm_num : (0 : ℝ) < 2)
+  simpa only [Real.rpow_two] using h
+
+variable [Nontrivial G]
+
+/-- The actual Haar majorant dominates the unshifted synthesis norm. -/
+theorem p4Q2PZ37AQG_haarMajorant_ge_base
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (u : Obs H) :
+    ‖Read H beta hb u‖ ≤
+      ‖periodicHypercubicEvenWilsonBoundaryGramFeatureSynthesisOperator
+        H 2 (by norm_num) beta hb‖ * ‖L2 H 2 u‖ := by
+  let B := periodicHypercubicEvenWilsonBoundaryGramFeatureSynthesisOperator
+    H 2 (by norm_num) beta hb
+  change ‖B (L2 H 2 u)‖ ≤ ‖B‖ * ‖L2 H 2 u‖
+  exact B.le_opNorm _
+
+/-- The Haar ceiling of AQF cannot certify a strict contraction for a
+nonzero genuine OS state. This does not disprove actual contraction. -/
+theorem p4Q2PZ37AQG_haarStrictThreshold_impossible
+    (H n : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (u : Obs H)
+    (c : ℝ) (hc : 0 ≤ c) (hc1 : c < 1)
+    (hbase : 0 < ‖Read H beta hb u‖) :
+    c ^ ((2 : ℕ) ^ n) * ‖Read H beta hb u‖ <
+      ‖periodicHypercubicEvenWilsonBoundaryGramFeatureSynthesisOperator
+        H 2 (by norm_num) beta hb‖ * ‖L2 H 2 u‖ := by
+  have hm : 0 < (2 : ℕ) ^ n := pow_pos (by norm_num) _
+  have hmR : 0 < (↑((2 : ℕ) ^ n) : ℝ) := by exact_mod_cast hm
+  have hpow : c ^ ((2 : ℕ) ^ n) < 1 := by
+    simpa only [Real.rpow_natCast, one_pow] using Real.rpow_lt_rpow hc hc1 hmR
+  calc
+    _ < 1 * ‖Read H beta hb u‖ := mul_lt_mul_of_pos_right hpow hbase
+    _ = ‖Read H beta hb u‖ := one_mul _
+    _ ≤ _ := p4Q2PZ37AQG_haarMajorant_ge_base H beta hb u
+
+/-- The literal reflected full-lattice Gibbs correlation. No auxiliary
+transfer or reconstructed continuum path is used. -/
+def p4Q2PZ37AQG_fullReflectedCorrelation
+    (H j : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (u v : Obs H) : ℝ :=
+  ∫ A, u ((P H).positiveRestriction A) *
+    v ((P H).positiveRestriction (Tau (L H) (-(j : ℤ)) (Theta H A)))
+    ∂(Gibbs (L H) 2 (by norm_num) beta hb).gibbsMeasure
+
+local notation "Corr" => p4Q2PZ37AQG_fullReflectedCorrelation
+
+/-- The exact mixed reflected pairing after arbitrary admissible unequal
+shifts. Only the first observable needs reach k; the second needs k+l. -/
+theorem p4Q2PZ37AQG_localMixedShift_inner_eq_fullCorrelation
+    (H k l : ℕ) (s t : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta) (u v : Obs H)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A)))
+    (hv : Supported H t (fun A => v ((P H).positiveRestriction A)))
+    (hps : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hpt : ∀ e ∈ t, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hk : ∀ e ∈ s, (e.1 0).val + k ≤ H)
+    (hkl : ∀ e ∈ t, (e.1 0).val + k + l ≤ H) :
+    inner ℝ (Read H beta hb (Local H k u)) (Read H beta hb (Local H l v)) =
+      Corr H (k + l) beta hb u v := by
+  have hl : ∀ e ∈ t, (e.1 0).val + l ≤ H := by
+    intro e he
+    have hh := hkl e he
+    omega
+  have hu' (A : PeriodicHypercubicEvenEdge H → G) :
+      Local H k u ((P H).positiveRestriction A) =
+        u ((P H).positiveRestriction (Tau (L H) (-(k : ℤ)) A)) := by
+    change p4Q2PZ37AQA_localRead H k
+      (fun Z => u ((P H).positiveRestriction Z)) ((P H).positiveRestriction A) = _
+    exact p4Q2PZ37AQA_localRead_full_eq H k s
+      (fun Z => u ((P H).positiveRestriction Z)) hu hps hk A
+  have hv' (A : PeriodicHypercubicEvenEdge H → G) :
+      Local H l v ((P H).positiveRestriction A) =
+        v ((P H).positiveRestriction (Tau (L H) (-(l : ℤ)) A)) := by
+    change p4Q2PZ37AQA_localRead H l
+      (fun Z => v ((P H).positiveRestriction Z)) ((P H).positiveRestriction A) = _
+    exact p4Q2PZ37AQA_localRead_full_eq H l t
+      (fun Z => v ((P H).positiveRestriction Z)) hv hpt hl A
+  let mu : Measure (PeriodicHypercubicEvenEdge H → G) :=
+    (Gibbs (L H) 2 (by norm_num) beta hb).gibbsMeasure
+  let F : (PeriodicHypercubicEvenEdge H → G) → ℝ :=
+    fun A => u ((P H).positiveRestriction A) *
+      v ((P H).positiveRestriction (Tau (L H) (-((k + l : ℕ) : ℤ)) (Theta H A)))
+  let T := periodicHypercubicIntegerTemporalConfigurationTranslation
+    (Gauge := G) (L H) (-(k : ℤ))
+  have hmp := periodicHypercubicSpecialUnitary_gibbs_measurePreserving_integerTemporalTranslation
+    (L H) 2 (by norm_num) beta hb (-(k : ℤ))
+  have hsum : -((k + l : ℕ) : ℤ) + (k : ℤ) = -(l : ℤ) := by omega
+  calc
+    _ = Pair H beta hb (Local H k u) (Local H l v) :=
+      (p4Q2PZ37AQC_reflectedPair_eq_inner H beta hb (Local H k u) (Local H l v)).symm
+    _ = ∫ A, F (T A) ∂mu := by
+      apply integral_congr_ae
+      filter_upwards [] with A
+      change Local H k u ((P H).positiveRestriction A) *
+        Local H l v ((P H).positiveRestriction (Theta H A)) =
+        u ((P H).positiveRestriction (Tau (L H) (-(k : ℤ)) A)) *
+        v ((P H).positiveRestriction
+          (Tau (L H) (-((k + l : ℕ) : ℤ)) (Theta H (Tau (L H) (-(k : ℤ)) A))))
+      rw [hu' A, hv' (Theta H A)]
+      have hc : Theta H (Tau (L H) (-(k : ℤ)) A) =
+          Tau (L H) (k : ℤ) (Theta H A) := by
+        simpa only [neg_neg] using
+          (periodicHypercubicEvenConfigurationReflection_integerTemporalTranslation
+            (Gauge := G) H (-(k : ℤ)) A)
+      have hd : Tau (L H) (-((k + l : ℕ) : ℤ))
+          (Tau (L H) (k : ℤ) (Theta H A)) =
+          Tau (L H) (-(l : ℤ)) (Theta H A) := by
+        calc
+          _ = Tau (L H) (-((k + l : ℕ) : ℤ) + (k : ℤ)) (Theta H A) :=
+            (periodicHypercubicIntegerTemporalConfigurationTranslation_add_apply
+              (L H) (-((k + l : ℕ) : ℤ)) (k : ℤ) (Theta H A)).symm
+          _ = _ := by rw [hsum]
+      have heq : Tau (L H) (-((k + l : ℕ) : ℤ))
+          (Theta H (Tau (L H) (-(k : ℤ)) A)) =
+          Tau (L H) (-(l : ℤ)) (Theta H A) :=
+        (congrArg (fun Z => Tau (L H) (-((k + l : ℕ) : ℤ)) Z) hc).trans hd
+      exact congrArg (fun Z => u ((P H).positiveRestriction (Tau (L H) (-(k : ℤ)) A)) *
+        v ((P H).positiveRestriction Z)) heq.symm
+    _ = Corr H (k + l) beta hb u v := hmp.integral_comp T.measurableEmbedding F
+
+/-- Actual terminal norm squared is exactly the doubled full reflected
+correlation, on the double-support-budget domain. -/
+theorem p4Q2PZ37AQG_localNormSq_eq_fullCorrelation
+    (H k : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta) (u : Obs H)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A)))
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hkk : ∀ e ∈ s, (e.1 0).val + k + k ≤ H) :
+    ‖Read H beta hb (Local H k u)‖ ^ 2 = Corr H (k + k) beta hb u u := by
+  have hk : ∀ e ∈ s, (e.1 0).val + k ≤ H := by
+    intro e he
+    have hh := hkk e he
+    omega
+  calc
+    _ = inner ℝ (Read H beta hb (Local H k u)) (Read H beta hb (Local H k u)) :=
+      (real_inner_self_eq_norm_sq _).symm
+    _ = _ := p4Q2PZ37AQG_localMixedShift_inner_eq_fullCorrelation
+      H k k s s beta hb u u hu hu hp hp hk hkk
+
+/-- Even reflected correlations are nonnegative on the certified budget. -/
+theorem p4Q2PZ37AQG_localEvenCorrelation_nonneg
+    (H k : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta) (u : Obs H)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A)))
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hkk : ∀ e ∈ s, (e.1 0).val + k + k ≤ H) :
+    0 ≤ Corr H (k + k) beta hb u u := by
+  rw [← p4Q2PZ37AQG_localNormSq_eq_fullCorrelation H k s beta hb u hu hp hkk]
+  exact sq_nonneg _
+
+/-- Exact equivalent criterion for the terminal threshold in AQF, in the
+original Gibbs correlation rather than the unshifted Haar majorant. -/
+theorem p4Q2PZ37AQG_localTerminalThreshold_iff_correlation
+    (H k n : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta) (u : Obs H)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A)))
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hbudget : ∀ e ∈ s, (e.1 0).val + (2 : ℕ) ^ n * k + (2 : ℕ) ^ n * k ≤ H)
+    (c : ℝ) (hc : 0 ≤ c) :
+    ‖Read H beta hb (Local H ((2 : ℕ) ^ n * k) u)‖ ≤
+        c ^ ((2 : ℕ) ^ n) * ‖Read H beta hb u‖ ↔
+      Corr H ((2 : ℕ) ^ n * k + (2 : ℕ) ^ n * k) beta hb u u ≤ (c ^ ((2 : ℕ) ^ n) * ‖Read H beta hb u‖) ^ 2 := by
+  rw [← p4Q2PZ37AQG_localNormSq_eq_fullCorrelation
+    H ((2 : ℕ) ^ n * k) s beta hb u hu hp hbudget]
+  exact (sq_threshold_iff _ _ (norm_nonneg _)
+    (mul_nonneg (pow_nonneg hc _) (norm_nonneg _))).symm
+
+/-- A genuine finite correlation estimate at doubled terminal reach
+suffices for the desired relative norm bound at the original step. -/
+theorem p4Q2PZ37AQG_localDyadicCorrelationThreshold
+    (H k n : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (beta : ℝ) (hb : 0 ≤ beta) (u : Obs H)
+    (hu : Supported H s (fun A => u ((P H).positiveRestriction A)))
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hbudget : ∀ e ∈ s, (e.1 0).val + (2 : ℕ) ^ n * k + (2 : ℕ) ^ n * k ≤ H)
+    (c : ℝ) (hc : 0 ≤ c)
+    (hcorr : Corr H ((2 : ℕ) ^ n * k + (2 : ℕ) ^ n * k) beta hb u u ≤ (c ^ ((2 : ℕ) ^ n) * ‖Read H beta hb u‖) ^ 2) :
+    ‖Read H beta hb (Local H k u)‖ ≤ c * ‖Read H beta hb u‖ := by
+  have hs : ∀ e ∈ s, (e.1 0).val + (2 : ℕ) ^ n * k ≤ H := by
+    intro e he
+    have hh := hbudget e he
+    omega
+  exact p4Q2PZ37AQF_localDyadicTerminalThreshold H k n s beta hb u hu hp hs c hc
+    ((p4Q2PZ37AQG_localTerminalThreshold_iff_correlation
+      H k n s beta hb u hu hp hbudget c hc).2 hcorr)
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQG_haarMajorant_ge_base
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQG_haarStrictThreshold_impossible
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQG_fullReflectedCorrelation
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQG_localMixedShift_inner_eq_fullCorrelation
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQG_localNormSq_eq_fullCorrelation
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQG_localEvenCorrelation_nonneg
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQG_localTerminalThreshold_iff_correlation
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQG_localDyadicCorrelationThreshold

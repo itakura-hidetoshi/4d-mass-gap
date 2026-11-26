@@ -1,0 +1,2 @@
+# AQG R3/R4 repair — 2026-11-26
+Exact predecessor diagnostic PR #7031, run 45783044574, job 139782908477, artifact 15099960207, baseline da9cc0976de5fce6211666fd81009f18a6cb0dd5. R1/R2 each failed at line 109: simplification gave `c ^ 2 ^ n < 1 ^ 2 ^ n` rather than `c ^ 2 ^ n < 1`; all other reported declaration audits used only the standard three axioms. R3 uses `one_pow` after `Real.rpow_natCast`; R4 uses the pinned `Real.rpow_lt_one` lemma directly. No signature, import, baseline or assumption changes. Candidate-only, TEST_REQUIRED; no independent CI before GREEN.

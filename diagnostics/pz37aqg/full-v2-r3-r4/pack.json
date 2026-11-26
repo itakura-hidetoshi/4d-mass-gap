@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "baseline_commit": "da9cc0976de5fce6211666fd81009f18a6cb0dd5",
+  "baseline_mgap4d_tree": "2c43fc84a8d6b574d657d12455121da471411a2f",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalLocalOSFiniteDyadicThresholdV5_PZ37AQF",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "AQG",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQG_haarMajorant_ge_base",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQG_haarStrictThreshold_impossible",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQG_fullReflectedCorrelation",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQG_localMixedShift_inner_eq_fullCorrelation",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQG_localNormSq_eq_fullCorrelation",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQG_localEvenCorrelation_nonneg",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQG_localTerminalThreshold_iff_correlation",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQG_localDyadicCorrelationThreshold"
+      ],
+      "candidates": [
+        {
+          "id": "R3",
+          "path": "diagnostics/pz37aqg/full-v2-r3-r4/AQG_R3.lean.txt",
+          "blob": "34683c448d5ab509bdea884856aa17e9375737e8"
+        },
+        {
+          "id": "R4",
+          "path": "diagnostics/pz37aqg/full-v2-r3-r4/AQG_R4.lean.txt",
+          "blob": "0371f8eed431205f3fea28f200cdeab774c0899c"
+        }
+      ]
+    }
+  ]
+}
