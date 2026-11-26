@@ -1,0 +1,2 @@
+# AQM R3/R4 repair
+R1/R2 direct run 45808019129 job 139868264401: same two errors, line 270 finite-dimensional antilipschitz map application mismatch, and lambda-applied equality rewrite mismatch at 283/284. R3 names domain/codomain/scalar explicitly and invokes exists_antilipschitzWith through kernel-bottom; R4 uses the explicit typed injective iff theorem. Both use sub_eq_zero.mpr hxy without rewrite matching. No statement or other proof changes. Preserve failed evidence PR 7050; independent CI only after direct and real MCP GREEN.

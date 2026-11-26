@@ -1,0 +1,19 @@
+name: PZ37AQM full-cache sandbox v2 centered OS null fibers
+on:
+  pull_request:
+    paths:
+      - "diagnostics/pz37aqm/full-v2-r3-r4/**"
+      - ".github/workflows/pz37aqm-full-v2-r3-r4.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pz37aqm-full-v2-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    uses: ./.github/workflows/lean-warm-sandbox-reusable-aqm-full-v2.yml
+    with:
+      pack: diagnostics/pz37aqm/full-v2-r3-r4/pack.json
+      source_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      baseline_commit: 8b7d1549eee4acd34bc85c59ed5b8f69bcbf717b
