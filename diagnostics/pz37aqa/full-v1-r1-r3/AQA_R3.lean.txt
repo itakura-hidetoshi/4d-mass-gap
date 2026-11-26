@@ -1,0 +1,150 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonFullPeriodicOriginalLocalSupportBudgetTransportV5_PZ37APZ
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37AQA — local composition after canonical half restriction
+Reuse the existing integer action and APZ support transport. A single supported
+observable may pass through the canonical positive-half section between steps
+without changing its value, provided the combined future displacement fits
+its actual edge budget. The APX/APY obstruction is unchanged. This is a
+pointwise finite-lattice statement, not a completed OS time evolution.
+-/
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory Filter Set
+open scoped ENNReal Topology InnerProductSpace InnerProduct
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 12000000
+set_option synthInstance.maxHeartbeats 100000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "O" => PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
+local notation "P" => periodicHypercubicEvenEdgeOrbitPartition
+local notation "L" => PeriodicHypercubicEvenSideLength
+local notation "Tau" => periodicHypercubicIntegerTemporalConfigurationTranslation
+local notation "Section" => periodicHypercubicEvenSpecialUnitaryPositiveHalfSection
+local notation "Step" => periodicHypercubicEvenSpecialUnitaryPositiveHalfSectionIntegerTemporalStep
+local notation "Shift" => p4Q2PZ37APZ_edgeShift
+local notation "Supported" => p4Q2PZ37APZ_DependsOn
+local notation "W" => p4Q2PZ37APW_openTimeOneObservable
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+
+local instance p4Q2PZ37AQA_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37AQA_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37AQA_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37AQA_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37AQA_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37AQA_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37AQA_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37AQA_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37AQA_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+local instance p4Q2PZ37AQA_openHalfProbability (H : ℕ) :
+    IsProbabilityMeasure (periodicHypercubicEvenOpenHalfHaarMeasure H 2) := by
+  dsimp [periodicHypercubicEvenOpenHalfHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
+  infer_instance
+
+/-- Read a future-shifted observable through the existing half section.
+The inverse configuration displacement is the APZ forward edge convention. -/
+def p4Q2PZ37AQA_localRead (H k : ℕ)
+    (f : (PeriodicHypercubicEvenEdge H → G) → ℝ) (x : O H 2) : ℝ :=
+  f (Tau (L H) (-(k : ℤ)) (Section H 2 x))
+
+local notation "Read" => p4Q2PZ37AQA_localRead
+
+/-- The translated support retains positivity and the remaining time budget. -/
+theorem p4Q2PZ37AQA_shifted_support_residual_budget
+    (H k l : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hkl : ∀ e ∈ s, (e.1 0).val + k + l ≤ H) :
+    ∀ e ∈ Shift H (k : ℤ) '' s,
+      periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive ∧
+      (e.1 0).val + l ≤ H := by
+  rintro e' ⟨e, he, rfl⟩
+  have hb := hkl e he
+  have hk : (e.1 0).val + k ≤ H := by omega
+  have hn : (e.1 0).val + k < L H := by
+    simp only [PeriodicHypercubicEvenSideLength]
+    omega
+  have hv : ((Shift H (k : ℤ) e).1 0).val = (e.1 0).val + k :=
+    periodicHypercubicEvenIntegerTemporalEdgeTranslation_sourceTime_val_of_add_lt H k e hn
+  exact ⟨p4Q2PZ37APZ_edgeShift_positive_of_budget H k e (hp e he) hk, by omega⟩
+
+/-- The half reading is independent of which full configuration represents
+the positive restriction, whenever the given local budget holds. -/
+theorem p4Q2PZ37AQA_localRead_full_eq
+    (H k : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (f : (PeriodicHypercubicEvenEdge H → G) → ℝ)
+    (hf : Supported H s f)
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hk : ∀ e ∈ s, (e.1 0).val + k ≤ H)
+    (A : PeriodicHypercubicEvenEdge H → G) :
+    Read H k f ((P H).positiveRestriction A) = f (Tau (L H) (-(k : ℤ)) A) := by
+  exact (p4Q2PZ37APZ_dependsOn_shift_factor_of_budget H k s f hf hp hk A).symm
+
+/-- A genuine intermediate half restriction and re-section do not change the
+two-step reading. The combined budget also certifies the direct reading. -/
+theorem p4Q2PZ37AQA_localRead_comp
+    (H k l : ℕ) (s : Set (PeriodicHypercubicEvenEdge H))
+    (f : (PeriodicHypercubicEvenEdge H → G) → ℝ)
+    (hf : Supported H s f)
+    (hp : ∀ e ∈ s, periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.positive)
+    (hkl : ∀ e ∈ s, (e.1 0).val + k + l ≤ H)
+    (x : O H 2) :
+    Read H k f (Step H 2 (-(l : ℤ)) x) = Read H (k + l) f x := by
+  have hk : ∀ e ∈ s, (e.1 0).val + k ≤ H := by
+    intro e he
+    have hh := hkl e he
+    omega
+  have hsum : -((k + l : ℕ) : ℤ) = -(k : ℤ) + -(l : ℤ) := by omega
+  have he := p4Q2PZ37AQA_localRead_full_eq H k s f hf hp hk
+    (Tau (L H) (-(l : ℤ)) (Section H 2 x))
+  have he' : Tau (L H) (-((k + l : ℕ) : ℤ)) (Section H 2 x) =
+      Tau (L H) (-(k : ℤ)) (Tau (L H) (-(l : ℤ)) (Section H 2 x)) := by
+    rw [hsum]
+    exact periodicHypercubicIntegerTemporalConfigurationTranslation_add_apply
+      (L H) (-(k : ℤ)) (-(l : ℤ)) (Section H 2 x)
+  exact he.trans (congrArg f he').symm
+
+/-- The literal APW time-one observable obeys the same local composition
+law. No all-step positive algebra covariance is used. -/
+theorem p4Q2PZ37AQA_timeOne_localRead_comp
+    (H k l : ℕ) (hH : 0 < H) (hkl : 1 + k + l ≤ H)
+    (c0 c1 : ℝ) (x : O H 2) :
+    Read H k (fun A => W H hH c0 c1 ((P H).positiveRestriction A))
+      (Step H 2 (-(l : ℤ)) x) =
+    Read H (k + l) (fun A => W H hH c0 c1 ((P H).positiveRestriction A)) x := by
+  apply p4Q2PZ37AQA_localRead_comp H k l
+    (p4Q2PZ37APZ_timeOneEdgeSupport H hH)
+    (fun A => W H hH c0 c1 ((P H).positiveRestriction A))
+    (p4Q2PZ37APZ_timeOneFullObservable_dependsOn H hH c0 c1)
+  · rintro e ⟨a, rfl⟩
+    exact periodicHypercubicEvenPositiveHalfInteriorSpatialEdge_positive H (⟨0, hH⟩, a)
+  · rintro e ⟨a, rfl⟩
+    change ((periodicHypercubicEvenPositiveHalfInteriorSpatialEdge H
+      (⟨0, hH⟩, a)).1 0).val + k + l ≤ H
+    rw [periodicHypercubicEvenPositiveHalfInteriorSpatialEdge_time_val]
+    exact hkl
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQA_localRead
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQA_shifted_support_residual_budget
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQA_localRead_full_eq
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQA_localRead_comp
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQA_timeOne_localRead_comp
