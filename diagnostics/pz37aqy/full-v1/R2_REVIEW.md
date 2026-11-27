@@ -1,0 +1,1 @@
+R2 retained untested. R3 append-only strengthens the target by extracting the single-index spectral power sum from the full diagonal HasSum through the injective diagonal map; pinned mathlib Basic.lean checked. No existing statement weakened. Latest candidate only.
