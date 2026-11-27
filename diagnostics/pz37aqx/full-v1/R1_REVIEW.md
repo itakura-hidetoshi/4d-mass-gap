@@ -1,0 +1,1 @@
+R1 retained untested. Static R2 review before any direct Lean: avoid potentially reserved local name to; replace final concrete-submodule rewrite and rfl with typed congrArg; supply known nonzero factors explicitly to field_simp. Public statements, pin, and audit conditions unchanged. Only latest R2 pack runs.
