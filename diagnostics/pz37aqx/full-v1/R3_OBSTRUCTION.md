@@ -1,0 +1,1 @@
+R3 run 45944987610 job 140327573464: direct Lean 16.546s exit 1; sole diagnostic unknown identifier line 81. Prior three R2 errors absent. Exact canonical source at baseline has periodicHypercubicEvenBoundaryHaarL2ToSpatialSlicePair_rightInverse with required signature. R4 corrects only identifier. Statements, pins, gate unchanged. Retain R3 failure; only R4 pack selected.
