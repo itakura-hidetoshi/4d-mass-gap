@@ -1,0 +1,484 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalProjectedExcitationParsevalV5_PZ37ARC
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalPairCompletedBlockTransferRestriction
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryOneSlabPairHaarL2TransferSelfAdjoint
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37ARD — exact projected-kernel pair-transfer moment
+
+Use the actual normalized Wilson pair transfer on the actual ARC projected
+kernel. Mixed complete tensor Parseval gives the even spectral moment at
+every intermediate discrete time, preserving all multiplicities. Its
+endpoints recover ARC and AQY. Shifted spectral bounds split the remaining
+contraction from the intermediate moment. No unconditional uniform bound,
+continuum limit or identification with a different carrier is asserted.
+-/
+namespace MGAP4D.MathlibAnalytic
+open MeasureTheory Filter
+open scoped ENNReal Topology InnerProductSpace InnerProduct BigOperators
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 1000000
+set_option synthInstance.maxHeartbeats 50000
+universe u v w i j
+
+private theorem p4Q2PZ37ARD_basis_zero
+    {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    {ι : Type i} (b : HilbertBasis ι ℝ E) (L : E →L[ℝ] ℝ)
+    (h : ∀ k, L (b k) = 0) (x : E) : L x = 0 := by
+  have hs : Submodule.span ℝ (Set.range b) ≤ L.ker := by
+    apply Submodule.span_le.2
+    rintro _ ⟨k,rfl⟩
+    exact h k
+  have hc := (Submodule.span ℝ (Set.range b)).topologicalClosure_minimal
+    hs L.isClosed_ker
+  rw [b.dense_span] at hc
+  exact hc (show x ∈ (⊤ : Submodule ℝ E) from Submodule.mem_top)
+
+private theorem p4Q2PZ37ARD_span_orthogonal
+    {V : Type w} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+    (s : Set V) (z : V) (h : ∀ x ∈ s, inner ℝ z x = 0) :
+    z ∈ (Submodule.span ℝ s)ᗮ := by
+  have hl : Submodule.span ℝ s ≤ (ℝ ∙ z)ᗮ :=
+    Submodule.span_le.2 fun x hx =>
+      Submodule.mem_orthogonal_singleton_iff_inner_right.2 (h x hx)
+  exact Submodule.orthogonal_le hl
+    (Submodule.le_orthogonal_orthogonal (ℝ ∙ z) (Submodule.mem_span_singleton_self z))
+
+/-- A generic complete tensor coefficient sum, proved by constructing the
+actual Hilbert basis of the closed span of all bilinear generators. -/
+private theorem p4Q2PZ37ARD_mixed_parseval
+    {E : Type u} {D : Type v} {V : Type w}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [NormedAddCommGroup D] [InnerProductSpace ℝ D]
+    [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
+    (B : E →ₗ[ℝ] D →ₗ[ℝ] V)
+    (hN : ∀ x y, ‖B x y‖ = ‖x‖*‖y‖)
+    (hI : ∀ x y f g, inner ℝ (B x y) (B f g) =
+      inner ℝ x f * inner ℝ y g)
+    (C : Submodule ℝ V)
+    (hC : C = (Submodule.span ℝ (Set.range fun p : E × D => B p.1 p.2)).topologicalClosure)
+    (z y : V) (hz : z ∈ C) (hy : y ∈ C)
+    {ι : Type i} {κ : Type j} (b : HilbertBasis ι ℝ E) (d : HilbertBasis κ ℝ D) :
+    HasSum (fun p : ι × κ => inner ℝ z (B (b p.1) (d p.2)) *
+      inner ℝ (B (b p.1) (d p.2)) y) (inner ℝ z y) := by
+  classical
+  have hclosed : IsClosed (C : Set V) := by
+    rw [hC]
+    exact Submodule.isClosed_topologicalClosure _
+  letI : CompleteSpace C := hclosed.completeSpace_coe
+  let w : ι × κ → C := fun p =>
+    ⟨B (b p.1) (d p.2), by
+      rw [hC]
+      exact (Submodule.span ℝ _).le_topologicalClosure
+        (Submodule.subset_span ⟨(b p.1,d p.2),rfl⟩)⟩
+  have hw : Orthonormal ℝ w := by
+    rw [orthonormal_iff_ite]
+    intro p q
+    change inner ℝ (B (b p.1) (d p.2)) (B (b q.1) (d q.2)) = _
+    rw [hI,(orthonormal_iff_ite.mp b.orthonormal) p.1 q.1,
+      (orthonormal_iff_ite.mp d.orthonormal) p.2 q.2]
+    by_cases h1 : p.1 = q.1 <;> by_cases h2 : p.2 = q.2 <;>
+      simp [h1,h2,Prod.ext_iff]
+  have htot : (Submodule.span ℝ (Set.range w))ᗮ = ⊥ := by
+    rw [Submodule.eq_bot_iff]
+    intro r hr
+    have htest (a : ι) (c : κ) : inner ℝ (r : V) (B (b a) (d c)) = 0 := by
+      have h := (Submodule.mem_orthogonal' _ _).1 hr (w (a,c))
+        (Submodule.subset_span ⟨(a,c),rfl⟩)
+      exact h
+    have hleft (x : E) (c : κ) : inner ℝ (r : V) (B x (d c)) = 0 := by
+      let L : E →L[ℝ] V := (B.flip (d c)).mkContinuous ‖d c‖
+        (fun y => by change ‖B y (d c)‖ ≤ ‖d c‖*‖y‖; rw [hN,mul_comm])
+      exact p4Q2PZ37ARD_basis_zero b ((innerSL ℝ (r : V)).comp L)
+        (fun a => htest a c) x
+    have hall (x : E) (y : D) : inner ℝ (r : V) (B x y) = 0 := by
+      let L : D →L[ℝ] V := (B x).mkContinuous ‖x‖
+        (fun q => (hN x q).le)
+      exact p4Q2PZ37ARD_basis_zero d ((innerSL ℝ (r : V)).comp L)
+        (fun c => hleft x c) y
+    have ho0 : (r : V) ∈
+        (Submodule.span ℝ (Set.range fun p : E × D => B p.1 p.2)).topologicalClosureᗮ := by
+      rw [Submodule.orthogonal_closure]
+      apply p4Q2PZ37ARD_span_orthogonal
+      rintro _ ⟨⟨x,y⟩,rfl⟩
+      exact hall x y
+    have ho : (r : V) ∈ Cᗮ :=
+      (congrArg (fun P : Submodule ℝ V => (r : V) ∈ Pᗮ) hC).mpr ho0
+    exact Subtype.ext (inner_self_eq_zero.mp
+      (Submodule.inner_right_of_mem_orthogonal r.property ho))
+  let bC : HilbertBasis (ι × κ) ℝ C := HilbertBasis.mkOfOrthogonalEqBot hw htot
+  have hbC : ⇑bC = w := HilbertBasis.coe_mkOfOrthogonalEqBot hw htot
+  let r : C := ⟨z,hz⟩
+  let s : C := ⟨y,hy⟩
+  have hs := bC.hasSum_inner_mul_inner r s
+  change HasSum _ (inner ℝ z y) at hs
+  have he : (fun p : ι × κ => inner ℝ r (bC p) * inner ℝ (bC p) s) =
+      (fun p : ι × κ => inner ℝ z (B (b p.1) (d p.2)) *
+        inner ℝ (B (b p.1) (d p.2)) y) := by
+    funext p
+    rw [show bC p = w p from congrFun hbC p]
+    rfl
+  rw [he] at hs
+  exact hs
+
+private theorem p4Q2PZ37ARD_scaled_symm {V : Type w}
+    [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+    (A : V →L[ℝ] V) (c : ℝ)
+    (h : ∀ x y, inner ℝ (A x) y = inner ℝ x (A y)) :
+    ∀ x y, inner ℝ ((c • A) x) y = inner ℝ x ((c • A) y) := by
+  intro x y
+  change inner ℝ (c • A x) y = inner ℝ x (c • A y)
+  rw [real_inner_smul_left,real_inner_smul_right,h]
+
+private theorem p4Q2PZ37ARD_eigen_inner_iterate {V : Type w}
+    [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+    (A : V →L[ℝ] V) (h : ∀ x y, inner ℝ (A x) y = inner ℝ x (A y))
+    (x z : V) (c : ℝ) (hx : A x = c • x) (n : ℕ) :
+    inner ℝ x ((A^n) z) = c^n * inner ℝ x z := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+    rw [pow_succ',ContinuousLinearMap.mul_def,ContinuousLinearMap.comp_apply,
+      ← h,hx,real_inner_smul_left,ih,pow_succ']
+    ring
+
+private theorem p4Q2PZ37ARD_moment_aux
+    {E : Type u} {V : Type w}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
+    (B : E →ₗ[ℝ] E →ₗ[ℝ] V)
+    (hN : ∀ x y, ‖B x y‖ = ‖x‖*‖y‖)
+    (hI : ∀ x y f g, inner ℝ (B x y) (B f g) = inner ℝ x f * inner ℝ y g)
+    (C : Submodule ℝ V)
+    (hC : C = (Submodule.span ℝ (Set.range fun p : E × E => B p.1 p.2)).topologicalClosure)
+    (z : V) (hz : z ∈ C)
+    (A : V →L[ℝ] V)
+    (hSym : ∀ x y, inner ℝ (A x) y = inner ℝ x (A y))
+    (hInv : ∀ x ∈ C, A x ∈ C)
+    (T : E →L[ℝ] E)
+    (hAct : ∀ f g, A (B f g) = B (T f) (T g))
+    (hCoeff : ∀ f g, inner ℝ (B f g) z = inner ℝ (T f) g)
+    (n : ℕ) {ι : Type i} [DecidableEq ι]
+    (b : HilbertBasis ι ℝ E) (rho : ι → ℝ)
+    (he : ∀ k, T (b k) = rho k • b k) :
+    HasSum (fun k => (rho k)^(2*(n+1))) (inner ℝ z ((A^n) z)) := by
+  have hzn : (A^n) z ∈ C := by
+    induction n with
+    | zero => simpa using hz
+    | succ n ih =>
+      rw [pow_succ',ContinuousLinearMap.mul_def,ContinuousLinearMap.comp_apply]
+      exact hInv _ ih
+  have hs := p4Q2PZ37ARD_mixed_parseval B hN hI C hC z ((A^n) z) hz hzn b b
+  have hcoef (p : ι × ι) :
+      inner ℝ (B (b p.1) (b p.2)) z = if p.1 = p.2 then rho p.1 else 0 := by
+    rw [hCoeff,he p.1,real_inner_smul_left,(orthonormal_iff_ite.mp b.orthonormal) p.1 p.2]
+    by_cases h : p.1 = p.2 <;> simp [h]
+  have hE (p : ι × ι) :
+      A (B (b p.1) (b p.2)) = (rho p.1 * rho p.2) • B (b p.1) (b p.2) := by
+    rw [hAct,he p.1,he p.2]
+    simp only [map_smul,LinearMap.smul_apply,smul_smul]
+    rw [mul_comm (rho p.2) (rho p.1)]
+  have hp (p : ι × ι) :
+      inner ℝ (B (b p.1) (b p.2)) ((A^n) z) =
+        (rho p.1 * rho p.2)^n * inner ℝ (B (b p.1) (b p.2)) z :=
+    p4Q2PZ37ARD_eigen_inner_iterate A hSym _ z _ (hE p) n
+  have hfun : (fun p : ι × ι => inner ℝ z (B (b p.1) (b p.2)) *
+      inner ℝ (B (b p.1) (b p.2)) ((A^n) z)) =
+      (fun p : ι × ι => if p.1 = p.2 then (rho p.1)^(2*(n+1)) else 0) := by
+    funext p
+    rw [real_inner_comm (B (b p.1) (b p.2)) z,hp p,hcoef p]
+    by_cases h : p.1 = p.2
+    · simp only [h,if_true]
+      have hn : (rho p.2 * rho p.2)^n = (rho p.2)^(2*n) := by
+        rw [pow_mul,pow_two]
+      rw [hn,show 2*(n+1)=2*n+2 by omega,pow_add,pow_two]
+      ring
+    · simp [h]
+  rw [hfun] at hs
+  let e : ι → ι × ι := fun k => (k,k)
+  let a : ι × ι → ℝ := fun p => if p.1 = p.2 then (rho p.1)^(2*(n+1)) else 0
+  have heInj : Function.Injective e := fun _ _ h => congrArg Prod.fst h
+  have ha0 : ∀ p ∉ Set.range e, a p = 0 := by
+    intro p hp
+    have hn : p.1 ≠ p.2 := by
+      intro hh
+      exact hp ⟨p.1,Prod.ext rfl hh⟩
+    simp [a,hn]
+  have ha : HasSum a (inner ℝ z ((A^n) z)) := hs
+  have hs' := (heInj.hasSum_iff ha0).2 ha
+  simpa [Function.comp_def,e,a] using hs'
+
+private theorem p4Q2PZ37ARD_zero_aux {V : Type w}
+    [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+    (A : V →L[ℝ] V) (z : V) :
+    inner ℝ z ((A^0) z) = ‖z‖^2 := by
+  simp
+
+private theorem p4Q2PZ37ARD_shift_aux {ι : Type i}
+    (rho : ι → ℝ) (r q q' : ℝ) (n m : ℕ) (hn : n ≤ m) (hr : 0 ≤ r)
+    (h0 : ∀ k, 0 ≤ rho k) (hb : ∀ k, rho k ≤ r)
+    (hs : HasSum (fun k => (rho k)^(2*(n+1))) q)
+    (hs' : HasSum (fun k => (rho k)^(2*(m+1))) q') :
+    q' ≤ r^(2*(m-n)) * q := by
+  apply hasSum_le_of_sum_le hs'
+  intro s
+  have hpart : (∑ k ∈ s, (rho k)^(2*(n+1))) ≤ q :=
+    sum_le_hasSum s (fun k _ => pow_nonneg (h0 k) _) hs
+  calc
+    (∑ k ∈ s, (rho k)^(2*(m+1))) ≤
+        r^(2*(m-n)) * (∑ k ∈ s, (rho k)^(2*(n+1))) := by
+      rw [Finset.mul_sum]
+      apply Finset.sum_le_sum
+      intro k hk
+      rw [show 2*(m+1) = 2*(m-n)+2*(n+1) by omega,pow_add]
+      exact mul_le_mul_of_nonneg_right
+        (pow_le_pow_left₀ (h0 k) (hb k) _) (pow_nonneg (h0 k) _)
+    _ ≤ _ := mul_le_mul_of_nonneg_left hpart (pow_nonneg hr _)
+
+private theorem p4Q2PZ37ARD_two_pos : 0 < (2 : ℕ) := by decide
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "Phys" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "Pair" => PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2
+local notation "Dec" => periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2
+local notation "K" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+local notation "OO" => periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockClosure
+local notation "EH" => periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderExcitationTransferOperator
+local notation "Step" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+local notation "PF" => p4Q2PZ37AQW_partitionFactor
+local notation "Res" => p4Q2PZ37AQX_relativeResidual
+local notation "Emb" => periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+
+local instance p4Q2PZ37ARD_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37ARD_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37ARD_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37ARD_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37ARD_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37ARD_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) := Fintype.ofFinite _
+local instance p4Q2PZ37ARD_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) := Fintype.ofFinite _
+local instance p4Q2PZ37ARD_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37ARD_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+local instance p4Q2PZ37ARD_nontrivial :
+    Nontrivial (Matrix.specialUnitaryGroup (Fin 2) ℂ) := by
+  refine ⟨⟨1, specialUnitaryTwoRotation Real.pi, ?_⟩⟩
+  intro h
+  have h00 := congrArg
+    (fun g : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+      (g : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
+  norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
+
+private def p4Q2PZ37ARD_bilinear (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) :
+    K H 2 (by norm_num) beta hb →ₗ[ℝ]
+      (K H 2 (by norm_num) beta hb →ₗ[ℝ] Pair H 2) where
+  toFun := fun f => (realL2ExternalTensorLinearMapRight
+    (Emb H 2 (by norm_num) beta hb f)).comp (Emb H 2 (by norm_num) beta hb).toLinearMap
+  map_add' := by
+    intro f g
+    apply LinearMap.ext
+    intro x
+    change realL2ExternalTensor
+      (Emb H 2 (by norm_num) beta hb (f+g)) (Emb H 2 (by norm_num) beta hb x) =
+        realL2ExternalTensor (Emb H 2 (by norm_num) beta hb f) (Emb H 2 (by norm_num) beta hb x) +
+        realL2ExternalTensor (Emb H 2 (by norm_num) beta hb g) (Emb H 2 (by norm_num) beta hb x)
+    rw [map_add, realL2ExternalTensor_add_left]
+  map_smul' := by
+    intro c f
+    apply LinearMap.ext
+    intro x
+    change realL2ExternalTensor
+      (Emb H 2 (by norm_num) beta hb (c • f)) (Emb H 2 (by norm_num) beta hb x) =
+        c • realL2ExternalTensor (Emb H 2 (by norm_num) beta hb f) (Emb H 2 (by norm_num) beta hb x)
+    rw [map_smul, realL2ExternalTensor_smul_left]
+
+private theorem p4Q2PZ37ARD_bilinear_norm (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (f g : K H 2 (by norm_num) beta hb) :
+    ‖p4Q2PZ37ARD_bilinear H beta hb f g‖ = ‖f‖*‖g‖ :=
+  periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairTensorL2_norm
+    H 2 (by norm_num) beta hb f g
+
+private theorem p4Q2PZ37ARD_bilinear_inner (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (f g x y : K H 2 (by norm_num) beta hb) :
+    inner ℝ (p4Q2PZ37ARD_bilinear H beta hb f g)
+      (p4Q2PZ37ARD_bilinear H beta hb x y) =
+      inner ℝ f x * inner ℝ g y :=
+  realL2ExternalTensor_inner
+    (Emb H 2 (by norm_num) beta hb f) (Emb H 2 (by norm_num) beta hb x)
+    (Emb H 2 (by norm_num) beta hb g) (Emb H 2 (by norm_num) beta hb y)
+
+private theorem p4Q2PZ37ARD_bilinear_generator (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (f g : K H 2 (by norm_num) beta hb) :
+    p4Q2PZ37ARD_bilinear H beta hb f g =
+      periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalDecomposableL2
+        H 2 (by norm_num) beta hb f g := rfl
+
+private theorem p4Q2PZ37ARD_closure_eq (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) :
+    OO H 2 (by norm_num) beta hb =
+      (Submodule.span ℝ (Set.range fun p :
+        K H 2 (by norm_num) beta hb × K H 2 (by norm_num) beta hb =>
+          p4Q2PZ37ARD_bilinear H beta hb p.1 p.2)).topologicalClosure := by
+  change (Submodule.span ℝ
+    (periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalGeneratorSet
+      H 2 (by norm_num) beta hb)).topologicalClosure = _
+  apply congrArg (fun s : Set (Pair H 2) => (Submodule.span ℝ s).topologicalClosure)
+  change Set.range (fun p :
+    K H 2 (by norm_num) beta hb × K H 2 (by norm_num) beta hb =>
+      periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalDecomposableL2
+        H 2 (by norm_num) beta hb p.1 p.2) = _
+  exact congrArg Set.range (funext fun p =>
+    (p4Q2PZ37ARD_bilinear_generator H beta hb p.1 p.2).symm)
+
+local notation "h2" => p4Q2PZ37ARD_two_pos
+local notation "PK" => p4Q2PZ37ARC_projectedKernel
+local notation "S2" => periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperator
+local notation "Raw2" => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
+local notation "T" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+
+private theorem p4Q2PZ37ARD_pair_symm (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) :
+    ∀ x y : Pair H 2, inner ℝ (S2 H 2 h2 beta hb x) y =
+      inner ℝ x (S2 H 2 h2 beta hb y) := by
+  have hs := periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_isSymmetric
+    H 2 h2 beta hb
+  exact p4Q2PZ37ARD_scaled_symm (V := Pair H 2) (Raw2 H 2 h2 beta hb)
+    (‖T H 2 h2 beta hb‖^2)⁻¹ (fun x y => hs x y)
+
+private theorem p4Q2PZ37ARD_pair_inv (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) :
+    ∀ x ∈ OO H 2 h2 beta hb, S2 H 2 h2 beta hb x ∈ OO H 2 h2 beta hb := by
+  intro x hx
+  exact periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockClosure_normalizedTransfer_invariant
+    H 2 h2 beta hb hx
+
+private theorem p4Q2PZ37ARD_pair_action (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (f g : K H 2 h2 beta hb) :
+    S2 H 2 h2 beta hb (p4Q2PZ37ARD_bilinear H beta hb f g) =
+      p4Q2PZ37ARD_bilinear H beta hb (Step H 2 h2 beta hb f) (Step H 2 h2 beta hb g) :=
+  periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperator_apply_orthogonal_orthogonal
+    H 2 h2 beta hb f g
+
+private theorem p4Q2PZ37ARD_pair_coeff (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (f g : K H 2 h2 beta hb) :
+    inner ℝ (p4Q2PZ37ARD_bilinear H beta hb f g) (PK H beta hb) =
+      inner ℝ (Step H 2 h2 beta hb f) g :=
+  p4Q2PZ37ARC_projected_inner H beta hb f g
+
+/-- Actual normalized pair-transfer correlation of ARC's projected kernel. -/
+def p4Q2PZ37ARD_pairMoment (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (n : ℕ) : ℝ :=
+  inner ℝ (PK H beta hb) ((S2 H 2 h2 beta hb ^ n) (PK H beta hb))
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARD_pairMoment
+local notation "M" => p4Q2PZ37ARD_pairMoment
+
+/-- Exact even moment at every intermediate time, with original multiplicity. -/
+theorem p4Q2PZ37ARD_moment_hasSum
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (n : ℕ)
+    {ι : Type i} (b : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ)
+    (he : ∀ k, Step H 2 h2 beta hb (b k) = rho k • b k) :
+    HasSum (fun k => (rho k)^(2*(n+1))) (M H beta hb n) := by
+  classical
+  refine @p4Q2PZ37ARD_moment_aux
+    ↥(K H 2 h2 beta hb) (Pair H 2)
+    inferInstance inferInstance inferInstance inferInstance inferInstance
+    (p4Q2PZ37ARD_bilinear H beta hb) ?_ ?_
+    (OO H 2 h2 beta hb) ?_ (PK H beta hb) ?_
+    (S2 H 2 h2 beta hb) ?_ ?_ (Step H 2 h2 beta hb) ?_ ?_
+    n ι (Classical.decEq ι) b rho he
+  · exact p4Q2PZ37ARD_bilinear_norm H beta hb
+  · exact p4Q2PZ37ARD_bilinear_inner H beta hb
+  · exact p4Q2PZ37ARD_closure_eq H beta hb
+  · exact p4Q2PZ37ARC_projected_mem H beta hb
+  · exact p4Q2PZ37ARD_pair_symm H beta hb
+  · exact p4Q2PZ37ARD_pair_inv H beta hb
+  · exact p4Q2PZ37ARD_pair_action H beta hb
+  · exact p4Q2PZ37ARD_pair_coeff H beta hb
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARD_moment_hasSum
+
+theorem p4Q2PZ37ARD_moment_zero (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) :
+    M H beta hb 0 = ‖PK H beta hb‖^2 := by
+  exact p4Q2PZ37ARD_zero_aux (V := Pair H 2) (S2 H 2 h2 beta hb) (PK H beta hb)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARD_moment_zero
+
+theorem p4Q2PZ37ARD_moment_nonneg (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (n : ℕ) :
+    0 ≤ M H beta hb n := by
+  classical
+  obtain ⟨ι,b,rho,he,hs⟩ := p4Q2PZ37AQY_original_spectral_power_hasSum H beta hb
+  have hm := @p4Q2PZ37ARD_moment_hasSum H beta hb n ι b rho he
+  have h0 : ∀ k : ι, 0 ≤ rho k := fun k =>
+    (p4Q2PZ37ARA_eigenvalue_bounds H beta hb (b k) (rho k)
+      (b.orthonormal.norm_eq_one k) (he k)).1
+  have hp := sum_le_hasSum (∅ : Finset ι) (fun k _ => pow_nonneg (h0 k) (2*(n+1))) hm
+  simpa using hp
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARD_moment_nonneg
+
+/-- AQY's exact partition factor is the terminal projected pair moment. -/
+theorem p4Q2PZ37ARD_moment_at_halfCylinder (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) :
+    M H beta hb H = (PF H beta hb)⁻¹ ^ 2 - 1 := by
+  classical
+  obtain ⟨ι,b,rho,he,hs⟩ := p4Q2PZ37AQY_original_spectral_power_hasSum H beta hb
+  have hm := @p4Q2PZ37ARD_moment_hasSum H beta hb H ι b rho he
+  exact hm.unique hs
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARD_moment_at_halfCylinder
+
+/-- The intermediate moment controls every later moment through the actual
+remaining one-slice contraction, not the ambient Haar kernel. -/
+theorem p4Q2PZ37ARD_moment_shift_bound
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (n m : ℕ) (hn : n ≤ m) :
+    M H beta hb m ≤ ‖Step H 2 h2 beta hb‖^(2*(m-n)) * M H beta hb n := by
+  classical
+  obtain ⟨ι,b,rho,he,hs⟩ := p4Q2PZ37AQY_original_spectral_power_hasSum H beta hb
+  have hN := @p4Q2PZ37ARD_moment_hasSum H beta hb n ι b rho he
+  have hM := @p4Q2PZ37ARD_moment_hasSum H beta hb m ι b rho he
+  have hR (k : ι) : 0 ≤ rho k ∧ rho k ≤ ‖Step H 2 h2 beta hb‖ :=
+    p4Q2PZ37ARA_eigenvalue_bounds H beta hb (b k) (rho k)
+      (b.orthonormal.norm_eq_one k) (he k)
+  have hr : 0 ≤ ‖Step H 2 h2 beta hb‖ :=
+    norm_nonneg (Step H 2 h2 beta hb)
+  exact p4Q2PZ37ARD_shift_aux rho ‖Step H 2 h2 beta hb‖
+    (M H beta hb n) (M H beta hb m) n m hn hr
+    (fun k => (hR k).1) (fun k => (hR k).2) hN hM
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARD_moment_shift_bound
+
+theorem p4Q2PZ37ARD_relative_budget_shift
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (n : ℕ) (hn : n ≤ H) :
+    (PF H beta hb)⁻¹ ^ 2 - 1 ≤
+      ‖Step H 2 h2 beta hb‖^(2*(H-n)) * M H beta hb n := by
+  have h := p4Q2PZ37ARD_moment_shift_bound H beta hb n H hn
+  rw [p4Q2PZ37ARD_moment_at_halfCylinder H beta hb] at h
+  exact h
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARD_relative_budget_shift
+
+/-- A volume-dependent intermediate time may be selected without changing
+the original Wilson model. The uniform shifted budget remains an obligation. -/
+theorem p4Q2PZ37ARD_partitionFloor_of_shiftedBudget
+    (beta : ℝ) (hb : 0 ≤ beta) (n : ℕ → ℕ) (hn : ∀ H, n H ≤ H)
+    (C : ℝ) (hC : 0 ≤ C)
+    (h : ∀ H : ℕ, ‖Step H 2 h2 beta hb‖^(2*(H-n H)) * M H beta hb (n H) ≤ C) :
+    ∃ c : ℝ, 0 < c ∧ ∀ H : ℕ, c ≤ PF H beta hb := by
+  apply (p4Q2PZ37AQX_partitionFloor_iff_relativeResidual_bound beta hb).2
+  refine ⟨C,hC,?_⟩
+  intro H
+  rw [p4Q2PZ37AQX_relativeResidual_normSq H beta hb]
+  exact (p4Q2PZ37ARD_relative_budget_shift H beta hb (n H) (hn H)).trans (h H)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARD_partitionFloor_of_shiftedBudget
+
+end
+end MGAP4D.MathlibAnalytic
