@@ -1,0 +1,194 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalCubicBudgetHorizonObstructionV5_PZ37ARI
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalFiniteSpectralBudgetV5_PZ37AQZ
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37ARJ — complete genuine spectral split at a physical horizon
+
+Separate a finite exceptional spectral family from the remaining small modes.
+Keep all multiplicities and the exact original Wilson complete moments.
+No claim that the required uniform weighted counting and tail budgets hold.
+The ARI obstruction to the old global action budget is unchanged.
+-/
+namespace MGAP4D.MathlibAnalytic
+open MeasureTheory Filter Set
+open scoped ENNReal Topology InnerProductSpace InnerProduct BigOperators
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 1000000
+set_option synthInstance.maxHeartbeats 50000
+universe i
+private theorem p4Q2PZ37ARJ_split_aux {ι : Type i} (rho : ι → ℝ)
+    (a b c r : ℝ) (n m : ℕ) (hn : n ≤ m) (S : Finset ι)
+    (hc : 0 ≤ c) (hr : 0 ≤ r)
+    (h0 : ∀ k, 0 ≤ rho k) (hcap : ∀ k, rho k ≤ c)
+    (htail : ∀ k, k ∉ S → rho k ≤ r)
+    (ha : HasSum (fun k => (rho k)^(2*(n+1))) a)
+    (hb : HasSum (fun k => (rho k)^(2*(m+1))) b) :
+    b ≤ (S.card : ℝ)*c^(2*(m+1)) + r^(2*(m-n))*a := by
+  classical
+  apply hasSum_le_of_sum_le hb
+  intro t
+  let hi := t.filter (fun k => k ∈ S)
+  let lo := t.filter (fun k => k ∉ S)
+  have hsub : hi ⊆ S := by
+    intro k hk
+    exact (Finset.mem_filter.mp hk).2
+  have hcard : (hi.card : ℝ) ≤ (S.card : ℝ) := by
+    exact_mod_cast Finset.card_le_card hsub
+  have hhi : (∑ k ∈ hi, (rho k)^(2*(m+1))) ≤ (S.card : ℝ)*c^(2*(m+1)) := by
+    calc
+      _ ≤ ∑ _k ∈ hi, c^(2*(m+1)) :=
+        Finset.sum_le_sum (fun k _ => pow_le_pow_left₀ (h0 k) (hcap k) _)
+      _ = (hi.card : ℝ)*c^(2*(m+1)) := by simp [nsmul_eq_mul]
+      _ ≤ _ := mul_le_mul_of_nonneg_right hcard (pow_nonneg hc _)
+  have hlo : (∑ k ∈ lo, (rho k)^(2*(m+1))) ≤ r^(2*(m-n))*a := by
+    calc
+      _ ≤ ∑ k ∈ lo, r^(2*(m-n))*(rho k)^(2*(n+1)) := by
+        apply Finset.sum_le_sum
+        intro k hk
+        have hout : k ∉ S := (Finset.mem_filter.mp hk).2
+        rw [show 2*(m+1) = 2*(m-n)+2*(n+1) by omega, pow_add]
+        exact mul_le_mul_of_nonneg_right
+          (pow_le_pow_left₀ (h0 k) (htail k hout) _) (pow_nonneg (h0 k) _)
+      _ = r^(2*(m-n))*(∑ k ∈ lo, (rho k)^(2*(n+1))) := by rw [Finset.mul_sum]
+      _ ≤ _ := mul_le_mul_of_nonneg_left
+        (sum_le_hasSum lo (fun k _ => pow_nonneg (h0 k) _) ha) (pow_nonneg hr _)
+  have hsplit :
+      (∑ k ∈ hi, (rho k)^(2*(m+1))) + (∑ k ∈ lo, (rho k)^(2*(m+1))) =
+        ∑ k ∈ t, (rho k)^(2*(m+1)) := by
+    exact Finset.sum_filter_add_sum_filter_not t (fun k => k ∈ S) _
+  rw [← hsplit]
+  exact add_le_add hhi hlo
+
+private theorem p4Q2PZ37ARJ_two_pos : 0 < (2 : ℕ) := by decide
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "Phys" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "Pair" => PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2
+local notation "Dec" => periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2
+local notation "K" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+local notation "OO" => periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockClosure
+local notation "EH" => periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderExcitationTransferOperator
+local notation "Step" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+local notation "PF" => p4Q2PZ37AQW_partitionFactor
+local notation "Res" => p4Q2PZ37AQX_relativeResidual
+local notation "Emb" => periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+
+local instance p4Q2PZ37ARJ_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37ARJ_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37ARJ_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37ARJ_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37ARJ_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37ARJ_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) := Fintype.ofFinite _
+local instance p4Q2PZ37ARJ_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) := Fintype.ofFinite _
+local instance p4Q2PZ37ARJ_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37ARJ_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+local instance p4Q2PZ37ARJ_nontrivial :
+    Nontrivial (Matrix.specialUnitaryGroup (Fin 2) ℂ) := by
+  refine ⟨⟨1, specialUnitaryTwoRotation Real.pi, ?_⟩⟩
+  intro h
+  have h00 := congrArg
+    (fun g : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+      (g : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
+  norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
+
+local notation "h2" => p4Q2PZ37ARJ_two_pos
+local notation "M" => p4Q2PZ37ARD_pairMoment
+
+local notation "Cut" => GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformGapCutoff
+local notation "c" => ((3071 : ℝ)/3072)
+
+/-- Count every mode above a positive threshold at any intermediate degree. -/
+theorem p4Q2PZ37ARJ_thresholdCount_at_degree
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (n : ℕ)
+    {ι : Type i} (b : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (he : ∀ k, Step H 2 h2 beta hb (b k) = rho k • b k)
+    (S : Finset ι) (r : ℝ) (hr : 0 ≤ r)
+    (hlarge : ∀ k ∈ S, r ≤ rho k) :
+    (S.card : ℝ)*r^(2*(n+1)) ≤ M H beta hb n := by
+  have hm := p4Q2PZ37ARD_moment_hasSum H beta hb n b rho he
+  calc
+    _ = ∑ _k ∈ S, r^(2*(n+1)) := by simp [nsmul_eq_mul]
+    _ ≤ ∑ k ∈ S, (rho k)^(2*(n+1)) :=
+      Finset.sum_le_sum (fun k hk => pow_le_pow_left₀ hr (hlarge k hk) _)
+    _ ≤ _ := sum_le_hasSum S (fun k _ => by
+      rw [pow_mul]
+      exact pow_nonneg (sq_nonneg _) _) hm
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARJ_thresholdCount_at_degree
+
+/-- Genuine complete moment split under the existing G4 contraction:
+only the low modes pay the earlier complete-moment budget. -/
+theorem p4Q2PZ37ARJ_moment_le_spectralSplit
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (s : ℝ) (hs : 8 < s) (hcut : beta ≤ Cut s hs)
+    (n m : ℕ) (hn : n ≤ m)
+    {ι : Type i} (b : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (he : ∀ k, Step H 2 h2 beta hb (b k) = rho k • b k)
+    (S : Finset ι) (r : ℝ) (hr : 0 ≤ r)
+    (htail : ∀ k, k ∉ S → rho k ≤ r) :
+    M H beta hb m ≤ (S.card : ℝ)*c^(2*(m+1)) + r^(2*(m-n))*M H beta hb n := by
+  have hnorm := p4Q2PZ37ARG_norm_le_of_cutoff H beta hb s hs hcut
+  have hR (k : ι) : 0 ≤ rho k ∧ rho k ≤ ‖Step H 2 h2 beta hb‖ :=
+    p4Q2PZ37ARA_eigenvalue_bounds H beta hb (b k) (rho k)
+      (b.orthonormal.norm_eq_one k) (he k)
+  exact p4Q2PZ37ARJ_split_aux rho (M H beta hb n) (M H beta hb m) c r n m hn S
+    (by norm_num) hr (fun k => (hR k).1) (fun k => (hR k).2.trans hnorm) htail
+    (p4Q2PZ37ARD_moment_hasSum H beta hb n b rho he)
+    (p4Q2PZ37ARD_moment_hasSum H beta hb m b rho he)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARJ_moment_le_spectralSplit
+
+/-- The split is evaluated at the actual finite half-cylinder endpoint. -/
+theorem p4Q2PZ37ARJ_terminal_le_spectralSplit
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (s : ℝ) (hs : 8 < s) (hcut : beta ≤ Cut s hs)
+    (n : ℕ) (hn : n ≤ H)
+    {ι : Type i} (b : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (he : ∀ k, Step H 2 h2 beta hb (b k) = rho k • b k)
+    (S : Finset ι) (r : ℝ) (hr : 0 ≤ r)
+    (htail : ∀ k, k ∉ S → rho k ≤ r) :
+    (PF H beta hb)⁻¹ ^ 2 - 1 ≤
+      (S.card : ℝ)*c^(2*(H+1)) + r^(2*(H-n))*M H beta hb n := by
+  rw [← p4Q2PZ37ARD_moment_at_halfCylinder H beta hb]
+  exact p4Q2PZ37ARJ_moment_le_spectralSplit H beta hb s hs hcut n H hn b rho he S r hr htail
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARJ_terminal_le_spectralSplit
+
+/-- Weighted exceptional multiplicity and low-mode budgets suffice for a
+uniform genuine partition floor. No all-volume budget is assumed proven. -/
+theorem p4Q2PZ37ARJ_partitionFloor_of_spectralSplit
+    (beta : ℝ) (hb : 0 ≤ beta)
+    (s : ℝ) (hs : 8 < s) (hcut : beta ≤ Cut s hs)
+    (A B : ℝ) (hA : 0 ≤ A) (hB : 0 ≤ B)
+    (h : ∀ H : ℕ, ∃ (ι : Type) (b : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+      (rho : ι → ℝ) (S : Finset ι) (r : ℝ) (n : ℕ),
+      (∀ k, Step H 2 h2 beta hb (b k) = rho k • b k) ∧
+      0 ≤ r ∧ n ≤ H ∧ (∀ k, k ∉ S → rho k ≤ r) ∧
+      (S.card : ℝ)*c^(2*(H+1)) ≤ A ∧ r^(2*(H-n))*M H beta hb n ≤ B) :
+    ∃ d : ℝ, 0 < d ∧ ∀ H : ℕ, d ≤ PF H beta hb := by
+  apply (p4Q2PZ37AQX_partitionFloor_iff_relativeResidual_bound beta hb).2
+  refine ⟨A+B, add_nonneg hA hB, ?_⟩
+  intro H
+  obtain ⟨ι,b,rho,S,r,n,he,hr,hn,htail,hhi,hlo⟩ := h H
+  rw [p4Q2PZ37AQX_relativeResidual_normSq H beta hb]
+  exact (p4Q2PZ37ARJ_terminal_le_spectralSplit H beta hb s hs hcut n hn b rho he S r hr htail).trans
+    (add_le_add hhi hlo)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARJ_partitionFloor_of_spectralSplit
+
+end
+end MGAP4D.MathlibAnalytic
