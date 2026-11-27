@@ -1,0 +1,1 @@
+R1 retained untested. R2 static review makes real-inner commutation direction explicit, bilinear goals fully explicit to avoid unnecessary trailing tactics, and simplifies diagonal exponent by pow_mul. Public statements and gate unchanged. Only latest numbered pack selected.

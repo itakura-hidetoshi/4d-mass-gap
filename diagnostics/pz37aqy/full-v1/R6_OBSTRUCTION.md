@@ -1,0 +1,5 @@
+# AQY R6 obstruction and R7 repair
+
+R6 direct Lean run 45952201128 job 140350479832 artifact 15177363416; source c2cbbf4683c4c6b3714dc5cef31d6abb0b40178e; 100.192 seconds, exit 1; 3 diagnostics: line 272 whnf timeout during concrete norm argument application; 343 no goals to be solved (nested proof witness in explicit type argument); 465 IsSymmetric implicit scalar/carrier mismatch. No real MCP, no certification. R5 NormedSpace issue absent.
+
+R7A: explicit scalar/carrier and all instance slots in generic matrix theorem, stage argument obligations, replace repeated nested arithmetic proof witnesses in adapter bodies with a closed theorem, explicit IsSymmetric linear map type. R7B: same structural repair with a finite 3M heartbeat budget scoped solely to full_matrix_hasSum, after repeated structural attempts; no change to theorem statements, assumptions, axioms, pins, audit criteria or other limits. Try R7A first; only if it fails, try R7B on same runner. All previous sources and packs retained. No independent CI until exact winner direct Lean plus real Lean MCP GREEN.
