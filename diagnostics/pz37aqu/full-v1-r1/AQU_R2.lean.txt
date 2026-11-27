@@ -1,0 +1,276 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalIntegratedRankOneRelativeQuadraticV5_PZ37AQT
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37AQU — uniform coefficient and genuine normalized transfer floor
+
+Choose the affine coefficients of the two original modes once on SU(2).
+The AQS scale grows at most quadratically in the probe coefficient, so
+AQT gives a uniform positive normalized quadratic floor even for
+volume-dependent coefficients. Keep the exact AQO centering and partition
+normalization. This is not a lower bound on the partition factor itself,
+nor an upper spectral contraction estimate or a continuum theorem.
+-/
+namespace MGAP4D.MathlibAnalytic
+open MeasureTheory Filter
+open scoped ENNReal BigOperators InnerProductSpace InnerProduct Topology
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 500000
+set_option synthInstance.maxHeartbeats 50000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "Cfg" => PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration
+local notation "P" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "PSD" => RealKernelPositiveSemidefiniteCertificate
+local notation "Hol" => p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy
+local notation "Trace" => normalizedSpecialUnitaryRealTrace 2
+local notation "Mode" => specialUnitaryWilsonPlaquetteEnergyTwoContinuousGramSchmidtMode
+local notation "Obs" => p4Q2PZ37APL_originalTwoModeObservable
+local notation "W" => p4Q2PZ37APL_originalVacuumWeightedTwoMode
+local notation "Tr" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+local notation "K" => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+local notation "Half" => periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeight
+local notation "R" => p4Q2PZ37AQR_residualCrossing
+local notation "Dual" => p4Q2PZ37AQS_affineDual
+local notation "TD" => p4Q2PZ37AQS_traceDual
+local notation "F4" => specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgewiseFeature
+local notation "LS" => p4Q2PZ37AQS_localScale
+local notation "DS" => p4Q2PZ37AQS_affineScale
+local notation "c4" => specialUnitaryTwoCyclicFourEdgeWilsonSelectedDegreeCoefficient
+local notation "qC" => p4Q2PZ37AQO_centerCoefficient
+local notation "J" => p4Q2PZ37AQO_testAmplitude
+local notation "NormZ" => periodicHypercubicEvenBoundaryPositiveHalfPartitionSqrtNormalization
+
+local instance p4Q2PZ37AQU_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37AQU_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37AQU_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37AQU_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37AQU_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37AQU_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) := Fintype.ofFinite _
+local instance p4Q2PZ37AQU_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37AQU_probability (H : ℕ) : IsProbabilityMeasure (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+
+/-- The local scale is strictly positive at positive coupling. -/
+theorem p4Q2PZ37AQU_localScale_pos (beta : ℝ) (hb : 0 < beta) :
+    0 < LS beta := by
+  have h0 : 0 < c4 beta 0 := by
+    unfold specialUnitaryTwoCyclicFourEdgeWilsonSelectedDegreeCoefficient
+      specialUnitaryWilsonSelectedTaylorCoefficient
+    positivity
+  have h1 : 0 < c4 beta 1 := by
+    unfold specialUnitaryTwoCyclicFourEdgeWilsonSelectedDegreeCoefficient
+      specialUnitaryWilsonSelectedTaylorCoefficient
+    positivity
+  exact add_pos (inv_pos.mpr h0) (inv_pos.mpr h1)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQU_localScale_pos
+
+/-- Compute the exact norm in the original AQS direct-sum feature. -/
+theorem p4Q2PZ37AQU_affineDual_normSq (a b : ℝ) :
+    ‖Dual a b‖^2 = a^2 + b^2 * ‖TD‖^2 := by
+  calc
+    ‖Dual a b‖^2 = inner ℝ (Dual a b) (Dual a b) :=
+      (real_inner_self_eq_norm_sq (Dual a b)).symm
+    _ = _ := by
+      change inner ℝ (WithLp.toLp 2 (a, b • TD))
+        (WithLp.toLp 2 (a, b • TD)) = _
+      rw [WithLp.prod_inner_apply]
+      change inner ℝ a a + inner ℝ (b • TD) (b • TD) = _
+      rw [realL2Scalar_inner_eq_mul, real_inner_smul_left,
+        real_inner_smul_right, real_inner_self_eq_norm_sq TD]
+      ring
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQU_affineDual_normSq
+
+/-- A single scalar depends on the fixed SU(2) coefficients and coupling only. -/
+def p4Q2PZ37AQU_coefficientBound (beta a0 a1 b0 b1 : ℝ) : ℝ :=
+  (a0^2 + a1^2 + (b0^2 + b1^2) * ‖TD‖^2) * LS beta + 1
+
+local notation "Bnd" => p4Q2PZ37AQU_coefficientBound
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQU_coefficientBound
+
+theorem p4Q2PZ37AQU_coefficientBound_pos (beta : ℝ) (hb : 0 < beta)
+    (a0 a1 b0 b1 : ℝ) : 0 < Bnd beta a0 a1 b0 b1 := by
+  unfold p4Q2PZ37AQU_coefficientBound
+  have hs : 0 ≤ LS beta := (p4Q2PZ37AQU_localScale_pos beta hb).le
+  have ht : 0 ≤ a0^2 + a1^2 + (b0^2 + b1^2) * ‖TD‖^2 := by positivity
+  exact add_pos_of_nonneg_of_pos (mul_nonneg ht hs) zero_lt_one
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQU_coefficientBound_pos
+
+private theorem p4Q2PZ37AQU_scalar_square_bound (q x y : ℝ) :
+    (q*x+y)^2 ≤ (1+q^2)*(x^2+y^2) := by
+  nlinarith only [sq_nonneg (x-q*y)]
+
+/-- No restriction on the real coefficient, including a coefficient that
+depends on volume. The actual AQS scale is unchanged. -/
+theorem p4Q2PZ37AQU_affineScale_bounds (beta : ℝ) (hb : 0 < beta)
+    (q a0 a1 b0 b1 : ℝ) :
+    0 ≤ DS beta (q*a0+a1) (q*b0+b1) ∧
+    DS beta (q*a0+a1) (q*b0+b1) ≤ Bnd beta a0 a1 b0 b1 * (1+q^2) := by
+  let n : ℝ := ‖TD‖^2
+  let s : ℝ := LS beta
+  have hn : 0 ≤ n := sq_nonneg _
+  have hs : 0 ≤ s := (p4Q2PZ37AQU_localScale_pos beta hb).le
+  constructor
+  · exact mul_nonneg (sq_nonneg _) hs
+  · have ha := p4Q2PZ37AQU_scalar_square_bound q a0 a1
+    have hb' := p4Q2PZ37AQU_scalar_square_bound q b0 b1
+    have ht : (q*a0+a1)^2 + (q*b0+b1)^2*n ≤
+        (1+q^2)*(a0^2+a1^2) + ((1+q^2)*(b0^2+b1^2))*n :=
+      add_le_add ha (mul_le_mul_of_nonneg_right hb' hn)
+    rw [p4Q2PZ37AQS_affineScale, p4Q2PZ37AQU_affineDual_normSq]
+    change ((q*a0+a1)^2 + (q*b0+b1)^2*n)*s ≤
+      ((a0^2+a1^2+(b0^2+b1^2)*n)*s+1)*(1+q^2)
+    calc
+      _ ≤ ((1+q^2)*(a0^2+a1^2) + ((1+q^2)*(b0^2+b1^2))*n)*s :=
+        mul_le_mul_of_nonneg_right ht hs
+      _ = ((a0^2+a1^2+(b0^2+b1^2)*n)*s)*(1+q^2) := by ring
+      _ ≤ _ := mul_le_mul_of_nonneg_right (le_add_of_nonneg_right zero_le_one)
+        (by positivity)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQU_affineScale_bounds
+
+/-- Quantifier order is essential: one C for every q and H. The witness d
+comes from the exact AQS affine certificate, not from a new kernel. -/
+theorem p4Q2PZ37AQU_uniform_psd_coefficient (beta : ℝ) (hb : 0 < beta) :
+    ∃ C : ℝ, 0 < C ∧ ∀ q : ℝ, ∃ d : ℝ, 0 ≤ d ∧ d ≤ C*(1+q^2) ∧
+      ∀ H : ℕ, PSD (Cfg H 2) (fun A B => d*K H 2 beta A B -
+        Half H 2 beta A * R H beta A B * Half H 2 beta B *
+          (Obs H q A * Obs H q B)) := by
+  obtain ⟨a0,b0,h0⟩ := p4Q2PZ37AQS_mode_affine 0 (by norm_num)
+  obtain ⟨a1,b1,h1⟩ := p4Q2PZ37AQS_mode_affine 1 (by norm_num)
+  refine ⟨Bnd beta a0 a1 b0 b1,
+    p4Q2PZ37AQU_coefficientBound_pos beta hb a0 a1 b0 b1, ?_⟩
+  intro q
+  let a := q*a0+a1
+  let b := q*b0+b1
+  let d := DS beta a b
+  have hBounds := p4Q2PZ37AQU_affineScale_bounds beta hb q a0 a1 b0 b1
+  refine ⟨d,hBounds.1,hBounds.2,?_⟩
+  intro H
+  have hab (A : Cfg H 2) : Obs H q A = a+b*Trace (Hol H 2 A) := by
+    change q*Mode 0 (Hol H 2 A) + 1*Mode 1 (Hol H 2 A) = _
+    rw [h0,h1]
+    dsimp only [a,b]
+    ring
+  have h := p4Q2PZ37AQS_affine_slab_psd H beta hb a b
+  have he : (fun A B : Cfg H 2 => d*K H 2 beta A B -
+      Half H 2 beta A * R H beta A B * Half H 2 beta B *
+        (Obs H q A * Obs H q B)) =
+      (fun A B : Cfg H 2 => d*K H 2 beta A B -
+      Half H 2 beta A * R H beta A B * Half H 2 beta B *
+        ((a+b*Trace (Hol H 2 A))*(a+b*Trace (Hol H 2 B)))) := by
+    funext A B
+    rw [hab A,hab B]
+  rw [he]
+  exact h
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQU_uniform_psd_coefficient
+
+/-- Abstract scalar cancellation, keeping the concrete transfer construction
+out of the ordered-field proof. -/
+private theorem p4Q2PZ37AQU_cancel_scale (e C m Q d : ℝ)
+    (hC : 0 < C) (hm : 0 < m) (hQ : 0 ≤ Q)
+    (hd : d ≤ C*m) (h : e*m^2 ≤ d*Q) :
+    (e/C)*m ≤ Q := by
+  have h' := h.trans (mul_le_mul_of_nonneg_right hd hQ)
+  have hh : (e*m)*m ≤ (Q*C)*m := by
+    calc
+      _ = e*m^2 := by ring
+      _ ≤ (C*m)*Q := h'
+      _ = _ := by ring
+  have hc : e*m ≤ Q*C := le_of_mul_le_mul_right hh hm
+  calc
+    _ = (e*m)/C := by ring
+    _ ≤ _ := (div_le_iff₀ hC).mpr hc
+
+/-- Positive relative quadratic floor, uniform in volume AND q, at each
+fixed strictly positive coupling. -/
+theorem p4Q2PZ37AQU_uniform_relative_quadratic (beta : ℝ) (hb : 0 < beta) :
+    ∃ c : ℝ, 0 < c ∧ ∀ (H : ℕ) (q : ℝ),
+      c*(1+q^2) ≤ ‖Tr H 2 (by norm_num) beta hb.le‖⁻¹ *
+        inner ℝ (Tr H 2 (by norm_num) beta hb.le (W H beta hb.le q)) (W H beta hb.le q) := by
+  obtain ⟨C,hC,hCert⟩ := p4Q2PZ37AQU_uniform_psd_coefficient beta hb
+  refine ⟨Real.exp (-32*beta)/C, div_pos (Real.exp_pos _) hC, ?_⟩
+  intro H q
+  obtain ⟨d,_,hd,hPSD⟩ := hCert q
+  let Q : ℝ := ‖Tr H 2 (by norm_num) beta hb.le‖⁻¹ *
+    inner ℝ (Tr H 2 (by norm_num) beta hb.le (W H beta hb.le q)) (W H beta hb.le q)
+  have hQ : 0 ≤ Q :=
+    mul_nonneg (inv_nonneg.mpr
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos_from_uniform_kernel_floor
+        H 2 (by norm_num) beta hb.le).le)
+      (p4Q2PZ37APL_originalVacuumWeightedTwoMode_quadratic_pos H beta hb q).le
+  have h : Real.exp (-32*beta)*(1+q^2)^2 ≤ d*Q :=
+    (p4Q2PZ37AQT_joint_pair_sq_lower H beta hb.le q).trans
+      (p4Q2PZ37AQT_integrated_rankOne H beta hb.le q d (hPSD H))
+  exact p4Q2PZ37AQU_cancel_scale (Real.exp (-32*beta)) C (1+q^2) Q d
+    hC (by positivity) hQ hd h
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQU_uniform_relative_quadratic
+
+/-- Apply the bound to the literal volume-dependent AQO centering coefficient. -/
+theorem p4Q2PZ37AQU_centered_relative_quadratic (beta : ℝ) (hb : 0 < beta) :
+    ∃ c : ℝ, 0 < c ∧ ∀ H : ℕ,
+      c*(1+(qC H beta hb.le)^2) ≤ ‖Tr H 2 (by norm_num) beta hb.le‖⁻¹ *
+        inner ℝ (Tr H 2 (by norm_num) beta hb.le (W H beta hb.le (qC H beta hb.le)))
+          (W H beta hb.le (qC H beta hb.le)) := by
+  obtain ⟨c,hc,h⟩ := p4Q2PZ37AQU_uniform_relative_quadratic beta hb
+  exact ⟨c,hc,fun H => h H (qC H beta hb.le)⟩
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQU_centered_relative_quadratic
+
+private theorem p4Q2PZ37AQU_scaled_endpoint_aux (z l x v : ℝ) (H : ℕ)
+    (hz : 0 ≤ z) (hl : 0 < l) (h : x ≤ l⁻¹*v) :
+    (z*l^(H+1))*x ≤ z*(l^H*v) := by
+  calc
+    _ ≤ (z*l^(H+1))*(l⁻¹*v) :=
+      mul_le_mul_of_nonneg_left h (mul_nonneg hz (pow_nonneg hl.le _))
+    _ = z*(l^H*v) := by
+      rw [pow_succ]
+      calc
+        _ = z*(l^H*v)*(l*l⁻¹) := by ring
+        _ = _ := by rw [mul_inv_cancel₀ hl.ne', mul_one]
+
+/-- The exact AQO insertion amplitude retains its true partition factor.
+A uniform floor for that factor is a separate, unresolved obligation. -/
+theorem p4Q2PZ37AQU_centered_testAmplitude_scaled_floor (beta : ℝ) (hb : 0 < beta) :
+    ∃ c : ℝ, 0 < c ∧ ∀ H : ℕ,
+      (NormZ H 2 (by norm_num) beta hb.le * ‖Tr H 2 (by norm_num) beta hb.le‖^(H+1)) *
+        (c*(1+(qC H beta hb.le)^2)) ≤ J H beta hb.le := by
+  obtain ⟨c,hc,h⟩ := p4Q2PZ37AQU_centered_relative_quadratic beta hb
+  refine ⟨c,hc,?_⟩
+  intro H
+  let l : ℝ := ‖Tr H 2 (by norm_num) beta hb.le‖
+  let z : ℝ := NormZ H 2 (by norm_num) beta hb.le
+  let w : P H 2 := W H beta hb.le (qC H beta hb.le)
+  let v : ℝ := inner ℝ (Tr H 2 (by norm_num) beta hb.le w) w
+  have hl : 0 < l := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos_from_uniform_kernel_floor
+    H 2 (by norm_num) beta hb.le
+  have hz : 0 ≤ z := by
+    unfold z periodicHypercubicEvenBoundaryPositiveHalfPartitionSqrtNormalization
+    exact Real.sqrt_nonneg _
+  have he : J H beta hb.le = z*(l^H*v) := p4Q2PZ37AQO_testAmplitude_eq H beta hb
+  have hq : c*(1+(qC H beta hb.le)^2) ≤ l⁻¹*v := h H
+  calc
+    _ ≤ z*(l^H*v) := p4Q2PZ37AQU_scaled_endpoint_aux z l _ v H hz hl hq
+    _ = _ := he.symm
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQU_centered_testAmplitude_scaled_floor
+
+end
+end MGAP4D.MathlibAnalytic
