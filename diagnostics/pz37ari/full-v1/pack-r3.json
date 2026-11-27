@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "baseline_commit": "8bc4523c87d7719d444f2eb06168eb97944c042e",
+  "baseline_mgap4d_tree": "4e327a55e093bd84ba82215e242d154547b77947",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalInitialMomentVolumeBudgetV5_PZ37ARH",
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalGlobalActionBudgetWindowObstructionV5_PZ37AAB",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "ARI",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARI_spatialPlaquetteCount_ge_cube",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARI_budget_ge_cubic",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARI_degree_gate_requires_small_beta",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARI_eventually_no_degree_gate",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARI_no_uniform_positive_horizon_gate"
+      ],
+      "candidates": [
+        {
+          "id": "R3A",
+          "path": "diagnostics/pz37ari/full-v1/ARI_R3A.lean.txt",
+          "blob": "a94d2f78cd2d38437785eea779deb9a4c0251d92"
+        },
+        {
+          "id": "R3B",
+          "path": "diagnostics/pz37ari/full-v1/ARI_R3B.lean.txt",
+          "blob": "c7fa1607719d00c8c9b234009faf8d4d87ce1ec7"
+        }
+      ]
+    }
+  ]
+}
