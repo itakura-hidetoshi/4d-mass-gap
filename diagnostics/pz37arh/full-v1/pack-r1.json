@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "baseline_commit": "7d83c511a64b7e9e07e4485add8233ee931f464e",
+  "baseline_mgap4d_tree": "598188f9649984c1d01d747d462cb0ba68fae02e",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalHighTemperatureCompleteMomentV5_PZ37ARG",
+    "MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferNormalizationFloor",
+    "Mathlib.Analysis.SpecialFunctions.Log.Basic",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "ARH",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARH_raw_norm_le_one",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARH_normalized_norm_le_exp",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARH_initial_moment_le_exp_sub_one",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARH_moment_le_exp_geometric",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARH_threshold_of_log_degree",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARH_terminal_threshold_of_log_degree"
+      ],
+      "candidates": [
+        {
+          "id": "R1A",
+          "path": "diagnostics/pz37arh/full-v1/ARH_R1A.lean.txt",
+          "blob": "cb2f2f42d0b3e602816e24e0829f2e58eaa2bdbb"
+        },
+        {
+          "id": "R1B",
+          "path": "diagnostics/pz37arh/full-v1/ARH_R1B.lean.txt",
+          "blob": "73dbb1fddcb6164b44e02b9a9c8d03f2eea9bb23"
+        }
+      ]
+    }
+  ]
+}

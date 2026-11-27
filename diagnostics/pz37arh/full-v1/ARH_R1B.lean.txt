@@ -1,0 +1,214 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalHighTemperatureCompleteMomentV5_PZ37ARG
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferNormalizationFloor
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37ARH — literal initial complete moment and volume-dependent degree
+
+Use the actual normalized Haar probability, literal kernel bound by one,
+and existing physical normalization floor. Retain the global volume budget.
+Combine with ARG on its existing high-temperature interval, and keep the
+finite cylinder horizon as an explicit condition. No uniform fixed-degree
+budget or continuum claim.
+-/
+namespace MGAP4D.MathlibAnalytic
+open MeasureTheory Filter Set
+open scoped ENNReal Topology InnerProductSpace InnerProduct BigOperators
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 1000000
+set_option synthInstance.maxHeartbeats 50000
+universe u
+
+private theorem p4Q2PZ37ARH_prob_norm_aux {X : Type u} [MeasurableSpace X]
+    (mu : Measure X) [IsProbabilityMeasure mu]
+    (f : Lp ℝ 2 mu) (hf : ∀ᵐ x ∂mu, ‖f x‖ ≤ 1) : ‖f‖ ≤ 1 := by
+  have h := Lp.norm_le_of_ae_bound (show (0:ℝ) ≤ 1 by norm_num) hf
+  have hm : measureUnivNNReal mu = 1 := by simp [measureUnivNNReal]
+  rw [hm] at h
+  simpa using h
+
+private theorem p4Q2PZ37ARH_scaled_norm_aux {E : Type u}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    (x : E) (a b : ℝ) (ha : 0 ≤ a) (hab : a ≤ b) (hx : ‖x‖ ≤ 1) :
+    ‖a • x‖ ≤ b := by
+  rw [norm_smul,Real.norm_eq_abs,abs_of_nonneg ha]
+  exact (mul_le_mul_of_nonneg_left hx ha).trans (by simpa only [mul_one] using hab)
+
+private theorem p4Q2PZ37ARH_sq_exp_aux (a x : ℝ)
+    (ha : 0 ≤ a) (h : a ≤ Real.exp x) : a^2 ≤ Real.exp (2*x) := by
+  calc
+    a^2 ≤ (Real.exp x)^2 := pow_le_pow_left₀ ha h 2
+    _ = Real.exp (2*x) := by simpa using (Real.exp_nat_mul x 2).symm
+
+private theorem p4Q2PZ37ARH_left_le_aux (a b d : ℝ)
+    (h : a = b+d) (hd : 0 ≤ d) : b ≤ a := by linarith
+
+private theorem p4Q2PZ37ARH_degree_aux (c x : ℝ) (hc : 0 < c)
+    (n : ℕ) (hx : x ≤ ((n:ℝ)-1)*(-Real.log c)) :
+    (c^2)^n*Real.exp x ≤ c^(n+1) := by
+  have he (k : ℕ) : Real.exp ((k:ℝ)*Real.log c) = c^k := by
+    rw [Real.exp_nat_mul,Real.exp_log hc]
+  have hp : (c^2)^n = Real.exp (2*(n:ℝ)*Real.log c) := by
+    rw [← pow_mul]
+    have h := (he (2*n)).symm
+    simpa only [Nat.cast_mul,Nat.cast_ofNat] using h
+  calc
+    (c^2)^n*Real.exp x = Real.exp (2*(n:ℝ)*Real.log c+x) := by
+      rw [hp,Real.exp_add]
+    _ ≤ Real.exp (((n:ℝ)+1)*Real.log c) := Real.exp_le_exp.mpr (by nlinarith only [hx])
+    _ = c^(n+1) := by simpa only [Nat.cast_add,Nat.cast_one] using he (n+1)
+
+private theorem p4Q2PZ37ARH_two_pos : 0 < (2 : ℕ) := by decide
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "Phys" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "Pair" => PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2
+local notation "Dec" => periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2
+local notation "K" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+local notation "OO" => periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockClosure
+local notation "EH" => periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderExcitationTransferOperator
+local notation "Step" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+local notation "PF" => p4Q2PZ37AQW_partitionFactor
+local notation "Res" => p4Q2PZ37AQX_relativeResidual
+local notation "Emb" => periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+
+local instance p4Q2PZ37ARH_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37ARH_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37ARH_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37ARH_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37ARH_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37ARH_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) := Fintype.ofFinite _
+local instance p4Q2PZ37ARH_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) := Fintype.ofFinite _
+local instance p4Q2PZ37ARH_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37ARH_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+local instance p4Q2PZ37ARH_nontrivial :
+    Nontrivial (Matrix.specialUnitaryGroup (Fin 2) ℂ) := by
+  refine ⟨⟨1, specialUnitaryTwoRotation Real.pi, ?_⟩⟩
+  intro h
+  have h00 := congrArg
+    (fun g : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+      (g : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
+  norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
+
+local notation "h2" => p4Q2PZ37ARH_two_pos
+local notation "M" => p4Q2PZ37ARD_pairMoment
+
+local notation "Cut" => GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformGapCutoff
+local notation "c" => ((3071 : ℝ)/3072)
+
+local notation "PM" => periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure
+local notation "Raw" => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2
+local notation "T" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+local notation "NK" => p4Q2PZ37ARA_normalizedKernel
+local notation "CK" => p4Q2PZ37ARB_centeredKernel
+local notation "PK" => p4Q2PZ37ARC_projectedKernel
+local notation "Leak" => p4Q2PZ37ARC_kernelLeakage
+local notation "B" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget
+local notation "Floor" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor
+
+/-- The genuine unnormalized pair Haar kernel has norm at most one. -/
+theorem p4Q2PZ37ARH_raw_norm_le_one
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) : ‖Raw H 2 h2 beta hb‖ ≤ 1 := by
+  have hae : ∀ᵐ p ∂PM H 2, ‖Raw H 2 h2 beta hb p‖ ≤ 1 := by
+    filter_upwards [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2_coeFn
+      H 2 h2 beta hb] with p hp
+    change Raw H 2 h2 beta hb p =
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 beta p.1 p.2 at hp
+    rw [hp,Real.norm_eq_abs]
+    exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_abs_le_one
+      H 2 h2 beta hb p.1 p.2
+  exact p4Q2PZ37ARH_prob_norm_aux (PM H 2) (Raw H 2 h2 beta hb) hae
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARH_raw_norm_le_one
+
+/-- The literal normalized kernel inherits the explicit global floor cost. -/
+theorem p4Q2PZ37ARH_normalized_norm_le_exp
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) :
+    ‖NK H beta hb‖ ≤ Real.exp (beta*B H) := by
+  have hi := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferNorm_inv_le_globalMinorizationFloor_inv
+    H 2 h2 beta hb
+  have he : (Floor H beta)⁻¹ = Real.exp (beta*B H) := by
+    unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor
+    rw [← Real.exp_neg,neg_neg]
+  have hi' : ‖T H 2 h2 beta hb‖⁻¹ ≤ Real.exp (beta*B H) := hi.trans_eq he
+  exact p4Q2PZ37ARH_scaled_norm_aux (E := Pair H 2)
+    (Raw H 2 h2 beta hb) ‖T H 2 h2 beta hb‖⁻¹ (Real.exp (beta*B H))
+    (inv_nonneg.mpr (norm_nonneg _)) hi' (p4Q2PZ37ARH_raw_norm_le_one H beta hb)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARH_normalized_norm_le_exp
+
+/-- Use the genuine projected kernel and retain the nonnegative leakage
+rather than identify it with the whole normalized Haar kernel. -/
+theorem p4Q2PZ37ARH_initial_moment_le_exp_sub_one
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) :
+    M H beta hb 0 ≤ Real.exp (2*(beta*B H))-1 := by
+  have hsq := p4Q2PZ37ARH_sq_exp_aux ‖NK H beta hb‖ (beta*B H)
+    (norm_nonneg _) (p4Q2PZ37ARH_normalized_norm_le_exp H beta hb)
+  calc
+    M H beta hb 0 = ‖PK H beta hb‖^2 := p4Q2PZ37ARD_moment_zero H beta hb
+    _ ≤ ‖CK H beta hb‖^2 := p4Q2PZ37ARH_left_le_aux _ _ _
+      (p4Q2PZ37ARC_normSq_decomposition H beta hb) (sq_nonneg ‖Leak H beta hb‖)
+    _ = ‖NK H beta hb‖^2-1 := p4Q2PZ37ARB_centered_normSq H beta hb
+    _ ≤ _ := sub_le_sub_right hsq 1
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARH_initial_moment_le_exp_sub_one
+
+/-- Actual complete moments are bounded by an explicit finite volume cost
+times the independently established G4 geometric factor. -/
+theorem p4Q2PZ37ARH_moment_le_exp_geometric
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (s : ℝ) (hs : 8 < s) (hcut : beta ≤ Cut s hs) (n : ℕ) :
+    M H beta hb n ≤ (c^2)^n*(Real.exp (2*(beta*B H))-1) := by
+  have h : M H beta hb n ≤ (c^2)^n*M H beta hb 0 := by
+    simpa only [Nat.sub_zero] using
+      p4Q2PZ37ARG_moment_shift_geometric H beta hb s hs hcut 0 n (Nat.zero_le n)
+  exact h.trans (mul_le_mul_of_nonneg_left
+    (p4Q2PZ37ARH_initial_moment_le_exp_sub_one H beta hb)
+    (pow_nonneg (sq_nonneg c) n))
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARH_moment_le_exp_geometric
+
+/-- Explicit sufficient degree condition, in terms of the actual slab action
+budget. The condition is not asserted at the physical horizon for all H. -/
+theorem p4Q2PZ37ARH_threshold_of_log_degree
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (s : ℝ) (hs : 8 < s) (hcut : beta ≤ Cut s hs) (n : ℕ)
+    (hdegree : 2*(beta*B H) ≤ ((n:ℝ)-1)*(-Real.log c)) :
+    M H beta hb n ≤ c^(n+1) := by
+  calc
+    M H beta hb n ≤ (c^2)^n*(Real.exp (2*(beta*B H))-1) :=
+      p4Q2PZ37ARH_moment_le_exp_geometric H beta hb s hs hcut n
+    _ ≤ (c^2)^n*Real.exp (2*(beta*B H)) :=
+      mul_le_mul_of_nonneg_left (sub_le_self _ (by norm_num)) (pow_nonneg (sq_nonneg c) n)
+    _ ≤ c^(n+1) := p4Q2PZ37ARH_degree_aux c _ (by norm_num) n hdegree
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARH_threshold_of_log_degree
+
+/-- At the genuine half-cylinder degree, the same explicit condition
+controls the actual partition residual, not a substituted kernel. -/
+theorem p4Q2PZ37ARH_terminal_threshold_of_log_degree
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (s : ℝ) (hs : 8 < s) (hcut : beta ≤ Cut s hs)
+    (hdegree : 2*(beta*B H) ≤ ((H:ℝ)-1)*(-Real.log c)) :
+    (PF H beta hb)⁻¹ ^ 2 - 1 ≤ c^(H+1) := by
+  exact (p4Q2PZ37ARD_moment_at_halfCylinder H beta hb).ge.trans
+    (p4Q2PZ37ARH_threshold_of_log_degree H beta hb s hs hcut H hdegree)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARH_terminal_threshold_of_log_degree
+
+end
+end MGAP4D.MathlibAnalytic
