@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "baseline_commit": "f88a6447be9339d67ead1a83ff7ad6657bbb09f6",
+  "baseline_mgap4d_tree": "3fda3b4a85c8ff66e4b6c24078fa89257bb14084",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalVacuumCenteredSpectralMomentV5_PZ37ARB",
+    "Mathlib.Analysis.InnerProductSpace.Projection.Basic",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "ARC",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARC_projectedKernel",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARC_kernelLeakage",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARC_projected_mem",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARC_projected_inner",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARC_full_matrix_hasSum",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARC_quadratic_hasSum",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARC_quadratic_tsum",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARC_normSq_decomposition",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARC_quadratic_leakage_identity",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARC_finite_projected_power",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARC_relative_budget_bound",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARC_partitionFloor_of_projectedBudget"
+      ],
+      "candidates": [
+        {
+          "id": "R1",
+          "path": "diagnostics/pz37arc/full-v1/ARC_R1.lean.txt",
+          "blob": "0a0ee176fe66c85612252a377fd0e28cd302c711"
+        }
+      ]
+    }
+  ]
+}
