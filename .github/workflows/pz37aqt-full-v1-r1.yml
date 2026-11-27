@@ -14,6 +14,6 @@ jobs:
   verify:
     uses: ./.github/workflows/lean-warm-sandbox-reusable-aqt-full-v1.yml
     with:
-      pack: diagnostics/pz37aqt/full-v1-r1/pack-r5.json
+      pack: diagnostics/pz37aqt/full-v1-r1/pack-r6.json
       source_head: ${{ github.event.pull_request.head.sha || github.sha }}
       baseline_commit: ac6e34e380b61038dc25f6950736e74676223bc3
