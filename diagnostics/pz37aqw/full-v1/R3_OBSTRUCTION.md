@@ -1,0 +1,1 @@
+R3 run 45937574172 job 140304256349: direct 31.795s exit 1, only remaining diagnostic unnecessarySeqFocus at line 156. All eight public declarations audited standard three axioms, no sorryAx. R4 restores sequential rw then rfl at that exact location. No statement, assumptions, pins or linter gates changed. Only newest R4 selected; no R2 or R3 recomputation.
