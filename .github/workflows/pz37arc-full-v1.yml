@@ -1,0 +1,41 @@
+name: PZ37ARC exact-cache sandbox — latest append-only candidate pack
+on:
+  pull_request:
+    paths:
+      - "diagnostics/pz37arc/full-v1/**"
+      - ".github/workflows/pz37arc-full-v1.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pz37arc-full-v1-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  select:
+    runs-on: ubuntu-22.04
+    outputs:
+      pack: ${{ steps.pack.outputs.pack }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Select newest numbered exact pack
+        id: pack
+        run: |
+          python3 - <<'PY'
+          import os, re
+          from pathlib import Path
+          d=Path("diagnostics/pz37arc/full-v1")
+          packs=[(int(m.group(1)),p) for p in d.glob("pack-r*.json") if (m:=re.fullmatch(r"pack-r([1-9][0-9]*)\.json",p.name))]
+          assert packs
+          with open(os.environ["GITHUB_OUTPUT"],"a") as f:
+              print("pack="+str(max(packs)[1]),file=f)
+          PY
+  verify:
+    needs: select
+    uses: ./.github/workflows/lean-warm-sandbox-reusable-arc-full-v1.yml
+    with:
+      pack: ${{ needs.select.outputs.pack }}
+      source_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      baseline_commit: f88a6447be9339d67ead1a83ff7ad6657bbb09f6
