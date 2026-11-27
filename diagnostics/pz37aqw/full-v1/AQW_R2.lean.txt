@@ -1,0 +1,299 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalUniformProbeNormNormalizedTestV5_PZ37AQV
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37AQW — exact partition factor as a genuine vacuum overlap
+
+The normalized original boundary vacuum and the two-endpoint tensor of
+the original physical top eigenvector are unit vectors in the SAME
+boundary Haar L2. The exact overlap equals the partition factor in AQV.
+No replacement of the Gibbs partition, no assumption of global OS/physical
+Hilbert equivalence. The uniform lower bound is reduced to, not inferred
+from, a uniform strict residual bound.
+-/
+namespace MGAP4D.MathlibAnalytic
+open MeasureTheory Filter
+open scoped ENNReal Topology InnerProductSpace InnerProduct BigOperators
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 1000000
+set_option synthInstance.maxHeartbeats 50000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "Cfg" => PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration
+local notation "Phys" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "B" => PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration
+local notation "O" => PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
+local notation "Closure" => PeriodicHypercubicEvenPositiveHalfClosureConfiguration
+local notation "BM" => periodicHypercubicEvenBoundaryHaarMeasure
+local notation "OM" => periodicHypercubicEvenOpenHalfHaarMeasure
+local notation "CM" => periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureHaarMeasure
+local notation "E" => periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
+local notation "PairE" => periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv
+local notation "Slab" => periodicHypercubicEvenPositiveHalfCylinderSlabCount
+local notation "Gram" => periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+local notation "VacM" => periodicHypercubicEvenBoundaryVacuumMoment
+local notation "Vac" => periodicHypercubicEvenBoundaryVacuumL2
+local notation "Omega" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+local notation "Tr" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+local notation "HalfTr" => periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransferOperator
+local notation "NormZ" => periodicHypercubicEvenBoundaryPositiveHalfPartitionSqrtNormalization
+local notation "Probe" => p4Q2PZ37AQO_endpointProbe
+local notation "OSCentered" => p4Q2PZ37APP_originalTimeOneOSCenteredBoundaryL2
+
+local instance p4Q2PZ37AQW_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37AQW_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37AQW_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37AQW_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37AQW_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37AQW_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) := Fintype.ofFinite _
+local instance p4Q2PZ37AQW_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) := Fintype.ofFinite _
+local instance p4Q2PZ37AQW_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37AQW_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+local instance p4Q2PZ37AQW_openHalfProbability (H : ℕ) :
+    IsProbabilityMeasure (OM H 2) := by
+  dsimp [periodicHypercubicEvenOpenHalfHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
+  infer_instance
+local instance p4Q2PZ37AQW_boundaryProbability (H : ℕ) :
+    IsProbabilityMeasure (BM H 2) := by
+  dsimp [periodicHypercubicEvenBoundaryHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure]
+  infer_instance
+local instance p4Q2PZ37AQW_nontrivial :
+    Nontrivial (Matrix.specialUnitaryGroup (Fin 2) ℂ) := by
+  refine ⟨⟨1, specialUnitaryTwoRotation Real.pi, ?_⟩⟩
+  intro h
+  have h00 := congrArg
+    (fun g : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+      (g : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
+  norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
+
+private theorem p4Q2PZ37AQW_left_eq
+    (H : ℕ) (b : B H 2) (x : O H 2) :
+    (E H 2 (b,x)).1 0 = (PairE H G b).1 := by
+  funext e
+  rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransfer_primary_apply H 2 b x e]
+  let k := periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices H
+  change b (k.symm (Sum.inl e)) =
+    MeasurableEquiv.piCongrLeft (fun _ : PeriodicHypercubicEvenSpatialSliceLink H ⊕
+      PeriodicHypercubicEvenSpatialSliceLink H => G) k b (Sum.inl e)
+  have hh := MeasurableEquiv.piCongrLeft_apply_apply k
+    (β := fun _ : PeriodicHypercubicEvenSpatialSliceLink H ⊕
+      PeriodicHypercubicEvenSpatialSliceLink H => ↥G) b (k.symm (Sum.inl e))
+  rw [Equiv.apply_symm_apply] at hh
+  exact hh.symm
+
+private theorem p4Q2PZ37AQW_right_eq
+    (H : ℕ) (b : B H 2) (x : O H 2) :
+    (E H 2 (b,x)).1 (Fin.last (Slab H)) = (PairE H G b).2 := by
+  have hi : Fin.last (Slab H) = (Fin.last H).succ := by
+    apply Fin.ext
+    rfl
+  rw [hi]
+  funext e
+  rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransfer_antipodal_apply H 2 b x e]
+  let k := periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices H
+  change b (k.symm (Sum.inr e)) =
+    MeasurableEquiv.piCongrLeft (fun _ : PeriodicHypercubicEvenSpatialSliceLink H ⊕
+      PeriodicHypercubicEvenSpatialSliceLink H => G) k b (Sum.inr e)
+  have hh := MeasurableEquiv.piCongrLeft_apply_apply k
+    (β := fun _ : PeriodicHypercubicEvenSpatialSliceLink H ⊕
+      PeriodicHypercubicEvenSpatialSliceLink H => ↥G) b (k.symm (Sum.inr e))
+  rw [Equiv.apply_symm_apply] at hh
+  exact hh.symm
+
+/-- The existing physical transfer coefficient is precisely the pairing of
+the actual boundary vacuum with the actual endpoint tensor. -/
+theorem p4Q2PZ37AQW_vacuum_probe_inner
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (f g : Phys H 2) :
+    inner ℝ (Probe H f g) (Vac H 2 (by norm_num) beta hb) =
+      NormZ H 2 (by norm_num) beta hb *
+        inner ℝ (HalfTr H 2 (by norm_num) beta hb f) g := by
+  let fl : Lp ℝ 2 (Mu H 2) := f
+  let gl : Lp ℝ 2 (Mu H 2) := g
+  let F : Closure H G → ℝ := fun z =>
+    Gram H 2 (by norm_num) beta hb z.1 z.2 * fl ((E H 2 z).1 0) *
+      gl ((E H 2 z).1 (Fin.last (Slab H)))
+  have hF : Integrable F (CM H 2) :=
+    periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_gaussEndpoints_integrable
+      H 2 (by norm_num) beta hb f g
+  have hTransfer : (∫ z, F z ∂(CM H 2)) =
+      NormZ H 2 (by norm_num) beta hb *
+        inner ℝ (HalfTr H 2 (by norm_num) beta hb f) g :=
+    periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_gaussEndpoint_integral_eq_normalizedPhysicalTransfer
+      H 2 (by norm_num) beta hb f g
+  have hFubini : (∫ z, F z ∂(CM H 2)) =
+      ∫ b : B H 2, (fl (PairE H G b).1 * gl (PairE H G b).2) *
+        VacM H 2 (by norm_num) beta hb b ∂(BM H 2) := by
+    calc
+      _ = ∫ b : B H 2, (∫ x : O H 2, F (b,x) ∂(OM H 2)) ∂(BM H 2) :=
+        MeasureTheory.integral_prod F hF
+      _ = _ := by
+        apply integral_congr_ae
+        filter_upwards with b
+        let k := fl (PairE H G b).1 * gl (PairE H G b).2
+        calc
+          _ = ∫ x : O H 2, k * Gram H 2 (by norm_num) beta hb b x ∂(OM H 2) := by
+            apply integral_congr_ae
+            filter_upwards with x
+            dsimp [F, k]
+            rw [p4Q2PZ37AQW_left_eq H b x, p4Q2PZ37AQW_right_eq H b x]
+            ring
+          _ = k * VacM H 2 (by norm_num) beta hb b := by
+            rw [integral_const_mul] <;> rfl
+  rw [← hTransfer, hFubini, MeasureTheory.L2.inner_def]
+  apply integral_congr_ae
+  filter_upwards [p4Q2PZ37AQO_endpointProbe_coeFn H f g,
+    periodicHypercubicEvenBoundaryVacuumL2_coeFn H 2 (by norm_num) beta hb] with b hf hv
+  rw [hf, hv, periodicHypercubicEven_real_inner_eq_mul] <;> rfl
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQW_vacuum_probe_inner
+
+/-- Exactly the unresolved AQV coefficient, with the original partition. -/
+def p4Q2PZ37AQW_partitionFactor (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) : ℝ :=
+  NormZ H 2 (by norm_num) beta hb * ‖Tr H 2 (by norm_num) beta hb‖^(H+1)
+
+local notation "PF" => p4Q2PZ37AQW_partitionFactor
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQW_partitionFactor
+
+private theorem p4Q2PZ37AQW_pow_eigen {V : Type*}
+    [NormedAddCommGroup V] [NormedSpace ℝ V]
+    (t : V →L[ℝ] V) (v : V) (l : ℝ) (he : t v = l • v) (n : ℕ) :
+    (t^n) v = l^n • v := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+    rw [pow_succ', ContinuousLinearMap.mul_def, ContinuousLinearMap.comp_apply,
+      ih, map_smul, he, smul_smul, pow_succ]
+
+/-- The two-endpoint tensor of the actual normalized physical ground state. -/
+def p4Q2PZ37AQW_topProbe (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) :=
+  Probe H (Omega H 2 (by norm_num) beta hb) (Omega H 2 (by norm_num) beta hb)
+
+local notation "TopProbe" => p4Q2PZ37AQW_topProbe
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQW_topProbe
+
+theorem p4Q2PZ37AQW_topProbe_norm (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) :
+    ‖TopProbe H beta hb‖ = 1 := by
+  unfold p4Q2PZ37AQW_topProbe
+  rw [p4Q2PZ37AQO_endpointProbe_norm,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_norm,
+    one_mul]
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQW_topProbe_norm
+
+/-- Exact partition factor as the overlap of two genuine unit vectors. -/
+theorem p4Q2PZ37AQW_partitionFactor_eq_overlap
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) :
+    PF H beta hb = inner ℝ (TopProbe H beta hb) (Vac H 2 (by norm_num) beta hb) := by
+  let t := Tr H 2 (by norm_num) beta hb
+  let o := Omega H 2 (by norm_num) beta hb
+  have he : t o = ‖t‖ • o :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_eigen
+      H 2 (by norm_num) beta hb
+  have hPow : HalfTr H 2 (by norm_num) beta hb o = ‖t‖^(H+1) • o :=
+    p4Q2PZ37AQW_pow_eigen t o ‖t‖ he (H+1)
+  have ho : ‖o‖ = 1 :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_norm
+      H 2 (by norm_num) beta hb
+  symm
+  change inner ℝ (Probe H o o) (Vac H 2 (by norm_num) beta hb) = _
+  rw [p4Q2PZ37AQW_vacuum_probe_inner, hPow, real_inner_smul_left,
+    real_inner_self_eq_norm_sq, ho]
+  simp [p4Q2PZ37AQW_partitionFactor, t]
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQW_partitionFactor_eq_overlap
+
+theorem p4Q2PZ37AQW_partitionFactor_pos_le_one
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) :
+    0 < PF H beta hb ∧ PF H beta hb ≤ 1 := by
+  have hZ : 0 <
+      (periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength H) 2 (by norm_num) beta hb).base.partitionFunction :=
+    compact_oriented_partitionFunction_pos
+      (periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength H) 2 (by norm_num) beta hb).base
+      (continuous_compact_oriented_boltzmannIntegrable
+        (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength H) 2 (by norm_num) beta hb))
+  have hn : 0 < NormZ H 2 (by norm_num) beta hb := by
+    unfold periodicHypercubicEvenBoundaryPositiveHalfPartitionSqrtNormalization
+    exact Real.sqrt_pos.2 (div_pos zero_lt_one hZ)
+  have ht : 0 < ‖Tr H 2 (by norm_num) beta hb‖ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos_from_uniform_kernel_floor
+      H 2 (by norm_num) beta hb
+  refine ⟨mul_pos hn (pow_pos ht _), ?_⟩
+  rw [p4Q2PZ37AQW_partitionFactor_eq_overlap]
+  calc
+    _ ≤ ‖TopProbe H beta hb‖ * ‖Vac H 2 (by norm_num) beta hb‖ := real_inner_le_norm _ _
+    _ = 1 := by rw [p4Q2PZ37AQW_topProbe_norm,
+      p4Q2PZ37APP_originalBoundaryVacuum_norm, one_mul]
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQW_partitionFactor_pos_le_one
+
+private theorem p4Q2PZ37AQW_residual_aux {V : Type*}
+    [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+    (x y : V) (a : ℝ) (hx : ‖x‖ = 1) (hy : ‖y‖ = 1)
+    (ha : inner ℝ x y = a) : ‖y - a • x‖^2 = 1-a^2 := by
+  rw [norm_sub_sq_real, real_inner_smul_right,
+    show inner ℝ y x = inner ℝ x y from real_inner_comm x y,
+    ha, norm_smul, hx, hy, mul_one, Real.norm_eq_abs, sq_abs]
+  ring
+
+/-- Exact orthogonal-residual energy of the original normalized boundary vacuum
+after subtracting its physical top tensor component. -/
+theorem p4Q2PZ37AQW_vacuum_residual_normSq
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) :
+    ‖Vac H 2 (by norm_num) beta hb - PF H beta hb • TopProbe H beta hb‖^2 =
+      1-(PF H beta hb)^2 :=
+  p4Q2PZ37AQW_residual_aux _ _ _ (p4Q2PZ37AQW_topProbe_norm H beta hb)
+    (p4Q2PZ37APP_originalBoundaryVacuum_norm H beta hb)
+    (p4Q2PZ37AQW_partitionFactor_eq_overlap H beta hb).symm
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQW_vacuum_residual_normSq
+
+/-- A nonzero uniform partition floor is equivalent to a uniform strict
+upper bound on the orthogonal residual of the same boundary vacuum.
+This criterion is not a proof that either side holds. -/
+theorem p4Q2PZ37AQW_partitionFloor_iff_residualMargin
+    (beta : ℝ) (hb : 0 ≤ beta) :
+    (∃ c : ℝ, 0 < c ∧ ∀ H : ℕ, c ≤ PF H beta hb) ↔
+    (∃ e : ℝ, 0 < e ∧ ∀ H : ℕ,
+      ‖Vac H 2 (by norm_num) beta hb - PF H beta hb • TopProbe H beta hb‖^2 ≤ 1-e) := by
+  constructor
+  · rintro ⟨c,hc,h⟩
+    refine ⟨c^2,by positivity,?_⟩
+    intro H
+    rw [p4Q2PZ37AQW_vacuum_residual_normSq]
+    have hsq := pow_le_pow_left₀ hc.le (h H) 2
+    linarith only [hsq]
+  · rintro ⟨e,he,h⟩
+    refine ⟨Real.sqrt e,Real.sqrt_pos.2 he,?_⟩
+    intro H
+    have hr := h H
+    rw [p4Q2PZ37AQW_vacuum_residual_normSq] at hr
+    have hp := (p4Q2PZ37AQW_partitionFactor_pos_le_one H beta hb).1
+    have hsq : e ≤ (PF H beta hb)^2 := by linarith only [hr]
+    have h' := Real.sqrt_le_sqrt hsq
+    rw [Real.sqrt_sq hp.le] at h'
+    exact h'
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQW_partitionFloor_iff_residualMargin
+
+end
+end MGAP4D.MathlibAnalytic
