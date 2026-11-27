@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "baseline_commit": "ac6e34e380b61038dc25f6950736e74676223bc3",
+  "baseline_mgap4d_tree": "abbcf84827fdbf09efcb3abeb6e5a1decc739374",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalAffineRankOnePSDV5_PZ37AQS",
+    "MGAP4D.MathlibAnalytic.RealHilbertKernelFeatureWeightedGramStrictness",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "AQT",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQT_psd_pair_integral_nonneg",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQT_residual_continuous",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQT_weightedProbe_ae",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQT_physical_pair_eq",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQT_joint",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQT_joint_continuous",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQT_joint_nonneg",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQT_joint_right_integral",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQT_joint_right_sq_lower",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQT_joint_pair_sq_lower",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQT_integrated_rankOne",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37AQT_relative_quadratic_floor"
+      ],
+      "candidates": [
+        {
+          "id": "R4",
+          "path": "diagnostics/pz37aqt/full-v1-r1/AQT_R4.lean.txt",
+          "blob": "18dce476a28f805f537897fdec5dff84bef5ed8a"
+        }
+      ]
+    }
+  ]
+}
