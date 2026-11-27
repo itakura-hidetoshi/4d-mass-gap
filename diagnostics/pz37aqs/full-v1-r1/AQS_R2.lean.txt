@@ -1,0 +1,333 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalRetainedResidualFourLinkPSDV5_PZ37AQR
+import MGAP4D.MathlibAnalytic.SpecialUnitaryTwoWilsonEnergyContinuousGramSchmidtClassFunction
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37AQS — local affine rank-one PSD domination
+
+Use the exact finite four-link Wilson product, with its degree-zero and
+degree-one certificates, and the fixed cyclic Hilbert adjoint. Derive a
+rank-one PSD minorant for the actual two-mode observable with a coefficient
+independent of volume. The residual Wilson kernel and both halfweights
+remain unchanged. This is a kernel-level bridge; no integrated lower bound,
+mass gap or continuum limit is asserted.
+-/
+namespace MGAP4D.MathlibAnalytic
+open MeasureTheory Filter
+open scoped BigOperators InnerProductSpace InnerProduct Topology
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 12000000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "X" => (Fin 4 → G)
+local notation "Cfg" => PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration
+local notation "E" => p4Q2PZ37AMS_primarySpatialSliceEdgeEmbedding
+local notation "Hol" => p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy
+local notation "S" => p4Q2PZ37AQR_localEdges
+local notation "C" => p4Q2PZ37AQR_crossingOn
+local notation "R" => p4Q2PZ37AQR_residualCrossing
+local notation "Full" => periodicHypercubicEvenSpatialSliceLinkSet
+local notation "Cross" => periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
+local notation "Slab" => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+local notation "Half" => periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeight
+local notation "PSD" => RealKernelPositiveSemidefiniteCertificate
+local notation "K4" => specialUnitaryTwoCyclicFourEdgeWilsonProductKernel
+local notation "T4" => specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgewiseKernel
+local notation "c4" => specialUnitaryTwoCyclicFourEdgeWilsonSelectedDegreeCoefficient
+local notation "F4" => specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgewiseFeature
+local notation "F1" => specialUnitaryTwoNormalizedTraceHilbertKernelFeature
+local notation "Trace" => normalizedSpecialUnitaryRealTrace 2
+local notation "Mode" => specialUnitaryWilsonPlaquetteEnergyTwoContinuousGramSchmidtMode
+local notation "Obs" => p4Q2PZ37APL_originalTwoModeObservable
+
+/-- A finite Gram Cauchy--Schwarz certificate. No sign condition on coefficients. -/
+theorem p4Q2PZ37AQS_feature_rankOne_psd
+    {Y : Type} {k : Y → Y → ℝ} (F : RealHilbertKernelFeature Y k)
+    (v : F.FeatureHilbert) :
+    PSD Y (fun x y => ‖v‖^2 * k x y -
+      inner ℝ v (F.feature x) * inner ℝ v (F.feature y)) := by
+  refine ⟨?_, ?_⟩
+  · intro x y
+    rw [F.symmetric x y]
+    ring
+  · intro ι _ points coeff
+    classical
+    let z : F.FeatureHilbert := ∑ i : ι, coeff i • F.feature (points i)
+    let a : ι → ℝ := fun i => inner ℝ v (F.feature (points i))
+    have hg : (∑ i : ι, ∑ j : ι, coeff i * coeff j * k (points i) (points j)) =
+        ‖z‖^2 := by
+      rw [F.finiteGram_eq_inner, real_inner_self_eq_norm_sq]
+    have ha : (∑ i : ι, coeff i * a i) = inner ℝ v z := by
+      simp only [a, z, inner_sum, real_inner_smul_right]
+    have hr : (∑ i : ι, ∑ j : ι, coeff i * coeff j * (a i * a j)) =
+        (∑ i : ι, coeff i * a i)^2 := by
+      rw [pow_two, Finset.sum_mul]
+      apply Finset.sum_congr rfl
+      intro i _
+      rw [Finset.mul_sum]
+      apply Finset.sum_congr rfl
+      intro j _
+      ring
+    change 0 ≤ ∑ i : ι, ∑ j : ι, coeff i * coeff j *
+      (‖v‖^2 * k (points i) (points j) - a i * a j)
+    have he : (∑ i : ι, ∑ j : ι, coeff i * coeff j *
+        (‖v‖^2 * k (points i) (points j) - a i * a j)) =
+        ‖v‖^2 * (∑ i : ι, ∑ j : ι, coeff i * coeff j * k (points i) (points j)) -
+        (∑ i : ι, ∑ j : ι, coeff i * coeff j * (a i * a j)) := by
+      simp only [Finset.mul_sum, ← Finset.sum_sub_distrib]
+      apply Finset.sum_congr rfl
+      intro i _
+      apply Finset.sum_congr rfl
+      intro j _
+      ring
+    rw [he, hg, hr, ha]
+    have hc := pow_le_pow_left₀ (abs_nonneg _) (abs_real_inner_le_norm v z) 2
+    rw [sq_abs, mul_pow] at hc
+    exact sub_nonneg.mpr hc
+
+/-- One coefficient, independent of the number of residual links. -/
+def p4Q2PZ37AQS_localScale (beta : ℝ) : ℝ := (c4 beta 0)⁻¹ + (c4 beta 1)⁻¹
+
+theorem p4Q2PZ37AQS_localScale_psd (beta : ℝ) (hb : 0 < beta) :
+    PSD X (fun u v => p4Q2PZ37AQS_localScale beta * K4 beta u v -
+      (1 + T4 u v ^ (1 : ℕ))) := by
+  let c0 := c4 beta 0
+  let c1 := c4 beta 1
+  have h0 : 0 < c0 := by
+    dsimp [c0, specialUnitaryTwoCyclicFourEdgeWilsonSelectedDegreeCoefficient,
+      specialUnitaryWilsonSelectedTaylorCoefficient]
+    positivity
+  have h1 : 0 < c1 := by
+    dsimp [c1, specialUnitaryTwoCyclicFourEdgeWilsonSelectedDegreeCoefficient,
+      specialUnitaryWilsonSelectedTaylorCoefficient]
+    positivity
+  have P0 : PSD X (fun u v => K4 beta u v - c0) := by
+    simpa only [specialUnitaryTwoCyclicFourEdgeWilsonSelectedRemainderKernel,
+      specialUnitaryTwoCyclicFourEdgeWilsonSelectedDegreeKernel, pow_zero, mul_one, c0]
+      using specialUnitaryTwoCyclicFourEdgeWilsonSelectedRemainderCertificate beta hb.le 0
+  have P1 : PSD X (fun u v => K4 beta u v - c1 * T4 u v ^ (1 : ℕ)) := by
+    exact specialUnitaryTwoCyclicFourEdgeWilsonSelectedRemainderCertificate beta hb.le 1
+  have P := (RealKernelPositiveSemidefiniteCertificate.nonnegSMul c0⁻¹
+    (inv_nonneg.mpr h0.le) P0).add
+    (RealKernelPositiveSemidefiniteCertificate.nonnegSMul c1⁻¹
+      (inv_nonneg.mpr h1.le) P1)
+  have he : (fun u v : X => c0⁻¹ * (K4 beta u v - c0) +
+      c1⁻¹ * (K4 beta u v - c1 * T4 u v ^ (1 : ℕ))) =
+      (fun u v : X => p4Q2PZ37AQS_localScale beta * K4 beta u v -
+        (1 + T4 u v ^ (1 : ℕ))) := by
+    funext u v
+    change c0⁻¹ * (K4 beta u v - c0) + c1⁻¹ * (K4 beta u v - c1 * T4 u v ^ 1) =
+      (c0⁻¹ + c1⁻¹) * K4 beta u v - (1 + T4 u v ^ 1)
+    field_simp [ne_of_gt h0, ne_of_gt h1] <;> ring
+  rw [← he]
+  exact P
+
+/-- Fixed local degree-zero plus degree-one feature. -/
+def p4Q2PZ37AQS_affineFeature :
+    RealHilbertKernelFeature X (fun u v => 1 + T4 u v ^ (1 : ℕ)) :=
+  RealHilbertKernelFeature.add (RealHilbertKernelFeature.one X) (F4.pow 1)
+
+def p4Q2PZ37AQS_traceDual : (F4.pow 1).FeatureHilbert :=
+  specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerDualPullback 1
+    ((F1.pow 1).feature 1)
+
+theorem p4Q2PZ37AQS_traceDual_inner (u : X) :
+    inner ℝ p4Q2PZ37AQS_traceDual ((F4.pow 1).feature u) =
+      Trace (haarFinFourCyclicPlaquetteWord u) := by
+  unfold p4Q2PZ37AQS_traceDual
+  rw [specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerDualPullback_inner_feature,
+    ← (F1.pow 1).kernel_eq_inner]
+  change (specialUnitaryNormalizedTraceRelativeKernel 2 (1 : G) (haarFinFourCyclicPlaquetteWord u)) ^ (1 : ℕ) = _
+  simp [specialUnitaryNormalizedTraceRelativeKernel]
+
+def p4Q2PZ37AQS_affineDual (a b : ℝ) :
+    p4Q2PZ37AQS_affineFeature.FeatureHilbert :=
+  WithLp.toLp 2 (a, b • p4Q2PZ37AQS_traceDual)
+
+theorem p4Q2PZ37AQS_affineDual_inner (a b : ℝ) (u : X) :
+    inner ℝ (p4Q2PZ37AQS_affineDual a b) (p4Q2PZ37AQS_affineFeature.feature u) =
+      a + b * Trace (haarFinFourCyclicPlaquetteWord u) := by
+  change inner ℝ (WithLp.toLp 2 (a, b • p4Q2PZ37AQS_traceDual))
+    (WithLp.toLp 2 ((1 : ℝ), (F4.pow 1).feature u)) = _
+  rw [WithLp.prod_inner_apply]
+  change inner ℝ a 1 + inner ℝ (b • p4Q2PZ37AQS_traceDual) ((F4.pow 1).feature u) = _
+  rw [realL2Scalar_inner_eq_mul, mul_one, real_inner_smul_left, p4Q2PZ37AQS_traceDual_inner]
+
+def p4Q2PZ37AQS_affineScale (beta a b : ℝ) : ℝ :=
+  ‖p4Q2PZ37AQS_affineDual a b‖^2 * p4Q2PZ37AQS_localScale beta
+
+theorem p4Q2PZ37AQS_affine_local_psd (beta : ℝ) (hb : 0 < beta) (a b : ℝ) :
+    PSD X (fun u v => p4Q2PZ37AQS_affineScale beta a b * K4 beta u v -
+      (a + b * Trace (haarFinFourCyclicPlaquetteWord u)) *
+      (a + b * Trace (haarFinFourCyclicPlaquetteWord v))) := by
+  let D := ‖p4Q2PZ37AQS_affineDual a b‖^2
+  have h := (RealKernelPositiveSemidefiniteCertificate.nonnegSMul D (sq_nonneg _)
+    (p4Q2PZ37AQS_localScale_psd beta hb)).add
+    (p4Q2PZ37AQS_feature_rankOne_psd p4Q2PZ37AQS_affineFeature
+      (p4Q2PZ37AQS_affineDual a b))
+  have he : (fun u v : X =>
+    D * (p4Q2PZ37AQS_localScale beta * K4 beta u v - (1 + T4 u v ^ (1 : ℕ))) +
+    (D * (1 + T4 u v ^ (1 : ℕ)) -
+      inner ℝ (p4Q2PZ37AQS_affineDual a b) (p4Q2PZ37AQS_affineFeature.feature u) *
+      inner ℝ (p4Q2PZ37AQS_affineDual a b) (p4Q2PZ37AQS_affineFeature.feature v))) =
+    (fun u v : X => p4Q2PZ37AQS_affineScale beta a b * K4 beta u v -
+      (a + b * Trace (haarFinFourCyclicPlaquetteWord u)) *
+      (a + b * Trace (haarFinFourCyclicPlaquetteWord v))) := by
+    funext u v
+    rw [p4Q2PZ37AQS_affineDual_inner, p4Q2PZ37AQS_affineDual_inner]
+    change _ = (D * p4Q2PZ37AQS_localScale beta) * K4 beta u v - _
+    ring
+  rw [← he]
+  exact h
+
+/-- Identify the exact selected four links with the fixed tuple kernel. -/
+theorem p4Q2PZ37AQS_local_product_eq (H : ℕ) (beta : ℝ) (A B : Cfg H 2) :
+    C H (S H) beta A B = K4 beta (fun i => A (E H i)) (fun i => B (E H i)) := by
+  classical
+  unfold p4Q2PZ37AQR_crossingOn p4Q2PZ37AQR_localEdges
+  rw [Finset.prod_map]
+  simp +decide [specialUnitaryTwoCyclicFourEdgeWilsonProductKernel, Fin.prod_univ_succ] <;> ring
+
+/-- Full residual and literal halfweights retained in the PSD comparison. -/
+theorem p4Q2PZ37AQS_affine_slab_psd (H : ℕ) (beta : ℝ) (hb : 0 < beta) (a b : ℝ) :
+    PSD (Cfg H 2) (fun A B => p4Q2PZ37AQS_affineScale beta a b * Slab H 2 beta A B -
+      Half H 2 beta A * R H beta A B * Half H 2 beta B *
+        ((a + b * Trace (Hol H 2 A)) * (a + b * Trace (Hol H 2 B)))) := by
+  let f := Half H 2 beta
+  let hF : RealHilbertKernelFeature (Cfg H 2) (fun A B => f A * f B) :=
+    { FeatureHilbert := ℝ
+      feature := f
+      kernel_eq_inner := fun A B => (realL2Scalar_inner_eq_mul (f A) (f B)).symm }
+  have hr : PSD (Cfg H 2) (R H beta) := by
+    classical
+    exact p4Q2PZ37AQR_crossingOn_psd H (Full H \ S H) beta hb.le
+  have hlocal := (p4Q2PZ37AQS_affine_local_psd beta hb a b).comap
+    (fun A : Cfg H 2 => fun i => A (E H i))
+  have h := (hF.toPositiveSemidefiniteCertificate.mul hr).mul hlocal
+  have he : (fun A B : Cfg H 2 =>
+      p4Q2PZ37AQS_affineScale beta a b * Slab H 2 beta A B -
+      f A * R H beta A B * f B *
+        ((a + b * Trace (Hol H 2 A)) * (a + b * Trace (Hol H 2 B)))) =
+      (fun A B : Cfg H 2 => ((f A * f B) * R H beta A B) *
+        (p4Q2PZ37AQS_affineScale beta a b *
+          K4 beta (fun i => A (E H i)) (fun i => B (E H i)) -
+        (a + b * Trace (haarFinFourCyclicPlaquetteWord (fun i => A (E H i)))) *
+        (a + b * Trace (haarFinFourCyclicPlaquetteWord (fun i => B (E H i)))))) := by
+    funext A B
+    change p4Q2PZ37AQS_affineScale beta a b * (f A * Cross H 2 beta A B * f B) -
+      f A * R H beta A B * f B *
+      ((a + b * Trace (Hol H 2 A)) * (a + b * Trace (Hol H 2 B))) = _
+    rw [p4Q2PZ37AQR_crossing_factor H beta A B, p4Q2PZ37AQS_local_product_eq]
+    unfold p4Q2PZ37AMS_primarySpatialSliceCyclicHolonomy
+    ring
+  change PSD (Cfg H 2) (fun A B => p4Q2PZ37AQS_affineScale beta a b * Slab H 2 beta A B -
+    f A * R H beta A B * f B *
+      ((a + b * Trace (Hol H 2 A)) * (a + b * Trace (Hol H 2 B))))
+  rw [he]
+  exact h
+
+/-- The first two canonical Gram--Schmidt modes are affine in the trace.
+The scalar coefficients live on SU(2), not on a finite-volume carrier. -/
+theorem p4Q2PZ37AQS_mode_affine (k : ℕ) (hk : k ≤ 1) :
+    ∃ a b : ℝ, ∀ g : G, Mode k g = a + b * Trace g := by
+  let V : Submodule ℝ C(G, ℝ) :=
+    { carrier := {f | ∃ a b : ℝ, ∀ g : G, f g = a + b * Trace g}
+      zero_mem' := by
+        exact ⟨0, 0, by intro g; simp⟩
+      add_mem' := by
+        intro f g hf hg
+        rcases hf with ⟨a, b, ha⟩
+        rcases hg with ⟨c, d, hc⟩
+        refine ⟨a+c, b+d, ?_⟩
+        intro x
+        change f x + g x = _
+        rw [ha, hc]
+        ring
+      smul_mem' := by
+        intro r f hf
+        rcases hf with ⟨a, b, ha⟩
+        refine ⟨r*a, r*b, ?_⟩
+        intro x
+        change r * f x = _
+        rw [ha]
+        ring }
+  have h := specialUnitaryWilsonPlaquetteEnergyTwoContinuousGramSchmidtMode_mem_power_span_Iic k
+  have hv : Mode k ∈ V := by
+    apply (Submodule.span_le.2 ?_) h
+    rintro f ⟨j, hj, rfl⟩
+    have hjk : j ≤ k := hj
+    have hj1 : j ≤ 1 := hjk.trans hk
+    change ∃ a b : ℝ, ∀ g : G, (specialUnitaryWilsonPlaquetteEnergyTwoContinuous ^ j) g =
+      a + b * Trace g
+    have hj01 : j = 0 ∨ j = 1 := by omega
+    rcases hj01 with rfl | rfl
+    · exact ⟨1, 0, by intro g; simp⟩
+    · refine ⟨1, -1, ?_⟩
+      intro g
+      simp only [pow_one]
+      change specialUnitaryWilsonPlaquetteEnergy 2 g = _
+      rw [specialUnitaryWilsonPlaquetteEnergy_eq]
+      ring
+  exact hv
+
+/-- Exact two-mode coefficients chosen once on SU(2); all volumes use them. -/
+theorem p4Q2PZ37AQS_original_observable_affine (q : ℝ) :
+    ∃ a b : ℝ, ∀ (H : ℕ) (A : Cfg H 2), Obs H q A = a + b * Trace (Hol H 2 A) := by
+  obtain ⟨a0, b0, h0⟩ := p4Q2PZ37AQS_mode_affine 0 (by norm_num)
+  obtain ⟨a1, b1, h1⟩ := p4Q2PZ37AQS_mode_affine 1 (by norm_num)
+  refine ⟨q*a0+a1, q*b0+b1, ?_⟩
+  intro H A
+  change q * Mode 0 (Hol H 2 A) + 1 * Mode 1 (Hol H 2 A) = _
+  rw [h0, h1]
+  ring
+
+/-- The original APL observable, not a replacement observable, has a uniform
+coefficient in the retained-residual rank-one PSD comparison. -/
+theorem p4Q2PZ37AQS_original_observable_slab_psd
+    (beta : ℝ) (hb : 0 < beta) (q : ℝ) :
+    ∃ d : ℝ, 0 ≤ d ∧ ∀ H : ℕ,
+    PSD (Cfg H 2) (fun A B => d * Slab H 2 beta A B -
+      Half H 2 beta A * R H beta A B * Half H 2 beta B * (Obs H q A * Obs H q B)) := by
+  obtain ⟨a, b, hab⟩ := p4Q2PZ37AQS_original_observable_affine q
+  refine ⟨p4Q2PZ37AQS_affineScale beta a b, ?_, ?_⟩
+  · unfold p4Q2PZ37AQS_affineScale p4Q2PZ37AQS_localScale
+    have h0 : 0 < c4 beta 0 := by
+      unfold specialUnitaryTwoCyclicFourEdgeWilsonSelectedDegreeCoefficient
+        specialUnitaryWilsonSelectedTaylorCoefficient
+      positivity
+    have h1 : 0 < c4 beta 1 := by
+      unfold specialUnitaryTwoCyclicFourEdgeWilsonSelectedDegreeCoefficient
+        specialUnitaryWilsonSelectedTaylorCoefficient
+      positivity
+    exact mul_nonneg (sq_nonneg _) (add_nonneg (inv_nonneg.mpr h0.le) (inv_nonneg.mpr h1.le))
+  · intro H
+    have h := p4Q2PZ37AQS_affine_slab_psd H beta hb a b
+    have he : (fun A B : Cfg H 2 => p4Q2PZ37AQS_affineScale beta a b * Slab H 2 beta A B -
+        Half H 2 beta A * R H beta A B * Half H 2 beta B * (Obs H q A * Obs H q B)) =
+      (fun A B : Cfg H 2 => p4Q2PZ37AQS_affineScale beta a b * Slab H 2 beta A B -
+        Half H 2 beta A * R H beta A B * Half H 2 beta B *
+        ((a + b * Trace (Hol H 2 A)) * (a + b * Trace (Hol H 2 B)))) := by
+      funext A B
+      rw [hab H A, hab H B]
+    rw [he]
+    exact h
+
+end
+end MGAP4D.MathlibAnalytic
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_feature_rankOne_psd
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_localScale
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_localScale_psd
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_affineFeature
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_traceDual
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_traceDual_inner
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_affineDual
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_affineDual_inner
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_affineScale
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_affine_local_psd
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_local_product_eq
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_affine_slab_psd
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_mode_affine
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_original_observable_affine
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37AQS_original_observable_slab_psd
