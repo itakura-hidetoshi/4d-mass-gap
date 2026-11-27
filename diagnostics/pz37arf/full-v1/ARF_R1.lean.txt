@@ -1,0 +1,307 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalProjectedMomentRatioSpectralEdgeV5_PZ37ARE
+import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
+import Mathlib.Analysis.SpecificLimits.Basic
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37ARF — genuine moment-root spectral upper certificates
+
+The complete ARD sums have positive weights and include every eigenvalue
+with its original multiplicity. ARE already proves the exact lower-ratio
+limit. Here the positive integer roots of the actual moments bound the
+full squared excitation norm from above, decrease, and converge to it.
+Finite moment thresholds give an equivalent volume-uniform contraction
+criterion, with the degree permitted to depend on volume. This is a
+criterion, not an assertion that such a uniform bound holds.
+-/
+namespace MGAP4D.MathlibAnalytic
+open MeasureTheory Filter Set
+open scoped ENNReal Topology InnerProductSpace InnerProduct BigOperators
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 1000000
+set_option synthInstance.maxHeartbeats 50000
+universe u i
+
+private def p4Q2PZ37ARF_root (a : ℝ) (n : ℕ) : ℝ :=
+  a ^ (1 / ((n : ℝ) + 1))
+
+private theorem p4Q2PZ37ARF_root_nonneg_aux (a : ℝ) (ha : 0 ≤ a) (n : ℕ) :
+    0 ≤ p4Q2PZ37ARF_root a n :=
+  Real.rpow_nonneg ha _
+
+private theorem p4Q2PZ37ARF_root_zero_aux (n : ℕ) :
+    p4Q2PZ37ARF_root 0 n = 0 := by
+  unfold p4Q2PZ37ARF_root
+  exact Real.zero_rpow (by positivity)
+
+private theorem p4Q2PZ37ARF_root_pow_aux (a : ℝ) (ha : 0 ≤ a) (n : ℕ) :
+    (p4Q2PZ37ARF_root a n)^(n+1) = a := by
+  have h := Real.rpow_inv_natCast_pow (x := a) (n := n+1) ha (by omega)
+  simpa only [p4Q2PZ37ARF_root,one_div,Nat.cast_add,Nat.cast_one] using h
+
+private theorem p4Q2PZ37ARF_le_root_iff (x y : ℝ) (hx : 0 ≤ x) (hy : 0 ≤ y) (n : ℕ) :
+    x ≤ p4Q2PZ37ARF_root y n ↔ x^(n+1) ≤ y := by
+  have h := Real.le_rpow_inv_iff_of_pos hx hy
+    (show 0 < ((n+1 : ℕ) : ℝ) by positivity)
+  rw [Real.rpow_natCast] at h
+  simpa only [p4Q2PZ37ARF_root,one_div,Nat.cast_add,Nat.cast_one] using h
+
+private theorem p4Q2PZ37ARF_root_le_iff (x y : ℝ) (hx : 0 ≤ x) (hy : 0 ≤ y) (n : ℕ) :
+    p4Q2PZ37ARF_root x n ≤ y ↔ x ≤ y^(n+1) := by
+  have h := Real.rpow_inv_le_iff_of_pos hx hy
+    (show 0 < ((n+1 : ℕ) : ℝ) by positivity)
+  rw [Real.rpow_natCast] at h
+  simpa only [p4Q2PZ37ARF_root,one_div,Nat.cast_add,Nat.cast_one] using h
+
+private theorem p4Q2PZ37ARF_coordinate_le_aux {ι : Type i}
+    (rho : ι → ℝ) (h0 : ∀ k, 0 ≤ rho k) (n : ℕ) (m : ℝ)
+    (hs : HasSum (fun k => (rho k)^(2*(n+1))) m) (k : ι) :
+    ((rho k)^2)^(n+1) ≤ m := by
+  classical
+  have h := sum_le_hasSum ({k} : Finset ι)
+    (fun j _ => pow_nonneg (h0 j) _) hs
+  simpa only [Finset.sum_singleton,pow_mul] using h
+
+private theorem p4Q2PZ37ARF_norm_zero_aux {E : Type u}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    (T : E →L[ℝ] E) (hT : T = 0) : ‖T‖^2 = 0 := by
+  subst T
+  rw [ContinuousLinearMap.opNorm_zero,zero_pow (by decide : (2:ℕ) ≠ 0)]
+
+private theorem p4Q2PZ37ARF_norm_pos_aux {E : Type u}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    (T : E →L[ℝ] E) (hT : T ≠ 0) : 0 < ‖T‖^2 :=
+  pow_pos (norm_pos_iff.mpr hT) 2
+
+private theorem p4Q2PZ37ARF_root_antitone_aux (m : ℕ → ℝ) (q : ℝ)
+    (hm : ∀ n, 0 ≤ m n)
+    (hL : ∀ n, q ≤ p4Q2PZ37ARF_root (m n) n)
+    (hS : ∀ n, m (n+1) ≤ q*m n) :
+    Antitone (fun n => p4Q2PZ37ARF_root (m n) n) := by
+  apply antitone_nat_of_succ_le
+  intro n
+  let U := p4Q2PZ37ARF_root (m n) n
+  have hU : 0 ≤ U := p4Q2PZ37ARF_root_nonneg_aux _ (hm n) n
+  change p4Q2PZ37ARF_root (m (n+1)) (n+1) ≤ U
+  apply (p4Q2PZ37ARF_root_le_iff _ U (hm (n+1)) hU (n+1)).2
+  calc
+    m (n+1) ≤ q*m n := hS n
+    _ ≤ U*m n := mul_le_mul_of_nonneg_right (hL n) (hm n)
+    _ = U*U^(n+1) := congrArg (fun x : ℝ => U*x)
+      (p4Q2PZ37ARF_root_pow_aux _ (hm n) n).symm
+    _ = U^(n+1+1) := (pow_succ' U (n+1)).symm
+
+private theorem p4Q2PZ37ARF_root_limit_aux (m : ℕ → ℝ) (q : ℝ)
+    (hq : 0 < q) (hm : ∀ n, 0 ≤ m n) (hm0 : 0 < m 0)
+    (hL : ∀ n, q ≤ p4Q2PZ37ARF_root (m n) n)
+    (hU : ∀ n, m n ≤ q^n*m 0) :
+    Tendsto (fun n => p4Q2PZ37ARF_root (m n) n) atTop (𝓝 q) := by
+  let C := m 0 / q
+  have hC : 0 < C := div_pos hm0 hq
+  have hCeq : q*C = m 0 := by
+    dsimp [C]
+    field_simp [hq.ne']
+  have hupper (n : ℕ) : p4Q2PZ37ARF_root (m n) n ≤ q*p4Q2PZ37ARF_root C n := by
+    apply (p4Q2PZ37ARF_root_le_iff _ _ (hm n)
+      (mul_nonneg hq.le (p4Q2PZ37ARF_root_nonneg_aux C hC.le n)) n).2
+    calc
+      m n ≤ q^n*m 0 := hU n
+      _ = q^(n+1)*C := by rw [pow_succ,mul_assoc,hCeq]
+      _ = (q*p4Q2PZ37ARF_root C n)^(n+1) := by
+        rw [mul_pow,p4Q2PZ37ARF_root_pow_aux C hC.le n]
+  have he : Tendsto (fun n : ℕ => 1 / ((n : ℝ)+1)) atTop (𝓝 0) :=
+    tendsto_one_div_add_atTop_nhds_zero_nat
+  have hc : Tendsto (fun n : ℕ => p4Q2PZ37ARF_root C n) atTop (𝓝 1) := by
+    have hh := (Real.continuousAt_const_rpow (a := C) (b := 0) hC.ne').tendsto.comp he
+    simpa only [Function.comp_def,Real.rpow_zero,p4Q2PZ37ARF_root] using hh
+  have hconst : Tendsto (fun _ : ℕ => q) atTop (𝓝 q) := tendsto_const_nhds
+  have htop : Tendsto (fun n : ℕ => q*p4Q2PZ37ARF_root C n) atTop (𝓝 q) := by
+    simpa only [mul_one] using hconst.mul hc
+  exact tendsto_of_tendsto_of_tendsto_of_le_of_le hconst htop hL hupper
+
+private theorem p4Q2PZ37ARF_two_pos : 0 < (2 : ℕ) := by decide
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "Phys" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "Pair" => PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2
+local notation "Dec" => periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2
+local notation "K" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+local notation "OO" => periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockClosure
+local notation "EH" => periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderExcitationTransferOperator
+local notation "Step" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+local notation "PF" => p4Q2PZ37AQW_partitionFactor
+local notation "Res" => p4Q2PZ37AQX_relativeResidual
+local notation "Emb" => periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+
+local instance p4Q2PZ37ARF_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37ARF_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37ARF_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37ARF_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37ARF_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37ARF_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) := Fintype.ofFinite _
+local instance p4Q2PZ37ARF_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) := Fintype.ofFinite _
+local instance p4Q2PZ37ARF_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37ARF_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+local instance p4Q2PZ37ARF_nontrivial :
+    Nontrivial (Matrix.specialUnitaryGroup (Fin 2) ℂ) := by
+  refine ⟨⟨1, specialUnitaryTwoRotation Real.pi, ?_⟩⟩
+  intro h
+  have h00 := congrArg
+    (fun g : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+      (g : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
+  norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
+
+local notation "h2" => p4Q2PZ37ARF_two_pos
+local notation "M" => p4Q2PZ37ARD_pairMoment
+
+/-- The actual complete even spectral sum raised to its inverse degree. -/
+def p4Q2PZ37ARF_momentRoot (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (n : ℕ) : ℝ :=
+  p4Q2PZ37ARF_root (M H beta hb n) n
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARF_momentRoot
+local notation "U" => p4Q2PZ37ARF_momentRoot
+
+theorem p4Q2PZ37ARF_momentRoot_nonneg
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (n : ℕ) :
+    0 ≤ U H beta hb n := by
+  exact p4Q2PZ37ARF_root_nonneg_aux _
+    (p4Q2PZ37ARD_moment_nonneg H beta hb n) n
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARF_momentRoot_nonneg
+
+/-- Unlike a finite adjacent ratio, a full moment root gives an upper bound
+on the genuine full excitation norm squared. -/
+theorem p4Q2PZ37ARF_normSq_le_momentRoot
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (n : ℕ) :
+    ‖Step H 2 h2 beta hb‖^2 ≤ U H beta hb n := by
+  classical
+  by_cases hT : Step H 2 h2 beta hb = 0
+  · have hnorm := @p4Q2PZ37ARF_norm_zero_aux
+      ↥(K H 2 h2 beta hb) inferInstance inferInstance (Step H 2 h2 beta hb) hT
+    rw [hnorm]
+    exact p4Q2PZ37ARF_momentRoot_nonneg H beta hb n
+  · obtain ⟨ι,b,rho,he,hs⟩ := p4Q2PZ37AQY_original_spectral_power_hasSum H beta hb
+    have hm := @p4Q2PZ37ARD_moment_hasSum H beta hb n ι b rho he
+    have h0 (k : ι) : 0 ≤ rho k :=
+      (p4Q2PZ37ARA_eigenvalue_bounds H beta hb (b k) (rho k)
+        (b.orthonormal.norm_eq_one k) (he k)).1
+    apply @p4Q2PZ37ARE_visible_upper_controls_normSq H beta hb hT ι b rho he
+      (U H beta hb n)
+    intro k hk
+    exact (p4Q2PZ37ARF_le_root_iff _ _ (sq_nonneg (rho k))
+      (p4Q2PZ37ARD_moment_nonneg H beta hb n) n).2
+      (p4Q2PZ37ARF_coordinate_le_aux rho h0 n _ hm k)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARF_normSq_le_momentRoot
+
+private theorem p4Q2PZ37ARF_step_upper
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (n : ℕ) :
+    M H beta hb (n+1) ≤ ‖Step H 2 h2 beta hb‖^2 * M H beta hb n := by
+  have h := p4Q2PZ37ARD_moment_shift_bound H beta hb n (n+1) (by omega)
+  rw [show n+1-n=1 by omega] at h
+  simpa only [mul_one] using h
+
+theorem p4Q2PZ37ARF_momentRoot_antitone
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) :
+    Antitone (U H beta hb) := by
+  exact p4Q2PZ37ARF_root_antitone_aux (M H beta hb) (‖Step H 2 h2 beta hb‖^2)
+    (p4Q2PZ37ARD_moment_nonneg H beta hb)
+    (p4Q2PZ37ARF_normSq_le_momentRoot H beta hb)
+    (p4Q2PZ37ARF_step_upper H beta hb)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARF_momentRoot_antitone
+
+theorem p4Q2PZ37ARF_momentRoot_tendsto_normSq
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) :
+    Tendsto (U H beta hb) atTop (𝓝 (‖Step H 2 h2 beta hb‖^2)) := by
+  classical
+  by_cases hT : Step H 2 h2 beta hb = 0
+  · have hnorm := @p4Q2PZ37ARF_norm_zero_aux
+      ↥(K H 2 h2 beta hb) inferInstance inferInstance (Step H 2 h2 beta hb) hT
+    have hf : U H beta hb = fun _ => 0 := by
+      funext n
+      change p4Q2PZ37ARF_root (M H beta hb n) n = 0
+      rw [p4Q2PZ37ARE_moment_eq_zero_of_step_zero H beta hb hT n]
+      exact p4Q2PZ37ARF_root_zero_aux n
+    rw [hnorm,hf]
+    exact tendsto_const_nhds
+  · have hq := @p4Q2PZ37ARF_norm_pos_aux
+      ↥(K H 2 h2 beta hb) inferInstance inferInstance (Step H 2 h2 beta hb) hT
+    have hshift (n : ℕ) : M H beta hb n ≤
+        (‖Step H 2 h2 beta hb‖^2)^n * M H beta hb 0 := by
+      have h := p4Q2PZ37ARD_moment_shift_bound H beta hb 0 n (Nat.zero_le n)
+      simpa only [Nat.sub_zero,pow_mul] using h
+    exact p4Q2PZ37ARF_root_limit_aux (M H beta hb) _ hq
+      (p4Q2PZ37ARD_moment_nonneg H beta hb)
+      (p4Q2PZ37ARE_moment_pos H beta hb hT 0)
+      (p4Q2PZ37ARF_normSq_le_momentRoot H beta hb) hshift
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARF_momentRoot_tendsto_normSq
+
+theorem p4Q2PZ37ARF_spectral_bracket
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (hT : Step H 2 h2 beta hb ≠ 0) (n : ℕ) :
+    M H beta hb (n+1) / M H beta hb n ≤ ‖Step H 2 h2 beta hb‖^2 ∧
+      ‖Step H 2 h2 beta hb‖^2 ≤ U H beta hb n := by
+  exact ⟨p4Q2PZ37ARE_moment_ratio_le_normSq H beta hb hT n,
+    p4Q2PZ37ARF_normSq_le_momentRoot H beta hb n⟩
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARF_spectral_bracket
+
+/-- A finite positive-degree complete moment bound certifies a squared-norm
+cap, without any supposition about the unseen multiplicities. -/
+theorem p4Q2PZ37ARF_normSq_le_of_moment_threshold
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (n : ℕ) (q : ℝ) (hq : 0 ≤ q)
+    (h : M H beta hb n ≤ q^(n+1)) :
+    ‖Step H 2 h2 beta hb‖^2 ≤ q := by
+  exact (p4Q2PZ37ARF_normSq_le_momentRoot H beta hb n).trans
+    ((p4Q2PZ37ARF_root_le_iff _ q (p4Q2PZ37ARD_moment_nonneg H beta hb n) hq n).2 h)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARF_normSq_le_of_moment_threshold
+
+/-- Strict uniform contraction is equivalent to a common geometric threshold
+for one finite complete moment at each volume. The degree can depend on H.
+Neither side is claimed to hold for the original model. -/
+theorem p4Q2PZ37ARF_uniform_normSq_iff_moment_threshold
+    (beta : ℝ) (hb : 0 ≤ beta) :
+    (∃ q : ℝ, 0 < q ∧ q < 1 ∧ ∀ H : ℕ, ‖Step H 2 h2 beta hb‖^2 ≤ q) ↔
+    (∃ q : ℝ, 0 < q ∧ q < 1 ∧ ∀ H : ℕ, ∃ n : ℕ, M H beta hb n ≤ q^(n+1)) := by
+  constructor
+  · rintro ⟨q,hq0,hq1,hq⟩
+    let r : ℝ := (q+1)/2
+    have hr0 : 0 < r := by dsimp [r]; linarith
+    have hr1 : r < 1 := by dsimp [r]; linarith
+    have hqr : q < r := by dsimp [r]; linarith
+    refine ⟨r,hr0,hr1,?_⟩
+    intro H
+    have ht := p4Q2PZ37ARF_momentRoot_tendsto_normSq H beta hb
+    have hlim : ‖Step H 2 h2 beta hb‖^2 < r := (hq H).trans_lt hqr
+    have hev := ht (Iio_mem_nhds hlim)
+    change ∀ᶠ n : ℕ in atTop, U H beta hb n < r at hev
+    obtain ⟨n,hn⟩ := hev.exists
+    exact ⟨n,(p4Q2PZ37ARF_root_le_iff _ r
+      (p4Q2PZ37ARD_moment_nonneg H beta hb n) hr0.le n).1 hn.le⟩
+  · rintro ⟨q,hq0,hq1,hq⟩
+    refine ⟨q,hq0,hq1,?_⟩
+    intro H
+    obtain ⟨n,hn⟩ := hq H
+    exact p4Q2PZ37ARF_normSq_le_of_moment_threshold H beta hb n q hq0.le hn
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARF_uniform_normSq_iff_moment_threshold
+
+end
+end MGAP4D.MathlibAnalytic

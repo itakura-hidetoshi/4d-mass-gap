@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "baseline_commit": "5cdb1f8927041f0a50a02b3f1ed783d6fc262352",
+  "baseline_mgap4d_tree": "10c9d8bf7727469ad44a73a6833ccf2e229cf519",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalProjectedMomentRatioSpectralEdgeV5_PZ37ARE",
+    "Mathlib.Analysis.SpecialFunctions.Pow.Continuity",
+    "Mathlib.Analysis.SpecificLimits.Basic",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "ARF",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARF_momentRoot",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARF_momentRoot_nonneg",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARF_normSq_le_momentRoot",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARF_momentRoot_antitone",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARF_momentRoot_tendsto_normSq",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARF_spectral_bracket",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARF_normSq_le_of_moment_threshold",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARF_uniform_normSq_iff_moment_threshold"
+      ],
+      "candidates": [
+        {
+          "id": "R1",
+          "path": "diagnostics/pz37arf/full-v1/ARF_R1.lean.txt",
+          "blob": "2fa44772b6e40d5afc0c9f1497df7c6dfe38cecf"
+        }
+      ]
+    }
+  ]
+}
