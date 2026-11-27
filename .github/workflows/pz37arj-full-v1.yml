@@ -7,15 +7,46 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+  actions: read
 concurrency:
   group: pz37arj-full-v1-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 jobs:
   select:
     runs-on: ubuntu-22.04
+    timeout-minutes: 20
     outputs:
       pack: ${{ steps.pack.outputs.pack }}
     steps:
+      - name: Require published exact ARI canonical cache
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_BASE: d301999c5a9790917e3207daeeafeb4ef891b761
+        run: |
+          python3 - <<'PY'
+          import json, os, time, urllib.request
+          root = os.environ["GITHUB_API_URL"] + "/repos/" + os.environ["GITHUB_REPOSITORY"]
+          def read(path):
+              req = urllib.request.Request(root + path, headers={
+                  "Authorization": "Bearer " + os.environ["GH_TOKEN"],
+                  "Accept": "application/vnd.github+json"})
+              with urllib.request.urlopen(req, timeout=20) as response:
+                  return json.load(response)
+          for _ in range(90):
+              run = read("/actions/runs/46081986432")
+              assert run["head_sha"] == os.environ["EXPECTED_BASE"]
+              if run["status"] == "completed":
+                  assert run["conclusion"] == "success", "ARI cache relay did not succeed"
+                  jobs = read("/actions/runs/46081986432/jobs")["jobs"]
+                  relay = next(j for j in jobs if j["name"] == "Relay independently certified Lean leaf outputs")
+                  visible = next(x for x in relay["steps"] if x["name"] == "Confirm exact merged cache is visible")
+                  assert relay["conclusion"] == "success" and visible["conclusion"] == "success"
+                  print("Exact ARI canonical cache published and visible")
+                  break
+              time.sleep(10)
+          else:
+              raise RuntimeError("Infrastructure HOLD: ARI cache publication not confirmed")
+          PY
       - uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}

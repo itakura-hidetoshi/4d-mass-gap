@@ -1,0 +1,1 @@
+ARJ diagnostic-only launch gate: wait for exact ARI canonical cache relay run 46081986432, matching canonical SHA d301999c5a9790917e3207daeeafeb4ef891b761 and successful visibility step. Existing exact restore remains authoritative. Candidate R1A/R1B blobs and pack unchanged. No fallback to previous canonical cache; no independent CI before direct Lean and real MCP GREEN.
