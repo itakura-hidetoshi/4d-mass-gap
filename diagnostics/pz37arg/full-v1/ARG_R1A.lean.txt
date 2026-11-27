@@ -1,0 +1,165 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalMomentRootSpectralBracketV5_PZ37ARF
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTwoSidedTwelveSpatialUniformGap
+import Mathlib.Analysis.SpecificLimits.Basic
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37ARG — complete genuine moment estimates on the existing G4 interval
+
+Transport the proved twelve-spatial Poincare gap of the identical normalized
+one-slab physical transfer into ARD complete moments. Keep the volume-specific
+initial moment; do not infer a uniform fixed-degree spectral budget.
+The positive cutoff is the existing G4 high-temperature cutoff, not a
+continuum scaling claim. The two candidate proofs have identical statements.
+-/
+namespace MGAP4D.MathlibAnalytic
+open MeasureTheory Filter Set
+open scoped ENNReal Topology InnerProductSpace InnerProduct BigOperators
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 1000000
+set_option synthInstance.maxHeartbeats 50000
+universe u
+
+private theorem p4Q2PZ37ARG_shift_aux {E : Type u}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    (T : E →L[ℝ] E) (c a : ℝ) (k : ℕ)
+    (hc : ‖T‖ ≤ c) (ha : 0 ≤ a) :
+    ‖T‖^(2*k)*a ≤ (c^2)^k*a := by
+  calc
+    ‖T‖^(2*k)*a ≤ c^(2*k)*a :=
+      mul_le_mul_of_nonneg_right (pow_le_pow_left₀ (norm_nonneg T) hc _) ha
+    _ = (c^2)^k*a := by rw [pow_mul]
+
+private theorem p4Q2PZ37ARG_eventual_aux (a q r : ℝ)
+    (hq : 0 ≤ q) (hqr : q < r) (hr : 0 < r) :
+    ∀ᶠ n : ℕ in atTop, q^n*a ≤ r^(n+1) := by
+  have hlim : Tendsto (fun n : ℕ => (q/r)^n) atTop (𝓝 0) :=
+    tendsto_pow_atTop_nhds_zero_of_lt_one (div_nonneg hq hr.le)
+      ((div_lt_one hr).2 hqr)
+  have hconst : Tendsto (fun _ : ℕ => a) atTop (𝓝 a) :=
+    tendsto_const_nhds
+  have ht : Tendsto (fun n : ℕ => (q/r)^n*a) atTop (𝓝 0) := by
+    simpa only [zero_mul] using hlim.mul hconst
+  have hev := ht (Iio_mem_nhds hr)
+  change ∀ᶠ n : ℕ in atTop, (q/r)^n*a < r at hev
+  filter_upwards [hev] with n hn
+  have hrn : 0 < r^n := pow_pos hr _
+  have hh : (q^n*a)/r^n < r := by
+    simpa only [div_pow,div_mul_eq_mul_div] using hn
+  have hh' := (div_lt_iff₀ hrn).1 hh
+  exact hh'.le.trans_eq (pow_succ' r n).symm
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "Phys" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "Pair" => PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2
+local notation "Dec" => periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2
+local notation "K" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+local notation "OO" => periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockClosure
+local notation "EH" => periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderExcitationTransferOperator
+local notation "Step" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+local notation "PF" => p4Q2PZ37AQW_partitionFactor
+local notation "Res" => p4Q2PZ37AQX_relativeResidual
+local notation "Emb" => periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+
+local instance p4Q2PZ37ARG_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37ARG_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37ARG_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37ARG_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37ARG_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37ARG_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) := Fintype.ofFinite _
+local instance p4Q2PZ37ARG_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) := Fintype.ofFinite _
+local instance p4Q2PZ37ARG_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37ARG_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+local instance p4Q2PZ37ARG_nontrivial :
+    Nontrivial (Matrix.specialUnitaryGroup (Fin 2) ℂ) := by
+  refine ⟨⟨1, specialUnitaryTwoRotation Real.pi, ?_⟩⟩
+  intro h
+  have h00 := congrArg
+    (fun g : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+      (g : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
+  norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
+
+local notation "h2" => p4Q2PZ37ARG_two_pos
+local notation "M" => p4Q2PZ37ARD_pairMoment
+
+local notation "Cut" => GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformGapCutoff
+local notation "c" => ((3071 : ℝ)/3072)
+
+/-- The existing genuine two-sided Poincare gap gives a common numerical
+one-step cap throughout its certified interval. -/
+theorem p4Q2PZ37ARG_norm_le_of_cutoff
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (s : ℝ) (hs : 8 < s) (hcut : beta ≤ Cut s hs) :
+    ‖Step H 2 h2 beta hb‖ ≤ c := by
+  have hg :=
+    periodicHypercubicEvenSpecialUnitary_uniformTopEigenspaceTransferGap_ge_one_div_3072
+      (fun H : ℕ => H) 2 h2 (fun _ : ℕ => beta) (fun _ => hb)
+      s hs (fun _ => hcut) H
+  change (1/3072 : ℝ) ≤ 1 - ‖Step H 2 h2 beta hb‖ at hg
+  linarith only [hg]
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARG_norm_le_of_cutoff
+
+/-- An actual complete-moment geometric shift estimate with an explicit
+volume-independent rate, obtained without an unknown norm hypothesis. -/
+theorem p4Q2PZ37ARG_moment_shift_geometric
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (s : ℝ) (hs : 8 < s) (hcut : beta ≤ Cut s hs)
+    (n m : ℕ) (hn : n ≤ m) :
+    M H beta hb m ≤ (c^2)^(m-n)*M H beta hb n := by
+  have hshift := p4Q2PZ37ARD_moment_shift_bound H beta hb n m hn
+  have hc := p4Q2PZ37ARG_norm_le_of_cutoff H beta hb s hs hcut
+  have h := @p4Q2PZ37ARG_shift_aux
+    ↥(K H 2 h2 beta hb) inferInstance inferInstance
+    (Step H 2 h2 beta hb) c (M H beta hb n) (m-n) hc
+    (p4Q2PZ37ARD_moment_nonneg H beta hb n)
+  exact hshift.trans h
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARG_moment_shift_geometric
+
+/-- The volume-dependent initial coefficient can be absorbed by degree.
+This asserts eventual thresholds at each volume, not a common degree. -/
+theorem p4Q2PZ37ARG_eventually_moment_threshold
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (s : ℝ) (hs : 8 < s) (hcut : beta ≤ Cut s hs)
+    (r : ℝ) (hr : c^2 < r) :
+    ∀ᶠ n : ℕ in atTop, M H beta hb n ≤ r^(n+1) := by
+  have hr0 : 0 < r := (by norm_num : (0:ℝ) < c^2).trans hr
+  have hev := p4Q2PZ37ARG_eventual_aux (M H beta hb 0) (c^2) r
+    (sq_nonneg _) hr hr0
+  filter_upwards [hev] with n hn
+  have h : M H beta hb n ≤ (c^2)^n*M H beta hb 0 := by
+    simpa only [Nat.sub_zero] using
+      p4Q2PZ37ARG_moment_shift_geometric H beta hb s hs hcut 0 n (Nat.zero_le n)
+  exact h.trans hn
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARG_eventually_moment_threshold
+
+/-- The actual ARF finite-degree criterion holds on the G4 interval with the
+explicit common threshold c, while degree may vary with volume. -/
+theorem p4Q2PZ37ARG_uniform_moment_threshold
+    (beta : ℝ) (hb : 0 ≤ beta)
+    (s : ℝ) (hs : 8 < s) (hcut : beta ≤ Cut s hs) :
+    ∃ r : ℝ, 0 < r ∧ r < 1 ∧ ∀ H : ℕ, ∃ n : ℕ, M H beta hb n ≤ r^(n+1) := by
+  refine ⟨c, by norm_num, by norm_num, ?_⟩
+  intro H
+  exact (p4Q2PZ37ARG_eventually_moment_threshold H beta hb s hs hcut c
+    (by norm_num)).exists
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARG_uniform_moment_threshold
+
+end
+end MGAP4D.MathlibAnalytic

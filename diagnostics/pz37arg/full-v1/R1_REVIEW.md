@@ -1,0 +1,1 @@
+Candidate only. G4 exact same Step and gap 1 - norm checked at ARF canonical base. Reuse ARD complete shift bound; preserve AQZ multiplicity obstruction. R1A uses scalar div_mul_eq_mul_div, R1B explicit equality. No hypothesis of unknown contraction; no general-beta or continuum claim. No promotion before exact direct Lean, real MCP, and independent CI.
