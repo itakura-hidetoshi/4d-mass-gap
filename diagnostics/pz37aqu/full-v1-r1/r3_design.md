@@ -1,0 +1,2 @@
+# AQU R3 prior to first run (TEST_REQUIRED)
+Use AQT R6/R7 observed lesson: prove direct-sum norm identity on an abstract real Hilbert carrier and instantiate it explicitly; use exact positive scalar and square witnesses, avoiding reduction of the concrete cyclic RKHS. Pinned mathlib Defs.lean confirms le_of_mul_le_mul_right. R1/R2 retained as alternatives, all original public statements, definition, imports and audit list unchanged. Prefer R3 on the first warm runner.

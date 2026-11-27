@@ -14,6 +14,6 @@ jobs:
   verify:
     uses: ./.github/workflows/lean-warm-sandbox-reusable-aqu-full-v1.yml
     with:
-      pack: diagnostics/pz37aqu/full-v1-r1/pack.json
+      pack: diagnostics/pz37aqu/full-v1-r1/pack-r2.json
       source_head: ${{ github.event.pull_request.head.sha || github.sha }}
       baseline_commit: a699fd3d492d33d07731931cf9d55799df0f3b1d
