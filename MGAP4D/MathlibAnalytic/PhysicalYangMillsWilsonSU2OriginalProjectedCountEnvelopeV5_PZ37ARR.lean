@@ -1,0 +1,283 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalProjectedSpectralTruncationV5_PZ37ARQ
+import MGAP4D.MathlibAnalytic.RealL2HilbertSchmidtSeparableKernelOperator
+import Mathlib.Analysis.InnerProductSpace.Adjoint
+import Mathlib.LinearAlgebra.Dimension.Constructions
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37ARR — physical projected kernel separable count and partition envelope
+
+The ARC projected kernel has exactly the same genuine excitation matrix
+coefficients as the ambient normalized kernel. Compress its finite
+separable approximants using the already certified ARO private argument,
+reused at source level because that generic helper is private.
+Use the ARQ attained projected minimum, ARN rank obstruction, and ARM
+layercake bound. No volume-uniform envelope is asserted.
+-/
+namespace MGAP4D.MathlibAnalytic
+open MeasureTheory Filter Set
+open scoped ENNReal Topology InnerProductSpace InnerProduct BigOperators
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 1000000
+set_option synthInstance.maxHeartbeats 50000
+universe i u v
+local notation "N" => p4Q2PZ37ARL_spectralCount
+
+private theorem p4Q2PZ37ARR_approx_aux
+    {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {α : Type v} [MeasurableSpace α] {μ : Measure α} [SFinite μ]
+    (J : E →ₗᵢ[ℝ] Lp ℝ 2 μ) (T : E →L[ℝ] E)
+    (L : Lp ℝ 2 (μ.prod μ))
+    (hpair : ∀ x y : E, inner ℝ (T x) y =
+      inner ℝ (realL2ExternalTensor (J x) (J y)) L)
+    (d : ℕ) (a b : Fin d → Lp ℝ 2 μ) :
+    ∃ F : E →L[ℝ] E,
+      Nonempty (Module.Finite ℝ (LinearMap.range F.toLinearMap)) ∧
+      Module.finrank ℝ (LinearMap.range F.toLinearMap) ≤ d ∧
+      ‖T-F‖ ≤ ‖L - ∑ j, realL2ExternalTensor (a j) (b j)‖ := by
+  classical
+  let P := J.toContinuousLinearMap.adjoint
+  let F : E →L[ℝ] E := ∑ j : Fin d, InnerProductSpace.rankOne ℝ (P (b j)) (P (a j))
+  let W : Submodule ℝ E := Submodule.span ℝ (Set.range (fun j : Fin d => P (b j)))
+  haveI : Module.Finite ℝ W := Module.Finite.span_of_finite ℝ (Set.finite_range _)
+  have hW (x : E) : F x ∈ W := by
+    change (∑ j : Fin d, InnerProductSpace.rankOne ℝ (P (b j)) (P (a j))) x ∈ W
+    rw [ContinuousLinearMap.sum_apply]
+    apply Submodule.sum_mem
+    intro j _
+    rw [InnerProductSpace.rankOne_apply]
+    exact Submodule.smul_mem W _ (Submodule.subset_span ⟨j,rfl⟩)
+  have hle : LinearMap.range F.toLinearMap ≤ W := by
+    rintro y ⟨x,rfl⟩
+    exact hW x
+  haveI : Module.Finite ℝ (LinearMap.range F.toLinearMap) :=
+    Module.Finite.of_injective (Submodule.inclusion hle)
+      (fun x y h => Subtype.ext (congrArg (fun z : W => (z : E)) h))
+  have hdim : Module.finrank ℝ W ≤ d := by
+    simpa [W] using (finrank_range_le_card (R := ℝ) (fun j : Fin d => P (b j)))
+  refine ⟨F,⟨inferInstance⟩,(Submodule.finrank_mono hle).trans hdim,?_⟩
+  let D := L - ∑ j : Fin d, realL2ExternalTensor (a j) (b j)
+  have hF (x y : E) : inner ℝ (F x) y =
+      inner ℝ (realL2ExternalTensor (J x) (J y))
+        (∑ j : Fin d, realL2ExternalTensor (a j) (b j)) := by
+    change inner ℝ ((∑ j : Fin d, InnerProductSpace.rankOne ℝ (P (b j)) (P (a j))) x) y = _
+    rw [ContinuousLinearMap.sum_apply, sum_inner, inner_sum]
+    apply Finset.sum_congr rfl
+    intro j _
+    rw [InnerProductSpace.rankOne_apply, real_inner_smul_left, realL2ExternalTensor_inner]
+    simp only [P, ContinuousLinearMap.adjoint_inner_left]
+    change inner ℝ (a j) (J x) * inner ℝ (b j) (J y) =
+      inner ℝ (J x) (a j) * inner ℝ (J y) (b j)
+    rw [real_inner_comm (a j) (J x), real_inner_comm (b j) (J y)]
+  have hdiff (x y : E) : inner ℝ ((T-F) x) y =
+      inner ℝ (realL2ExternalTensor (J x) (J y)) D := by
+    rw [ContinuousLinearMap.sub_apply, inner_sub_left, hpair, hF]
+    exact (inner_sub_right _ _ _).symm
+  have hbound (x y : E) : inner ℝ ((T-F) x) y ≤ ‖D‖ * ‖x‖ * ‖y‖ := by
+    rw [hdiff]
+    calc
+      _ ≤ ‖realL2ExternalTensor (J x) (J y)‖ * ‖D‖ := real_inner_le_norm _ _
+      _ = _ := by rw [realL2ExternalTensor_norm, J.norm_map, J.norm_map]; ring
+  change ‖T-F‖ ≤ ‖D‖
+  apply ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg D)
+  intro x
+  have h := hbound x ((T-F) x)
+  rw [real_inner_self_eq_norm_sq] at h
+  by_contra! hn
+  have hp : 0 < ‖(T-F) x‖ :=
+    lt_of_le_of_lt (mul_nonneg (norm_nonneg D) (norm_nonneg x)) hn
+  have hlt := mul_lt_mul_of_pos_right hn hp
+  rw [← pow_two] at hlt
+  exact (not_lt_of_ge h) hlt
+
+private theorem p4Q2PZ37ARR_two_pos : 0 < (2 : ℕ) := by decide
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "Phys" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "Pair" => PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2
+local notation "Dec" => periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2
+local notation "K" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+local notation "OO" => periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockClosure
+local notation "EH" => periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderExcitationTransferOperator
+local notation "Step" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+local notation "PF" => p4Q2PZ37AQW_partitionFactor
+local notation "Res" => p4Q2PZ37AQX_relativeResidual
+local notation "Emb" => periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+
+local instance p4Q2PZ37ARR_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37ARR_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37ARR_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37ARR_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37ARR_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37ARR_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) := Fintype.ofFinite _
+local instance p4Q2PZ37ARR_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) := Fintype.ofFinite _
+local instance p4Q2PZ37ARR_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37ARR_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+local instance p4Q2PZ37ARR_nontrivial :
+    Nontrivial (Matrix.specialUnitaryGroup (Fin 2) ℂ) := by
+  refine ⟨⟨1, specialUnitaryTwoRotation Real.pi, ?_⟩⟩
+  intro h
+  have h00 := congrArg
+    (fun g : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+      (g : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
+  norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
+
+local notation "h2" => p4Q2PZ37ARR_two_pos
+local notation "M" => p4Q2PZ37ARD_pairMoment
+
+local notation "Cut" => GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformGapCutoff
+local notation "c" => ((3071 : ℝ)/3072)
+
+local notation "PK" => p4Q2PZ37ARC_projectedKernel
+local notation "D" => p4Q2PZ37ARQ_projectedMinTerms
+local notation "Q" => p4Q2PZ37ARK_thresholdFinset
+
+/-- A d-term separable approximation of the genuine physical projected
+kernel yields an actual finite-rank approximant on the same excitation
+Hilbert space, with no additional operator-norm error. -/
+theorem p4Q2PZ37ARR_exists_rankApprox_of_projectedKernel
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (d : ℕ) (a b : Fin d → Lp ℝ 2 (Mu H 2)) :
+    ∃ F : ↥(K H 2 h2 beta hb) →L[ℝ] ↥(K H 2 h2 beta hb),
+      Nonempty (Module.Finite ℝ (LinearMap.range F.toLinearMap)) ∧
+      Module.finrank ℝ (LinearMap.range F.toLinearMap) ≤ d ∧
+      ‖Step H 2 h2 beta hb-F‖ ≤
+        ‖(show Lp ℝ 2 ((Mu H 2).prod (Mu H 2)) from PK H beta hb) - ∑ j, realL2ExternalTensor (a j) (b j)‖ := by
+  letI : CompleteSpace (Phys H 2) :=
+    (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule_isClosed H 2).completeSpace_coe
+  letI : CompleteSpace (K H 2 h2 beta hb) :=
+    ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
+      H 2 h2 beta hb).isClosed_orthogonal).completeSpace_coe
+  refine @p4Q2PZ37ARR_approx_aux
+    ↥(K H 2 h2 beta hb) inferInstance inferInstance inferInstance
+    _ inferInstance (Mu H 2) inferInstance
+    (Emb H 2 h2 beta hb) (Step H 2 h2 beta hb) (PK H beta hb) ?_ d a b
+  intro x y
+  exact (p4Q2PZ37ARC_projected_inner H beta hb x y).symm
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARR_exists_rankApprox_of_projectedKernel
+
+/-- The genuine threshold count is bounded by the number of separable
+terms whenever the actual kernel approximation error is strictly below r. -/
+theorem p4Q2PZ37ARR_thresholdCard_le_projectedTerms
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    {ι : Type i} (B : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (he : ∀ k, Step H 2 h2 beta hb (B k) = rho k • B k)
+    (r : ℝ) (hr : 0 < r)
+    (d : ℕ) (a b : Fin d → Lp ℝ 2 (Mu H 2))
+    (hclose : ‖(show Lp ℝ 2 ((Mu H 2).prod (Mu H 2)) from PK H beta hb) - ∑ j, realL2ExternalTensor (a j) (b j)‖ < r) :
+    (Q H beta hb B rho he r hr).card ≤ d := by
+  obtain ⟨F,hfinite,hd,hF⟩ := p4Q2PZ37ARR_exists_rankApprox_of_projectedKernel H beta hb d a b
+  letI : Module.Finite ℝ (LinearMap.range F.toLinearMap) := hfinite.some
+  exact (p4Q2PZ37ARN_thresholdCard_le_rank H beta hb B rho he r hr F
+    (hF.trans_lt hclose)).trans hd
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARR_thresholdCard_le_projectedTerms
+
+theorem p4Q2PZ37ARR_count_le_projectedTerms
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    {ι : Type i} (B : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (he : ∀ k, Step H 2 h2 beta hb (B k) = rho k • B k)
+    (r : ℝ) (hr : 0 < r)
+    (d : ℕ) (a b : Fin d → Lp ℝ 2 (Mu H 2))
+    (hclose : ‖(show Lp ℝ 2 ((Mu H 2).prod (Mu H 2)) from PK H beta hb) - ∑ j, realL2ExternalTensor (a j) (b j)‖ < r) :
+    N rho r ≤ (d : ℝ≥0∞) := by
+  rw [p4Q2PZ37ARL_count_eq_thresholdCard H beta hb B rho he r hr]
+  exact_mod_cast p4Q2PZ37ARR_thresholdCard_le_projectedTerms H beta hb B rho he r hr d a b hclose
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARR_count_le_projectedTerms
+
+theorem p4Q2PZ37ARR_count_le_projectedMinTerms
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    {ι : Type i} (B : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (he : ∀ k, Step H 2 h2 beta hb (B k) = rho k • B k)
+    (r : ℝ) (hr : 0 < r) :
+    N rho r ≤ (p4Q2PZ37ARQ_projectedMinTerms H beta hb r hr : ℝ≥0∞) := by
+  obtain ⟨a,b,hclose⟩ := p4Q2PZ37ARQ_projectedMinTerms_spec H beta hb r hr
+  exact p4Q2PZ37ARR_count_le_projectedTerms H beta hb B rho he r hr _ a b hclose
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARR_count_le_projectedMinTerms
+
+/-- Two-sided cardinal sandwich for the actual projected minimum and a
+finite spectral truncation meeting the strict quadratic tail budget. -/
+theorem p4Q2PZ37ARR_projectedMinTerms_sandwich
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    {ι : Type i} (B : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (he : ∀ k, Step H 2 h2 beta hb (B k) = rho k • B k)
+    (S : Finset ι) (r : ℝ) (hr : 0 < r)
+    (htail : (∑' k, (rho k)^2) - ∑ k ∈ S, (rho k)^2 < r^2) :
+    (Q H beta hb B rho he r hr).card ≤ D H beta hb r hr ∧
+      D H beta hb r hr ≤ S.card := by
+  obtain ⟨a,b,hclose⟩ := p4Q2PZ37ARQ_projectedMinTerms_spec H beta hb r hr
+  exact ⟨p4Q2PZ37ARR_thresholdCard_le_projectedTerms H beta hb B rho he r hr _ a b hclose,
+    p4Q2PZ37ARQ_projectedMinTerms_le_card H beta hb B rho he S r hr htail⟩
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARR_projectedMinTerms_sandwich
+
+theorem p4Q2PZ37ARR_moment_le_projectedMinTermsEnvelope
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (n : ℕ)
+    (s : ℝ) (hs : 8 < s) (hcut : beta ≤ Cut s hs)
+    {ι : Type i} (B : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (he : ∀ k, Step H 2 h2 beta hb (B k) = rho k • B k)
+    (A p : ℝ) (hA : 0 ≤ A) (hp : p < 2*((n:ℝ)+1))
+    (hbudget : ∀ t (ht : 0 < t), t ≤ c →
+      (D H beta hb t ht : ℝ≥0∞) ≤ ENNReal.ofReal (A*t^(-p))) :
+    M H beta hb n ≤ (2*((n:ℝ)+1)*A)/(2*((n:ℝ)+1)-p) * c^(2*((n:ℝ)+1)-p) := by
+  apply p4Q2PZ37ARM_moment_le_powerEnvelope H beta hb n s hs hcut B rho he A p hA hp
+  intro t ht
+  exact (p4Q2PZ37ARR_count_le_projectedMinTerms H beta hb B rho he t ht.1).trans
+    (hbudget t ht.1 ht.2)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARR_moment_le_projectedMinTermsEnvelope
+
+theorem p4Q2PZ37ARR_terminal_le_projectedMinTermsEnvelope
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (s : ℝ) (hs : 8 < s) (hcut : beta ≤ Cut s hs)
+    {ι : Type i} (B : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (he : ∀ k, Step H 2 h2 beta hb (B k) = rho k • B k)
+    (A p : ℝ) (hA : 0 ≤ A) (hp : p < 2*((H:ℝ)+1))
+    (hbudget : ∀ t (ht : 0 < t), t ≤ c →
+      (D H beta hb t ht : ℝ≥0∞) ≤ ENNReal.ofReal (A*t^(-p))) :
+    (PF H beta hb)⁻¹ ^ 2 - 1 ≤ (2*((H:ℝ)+1)*A)/(2*((H:ℝ)+1)-p) *
+      c^(2*((H:ℝ)+1)-p) := by
+  rw [← p4Q2PZ37ARD_moment_at_halfCylinder H beta hb]
+  exact p4Q2PZ37ARR_moment_le_projectedMinTermsEnvelope H beta hb H s hs hcut B rho he A p hA hp hbudget
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARR_terminal_le_projectedMinTermsEnvelope
+
+theorem p4Q2PZ37ARR_partitionFloor_of_projectedMinTermsEnvelope
+    (beta : ℝ) (hb : 0 ≤ beta)
+    (s : ℝ) (hs : 8 < s) (hcut : beta ≤ Cut s hs)
+    (C : ℝ) (hC : 0 ≤ C)
+    (h : ∀ H : ℕ, ∃ (ι : Type) (B : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+      (rho : ι → ℝ) (A p : ℝ),
+      (∀ k, Step H 2 h2 beta hb (B k) = rho k • B k) ∧
+      0 ≤ A ∧ p < 2*((H:ℝ)+1) ∧
+      (∀ t (ht : 0 < t), t ≤ c →
+        (D H beta hb t ht : ℝ≥0∞) ≤ ENNReal.ofReal (A*t^(-p))) ∧
+      (2*((H:ℝ)+1)*A)/(2*((H:ℝ)+1)-p) * c^(2*((H:ℝ)+1)-p) ≤ C) :
+    ∃ d : ℝ, 0 < d ∧ ∀ H : ℕ, d ≤ PF H beta hb := by
+  apply (p4Q2PZ37AQX_partitionFloor_iff_relativeResidual_bound beta hb).2
+  refine ⟨C,hC,?_⟩
+  intro H
+  obtain ⟨ι,B,rho,A,p,he,hA,hp,henv,hbudget⟩ := h H
+  rw [p4Q2PZ37AQX_relativeResidual_normSq H beta hb]
+  exact (p4Q2PZ37ARR_terminal_le_projectedMinTermsEnvelope H beta hb s hs hcut B rho he A p hA hp henv).trans hbudget
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARR_partitionFloor_of_projectedMinTermsEnvelope
+
+end
+end MGAP4D.MathlibAnalytic
