@@ -1,0 +1,288 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalProjectedGrowthBudgetV5_PZ37ARS
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalStrictPartitionClosedHalfHaarV5_PZ37AIP
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalFixedCouplingQuarticBudgetObstructionV5_PZ37AIB
+import Mathlib.Data.Nat.Choose.Sum
+import Mathlib.Analysis.SpecialFunctions.Exp
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37ART — local grade and binomial spectral budget
+
+A genuine eigenbasis graded by nonempty support size, with an exponential
+eigenvalue upper bound per grade and a quadratic weighted multiplicity
+budget, would imply a terminal binomial bound. Use the actual cubic
+spatial-link count, not an artificial finite mode dimension. Each grade
+may have infinitely many indices: only its finite partial quadratic
+sums are constrained. The interaction halfweights are not removed.
+The required grading/attenuation and weighted multiplicity estimates
+for the interacting Wilson transfer remain unproved.
+-/
+namespace MGAP4D.MathlibAnalytic
+open MeasureTheory Filter Set
+open scoped ENNReal Topology InnerProductSpace InnerProduct BigOperators
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 1000000
+set_option synthInstance.maxHeartbeats 50000
+universe i
+
+private theorem p4Q2PZ37ART_binomial_aux
+    {ι : Type i} (L : ℕ) (g : ι → ℕ) (w : ι → ℝ) (x : ℝ)
+    (hg : ∀ k, 0 < g k ∧ g k ≤ L)
+    (h : ∀ j : ℕ, 0 < j → j ≤ L → ∀ S : Finset ι,
+      (∑ k ∈ S with g k = j, w k) ≤ (L.choose j : ℝ)*x^j)
+    (S : Finset ι) :
+    (∑ k ∈ S, w k) ≤ (1+x)^L-1 := by
+  classical
+  let J := (Finset.range (L+1)).erase 0
+  have hm : ∀ k ∈ S, g k ∈ J := by
+    intro k _
+    exact Finset.mem_erase.mpr ⟨(Nat.ne_of_gt (hg k).1),
+      Finset.mem_range.mpr (Nat.lt_succ_of_le (hg k).2)⟩
+  have hsum : (∑ j ∈ J, (L.choose j : ℝ)*x^j) = (1+x)^L-1 := by
+    have h0 : 0 ∈ Finset.range (L+1) := Finset.mem_range.mpr (Nat.zero_lt_succ L)
+    have he := Finset.sum_erase_add (Finset.range (L+1))
+      (fun j : ℕ => (L.choose j : ℝ)*x^j) h0
+    have hf : (∑ j ∈ Finset.range (L+1), (L.choose j : ℝ)*x^j) = (1+x)^L := by
+      rw [add_comm (1:ℝ) x, add_pow]
+      apply Finset.sum_congr rfl
+      intro j _
+      simp [mul_comm]
+    simp only [Nat.choose_zero_right, Nat.cast_one, pow_zero, mul_one] at he
+    rw [hf] at he
+    change (∑ j ∈ (Finset.range (L+1)).erase 0, (L.choose j : ℝ)*x^j) = _
+    linarith only [he]
+  calc
+    _ = ∑ j ∈ J, ∑ k ∈ S with g k = j, w k :=
+      (Finset.sum_fiberwise_of_maps_to hm w).symm
+    _ ≤ ∑ j ∈ J, (L.choose j : ℝ)*x^j := by
+      apply Finset.sum_le_sum
+      intro j hj
+      have hj' := Finset.mem_erase.mp hj
+      exact h j (Nat.pos_of_ne_zero hj'.1)
+        (Nat.le_of_lt_succ (Finset.mem_range.mp hj'.2)) S
+    _ = _ := hsum
+
+private theorem p4Q2PZ37ART_gradePower_aux
+    {ι : Type i} (L H : ℕ) (g : ι → ℕ) (rho : ι → ℝ)
+    (a A : ℝ) (ha : 0 ≤ a) (hA : 0 ≤ A)
+    (hrho : ∀ k, 0 ≤ rho k ∧ rho k ≤ a^(g k))
+    (hgrade : ∀ j : ℕ, 0 < j → j ≤ L → ∀ S : Finset ι,
+      (∑ k ∈ S with g k = j, (rho k)^2) ≤ (L.choose j : ℝ)*A^j)
+    (j : ℕ) (hj : 0 < j) (hjL : j ≤ L) (S : Finset ι) :
+    (∑ k ∈ S with g k = j, (rho k)^(2*(H+1))) ≤
+      (L.choose j : ℝ)*(A*(a^2)^H)^j := by
+  classical
+  calc
+    _ = ∑ k ∈ S with g k = j, (rho k)^2*(rho k)^(2*H) := by
+      apply Finset.sum_congr rfl
+      intro k _
+      rw [← pow_add]
+      congr 1
+      omega
+    _ ≤ ∑ k ∈ S with g k = j, (rho k)^2*((a^2)^H)^j := by
+      apply Finset.sum_le_sum
+      intro k hk
+      have he := (Finset.mem_filter.mp hk).2
+      have hp := pow_le_pow_left₀ (hrho k).1 (hrho k).2 (2*H)
+      rw [he] at hp
+      apply mul_le_mul_of_nonneg_left _ (sq_nonneg _)
+      calc
+        _ ≤ (a^j)^(2*H) := hp
+        _ = ((a^2)^H)^j := by
+          simp only [← pow_mul, Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm]
+    _ = (∑ k ∈ S with g k = j, (rho k)^2)*((a^2)^H)^j := by
+      rw [Finset.sum_mul]
+    _ ≤ ((L.choose j : ℝ)*A^j)*((a^2)^H)^j :=
+      mul_le_mul_of_nonneg_right (hgrade j hj hjL S)
+        (pow_nonneg (pow_nonneg (sq_nonneg a) H) j)
+    _ = _ := by rw [mul_pow]; ring
+
+private theorem p4Q2PZ37ART_two_pos : 0 < (2 : ℕ) := by decide
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "Phys" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "Pair" => PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2
+local notation "Dec" => periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2
+local notation "K" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+local notation "OO" => periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockClosure
+local notation "EH" => periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderExcitationTransferOperator
+local notation "Step" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+local notation "PF" => p4Q2PZ37AQW_partitionFactor
+local notation "Res" => p4Q2PZ37AQX_relativeResidual
+local notation "Emb" => periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+
+local instance p4Q2PZ37ART_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37ART_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37ART_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37ART_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37ART_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37ART_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) := Fintype.ofFinite _
+local instance p4Q2PZ37ART_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) := Fintype.ofFinite _
+local instance p4Q2PZ37ART_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37ART_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+local instance p4Q2PZ37ART_nontrivial :
+    Nontrivial (Matrix.specialUnitaryGroup (Fin 2) ℂ) := by
+  refine ⟨⟨1, specialUnitaryTwoRotation Real.pi, ?_⟩⟩
+  intro h
+  have h00 := congrArg
+    (fun g : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+      (g : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
+  norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
+
+local notation "h2" => p4Q2PZ37ART_two_pos
+local notation "M" => p4Q2PZ37ARD_pairMoment
+
+local notation "Cut" => GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformGapCutoff
+local notation "c" => ((3071 : ℝ)/3072)
+
+local notation "PK" => p4Q2PZ37ARC_projectedKernel
+local notation "D" => p4Q2PZ37ARQ_projectedMinTerms
+local notation "Q" => p4Q2PZ37ARK_thresholdFinset
+
+local notation "Lk" => fun H : ℕ => Nat.card (PeriodicHypercubicEvenSpatialSliceLink H)
+
+/-- Actual original link count, not a surrogate dimension. -/
+theorem p4Q2PZ37ART_linkCount_exact (H : ℕ) :
+    (Lk H : ℝ) = 24*((H:ℝ)+1)^3 := by
+  change (Nat.card (PeriodicHypercubicEvenSpatialSliceLink H) : ℝ) = _
+  exact (GroundStatePosteriorJoint.p4Q2PZ37AIP_originalLinkCount_eq_plaquettes H).trans
+    (GroundStatePosteriorJoint.p4Q2PZ37AIB_plaquetteCount_exact H)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ART_linkCount_exact
+
+/-- Weighted degree budget yields an exact binomial terminal envelope.
+The degree assignment and its two inequalities are explicit hypotheses
+on the actual interacting excitation eigenbasis. -/
+theorem p4Q2PZ37ART_terminal_le_gradeBinomial
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    {ι : Type i} (B : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (he : ∀ k, Step H 2 h2 beta hb (B k) = rho k • B k)
+    (g : ι → ℕ) (a A : ℝ) (ha : 0 ≤ a) (hA : 0 ≤ A)
+    (hg : ∀ k, 0 < g k ∧ g k ≤ Lk H)
+    (hrho : ∀ k, 0 ≤ rho k ∧ rho k ≤ a^(g k))
+    (hgrade : ∀ j : ℕ, 0 < j → j ≤ Lk H → ∀ S : Finset ι,
+      (∑ k ∈ S with g k = j, (rho k)^2) ≤ ((Lk H).choose j : ℝ)*A^j) :
+    (PF H beta hb)⁻¹ ^ 2 - 1 ≤ (1+A*(a^2)^H)^(Lk H)-1 := by
+  classical
+  have hs := p4Q2PZ37ARD_moment_hasSum H beta hb H B rho he
+  rw [← p4Q2PZ37ARD_moment_at_halfCylinder H beta hb, ← hs.tsum_eq]
+  apply Real.tsum_le_of_sum_le (fun k => pow_nonneg (hrho k).1 _)
+  intro S
+  exact p4Q2PZ37ART_binomial_aux (Lk H) g
+    (fun k => (rho k)^(2*(H+1))) (A*(a^2)^H) hg
+    (p4Q2PZ37ART_gradePower_aux (Lk H) H g rho a A ha hA hrho hgrade) S
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ART_terminal_le_gradeBinomial
+
+/-- Binomial bound converted into a scalar exponential without assuming
+independence of the true spatial interactions. -/
+theorem p4Q2PZ37ART_terminal_le_gradeExp
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    {ι : Type i} (B : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (he : ∀ k, Step H 2 h2 beta hb (B k) = rho k • B k)
+    (g : ι → ℕ) (delta A : ℝ) (hA : 0 ≤ A)
+    (hg : ∀ k, 0 < g k ∧ g k ≤ Lk H)
+    (hrho : ∀ k, 0 ≤ rho k ∧ rho k ≤ (Real.exp (-delta))^(g k))
+    (hgrade : ∀ j : ℕ, 0 < j → j ≤ Lk H → ∀ S : Finset ι,
+      (∑ k ∈ S with g k = j, (rho k)^2) ≤ ((Lk H).choose j : ℝ)*A^j) :
+    (PF H beta hb)⁻¹ ^ 2 - 1 ≤
+      Real.exp ((Lk H : ℝ)*A*Real.exp (-(2*delta*(H:ℝ))))-1 := by
+  have h := p4Q2PZ37ART_terminal_le_gradeBinomial H beta hb B rho he
+    g (Real.exp (-delta)) A (Real.exp_pos _).le hA hg hrho hgrade
+  have hex : ((Real.exp (-delta))^2)^H =
+      Real.exp (-(2*delta*(H:ℝ))) := by
+    rw [← pow_mul, ← Real.exp_nat_mul]
+    congr 1
+    push_cast
+    ring
+  rw [hex] at h
+  let x := A*Real.exp (-(2*delta*(H:ℝ)))
+  have hx : 0 ≤ x := mul_nonneg hA (Real.exp_pos _).le
+  have hp : (1+x)^(Lk H) ≤ (Real.exp x)^(Lk H) :=
+    pow_le_pow_left₀ (by linarith) (by linarith only [Real.add_one_le_exp x]) _
+  rw [← Real.exp_nat_mul] at hp
+  have hc : (Lk H : ℝ)*x = (Lk H : ℝ)*A*Real.exp (-(2*delta*(H:ℝ))) := by
+    dsimp [x]
+    ring
+  exact h.trans (sub_le_sub_right (hp.trans_eq (congrArg Real.exp hc)) 1)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ART_terminal_le_gradeExp
+
+/-- The genuine cubic link count is absorbed by every fixed strictly
+positive exponential rate in the physical horizon. -/
+theorem p4Q2PZ37ART_linkBudget_tendsto_zero
+    (delta A : ℝ) (hd : 0 < delta) :
+    Tendsto (fun H : ℕ => (Lk H : ℝ)*A*Real.exp (-(2*delta*(H:ℝ))))
+      atTop (𝓝 0) := by
+  have hNat : Tendsto (fun H : ℕ => (H:ℝ)) atTop atTop := tendsto_natCast_atTop_atTop
+  have hN : Tendsto (fun H : ℕ => (H:ℝ)+1) atTop atTop :=
+    tendsto_atTop_mono (fun H => by linarith) hNat
+  have hRate : 0 < 2*delta := by linarith
+  have hArg : Tendsto (fun H : ℕ => (2*delta)*((H:ℝ)+1)) atTop atTop :=
+    hN.const_mul_atTop hRate
+  have hKernel : Tendsto
+      (fun H : ℕ => ((2*delta)*((H:ℝ)+1))^3 *
+        Real.exp (-((2*delta)*((H:ℝ)+1)))) atTop (𝓝 0) :=
+    (Real.tendsto_pow_mul_exp_neg_atTop_nhds_zero 3).comp hArg
+  have hScaled : Tendsto
+      (fun H : ℕ => (24*A*Real.exp (2*delta)/(2*delta)^3) *
+        (((2*delta)*((H:ℝ)+1))^3 *
+          Real.exp (-((2*delta)*((H:ℝ)+1))))) atTop (𝓝 0) := by
+    simpa only [mul_zero] using hKernel.const_mul (24*A*Real.exp (2*delta)/(2*delta)^3)
+  apply hScaled.congr
+  intro H
+  rw [p4Q2PZ37ART_linkCount_exact H]
+  have he : Real.exp (2*delta)*Real.exp (-((2*delta)*((H:ℝ)+1))) =
+      Real.exp (-(2*delta*(H:ℝ))) := by
+    rw [← Real.exp_add]
+    congr 1
+    ring
+  rw [← he]
+  have hd0 : 2*delta ≠ 0 := ne_of_gt hRate
+  field_simp [hd0]
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ART_linkBudget_tendsto_zero
+
+/-- A local weighted-grade certificate at all sufficiently large genuine
+volumes suffices for the all-volume partition floor. Finite initial
+horizons are retained by ARS. No such certificate is claimed here. -/
+theorem p4Q2PZ37ART_partitionFloor_of_localGrades
+    (beta : ℝ) (hb : 0 ≤ beta) (N0 : ℕ)
+    (delta A : ℝ) (hd : 0 < delta) (hA : 0 ≤ A)
+    (h : ∀ H : ℕ, N0 ≤ H → ∃ (ι : Type)
+      (B : HilbertBasis ι ℝ (K H 2 h2 beta hb)) (rho : ι → ℝ) (g : ι → ℕ),
+      (∀ k, Step H 2 h2 beta hb (B k) = rho k • B k) ∧
+      (∀ k, 0 < g k ∧ g k ≤ Lk H) ∧
+      (∀ k, 0 ≤ rho k ∧ rho k ≤ (Real.exp (-delta))^(g k)) ∧
+      (∀ j : ℕ, 0 < j → j ≤ Lk H → ∀ S : Finset ι,
+        (∑ k ∈ S with g k = j, (rho k)^2) ≤ ((Lk H).choose j : ℝ)*A^j)) :
+    ∃ d : ℝ, 0 < d ∧ ∀ H : ℕ, d ≤ PF H beta hb := by
+  have ht := p4Q2PZ37ART_linkBudget_tendsto_zero delta A hd
+  have hev : ∀ᶠ H : ℕ in atTop, (Lk H : ℝ)*A*Real.exp (-(2*delta*(H:ℝ))) < 1 :=
+    (tendsto_order.mp ht).2 1 (by norm_num)
+  obtain ⟨N1,hN1⟩ := eventually_atTop.1 hev
+  apply p4Q2PZ37ARS_partitionFloor_of_eventualTerminalBudget beta hb (max N0 N1)
+    (Real.exp 1-1) (sub_nonneg.mpr (Real.one_le_exp_iff.mpr (by norm_num)))
+  intro H hH
+  obtain ⟨ι,B,rho,g,he,hg,hrho,hgrade⟩ := h H ((le_max_left N0 N1).trans hH)
+  have hterm := p4Q2PZ37ART_terminal_le_gradeExp H beta hb B rho he g delta A hA hg hrho hgrade
+  exact hterm.trans (sub_le_sub_right
+    (Real.exp_le_exp.mpr (hN1 H ((le_max_right N0 N1).trans hH)).le) 1)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ART_partitionFloor_of_localGrades
+
+end
+end MGAP4D.MathlibAnalytic
