@@ -1,0 +1,4 @@
+# ASF R1A review — diagnostic only
+Exact canonical ASE base c51a6260fc4029b647d9a822bf0a15133734d581, independent CI 46142602244, exact cache publication gate 46143334932 (either certified no-build relay or verified fallback).
+Actual ASC binomial parity fibers converted to range sums; last-degree step, monotonicity of binomial coefficient, induction establishing sign and imbalance; exact (m+8)*A_m=8*S_m identity via Nat.add_one_mul_choose_eq; derive 2*(m+8)*MaxM <= (m+16)*S; lift to ASE systematic survivor bound in Nat, avoiding division or nonzero denominator side conditions; exact numeric ASD substitution. Pinned mathlib choose and parity APIs inspected. No canonical files or assumptions changed. No claim of uniform absolute spectral count, mass gap or continuum result.
+Candidate only; direct Lean and real MCP audit required before independent proof PR. Preserve all terminal evidence. Never merge diagnostics.
