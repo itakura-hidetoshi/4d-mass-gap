@@ -1,0 +1,251 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalProjectedTaylorRankApproximationV5_PZ37ARY
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarQuaternionWilsonHaarContractionV5_PZ35D4
+import Mathlib.MeasureTheory.Function.LpSpace.ContinuousFunctions
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37ARZ — gauge-odd feature annihilation and filtered rank budget
+
+Preserve the literal physical excitation space and Haar gauge pullbacks.
+An odd right factor is orthogonal to every embedded physical excitation.
+A genuine central vertex flip gives a pointwise odd weighted single-link
+matrix coordinate when its endpoints differ. Remove right factors proved
+orthogonal to the excitation range when bounding the rank of a separable
+approximant. No claim that an arbitrary ARX enumeration has already been
+indexed by vertex parities, or that a uniform spectral envelope holds.
+-/
+namespace MGAP4D.MathlibAnalytic
+open MeasureTheory Filter
+open scoped ENNReal Topology BigOperators InnerProductSpace InnerProduct
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 1000000
+set_option synthInstance.maxHeartbeats 50000
+universe i u v
+
+theorem p4Q2PZ37ARZ_odd_inner_zero
+    {X : Type u} [NormedAddCommGroup X] [InnerProductSpace ℝ X]
+    (U : X →ₗᵢ[ℝ] X) (b x : X) (hb : U b = -b) (hx : U x = x) :
+    inner ℝ b x = 0 := by
+  have h := U.inner_map_map b x
+  rw [hb,hx,inner_neg_left] at h
+  linarith only [h]
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARZ_odd_inner_zero
+
+/-- Finite-rank bound counts only the indices not certified orthogonal to
+the actual embedded space. The original approximation error is unchanged. -/
+theorem p4Q2PZ37ARZ_filtered_approx
+    {X : Type u} [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X]
+    {α : Type v} [MeasurableSpace α] {μ : Measure α} [SFinite μ]
+    (J : X →ₗᵢ[ℝ] Lp ℝ 2 μ) (T : X →L[ℝ] X)
+    (L : Lp ℝ 2 (μ.prod μ))
+    (hpair : ∀ x y : X, inner ℝ (T x) y =
+      inner ℝ (realL2ExternalTensor (J x) (J y)) L)
+    (d : ℕ) (a b : Fin d → Lp ℝ 2 μ) (s : Finset (Fin d))
+    (hzero : ∀ j ∉ s, ∀ x : X, inner ℝ (b j) (J x) = 0) :
+    ∃ F : X →L[ℝ] X,
+      Nonempty (Module.Finite ℝ (LinearMap.range F.toLinearMap)) ∧
+      Module.finrank ℝ (LinearMap.range F.toLinearMap) ≤ s.card ∧
+      ‖T-F‖ ≤ ‖L - ∑ j, realL2ExternalTensor (a j) (b j)‖ := by
+  classical
+  let P := J.toContinuousLinearMap.adjoint
+  let W : Submodule ℝ X := Submodule.span ℝ (Set.range (fun j : Fin d => P (b j)))
+  let V : Submodule ℝ X := Submodule.span ℝ (Set.range (fun j : s => P (b j.val)))
+  haveI : Module.Finite ℝ V := Module.Finite.span_of_finite ℝ (Set.finite_range _)
+  have hWV : W ≤ V := by
+    apply Submodule.span_le.mpr
+    rintro y ⟨j,rfl⟩
+    by_cases hj : j ∈ s
+    · exact Submodule.subset_span ⟨⟨j,hj⟩,rfl⟩
+    · have hi : inner ℝ (P (b j)) (P (b j)) = 0 := by
+        change inner ℝ (J.toContinuousLinearMap.adjoint (b j)) (P (b j)) = 0
+        rw [ContinuousLinearMap.adjoint_inner_left]
+        exact hzero j hj (P (b j))
+      rw [real_inner_self_eq_norm_sq] at hi
+      have hz : P (b j) = 0 := norm_eq_zero.mp (by nlinarith [norm_nonneg (P (b j))])
+      change P (b j) ∈ V
+      exact hz.symm ▸ V.zero_mem
+  have hV : Module.finrank ℝ V ≤ s.card := by
+    simpa only [V, Fintype.card_coe] using
+      (finrank_range_le_card (R := ℝ) (fun j : s => P (b j.val)))
+  obtain ⟨F,hf,_,hd,_,he⟩ := p4Q2PZ37ARY_projected_approx J T L hpair d a b
+  have hWVdim : Module.finrank ℝ W ≤ Module.finrank ℝ V :=
+    Submodule.finrank_mono hWV
+  exact ⟨F,hf,hd.trans (hWVdim.trans hV),he⟩
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARZ_filtered_approx
+
+private theorem p4Q2PZ37ARZ_two_pos : 0 < (2 : ℕ) := by decide
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "Cfg" => PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "K" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+local notation "Phys" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "Emb" => periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+local notation "Step" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+local notation "T" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+local notation "Raw" => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2
+local notation "Kernel" => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+local notation "L" => periodicHypercubicEvenSpatialSliceLinkList
+local notation "NK" => p4Q2PZ37ARA_normalizedKernel
+local notation "h2" => p4Q2PZ37ARZ_two_pos
+
+local instance p4Q2PZ37ARZ_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37ARZ_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37ARZ_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37ARZ_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37ARZ_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37ARZ_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) := Fintype.ofFinite _
+local instance p4Q2PZ37ARZ_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) := Fintype.ofFinite _
+local instance p4Q2PZ37ARZ_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37ARZ_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+local instance p4Q2PZ37ARZ_nontrivial : Nontrivial G := by
+  refine ⟨⟨1, specialUnitaryTwoRotation Real.pi, ?_⟩⟩
+  intro h
+  have h00 := congrArg
+    (fun g : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+      (g : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
+  norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
+
+
+local notation "Gauge" => PeriodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransformation
+local notation "GT" => periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform
+local notation "Pull" => periodicHypercubicEvenSpecialUnitarySpatialSliceGaugePullbackLinearIsometry
+local notation "Link" => PeriodicHypercubicEvenSpatialSliceLink
+local notation "W" => periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeight
+local notation "Coord" => ((Fin 2 × Fin 2) × Bool)
+
+theorem p4Q2PZ37ARZ_gaugeOdd_inner
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (b : Lp ℝ 2 (Mu H 2)) (gamma : Gauge H 2)
+    (hodd : Pull H 2 gamma b = -b) (x : K H 2 h2 beta hb) :
+    inner ℝ b (Emb H 2 h2 beta hb x) = 0 := by
+  let x0 : Phys H 2 := x
+  have hfix : Pull H 2 gamma (Emb H 2 h2 beta hb x) =
+      Emb H 2 h2 beta hb x := by
+    change Pull H 2 gamma (x0 : Lp ℝ 2 (Mu H 2)) = (x0 : Lp ℝ 2 (Mu H 2))
+    exact (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule_mem
+      H 2 (x0 : Lp ℝ 2 (Mu H 2))).mp x0.property gamma
+  exact @p4Q2PZ37ARZ_odd_inner_zero (Lp ℝ 2 (Mu H 2)) inferInstance inferInstance
+    (Pull H 2 gamma) b (Emb H 2 h2 beta hb x) hodd hfix
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARZ_gaugeOdd_inner
+
+/-- Pointwise oddness passes through the actual Haar-L2 gauge pullback. -/
+theorem p4Q2PZ37ARZ_ae_odd_pullback
+    (H : ℕ) (gamma : Gauge H 2)
+    (b : Lp ℝ 2 (Mu H 2)) (f : Cfg H 2 → ℝ)
+    (hb : (fun A => b A) =ᵐ[Mu H 2] f)
+    (hodd : ∀ A, f (GT H 2 gamma A) = -f A) :
+    Pull H 2 gamma b = -b := by
+  have hm := periodicHypercubicEvenSpecialUnitarySpatialSliceHaar_measurePreserving H 2 gamma
+  have h1 : (fun A => Pull H 2 gamma b A) =ᵐ[Mu H 2] (fun A => b (GT H 2 gamma A)) :=
+    Lp.coeFn_compMeasurePreserving b hm
+  have h2' : (fun A => b (GT H 2 gamma A)) =ᵐ[Mu H 2]
+      (fun A => f (GT H 2 gamma A)) := hm.quasiMeasurePreserving.ae_eq hb
+  apply Lp.ext
+  filter_upwards [h1,h2',hb,Lp.coeFn_neg b] with A hA hB hC hN
+  calc
+    _ = b (GT H 2 gamma A) := hA
+    _ = f (GT H 2 gamma A) := hB
+    _ = -f A := hodd A
+    _ = -b A := congrArg Neg.neg hC.symm
+    _ = _ := hN.symm
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARZ_ae_odd_pullback
+
+/-- Same eight transposed real matrix-entry coordinates as ARX. -/
+def p4Q2PZ37ARZ_coord (q : Coord) (g : G) : ℝ :=
+  if q.2 then ((g : Matrix (Fin 2) (Fin 2) ℂ) q.1.2 q.1.1).re
+  else ((g : Matrix (Fin 2) (Fin 2) ℂ) q.1.2 q.1.1).im
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARZ_coord
+
+/-- The genuine halfweight times a single coordinate is odd under a
+central transformation at the source vertex if the target is distinct. -/
+theorem p4Q2PZ37ARZ_weightedCoord_odd
+    (H : ℕ) (beta : ℝ) (l : Link H) (q : Coord)
+    (hne : periodicHypercubicEvenSpatialSliceShift H l.1 l.2 ≠ l.1) :
+    ∃ gamma : Gauge H 2, ∀ A : Cfg H 2,
+      W H 2 beta (GT H 2 gamma A) *
+        p4Q2PZ37ARZ_coord q (GT H 2 gamma A l) =
+      -(W H 2 beta A * p4Q2PZ37ARZ_coord q (A l)) := by
+  classical
+  let gamma : Gauge H 2 := fun v => if v = l.1 then p4Q2PZ35D4_centralMinusOne else 1
+  refine ⟨gamma,?_⟩
+  intro A
+  have hl : GT H 2 gamma A l = p4Q2PZ35D4_centralMinusOne * A l := by
+    rw [periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform_apply]
+    simp [gamma,hne]
+  have hm : ((GT H 2 gamma A l : G) : Matrix (Fin 2) (Fin 2) ℂ) =
+      -((A l : G) : Matrix (Fin 2) (Fin 2) ℂ) := by
+    rw [hl]
+    change ((p4Q2PZ35D4_centralMinusOne : G) : Matrix (Fin 2) (Fin 2) ℂ) *
+      ((A l : G) : Matrix (Fin 2) (Fin 2) ℂ) = _
+    rw [p4Q2PZ35D4_centralMinusOne_coe]
+    simp
+  rw [periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeight_gaugeInvariant]
+  unfold p4Q2PZ37ARZ_coord
+  rw [hm]
+  split <;> simp
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARZ_weightedCoord_odd
+
+/-- One-link weighted coordinate annihilation for an actual L2 representative. -/
+theorem p4Q2PZ37ARZ_weightedCoord_inner_zero
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (l : Link H) (q : Coord)
+    (hne : periodicHypercubicEvenSpatialSliceShift H l.1 l.2 ≠ l.1)
+    (b : Lp ℝ 2 (Mu H 2))
+    (hrep : (fun A => b A) =ᵐ[Mu H 2]
+      (fun A => W H 2 beta A * p4Q2PZ37ARZ_coord q (A l)))
+    (x : K H 2 h2 beta hb) :
+    inner ℝ b (Emb H 2 h2 beta hb x) = 0 := by
+  obtain ⟨gamma,hgamma⟩ := p4Q2PZ37ARZ_weightedCoord_odd H beta l q hne
+  exact p4Q2PZ37ARZ_gaugeOdd_inner H beta hb b gamma
+    (p4Q2PZ37ARZ_ae_odd_pullback H gamma b _ hrep hgamma) x
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARZ_weightedCoord_inner_zero
+
+theorem p4Q2PZ37ARZ_gaugeFilteredRankApprox
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (d : ℕ) (a b : Fin d → Lp ℝ 2 (Mu H 2)) (s : Finset (Fin d))
+    (hodd : ∀ j ∉ s, ∃ gamma : Gauge H 2, Pull H 2 gamma (b j) = -(b j)) :
+    ∃ F : ↥(K H 2 h2 beta hb) →L[ℝ] ↥(K H 2 h2 beta hb),
+      Nonempty (Module.Finite ℝ (LinearMap.range F.toLinearMap)) ∧
+      Module.finrank ℝ (LinearMap.range F.toLinearMap) ≤ s.card ∧
+      ‖Step H 2 h2 beta hb-F‖ ≤
+        ‖(show Lp ℝ 2 ((Mu H 2).prod (Mu H 2)) from NK H beta hb) -
+          ∑ j, realL2ExternalTensor (a j) (b j)‖ := by
+  letI : CompleteSpace (Phys H 2) :=
+    (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule_isClosed H 2).completeSpace_coe
+  letI : CompleteSpace (K H 2 h2 beta hb) :=
+    ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
+      H 2 h2 beta hb).isClosed_orthogonal).completeSpace_coe
+  refine @p4Q2PZ37ARZ_filtered_approx
+    ↥(K H 2 h2 beta hb) inferInstance inferInstance inferInstance
+    _ inferInstance (Mu H 2) inferInstance
+    (Emb H 2 h2 beta hb) (Step H 2 h2 beta hb) (NK H beta hb) ?_ d a b s ?_
+  · intro x y
+    exact (p4Q2PZ37ARA_kernel_inner H beta hb x y).symm
+  · intro j hj x
+    obtain ⟨gamma,hg⟩ := hodd j hj
+    exact p4Q2PZ37ARZ_gaugeOdd_inner H beta hb (b j) gamma hg x
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARZ_gaugeFilteredRankApprox
+
+end
+end MGAP4D.MathlibAnalytic
