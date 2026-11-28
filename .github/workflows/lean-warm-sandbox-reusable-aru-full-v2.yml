@@ -1,0 +1,124 @@
+name: Diagnostic ARU exact-source warm Lean sandbox v2 process-group cleanup
+on:
+  workflow_call:
+    inputs:
+      pack:
+        type: string
+        required: true
+      source_head:
+        type: string
+        required: true
+      baseline_commit:
+        type: string
+        required: true
+permissions:
+  contents: read
+env:
+  MATHLIB_NO_CACHE_ON_UPDATE: "1"
+  EXACT_HEAD: ${{ inputs.source_head }}
+  PACK: ${{ inputs.pack }}
+  BASELINE_COMMIT: ${{ inputs.baseline_commit }}
+jobs:
+  warm-sandbox:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.source_head }}
+          persist-credentials: false
+          show-progress: false
+      - uses: actions/checkout@v6
+        with:
+          repository: itakura-hidetoshi/KuuOS
+          ref: 3c3d4a9127256fff732749fdfddd3118b30e86ab
+          path: _codeai_pinned
+          persist-credentials: false
+          show-progress: false
+      - name: Bind pack and source pins
+        id: meta
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          root = Path.cwd().resolve()
+          path = (root / os.environ["PACK"]).resolve()
+          assert path.is_relative_to(root / "diagnostics")
+          p = json.loads(path.read_text())
+          base = p["baseline_commit"]
+          assert re.fullmatch(r"[0-9a-f]{40}", base)
+          assert base == os.environ["BASELINE_COMMIT"]
+          assert re.fullmatch(r"[0-9a-f]{40}", os.environ["EXACT_HEAD"])
+          assert p["imports"] and all(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_.]*", x) for x in p["imports"])
+          with open(os.environ["GITHUB_OUTPUT"], "a") as out:
+              out.write("base=" + base + "\n")
+          PY
+          python3 scripts/lean_warm_sandbox_v1.py --pack "$PACK" --output "$RUNNER_TEMP/warm-evidence" --preflight
+          python3 _codeai_pinned/tests/test_kuuos_lean_mcp_repair_loop_v1.py
+      - name: Restore Lean once
+        id: elan
+        uses: actions/cache/restore@v5
+        with:
+          path: ~/.elan
+          key: ${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
+      - name: Restore mathlib once
+        id: deps
+        uses: actions/cache/restore@v5
+        with:
+          path: .lake/packages
+          key: ${{ runner.os }}-lean-fast-deps-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
+      - name: Restore exact certified full project
+        id: project
+        uses: actions/cache/restore@v5
+        with:
+          path: .lake/build
+          key: ${{ runner.os }}-lean-fast-project-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-base-${{ steps.meta.outputs.base }}
+      - name: Verify exact full cache and warm requested imports
+        env:
+          ELAN_HIT: ${{ steps.elan.outputs.cache-hit }}
+          DEPS_HIT: ${{ steps.deps.outputs.cache-hit }}
+          PROJECT_HIT: ${{ steps.project.outputs.cache-hit }}
+        run: |
+          set -euo pipefail
+          if [[ "$ELAN_HIT" != true || "$DEPS_HIT" != true || "$PROJECT_HIT" != true ]]; then
+            echo "::error::Infrastructure HOLD: exact baseline cache unavailable; proof untested."
+            exit 2
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          mkdir -p "$RUNNER_TEMP/warm-evidence"
+          lean --version
+          lake --version
+          echo "FULL_HIT=$PROJECT_HIT"
+          python3 - <<'PY'
+          import json, os, subprocess, time
+          from pathlib import Path
+          imports = json.loads(Path(os.environ["PACK"]).read_text())["imports"]
+          start = time.monotonic()
+          log = Path(os.environ["RUNNER_TEMP"]) / "warm-evidence/imports.log"
+          try:
+              with log.open("w") as out:
+                  subprocess.run(["lake", "build", *imports], stdout=out, stderr=subprocess.STDOUT, check=True, timeout=900)
+          finally:
+              print("WARU_IMPORT_SECONDS", round(time.monotonic() - start, 3), flush=True)
+              print("\n".join(log.read_text().splitlines()[-100:]), flush=True)
+          PY
+      - name: Run all needed candidates on the same runner
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check uv
+          python3 diagnostics/pz37aru/full-v1/run_bounded_v2.py --pack "$PACK" --output "$RUNNER_TEMP/warm-evidence"
+      - name: Inventory restored cache after candidate testing
+        if: always() && steps.project.outputs.cache-hit == 'true' && steps.deps.outputs.cache-hit == 'true'
+        run: |
+          mkdir -p "$RUNNER_TEMP/warm-evidence"
+          python3 scripts/lean_cache_inventory_v1.py "$RUNNER_TEMP/warm-evidence/cache-inventory.json"
+      - name: Preserve all candidate and cache evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: warm-lean-reusable-evidence
+          path: ${{ runner.temp }}/warm-evidence
+          if-no-files-found: warn
+          retention-days: 30
