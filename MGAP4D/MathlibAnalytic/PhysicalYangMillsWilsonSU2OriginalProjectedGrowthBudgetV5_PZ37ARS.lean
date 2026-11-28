@@ -1,0 +1,216 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalProjectedCountEnvelopeV5_PZ37ARR
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37ARS — projected term growth absorbed by exact spectral decay
+
+Use ARR's fixed-degree moment bound and the independently certified ARG
+geometric shift. The envelope coefficient may grow with the actual
+horizon H as A*q^(H-n), provided q*c² ≤ 1. A finite initial segment is
+bounded by its actual nonnegative terminal moments, not discarded.
+No assertion of the required Wilson growth envelope is made.
+-/
+namespace MGAP4D.MathlibAnalytic
+open MeasureTheory Filter Set
+open scoped ENNReal Topology InnerProductSpace InnerProduct BigOperators
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 1000000
+set_option synthInstance.maxHeartbeats 50000
+universe i
+
+private theorem p4Q2PZ37ARS_two_pos : 0 < (2 : ℕ) := by decide
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "Phys" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "Pair" => PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2
+local notation "Dec" => periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2
+local notation "K" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+local notation "OO" => periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockClosure
+local notation "EH" => periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderExcitationTransferOperator
+local notation "Step" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+local notation "PF" => p4Q2PZ37AQW_partitionFactor
+local notation "Res" => p4Q2PZ37AQX_relativeResidual
+local notation "Emb" => periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+
+local instance p4Q2PZ37ARS_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37ARS_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37ARS_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37ARS_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37ARS_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37ARS_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) := Fintype.ofFinite _
+local instance p4Q2PZ37ARS_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) := Fintype.ofFinite _
+local instance p4Q2PZ37ARS_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37ARS_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+local instance p4Q2PZ37ARS_nontrivial :
+    Nontrivial (Matrix.specialUnitaryGroup (Fin 2) ℂ) := by
+  refine ⟨⟨1, specialUnitaryTwoRotation Real.pi, ?_⟩⟩
+  intro h
+  have h00 := congrArg
+    (fun g : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+      (g : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
+  norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
+
+local notation "h2" => p4Q2PZ37ARS_two_pos
+local notation "M" => p4Q2PZ37ARD_pairMoment
+
+local notation "Cut" => GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformGapCutoff
+local notation "c" => ((3071 : ℝ)/3072)
+
+local notation "PK" => p4Q2PZ37ARC_projectedKernel
+local notation "D" => p4Q2PZ37ARQ_projectedMinTerms
+local notation "Q" => p4Q2PZ37ARK_thresholdFinset
+
+private theorem p4Q2PZ37ARS_coefficient_nonneg
+    (n : ℕ) (A p : ℝ) (hA : 0 ≤ A) (hp : p < 2*((n:ℝ)+1)) :
+    0 ≤ (2*((n:ℝ)+1)*A)/(2*((n:ℝ)+1)-p) * c^(2*((n:ℝ)+1)-p) := by
+  have hn : 0 ≤ 2*((n:ℝ)+1) := by positivity
+  exact mul_nonneg (div_nonneg (mul_nonneg hn hA) (sub_pos.mpr hp).le)
+    (Real.rpow_nonneg (by norm_num : 0 ≤ c) _)
+
+/-- A fixed-degree envelope with a horizon-dependent coefficient gives
+the exact terminal decay factor, with no uniformity assumption on A*q^k. -/
+theorem p4Q2PZ37ARS_terminal_le_growthEnvelope
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (s : ℝ) (hs : 8 < s) (hcut : beta ≤ Cut s hs)
+    (n : ℕ) (hn : n ≤ H)
+    (A p q : ℝ) (hA : 0 ≤ A) (hq : 0 ≤ q) (hp : p < 2*((n:ℝ)+1))
+    (hbudget : ∀ t (ht : 0 < t), t ≤ c →
+      (D H beta hb t ht : ℝ≥0∞) ≤ ENNReal.ofReal ((A*q^(H-n))*t^(-p))) :
+    (PF H beta hb)⁻¹ ^ 2 - 1 ≤
+      (q*c^2)^(H-n) *
+        ((2*((n:ℝ)+1)*A)/(2*((n:ℝ)+1)-p) * c^(2*((n:ℝ)+1)-p)) := by
+  classical
+  obtain ⟨ι,B,rho,he,hsum⟩ := p4Q2PZ37AQY_original_spectral_power_hasSum H beta hb
+  have hm := p4Q2PZ37ARR_moment_le_projectedMinTermsEnvelope
+    H beta hb n s hs hcut B rho he (A*q^(H-n)) p
+    (mul_nonneg hA (pow_nonneg hq _)) hp hbudget
+  rw [← p4Q2PZ37ARD_moment_at_halfCylinder H beta hb]
+  calc
+    M H beta hb H ≤ (c^2)^(H-n)*M H beta hb n :=
+      p4Q2PZ37ARG_moment_shift_geometric H beta hb s hs hcut n H hn
+    _ ≤ (c^2)^(H-n) *
+        ((2*((n:ℝ)+1)*(A*q^(H-n)))/(2*((n:ℝ)+1)-p) * c^(2*((n:ℝ)+1)-p)) :=
+      mul_le_mul_of_nonneg_left hm (pow_nonneg (sq_nonneg c) _)
+    _ = _ := by rw [mul_pow]; ring
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARS_terminal_le_growthEnvelope
+
+/-- Under the exact growth/decay balance, every sufficiently large
+horizon has a common terminal budget. -/
+theorem p4Q2PZ37ARS_terminal_le_balancedEnvelope
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (s : ℝ) (hs : 8 < s) (hcut : beta ≤ Cut s hs)
+    (n : ℕ) (hn : n ≤ H)
+    (A p q : ℝ) (hA : 0 ≤ A) (hq : 0 ≤ q) (hp : p < 2*((n:ℝ)+1))
+    (hbal : q*c^2 ≤ 1)
+    (hbudget : ∀ t (ht : 0 < t), t ≤ c →
+      (D H beta hb t ht : ℝ≥0∞) ≤ ENNReal.ofReal ((A*q^(H-n))*t^(-p))) :
+    (PF H beta hb)⁻¹ ^ 2 - 1 ≤
+      (2*((n:ℝ)+1)*A)/(2*((n:ℝ)+1)-p) * c^(2*((n:ℝ)+1)-p) := by
+  have h := p4Q2PZ37ARS_terminal_le_growthEnvelope
+    H beta hb s hs hcut n hn A p q hA hq hp hbudget
+  have hpow : (q*c^2)^(H-n) ≤ 1 := by
+    simpa using pow_le_pow_left₀ (mul_nonneg hq (sq_nonneg c)) hbal (H-n)
+  have hC := p4Q2PZ37ARS_coefficient_nonneg n A p hA hp
+  exact h.trans (by simpa only [one_mul] using mul_le_mul_of_nonneg_right hpow hC)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARS_terminal_le_balancedEnvelope
+
+/-- An eventual terminal bound suffices: preserve every omitted finite
+horizon by adding the sum of its actual nonnegative terminal moments. -/
+theorem p4Q2PZ37ARS_partitionFloor_of_eventualTerminalBudget
+    (beta : ℝ) (hb : 0 ≤ beta) (n : ℕ)
+    (C : ℝ) (hC : 0 ≤ C)
+    (h : ∀ H : ℕ, n ≤ H → (PF H beta hb)⁻¹ ^ 2 - 1 ≤ C) :
+    ∃ d : ℝ, 0 < d ∧ ∀ H : ℕ, d ≤ PF H beta hb := by
+  classical
+  let E : ℝ := ∑ j ∈ Finset.range n, M j beta hb j
+  have hE : 0 ≤ E := Finset.sum_nonneg (fun j _ => p4Q2PZ37ARD_moment_nonneg j beta hb j)
+  apply (p4Q2PZ37AQX_partitionFloor_iff_relativeResidual_bound beta hb).2
+  refine ⟨C+E,add_nonneg hC hE,?_⟩
+  intro H
+  rw [p4Q2PZ37AQX_relativeResidual_normSq H beta hb]
+  by_cases hn : n ≤ H
+  · exact (h H hn).trans (le_add_of_nonneg_right hE)
+  · have hH : H ∈ Finset.range n := Finset.mem_range.mpr (Nat.lt_of_not_ge hn)
+    rw [← p4Q2PZ37ARD_moment_at_halfCylinder H beta hb]
+    have hh : M H beta hb H ≤ E :=
+      Finset.single_le_sum (f := fun j => M j beta hb j)
+        (fun j _ => p4Q2PZ37ARD_moment_nonneg j beta hb j) hH
+    exact hh.trans (le_add_of_nonneg_left hC)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARS_partitionFloor_of_eventualTerminalBudget
+
+/-- The projected minimum may grow exponentially in the horizon H.
+Only the weighted balance q*c² ≤ 1 is required. -/
+theorem p4Q2PZ37ARS_partitionFloor_of_projectedGrowth
+    (beta : ℝ) (hb : 0 ≤ beta)
+    (s : ℝ) (hs : 8 < s) (hcut : beta ≤ Cut s hs)
+    (n : ℕ) (A p q : ℝ) (hA : 0 ≤ A) (hq : 0 ≤ q) (hp : p < 2*((n:ℝ)+1))
+    (hbal : q*c^2 ≤ 1)
+    (hbudget : ∀ H : ℕ, n ≤ H → ∀ t (ht : 0 < t), t ≤ c →
+      (D H beta hb t ht : ℝ≥0∞) ≤ ENNReal.ofReal ((A*q^(H-n))*t^(-p))) :
+    ∃ d : ℝ, 0 < d ∧ ∀ H : ℕ, d ≤ PF H beta hb := by
+  apply p4Q2PZ37ARS_partitionFloor_of_eventualTerminalBudget beta hb n _
+    (p4Q2PZ37ARS_coefficient_nonneg n A p hA hp)
+  intro H hn
+  exact p4Q2PZ37ARS_terminal_le_balancedEnvelope H beta hb s hs hcut
+    n hn A p q hA hq hp hbal (hbudget H hn)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARS_partitionFloor_of_projectedGrowth
+
+/-- The existing rational gap gives a concrete admissible growth base. -/
+theorem p4Q2PZ37ARS_partitionFloor_of_criticalGrowth
+    (beta : ℝ) (hb : 0 ≤ beta)
+    (s : ℝ) (hs : 8 < s) (hcut : beta ≤ Cut s hs)
+    (n : ℕ) (A p : ℝ) (hA : 0 ≤ A) (hp : p < 2*((n:ℝ)+1))
+    (hbudget : ∀ H : ℕ, n ≤ H → ∀ t (ht : 0 < t), t ≤ c →
+      (D H beta hb t ht : ℝ≥0∞) ≤
+        ENNReal.ofReal ((A*((3072:ℝ)/3071)^ (2*(H-n)))*t^(-p))) :
+    ∃ d : ℝ, 0 < d ∧ ∀ H : ℕ, d ≤ PF H beta hb := by
+  apply p4Q2PZ37ARS_partitionFloor_of_projectedGrowth beta hb s hs hcut n A p
+    (((3072:ℝ)/3071)^2) hA (sq_nonneg _) hp (by norm_num)
+  intro H hn t ht hc
+  simpa only [pow_mul] using hbudget H hn t ht hc
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARS_partitionFloor_of_criticalGrowth
+
+/-- A finite spectral tail certificate with a weighted cardinal budget
+suffices, without controlling any ambient leakage component. -/
+theorem p4Q2PZ37ARS_partitionFloor_of_spectralTailGrowth
+    (beta : ℝ) (hb : 0 ≤ beta)
+    (s : ℝ) (hs : 8 < s) (hcut : beta ≤ Cut s hs)
+    (n : ℕ) (A p q : ℝ) (hA : 0 ≤ A) (hq : 0 ≤ q) (hp : p < 2*((n:ℝ)+1))
+    (hbal : q*c^2 ≤ 1)
+    (hbudget : ∀ H : ℕ, n ≤ H → ∃ (ι : Type)
+      (B : HilbertBasis ι ℝ (K H 2 h2 beta hb)) (rho : ι → ℝ),
+      (∀ k, Step H 2 h2 beta hb (B k) = rho k • B k) ∧
+        ∀ t : ℝ, 0 < t → t ≤ c → ∃ S : Finset ι,
+          (∑' k, (rho k)^2) - ∑ k ∈ S, (rho k)^2 < t^2 ∧
+          (S.card : ℝ≥0∞) ≤ ENNReal.ofReal ((A*q^(H-n))*t^(-p))) :
+    ∃ d : ℝ, 0 < d ∧ ∀ H : ℕ, d ≤ PF H beta hb := by
+  apply p4Q2PZ37ARS_partitionFloor_of_projectedGrowth beta hb s hs hcut n A p q hA hq hp hbal
+  intro H hn t ht hc
+  obtain ⟨ι,B,rho,he,h⟩ := hbudget H hn
+  obtain ⟨S,htail,hcard⟩ := h t ht hc
+  have hle := p4Q2PZ37ARQ_projectedMinTerms_le_card H beta hb B rho he S t ht htail
+  have hcast : (D H beta hb t ht : ℝ≥0∞) ≤ (S.card : ℝ≥0∞) := by exact_mod_cast hle
+  exact hcast.trans hcard
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARS_partitionFloor_of_spectralTailGrowth
+
+end
+end MGAP4D.MathlibAnalytic
