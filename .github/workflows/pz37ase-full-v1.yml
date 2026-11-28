@@ -36,13 +36,29 @@ jobs:
               run = read("/actions/runs/46140011014")
               assert run["head_sha"] == os.environ["EXPECTED_BASE"]
               if run["status"] == "completed":
-                  assert run["conclusion"] == "success", "ASD cache relay did not succeed"
+                  assert run["conclusion"] == "success", "ASD canonical verification did not succeed"
                   jobs = read("/actions/runs/46140011014/jobs")["jobs"]
+                  def passed(job, name):
+                      return (job["status"] == "completed" and
+                              job["conclusion"] == "success" and
+                              any(x["name"] == name and x["status"] == "completed" and
+                                  x["conclusion"] == "success" for x in (job.get("steps") or [])))
                   relay = next(j for j in jobs if j["name"] == "Relay independently certified Lean leaf outputs")
-                  visible = next(x for x in relay["steps"] if x["name"] == "Confirm exact merged cache is visible")
-                  assert relay["conclusion"] == "success" and visible["conclusion"] == "success"
-                  print("Exact ASD canonical cache published and visible")
-                  break
+                  if all(passed(relay, name) for name in (
+                      "Bind exact successful independent PR and verified leaf delta",
+                      "Verify delta and no-build imports without re-elaboration",
+                      "Publish exact merged full cache without a second Lean build",
+                      "Confirm exact merged cache is visible")):
+                      print("Exact ASD canonical cache published by no-build relay")
+                      break
+                  rebuild = next(j for j in jobs if j["name"] == "Changed Lean fast check")
+                  if all(passed(rebuild, name) for name in (
+                      "Restore the exact checkout's pinned manifest",
+                      "Run changed Lean fast check",
+                      "Save MGAP4D project olean cache from trusted branches")):
+                      print("Exact ASD canonical cache published after successful full fallback verification")
+                      break
+                  raise RuntimeError("Infrastructure HOLD: neither certified cache publication path succeeded")
               time.sleep(10)
           else:
               raise RuntimeError("Infrastructure HOLD: ASD cache publication not confirmed")
