@@ -65,7 +65,7 @@ jobs:
           PY
   verify:
     needs: select
-    uses: ./.github/workflows/lean-warm-sandbox-reusable-aru-full-v1.yml
+    uses: ./.github/workflows/lean-warm-sandbox-reusable-aru-full-v2.yml
     with:
       pack: ${{ needs.select.outputs.pack }}
       source_head: ${{ github.event.pull_request.head.sha || github.sha }}
