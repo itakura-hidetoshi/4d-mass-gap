@@ -1,0 +1,225 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalSpectralPowerEnvelopeV5_PZ37ARM
+import Mathlib.LinearAlgebra.Dimension.Finite
+import Mathlib.Analysis.InnerProductSpace.Orthonormal
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37ARN — finite-rank approximation controls genuine spectral count
+
+An approximant with norm error strictly below a positive threshold is
+injective on the span of the corresponding orthonormal eigenfamily.
+Its finite-dimensional range therefore bounds the entire genuine ARK
+threshold count, retaining multiplicity. Connect actual approximant rank
+bounds to ARM's envelope, without asserting such ranks uniformly bounded.
+-/
+namespace MGAP4D.MathlibAnalytic
+open MeasureTheory Filter Set
+open scoped ENNReal Topology InnerProductSpace InnerProduct BigOperators
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 1000000
+set_option synthInstance.maxHeartbeats 50000
+universe i u
+local notation "N" => p4Q2PZ37ARL_spectralCount
+
+private theorem p4Q2PZ37ARN_image_independent {E : Type u}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    {ι : Type i} (v : ι → E) (hv : Orthonormal ℝ v)
+    (T F : E →L[ℝ] E) (rho : ι → ℝ)
+    (he : ∀ k, T (v k) = rho k • v k)
+    (r : ℝ) (hr : ∀ k, r ≤ rho k) (hclose : ‖T-F‖ < r) :
+    LinearIndependent ℝ (fun k => F (v k)) := by
+  classical
+  apply linearIndependent_iff'.2
+  intro s a hsum k hk
+  let x : E := ∑ j ∈ s, a j • v j
+  have hxF : F x = 0 := by
+    simpa only [x, map_sum, map_smul] using hsum
+  have hxT : T x = ∑ j ∈ s, (a j * rho j) • v j := by
+    simp only [x, map_sum, map_smul, he, smul_smul]
+  have hxnorm : ‖x‖^2 = ∑ j ∈ s, (a j)^2 := by
+    rw [← real_inner_self_eq_norm_sq]
+    simpa [x, pow_two] using hv.inner_sum a a s
+  have hinner : inner ℝ (T x) x = ∑ j ∈ s, rho j * (a j)^2 := by
+    rw [hxT]
+    calc
+      _ = ∑ j ∈ s, (a j * rho j) * a j := by
+        simpa [x] using hv.inner_sum (fun j => a j * rho j) a s
+      _ = _ := Finset.sum_congr rfl (fun j _ => by ring)
+  have hlow : r * ‖x‖^2 ≤ inner ℝ (T x) x := by
+    rw [hxnorm, hinner, Finset.mul_sum]
+    exact Finset.sum_le_sum (fun j _ =>
+      mul_le_mul_of_nonneg_right (hr j) (sq_nonneg (a j)))
+  have hnorm : ‖T x‖ ≤ ‖T-F‖ * ‖x‖ := by
+    have hh := (T-F).le_opNorm x
+    simpa only [ContinuousLinearMap.sub_apply, hxF, sub_zero] using hh
+  have hx : x = 0 := by
+    by_contra hne
+    have hp : 0 < ‖x‖ := norm_pos_iff.mpr hne
+    have hupper : inner ℝ (T x) x ≤ ‖T-F‖ * ‖x‖^2 := by
+      calc
+        _ ≤ ‖T x‖ * ‖x‖ := real_inner_le_norm _ _
+        _ ≤ (‖T-F‖ * ‖x‖) * ‖x‖ :=
+          mul_le_mul_of_nonneg_right hnorm hp.le
+        _ = _ := by ring
+    have hlt : ‖T-F‖ * ‖x‖^2 < r * ‖x‖^2 :=
+      mul_lt_mul_of_pos_right hclose (pow_pos hp 2)
+    exact (not_lt_of_ge (hlow.trans hupper)) hlt
+  have hcoeff := hv.inner_right_sum a hk
+  change inner ℝ (v k) x = a k at hcoeff
+  rw [hx, inner_zero_right] at hcoeff
+  exact hcoeff.symm
+
+private theorem p4Q2PZ37ARN_count_aux {E : Type u}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    {ι : Type i} (v : ι → E) (hv : Orthonormal ℝ v)
+    (T F : E →L[ℝ] E) (rho : ι → ℝ)
+    (he : ∀ k, T (v k) = rho k • v k)
+    (S : Finset ι) (r : ℝ) (hr : ∀ k ∈ S, r ≤ rho k)
+    (hclose : ‖T-F‖ < r)
+    (W : Submodule ℝ E) [Module.Finite ℝ W] (hW : ∀ x, F x ∈ W) :
+    S.card ≤ Module.finrank ℝ W := by
+  classical
+  let w : S → E := fun k => v k.val
+  have hw : Orthonormal ℝ w := hv.comp Subtype.val Subtype.val_injective
+  have hi : LinearIndependent ℝ (fun k : S => F (w k)) :=
+    p4Q2PZ37ARN_image_independent w hw T F (fun k => rho k.val)
+      (fun k => he k.val) r (fun k => hr k.val k.property) hclose
+  let z : S → W := fun k => ⟨F (w k), hW _⟩
+  have hz : LinearIndependent ℝ z := by
+    apply Fintype.linearIndependent_iff.2
+    intro a ha k
+    apply Fintype.linearIndependent_iff.1 hi a _ k
+    have h := congrArg (fun x : W => (x : E)) ha
+    simpa [z] using h
+  simpa only [Fintype.card_coe] using hz.fintype_card_le_finrank
+
+private theorem p4Q2PZ37ARN_two_pos : 0 < (2 : ℕ) := by decide
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "Phys" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "Pair" => PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2
+local notation "Dec" => periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2
+local notation "K" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+local notation "OO" => periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockClosure
+local notation "EH" => periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderExcitationTransferOperator
+local notation "Step" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+local notation "PF" => p4Q2PZ37AQW_partitionFactor
+local notation "Res" => p4Q2PZ37AQX_relativeResidual
+local notation "Emb" => periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+
+local instance p4Q2PZ37ARN_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37ARN_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37ARN_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37ARN_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37ARN_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37ARN_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) := Fintype.ofFinite _
+local instance p4Q2PZ37ARN_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) := Fintype.ofFinite _
+local instance p4Q2PZ37ARN_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37ARN_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+local instance p4Q2PZ37ARN_nontrivial :
+    Nontrivial (Matrix.specialUnitaryGroup (Fin 2) ℂ) := by
+  refine ⟨⟨1, specialUnitaryTwoRotation Real.pi, ?_⟩⟩
+  intro h
+  have h00 := congrArg
+    (fun g : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+      (g : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
+  norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
+
+local notation "h2" => p4Q2PZ37ARN_two_pos
+local notation "M" => p4Q2PZ37ARD_pairMoment
+
+local notation "Cut" => GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformGapCutoff
+local notation "c" => ((3071 : ℝ)/3072)
+
+local notation "Q" => p4Q2PZ37ARK_thresholdFinset
+
+/-- Any finite-dimensional target containing the approximant image bounds
+the whole genuine spectral threshold family. -/
+theorem p4Q2PZ37ARN_thresholdCard_le_targetFinrank
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    {ι : Type i} (b : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (he : ∀ k, Step H 2 h2 beta hb (b k) = rho k • b k)
+    (r : ℝ) (hr : 0 < r)
+    (F : ↥(K H 2 h2 beta hb) →L[ℝ] ↥(K H 2 h2 beta hb))
+    (hclose : ‖Step H 2 h2 beta hb-F‖ < r)
+    (W : Submodule ℝ ↥(K H 2 h2 beta hb)) [Module.Finite ℝ W]
+    (hW : ∀ x, F x ∈ W) :
+    (Q H beta hb b rho he r hr).card ≤ Module.finrank ℝ W := by
+  exact p4Q2PZ37ARN_count_aux (fun k => b k) b.orthonormal
+    (Step H 2 h2 beta hb) F rho he (Q H beta hb b rho he r hr) r
+    (fun k hk => (p4Q2PZ37ARK_mem_thresholdFinset H beta hb b rho he r hr k).1 hk)
+    hclose W hW
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARN_thresholdCard_le_targetFinrank
+
+/-- In particular the count is bounded by the actual finite rank of F. -/
+theorem p4Q2PZ37ARN_thresholdCard_le_rank
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    {ι : Type i} (b : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (he : ∀ k, Step H 2 h2 beta hb (b k) = rho k • b k)
+    (r : ℝ) (hr : 0 < r)
+    (F : ↥(K H 2 h2 beta hb) →L[ℝ] ↥(K H 2 h2 beta hb))
+    [Module.Finite ℝ (LinearMap.range F.toLinearMap)]
+    (hclose : ‖Step H 2 h2 beta hb-F‖ < r) :
+    (Q H beta hb b rho he r hr).card ≤
+      Module.finrank ℝ (LinearMap.range F.toLinearMap) := by
+  exact p4Q2PZ37ARN_thresholdCard_le_targetFinrank H beta hb b rho he r hr F
+    hclose (LinearMap.range F.toLinearMap) (fun x => ⟨x,rfl⟩)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARN_thresholdCard_le_rank
+
+/-- The exact extended multiplicity count inherits the same rank bound. -/
+theorem p4Q2PZ37ARN_count_le_rank
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    {ι : Type i} (b : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (he : ∀ k, Step H 2 h2 beta hb (b k) = rho k • b k)
+    (r : ℝ) (hr : 0 < r)
+    (F : ↥(K H 2 h2 beta hb) →L[ℝ] ↥(K H 2 h2 beta hb))
+    [Module.Finite ℝ (LinearMap.range F.toLinearMap)]
+    (hclose : ‖Step H 2 h2 beta hb-F‖ < r) :
+    N rho r ≤ (Module.finrank ℝ (LinearMap.range F.toLinearMap) : ℝ≥0∞) := by
+  rw [p4Q2PZ37ARL_count_eq_thresholdCard H beta hb b rho he r hr]
+  exact_mod_cast p4Q2PZ37ARN_thresholdCard_le_rank H beta hb b rho he r hr F hclose
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARN_count_le_rank
+
+/-- Finite-rank approximants with a quantitative rank envelope suffice
+for the actual complete moment bound, via ARM. The approximant
+hypotheses are not asserted to hold for Wilson uniformly. -/
+theorem p4Q2PZ37ARN_moment_le_rankEnvelope
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (n : ℕ)
+    (s : ℝ) (hs : 8 < s) (hcut : beta ≤ Cut s hs)
+    {ι : Type i} (b : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (he : ∀ k, Step H 2 h2 beta hb (b k) = rho k • b k)
+    (A p : ℝ) (hA : 0 ≤ A) (hp : p < 2*((n:ℝ)+1))
+    (happrox : ∀ t ∈ Ioc (0:ℝ) c,
+      ∃ (F : ↥(K H 2 h2 beta hb) →L[ℝ] ↥(K H 2 h2 beta hb)),
+        Nonempty (Module.Finite ℝ (LinearMap.range F.toLinearMap)) ∧
+        ‖Step H 2 h2 beta hb-F‖ < t ∧
+        (Module.finrank ℝ (LinearMap.range F.toLinearMap) : ℝ≥0∞) ≤
+          ENNReal.ofReal (A*t^(-p))) :
+    M H beta hb n ≤ (2*((n:ℝ)+1)*A)/(2*((n:ℝ)+1)-p) *
+      c^(2*((n:ℝ)+1)-p) := by
+  apply p4Q2PZ37ARM_moment_le_powerEnvelope H beta hb n s hs hcut b rho he A p hA hp
+  intro t ht
+  obtain ⟨F,hfinite,hclose,hrank⟩ := happrox t ht
+  letI : Module.Finite ℝ (LinearMap.range F.toLinearMap) := hfinite.some
+  exact (p4Q2PZ37ARN_count_le_rank H beta hb b rho he t ht.1 F hclose).trans hrank
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARN_moment_le_rankEnvelope
+
+end
+end MGAP4D.MathlibAnalytic
