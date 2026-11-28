@@ -1,0 +1,223 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalSpectralLayercakeV5_PZ37ARL
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37ARM — spectral count power envelope
+
+Truncate ARL at the actual certified G4 cap. A power envelope for the genuine
+multiplicity count, with real exponent p below the moment degree, gives an
+explicit finite moment bound. At the physical horizon this is a sufficient
+budget for the true partition factor. The envelope itself remains unproved.
+-/
+namespace MGAP4D.MathlibAnalytic
+open MeasureTheory Filter Set
+open scoped ENNReal Topology InnerProductSpace InnerProduct BigOperators
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 1000000
+set_option synthInstance.maxHeartbeats 50000
+universe i
+local notation "N" => p4Q2PZ37ARL_spectralCount
+
+private theorem p4Q2PZ37ARM_trunc_aux {ι : Type i} (rho : ι → ℝ)
+    (g : ℝ → ℝ≥0∞) (d : ℝ) (hcap : ∀ k, rho k ≤ d) :
+    (∫⁻ t in Ioi (0:ℝ), N rho t * g t) =
+      ∫⁻ t in Ioc (0:ℝ) d, N rho t * g t := by
+  let f : ℝ → ℝ≥0∞ := fun t => N rho t * g t
+  have hs := lintegral_inter_add_diff (μ := volume) f (Ioi (0:ℝ))
+    (measurableSet_Ioc : MeasurableSet (Ioc (0:ℝ) d))
+  have hi : Ioi (0:ℝ) ∩ Ioc 0 d = Ioc 0 d := by
+    ext t
+    simp only [mem_inter_iff, mem_Ioi, mem_Ioc]
+    tauto
+  have hz : (∫⁻ t in Ioi (0:ℝ) \ Ioc 0 d, f t) = 0 := by
+    apply setLIntegral_eq_zero (measurableSet_Ioi.diff measurableSet_Ioc)
+    intro t ht
+    have htd : d < t := by
+      by_contra! h
+      exact ht.2 ⟨ht.1,h⟩
+    have he : {k : ι | t ≤ rho k} = ∅ := by
+      apply Set.eq_empty_of_forall_notMem
+      intro k hk
+      exact (not_le_of_gt htd) (hk.trans (hcap k))
+    simp [f, p4Q2PZ37ARL_spectralCount, he]
+  rw [hi, hz, add_zero] at hs
+  exact hs.symm
+
+private theorem p4Q2PZ37ARM_integral_aux (d a q : ℝ)
+    (hd : 0 ≤ d) (ha : 0 ≤ a) (hq : -1 < q) :
+    (∫⁻ t in Ioc (0:ℝ) d, ENNReal.ofReal (a * t^q)) =
+      ENNReal.ofReal (a * d^(q+1)/(q+1)) := by
+  have hi : IntervalIntegrable (fun t : ℝ => t^q) volume 0 d :=
+    intervalIntegral.intervalIntegrable_rpow' hq
+  have hm : IntegrableOn (fun t : ℝ => a*t^q) (Ioc 0 d) :=
+    (hi.const_mul a).1
+  have hnon : 0 ≤ᵐ[volume.restrict (Ioc 0 d)] (fun t : ℝ => a*t^q) := by
+    filter_upwards [self_mem_ae_restrict (measurableSet_Ioc : MeasurableSet (Ioc (0:ℝ) d))]
+      with t ht
+    exact mul_nonneg ha (Real.rpow_nonneg ht.1.le _)
+  rw [← ofReal_integral_eq_lintegral_ofReal hm hnon,
+    ← intervalIntegral.integral_of_le hd, intervalIntegral.integral_const_mul,
+    _root_.integral_rpow (Or.inl hq), Real.zero_rpow (by linarith : q+1 ≠ 0), sub_zero]
+  rw [mul_div_assoc]
+
+private theorem p4Q2PZ37ARM_weight_aux {ι : Type i} (rho : ι → ℝ)
+    (d A w p : ℝ) (m : ℕ) (hA : 0 ≤ A) (hw : 0 ≤ w)
+    (henv : ∀ t ∈ Ioc (0:ℝ) d, N rho t ≤ ENNReal.ofReal (A*t^(-p))) :
+    (∫⁻ t in Ioc (0:ℝ) d, N rho t * ENNReal.ofReal (w*t^m)) ≤
+      ∫⁻ t in Ioc (0:ℝ) d, ENNReal.ofReal ((w*A)*t^((m:ℝ)-p)) := by
+  apply lintegral_mono_ae
+  filter_upwards [self_mem_ae_restrict (measurableSet_Ioc : MeasurableSet (Ioc (0:ℝ) d))]
+    with t ht
+  have ht0 : 0 < t := ht.1
+  have hp : t^(-p)*t^(m:ℝ) = t^((m:ℝ)-p) := by
+    rw [← Real.rpow_add ht0, show -p+(m:ℝ) = (m:ℝ)-p by ring]
+  calc
+    _ ≤ ENNReal.ofReal (A*t^(-p)) * ENNReal.ofReal (w*t^m) :=
+      mul_le_mul_right' (henv t ht) _
+    _ = ENNReal.ofReal ((A*t^(-p))*(w*t^m)) :=
+      (ENNReal.ofReal_mul (mul_nonneg hA (Real.rpow_nonneg ht0.le _))).symm
+    _ = ENNReal.ofReal ((w*A)*t^((m:ℝ)-p)) := by
+      congr 1
+      rw [← Real.rpow_natCast t m]
+      calc
+        _ = (w*A)*(t^(-p)*t^(m:ℝ)) := by ring
+        _ = _ := by rw [hp]
+
+private theorem p4Q2PZ37ARM_two_pos : 0 < (2 : ℕ) := by decide
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "Phys" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "Pair" => PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2
+local notation "Dec" => periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2
+local notation "K" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+local notation "OO" => periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockClosure
+local notation "EH" => periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderExcitationTransferOperator
+local notation "Step" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+local notation "PF" => p4Q2PZ37AQW_partitionFactor
+local notation "Res" => p4Q2PZ37AQX_relativeResidual
+local notation "Emb" => periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+
+local instance p4Q2PZ37ARM_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37ARM_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37ARM_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37ARM_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37ARM_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37ARM_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) := Fintype.ofFinite _
+local instance p4Q2PZ37ARM_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) := Fintype.ofFinite _
+local instance p4Q2PZ37ARM_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37ARM_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+local instance p4Q2PZ37ARM_nontrivial :
+    Nontrivial (Matrix.specialUnitaryGroup (Fin 2) ℂ) := by
+  refine ⟨⟨1, specialUnitaryTwoRotation Real.pi, ?_⟩⟩
+  intro h
+  have h00 := congrArg
+    (fun g : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+      (g : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
+  norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
+
+local notation "h2" => p4Q2PZ37ARM_two_pos
+local notation "M" => p4Q2PZ37ARD_pairMoment
+
+local notation "Cut" => GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformGapCutoff
+local notation "c" => ((3071 : ℝ)/3072)
+
+/-- Exact layer cake on the actual certified high-temperature cap. -/
+theorem p4Q2PZ37ARM_moment_layercake_cap
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (n : ℕ)
+    (s : ℝ) (hs : 8 < s) (hcut : beta ≤ Cut s hs)
+    {ι : Type i} (b : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (he : ∀ k, Step H 2 h2 beta hb (b k) = rho k • b k) :
+    ENNReal.ofReal (M H beta hb n) =
+      ∫⁻ t in Ioc (0:ℝ) c, N rho t * ENNReal.ofReal (2*((n:ℝ)+1)*t^(2*n+1)) := by
+  have hcap (k : ι) : rho k ≤ c :=
+    (p4Q2PZ37ARA_eigenvalue_bounds H beta hb (b k) (rho k)
+      (b.orthonormal.norm_eq_one k) (he k)).2.trans
+      (p4Q2PZ37ARG_norm_le_of_cutoff H beta hb s hs hcut)
+  exact (p4Q2PZ37ARL_moment_layercake_Ioi H beta hb n b rho he).trans
+    (p4Q2PZ37ARM_trunc_aux rho _ c hcap)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARM_moment_layercake_cap
+
+/-- A real-exponent power envelope gives an explicit finite moment bound.
+The strict exponent condition is required for integrability at zero. -/
+theorem p4Q2PZ37ARM_moment_le_powerEnvelope
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (n : ℕ)
+    (s : ℝ) (hs : 8 < s) (hcut : beta ≤ Cut s hs)
+    {ι : Type i} (b : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (he : ∀ k, Step H 2 h2 beta hb (b k) = rho k • b k)
+    (A p : ℝ) (hA : 0 ≤ A) (hp : p < 2*((n:ℝ)+1))
+    (henv : ∀ t ∈ Ioc (0:ℝ) c, N rho t ≤ ENNReal.ofReal (A*t^(-p))) :
+    M H beta hb n ≤ (2*((n:ℝ)+1)*A)/(2*((n:ℝ)+1)-p) *
+      c^(2*((n:ℝ)+1)-p) := by
+  have hw : 0 ≤ 2*((n:ℝ)+1) := by positivity
+  have hqeq : ((2*n+1 : ℕ) : ℝ)-p+1 = 2*((n:ℝ)+1)-p := by
+    push_cast
+    ring
+  have hq : -1 < ((2*n+1 : ℕ) : ℝ)-p := by linarith only [hqeq,hp]
+  have hd : 0 ≤ c := by norm_num
+  have hh := p4Q2PZ37ARM_weight_aux rho c A (2*((n:ℝ)+1)) p (2*n+1) hA hw henv
+  rw [← p4Q2PZ37ARM_moment_layercake_cap H beta hb n s hs hcut b rho he] at hh
+  rw [p4Q2PZ37ARM_integral_aux c _ _ hd (mul_nonneg hw hA) hq, hqeq] at hh
+  have hden : 0 < 2*((n:ℝ)+1)-p := sub_pos.mpr hp
+  have hnon : 0 ≤ (2*((n:ℝ)+1)*A)/(2*((n:ℝ)+1)-p) * c^(2*((n:ℝ)+1)-p) :=
+    mul_nonneg (div_nonneg (mul_nonneg hw hA) hden.le) (Real.rpow_nonneg hd _)
+  apply (ENNReal.ofReal_le_ofReal_iff hnon).mp
+  refine hh.trans_eq ?_
+  congr 1
+  rw [mul_div_assoc, mul_comm (c^(2*((n:ℝ)+1)-p))]
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARM_moment_le_powerEnvelope
+
+/-- The same estimate controls the genuine terminal residual. -/
+theorem p4Q2PZ37ARM_terminal_le_powerEnvelope
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (s : ℝ) (hs : 8 < s) (hcut : beta ≤ Cut s hs)
+    {ι : Type i} (b : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (he : ∀ k, Step H 2 h2 beta hb (b k) = rho k • b k)
+    (A p : ℝ) (hA : 0 ≤ A) (hp : p < 2*((H:ℝ)+1))
+    (henv : ∀ t ∈ Ioc (0:ℝ) c, N rho t ≤ ENNReal.ofReal (A*t^(-p))) :
+    (PF H beta hb)⁻¹ ^ 2 - 1 ≤ (2*((H:ℝ)+1)*A)/(2*((H:ℝ)+1)-p) *
+      c^(2*((H:ℝ)+1)-p) := by
+  rw [← p4Q2PZ37ARD_moment_at_halfCylinder H beta hb]
+  exact p4Q2PZ37ARM_moment_le_powerEnvelope H beta hb H s hs hcut b rho he A p hA hp henv
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARM_terminal_le_powerEnvelope
+
+/-- A uniform budget for these explicit envelope bounds suffices for the
+genuine partition floor. No such envelope is asserted unconditionally. -/
+theorem p4Q2PZ37ARM_partitionFloor_of_powerEnvelope
+    (beta : ℝ) (hb : 0 ≤ beta)
+    (s : ℝ) (hs : 8 < s) (hcut : beta ≤ Cut s hs)
+    (C : ℝ) (hC : 0 ≤ C)
+    (h : ∀ H : ℕ, ∃ (ι : Type) (b : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+      (rho : ι → ℝ) (A p : ℝ),
+      (∀ k, Step H 2 h2 beta hb (b k) = rho k • b k) ∧
+      0 ≤ A ∧ p < 2*((H:ℝ)+1) ∧
+      (∀ t ∈ Ioc (0:ℝ) c, N rho t ≤ ENNReal.ofReal (A*t^(-p))) ∧
+      (2*((H:ℝ)+1)*A)/(2*((H:ℝ)+1)-p) * c^(2*((H:ℝ)+1)-p) ≤ C) :
+    ∃ d : ℝ, 0 < d ∧ ∀ H : ℕ, d ≤ PF H beta hb := by
+  apply (p4Q2PZ37AQX_partitionFloor_iff_relativeResidual_bound beta hb).2
+  refine ⟨C,hC,?_⟩
+  intro H
+  obtain ⟨ι,b,rho,A,p,he,hA,hp,henv,hbudget⟩ := h H
+  rw [p4Q2PZ37AQX_relativeResidual_normSq H beta hb]
+  exact (p4Q2PZ37ARM_terminal_le_powerEnvelope H beta hb s hs hcut b rho he A p hA hp henv).trans hbudget
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARM_partitionFloor_of_powerEnvelope
+
+end
+end MGAP4D.MathlibAnalytic
