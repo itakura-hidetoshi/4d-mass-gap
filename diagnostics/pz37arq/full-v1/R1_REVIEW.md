@@ -1,0 +1,3 @@
+# ARQ R1 — physical projected kernel spectral truncation
+
+Use exact ARC projection and quadratic HasSum. Diagonal orthonormal tensor vectors; finite truncation residual norm squared is total spectral quadratic sum minus retained finite sum. Reindex retained modes as separable factors; use ARP density to define least projected separable term count; finite tail below r² implies bound by retained card. Existence of finite tail from HasSum. Two same-type candidates differ only in local inner product proof. No uniform tail bound or continuum claim. Append only; exact cache gate; direct Lean + real MCP before independent CI.
