@@ -1,0 +1,88 @@
+name: PZ37ASF exact-cache sandbox — latest append-only candidate pack
+on:
+  pull_request:
+    paths:
+      - "diagnostics/pz37asf/full-v1/**"
+      - ".github/workflows/pz37asf-full-v1.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: pz37asf-full-v1-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  select:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    outputs:
+      pack: ${{ steps.pack.outputs.pack }}
+    steps:
+      - name: Require published exact ASE canonical cache
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_BASE: c51a6260fc4029b647d9a822bf0a15133734d581
+        run: |
+          python3 - <<'PY'
+          import json, os, time, urllib.request
+          root = os.environ["GITHUB_API_URL"] + "/repos/" + os.environ["GITHUB_REPOSITORY"]
+          def read(path):
+              req = urllib.request.Request(root + path, headers={
+                  "Authorization": "Bearer " + os.environ["GH_TOKEN"],
+                  "Accept": "application/vnd.github+json"})
+              with urllib.request.urlopen(req, timeout=20) as response:
+                  return json.load(response)
+          for _ in range(90):
+              run = read("/actions/runs/46143334932")
+              assert run["head_sha"] == os.environ["EXPECTED_BASE"]
+              if run["status"] == "completed":
+                  assert run["conclusion"] == "success", "ASE canonical verification did not succeed"
+                  jobs = read("/actions/runs/46143334932/jobs")["jobs"]
+                  def passed(job, name):
+                      return (job["status"] == "completed" and
+                              job["conclusion"] == "success" and
+                              any(x["name"] == name and x["status"] == "completed" and
+                                  x["conclusion"] == "success" for x in (job.get("steps") or [])))
+                  relay = next(j for j in jobs if j["name"] == "Relay independently certified Lean leaf outputs")
+                  if all(passed(relay, name) for name in (
+                      "Bind exact successful independent PR and verified leaf delta",
+                      "Verify delta and no-build imports without re-elaboration",
+                      "Publish exact merged full cache without a second Lean build",
+                      "Confirm exact merged cache is visible")):
+                      print("Exact ASE canonical cache published by no-build relay")
+                      break
+                  rebuild = next(j for j in jobs if j["name"] == "Changed Lean fast check")
+                  if all(passed(rebuild, name) for name in (
+                      "Restore the exact checkout's pinned manifest",
+                      "Run changed Lean fast check",
+                      "Save MGAP4D project olean cache from trusted branches")):
+                      print("Exact ASE canonical cache published after successful full fallback verification")
+                      break
+                  raise RuntimeError("Infrastructure HOLD: neither certified cache publication path succeeded")
+              time.sleep(10)
+          else:
+              raise RuntimeError("Infrastructure HOLD: ASE cache publication not confirmed")
+          PY
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Select newest numbered exact pack
+        id: pack
+        run: |
+          python3 - <<'PY'
+          import os, re
+          from pathlib import Path
+          d=Path("diagnostics/pz37asf/full-v1")
+          packs=[(int(m.group(1)),p) for p in d.glob("pack-r*.json") if (m:=re.fullmatch(r"pack-r([1-9][0-9]*)\.json",p.name))]
+          assert packs
+          with open(os.environ["GITHUB_OUTPUT"],"a") as f:
+              print("pack="+str(max(packs)[1]),file=f)
+          PY
+  verify:
+    needs: select
+    uses: ./.github/workflows/lean-warm-sandbox-reusable-asf-full-v1.yml
+    with:
+      pack: ${{ needs.select.outputs.pack }}
+      source_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      baseline_commit: c51a6260fc4029b647d9a822bf0a15133734d581

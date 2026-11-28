@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "baseline_commit": "c51a6260fc4029b647d9a822bf0a15133734d581",
+  "baseline_mgap4d_tree": "aa97846d27738ac4ee391803e1ef1b8dc4b127a2",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalSystematicParityCoordinatesV5_PZ37ASE",
+    "Mathlib.Data.Nat.Choose.Basic",
+    "Mathlib.Algebra.Ring.Parity",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "ASF",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASF_degreeWeight",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASF_range_formula",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASF_step",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASF_degree_mono",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASF_balance",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASF_imbalance",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASF_degree_total",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASF_total_pos",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASF_max_le",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASF_scaled_max",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASF_scaled_survivors",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASF_scaled_survivors_numeric"
+      ],
+      "candidates": [
+        {
+          "id": "R1A",
+          "path": "diagnostics/pz37asf/full-v1/ASF_R1A.lean.txt",
+          "blob": "9efa74829d025a6767a4557b6251d68c81d97b5b"
+        }
+      ]
+    }
+  ]
+}
