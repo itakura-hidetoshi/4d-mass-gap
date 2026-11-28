@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "baseline_commit": "c19e07d616c9db91c3589df45eb2cb172ecba16d",
+  "baseline_mgap4d_tree": "b5ccea92cc4a818b8c6fe99041a91b02671f779e",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalProjectedSpectralTruncationV5_PZ37ARQ",
+    "MGAP4D.MathlibAnalytic.RealL2HilbertSchmidtSeparableKernelOperator",
+    "Mathlib.Analysis.InnerProductSpace.Adjoint",
+    "Mathlib.LinearAlgebra.Dimension.Constructions",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "ARR",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARR_exists_rankApprox_of_projectedKernel",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARR_thresholdCard_le_projectedTerms",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARR_count_le_projectedTerms",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARR_count_le_projectedMinTerms",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARR_projectedMinTerms_sandwich",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARR_moment_le_projectedMinTermsEnvelope",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARR_terminal_le_projectedMinTermsEnvelope",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARR_partitionFloor_of_projectedMinTermsEnvelope"
+      ],
+      "candidates": [
+        {
+          "id": "R1A",
+          "path": "diagnostics/pz37arr/full-v1/ARR_R1A.lean.txt",
+          "blob": "30414356b22780a8f3073ff8d8d9f58f152817ae"
+        },
+        {
+          "id": "R1B",
+          "path": "diagnostics/pz37arr/full-v1/ARR_R1B.lean.txt",
+          "blob": "0ee3db7c489d6e4f1b3ae67472ffec1fc1b1d570"
+        }
+      ]
+    }
+  ]
+}

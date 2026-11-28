@@ -1,0 +1,3 @@
+# ARR R1 — projected minimum and genuine spectral count
+
+ARO's generic compression helper is private, so its certified proof source is reused in a private helper with the same mathematical type; ARC projected_inner replaces ARA kernel_inner at the application. ARN rank bound, ARQ attained minimum and finite spectral-tail upper bound, ARM layercake/terminal/partition floor are reused. Eight new public statements; no existing source changed. The cardinal sandwich retains strict positive error and actual eigenbasis assumptions. Uniform envelope remains a hypothesis; no mass gap or continuum claim. R1A/R1B identical statements with alternative casting proof. Direct Lean and real MCP before independent CI.
