@@ -1,0 +1,72 @@
+name: PZ37ARZ exact-cache sandbox — latest append-only candidate pack
+on:
+  pull_request:
+    paths:
+      - "diagnostics/pz37arz/full-v1/**"
+      - ".github/workflows/pz37arz-full-v1.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: pz37arz-full-v1-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  select:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    outputs:
+      pack: ${{ steps.pack.outputs.pack }}
+    steps:
+      - name: Require published exact ARY canonical cache
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_BASE: 3fd9f84dd0cae0285b3abc5223485439c0513d13
+        run: |
+          python3 - <<'PY'
+          import json, os, time, urllib.request
+          root = os.environ["GITHUB_API_URL"] + "/repos/" + os.environ["GITHUB_REPOSITORY"]
+          def read(path):
+              req = urllib.request.Request(root + path, headers={
+                  "Authorization": "Bearer " + os.environ["GH_TOKEN"],
+                  "Accept": "application/vnd.github+json"})
+              with urllib.request.urlopen(req, timeout=20) as response:
+                  return json.load(response)
+          for _ in range(90):
+              run = read("/actions/runs/46127892314")
+              assert run["head_sha"] == os.environ["EXPECTED_BASE"]
+              if run["status"] == "completed":
+                  assert run["conclusion"] == "success", "ARY cache relay did not succeed"
+                  jobs = read("/actions/runs/46127892314/jobs")["jobs"]
+                  relay = next(j for j in jobs if j["name"] == "Relay independently certified Lean leaf outputs")
+                  visible = next(x for x in relay["steps"] if x["name"] == "Confirm exact merged cache is visible")
+                  assert relay["conclusion"] == "success" and visible["conclusion"] == "success"
+                  print("Exact ARY canonical cache published and visible")
+                  break
+              time.sleep(10)
+          else:
+              raise RuntimeError("Infrastructure HOLD: ARY cache publication not confirmed")
+          PY
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Select newest numbered exact pack
+        id: pack
+        run: |
+          python3 - <<'PY'
+          import os, re
+          from pathlib import Path
+          d=Path("diagnostics/pz37arz/full-v1")
+          packs=[(int(m.group(1)),p) for p in d.glob("pack-r*.json") if (m:=re.fullmatch(r"pack-r([1-9][0-9]*)\.json",p.name))]
+          assert packs
+          with open(os.environ["GITHUB_OUTPUT"],"a") as f:
+              print("pack="+str(max(packs)[1]),file=f)
+          PY
+  verify:
+    needs: select
+    uses: ./.github/workflows/lean-warm-sandbox-reusable-arz-full-v1.yml
+    with:
+      pack: ${{ needs.select.outputs.pack }}
+      source_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      baseline_commit: 3fd9f84dd0cae0285b3abc5223485439c0513d13
