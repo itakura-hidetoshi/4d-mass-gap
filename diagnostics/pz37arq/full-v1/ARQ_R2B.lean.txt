@@ -1,0 +1,273 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalMinimalSeparableTermsV5_PZ37ARP
+import Mathlib.Data.Fintype.EquivFin
+import Mathlib.Analysis.InnerProductSpace.Orthonormal
+import Mathlib.Analysis.InnerProductSpace.LinearMap
+import Mathlib.Tactic
+
+/-! PZ37ARQ: exact spectral truncation of the physical double-excitation kernel.
+Reuse ARC's actual projection and complete quadratic Parseval equality.
+Finite truncations give explicit separable witnesses for the minimal
+projected-kernel term count. No uniform rank or tail estimate is assumed. -/
+namespace MGAP4D.MathlibAnalytic
+open MeasureTheory Filter Set
+open scoped ENNReal Topology InnerProductSpace InnerProduct BigOperators
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 1000000
+set_option synthInstance.maxHeartbeats 50000
+universe i u v
+
+private theorem p4Q2PZ37ARQ_residual_aux
+    {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    {ι : Type i} (w : ι → E) (hw : Orthonormal ℝ w)
+    (z : E) (rho : ι → ℝ) (hc : ∀ k, inner ℝ (w k) z = rho k)
+    (S : Finset ι) :
+    ‖z - ∑ k ∈ S, rho k • w k‖^2 = ‖z‖^2 - ∑ k ∈ S, (rho k)^2 := by
+  let v : E := ∑ k ∈ S, rho k • w k
+  have hv : ‖v‖^2 = ∑ k ∈ S, (rho k)^2 := by
+    rw [← real_inner_self_eq_norm_sq]
+    simpa [v, pow_two] using hw.inner_sum rho rho S
+  have hi : inner ℝ v z = ∑ k ∈ S, (rho k)^2 := by
+    dsimp only [v]
+    rw [sum_inner]
+    apply Finset.sum_congr rfl
+    intro k _
+    rw [real_inner_smul_left, hc k, pow_two]
+  change ‖z-v‖^2 = _
+  rw [norm_sub_sq_real, real_inner_comm v z, hi, hv]
+  ring
+
+private theorem p4Q2PZ37ARQ_orth_aux
+    {E : Type u} {V : Type v}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+    {ι : Type i} (B : HilbertBasis ι ℝ E) (w : ι → V)
+    (h : ∀ j k, inner ℝ (w j) (w k) =
+      inner ℝ (B j) (B k) * inner ℝ (B j) (B k)) :
+    Orthonormal ℝ w := by
+  classical
+  rw [orthonormal_iff_ite]
+  intro j k
+  calc
+    _ = inner ℝ (B j) (B k) * inner ℝ (B j) (B k) := h j k
+    _ = _ := by rw [(orthonormal_iff_ite.mp B.orthonormal) j k]; by_cases hj : j = k <;> simp [hj]
+
+private theorem p4Q2PZ37ARQ_eigen_inner_aux {E : Type u}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    (t : E →L[ℝ] E) (x : E) (a : ℝ)
+    (hx : ‖x‖ = 1) (he : t x = a • x) :
+    inner ℝ (t x) x = a := by
+  rw [he, real_inner_smul_left, real_inner_self_eq_norm_sq, hx]
+  ring
+
+private theorem p4Q2PZ37ARQ_two_pos : 0 < (2 : ℕ) := by decide
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "Phys" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "Pair" => PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2
+local notation "Dec" => periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2
+local notation "K" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+local notation "OO" => periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockClosure
+local notation "EH" => periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderExcitationTransferOperator
+local notation "Step" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+local notation "PF" => p4Q2PZ37AQW_partitionFactor
+local notation "Res" => p4Q2PZ37AQX_relativeResidual
+local notation "Emb" => periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+
+local instance p4Q2PZ37ARQ_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37ARQ_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37ARQ_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37ARQ_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37ARQ_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37ARQ_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) := Fintype.ofFinite _
+local instance p4Q2PZ37ARQ_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) := Fintype.ofFinite _
+local instance p4Q2PZ37ARQ_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37ARQ_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+local instance p4Q2PZ37ARQ_nontrivial :
+    Nontrivial (Matrix.specialUnitaryGroup (Fin 2) ℂ) := by
+  refine ⟨⟨1, specialUnitaryTwoRotation Real.pi, ?_⟩⟩
+  intro h
+  have h00 := congrArg
+    (fun g : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+      (g : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
+  norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
+
+local notation "h2" => p4Q2PZ37ARQ_two_pos
+local notation "M" => p4Q2PZ37ARD_pairMoment
+
+local notation "Cut" => GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformGapCutoff
+local notation "c" => ((3071 : ℝ)/3072)
+
+local notation "NK" => p4Q2PZ37ARA_normalizedKernel
+local notation "Q" => p4Q2PZ37ARK_thresholdFinset
+
+local instance p4Q2PZ37ARQ_sliceIsFinite (H : ℕ) :
+    IsFiniteMeasure (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+
+local notation "PK" => p4Q2PZ37ARC_projectedKernel
+
+private def p4Q2PZ37ARQ_diagTensor
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    {ι : Type i} (B : HilbertBasis ι ℝ (K H 2 h2 beta hb)) (k : ι) :
+    Pair H 2 :=
+  realL2ExternalTensor (Emb H 2 h2 beta hb (B k)) (Emb H 2 h2 beta hb (B k))
+
+private theorem p4Q2PZ37ARQ_diagTensor_orthonormal
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    {ι : Type i} (B : HilbertBasis ι ℝ (K H 2 h2 beta hb)) :
+    Orthonormal ℝ (p4Q2PZ37ARQ_diagTensor H beta hb B) := by
+  refine @p4Q2PZ37ARQ_orth_aux
+    ↥(K H 2 h2 beta hb) (Pair H 2)
+    inferInstance inferInstance inferInstance inferInstance
+    ι B (p4Q2PZ37ARQ_diagTensor H beta hb B) ?_
+  intro j k
+  exact realL2ExternalTensor_inner
+    (Emb H 2 h2 beta hb (B j)) (Emb H 2 h2 beta hb (B k))
+    (Emb H 2 h2 beta hb (B j)) (Emb H 2 h2 beta hb (B k))
+
+private theorem p4Q2PZ37ARQ_diagTensor_coeff
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    {ι : Type i} (B : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (he : ∀ k, Step H 2 h2 beta hb (B k) = rho k • B k) (k : ι) :
+    inner ℝ (p4Q2PZ37ARQ_diagTensor H beta hb B k) (PK H beta hb) = rho k := by
+  change inner ℝ (realL2ExternalTensor (Emb H 2 h2 beta hb (B k))
+    (Emb H 2 h2 beta hb (B k))) (PK H beta hb) = _
+  rw [p4Q2PZ37ARC_projected_inner H beta hb]
+  exact @p4Q2PZ37ARQ_eigen_inner_aux
+    ↥(K H 2 h2 beta hb) inferInstance inferInstance
+    (Step H 2 h2 beta hb) (B k) (rho k)
+    (B.orthonormal.norm_eq_one k) (he k)
+
+/-- The actual finite spectral truncation of the projected Haar kernel. -/
+def p4Q2PZ37ARQ_truncation
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    {ι : Type i} (B : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (S : Finset ι) : Pair H 2 :=
+  ∑ k ∈ S, rho k • p4Q2PZ37ARQ_diagTensor H beta hb B k
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARQ_truncation
+
+theorem p4Q2PZ37ARQ_truncation_errorSq
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    {ι : Type i} (B : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (he : ∀ k, Step H 2 h2 beta hb (B k) = rho k • B k)
+    (S : Finset ι) :
+    ‖PK H beta hb - p4Q2PZ37ARQ_truncation H beta hb B rho S‖^2 =
+      (∑' k, (rho k)^2) - ∑ k ∈ S, (rho k)^2 := by
+  rw [p4Q2PZ37ARC_quadratic_tsum H beta hb B rho he]
+  exact p4Q2PZ37ARQ_residual_aux
+    (p4Q2PZ37ARQ_diagTensor H beta hb B)
+    (p4Q2PZ37ARQ_diagTensor_orthonormal H beta hb B)
+    (PK H beta hb) rho (p4Q2PZ37ARQ_diagTensor_coeff H beta hb B rho he) S
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARQ_truncation_errorSq
+
+theorem p4Q2PZ37ARQ_truncation_separable
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    {ι : Type i} (B : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (S : Finset ι) :
+    ∃ (a b : Fin S.card → Lp ℝ 2 (Mu H 2)),
+      (show Lp ℝ 2 ((Mu H 2).prod (Mu H 2)) from
+        p4Q2PZ37ARQ_truncation H beta hb B rho S) =
+        ∑ j, realL2ExternalTensor (a j) (b j) := by
+  classical
+  let e : Fin S.card ≃ S := S.equivFin.symm
+  let f : ι → Lp ℝ 2 (Mu H 2) := fun k => Emb H 2 h2 beta hb (B k)
+  let a : Fin S.card → Lp ℝ 2 (Mu H 2) := fun j => rho (e j).val • f (e j).val
+  let b : Fin S.card → Lp ℝ 2 (Mu H 2) := fun j => f (e j).val
+  refine ⟨a,b,?_⟩
+  let g : ι → Lp ℝ 2 ((Mu H 2).prod (Mu H 2)) := fun k =>
+    rho k • realL2ExternalTensor (f k) (f k)
+  change (∑ k ∈ S, g k) = ∑ j, realL2ExternalTensor (a j) (b j)
+  calc
+    _ = ∑ k : S, g k.val := (Finset.sum_coe_sort S g).symm
+    _ = ∑ j : Fin S.card, g (e j).val :=
+      Fintype.sum_equiv e.symm _ _ (fun k => by simp)
+    _ = _ := by
+      apply Finset.sum_congr rfl
+      intro j _
+      exact (realL2ExternalTensor_smul_left (rho (e j).val) (f (e j).val) (f (e j).val)).symm
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARQ_truncation_separable
+
+theorem p4Q2PZ37ARQ_projected_exists_separable
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (r : ℝ) (hr : 0 < r) :
+    ∃ (d : ℕ) (a b : Fin d → Lp ℝ 2 (Mu H 2)),
+      ‖(show Lp ℝ 2 ((Mu H 2).prod (Mu H 2)) from PK H beta hb)
+        - ∑ j, realL2ExternalTensor (a j) (b j)‖ < r := by
+  exact p4Q2PZ37ARP_productL2_exists_separable
+    (μ := Mu H 2) (ν := Mu H 2) (PK H beta hb) r hr
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARQ_projected_exists_separable
+
+noncomputable def p4Q2PZ37ARQ_projectedMinTerms
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (r : ℝ) (hr : 0 < r) : ℕ := by
+  classical
+  exact Nat.find (p4Q2PZ37ARQ_projected_exists_separable H beta hb r hr)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARQ_projectedMinTerms
+
+theorem p4Q2PZ37ARQ_projectedMinTerms_spec
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (r : ℝ) (hr : 0 < r) :
+    ∃ (a b : Fin (p4Q2PZ37ARQ_projectedMinTerms H beta hb r hr) → Lp ℝ 2 (Mu H 2)),
+      ‖(show Lp ℝ 2 ((Mu H 2).prod (Mu H 2)) from PK H beta hb)
+        - ∑ j, realL2ExternalTensor (a j) (b j)‖ < r := by
+  classical
+  exact Nat.find_spec (p4Q2PZ37ARQ_projected_exists_separable H beta hb r hr)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARQ_projectedMinTerms_spec
+
+theorem p4Q2PZ37ARQ_projectedMinTerms_le_card
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    {ι : Type i} (B : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (he : ∀ k, Step H 2 h2 beta hb (B k) = rho k • B k)
+    (S : Finset ι) (r : ℝ) (hr : 0 < r)
+    (htail : (∑' k, (rho k)^2) - ∑ k ∈ S, (rho k)^2 < r^2) :
+    p4Q2PZ37ARQ_projectedMinTerms H beta hb r hr ≤ S.card := by
+  classical
+  have hsq := p4Q2PZ37ARQ_truncation_errorSq H beta hb B rho he S
+  have hc : ‖PK H beta hb - p4Q2PZ37ARQ_truncation H beta hb B rho S‖ < r := by
+    by_contra! hn
+    have hh := mul_self_le_mul_self hr.le hn
+    nlinarith only [hsq, htail, hh]
+  obtain ⟨a,b,hab⟩ := p4Q2PZ37ARQ_truncation_separable H beta hb B rho S
+  apply Nat.find_min' (p4Q2PZ37ARQ_projected_exists_separable H beta hb r hr)
+  exact ⟨a,b,by rw [← hab]; exact hc⟩
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARQ_projectedMinTerms_le_card
+
+/-- Every fixed-volume positive error has a finite spectral truncation
+witness, from the actual ARC HasSum, not a uniform-tail assumption. -/
+theorem p4Q2PZ37ARQ_exists_spectral_tail
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    {ι : Type i} (B : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (he : ∀ k, Step H 2 h2 beta hb (B k) = rho k • B k)
+    (r : ℝ) (hr : 0 < r) :
+    ∃ S : Finset ι, (∑' k, (rho k)^2) - ∑ k ∈ S, (rho k)^2 < r^2 := by
+  have hs := p4Q2PZ37ARC_quadratic_hasSum H beta hb B rho he
+  have ht : Tendsto (fun S : Finset ι => ∑ k ∈ S, (rho k)^2)
+      atTop (𝓝 (‖PK H beta hb‖^2)) := hs
+  obtain ⟨S,hS⟩ := (Metric.tendsto_nhds.mp ht (r^2) (sq_pos_of_pos hr)).exists
+  rw [Real.dist_eq] at hS
+  refine ⟨S,?_⟩
+  rw [hs.tsum_eq]
+  linarith only [(abs_lt.mp hS).1]
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARQ_exists_spectral_tail
+
+end
+end MGAP4D.MathlibAnalytic
