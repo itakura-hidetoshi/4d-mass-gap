@@ -1,0 +1,249 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalLocalTaylorSlabV5_PZ37ARU
+import MGAP4D.MathlibAnalytic.SpecialUnitaryNormalizedTraceKernelFeature
+import Mathlib.Algebra.BigOperators.Ring.Finset
+import Mathlib.Data.Fintype.BigOperators
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37ARV — explicit finite separable Taylor slab
+
+Use the actual eight real matrix-entry coordinates of SU(2), their existing
+normalized trace pairing and the existing local Taylor partial kernel.
+A degree m local index is a word of length j ≤ m in the eight coordinates.
+The full index assigns such a word to each literal spatial link. Both
+interacting endpoint halfweights are retained in continuous factors.
+The cardinal is an explicit upper budget, not minimal separable rank.
+This is an unnormalized pointwise approximation, not a volume-uniform
+normalized spectral estimate or independent physical excitation grading.
+-/
+namespace MGAP4D.MathlibAnalytic
+open scoped BigOperators InnerProductSpace InnerProduct
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 1000000
+set_option synthInstance.maxHeartbeats 50000
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "J" => ((Fin 2 × Fin 2) × Bool)
+local notation "Link" => PeriodicHypercubicEvenSpatialSliceLink
+local notation "Cfg" => PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration
+local notation "Tr" => specialUnitaryNormalizedTraceRelativeKernel
+local notation "kp" => specialUnitaryWilsonRelativeKernelPartial
+local notation "W" => periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeight
+local notation "K" => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+local notation "L" => periodicHypercubicEvenSpatialSliceLinkList
+local notation "E" => p4Q2PZ37ARU_tail
+
+local instance p4Q2PZ37ARV_linkFintype (H : ℕ) : Fintype (Link H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37ARV_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+
+/-- Actual matrix-entry realification coordinate, in the certified transposed
+coordinate convention of SpecialUnitaryNormalizedTraceKernelFeature. -/
+private def p4Q2PZ37ARV_coord (q : J) (g : G) : ℝ :=
+  if q.2 then ((g : Matrix (Fin 2) (Fin 2) ℂ) q.1.2 q.1.1).re
+  else ((g : Matrix (Fin 2) (Fin 2) ℂ) q.1.2 q.1.1).im
+
+private theorem p4Q2PZ37ARV_coord_cont (q : J) :
+    Continuous (p4Q2PZ37ARV_coord q) := by
+  have hMat : Continuous (fun g : G => (g : Matrix (Fin 2) (Fin 2) ℂ)) :=
+    continuous_subtype_val
+  have hEntry : Continuous (fun g : G => (g : Matrix (Fin 2) (Fin 2) ℂ) q.1.2 q.1.1) :=
+    (continuous_apply q.1.1).comp ((continuous_apply q.1.2).comp hMat)
+  unfold p4Q2PZ37ARV_coord
+  split
+  · exact Complex.continuous_re.comp hEntry
+  · exact Complex.continuous_im.comp hEntry
+
+private theorem p4Q2PZ37ARV_trace_sum (g h : G) :
+    Tr 2 g h = ∑ q : J, (p4Q2PZ37ARV_coord q g/2)*p4Q2PZ37ARV_coord q h := by
+  rw [specialUnitaryNormalizedTraceRelativeKernel_eq_scaled,
+    specialUnitaryRealTraceRelativeKernel_eq_inner, PiLp.inner_apply, Finset.mul_sum]
+  apply Finset.sum_congr rfl
+  intro q _
+  rw [realScalarInner_eq_mul]
+  change (1/(2:ℝ))*(p4Q2PZ37ARV_coord q g*p4Q2PZ37ARV_coord q h) = _
+  ring
+
+/-- Word indices record multiplicity rather than identifying commuting
+monomials; this gives a simple explicit finite upper budget. -/
+abbrev PZ37ARVLocalIndex (m : ℕ) := Σ j : Fin (m+1), Fin j.val → J
+
+/-- Explicit number of local word terms. -/
+def p4Q2PZ37ARV_localTerms (m : ℕ) : ℕ :=
+  ∑ j ∈ Finset.range (m+1), (8:ℕ)^j
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARV_localTerms
+
+theorem p4Q2PZ37ARV_localIndex_card (m : ℕ) :
+    Fintype.card (PZ37ARVLocalIndex m) = p4Q2PZ37ARV_localTerms m := by
+  unfold p4Q2PZ37ARV_localTerms
+  calc
+    _ = ∑ j : Fin (m+1), (8:ℕ)^j.val := by
+      have hJ : Fintype.card J = 8 := by decide
+      change Fintype.card (Σ j : Fin (m+1), Fin j.val → J) = _
+      rw [Fintype.card_sigma]
+      apply Finset.sum_congr rfl
+      intro j _
+      rw [Fintype.card_pi_const, hJ]
+    _ = _ := Fin.sum_univ_eq_sum_range (fun j : ℕ => (8:ℕ)^j) (m+1)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARV_localIndex_card
+
+private def p4Q2PZ37ARV_left (beta : ℝ) {m : ℕ} (i : PZ37ARVLocalIndex m) (g : G) : ℝ :=
+  (Real.exp (-beta)*(beta^i.1.val/(Nat.factorial i.1.val : ℝ)))*
+    ∏ j : Fin i.1.val, p4Q2PZ37ARV_coord (i.2 j) g/2
+
+private def p4Q2PZ37ARV_right {m : ℕ} (i : PZ37ARVLocalIndex m) (g : G) : ℝ :=
+  ∏ j : Fin i.1.val, p4Q2PZ37ARV_coord (i.2 j) g
+
+private theorem p4Q2PZ37ARV_cont_prod
+    {X I : Type} [TopologicalSpace X] (s : Finset I) (f : I → X → ℝ)
+    (hf : ∀ i, Continuous (f i)) :
+    Continuous (fun x => ∏ i ∈ s, f i x) := by
+  classical
+  induction s using Finset.induction_on with
+  | empty => simpa using (continuous_const : Continuous (fun _ : X => (1:ℝ)))
+  | @insert i s hi ih =>
+      simp only [Finset.prod_insert hi]
+      exact (hf i).mul ih
+
+private theorem p4Q2PZ37ARV_left_cont (beta : ℝ) {m : ℕ} (i : PZ37ARVLocalIndex m) :
+    Continuous (p4Q2PZ37ARV_left beta i) := by
+  unfold p4Q2PZ37ARV_left
+  exact continuous_const.mul (p4Q2PZ37ARV_cont_prod Finset.univ
+    (fun j : Fin i.1.val => fun g : G => p4Q2PZ37ARV_coord (i.2 j) g/2)
+    (fun j => (p4Q2PZ37ARV_coord_cont (i.2 j)).div_const 2))
+
+private theorem p4Q2PZ37ARV_right_cont {m : ℕ} (i : PZ37ARVLocalIndex m) :
+    Continuous (p4Q2PZ37ARV_right i) := by
+  unfold p4Q2PZ37ARV_right
+  exact p4Q2PZ37ARV_cont_prod Finset.univ _ (fun j => p4Q2PZ37ARV_coord_cont (i.2 j))
+
+private theorem p4Q2PZ37ARV_local_expansion
+    (beta : ℝ) (m : ℕ) (g h : G) :
+    kp 2 beta m g h = ∑ i : PZ37ARVLocalIndex m,
+      p4Q2PZ37ARV_left beta i g*p4Q2PZ37ARV_right i h := by
+  classical
+  unfold specialUnitaryWilsonRelativeKernelPartial
+  rw [RealHilbertKernelFeature.exponentialPartialKernel_eq_sum,
+    ← Fin.sum_univ_eq_sum_range, Finset.mul_sum, Fintype.sum_sigma]
+  apply Finset.sum_congr rfl
+  intro j _
+  rw [mul_pow,p4Q2PZ37ARV_trace_sum,Fintype.sum_pow]
+  calc
+    _ = ∑ p : Fin j.val → J,
+        (Real.exp (-beta)*(beta^j.val/(Nat.factorial j.val : ℝ)))*
+          (∏ l : Fin j.val, (p4Q2PZ37ARV_coord (p l) g/2)*p4Q2PZ37ARV_coord (p l) h) := by
+      rw [← Finset.mul_sum]
+      ring
+    _ = _ := by
+      apply Finset.sum_congr rfl
+      intro p _
+      rw [Finset.prod_mul_distrib]
+      unfold p4Q2PZ37ARV_left p4Q2PZ37ARV_right
+      ring
+
+/-- Local continuous separable factors for every Taylor degree. -/
+theorem p4Q2PZ37ARV_local_separable (beta : ℝ) (m : ℕ) :
+    ∃ a b : Fin (p4Q2PZ37ARV_localTerms m) → G → ℝ,
+      (∀ i, Continuous (a i)) ∧ (∀ i, Continuous (b i)) ∧
+      ∀ g h : G, kp 2 beta m g h = ∑ i, a i g*b i h := by
+  classical
+  let e := (Fintype.equivFinOfCardEq (p4Q2PZ37ARV_localIndex_card m)).symm
+  refine ⟨fun i => p4Q2PZ37ARV_left beta (e i),fun i => p4Q2PZ37ARV_right (e i),
+    fun i => p4Q2PZ37ARV_left_cont beta (e i),fun i => p4Q2PZ37ARV_right_cont (e i),?_⟩
+  intro g h
+  exact (p4Q2PZ37ARV_local_expansion beta m g h).trans
+    (e.sum_comp (fun i => p4Q2PZ37ARV_left beta i g*p4Q2PZ37ARV_right i h)).symm
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARV_local_separable
+
+/-- Product index over the literal original spatial links. -/
+def p4Q2PZ37ARV_slabTerms (H m : ℕ) : ℕ :=
+  (p4Q2PZ37ARV_localTerms m)^(Nat.card (Link H))
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARV_slabTerms
+
+theorem p4Q2PZ37ARV_slabIndex_card (H m : ℕ) :
+    Fintype.card (Link H → PZ37ARVLocalIndex m) = p4Q2PZ37ARV_slabTerms H m := by
+  classical
+  unfold p4Q2PZ37ARV_slabTerms
+  rw [Fintype.card_fun,p4Q2PZ37ARV_localIndex_card,Fintype.card_eq_nat_card (α := Link H)]
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARV_slabIndex_card
+
+/-- Expand and separate a finite product with abstract index types before
+specializing to the literal Wilson geometry. -/
+private theorem p4Q2PZ37ARV_weighted_product
+    {ι κ : Type} [Fintype ι] [Fintype κ] [DecidableEq ι]
+    (u v : ℝ) (k : ι → ℝ) (a b : ι → κ → ℝ)
+    (hk : ∀ l, k l = ∑ i, a l i * b l i) :
+    u * (∏ l, k l) * v =
+      ∑ i : ι → κ, (u * ∏ l, a l (i l)) * (v * ∏ l, b l (i l)) := by
+  classical
+  have hkprod : (∏ l, k l) = ∏ l, ∑ i, a l i * b l i :=
+    Finset.prod_congr rfl (fun l _ => hk l)
+  calc
+    _ = u * (∏ l, ∑ i, a l i * b l i) * v := by rw [hkprod]
+    _ = u * (∑ i : ι → κ, ∏ l, a l (i l) * b l (i l)) * v := by
+      rw [Fintype.prod_sum (fun l i => a l i * b l i)]
+    _ = _ := by
+      rw [Finset.mul_sum, Finset.sum_mul]
+      apply Finset.sum_congr rfl
+      intro i _
+      rw [Finset.prod_mul_distrib]
+      ring
+
+/-- Exact separable realization of ARU's actual partial slab; both spatial
+halfweights remain in the continuous factors. -/
+theorem p4Q2PZ37ARV_slab_separable (H : ℕ) (beta : ℝ) (m : ℕ) :
+    ∃ a b : Fin (p4Q2PZ37ARV_slabTerms H m) → Cfg H 2 → ℝ,
+      (∀ i, Continuous (a i)) ∧ (∀ i, Continuous (b i)) ∧
+      ∀ A B : Cfg H 2, p4Q2PZ37ARU_partialSlab H beta m A B = ∑ i, a i A*b i B := by
+  classical
+  let I := Link H → PZ37ARVLocalIndex m
+  let e := (Fintype.equivFinOfCardEq (p4Q2PZ37ARV_slabIndex_card H m)).symm
+  let f (i : I) (A : Cfg H 2) : ℝ :=
+    W H 2 beta A*(∏ l : Link H, p4Q2PZ37ARV_left beta (i l) (A l))
+  let g (i : I) (B : Cfg H 2) : ℝ :=
+    W H 2 beta B*(∏ l : Link H, p4Q2PZ37ARV_right (i l) (B l))
+  have hf (i : I) : Continuous (f i) := by
+    exact (periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeight_continuous H 2 beta).mul
+      (p4Q2PZ37ARV_cont_prod Finset.univ _ (fun l =>
+        (p4Q2PZ37ARV_left_cont beta (i l)).comp (continuous_apply l)))
+  have hg (i : I) : Continuous (g i) := by
+    exact (periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeight_continuous H 2 beta).mul
+      (p4Q2PZ37ARV_cont_prod Finset.univ _ (fun l =>
+        (p4Q2PZ37ARV_right_cont (i l)).comp (continuous_apply l)))
+  refine ⟨fun i => f (e i),fun i => g (e i),fun i => hf (e i),fun i => hg (e i),?_⟩
+  intro A B
+  have hprod : p4Q2PZ37ARU_partialSlab H beta m A B = ∑ i : I, f i A*g i B := by
+    unfold p4Q2PZ37ARU_partialSlab periodicHypercubicEvenSpatialSliceLinkList
+    rw [Finset.prod_map_toList]
+    exact p4Q2PZ37ARV_weighted_product (W H 2 beta A) (W H 2 beta B)
+      (fun l : Link H => kp 2 beta m (A l) (B l))
+      (fun (l : Link H) (i : PZ37ARVLocalIndex m) => p4Q2PZ37ARV_left beta i (A l))
+      (fun (l : Link H) (i : PZ37ARVLocalIndex m) => p4Q2PZ37ARV_right i (B l))
+      (fun l => p4Q2PZ37ARV_local_expansion beta m (A l) (B l))
+  exact hprod.trans (e.sum_comp (fun i => f i A*g i B)).symm
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARV_slab_separable
+
+/-- Explicit continuous separable budget with certified pointwise error. -/
+theorem p4Q2PZ37ARV_slab_approximation (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (m : ℕ) :
+    ∃ a b : Fin (p4Q2PZ37ARV_slabTerms H m) → Cfg H 2 → ℝ,
+      (∀ i, Continuous (a i)) ∧ (∀ i, Continuous (b i)) ∧
+      ∀ A B : Cfg H 2, |K H 2 beta A B-∑ i, a i A*b i B| ≤
+        ((L H).length : ℝ)*E beta m := by
+  obtain ⟨a,b,ha,hb',he⟩ := p4Q2PZ37ARV_slab_separable H beta m
+  refine ⟨a,b,ha,hb',?_⟩
+  intro A B
+  rw [← he A B]
+  exact p4Q2PZ37ARU_slab_tail_bound H beta hb m A B
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARV_slab_approximation
+
+end
+end MGAP4D.MathlibAnalytic

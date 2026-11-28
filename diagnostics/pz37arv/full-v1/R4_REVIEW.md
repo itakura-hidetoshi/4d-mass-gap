@@ -1,0 +1,5 @@
+# ARV R4 (TEST_REQUIRED)
+
+R3 sandbox 46115638525 / job 140888762960, exact source 5d1aef4db96d0caea19666e9ed93596b0d8aa101. R3A 32.287 s, R3B 11.120 s, exit 1, two diagnostics each. No MCP. List rewrite error absent. Both failed in generic weighted_product statement at line 184: failed synthesis Fintype (ι → κ); downstream slab_separable and slab_approximation audits contain sorryAx. First five public declarations audit to the standard three axioms in failed run, not promoted.
+
+Pinned mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6: Mathlib/Data/Fintype/Pi.lean declares Pi.instFintype {α} {β} [DecidableEq α] [Fintype α] [∀ a, Fintype (β a)]; Mathlib/Algebra/BigOperators/Ring/Finset.lean Fintype.prod_sum requires [DecidableEq ι]. The previous helper's classical tactic executes only after its proposition elaborates. R4 adds [DecidableEq ι] to the private helper binder, not any public declaration; existing classical concrete calls can supply this instance. R4A and R4B retain both R3 proof paths. No changes to public statements, imports, axioms, heartbeat, canonical state or prior records. Direct Lean and real Lean MCP required before independent CI.
