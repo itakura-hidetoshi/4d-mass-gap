@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "baseline_commit": "9bad693587f1cfcf5069dd24ff1c4be461378965",
+  "baseline_mgap4d_tree": "49acad7314aa971c402c55a8ee90a715d578da29",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalParitySurvivorRankV5_PZ37ASB",
+    "Mathlib.Algebra.BigOperators.Group.Finset.Sigma",
+    "Mathlib.LinearAlgebra.Dimension.Free",
+    "Mathlib.LinearAlgebra.FiniteDimensional.Lemmas",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "ASC",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASC_localMultiplicity_formula",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASC_evenMultiplicity",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASC_oddMultiplicity",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASC_localMultiplicity_total",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASC_cycleDim",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASC_boundaryRank",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASC_rank_nullity",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASC_closed_card",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASC_closed_card_rank",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASC_maxMultiplicity",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASC_multiplicity_le_max",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASC_survivors_le_cycleWeight",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASC_count_le_cycleWeight"
+      ],
+      "candidates": [
+        {
+          "id": "R1A",
+          "path": "diagnostics/pz37asc/full-v1/ASC_R1A.lean.txt",
+          "blob": "82dbc37388a2fa88005bcc105ffc6b42c953ee05"
+        },
+        {
+          "id": "R1B",
+          "path": "diagnostics/pz37asc/full-v1/ASC_R1B.lean.txt",
+          "blob": "55e7b261915595825eecc064c9c71d5dc34110b3"
+        }
+      ]
+    }
+  ]
+}
