@@ -1,0 +1,249 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalSpatialIncidenceRankV5_PZ37ASD
+import Mathlib.LinearAlgebra.LinearIndependent.Lemmas
+import Mathlib.LinearAlgebra.Dimension.Constructions
+import Mathlib.Algebra.BigOperators.Ring.Finset
+import Mathlib.Data.Fintype.EquivFin
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37ASE — systematic coordinates of the literal parity kernel
+
+Select independent columns from the actual ASB incidence map, with
+no replacement graph. Their complement determines a closed pattern
+uniquely, and the exact ASC cardinality gives surjectivity as well.
+Evaluate the free-coordinate sum exactly, bounding only the dependent
+coordinates by the largest local multiplicity. This is a finite-volume
+survivor count, not an equality of spectral ranks or a uniform mass gap.
+-/
+namespace MGAP4D.MathlibAnalytic
+open scoped BigOperators
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 1000000
+set_option synthInstance.maxHeartbeats 50000
+
+local notation "F" => ZMod 2
+local notation "Link" => PeriodicHypercubicEvenSpatialSliceLink
+local notation "Vtx" => PeriodicHypercubicEvenSpatialSliceVertex
+local notation "L" => PeriodicHypercubicEvenSideLength
+local notation "Bd" => p4Q2PZ37ASB_boundary
+local notation "Closed" => p4Q2PZ37ASB_closedPatterns
+local notation "Mlt" => p4Q2PZ37ASB_localMultiplicity
+local notation "MaxM" => p4Q2PZ37ASC_maxMultiplicity
+local notation "Rank" => p4Q2PZ37ASC_boundaryRank
+local notation "Dim" => p4Q2PZ37ASC_cycleDim
+
+local instance p4Q2PZ37ASE_vertexFintype (H : ℕ) : Fintype (Vtx H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37ASE_linkFintype (H : ℕ) : Fintype (Link H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37ASE_sideNeZero (H : ℕ) : NeZero (L H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+
+private def p4Q2PZ37ASE_unit (H : ℕ) (l : Link H) : Link H → F :=
+  fun j => if j = l then 1 else 0
+
+/-- Literal incidence column, using the previously certified boundary map. -/
+def p4Q2PZ37ASE_column (H : ℕ) (l : Link H) : Vtx H → F :=
+  Bd H (p4Q2PZ37ASE_unit H l)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ASE_column
+
+private theorem p4Q2PZ37ASE_sum_unit (H : ℕ) (p : Link H → F) :
+    (∑ l : Link H, p l • p4Q2PZ37ASE_unit H l) = p := by
+  classical
+  funext j
+  simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul,
+    p4Q2PZ37ASE_unit, mul_ite, mul_one, mul_zero]
+  simp
+
+theorem p4Q2PZ37ASE_column_expansion (H : ℕ) (p : Link H → F) :
+    (∑ l : Link H, p l • p4Q2PZ37ASE_column H l) = Bd H p := by
+  classical
+  calc
+    _ = Bd H (∑ l : Link H, p l • p4Q2PZ37ASE_unit H l) := by
+      rw [map_sum]
+      simp only [map_smul, p4Q2PZ37ASE_column]
+    _ = _ := by rw [p4Q2PZ37ASE_sum_unit]
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ASE_column_expansion
+
+theorem p4Q2PZ37ASE_range_span (H : ℕ) :
+    LinearMap.range (Bd H) = Submodule.span F (Set.range (p4Q2PZ37ASE_column H)) := by
+  classical
+  apply le_antisymm
+  · rintro f ⟨p, rfl⟩
+    rw [← p4Q2PZ37ASE_column_expansion H p]
+    apply Submodule.sum_mem
+    intro l _
+    exact (Submodule.span F (Set.range (p4Q2PZ37ASE_column H))).smul_mem _
+      (Submodule.subset_span ⟨l, rfl⟩)
+  · apply Submodule.span_le.mpr
+    rintro f ⟨l, rfl⟩
+    exact ⟨p4Q2PZ37ASE_unit H l, rfl⟩
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ASE_range_span
+
+/-- Independent pivot columns yield unique reconstruction from the complement. -/
+theorem p4Q2PZ37ASE_pivots (H : ℕ) :
+    ∃ s : Finset (Link H), s.card = Rank H ∧
+      ∀ p q : Link H → F, Bd H p = 0 → Bd H q = 0 →
+        (∀ l ∉ s, p l = q l) → p = q := by
+  classical
+  let c := p4Q2PZ37ASE_column H
+  obtain ⟨κ, a, ha, hsp, hli⟩ := exists_linearIndependent' F c
+  letI : Finite κ := Finite.of_injective a ha
+  letI : Fintype κ := Fintype.ofFinite κ
+  let s : Finset (Link H) := (Finset.univ : Finset κ).image a
+  have hcard : s.card = Fintype.card κ := by
+    dsimp [s]
+    rw [Finset.card_image_of_injective _ ha, Finset.card_univ]
+  have hdim := finrank_span_eq_card hli
+  rw [hsp] at hdim
+  change Module.finrank F (Submodule.span F (Set.range (p4Q2PZ37ASE_column H))) =
+    Fintype.card κ at hdim
+  rw [← p4Q2PZ37ASE_range_span H] at hdim
+  change Rank H = Fintype.card κ at hdim
+  refine ⟨s, hcard.trans hdim.symm, ?_⟩
+  intro p q hp hq hfree
+  have htotal : (∑ l : Link H, p l • c l) = ∑ l : Link H, q l • c l := by
+    change (∑ l : Link H, p l • p4Q2PZ37ASE_column H l) =
+      ∑ l : Link H, q l • p4Q2PZ37ASE_column H l
+    rw [p4Q2PZ37ASE_column_expansion, p4Q2PZ37ASE_column_expansion, hp, hq]
+  have hc : (∑ l ∈ sᶜ, p l • c l) = ∑ l ∈ sᶜ, q l • c l := by
+    apply Finset.sum_congr rfl
+    intro l hl
+    rw [hfree l (Finset.mem_compl.mp hl)]
+  have hps := Finset.sum_add_sum_compl s (fun l => p l • c l)
+  have hqs := Finset.sum_add_sum_compl s (fun l => q l • c l)
+  rw [← hps, ← hqs, hc] at htotal
+  have hsel := add_right_cancel htotal
+  change (∑ l ∈ (Finset.univ : Finset κ).image a, p l • c l) =
+    ∑ l ∈ (Finset.univ : Finset κ).image a, q l • c l at hsel
+  have ha' : Set.InjOn a (↑(Finset.univ : Finset κ) : Set κ) := ha.injOn
+  simp only [Finset.sum_image ha'] at hsel
+  have hh := (Fintype.linearIndependent_iffₛ.mp hli)
+    (fun i => p (a i)) (fun i => q (a i)) hsel
+  funext l
+  by_cases hl : l ∈ s
+  · change l ∈ (Finset.univ : Finset κ).image a at hl
+    obtain ⟨i, _, hi⟩ := Finset.mem_image.mp hl
+    rw [← hi]
+    exact hh i
+  · exact hfree l hl
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ASE_pivots
+
+/-- Free coordinates are an exact bijective presentation of the closed patterns. -/
+theorem p4Q2PZ37ASE_systematic (H : ℕ) :
+    ∃ s : Finset (Link H), s.card = Rank H ∧
+      (sᶜ : Finset (Link H)).card = Dim H ∧
+      Function.Bijective (fun p : ↥(Closed H) =>
+        fun l : ↥(sᶜ : Finset (Link H)) => p.val l.val) := by
+  classical
+  obtain ⟨s, hs, hu⟩ := p4Q2PZ37ASE_pivots H
+  have hc := Finset.card_add_card_compl s
+  rw [hs, Fintype.card_eq_nat_card] at hc
+  have hd := p4Q2PZ37ASC_rank_nullity H
+  have ht : (sᶜ : Finset (Link H)).card = Dim H := by omega
+  refine ⟨s, hs, ht, (Fintype.bijective_iff_injective_and_card _).2 ⟨?_, ?_⟩⟩
+  · intro p q hpq
+    apply Subtype.ext
+    have hp : Bd H p.val = 0 := (Finset.mem_filter.mp p.property).2
+    have hq : Bd H q.val = 0 := (Finset.mem_filter.mp q.property).2
+    apply hu p.val q.val hp hq
+    intro l hl
+    exact congrFun hpq ⟨l, Finset.mem_compl.mpr hl⟩
+  · rw [Fintype.card_coe, Fintype.card_fun, Fintype.card_coe, ZMod.card,
+      p4Q2PZ37ASC_closed_card, ht]
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ASE_systematic
+
+/-- Exact sum of product weights over unconstrained binary coordinates. -/
+theorem p4Q2PZ37ASE_free_sum {I : Type} [Fintype I] [DecidableEq I] (m : ℕ) :
+    (∑ p : I → F, ∏ l : I, Mlt m (p l)) =
+      (Mlt m 0 + Mlt m 1)^(Fintype.card I) := by
+  classical
+  rw [← Fintype.prod_sum (fun (_ : I) (z : F) => Mlt m z)]
+  have htwo : (Finset.univ : Finset F) = {0, 1} := by decide
+  have h01 : (0 : F) ∉ ({1} : Finset F) := by decide
+  have hz : (∑ z : F, Mlt m z) = Mlt m 0 + Mlt m 1 := by
+    rw [htwo, Finset.sum_insert h01, Finset.sum_singleton]
+  simp only [hz, Finset.prod_const, Finset.card_univ]
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ASE_free_sum
+
+/-- Bound only pivot weights; sum over all free parity coordinates exactly. -/
+theorem p4Q2PZ37ASE_survivors_le_systematic (H m : ℕ) :
+    (p4Q2PZ37ASB_survivors H m).card ≤
+      (MaxM m)^(Rank H) * (Mlt m 0 + Mlt m 1)^(Dim H) := by
+  classical
+  obtain ⟨s, hs, ht, hbij⟩ := p4Q2PZ37ASE_systematic H
+  let e : ↥(Closed H) ≃ (↥(sᶜ : Finset (Link H)) → F) :=
+    Equiv.ofBijective _ hbij
+  have hweight (p : ↥(Closed H)) :
+      (∏ l : Link H, Mlt m (p.val l)) ≤
+        (MaxM m)^s.card * ∏ l : ↥(sᶜ : Finset (Link H)), Mlt m (e p l) := by
+    have h : (∏ l ∈ s, Mlt m (p.val l)) ≤ (MaxM m)^s.card := by
+      calc
+        _ ≤ ∏ l ∈ s, MaxM m := by
+          apply Finset.prod_le_prod
+          · intro l _
+            exact Nat.zero_le _
+          · intro l _
+            exact p4Q2PZ37ASC_multiplicity_le_max m (p.val l)
+        _ = _ := by rw [Finset.prod_const]
+    rw [← Finset.prod_mul_prod_compl s (fun l => Mlt m (p.val l))]
+    calc
+      _ ≤ (MaxM m)^s.card * ∏ l ∈ sᶜ, Mlt m (p.val l) :=
+        Nat.mul_le_mul_right _ h
+      _ = _ := by
+        change _ = (MaxM m)^s.card *
+          ∏ l : ↥(sᶜ : Finset (Link H)), Mlt m (p.val l.val)
+        exact congrArg (fun n : ℕ => (MaxM m)^s.card * n)
+          (Finset.prod_coe_sort (sᶜ : Finset (Link H))
+            (fun l : Link H => Mlt m (p.val l))).symm
+  rw [p4Q2PZ37ASB_survivor_card, ← Finset.sum_coe_sort]
+  calc
+    _ ≤ ∑ p : ↥(Closed H), (MaxM m)^s.card *
+        ∏ l : ↥(sᶜ : Finset (Link H)), Mlt m (e p l) := by
+      apply Finset.sum_le_sum
+      intro p _
+      exact hweight p
+    _ = (MaxM m)^s.card *
+        ∑ f : (↥(sᶜ : Finset (Link H)) → F),
+          ∏ l : ↥(sᶜ : Finset (Link H)), Mlt m (f l) := by
+      rw [← Finset.mul_sum]
+      congr 1
+      exact e.sum_comp (fun f => ∏ l : ↥(sᶜ : Finset (Link H)), Mlt m (f l))
+    _ = _ := by rw [p4Q2PZ37ASE_free_sum, Fintype.card_coe, hs, ht]
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ASE_survivors_le_systematic
+
+theorem p4Q2PZ37ASE_survivors_le_numeric (H m : ℕ) :
+    (p4Q2PZ37ASB_survivors H m).card ≤
+      (MaxM m)^(8*(H+1)^3-1) *
+        (Mlt m 0 + Mlt m 1)^(16*(H+1)^3+1) := by
+  simpa only [p4Q2PZ37ASD_rank_numeric, p4Q2PZ37ASD_cycleDim_numeric] using
+    p4Q2PZ37ASE_survivors_le_systematic H m
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ASE_survivors_le_numeric
+
+/-- The systematic envelope never exceeds the previous maximal-weight bound. -/
+theorem p4Q2PZ37ASE_envelope_le_cycleWeight (H m : ℕ) :
+    (MaxM m)^(Rank H) * (Mlt m 0 + Mlt m 1)^(Dim H) ≤
+      2^(Dim H) * (MaxM m)^(Nat.card (Link H)) := by
+  have hm0 := p4Q2PZ37ASC_multiplicity_le_max m 0
+  have hm1 := p4Q2PZ37ASC_multiplicity_le_max m 1
+  have hm : Mlt m 0 + Mlt m 1 ≤ 2 * MaxM m := by omega
+  calc
+    _ ≤ (MaxM m)^(Rank H) * (2 * MaxM m)^(Dim H) :=
+      Nat.mul_le_mul_left _ (Nat.pow_le_pow_left hm _)
+    _ = _ := by
+      rw [mul_pow, ← p4Q2PZ37ASC_rank_nullity H, pow_add]
+      ac_rfl
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ASE_envelope_le_cycleWeight
+
+end
+end MGAP4D.MathlibAnalytic
