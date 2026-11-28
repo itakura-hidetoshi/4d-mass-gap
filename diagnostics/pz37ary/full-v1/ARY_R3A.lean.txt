@@ -1,0 +1,338 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalSymmetricTaylorSlabV5_PZ37ARX
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalSeparableKernelRankApproximationV5_PZ37ARO
+import Mathlib.MeasureTheory.Function.LpSpace.ContinuousFunctions
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37ARY — compressed normalized Taylor approximation and projected feature span
+Transfer the exact symmetric monomial ARX approximation into the literal
+product Haar L² with the unchanged ARW normalization error. Compress
+through the actual gauge-invariant excitation embedding and its adjoint.
+Retain the span of the projected right factors, not merely their number.
+No volume-uniform normalized error, minimal rank, or growth assertion.
+-/
+namespace MGAP4D.MathlibAnalytic
+open MeasureTheory Filter
+open scoped ENNReal Topology BigOperators InnerProductSpace InnerProduct
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 1000000
+set_option synthInstance.maxHeartbeats 50000
+universe i u v
+
+private theorem p4Q2PZ37ARY_sum_ae
+    {X I : Type*} [MeasurableSpace X] {mu : Measure X}
+    (s : Finset I) (v : I → Lp ℝ 2 mu) (f : I → X → ℝ)
+    (h : ∀ i, (fun x => v i x) =ᵐ[mu] f i) :
+    (fun x => (∑ i ∈ s, v i) x) =ᵐ[mu] (fun x => ∑ i ∈ s, f i x) := by
+  classical
+  induction s using Finset.induction_on with
+  | empty =>
+      simpa using (Lp.coeFn_zero (E := ℝ) (p := (2 : ℝ≥0∞)) (μ := mu))
+  | @insert j s hj ih =>
+      simp only [Finset.sum_insert hj]
+      filter_upwards [Lp.coeFn_add (v j) (∑ i ∈ s, v i), h j, ih] with x hx h1 h2
+      calc
+        _ = v j x + (∑ i ∈ s, v i) x := hx
+        _ = _ := by rw [h1,h2]
+
+private theorem p4Q2PZ37ARY_norm_bound
+    {X : Type*} [MeasurableSpace X] {mu : Measure X}
+    [IsProbabilityMeasure mu] (z : Lp ℝ 2 mu) (e : ℝ) (he : 0 ≤ e)
+    (h : ∀ᵐ x ∂mu, ‖z x‖ ≤ e) : ‖z‖ ≤ e := by
+  have hi : Integrable (fun x => ‖z x‖ ^ 2) mu :=
+    (memLp_two_iff_integrable_sq_norm (Lp.aestronglyMeasurable z)).1 (Lp.memLp z)
+  have hh : ∀ᵐ x ∂mu, ‖z x‖ ^ 2 ≤ e ^ 2 :=
+    h.mono (fun x hx => by nlinarith [norm_nonneg (z x)])
+  have hl := integral_mono_ae hi (integrable_const (e ^ 2)) hh
+  rw [← realL2_norm_sq_eq_integral_norm_sq z] at hl
+  have hs : ‖z‖ ^ 2 ≤ e ^ 2 := by simpa using hl
+  nlinarith [norm_nonneg z]
+
+private theorem p4Q2PZ37ARY_raw_transfer
+    {X : Type} [TopologicalSpace X] [CompactSpace X]
+    [MeasurableSpace X] [BorelSpace X]
+    (mu : Measure X) [IsProbabilityMeasure mu]
+    (raw : Lp ℝ 2 (mu.prod mu)) (k : X × X → ℝ)
+    (hraw : (fun z => raw z) =ᵐ[mu.prod mu] k)
+    (d : ℕ) (a b : Fin d → X → ℝ)
+    (ha : ∀ i, Continuous (a i)) (hb : ∀ i, Continuous (b i))
+    (e : ℝ) (he : 0 ≤ e)
+    (hclose : ∀ z : X × X, |k z - ∑ i, a i z.1 * b i z.2| ≤ e) :
+    ∃ u v : Fin d → Lp ℝ 2 mu,
+      ‖raw - ∑ i, realL2ExternalTensor (u i) (v i)‖ ≤ e := by
+  classical
+  let u : Fin d → Lp ℝ 2 mu :=
+    fun i => ContinuousMap.toLp 2 mu ℝ ⟨a i,ha i⟩
+  let v : Fin d → Lp ℝ 2 mu :=
+    fun i => ContinuousMap.toLp 2 mu ℝ ⟨b i,hb i⟩
+  have hu (i : Fin d) : (fun x => u i x) =ᵐ[mu] a i :=
+    ContinuousMap.coeFn_toLp (𝕜 := ℝ) (p := 2) mu ⟨a i,ha i⟩
+  have hv (i : Fin d) : (fun x => v i x) =ᵐ[mu] b i :=
+    ContinuousMap.coeFn_toLp (𝕜 := ℝ) (p := 2) mu ⟨b i,hb i⟩
+  have ht (i : Fin d) :
+      (fun z => realL2ExternalTensor (u i) (v i) z) =ᵐ[mu.prod mu]
+        (fun z : X × X => a i z.1 * b i z.2) := by
+    have hu' : (fun z : X × X => u i z.1) =ᵐ[mu.prod mu]
+        (fun z => a i z.1) :=
+      (Measure.quasiMeasurePreserving_fst (μ := mu) (ν := mu)).ae_eq (hu i)
+    have hv' : (fun z : X × X => v i z.2) =ᵐ[mu.prod mu]
+        (fun z => b i z.2) :=
+      (Measure.quasiMeasurePreserving_snd (μ := mu) (ν := mu)).ae_eq (hv i)
+    filter_upwards [realL2ExternalTensor_coeFn (u i) (v i),hu',hv'] with z hz h1 h2
+    calc
+      _ = u i z.1 * v i z.2 := hz
+      _ = _ := by rw [h1,h2]
+  let S : Lp ℝ 2 (mu.prod mu) := ∑ i, realL2ExternalTensor (u i) (v i)
+  have hS : (fun z => S z) =ᵐ[mu.prod mu]
+      (fun z => ∑ i, a i z.1 * b i z.2) :=
+    p4Q2PZ37ARY_sum_ae Finset.univ _ _ ht
+  refine ⟨u,v,?_⟩
+  change ‖raw - S‖ ≤ e
+  apply p4Q2PZ37ARY_norm_bound _ e he
+  filter_upwards [Lp.coeFn_sub raw S,hraw,hS] with z hz hr hs
+  calc
+    _ = |raw z - S z| := by
+      rw [Real.norm_eq_abs]
+      exact congrArg abs hz
+    _ = |k z - ∑ i, a i z.1 * b i z.2| := by rw [hr,hs]
+    _ ≤ _ := hclose z
+
+/-- An explicit projection-sensitive refinement of the ARO rank bound. -/
+theorem p4Q2PZ37ARY_projected_approx
+    {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {α : Type v} [MeasurableSpace α] {μ : Measure α} [SFinite μ]
+    (J : E →ₗᵢ[ℝ] Lp ℝ 2 μ) (T : E →L[ℝ] E)
+    (L : Lp ℝ 2 (μ.prod μ))
+    (hpair : ∀ x y : E, inner ℝ (T x) y =
+      inner ℝ (realL2ExternalTensor (J x) (J y)) L)
+    (d : ℕ) (a b : Fin d → Lp ℝ 2 μ) :
+    ∃ F : E →L[ℝ] E,
+      Nonempty (Module.Finite ℝ (LinearMap.range F.toLinearMap)) ∧
+      LinearMap.range F.toLinearMap ≤
+        Submodule.span ℝ (Set.range (fun j : Fin d => J.toContinuousLinearMap.adjoint (b j))) ∧
+      Module.finrank ℝ (LinearMap.range F.toLinearMap) ≤
+        Module.finrank ℝ (Submodule.span ℝ
+          (Set.range (fun j : Fin d => J.toContinuousLinearMap.adjoint (b j)))) ∧
+      Module.finrank ℝ (Submodule.span ℝ
+        (Set.range (fun j : Fin d => J.toContinuousLinearMap.adjoint (b j)))) ≤ d ∧
+      ‖T-F‖ ≤ ‖L - ∑ j, realL2ExternalTensor (a j) (b j)‖ := by
+  classical
+  let P := J.toContinuousLinearMap.adjoint
+  let F : E →L[ℝ] E := ∑ j : Fin d, InnerProductSpace.rankOne ℝ (P (b j)) (P (a j))
+  let W : Submodule ℝ E := Submodule.span ℝ (Set.range (fun j : Fin d => P (b j)))
+  haveI : Module.Finite ℝ W := Module.Finite.span_of_finite ℝ (Set.finite_range _)
+  have hW (x : E) : F x ∈ W := by
+    change (∑ j : Fin d, InnerProductSpace.rankOne ℝ (P (b j)) (P (a j))) x ∈ W
+    rw [ContinuousLinearMap.sum_apply]
+    apply Submodule.sum_mem
+    intro j _
+    rw [InnerProductSpace.rankOne_apply]
+    exact Submodule.smul_mem W _ (Submodule.subset_span ⟨j,rfl⟩)
+  have hle : LinearMap.range F.toLinearMap ≤ W := by
+    rintro y ⟨x,rfl⟩
+    exact hW x
+  haveI : Module.Finite ℝ (LinearMap.range F.toLinearMap) :=
+    Module.Finite.of_injective (Submodule.inclusion hle)
+      (fun x y h => Subtype.ext (congrArg (fun z : W => (z : E)) h))
+  have hdim : Module.finrank ℝ W ≤ d := by
+    simpa [W] using (finrank_range_le_card (R := ℝ) (fun j : Fin d => P (b j)))
+  refine ⟨F,⟨inferInstance⟩,hle,Submodule.finrank_mono hle,hdim,?_⟩
+  let D := L - ∑ j : Fin d, realL2ExternalTensor (a j) (b j)
+  have hF (x y : E) : inner ℝ (F x) y =
+      inner ℝ (realL2ExternalTensor (J x) (J y))
+        (∑ j : Fin d, realL2ExternalTensor (a j) (b j)) := by
+    change inner ℝ ((∑ j : Fin d, InnerProductSpace.rankOne ℝ (P (b j)) (P (a j))) x) y = _
+    rw [ContinuousLinearMap.sum_apply, sum_inner, inner_sum]
+    apply Finset.sum_congr rfl
+    intro j _
+    rw [InnerProductSpace.rankOne_apply, real_inner_smul_left, realL2ExternalTensor_inner]
+    simp only [P, ContinuousLinearMap.adjoint_inner_left]
+    change inner ℝ (a j) (J x) * inner ℝ (b j) (J y) =
+      inner ℝ (J x) (a j) * inner ℝ (J y) (b j)
+    rw [real_inner_comm (a j) (J x), real_inner_comm (b j) (J y)]
+  have hdiff (x y : E) : inner ℝ ((T-F) x) y =
+      inner ℝ (realL2ExternalTensor (J x) (J y)) D := by
+    rw [ContinuousLinearMap.sub_apply, inner_sub_left, hpair, hF]
+    exact (inner_sub_right _ _ _).symm
+  have hbound (x y : E) : inner ℝ ((T-F) x) y ≤ ‖D‖ * ‖x‖ * ‖y‖ := by
+    rw [hdiff]
+    calc
+      _ ≤ ‖realL2ExternalTensor (J x) (J y)‖ * ‖D‖ := real_inner_le_norm _ _
+      _ = _ := by rw [realL2ExternalTensor_norm, J.norm_map, J.norm_map]; ring
+  change ‖T-F‖ ≤ ‖D‖
+  apply ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg D)
+  intro x
+  have h := hbound x ((T-F) x)
+  rw [real_inner_self_eq_norm_sq] at h
+  by_contra! hn
+  have hp : 0 < ‖(T-F) x‖ :=
+    lt_of_le_of_lt (mul_nonneg (norm_nonneg D) (norm_nonneg x)) hn
+  have hlt := mul_lt_mul_of_pos_right hn hp
+  rw [← pow_two] at hlt
+  exact (not_lt_of_ge h) hlt
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARY_projected_approx
+
+private def p4Q2PZ37ARY_projectedSpanAux
+    {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {α : Type v} [MeasurableSpace α] {μ : Measure α}
+    (J : E →ₗᵢ[ℝ] Lp ℝ 2 μ) (d : ℕ) (b : Fin d → Lp ℝ 2 μ) :
+    Submodule ℝ E :=
+  Submodule.span ℝ (Set.range (fun j : Fin d => J.toContinuousLinearMap.adjoint (b j)))
+
+private theorem p4Q2PZ37ARY_two_pos : 0 < (2 : ℕ) := by decide
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "Cfg" => PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "K" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+local notation "Phys" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "Emb" => periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+local notation "Step" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+local notation "T" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+local notation "Raw" => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2
+local notation "Kernel" => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+local notation "L" => periodicHypercubicEvenSpatialSliceLinkList
+local notation "E" => p4Q2PZ37ARU_tail
+local notation "D" => p4Q2PZ37ARX_slabTerms
+local notation "NK" => p4Q2PZ37ARA_normalizedKernel
+local notation "h2" => p4Q2PZ37ARY_two_pos
+
+local instance p4Q2PZ37ARY_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37ARY_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37ARY_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37ARY_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37ARY_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37ARY_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) := Fintype.ofFinite _
+local instance p4Q2PZ37ARY_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) := Fintype.ofFinite _
+local instance p4Q2PZ37ARY_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37ARY_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+local instance p4Q2PZ37ARY_nontrivial : Nontrivial G := by
+  refine ⟨⟨1, specialUnitaryTwoRotation Real.pi, ?_⟩⟩
+  intro h
+  have h00 := congrArg
+    (fun g : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+      (g : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
+  norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
+
+/-- Actual normalized product-Haar L² approximation with the ARX symmetric budget. -/
+theorem p4Q2PZ37ARY_normalized_separable
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (m : ℕ) :
+    ∃ a b : Fin (D H m) → Lp ℝ 2 (Mu H 2),
+      ‖(show Lp ℝ 2 ((Mu H 2).prod (Mu H 2)) from NK H beta hb) -
+        ∑ i, realL2ExternalTensor (a i) (b i)‖ ≤
+        p4Q2PZ37ARW_normalizedError H beta hb m := by
+  obtain ⟨a,b,ha,hb',he⟩ := p4Q2PZ37ARX_slab_approximation H beta hb m
+  have hr : (fun z => Raw H 2 h2 beta hb z) =ᵐ[(Mu H 2).prod (Mu H 2)]
+      (fun z => Kernel H 2 beta z.1 z.2) :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2_coeFn H 2 h2 beta hb
+  obtain ⟨u,v,huv⟩ := p4Q2PZ37ARY_raw_transfer (Mu H 2)
+    (show Lp ℝ 2 ((Mu H 2).prod (Mu H 2)) from Raw H 2 h2 beta hb)
+    (fun z => Kernel H 2 beta z.1 z.2) hr (D H m) a b ha hb'
+    (((L H).length : ℝ)*E beta m)
+    (mul_nonneg (Nat.cast_nonneg _) (p4Q2PZ37ARU_tail_nonneg beta hb m))
+    (fun z => he z.1 z.2)
+  let c := ‖T H 2 h2 beta hb‖⁻¹
+  have hc : 0 ≤ c := inv_nonneg.mpr (le_of_lt (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos H 2 h2 beta hb))
+  refine ⟨fun i => c • u i,v,?_⟩
+  change ‖c • (show Lp ℝ 2 ((Mu H 2).prod (Mu H 2)) from Raw H 2 h2 beta hb) -
+      ∑ i, realL2ExternalTensor (c • u i) (v i)‖ ≤
+    c * (((L H).length : ℝ)*E beta m)
+  simp_rw [realL2ExternalTensor_smul_left]
+  rw [← Finset.smul_sum, ← smul_sub, norm_smul, Real.norm_eq_abs, abs_of_nonneg hc]
+  exact mul_le_mul_of_nonneg_left huv hc
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARY_normalized_separable
+
+/-- Span of the right factors compressed through the actual excitation
+isometry. It can have smaller dimension than the raw separable budget. -/
+def p4Q2PZ37ARY_projectedSpan
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (d : ℕ) (b : Fin d → Lp ℝ 2 (Mu H 2)) : Submodule ℝ ↥(K H 2 h2 beta hb) := by
+  letI : CompleteSpace (Phys H 2) :=
+    (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule_isClosed H 2).completeSpace_coe
+  letI : CompleteSpace (K H 2 h2 beta hb) :=
+    ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
+      H 2 h2 beta hb).isClosed_orthogonal).completeSpace_coe
+  exact @p4Q2PZ37ARY_projectedSpanAux
+    ↥(K H 2 h2 beta hb) inferInstance inferInstance inferInstance
+    _ inferInstance (Mu H 2) (Emb H 2 h2 beta hb) d b
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARY_projectedSpan
+
+theorem p4Q2PZ37ARY_projectedRankApprox
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (m : ℕ) :
+    ∃ a b : Fin (D H m) → Lp ℝ 2 (Mu H 2),
+      ‖(show Lp ℝ 2 ((Mu H 2).prod (Mu H 2)) from NK H beta hb) -
+        ∑ i, realL2ExternalTensor (a i) (b i)‖ ≤
+        p4Q2PZ37ARW_normalizedError H beta hb m ∧
+      ∃ F : ↥(K H 2 h2 beta hb) →L[ℝ] ↥(K H 2 h2 beta hb),
+        Nonempty (Module.Finite ℝ (LinearMap.range F.toLinearMap)) ∧
+        LinearMap.range F.toLinearMap ≤ p4Q2PZ37ARY_projectedSpan H beta hb (D H m) b ∧
+        Module.finrank ℝ (LinearMap.range F.toLinearMap) ≤
+          Module.finrank ℝ (p4Q2PZ37ARY_projectedSpan H beta hb (D H m) b) ∧
+        Module.finrank ℝ (p4Q2PZ37ARY_projectedSpan H beta hb (D H m) b) ≤ D H m ∧
+        ‖Step H 2 h2 beta hb-F‖ ≤ p4Q2PZ37ARW_normalizedError H beta hb m := by
+  obtain ⟨a,b,he⟩ := p4Q2PZ37ARY_normalized_separable H beta hb m
+  letI : CompleteSpace (Phys H 2) :=
+    (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule_isClosed H 2).completeSpace_coe
+  letI : CompleteSpace (K H 2 h2 beta hb) :=
+    ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
+      H 2 h2 beta hb).isClosed_orthogonal).completeSpace_coe
+  have hpair (x y : K H 2 h2 beta hb) :
+      inner ℝ (Step H 2 h2 beta hb x) y =
+        inner ℝ (realL2ExternalTensor (Emb H 2 h2 beta hb x)
+          (Emb H 2 h2 beta hb y)) (NK H beta hb) :=
+    (p4Q2PZ37ARA_kernel_inner H beta hb x y).symm
+  obtain ⟨F,hf,hr,hd,hcap,herr⟩ :=
+    @p4Q2PZ37ARY_projected_approx
+      ↥(K H 2 h2 beta hb) inferInstance inferInstance inferInstance
+      _ inferInstance (Mu H 2) inferInstance
+      (Emb H 2 h2 beta hb) (Step H 2 h2 beta hb) (NK H beta hb) hpair (D H m) a b
+  refine ⟨a,b,he,F,hf,?_,?_,?_,herr.trans he⟩
+  · simpa only [p4Q2PZ37ARY_projectedSpan, p4Q2PZ37ARY_projectedSpanAux] using hr
+  · simpa only [p4Q2PZ37ARY_projectedSpan, p4Q2PZ37ARY_projectedSpanAux] using hd
+  · simpa only [p4Q2PZ37ARY_projectedSpan, p4Q2PZ37ARY_projectedSpanAux] using hcap
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARY_projectedRankApprox
+
+theorem p4Q2PZ37ARY_rankApprox
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (m : ℕ) :
+    ∃ F : ↥(K H 2 h2 beta hb) →L[ℝ] ↥(K H 2 h2 beta hb),
+      Nonempty (Module.Finite ℝ (LinearMap.range F.toLinearMap)) ∧
+      Module.finrank ℝ (LinearMap.range F.toLinearMap) ≤ D H m ∧
+      ‖Step H 2 h2 beta hb-F‖ ≤ p4Q2PZ37ARW_normalizedError H beta hb m := by
+  obtain ⟨a,b,he⟩ := p4Q2PZ37ARY_normalized_separable H beta hb m
+  obtain ⟨F,hf,hd,herr⟩ :=
+    p4Q2PZ37ARO_exists_rankApprox_of_separableKernel H beta hb (D H m) a b
+  exact ⟨F,hf,hd,herr.trans he⟩
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARY_rankApprox
+
+theorem p4Q2PZ37ARY_count_le
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    {ι : Type i} (B : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (he : ∀ k, Step H 2 h2 beta hb (B k) = rho k • B k)
+    (m : ℕ) (r : ℝ) (hr : 0 < r)
+    (hclose : p4Q2PZ37ARW_normalizedError H beta hb m < r) :
+    p4Q2PZ37ARL_spectralCount rho r ≤ (D H m : ℝ≥0∞) := by
+  obtain ⟨a,b,hab⟩ := p4Q2PZ37ARY_normalized_separable H beta hb m
+  exact p4Q2PZ37ARO_count_le_separableTerms H beta hb B rho he r hr (D H m) a b
+    (hab.trans_lt hclose)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARY_count_le
+
+end
+end MGAP4D.MathlibAnalytic
