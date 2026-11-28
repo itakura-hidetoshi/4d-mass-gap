@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "baseline_commit": "f8ff41bae31f96874b37f5c927dd3d14e5becd47",
+  "baseline_mgap4d_tree": "80c6b79ed99952466b95931ba2b24651b621b0c0",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalParityCycleDimensionV5_PZ37ASC",
+    "MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpatialSliceActiveGraphConnectivity",
+    "Mathlib.LinearAlgebra.Dimension.Free",
+    "Mathlib.LinearAlgebra.FiniteDimensional.Lemmas",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "ASD",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASD_sumMap",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASD_boundary_column",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASD_range_le_zeroSum",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASD_pair_mem_range",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASD_range_eq_zeroSum",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASD_sum_surjective",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASD_rank",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASD_vertex_card",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASD_link_card",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASD_rank_numeric",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASD_cycleDim_numeric",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASD_closed_card_numeric",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASD_survivors_le_numeric"
+      ],
+      "candidates": [
+        {
+          "id": "R2A",
+          "path": "diagnostics/pz37asd/full-v1/ASD_R2A.lean.txt",
+          "blob": "4f245ef06f1b8e79992307141f2a6b34bbfd672f"
+        }
+      ]
+    }
+  ]
+}
