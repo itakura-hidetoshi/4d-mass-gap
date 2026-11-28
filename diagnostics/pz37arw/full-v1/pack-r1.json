@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "baseline_commit": "2d562ea1a33cf255969bdb0bd2cf0ad9b8ab1535",
+  "baseline_mgap4d_tree": "ba1191e39222b48c82bb2a4ddebb485c8a8e4418",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalFiniteSeparableTaylorSlabV5_PZ37ARV",
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalSeparableKernelRankApproximationV5_PZ37ARO",
+    "Mathlib.MeasureTheory.Function.LpSpace.ContinuousFunctions",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "ARW",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARW_normalizedError",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARW_error_nonneg",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARW_normalized_separable",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARW_rankApprox",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ARW_count_le"
+      ],
+      "candidates": [
+        {
+          "id": "R1A",
+          "path": "diagnostics/pz37arw/full-v1/ARW_R1A.lean.txt",
+          "blob": "b995fcb7fa28abcf4666f9f87076bd1451357e1d"
+        },
+        {
+          "id": "R1B",
+          "path": "diagnostics/pz37arw/full-v1/ARW_R1B.lean.txt",
+          "blob": "03c6564e73eccd57576b58e2b5d95e203365641e"
+        }
+      ]
+    }
+  ]
+}
