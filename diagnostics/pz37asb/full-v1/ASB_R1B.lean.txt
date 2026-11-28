@@ -1,0 +1,371 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalIndexedTaylorVertexParityV5_PZ37ASA
+import Mathlib.Data.ZMod.Basic
+import Mathlib.Data.Fintype.BigOperators
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37ASB — exact parity survivor count and normalized excitation rank
+
+Use actual ASA indexed weighted factors. Reduce endpoint degrees modulo
+two in the literal lattice incidence map. Count the surviving symmetric
+indices by the weighted sum over zero-boundary parity patterns, with
+each link's full local parity multiplicity. Transfer this exact count to
+a genuine finite-rank approximation and a threshold spectral count,
+without increasing ARW's normalization error. Even parity is only a
+necessary condition; no exact rank, cycle dimension, uniform volume
+bound, or continuum assertion is made.
+-/
+namespace MGAP4D.MathlibAnalytic
+open MeasureTheory Filter
+open scoped ENNReal Topology BigOperators InnerProductSpace InnerProduct
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 1000000
+set_option synthInstance.maxHeartbeats 50000
+universe i
+
+private theorem p4Q2PZ37ASB_sum_ae
+    {X I : Type*} [MeasurableSpace X] {mu : Measure X}
+    (s : Finset I) (v : I → Lp ℝ 2 mu) (f : I → X → ℝ)
+    (h : ∀ i, (fun x => v i x) =ᵐ[mu] f i) :
+    (fun x => (∑ i ∈ s, v i) x) =ᵐ[mu] (fun x => ∑ i ∈ s, f i x) := by
+  classical
+  induction s using Finset.induction_on with
+  | empty =>
+      simpa using (Lp.coeFn_zero (E := ℝ) (p := (2 : ℝ≥0∞)) (μ := mu))
+  | @insert j s hj ih =>
+      simp only [Finset.sum_insert hj]
+      filter_upwards [Lp.coeFn_add (v j) (∑ i ∈ s, v i), h j, ih] with x hx h1 h2
+      calc
+        _ = v j x + (∑ i ∈ s, v i) x := hx
+        _ = _ := by rw [h1,h2]
+
+private theorem p4Q2PZ37ASB_norm_bound
+    {X : Type*} [MeasurableSpace X] {mu : Measure X}
+    [IsProbabilityMeasure mu] (z : Lp ℝ 2 mu) (e : ℝ) (he : 0 ≤ e)
+    (h : ∀ᵐ x ∂mu, ‖z x‖ ≤ e) : ‖z‖ ≤ e := by
+  have hi : Integrable (fun x => ‖z x‖ ^ 2) mu :=
+    (memLp_two_iff_integrable_sq_norm (Lp.aestronglyMeasurable z)).1 (Lp.memLp z)
+  have hh : ∀ᵐ x ∂mu, ‖z x‖ ^ 2 ≤ e ^ 2 :=
+    h.mono (fun x hx => by nlinarith [norm_nonneg (z x)])
+  have hl := integral_mono_ae hi (integrable_const (e ^ 2)) hh
+  rw [← realL2_norm_sq_eq_integral_norm_sq z] at hl
+  have hs : ‖z‖ ^ 2 ≤ e ^ 2 := by simpa using hl
+  nlinarith [norm_nonneg z]
+
+private theorem p4Q2PZ37ASB_raw_transfer
+    {X : Type} [TopologicalSpace X] [CompactSpace X]
+    [MeasurableSpace X] [BorelSpace X]
+    (mu : Measure X) [IsProbabilityMeasure mu]
+    (raw : Lp ℝ 2 (mu.prod mu)) (k : X × X → ℝ)
+    (hraw : (fun z => raw z) =ᵐ[mu.prod mu] k)
+    {I : Type} [Fintype I] (a b : I → X → ℝ)
+    (u v : I → Lp ℝ 2 mu)
+    (hu : ∀ i, (fun x => u i x) =ᵐ[mu] a i)
+    (hv : ∀ i, (fun x => v i x) =ᵐ[mu] b i)
+    (e : ℝ) (he : 0 ≤ e)
+    (hclose : ∀ z : X × X, |k z - ∑ i, a i z.1 * b i z.2| ≤ e) :
+    ‖raw - ∑ i, realL2ExternalTensor (u i) (v i)‖ ≤ e := by
+  classical
+  have ht (i : I) :
+      (fun z => realL2ExternalTensor (u i) (v i) z) =ᵐ[mu.prod mu]
+        (fun z : X × X => a i z.1 * b i z.2) := by
+    have hu' : (fun z : X × X => u i z.1) =ᵐ[mu.prod mu]
+        (fun z => a i z.1) :=
+      (Measure.quasiMeasurePreserving_fst (μ := mu) (ν := mu)).ae_eq (hu i)
+    have hv' : (fun z : X × X => v i z.2) =ᵐ[mu.prod mu]
+        (fun z => b i z.2) :=
+      (Measure.quasiMeasurePreserving_snd (μ := mu) (ν := mu)).ae_eq (hv i)
+    filter_upwards [realL2ExternalTensor_coeFn (u i) (v i),hu',hv'] with z hz h1 h2
+    calc
+      _ = u i z.1 * v i z.2 := hz
+      _ = _ := by rw [h1,h2]
+  let S : Lp ℝ 2 (mu.prod mu) := ∑ i, realL2ExternalTensor (u i) (v i)
+  have hS : (fun z => S z) =ᵐ[mu.prod mu]
+      (fun z => ∑ i, a i z.1 * b i z.2) :=
+    p4Q2PZ37ASB_sum_ae Finset.univ _ _ ht
+  change ‖raw - S‖ ≤ e
+  apply p4Q2PZ37ASB_norm_bound _ e he
+  filter_upwards [Lp.coeFn_sub raw S,hraw,hS] with z hz hr hs
+  calc
+    _ = |raw z - S z| := by
+      rw [Real.norm_eq_abs]
+      exact congrArg abs hz
+    _ = |k z - ∑ i, a i z.1 * b i z.2| := by rw [hr,hs]
+    _ ≤ _ := hclose z
+
+
+private theorem p4Q2PZ37ASB_two_pos : 0 < (2 : ℕ) := by decide
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "Cfg" => PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "K" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+local notation "Phys" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "Emb" => periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+local notation "Step" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+local notation "T" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+local notation "Raw" => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2
+local notation "Kernel" => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+local notation "L" => periodicHypercubicEvenSpatialSliceLinkList
+local notation "NK" => p4Q2PZ37ARA_normalizedKernel
+local notation "h2" => p4Q2PZ37ASB_two_pos
+
+local instance p4Q2PZ37ASB_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37ASB_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37ASB_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37ASB_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37ASB_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37ASB_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) := Fintype.ofFinite _
+local instance p4Q2PZ37ASB_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) := Fintype.ofFinite _
+local instance p4Q2PZ37ASB_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37ASB_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+local instance p4Q2PZ37ASB_nontrivial : Nontrivial G := by
+  refine ⟨⟨1, specialUnitaryTwoRotation Real.pi, ?_⟩⟩
+  intro h
+  have h00 := congrArg
+    (fun g : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+      (g : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
+  norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
+
+
+local notation "Gauge" => PeriodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransformation
+local notation "GT" => periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform
+local notation "Pull" => periodicHypercubicEvenSpecialUnitarySpatialSliceGaugePullbackLinearIsometry
+local notation "Link" => PeriodicHypercubicEvenSpatialSliceLink
+local notation "W" => periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeight
+local notation "Coord" => ((Fin 2 × Fin 2) × Bool)
+
+
+local notation "J" => ((Fin 2 × Fin 2) × Bool)
+local notation "Tr" => specialUnitaryNormalizedTraceRelativeKernel
+local notation "kp" => specialUnitaryWilsonRelativeKernelPartial
+local notation "Vtx" => PeriodicHypercubicEvenSpatialSliceVertex
+local notation "Idx" => PZ37ARXLocalIndex
+local notation "Mat" => Matrix (Fin 2) (Fin 2) ℂ
+local notation "c0" => p4Q2PZ35D4_centralMinusOne
+
+
+local notation "All" => fun H m : ℕ => Link H → Idx m
+local notation "Pat" => fun H : ℕ => Link H → ZMod 2
+
+/-- Literal incidence map over the field of two elements. -/
+def p4Q2PZ37ASB_boundary (H : ℕ) : Pat H →ₗ[ZMod 2] (Vtx H → ZMod 2) where
+  toFun p v := ∑ l : Link H, (p4Q2PZ37ASA_incidence H v l : ZMod 2) * p l
+  map_add' p q := by
+    funext v
+    change (∑ l : Link H, (p4Q2PZ37ASA_incidence H v l : ZMod 2) * (p l+q l)) = _
+    simp only [mul_add, Finset.sum_add_distrib, Pi.add_apply]
+  map_smul' c p := by
+    funext v
+    change (∑ l : Link H, (p4Q2PZ37ASA_incidence H v l : ZMod 2) * (c*p l)) =
+      c * (∑ l : Link H, (p4Q2PZ37ASA_incidence H v l : ZMod 2) * p l)
+    rw [Finset.mul_sum]
+    apply Finset.sum_congr rfl
+    intro l _
+    ring
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ASB_boundary
+
+def p4Q2PZ37ASB_pattern (H m : ℕ) (j : All H m) : Pat H :=
+  fun l => ((j l).1.val : ZMod 2)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ASB_pattern
+
+theorem p4Q2PZ37ASB_boundary_degree (H m : ℕ) (j : All H m) (v : Vtx H) :
+    p4Q2PZ37ASB_boundary H (p4Q2PZ37ASB_pattern H m j) v =
+      (p4Q2PZ37ASA_vertexDegree H m v j : ZMod 2) := by
+  change (∑ l : Link H, (p4Q2PZ37ASA_incidence H v l : ZMod 2) *
+    ((j l).1.val : ZMod 2)) = (p4Q2PZ37ASA_vertexDegree H m v j : ZMod 2)
+  unfold p4Q2PZ37ASA_vertexDegree
+  simp only [Nat.cast_sum,Nat.cast_mul]
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ASB_boundary_degree
+
+def p4Q2PZ37ASB_closedPatterns (H : ℕ) : Finset (Pat H) :=
+  Finset.univ.filter (fun p => p4Q2PZ37ASB_boundary H p = 0)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ASB_closedPatterns
+
+def p4Q2PZ37ASB_survivors (H m : ℕ) : Finset (All H m) :=
+  Finset.univ.filter (fun j => p4Q2PZ37ASB_pattern H m j ∈ p4Q2PZ37ASB_closedPatterns H)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ASB_survivors
+
+theorem p4Q2PZ37ASB_mem_survivors (H m : ℕ) (j : All H m) :
+    j ∈ p4Q2PZ37ASB_survivors H m ↔ ∀ v : Vtx H, Even (p4Q2PZ37ASA_vertexDegree H m v j) := by
+  simp only [p4Q2PZ37ASB_survivors, p4Q2PZ37ASB_closedPatterns, Finset.mem_filter,
+    Finset.mem_univ, true_and]
+  constructor
+  · intro h v
+    have hv := congrFun h v
+    rw [p4Q2PZ37ASB_boundary_degree] at hv
+    exact ZMod.natCast_eq_zero_iff_even.mp hv
+  · intro h
+    funext v
+    rw [p4Q2PZ37ASB_boundary_degree]
+    exact ZMod.natCast_eq_zero_iff_even.mpr (h v)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ASB_mem_survivors
+
+def p4Q2PZ37ASB_localMultiplicity (m : ℕ) (p : ZMod 2) : ℕ :=
+  (Finset.univ.filter (fun j : Idx m => (j.1.val : ZMod 2) = p)).card
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ASB_localMultiplicity
+
+theorem p4Q2PZ37ASB_pattern_fiber_card (H m : ℕ) (p : Pat H) :
+    (Finset.univ.filter (fun j : All H m => p4Q2PZ37ASB_pattern H m j = p)).card =
+      ∏ l : Link H, p4Q2PZ37ASB_localMultiplicity m (p l) := by
+  classical
+  have hs : Finset.univ.filter (fun j : All H m => p4Q2PZ37ASB_pattern H m j = p) =
+      Fintype.piFinset (fun l : Link H =>
+        Finset.univ.filter (fun j : Idx m => (j.1.val : ZMod 2) = p l)) := by
+    ext j
+    simp only [Finset.mem_filter,Finset.mem_univ,true_and,Fintype.mem_piFinset]
+    change (p4Q2PZ37ASB_pattern H m j = p) ↔ ∀ l, p4Q2PZ37ASB_pattern H m j l = p l
+    exact funext_iff
+  simpa only [hs,Fintype.card_piFinset,p4Q2PZ37ASB_localMultiplicity]
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ASB_pattern_fiber_card
+
+/-- Exact weighted closed-pattern count, not just the cycle pattern count. -/
+theorem p4Q2PZ37ASB_survivor_card (H m : ℕ) :
+    (p4Q2PZ37ASB_survivors H m).card =
+      ∑ p ∈ p4Q2PZ37ASB_closedPatterns H, ∏ l : Link H,
+        p4Q2PZ37ASB_localMultiplicity m (p l) := by
+  classical
+  calc
+    _ = ∑ p ∈ p4Q2PZ37ASB_closedPatterns H,
+        (Finset.univ.filter (fun j : All H m => p4Q2PZ37ASB_pattern H m j = p)).card :=
+      (Finset.sum_card_fiberwise_eq_card_filter Finset.univ
+        (p4Q2PZ37ASB_closedPatterns H) (p4Q2PZ37ASB_pattern H m)).symm
+    _ = _ := by
+      apply Finset.sum_congr rfl
+      intro p _
+      exact p4Q2PZ37ASB_pattern_fiber_card H m p
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ASB_survivor_card
+
+theorem p4Q2PZ37ASB_survivor_card_le (H m : ℕ) :
+    (p4Q2PZ37ASB_survivors H m).card ≤ p4Q2PZ37ARX_slabTerms H m := by
+  classical
+  calc
+    _ ≤ (Finset.univ : Finset (All H m)).card :=
+      Finset.card_filter_le _ _
+    _ = _ := by
+      rw [Finset.card_univ]
+      exact p4Q2PZ37ARX_slabIndex_card H m
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ASB_survivor_card_le
+
+def p4Q2PZ37ASB_leftLp (H : ℕ) (beta : ℝ) (m : ℕ) (j : All H m) :
+    Lp ℝ 2 (Mu H 2) :=
+  ContinuousMap.toLp 2 (Mu H 2) ℝ
+    ⟨p4Q2PZ37ASA_weightedLeft H beta m j,p4Q2PZ37ASA_weightedLeft_cont H beta m j⟩
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ASB_leftLp
+
+theorem p4Q2PZ37ASB_normalized_indexed
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (m : ℕ) :
+    ‖(show Lp ℝ 2 ((Mu H 2).prod (Mu H 2)) from NK H beta hb) -
+      ∑ j : All H m, realL2ExternalTensor
+        (‖T H 2 h2 beta hb‖⁻¹ • p4Q2PZ37ASB_leftLp H beta m j)
+        (p4Q2PZ37ASA_rightLp H beta m j)‖ ≤
+      p4Q2PZ37ARW_normalizedError H beta hb m := by
+  classical
+  have hr : (fun z => Raw H 2 h2 beta hb z) =ᵐ[(Mu H 2).prod (Mu H 2)]
+      (fun z => Kernel H 2 beta z.1 z.2) :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2_coeFn H 2 h2 beta hb
+  have he := p4Q2PZ37ASB_raw_transfer (Mu H 2)
+    (show Lp ℝ 2 ((Mu H 2).prod (Mu H 2)) from Raw H 2 h2 beta hb)
+    (fun z => Kernel H 2 beta z.1 z.2) hr
+    (p4Q2PZ37ASA_weightedLeft H beta m) (p4Q2PZ37ASA_weightedRight H beta m)
+    (p4Q2PZ37ASB_leftLp H beta m) (p4Q2PZ37ASA_rightLp H beta m)
+    (fun j => ContinuousMap.coeFn_toLp (𝕜 := ℝ) (p := 2) (Mu H 2)
+      ⟨p4Q2PZ37ASA_weightedLeft H beta m j,p4Q2PZ37ASA_weightedLeft_cont H beta m j⟩)
+    (fun j => ContinuousMap.coeFn_toLp (𝕜 := ℝ) (p := 2) (Mu H 2)
+      ⟨p4Q2PZ37ASA_weightedRight H beta m j,p4Q2PZ37ASA_weightedRight_cont H beta m j⟩)
+    (((L H).length : ℝ)*p4Q2PZ37ARU_tail beta m)
+    (mul_nonneg (Nat.cast_nonneg _) (p4Q2PZ37ARU_tail_nonneg beta hb m))
+    (fun z => by
+      rw [← p4Q2PZ37ASA_partialSlab_indexed H beta m z.1 z.2]
+      exact p4Q2PZ37ARU_slab_tail_bound H beta hb m z.1 z.2)
+  let c := ‖T H 2 h2 beta hb‖⁻¹
+  have hc : 0 ≤ c := inv_nonneg.mpr (le_of_lt
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos H 2 h2 beta hb))
+  change ‖c • (show Lp ℝ 2 ((Mu H 2).prod (Mu H 2)) from Raw H 2 h2 beta hb) -
+    ∑ j : All H m, realL2ExternalTensor (c • p4Q2PZ37ASB_leftLp H beta m j)
+      (p4Q2PZ37ASA_rightLp H beta m j)‖ ≤ c * (((L H).length : ℝ)*p4Q2PZ37ARU_tail beta m)
+  simp_rw [realL2ExternalTensor_smul_left]
+  rw [← Finset.smul_sum, ← smul_sub, norm_smul, Real.norm_eq_abs, abs_of_nonneg hc]
+  exact mul_le_mul_of_nonneg_left he hc
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ASB_normalized_indexed
+
+theorem p4Q2PZ37ASB_rankApprox (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (m : ℕ) :
+    ∃ F : ↥(K H 2 h2 beta hb) →L[ℝ] ↥(K H 2 h2 beta hb),
+      Nonempty (Module.Finite ℝ (LinearMap.range F.toLinearMap)) ∧
+      Module.finrank ℝ (LinearMap.range F.toLinearMap) ≤
+        (p4Q2PZ37ASB_survivors H m).card ∧
+      ‖Step H 2 h2 beta hb-F‖ ≤ p4Q2PZ37ARW_normalizedError H beta hb m := by
+  classical
+  let d := Fintype.card (All H m)
+  let e : Fin d ≃ All H m := (Fintype.equivFin (All H m)).symm
+  let u : Fin d → Lp ℝ 2 (Mu H 2) := fun j =>
+    ‖T H 2 h2 beta hb‖⁻¹ • p4Q2PZ37ASB_leftLp H beta m (e j)
+  let v : Fin d → Lp ℝ 2 (Mu H 2) := fun j => p4Q2PZ37ASA_rightLp H beta m (e j)
+  let s := (p4Q2PZ37ASB_survivors H m).map e.symm.toEmbedding
+  have hs : s.card = (p4Q2PZ37ASB_survivors H m).card := Finset.card_map _
+  have hodd (j : Fin d) (hj : j ∉ s) :
+      ∃ gamma : Gauge H 2, Pull H 2 gamma (v j) = -(v j) := by
+    have hj' : e j ∉ p4Q2PZ37ASB_survivors H m := by
+      intro h
+      apply hj
+      exact Finset.mem_map.mpr ⟨e j,h,e.symm_apply_apply j⟩
+    have hn : ¬ ∀ w : Vtx H, Even (p4Q2PZ37ASA_vertexDegree H m w (e j)) :=
+      fun hh => hj' ((p4Q2PZ37ASB_mem_survivors H m (e j)).mpr hh)
+    push_neg at hn
+    obtain ⟨w,hw⟩ := hn
+    have ho : Odd (p4Q2PZ37ASA_vertexDegree H m w (e j)) :=
+      ZMod.natCast_ne_zero_iff_odd.mp (fun hz => hw (ZMod.natCast_eq_zero_iff_even.mp hz))
+    exact ⟨p4Q2PZ37ASA_vertexFlip H w,p4Q2PZ37ASA_rightLp_odd H beta m (e j) w ho⟩
+  obtain ⟨F,hf,hcap,herr⟩ := p4Q2PZ37ARZ_gaugeFilteredRankApprox H beta hb d u v s hodd
+  have hsum : (∑ j : Fin d, realL2ExternalTensor (u j) (v j)) =
+      ∑ j : All H m, realL2ExternalTensor
+        (‖T H 2 h2 beta hb‖⁻¹ • p4Q2PZ37ASB_leftLp H beta m j)
+        (p4Q2PZ37ASA_rightLp H beta m j) :=
+    e.sum_comp _
+  rw [hs] at hcap
+  rw [hsum] at herr
+  exact ⟨F,hf,hcap,herr.trans (p4Q2PZ37ASB_normalized_indexed H beta hb m)⟩
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ASB_rankApprox
+
+theorem p4Q2PZ37ASB_count_le
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    {ι : Type i} (B : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (he : ∀ k, Step H 2 h2 beta hb (B k) = rho k • B k)
+    (m : ℕ) (r : ℝ) (hr : 0 < r)
+    (hclose : p4Q2PZ37ARW_normalizedError H beta hb m < r) :
+    p4Q2PZ37ARL_spectralCount rho r ≤ ((p4Q2PZ37ASB_survivors H m).card : ℝ≥0∞) := by
+  obtain ⟨F,hfinite,hd,hF⟩ := p4Q2PZ37ASB_rankApprox H beta hb m
+  letI : Module.Finite ℝ (LinearMap.range F.toLinearMap) := hfinite.some
+  rw [p4Q2PZ37ARL_count_eq_thresholdCard H beta hb B rho he r hr]
+  exact_mod_cast (p4Q2PZ37ARN_thresholdCard_le_rank H beta hb B rho he r hr F
+    (hF.trans_lt hclose)).trans hd
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ASB_count_le
+
+end
+end MGAP4D.MathlibAnalytic

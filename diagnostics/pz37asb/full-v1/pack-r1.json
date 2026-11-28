@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "baseline_commit": "46b61dcc15d3ebbbdb0d37072707e74e9c68b506",
+  "baseline_mgap4d_tree": "73cc1f51371e7d1ca4ccd0fc6d731c17747ecb06",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalIndexedTaylorVertexParityV5_PZ37ASA",
+    "Mathlib.Data.ZMod.Basic",
+    "Mathlib.Data.Fintype.BigOperators",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "ASB",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASB_boundary",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASB_pattern",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASB_boundary_degree",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASB_closedPatterns",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASB_survivors",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASB_mem_survivors",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASB_localMultiplicity",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASB_pattern_fiber_card",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASB_survivor_card",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASB_survivor_card_le",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASB_leftLp",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASB_normalized_indexed",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASB_rankApprox",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ASB_count_le"
+      ],
+      "candidates": [
+        {
+          "id": "R1A",
+          "path": "diagnostics/pz37asb/full-v1/ASB_R1A.lean.txt",
+          "blob": "84e45698011309a7e6fc37ee1cf5f71f84e9109c"
+        },
+        {
+          "id": "R1B",
+          "path": "diagnostics/pz37asb/full-v1/ASB_R1B.lean.txt",
+          "blob": "1844535df44188c0da847cf61d14f7be6dfcbf51"
+        }
+      ]
+    }
+  ]
+}
