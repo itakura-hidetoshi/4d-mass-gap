@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "baseline_commit": "12fb62cd7b383c66a99ab14aae4b21d8174d38e3",
+  "baseline_mgap4d_tree": "ab74357a4435c35797787c88c0f2e40ad12ef25d",
+  "baseline_blobs": {
+    "lake-manifest.json": "01260678b674ab241e753563e913c7ce9c6ba659",
+    "lakefile.lean": "22126bb16f47cf92042d6166dd7b0daddd2ca1b3",
+    "lean-toolchain": "6c7e31fffe3e03be3e0d7021acd9cd848e44db26"
+  },
+  "codeai_pin": "3c3d4a9127256fff732749fdfddd3118b30e86ab",
+  "imports": [
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalProjectedGrowthBudgetV5_PZ37ARS",
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalStrictPartitionClosedHalfHaarV5_PZ37AIP",
+    "MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalFixedCouplingQuarticBudgetObstructionV5_PZ37AIB",
+    "Mathlib.Data.Nat.Choose.Sum",
+    "Mathlib.Analysis.SpecialFunctions.Exp",
+    "Mathlib.Tactic"
+  ],
+  "groups": [
+    {
+      "id": "ART",
+      "declarations": [
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ART_linkCount_exact",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ART_terminal_le_gradeBinomial",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ART_terminal_le_gradeExp",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ART_linkBudget_tendsto_zero",
+        "MGAP4D.MathlibAnalytic.p4Q2PZ37ART_partitionFloor_of_localGrades"
+      ],
+      "candidates": [
+        {
+          "id": "R1A",
+          "path": "diagnostics/pz37art/full-v1/ART_R1A.lean.txt",
+          "blob": "b7ac8b9e3b9be4cd0beaa26a2e624b9357641930"
+        },
+        {
+          "id": "R1B",
+          "path": "diagnostics/pz37art/full-v1/ART_R1B.lean.txt",
+          "blob": "e3915f239fff7bd686612b394a42e314a1e774f8"
+        }
+      ]
+    }
+  ]
+}
