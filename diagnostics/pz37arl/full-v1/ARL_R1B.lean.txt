@@ -1,0 +1,221 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalPositiveSpectralThresholdCountV5_PZ37ARK
+import Mathlib.MeasureTheory.Integral.Layercake
+import Mathlib.MeasureTheory.Integral.Lebesgue.Countable
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-PZ37ARL — exact spectral layer cake of the original complete moment
+
+Use counting measure on the genuine eigen-Hilbert basis, retaining all
+multiplicities. At positive thresholds the extended count equals ARK's
+actual finite count; at zero no finite count is asserted. The weighted
+nonnegative Lebesgue integral reconstructs the exact original moments.
+The G4 cap truncates the integral to (0,1]. No uniform distribution bound
+or continuum claim is made.
+-/
+namespace MGAP4D.MathlibAnalytic
+open MeasureTheory Filter Set
+open scoped ENNReal Topology InnerProductSpace InnerProduct BigOperators
+noncomputable section
+set_option autoImplicit false
+set_option maxHeartbeats 1000000
+set_option synthInstance.maxHeartbeats 50000
+universe i
+
+/-- Extended multiplicity count. It may be infinite at the zero threshold. -/
+def p4Q2PZ37ARL_spectralCount {ι : Type i} (rho : ι → ℝ) (t : ℝ) : ℝ≥0∞ :=
+  ({k : ι | t ≤ rho k} : Set ι).encard
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARL_spectralCount
+local notation "N" => p4Q2PZ37ARL_spectralCount
+
+private theorem p4Q2PZ37ARL_primitive (p : ℕ) (x : ℝ) :
+    (∫ t in 0..x, ((p : ℝ)+1)*t^p) = x^(p+1) := by
+  rw [intervalIntegral.integral_const_mul, intervalIntegral.integral_pow,
+    zero_pow (Nat.succ_ne_zero p), sub_zero]
+  have hp : (p : ℝ)+1 ≠ 0 := by positivity
+  exact mul_div_cancel_left₀ _ hp
+
+private theorem p4Q2PZ37ARL_layer_aux {ι : Type i} (rho : ι → ℝ)
+    (p : ℕ) (a : ℝ) (h0 : ∀ k, 0 ≤ rho k)
+    (ha : HasSum (fun k => (rho k)^(p+1)) a) :
+    ENNReal.ofReal a = ∫⁻ t in Ioi (0:ℝ), N rho t *
+      ENNReal.ofReal (((p : ℝ)+1)*t^p) := by
+  letI : MeasurableSpace ι := ⊤
+  letI : MeasurableSingletonClass ι := ⟨fun _ => trivial⟩
+  have hm : Measurable rho := by
+    intro s _
+    trivial
+  have hg : Continuous (fun t : ℝ => ((p : ℝ)+1)*t^p) := by fun_prop
+  have hl := lintegral_comp_eq_lintegral_meas_le_mul
+    (f := rho) (g := fun t : ℝ => ((p : ℝ)+1)*t^p)
+    (Measure.count : Measure ι) (Eventually.of_forall h0) hm.aemeasurable
+    (fun t _ => hg.intervalIntegrable 0 t)
+    (by
+      filter_upwards [self_mem_ae_restrict (measurableSet_Ioi : MeasurableSet (Ioi (0:ℝ)))]
+        with t ht
+      exact mul_nonneg (by positivity) (pow_nonneg ht.le _))
+  have hprim (k : ι) :
+      (∫ t in 0..rho k, ((p : ℝ)+1)*t^p) = (rho k)^(p+1) :=
+    p4Q2PZ37ARL_primitive p (rho k)
+  simp_rw [hprim] at hl
+  have hleft : (∫⁻ k, ENNReal.ofReal ((rho k)^(p+1)) ∂(Measure.count : Measure ι)) =
+      ENNReal.ofReal a := by
+    calc
+      _ = ∑' k, ENNReal.ofReal ((rho k)^(p+1)) := lintegral_count _
+      _ = ENNReal.ofReal (∑' k, (rho k)^(p+1)) :=
+        (ENNReal.ofReal_tsum_of_nonneg (fun k => pow_nonneg (h0 k) _) ha.summable).symm
+      _ = ENNReal.ofReal a := congrArg ENNReal.ofReal ha.tsum_eq
+  rw [hleft] at hl
+  refine hl.trans ?_
+  apply lintegral_congr
+  intro t
+  simp only [p4Q2PZ37ARL_spectralCount,
+    Measure.count_apply (show MeasurableSet {k : ι | t ≤ rho k} by trivial)]
+
+private theorem p4Q2PZ37ARL_trunc_aux {ι : Type i} (rho : ι → ℝ)
+    (g : ℝ → ℝ≥0∞) (hcap : ∀ k, rho k ≤ 1) :
+    (∫⁻ t in Ioi (0:ℝ), N rho t * g t) =
+      ∫⁻ t in Ioc (0:ℝ) 1, N rho t * g t := by
+  let f : ℝ → ℝ≥0∞ := fun t => N rho t * g t
+  have hs := lintegral_inter_add_diff (μ := volume) f (Ioi (0:ℝ))
+    (measurableSet_Ioc : MeasurableSet (Ioc (0:ℝ) 1))
+  have hi : Ioi (0:ℝ) ∩ Ioc 0 1 = Ioc 0 1 := by
+    ext t
+    simp only [mem_inter_iff, mem_Ioi, mem_Ioc]
+    tauto
+  have hz : (∫⁻ t in Ioi (0:ℝ) \ Ioc 0 1, f t) = 0 := by
+    apply setLIntegral_eq_zero (measurableSet_Ioi.diff measurableSet_Ioc)
+    intro t ht
+    have ht1 : 1 < t := by
+      by_contra! h
+      exact ht.2 ⟨ht.1,h⟩
+    have he : {k : ι | t ≤ rho k} = ∅ := by
+      apply Set.eq_empty_of_forall_notMem
+      intro k hk
+      exact (not_le_of_gt ht1) (hk.trans (hcap k))
+    simp [f, p4Q2PZ37ARL_spectralCount, he]
+  rw [hi, hz, add_zero] at hs
+  exact hs.symm
+
+private theorem p4Q2PZ37ARL_two_pos : 0 < (2 : ℕ) := by decide
+
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "Phys" => PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert
+local notation "Mu" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+local notation "Pair" => PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2
+local notation "Dec" => periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2
+local notation "K" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+local notation "OO" => periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockClosure
+local notation "EH" => periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderExcitationTransferOperator
+local notation "Step" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+local notation "PF" => p4Q2PZ37AQW_partitionFactor
+local notation "Res" => p4Q2PZ37AQX_relativeResidual
+local notation "Emb" => periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+
+local instance p4Q2PZ37ARL_group : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37ARL_compact : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37ARL_countable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37ARL_measurable : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37ARL_borel : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37ARL_vertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) := Fintype.ofFinite _
+local instance p4Q2PZ37ARL_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) := Fintype.ofFinite _
+local instance p4Q2PZ37ARL_sideLength (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength, periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+local instance p4Q2PZ37ARL_sliceFinite (H : ℕ) : SFinite (Mu H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+local instance p4Q2PZ37ARL_nontrivial :
+    Nontrivial (Matrix.specialUnitaryGroup (Fin 2) ℂ) := by
+  refine ⟨⟨1, specialUnitaryTwoRotation Real.pi, ?_⟩⟩
+  intro h
+  have h00 := congrArg
+    (fun g : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+      (g : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
+  norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
+
+local notation "h2" => p4Q2PZ37ARL_two_pos
+local notation "M" => p4Q2PZ37ARD_pairMoment
+
+local notation "Cut" => GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformGapCutoff
+local notation "c" => ((3071 : ℝ)/3072)
+
+/-- For every strictly positive threshold the extended count is literally
+the cardinality of ARK's complete finite spectral family. -/
+theorem p4Q2PZ37ARL_count_eq_thresholdCard
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    {ι : Type i} (b : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (he : ∀ k, Step H 2 h2 beta hb (b k) = rho k • b k)
+    (r : ℝ) (hr : 0 < r) :
+    N rho r = (p4Q2PZ37ARK_thresholdFinset H beta hb b rho he r hr).card := by
+  letI : MeasurableSpace ι := ⊤
+  letI : MeasurableSingletonClass ι := ⟨fun _ => trivial⟩
+  have hf := p4Q2PZ37ARK_threshold_finite H beta hb b rho he r hr
+  have hc := Measure.count_apply_finite {k : ι | r ≤ rho k} hf
+  rw [Measure.count_apply (show MeasurableSet {k : ι | r ≤ rho k} by trivial)] at hc
+  exact hc
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARL_count_eq_thresholdCard
+
+/-- Exact layer-cake formula for the genuine complete moment at every
+degree, on the full positive threshold axis. -/
+theorem p4Q2PZ37ARL_moment_layercake_Ioi
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (n : ℕ)
+    {ι : Type i} (b : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (he : ∀ k, Step H 2 h2 beta hb (b k) = rho k • b k) :
+    ENNReal.ofReal (M H beta hb n) =
+      ∫⁻ t in Ioi (0:ℝ), N rho t * ENNReal.ofReal (2*((n:ℝ)+1)*t^(2*n+1)) := by
+  have h0 (k : ι) : 0 ≤ rho k :=
+    (p4Q2PZ37ARA_eigenvalue_bounds H beta hb (b k) (rho k)
+      (b.orthonormal.norm_eq_one k) (he k)).1
+  have hm : HasSum (fun k => (rho k)^((2*n+1)+1)) (M H beta hb n) := by
+    rw [show 2*n+1+1 = 2*(n+1) by omega]
+    exact p4Q2PZ37ARD_moment_hasSum H beta hb n b rho he
+  have hw : ((2*n+1 : ℕ) : ℝ)+1 = 2*((n:ℝ)+1) := by
+    push_cast <;> ring
+  simpa only [hw] using p4Q2PZ37ARL_layer_aux rho (2*n+1) (M H beta hb n) h0 hm
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARL_moment_layercake_Ioi
+
+/-- On the existing high-temperature interval the actual spectral cap
+allows the exact integral to be restricted to (0,1]. -/
+theorem p4Q2PZ37ARL_moment_layercake_Ioc
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta) (n : ℕ)
+    (s : ℝ) (hs : 8 < s) (hcut : beta ≤ Cut s hs)
+    {ι : Type i} (b : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (he : ∀ k, Step H 2 h2 beta hb (b k) = rho k • b k) :
+    ENNReal.ofReal (M H beta hb n) =
+      ∫⁻ t in Ioc (0:ℝ) 1, N rho t * ENNReal.ofReal (2*((n:ℝ)+1)*t^(2*n+1)) := by
+  have hcap (k : ι) : rho k ≤ 1 :=
+    ((p4Q2PZ37ARA_eigenvalue_bounds H beta hb (b k) (rho k)
+      (b.orthonormal.norm_eq_one k) (he k)).2.trans
+      (p4Q2PZ37ARG_norm_le_of_cutoff H beta hb s hs hcut)).trans (by norm_num : c ≤ 1)
+  exact (p4Q2PZ37ARL_moment_layercake_Ioi H beta hb n b rho he).trans
+    (p4Q2PZ37ARL_trunc_aux rho _ hcap)
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARL_moment_layercake_Ioc
+
+/-- Exact distribution integral of the original physical terminal residual. -/
+theorem p4Q2PZ37ARL_terminal_layercake
+    (H : ℕ) (beta : ℝ) (hb : 0 ≤ beta)
+    (s : ℝ) (hs : 8 < s) (hcut : beta ≤ Cut s hs)
+    {ι : Type i} (b : HilbertBasis ι ℝ (K H 2 h2 beta hb))
+    (rho : ι → ℝ) (he : ∀ k, Step H 2 h2 beta hb (b k) = rho k • b k) :
+    ENNReal.ofReal ((PF H beta hb)⁻¹ ^ 2 - 1) =
+      ∫⁻ t in Ioc (0:ℝ) 1, N rho t * ENNReal.ofReal (2*((H:ℝ)+1)*t^(2*H+1)) := by
+  rw [← p4Q2PZ37ARD_moment_at_halfCylinder H beta hb]
+  exact p4Q2PZ37ARL_moment_layercake_Ioc H beta hb H s hs hcut b rho he
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ARL_terminal_layercake
+
+end
+end MGAP4D.MathlibAnalytic
