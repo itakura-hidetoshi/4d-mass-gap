@@ -1,0 +1,3 @@
+# ARS R1 — projected rank growth and geometric decay
+
+Reuse ARR fixed-degree envelope, ARG exact geometric shift, ARQ finite spectral tail witnesses and AQX residual/partition equivalence. Allow projected minimum coefficient A*q^(H-n), fixed n and p<2(n+1), q*c²≤1. Critical base (3072/3071)^2. Finite initial horizons retained via sum of actual nonnegative terminal moments. H is horizon parameter, not spatial volume. Six public conditional theorems; no assertion of actual growth bound, continuum or mass gap. R1A/R1B same public types, alternate algebra only. Append-only diagnostics; direct Lean and real MCP before independent CI.
